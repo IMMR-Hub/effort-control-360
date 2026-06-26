@@ -1,0 +1,68 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --topbar-h: 64px;
+    --sidebar-collapsed: 64px;
+    --sidebar-expanded: 240px;
+  }
+
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased;
+    font-family: 'Fira Sans', system-ui, sans-serif;
+  }
+}
+
+@layer utilities {
+  .font-data {
+    font-family: 'Fira Code', 'Courier New', monospace;
+  }
+
+  .sidebar-width {
+    width: var(--sidebar-collapsed);
+  }
+
+  /* Hover-reveal sidebar on desktop */
+  .sidebar-nav {
+    width: var(--sidebar-collapsed);
+    transition: width 200ms ease-out;
+  }
+  @media (min-width: 1024px) {
+    .sidebar-nav:hover {
+      width: var(--sidebar-expanded);
+    }
+    .sidebar-nav:hover .nav-label {
+      opacity: 1;
+      width: auto;
+    }
+  }
+  .nav-label {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    transition: opacity 180ms ease-out, width 0ms;
+    transition-delay: 60ms;
+  }
+
+  /* Scrollbar */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: #334155 transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar { width: 4px; }
+  .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background: #475569;
+    border-radius: 2px;
+  }
+
+  /* Chart responsive height */
+  .chart-h { height: clamp(200px, 35vh, 380px); }
+  .chart-h-sm { height: clamp(160px, 25vh, 280px); }
+  .chart-h-lg { height: clamp(280px, 45vh, 480px); }
+}
