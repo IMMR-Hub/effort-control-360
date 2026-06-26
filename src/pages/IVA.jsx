@@ -73,11 +73,16 @@ export default function IVAPage() {
               {c.retenciones !== null && <IVAMetric label="Retenciones" value={c.retenciones} color="text-amber-700" />}
               <IVAMetric label="Saldo a pagar" value={c.saldoPagar} color={c.saldoPagar > 0 ? 'text-red-700 font-bold' : 'text-emerald-700'} />
             </div>
-            {c.observacion && (
-              <div className="px-4 pb-3">
+            <div className="px-4 pb-3 space-y-2">
+              {c.observacion && (
                 <p className="text-[10px] text-amber-700 bg-amber-50 border border-amber-200 rounded-sm px-3 py-1.5">{c.observacion}</p>
-              </div>
-            )}
+              )}
+              {c.cliente === 'NR REGISTROS GANADEROS' && (
+                <p className="text-[10px] text-blue-700 bg-blue-50 border border-blue-200 rounded-sm px-3 py-1.5">
+                  <strong>Estado:</strong> Controlado · <strong>Próxima acción:</strong> Validar diferencias pendientes contra SIGA si aplica
+                </p>
+              )}
+            </div>
           </div>
         ))}
       </div>

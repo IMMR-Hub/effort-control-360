@@ -132,6 +132,50 @@ export default function Overview({ onClienteClick }) {
         </ChartCard>
       </section>
 
+      {/* Impact summary */}
+      <section>
+        <SectionHeader title="Impacto estimado" description="Piloto de 14 días · 5 clientes" />
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-2">
+          {[
+            { icon: TrendingUp, label: 'Horas ahorradas', val: '31h', color: 'text-blue-700', bg: 'bg-blue-50' },
+            { icon: FileCheck, label: 'Docs clasificados', val: '184', color: 'text-emerald-700', bg: 'bg-emerald-50' },
+            { icon: AlertTriangle, label: 'Pendientes', val: '23', color: 'text-amber-700', bg: 'bg-amber-50' },
+            { icon: ShieldAlert, label: 'Vencimientos', val: '9', color: 'text-orange-700', bg: 'bg-orange-50' },
+            { icon: FileCheck, label: 'Liquidaciones', val: '4', color: 'text-green-700', bg: 'bg-green-50' },
+            { icon: ShieldAlert, label: 'Balances', val: '3', color: 'text-purple-700', bg: 'bg-purple-50' },
+            { icon: AlertTriangle, label: 'Riesgos críticos', val: '4', color: 'text-red-700', bg: 'bg-red-50' },
+          ].map(item => {
+            const Icon = item.icon
+            return (
+              <div key={item.label} className={`${item.bg} border border-slate-100 rounded-sm p-3 text-center`}>
+                <Icon className={`w-4 h-4 mx-auto mb-1 ${item.color}`} />
+                <p className={`text-lg font-bold font-data ${item.color}`}>{item.val}</p>
+                <p className="text-[9px] text-slate-600 leading-tight mt-0.5">{item.label}</p>
+              </div>
+            )
+          })}
+        </div>
+      </section>
+
+      {/* Pilot 14 days */}
+      <section className="bg-gradient-to-r from-blue-50 to-slate-50 border border-blue-200 rounded-sm p-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h3 className="text-sm font-bold text-slate-900 mb-1">Piloto 14 días · EFFORT Control 360</h3>
+            <p className="text-xs text-slate-600">5 clientes reales · Sin reemplazar SIGA · Datos controlados</p>
+            <p className="text-[11px] text-slate-500 mt-1.5">
+              Validar casos de uso, flujos de trabajo, alertas críticas y exportación de reportes sin comprometer operaciones existentes.
+            </p>
+          </div>
+          <button
+            onClick={() => alert('✅ Acción demo: en el prototipo se configuraría el piloto con datos reales.')}
+            className="flex-shrink-0 px-4 py-2.5 text-xs font-bold text-white bg-blue-700 hover:bg-blue-800 rounded-sm transition-colors whitespace-nowrap"
+          >
+            Iniciar piloto
+          </button>
+        </div>
+      </section>
+
       {/* Executive summary */}
       <section>
         <ChartCard title="Resumen ejecutivo" subtitle="Demo piloto — datos ficticios">

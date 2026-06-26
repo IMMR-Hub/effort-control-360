@@ -48,6 +48,9 @@ export default function Vencimientos() {
                     </span>
                   )}
                   <span className="text-[10px] text-slate-400">{v.responsable}</span>
+                  {v.diasRestantes !== null && v.diasRestantes <= 7 && (
+                    <span className="text-[10px] text-orange-700 font-semibold">📌 Escalar presentación</span>
+                  )}
                 </div>
               </div>
             </div>

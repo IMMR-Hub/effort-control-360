@@ -16,7 +16,19 @@ export default function AIPanel({ open, onClose }) {
     setMessages(prev => [...prev, { role: 'user', text: q }])
     setLoading(true)
     setTimeout(() => {
-      setMessages(prev => [...prev, { role: 'assistant', text: AI_ANSWER }])
+      let response = AI_ANSWER
+      if (q.toLowerCase().includes('riesgo')) {
+        response = '4 clientes en riesgo detectados: RAMIRO GARCIA (Crítico), GARSO S.A. (Alto). Acciones recomendadas: escalar presentaciones pendientes y validar SIGA.'
+      } else if (q.toLowerCase().includes('faltan')) {
+        response = '23 documentos pendientes distribuidos en 5 clientes. RAMIRO GARCIA necesita presentación societaria en 7 días. Recomendación: solicitar urgente.'
+      } else if (q.toLowerCase().includes('vencimiento')) {
+        response = '9 vencimientos próximos en 30 días. 2 son críticos (riesgo de multa). Acción inmediata: escalar presentación de RAMIRO GARCIA y validación GARSO S.A.'
+      } else if (q.toLowerCase().includes('balance')) {
+        response = '3 balances pendientes de pre-revisión. LAURA SOSA requiere correcciones menores. Próximo paso: enviar a revisión humana después de validar inconsistencias.'
+      } else if (q.toLowerCase().includes('resumen')) {
+        response = '📊 Semana de 5 clientes: 184 docs procesados, 23 pendientes, 9 vencimientos próximos, 4 alertas críticas. Piloto en buen camino. Recomendación: iniciar fase 2 con feedback de usuario.'
+      }
+      setMessages(prev => [...prev, { role: 'assistant', text: response }])
       setLoading(false)
     }, 1200)
   }

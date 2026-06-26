@@ -74,19 +74,36 @@ export default function Alertas() {
                     <p className="text-sm text-slate-800">{a.mensaje}</p>
                     {a.accionRequerida && (
                       <p className="text-xs text-slate-600 mt-1">
-                        <strong>Acción:</strong> {a.accionRequerida}
+                        <strong className="text-slate-700">Próxima acción:</strong> <span className="text-slate-600">{a.accionRequerida}</span>
                       </p>
                     )}
                     <p className="text-[10px] text-slate-400 mt-1">{a.responsable}</p>
                   </div>
-                  {(a.nivel === 'Crítica' || a.nivel === 'Alta') && (
+                  <div className="flex-shrink-0 flex items-center gap-1">
                     <button
-                      onClick={() => handleEscalar(a)}
-                      className="flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider text-white bg-red-600 hover:bg-red-700 rounded-sm transition-colors"
+                      onClick={() => alert(`✅ Alerta asignada a ${a.responsable}`)}
+                      className="text-[10px] font-semibold px-2 py-1 rounded-sm bg-blue-50 text-blue-700 border border-blue-200 hover:bg-blue-100 transition-colors hidden sm:inline-block"
+                      title="Asignar alerta"
                     >
-                      Escalar
+                      Asignar
                     </button>
-                  )}
+                    <button
+                      onClick={() => alert(`✅ Alerta marcada en proceso`)}
+                      className="text-[10px] font-semibold px-2 py-1 rounded-sm bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 transition-colors hidden sm:inline-block"
+                      title="Marcar en proceso"
+                    >
+                      En proceso
+                    </button>
+                    {(a.nivel === 'Crítica' || a.nivel === 'Alta') && (
+                      <button
+                        onClick={() => handleEscalar(a)}
+                        className="text-[10px] font-bold px-2.5 py-1 rounded-sm text-white bg-red-600 hover:bg-red-700 transition-colors"
+                        title="Escalar alerta"
+                      >
+                        Escalar
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             </div>

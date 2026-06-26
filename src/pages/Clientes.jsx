@@ -62,7 +62,7 @@ export default function Clientes() {
                   <Badge label={c.riesgo} size="xs" />
                 </div>
               </div>
-              <div className="grid grid-cols-3 gap-2 text-center mb-3">
+              <div className="grid grid-cols-3 gap-2 text-center mb-2">
                 <div className="bg-slate-50 rounded-sm p-2">
                   <p className="text-base font-bold text-slate-900 font-data">{c.docsRecibidos}</p>
                   <p className="text-[9px] text-slate-500">Docs recib.</p>
@@ -76,9 +76,9 @@ export default function Clientes() {
                   <p className="text-[9px] text-slate-500">Días activo</p>
                 </div>
               </div>
-              <div className="flex items-center justify-between">
-                <p className="text-[10px] text-slate-500 truncate">{c.proximaAccion}</p>
-                <ChevronRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-blue-500 flex-shrink-0 transition-colors" />
+              <div className="flex items-start justify-between gap-2 mb-2">
+                <p className="text-[9px] text-slate-500 line-clamp-1">📋 {c.proximaAccion}</p>
+                <ChevronRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-blue-500 flex-shrink-0 transition-colors mt-0.5" />
               </div>
             </button>
           ))}

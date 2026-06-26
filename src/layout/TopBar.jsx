@@ -1,12 +1,17 @@
-import { Menu, Download, Bell, Bot, Eye, Briefcase } from 'lucide-react'
+import { Menu, Download, Bell, Bot, Eye, Briefcase, Send, AlertTriangle } from 'lucide-react'
 import { useFilters } from '../contexts/FilterContext'
 import { FILTER_OPTIONS } from '../data/data'
 
 export default function TopBar({ onMenuOpen, onAIOpen, pageTitle }) {
   const { filters, setFilter } = useFilters()
 
-  const handleExport = () =>
-    alert('📊 Exportando reporte PDF…\n\nEn producción: genera un PDF con todos los indicadores del período seleccionado.')
+  const handleExport = () => {
+    alert('✅ Reporte demo generado\n\nEn producción: descarga PDF con indicadores, alertas y propuestas de acción.')
+  }
+
+  const handleAlert = () => {
+    alert('✅ Alerta demo enviada al responsable\n\nEn producción: envía por WhatsApp, email o SMS al equipo.')
+  }
 
   return (
     <header className="fixed top-0 left-0 right-0 lg:left-16 z-40 bg-white border-b border-slate-200 h-16 flex items-center px-4 gap-3">
@@ -19,8 +24,11 @@ export default function TopBar({ onMenuOpen, onAIOpen, pageTitle }) {
         <Menu className="w-5 h-5 text-slate-600" />
       </button>
 
-      {/* Page title */}
-      <span className="text-sm font-bold text-slate-800 hidden sm:block flex-shrink-0">{pageTitle}</span>
+      {/* Page title + Demo badge */}
+      <div className="flex items-center gap-2 flex-shrink-0">
+        <span className="text-sm font-bold text-slate-800 hidden sm:block">{pageTitle}</span>
+        <span className="px-2 py-0.5 text-[10px] font-semibold text-blue-700 bg-blue-50 border border-blue-200 rounded-full">Demo visual</span>
+      </div>
 
       {/* Global filters */}
       <div className="flex items-center gap-2 overflow-x-auto flex-1 scrollbar-thin min-w-0">
@@ -63,14 +71,22 @@ export default function TopBar({ onMenuOpen, onAIOpen, pageTitle }) {
       </div>
 
       {/* Action buttons */}
-      <div className="flex items-center gap-1.5 flex-shrink-0">
+      <div className="flex items-center gap-1.5 flex-shrink-0 ml-auto">
+        <button
+          onClick={handleAlert}
+          className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-amber-700 bg-amber-50 border border-amber-200 rounded-sm hover:bg-amber-100 transition-colors hidden sm:flex"
+          title="Enviar alerta al equipo"
+        >
+          <Bell className="w-3.5 h-3.5" />
+          <span className="hidden md:inline">Alerta</span>
+        </button>
         <button
           onClick={onAIOpen}
-          className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-purple-700 bg-purple-50 border border-purple-200 rounded-sm hover:bg-purple-100 transition-colors"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-semibold text-purple-700 bg-purple-50 border border-purple-200 rounded-sm hover:bg-purple-100 transition-colors hidden md:flex"
           title="Asistente EFFORT"
         >
           <Bot className="w-3.5 h-3.5" />
-          <span className="hidden md:inline">IA</span>
+          <span>Asistente</span>
         </button>
         <button
           onClick={handleExport}

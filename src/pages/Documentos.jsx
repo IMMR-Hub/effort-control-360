@@ -1,13 +1,15 @@
+import { useState } from 'react'
 import Badge from '../ui/Badge'
 import { SectionHeader } from '../ui/ChartCard'
 import { DOCUMENTOS } from '../data/data'
 import { useFilters } from '../contexts/FilterContext'
-import { FileText, AlertCircle, CheckCircle2, Clock } from 'lucide-react'
+import { FileText, AlertCircle, CheckCircle2, Clock, List, LayoutGrid } from 'lucide-react'
 
 const TIPO_ICON = { Factura: FileText, 'Nota de crédito': FileText, Recibo: FileText, Comprobante: FileText }
 
 export default function Documentos() {
   const { filters, applyFilters } = useFilters()
+  const [view, setView] = useState('list')
   const docs = applyFilters(DOCUMENTOS, { clienteKey: 'cliente', estadoKey: 'estado' })
 
   const total = docs.length
@@ -17,7 +19,27 @@ export default function Documentos() {
 
   return (
     <div className="space-y-6">
-      <SectionHeader title="Documentos del período" description={`${total} documentos · ${filters.periodo}`} />
+      <div className="flex items-center justify-between gap-4">
+        <SectionHeader title="Documentos del período" description={`${total} documentos · ${filters.periodo}`} />
+        <div className="flex items-center border border-slate-200 rounded-sm overflow-hidden flex-shrink-0">
+          <button
+            onClick={() => setView('grid')}
+            className={`p-2 transition-colors ${view === 'grid' ? 'bg-slate-900 text-white' : 'text-slate-500 hover:bg-slate-50'}`}
+            title="Vista tarjetas"
+            aria-pressed={view === 'grid'}
+          >
+            <LayoutGrid className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => setView('list')}
+            className={`p-2 transition-colors ${view === 'list' ? 'bg-slate-900 text-white' : 'text-slate-500 hover:bg-slate-50'}`}
+            title="Vista lista"
+            aria-pressed={view === 'list'}
+          >
+            <List className="w-4 h-4" />
+          </button>
+        </div>
+      </div>
 
       {/* Summary row */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">

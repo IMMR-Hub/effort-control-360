@@ -80,13 +80,18 @@ export default function Balances() {
               )}
 
               {/* Blocking reason */}
-              {b.motivoBloqueo && (
-                <div className="px-3 pb-3">
+              <div className="px-3 pb-3 space-y-2">
+                {b.motivoBloqueo && (
                   <p className="text-[10px] text-orange-700 bg-orange-50 border border-orange-200 rounded px-2 py-1.5">
                     <strong>Motivo bloqueo:</strong> {b.motivoBloqueo}
                   </p>
-                </div>
-              )}
+                )}
+                {b.cliente === 'LAURA SOSA' && (
+                  <p className="text-[10px] text-blue-700 bg-blue-50 border border-blue-200 rounded px-2 py-1.5">
+                    La IA prepara alertas. La revisión final queda a cargo de una persona.
+                  </p>
+                )}
+              </div>
             </div>
           )
         })}
