@@ -14,7 +14,7 @@ export default function TopBar({ onMenuOpen, onAIOpen, pageTitle }) {
   }
 
   return (
-    <header className="fixed top-0 left-0 right-0 lg:left-16 z-40 bg-white border-b border-slate-200 h-16 flex items-center px-4 gap-3">
+    <header className="fixed top-0 left-0 right-0 lg:left-16 z-40 topbar-glass border-b border-slate-200/80 h-16 flex items-center px-4 gap-3">
       {/* Mobile hamburger */}
       <button
         onClick={onMenuOpen}

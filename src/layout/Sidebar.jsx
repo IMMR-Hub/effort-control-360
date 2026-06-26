@@ -21,7 +21,8 @@ export default function Sidebar({ active, onChange, mobileOpen, onMobileClose })
     <>
       {/* Desktop sidebar */}
       <aside
-        className="sidebar-nav hidden lg:flex flex-col fixed inset-y-0 left-0 z-50 bg-slate-900 overflow-hidden group"
+        className="sidebar-nav hidden lg:flex flex-col fixed inset-y-0 left-0 z-50 overflow-hidden group"
+        style={{ background: 'linear-gradient(160deg, #0f172a 0%, #1e293b 60%, #0f172a 100%)' }}
         aria-label="Navegación principal"
       >
         {/* Logo area */}
@@ -44,10 +45,10 @@ export default function Sidebar({ active, onChange, mobileOpen, onMobileClose })
               <button
                 key={item.id}
                 onClick={() => onChange(item.id)}
-                className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-colors duration-150 relative group/item
+                className={`w-full flex items-center gap-3 px-4 py-2.5 text-left transition-all duration-150 relative group/item
                   ${isActive
-                    ? 'bg-blue-700/30 text-white border-r-2 border-blue-400'
-                    : 'text-slate-400 hover:bg-slate-800 hover:text-white'
+                    ? 'bg-blue-600/20 text-white border-r-2 border-blue-400 shadow-[inset_0_1px_0_0_rgba(255,255,255,0.05)]'
+                    : 'text-slate-400 hover:bg-white/5 hover:text-slate-200'
                   }`}
                 aria-current={isActive ? 'page' : undefined}
               >

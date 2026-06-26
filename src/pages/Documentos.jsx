@@ -66,7 +66,7 @@ export default function Documentos() {
         ) : (
           <div className="divide-y divide-slate-50">
             {docs.map(doc => {
-              const pct = Math.round((doc.confianza || 0) * 100)
+              const pct = Math.round(doc.confianza || 0)
               const isOk = doc.estado === 'Revisado'
               const hasProblem = doc.observacion
               return (

@@ -59,7 +59,7 @@ export default function Alertas() {
           const cfg = NIVEL_CONFIG[a.nivel] || NIVEL_CONFIG['Baja']
           const Icon = cfg.icon
           return (
-            <div key={a.id} className={`flex items-start gap-3 p-4 rounded-sm border ${cfg.bg}`}>
+            <div key={a.id} className={`flex items-start gap-3 p-4 rounded-lg border card alert-${a.nivel.toLowerCase()} ${cfg.bg}`}>
               <div className="flex-shrink-0 mt-0.5">
                 <Icon className={`w-4 h-4 ${cfg.color}`} />
               </div>

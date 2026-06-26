@@ -49,7 +49,7 @@ export default function Clientes() {
             <button
               key={c.id}
               onClick={() => setSelected(c)}
-              className="text-left bg-white border border-slate-200 rounded-sm p-4 hover:border-blue-400 hover:shadow-md transition-all group"
+              className="text-left card card-interactive rounded-lg p-4 hover:border-blue-300 group"
               aria-label={`Ver detalle de ${c.nombre}`}
             >
               <div className="flex items-start justify-between gap-2 mb-3">

@@ -1,9 +1,9 @@
 export const CLIENTES = [
   { id: 'CLI-001', nombre: 'GARSO S.A.', responsable: 'Laura Sosa', coordinador: 'Karina Fretes', auxiliar: 'Aracely Gaona', periodo: 'Abril 2026', canal: 'Drive / Físico', docsRecibidos: 36, docsPendientes: 4, estadoDocumental: 'Parcial', estadoSIGA: 'En proceso', estadoLiquidacion: 'Pendiente', estadoBalance: 'Pendiente', riesgo: 'Medio', estadoGeneral: 'En proceso', proximaAccion: 'Solicitar extracto bancario y confirmar carga SIGA' },
-  { id: 'CLI-002', nombre: 'LAURA SOSA', responsable: 'Laura Sosa', coordinador: 'Karina Fretes', auxiliar: 'Aracely Gaona', periodo: 'Abril 2026', canal: 'Drive', docsRecibidos: 42, docsPendientes: 2, estadoDocumental: 'Completo', estadoSIGA: 'Cargado', estadoLiquidacion: 'Enviada', estadoBalance: 'Pre-revisado', riesgo: 'Bajo', estadoGeneral: 'Completo', proximaAccion: 'Revisión final de balance' },
+  { id: 'CLI-002', nombre: 'LAURA SOSA', responsable: 'Laura Sosa', coordinador: 'Karina Fretes', auxiliar: 'Aracely Gaona', periodo: 'Abril 2026', canal: 'Drive', docsRecibidos: 42, docsPendientes: 2, estadoDocumental: 'Controlado', estadoSIGA: 'Cargado', estadoLiquidacion: 'Enviada', estadoBalance: 'Pre-revisado', riesgo: 'Bajo', estadoGeneral: 'Controlado', proximaAccion: 'Revisión final de balance' },
   { id: 'CLI-003', nombre: 'RAMIRO GARCIA', responsable: 'Laura Sosa', coordinador: 'Karina Fretes', auxiliar: 'Aracely Gaona', periodo: 'Abril 2026', canal: 'WhatsApp / Físico', docsRecibidos: 28, docsPendientes: 9, estadoDocumental: 'Parcial', estadoSIGA: 'Parcial', estadoLiquidacion: 'Pendiente', estadoBalance: 'Bloqueado', riesgo: 'Alto', estadoGeneral: 'Observado', proximaAccion: 'Reclamar comprobantes faltantes y validar documentos con baja calidad' },
   { id: 'CLI-004', nombre: 'GERARDO SOSA', responsable: 'Laura Sosa', coordinador: 'Karina Fretes', auxiliar: 'Aracely Gaona', periodo: 'Abril 2026', canal: 'Email / Drive', docsRecibidos: 31, docsPendientes: 5, estadoDocumental: 'Parcial', estadoSIGA: 'En proceso', estadoLiquidacion: 'Reclamada', estadoBalance: 'Pendiente', riesgo: 'Medio', estadoGeneral: 'En proceso', proximaAccion: 'Revisar diferencias entre documentos recibidos y carga SIGA' },
-  { id: 'CLI-005', nombre: 'NR REGISTROS GANADEROS', responsable: 'Laura Sosa', coordinador: 'Karina Fretes', auxiliar: 'Aracely Gaona', periodo: 'Abril 2026', canal: 'SIGA / PDF', docsRecibidos: 47, docsPendientes: 3, estadoDocumental: 'Completo', estadoSIGA: 'Cargado', estadoLiquidacion: 'Enviada', estadoBalance: 'Pre-revisado', riesgo: 'Bajo', estadoGeneral: 'Completo', proximaAccion: 'Enviar resumen ejecutivo mensual' },
+  { id: 'CLI-005', nombre: 'NR REGISTROS GANADEROS', responsable: 'Laura Sosa', coordinador: 'Karina Fretes', auxiliar: 'Aracely Gaona', periodo: 'Abril 2026', canal: 'SIGA / PDF', docsRecibidos: 47, docsPendientes: 3, estadoDocumental: 'Controlado', estadoSIGA: 'Cargado', estadoLiquidacion: 'Enviada', estadoBalance: 'Pre-revisado', riesgo: 'Bajo', estadoGeneral: 'Controlado', proximaAccion: 'Enviar resumen ejecutivo mensual' },
 ]
 
 export const KPIS = [
@@ -80,7 +80,7 @@ export const FILTER_OPTIONS = {
   responsable: ['Todos', 'Laura Sosa'],
   coordinador: ['Todos', 'Karina Fretes'],
   auxiliar: ['Todos', 'Aracely Gaona'],
-  estado: ['Todos', 'Completo', 'En proceso', 'Parcial', 'Pendiente', 'Observado', 'Crítico'],
+  estado: ['Todos', 'Controlado', 'Completo', 'En proceso', 'Parcial', 'Pendiente', 'Observado', 'Crítico'],
   riesgo: ['Todos', 'Bajo', 'Medio', 'Alto', 'Crítico'],
   visualizacion: ['Tarjetas', 'Tabla', 'Barras', 'Torta', 'Línea'],
 }

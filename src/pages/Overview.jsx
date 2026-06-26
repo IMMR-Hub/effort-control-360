@@ -20,7 +20,7 @@ export default function Overview({ onClienteClick }) {
     <div className="space-y-8">
       {/* Critical alert banner */}
       {criticas.length > 0 && (
-        <div className="bg-red-50 border border-red-300 border-l-4 border-l-red-600 rounded-sm p-4 flex items-start gap-3">
+        <div className="bg-red-50 border border-red-200 border-l-4 border-l-red-600 rounded-lg p-4 flex items-start gap-3 shadow-sm">
           <AlertTriangle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
           <div className="flex-1 min-w-0">
             <p className="text-xs font-bold text-red-800 uppercase tracking-wider mb-1">{criticas.length} alerta{criticas.length > 1 ? 's' : ''} crítica{criticas.length > 1 ? 's' : ''} — acción inmediata requerida</p>
@@ -158,7 +158,7 @@ export default function Overview({ onClienteClick }) {
       </section>
 
       {/* Pilot 14 days */}
-      <section className="bg-gradient-to-r from-blue-50 to-slate-50 border border-blue-200 rounded-sm p-6">
+      <section className="bg-gradient-to-r from-blue-50 via-slate-50 to-indigo-50 border border-blue-200/60 rounded-lg p-6 shadow-sm">
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
           <div>
             <h3 className="text-sm font-bold text-slate-900 mb-1">Piloto 14 días · EFFORT Control 360</h3>
