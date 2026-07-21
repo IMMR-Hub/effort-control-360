@@ -1,13 +1,13 @@
 {
-  "generado_en": "2026-07-21T17:02:44.843Z",
-  "commit": "aea94e400023ad6c0142692bbe9700ec40c3eb6f",
+  "generado_en": "2026-07-21T17:35:09.199Z",
+  "commit": "3cd236d2fe67cea8fb6cbc89e1e47a218337927e",
   "checks": [
     {
       "nombre": "typecheck",
       "comando": "npx tsc --build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 2539,
+      "duracion_ms": 3927,
       "detalle": ""
     },
     {
@@ -15,7 +15,7 @@
       "comando": "npx vitest run",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 5812,
+      "duracion_ms": 6779,
       "detalle": ""
     },
     {
@@ -23,7 +23,7 @@
       "comando": "npx vitest run packages/core/test/golden.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4448,
+      "duracion_ms": 4471,
       "detalle": ""
     },
     {
@@ -33,16 +33,34 @@
       "detalle": "Falta configurar ESLint (slice de calidad)."
     },
     {
+      "nombre": "verify:rbac",
+      "comando": "npx vitest run apps/api/test/rbac.test.ts",
+      "estado": "OK",
+      "exit_code": 0,
+      "duracion_ms": 4249,
+      "detalle": ""
+    },
+    {
+      "nombre": "verify:seguridad",
+      "comando": "npx vitest run apps/api/test/seguridad.test.ts",
+      "estado": "OK",
+      "exit_code": 0,
+      "duracion_ms": 4318,
+      "detalle": ""
+    },
+    {
+      "nombre": "verify:contratos",
+      "comando": "npx vitest run packages/schema/test/contratos.test.ts",
+      "estado": "OK",
+      "exit_code": 0,
+      "duracion_ms": 3997,
+      "detalle": ""
+    },
+    {
       "nombre": "test:integration",
       "comando": "npm run test:integration --workspace @effort/api",
       "estado": "PENDIENTE",
-      "detalle": "apps/api todavía no existe."
-    },
-    {
-      "nombre": "verify:rbac",
-      "comando": "npm run verify:rbac --workspace @effort/api",
-      "estado": "PENDIENTE",
-      "detalle": "apps/api todavía no existe."
+      "detalle": "Falta la base Postgres del piloto (Supabase): ver docs/DISCREPANCIAS.md."
     },
     {
       "nombre": "verify:drive",
@@ -67,7 +85,7 @@
       "comando": "npm audit --audit-level=high",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3180,
+      "duracion_ms": 2137,
       "detalle": ""
     },
     {
@@ -75,12 +93,12 @@
       "comando": "npm run build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 8742,
+      "duracion_ms": 8261,
       "detalle": ""
     }
   ],
-  "checks_ok": 5,
-  "checks_pendientes": 6,
+  "checks_ok": 8,
+  "checks_pendientes": 5,
   "checks_fallidos": 0,
   "todo_verde": true
 }

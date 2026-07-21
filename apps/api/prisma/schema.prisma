@@ -1,0 +1,616 @@
+// Modelo de datos de EFFORT Control 360.
+//
+// Decisiones que atraviesan todo el archivo:
+//
+//  - El dinero es BigInt. Nunca Float, nunca Decimal con escala: el guaraní es
+//    entero y un Float introduciría error de coma flotante en los saldos.
+//    Ver docs/adr/0002-representacion-del-dinero.md.
+//
+//  - Nada se borra. No hay borrado en cascada en ninguna relación de negocio:
+//    un sistema que existe para poder demostrar qué pasó no puede permitir que
+//    dar de baja un cliente se lleve puesta la evidencia de su gestión.
+//    Las bajas son lógicas (`activo = false`).
+//
+//  - Toda tabla de negocio lleva marca de auditoría y `origen`, para poder
+//    distinguir un dato real de uno de semilla y purgar los de semilla.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/* ========================================================================== */
+/* Usuarios, credenciales y sesiones                                          */
+/* ========================================================================== */
+
+enum Rol {
+  direccion
+  responsable
+  coordinador
+  auxiliar
+  revisor_balance
+  solo_lectura
+}
+
+enum Origen {
+  REAL
+  SEMILLA
+  IMPORTADO
+}
+
+model Usuario {
+  id       String  @id @default(uuid()) @db.Uuid
+  nombre   String  @db.VarChar(200)
+  apellido String  @db.VarChar(200)
+  email    String  @unique @db.VarChar(254)
+  telefono String? @db.VarChar(25)
+  cargo    String? @db.VarChar(200)
+  rol      Rol
+  activo   Boolean @default(true)
+
+  veTodosLosClientes Boolean @default(false) @map("ve_todos_los_clientes")
+
+  // Credenciales. Nunca salen por la API: el esquema `usuarioPublicoSchema`
+  // de @effort/schema no las incluye.
+  hashContrasena          String    @map("hash_contrasena") @db.VarChar(255)
+  contrasenaActualizadaEn DateTime? @map("contrasena_actualizada_en") @db.Timestamptz(3)
+  debeCambiarContrasena   Boolean   @default(true) @map("debe_cambiar_contrasena")
+
+  secretoTotp        String?  @map("secreto_totp") @db.VarChar(64)
+  segundoFactorActivo Boolean @default(false) @map("segundo_factor_activo")
+
+  ultimoAccesoEn DateTime? @map("ultimo_acceso_en") @db.Timestamptz(3)
+
+  creadoEn                DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  creadoPorUsuarioId      String?  @map("creado_por_usuario_id") @db.Uuid
+  actualizadoEn           DateTime @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+  actualizadoPorUsuarioId String?  @map("actualizado_por_usuario_id") @db.Uuid
+  origen                  Origen   @default(REAL)
+
+  sesiones             Sesion[]
+  codigosRecuperacion  CodigoRecuperacion[]
+  clientesAsignados    AsignacionCliente[]
+  contactosRegistrados RegistroContacto[]
+
+  @@index([email])
+  @@index([activo, rol])
+  @@map("usuario")
+}
+
+/// Códigos de un solo uso para recuperar el acceso si se pierde el teléfono.
+/// Se guardan hasheados: una copia de la base no debe habilitar el bypass de 2FA.
+model CodigoRecuperacion {
+  id        String    @id @default(uuid()) @db.Uuid
+  usuarioId String    @map("usuario_id") @db.Uuid
+  hash      String    @db.VarChar(255)
+  usadoEn   DateTime? @map("usado_en") @db.Timestamptz(3)
+  creadoEn  DateTime  @default(now()) @map("creado_en") @db.Timestamptz(3)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id])
+
+  @@index([usuarioId])
+  @@map("codigo_recuperacion")
+}
+
+/// Sesión del lado del servidor. La cookie solo lleva un identificador opaco,
+/// para poder revocarla en el acto. Ver apps/api/src/seguridad/sesiones.ts.
+model Sesion {
+  id            String    @id @default(uuid()) @db.Uuid
+  hashDelToken  String    @unique @map("hash_del_token") @db.VarChar(64)
+  usuarioId     String    @map("usuario_id") @db.Uuid
+  creadaEn      DateTime  @default(now()) @map("creada_en") @db.Timestamptz(3)
+  ultimoUsoEn   DateTime  @default(now()) @map("ultimo_uso_en") @db.Timestamptz(3)
+  revocadaEn    DateTime? @map("revocada_en") @db.Timestamptz(3)
+  motivoRevocacion String? @map("motivo_revocacion") @db.VarChar(120)
+
+  segundoFactorSuperado Boolean @default(false) @map("segundo_factor_superado")
+
+  // IP truncada, no completa: alcanza para detectar un patrón y deja de ser
+  // un dato que apunta a una persona. Ver seguridad/privacidad.ts.
+  ipTruncada    String? @map("ip_truncada") @db.VarChar(45)
+  agenteUsuario String? @map("agente_usuario") @db.VarChar(300)
+
+  usuario Usuario @relation(fields: [usuarioId], references: [id])
+
+  @@index([usuarioId, revocadaEn])
+  @@index([ultimoUsoEn])
+  @@map("sesion")
+}
+
+/* ========================================================================== */
+/* Clientes                                                                   */
+/* ========================================================================== */
+
+enum TipoPersona {
+  FISICA
+  JURIDICA
+}
+
+model Cliente {
+  id                String      @id @default(uuid()) @db.Uuid
+  nombre            String      @db.VarChar(200)
+  ruc               String      @unique @db.VarChar(20)
+  tipoPersona       TipoPersona @map("tipo_persona")
+  regimenTributario String?     @map("regimen_tributario") @db.VarChar(200)
+  email             String?     @db.VarChar(254)
+  telefono          String?     @db.VarChar(25)
+  canalPreferido    String?     @map("canal_preferido") @db.VarChar(30)
+
+  carpetaOneDriveId String? @map("carpeta_onedrive_id") @db.VarChar(200)
+  activo            Boolean @default(true)
+  observaciones     String? @db.VarChar(4000)
+
+  creadoEn                DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  creadoPorUsuarioId      String?  @map("creado_por_usuario_id") @db.Uuid
+  actualizadoEn           DateTime @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+  actualizadoPorUsuarioId String?  @map("actualizado_por_usuario_id") @db.Uuid
+  origen                  Origen   @default(REAL)
+
+  asignaciones     AsignacionCliente[]
+  documentos       Documento[]
+  procesosMensuales ProcesoMensual[]
+  vencimientos     Vencimiento[]
+  contactos        RegistroContacto[]
+  solicitudes      SolicitudDocumentacion[]
+  balances         Balance[]
+
+  @@index([activo])
+  @@map("cliente")
+}
+
+enum RolEnCliente {
+  responsable
+  coordinador
+  auxiliar
+  revisor_balance
+}
+
+/// Quién trabaja en qué cliente. Es la tabla que alimenta el alcance por
+/// cartera del RBAC: sin una fila acá, el usuario no ve al cliente.
+model AsignacionCliente {
+  id        String       @id @default(uuid()) @db.Uuid
+  clienteId String       @map("cliente_id") @db.Uuid
+  usuarioId String       @map("usuario_id") @db.Uuid
+  rol       RolEnCliente
+  desde     DateTime     @default(now()) @db.Timestamptz(3)
+  hasta     DateTime?    @db.Timestamptz(3)
+
+  cliente Cliente @relation(fields: [clienteId], references: [id])
+  usuario Usuario @relation(fields: [usuarioId], references: [id])
+
+  @@unique([clienteId, usuarioId, rol])
+  @@index([usuarioId, hasta])
+  @@map("asignacion_cliente")
+}
+
+/* ========================================================================== */
+/* Reglas impositivas                                                         */
+/* ========================================================================== */
+
+enum TasaIva {
+  DIEZ
+  CINCO
+  EXENTA
+}
+
+/// Las tasas viven en la base, no en el código: cambiar una tasa es un cambio
+/// de dato. `requiereConfirmacionCliente` marca las que EFFORT todavía no
+/// contrastó contra una liquidación real presentada.
+model ReglaImpositiva {
+  id                          String    @id @default(uuid()) @db.Uuid
+  nombre                      String    @db.VarChar(200)
+  tasa                        TasaIva
+  divisorIvaIncluido          Int?      @map("divisor_iva_incluido")
+  vigenteDesde                DateTime  @map("vigente_desde") @db.Date
+  vigenteHasta                DateTime? @map("vigente_hasta") @db.Date
+  requiereConfirmacionCliente Boolean   @default(true) @map("requiere_confirmacion_cliente")
+  fuente                      String    @db.VarChar(4000)
+
+  creadoEn                DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  creadoPorUsuarioId      String?  @map("creado_por_usuario_id") @db.Uuid
+  actualizadoEn           DateTime @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+  actualizadoPorUsuarioId String?  @map("actualizado_por_usuario_id") @db.Uuid
+
+  @@map("regla_impositiva")
+}
+
+/* ========================================================================== */
+/* Documentos y evidencias                                                    */
+/* ========================================================================== */
+
+model Evidencia {
+  id            String  @id @default(uuid()) @db.Uuid
+  clienteId     String? @map("cliente_id") @db.Uuid
+  periodo       String? @db.VarChar(7)
+  nombreArchivo String  @map("nombre_archivo") @db.VarChar(400)
+  rutaOneDrive  String  @map("ruta_onedrive") @db.VarChar(1000)
+  itemIdOneDrive String? @map("item_id_onedrive") @db.VarChar(200)
+  tipoMime      String  @map("tipo_mime") @db.VarChar(120)
+  tamanoBytes   BigInt  @map("tamano_bytes")
+
+  /// Da idempotencia a la importación y permite demostrar, meses después, que
+  /// el archivo que se está mirando es el que se recibió.
+  sha256 String @unique @db.Char(64)
+
+  /// Cuándo se copió al OneDrive espejo de respaldo.
+  respaldadoEn      DateTime? @map("respaldado_en") @db.Timestamptz(3)
+  subidoPorUsuarioId String   @map("subido_por_usuario_id") @db.Uuid
+
+  creadoEn DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  origen   Origen   @default(REAL)
+
+  documentos Documento[]
+
+  @@index([clienteId, periodo])
+  @@map("evidencia")
+}
+
+enum EstadoDocumento {
+  RECIBIDO
+  OBSERVADO
+  RECHAZADO
+  DUPLICADO
+  CARGADO_EN_SIGA
+}
+
+model Documento {
+  id        String @id @default(uuid()) @db.Uuid
+  clienteId String @map("cliente_id") @db.Uuid
+  periodo   String @db.VarChar(7)
+
+  tipo           String   @db.VarChar(40)
+  canalRecepcion String   @map("canal_recepcion") @db.VarChar(30)
+  recibidoEn     DateTime @map("recibido_en") @db.Timestamptz(3)
+
+  // Identidad del comprobante: RUC emisor + timbrado + número.
+  rucEmisor         String? @map("ruc_emisor") @db.VarChar(20)
+  timbrado          String? @db.VarChar(20)
+  numeroComprobante String? @map("numero_comprobante") @db.VarChar(30)
+
+  /// Guaraníes enteros. BigInt y no Float: ver ADR 0002.
+  total   BigInt?
+  tasa    TasaIva?
+  anulado Boolean  @default(false)
+
+  estado        EstadoDocumento @default(RECIBIDO)
+  motivoRechazo String?         @map("motivo_rechazo") @db.VarChar(4000)
+  evidenciaId   String?         @map("evidencia_id") @db.Uuid
+  observaciones String?         @db.VarChar(4000)
+
+  creadoEn                DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  creadoPorUsuarioId      String?  @map("creado_por_usuario_id") @db.Uuid
+  actualizadoEn           DateTime @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+  actualizadoPorUsuarioId String?  @map("actualizado_por_usuario_id") @db.Uuid
+  origen                  Origen   @default(REAL)
+
+  cliente   Cliente    @relation(fields: [clienteId], references: [id])
+  evidencia Evidencia? @relation(fields: [evidenciaId], references: [id])
+
+  /// Un mismo comprobante no puede cargarse dos veces para el mismo cliente.
+  /// La unicidad se impone en la base y no solo en el código: dos peticiones
+  /// simultáneas pasarían las dos por la validación de aplicación.
+  @@unique([clienteId, rucEmisor, timbrado, numeroComprobante], name: "comprobante_unico")
+  @@index([clienteId, periodo])
+  @@index([estado])
+  @@map("documento")
+}
+
+/* ========================================================================== */
+/* Proceso mensual y balances                                                 */
+/* ========================================================================== */
+
+enum EstadoGeneral {
+  COMPLETO
+  PARCIAL
+  PENDIENTE
+  OBSERVADO
+  CRITICO
+}
+
+enum NivelRiesgo {
+  BAJO
+  MEDIO
+  ALTO
+  CRITICO
+}
+
+model ProcesoMensual {
+  id        String @id @default(uuid()) @db.Uuid
+  clienteId String @map("cliente_id") @db.Uuid
+  periodo   String @db.VarChar(7)
+
+  comprobantesRetirados Boolean   @default(false) @map("comprobantes_retirados")
+  fechaRetiro           DateTime? @map("fecha_retiro") @db.Date
+
+  documentosRecibidos  Int @default(0) @map("documentos_recibidos")
+  documentosFaltantes  Int @default(0) @map("documentos_faltantes")
+  documentosObservados Int @default(0) @map("documentos_observados")
+
+  comprasCargadasSiga         Boolean @default(false) @map("compras_cargadas_siga")
+  ventasCargadasSiga          Boolean @default(false) @map("ventas_cargadas_siga")
+  retencionesCargadas         Boolean @default(false) @map("retenciones_cargadas")
+  extractosRecibidos          Boolean @default(false) @map("extractos_recibidos")
+  conciliacionBancariaRealizada Boolean @default(false) @map("conciliacion_bancaria_realizada")
+  ivaRevisado                 Boolean @default(false) @map("iva_revisado")
+
+  ivaSaldoAPagar BigInt? @map("iva_saldo_a_pagar")
+  ivaSaldoAFavor BigInt? @map("iva_saldo_a_favor")
+
+  liquidacionGenerada Boolean @default(false) @map("liquidacion_generada")
+  liquidacionEnviada  Boolean @default(false) @map("liquidacion_enviada")
+  balanceAplica       Boolean @default(false) @map("balance_aplica")
+
+  estadoGeneral      EstadoGeneral @default(PENDIENTE) @map("estado_general")
+  riesgo             NivelRiesgo   @default(BAJO)
+  proximaAccion      String?       @map("proxima_accion") @db.VarChar(4000)
+  fechaLimiteInterna DateTime?     @map("fecha_limite_interna") @db.Date
+  observaciones      String?       @db.VarChar(4000)
+
+  creadoEn                DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  creadoPorUsuarioId      String?  @map("creado_por_usuario_id") @db.Uuid
+  actualizadoEn           DateTime @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+  actualizadoPorUsuarioId String?  @map("actualizado_por_usuario_id") @db.Uuid
+  origen                  Origen   @default(REAL)
+
+  cliente Cliente @relation(fields: [clienteId], references: [id])
+
+  @@unique([clienteId, periodo])
+  @@index([estadoGeneral, riesgo])
+  @@map("proceso_mensual")
+}
+
+enum EstadoBalance {
+  NO_APLICA
+  PENDIENTE
+  EN_PREPARACION
+  OBSERVADO
+  LISTO_PARA_REVISION
+  EN_REVISION
+  APROBADO
+}
+
+model Balance {
+  id        String @id @default(uuid()) @db.Uuid
+  clienteId String @map("cliente_id") @db.Uuid
+  periodo   String @db.VarChar(7)
+
+  activo             BigInt?
+  pasivo             BigInt?
+  patrimonioNeto     BigInt? @map("patrimonio_neto")
+  resultadoEjercicio BigInt? @map("resultado_ejercicio")
+
+  estado EstadoBalance @default(PENDIENTE)
+
+  preparadoPorUsuarioId String?   @map("preparado_por_usuario_id") @db.Uuid
+  /// Quién aprobó y cuándo. El sistema nunca los completa solo:
+  /// ver docs/adr/0004-el-sistema-no-aprueba-balances.md.
+  aprobadoPorUsuarioId  String?   @map("aprobado_por_usuario_id") @db.Uuid
+  aprobadoEn            DateTime? @map("aprobado_en") @db.Timestamptz(3)
+
+  inconsistencias Json?
+  proximaAccion   String? @map("proxima_accion") @db.VarChar(4000)
+
+  creadoEn                DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  creadoPorUsuarioId      String?  @map("creado_por_usuario_id") @db.Uuid
+  actualizadoEn           DateTime @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+  actualizadoPorUsuarioId String?  @map("actualizado_por_usuario_id") @db.Uuid
+  origen                  Origen   @default(REAL)
+
+  cliente Cliente @relation(fields: [clienteId], references: [id])
+
+  @@unique([clienteId, periodo])
+  @@map("balance")
+}
+
+/* ========================================================================== */
+/* Vencimientos                                                               */
+/* ========================================================================== */
+
+enum EstadoVencimiento {
+  VIGENTE
+  POR_VENCER
+  VENCIDO
+  PRESENTADO
+  NO_APLICA
+}
+
+model Vencimiento {
+  id        String @id @default(uuid()) @db.Uuid
+  clienteId String @map("cliente_id") @db.Uuid
+
+  tipoDocumento String @map("tipo_documento") @db.VarChar(40)
+  descripcion   String @db.VarChar(400)
+  entidad       String @db.VarChar(200)
+
+  fechaEmision      DateTime? @map("fecha_emision") @db.Date
+  fechaVencimiento  DateTime  @map("fecha_vencimiento") @db.Date
+  fechaPresentacion DateTime? @map("fecha_presentacion") @db.Date
+
+  responsableId String?           @map("responsable_id") @db.Uuid
+  estado        EstadoVencimiento @default(VIGENTE)
+  riesgo        NivelRiesgo       @default(MEDIO)
+  evidenciaId   String?           @map("evidencia_id") @db.Uuid
+  proximaAccion String?           @map("proxima_accion") @db.VarChar(4000)
+
+  creadoEn                DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  creadoPorUsuarioId      String?  @map("creado_por_usuario_id") @db.Uuid
+  actualizadoEn           DateTime @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+  actualizadoPorUsuarioId String?  @map("actualizado_por_usuario_id") @db.Uuid
+  origen                  Origen   @default(REAL)
+
+  cliente Cliente @relation(fields: [clienteId], references: [id])
+
+  @@index([fechaVencimiento, estado])
+  @@index([clienteId])
+  @@map("vencimiento")
+}
+
+/* ========================================================================== */
+/* Seguimiento al cliente                                                     */
+/* ========================================================================== */
+
+enum EstadoSolicitud {
+  ABIERTA
+  RESPONDIDA_SIN_ENTREGA
+  ENTREGADA
+  ESCALADA
+  AGOTADA
+  CERRADA_MANUALMENTE
+}
+
+model SolicitudDocumentacion {
+  id        String          @id @default(uuid()) @db.Uuid
+  clienteId String          @map("cliente_id") @db.Uuid
+  periodo   String          @db.VarChar(7)
+  estado    EstadoSolicitud @default(ABIERTA)
+
+  cuentaDesde           DateTime  @map("cuenta_desde") @db.Date
+  recordatoriosEnviados Int       @default(0) @map("recordatorios_enviados")
+  ultimoRecordatorioEn  DateTime? @map("ultimo_recordatorio_en") @db.Date
+  reglaId               String?   @map("regla_id") @db.Uuid
+
+  creadoEn                DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn           DateTime @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+  actualizadoPorUsuarioId String?  @map("actualizado_por_usuario_id") @db.Uuid
+  origen                  Origen   @default(REAL)
+
+  cliente   Cliente            @relation(fields: [clienteId], references: [id])
+  contactos RegistroContacto[]
+
+  @@unique([clienteId, periodo])
+  @@map("solicitud_documentacion")
+}
+
+model ReglaNotificacion {
+  id     String  @id @default(uuid()) @db.Uuid
+  nombre String  @db.VarChar(200)
+  activa Boolean @default(true)
+  evento String  @db.VarChar(60)
+
+  diasHabilesDePlazo            Int    @map("dias_habiles_de_plazo")
+  horaDeEnvio                   String @map("hora_de_envio") @db.VarChar(5)
+  reintentarCadaDiasHabiles     Int    @map("reintentar_cada_dias_habiles")
+  maximoRecordatorios           Int    @map("maximo_recordatorios")
+  escalarAPartirDelRecordatorio Int    @map("escalar_a_partir_del_recordatorio")
+
+  destinatariosIniciales      Json @map("destinatarios_iniciales")
+  destinatariosDeEscalamiento Json @map("destinatarios_de_escalamiento")
+  clientesAlcanzados          Json @map("clientes_alcanzados")
+
+  plantillaId String? @map("plantilla_id") @db.Uuid
+
+  creadoEn                DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  creadoPorUsuarioId      String?  @map("creado_por_usuario_id") @db.Uuid
+  actualizadoEn           DateTime @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+  actualizadoPorUsuarioId String?  @map("actualizado_por_usuario_id") @db.Uuid
+
+  @@map("regla_notificacion")
+}
+
+enum CanalContacto {
+  LLAMADA
+  MENSAJE
+  WHATSAPP
+  CORREO
+  PRESENCIAL
+}
+
+/// Bitácora de contactos: la evidencia con la que EFFORT responde un reclamo.
+/// No se borra nunca y solo admite corrección por un registro nuevo que la
+/// referencie, para que la versión original quede a la vista.
+model RegistroContacto {
+  id           String  @id @default(uuid()) @db.Uuid
+  clienteId    String  @map("cliente_id") @db.Uuid
+  periodo      String  @db.VarChar(7)
+  solicitudId  String? @map("solicitud_id") @db.Uuid
+
+  canal     CanalContacto
+  direccion String        @db.VarChar(10)
+  origenContacto String   @map("origen_contacto") @db.VarChar(12)
+
+  ocurridoEn             DateTime @map("ocurrido_en") @db.Timestamptz(3)
+  registradoPorUsuarioId String   @map("registrado_por_usuario_id") @db.Uuid
+
+  huboRespuesta Boolean @map("hubo_respuesta")
+  quienAtendio  String? @map("quien_atendio") @db.VarChar(200)
+  resumen       String  @db.VarChar(4000)
+  evidenciaId   String? @map("evidencia_id") @db.Uuid
+
+  /// Registro que corrige a este. La corrección es un registro nuevo:
+  /// modificar el original destruiría la evidencia.
+  corregidoPorId String? @unique @map("corregido_por_id") @db.Uuid
+
+  creadoEn DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  origen   Origen   @default(REAL)
+
+  cliente   Cliente                 @relation(fields: [clienteId], references: [id])
+  usuario   Usuario                 @relation(fields: [registradoPorUsuarioId], references: [id])
+  solicitud SolicitudDocumentacion? @relation(fields: [solicitudId], references: [id])
+
+  @@index([clienteId, periodo])
+  @@index([ocurridoEn])
+  @@map("registro_contacto")
+}
+
+/// Log de cada correo efectivamente despachado. Es lo que hace verificable un
+/// contacto de origen AUTOMATICO: se puede cotejar contra el proveedor de correo.
+model EnvioNotificacion {
+  id         String  @id @default(uuid()) @db.Uuid
+  reglaId    String? @map("regla_id") @db.Uuid
+  clienteId  String? @map("cliente_id") @db.Uuid
+  solicitudId String? @map("solicitud_id") @db.Uuid
+
+  destinatario String @db.VarChar(254)
+  asunto       String @db.VarChar(400)
+  numeroDeRecordatorio Int? @map("numero_de_recordatorio")
+  esEscalamiento Boolean @default(false) @map("es_escalamiento")
+
+  estado           String    @db.VarChar(20)
+  idMensajeProveedor String? @map("id_mensaje_proveedor") @db.VarChar(200)
+  errorProveedor   String?   @map("error_proveedor") @db.VarChar(1000)
+  despachadoEn     DateTime? @map("despachado_en") @db.Timestamptz(3)
+
+  creadoEn DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+
+  @@index([clienteId, creadoEn])
+  @@map("envio_notificacion")
+}
+
+/* ========================================================================== */
+/* Bitácora inmutable                                                         */
+/* ========================================================================== */
+
+/// Registro de eventos. Append-only, impuesto por un disparador de PostgreSQL
+/// que rechaza UPDATE y DELETE (ver migrations/.../event_log_inmutable.sql).
+///
+/// No alcanza con "el código no hace UPDATE": alcanza con que alguien abra un
+/// cliente SQL. La garantía tiene que estar en la base.
+model EventLog {
+  id         String   @id @default(uuid()) @db.Uuid
+  ocurridoEn DateTime @default(now()) @map("ocurrido_en") @db.Timestamptz(3)
+
+  usuarioId String? @map("usuario_id") @db.Uuid
+  accion    String  @db.VarChar(80)
+  entidad   String  @db.VarChar(80)
+  entidadId String? @map("entidad_id") @db.VarChar(80)
+  clienteId String? @map("cliente_id") @db.Uuid
+
+  /// Saneados antes de persistirse: sin contraseñas, tokens ni secretos.
+  /// Ver apps/api/src/seguridad/privacidad.ts.
+  datosAntes   Json? @map("datos_antes")
+  datosDespues Json? @map("datos_despues")
+
+  ipTruncada    String? @map("ip_truncada") @db.VarChar(45)
+  agenteUsuario String? @map("agente_usuario") @db.VarChar(300)
+  peticionId    String? @map("peticion_id") @db.VarChar(60)
+
+  @@index([ocurridoEn])
+  @@index([entidad, entidadId])
+  @@index([clienteId, ocurridoEn])
+  @@index([usuarioId, ocurridoEn])
+  @@map("event_log")
+}

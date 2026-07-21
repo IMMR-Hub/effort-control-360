@@ -27,8 +27,10 @@ const CHECKS = [
   // Checks previstos que todavía no tienen sobre qué correr. Se declaran
   // explícitamente para que el reporte muestre la cobertura real del sistema.
   { nombre: 'lint', comando: 'npx eslint .', pendiente: 'Falta configurar ESLint (slice de calidad).' },
-  { nombre: 'test:integration', comando: 'npm run test:integration --workspace @effort/api', pendiente: 'apps/api todavía no existe.' },
-  { nombre: 'verify:rbac', comando: 'npm run verify:rbac --workspace @effort/api', pendiente: 'apps/api todavía no existe.' },
+  { nombre: 'verify:rbac', comando: 'npx vitest run apps/api/test/rbac.test.ts' },
+  { nombre: 'verify:seguridad', comando: 'npx vitest run apps/api/test/seguridad.test.ts' },
+  { nombre: 'verify:contratos', comando: 'npx vitest run packages/schema/test/contratos.test.ts' },
+  { nombre: 'test:integration', comando: 'npm run test:integration --workspace @effort/api', pendiente: 'Falta la base Postgres del piloto (Supabase): ver docs/DISCREPANCIAS.md.' },
   { nombre: 'verify:drive', comando: 'npm run verify:drive --workspace @effort/drive', pendiente: 'packages/drive todavía no existe.' },
   { nombre: 'verify:no-hardcoded-kpi', comando: 'node scripts/verificar-kpi.mjs', pendiente: 'apps/web todavía muestra los datos de la demo anterior.' },
   { nombre: 'test:e2e', comando: 'npx playwright test', pendiente: 'apps/web todavía no consume la API.' },

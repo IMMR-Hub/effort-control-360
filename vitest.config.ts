@@ -11,6 +11,22 @@ export default defineConfig({
           environment: 'node',
         },
       },
+      {
+        test: {
+          name: 'schema',
+          root: './packages/schema',
+          include: ['test/**/*.test.ts'],
+          environment: 'node',
+        },
+      },
+      {
+        test: {
+          name: 'api',
+          root: './apps/api',
+          include: ['test/**/*.test.ts'],
+          environment: 'node',
+        },
+      },
     ],
     coverage: {
       provider: 'v8',
