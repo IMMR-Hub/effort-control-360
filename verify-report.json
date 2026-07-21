@@ -1,13 +1,13 @@
 {
-  "generado_en": "2026-07-21T17:35:09.199Z",
-  "commit": "3cd236d2fe67cea8fb6cbc89e1e47a218337927e",
+  "generado_en": "2026-07-21T20:31:10.739Z",
+  "commit": "2981691e58971b3bca2f9398e835f763aec8c6af",
   "checks": [
     {
       "nombre": "typecheck",
       "comando": "npx tsc --build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3927,
+      "duracion_ms": 1416,
       "detalle": ""
     },
     {
@@ -15,7 +15,7 @@
       "comando": "npx vitest run",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6779,
+      "duracion_ms": 6404,
       "detalle": ""
     },
     {
@@ -23,7 +23,7 @@
       "comando": "npx vitest run packages/core/test/golden.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4471,
+      "duracion_ms": 3138,
       "detalle": ""
     },
     {
@@ -37,7 +37,7 @@
       "comando": "npx vitest run apps/api/test/rbac.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4249,
+      "duracion_ms": 3810,
       "detalle": ""
     },
     {
@@ -45,7 +45,7 @@
       "comando": "npx vitest run apps/api/test/seguridad.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4318,
+      "duracion_ms": 3422,
       "detalle": ""
     },
     {
@@ -53,14 +53,22 @@
       "comando": "npx vitest run packages/schema/test/contratos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3997,
+      "duracion_ms": 3207,
+      "detalle": ""
+    },
+    {
+      "nombre": "verify:servidor",
+      "comando": "npx vitest run apps/api/test/servidor.test.ts",
+      "estado": "OK",
+      "exit_code": 0,
+      "duracion_ms": 6756,
       "detalle": ""
     },
     {
       "nombre": "test:integration",
       "comando": "npm run test:integration --workspace @effort/api",
       "estado": "PENDIENTE",
-      "detalle": "Falta la base Postgres del piloto (Supabase): ver docs/DISCREPANCIAS.md."
+      "detalle": "Los tests contra Postgres real (SQL y disparadores de inmutabilidad) esperan el DATABASE_URL de Supabase. El comportamiento de seguridad ya se verifica en verify:servidor con dobles."
     },
     {
       "nombre": "verify:drive",
@@ -85,7 +93,7 @@
       "comando": "npm audit --audit-level=high",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 2137,
+      "duracion_ms": 2422,
       "detalle": ""
     },
     {
@@ -93,11 +101,11 @@
       "comando": "npm run build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 8261,
+      "duracion_ms": 6706,
       "detalle": ""
     }
   ],
-  "checks_ok": 8,
+  "checks_ok": 9,
   "checks_pendientes": 5,
   "checks_fallidos": 0,
   "todo_verde": true
