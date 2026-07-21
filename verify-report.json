@@ -1,0 +1,86 @@
+{
+  "generado_en": "2026-07-21T14:30:43.195Z",
+  "commit": "d99b0863067cc3f02dcd2162280e6897d32d64bb",
+  "checks": [
+    {
+      "nombre": "typecheck",
+      "comando": "npx tsc --build",
+      "estado": "OK",
+      "exit_code": 0,
+      "duracion_ms": 2849,
+      "detalle": ""
+    },
+    {
+      "nombre": "test:unit",
+      "comando": "npx vitest run",
+      "estado": "OK",
+      "exit_code": 0,
+      "duracion_ms": 5354,
+      "detalle": ""
+    },
+    {
+      "nombre": "verify:accounting",
+      "comando": "npx vitest run packages/core/test/golden.test.ts",
+      "estado": "OK",
+      "exit_code": 0,
+      "duracion_ms": 4403,
+      "detalle": ""
+    },
+    {
+      "nombre": "lint",
+      "comando": "npx eslint .",
+      "estado": "PENDIENTE",
+      "detalle": "Falta configurar ESLint (slice de calidad)."
+    },
+    {
+      "nombre": "test:integration",
+      "comando": "npm run test:integration --workspace @effort/api",
+      "estado": "PENDIENTE",
+      "detalle": "apps/api todavía no existe."
+    },
+    {
+      "nombre": "verify:rbac",
+      "comando": "npm run verify:rbac --workspace @effort/api",
+      "estado": "PENDIENTE",
+      "detalle": "apps/api todavía no existe."
+    },
+    {
+      "nombre": "verify:drive",
+      "comando": "npm run verify:drive --workspace @effort/drive",
+      "estado": "PENDIENTE",
+      "detalle": "packages/drive todavía no existe."
+    },
+    {
+      "nombre": "verify:no-hardcoded-kpi",
+      "comando": "node scripts/verificar-kpi.mjs",
+      "estado": "PENDIENTE",
+      "detalle": "apps/web todavía muestra los datos de la demo anterior."
+    },
+    {
+      "nombre": "test:e2e",
+      "comando": "npx playwright test",
+      "estado": "PENDIENTE",
+      "detalle": "apps/web todavía no consume la API."
+    },
+    {
+      "nombre": "audit",
+      "comando": "npm audit --audit-level=high",
+      "estado": "OK",
+      "exit_code": 0,
+      "duracion_ms": 3164,
+      "detalle": ""
+    },
+    {
+      "nombre": "build",
+      "comando": "npm run build",
+      "estado": "OK",
+      "exit_code": 0,
+      "duracion_ms": 26941,
+      "detalle": ""
+    }
+  ],
+  "checks_ok": 5,
+  "checks_pendientes": 6,
+  "checks_fallidos": 0,
+  "todo_verde": true
+}
