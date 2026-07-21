@@ -1,13 +1,13 @@
 {
-  "generado_en": "2026-07-21T14:30:43.195Z",
-  "commit": "d99b0863067cc3f02dcd2162280e6897d32d64bb",
+  "generado_en": "2026-07-21T17:02:44.843Z",
+  "commit": "aea94e400023ad6c0142692bbe9700ec40c3eb6f",
   "checks": [
     {
       "nombre": "typecheck",
       "comando": "npx tsc --build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 2849,
+      "duracion_ms": 2539,
       "detalle": ""
     },
     {
@@ -15,7 +15,7 @@
       "comando": "npx vitest run",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 5354,
+      "duracion_ms": 5812,
       "detalle": ""
     },
     {
@@ -23,7 +23,7 @@
       "comando": "npx vitest run packages/core/test/golden.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4403,
+      "duracion_ms": 4448,
       "detalle": ""
     },
     {
@@ -67,7 +67,7 @@
       "comando": "npm audit --audit-level=high",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3164,
+      "duracion_ms": 3180,
       "detalle": ""
     },
     {
@@ -75,7 +75,7 @@
       "comando": "npm run build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 26941,
+      "duracion_ms": 8742,
       "detalle": ""
     }
   ],

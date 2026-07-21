@@ -27,7 +27,11 @@
     --marca-300: 319 32% 74%;
     --marca-400: 319 36% 58%;
     --marca-500: 319 42% 42%;
-    --marca-600: 319 46% 30%; /* #6E2958 — color institucional exacto */
+    /* Valor exacto del manual: hsl(319.1, 45.7%, 29.6%) reconstruye #6E2958
+       sin desvío. Redondear a 319/46%/30% daba #702959, dos puntos de rojo
+       de más: imperceptible suelto, pero el logotipo se imprime al lado de
+       piezas de marca y ahí la diferencia se nota. */
+    --marca-600: 319.1 45.7% 29.6%; /* #6E2958 */
     --marca-700: 319 48% 25%;
     --marca-800: 319 50% 20%;
     --marca-900: 319 52% 15%;
@@ -43,7 +47,7 @@
     --superficie-tenue: 319 20% 97%;
 
     /* --- Tinta ------------------------------------------------------------ */
-    --tinta: 340 4% 13%; /* #231F20 del manual */
+    --tinta: 345 6.1% 12.9%; /* #231F20 exacto del manual */
     --tinta-suave: 320 3% 35%;
     --tinta-tenue: 320 3% 50%;
     --tinta-sobre-marca: 0 0% 100%;

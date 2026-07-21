@@ -1,0 +1,17 @@
+/* Hoja de estilos de la interfaz nueva.
+   La demo anterior sigue usando `index.css` sin tocar, para no romperla
+   mientras se la reemplaza pantalla por pantalla.
+
+   Fuentes autoalojadas: depender de Google Fonts en producción significaría
+   enviar la IP de cada usuario de EFFORT a un tercero en cada carga. */
+@import '@fontsource/raleway/400.css';
+@import '@fontsource/raleway/500.css';
+@import '@fontsource/raleway/600.css';
+@import '@fontsource/raleway/700.css';
+@import '@fontsource/bodoni-moda/400.css';
+
+@import './tokens.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

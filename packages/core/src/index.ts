@@ -12,3 +12,5 @@ export * from './fechas.js';
 export * from './comprobantes.js';
 export * from './conciliacion.js';
 export * from './balance.js';
+export * from './diasHabiles.js';
+export * from './seguimiento.js';
