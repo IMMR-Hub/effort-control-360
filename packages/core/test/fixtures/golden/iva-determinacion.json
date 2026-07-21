@@ -1,0 +1,42 @@
+{
+  "descripcion": "Determinación mensual del IVA: débito fiscal menos crédito fiscal menos saldo a favor arrastrado.",
+  "fuente_de_la_regla": "Práctica estándar de liquidación mensual de IVA en Paraguay. El saldo a favor del período anterior es crédito del contribuyente y no puede perderse.",
+  "invariante": "saldoAPagar y saldoAFavor nunca son ambos distintos de cero, y ninguno es negativo.",
+  "casos": [
+    {
+      "nombre": "período con IVA a pagar",
+      "debitoFiscal": "5000000", "creditoFiscal": "3000000", "saldoAFavorAnterior": "0",
+      "saldoAPagar": "2000000", "saldoAFavor": "0"
+    },
+    {
+      "nombre": "período que cierra a favor del cliente",
+      "debitoFiscal": "3000000", "creditoFiscal": "5000000", "saldoAFavorAnterior": "0",
+      "saldoAPagar": "0", "saldoAFavor": "2000000"
+    },
+    {
+      "nombre": "el saldo a favor anterior se descuenta y da vuelta el resultado",
+      "debitoFiscal": "5000000", "creditoFiscal": "3000000", "saldoAFavorAnterior": "2500000",
+      "saldoAPagar": "0", "saldoAFavor": "500000"
+    },
+    {
+      "nombre": "el saldo a favor anterior compensa exactamente: no se paga ni se arrastra",
+      "debitoFiscal": "5000000", "creditoFiscal": "3000000", "saldoAFavorAnterior": "2000000",
+      "saldoAPagar": "0", "saldoAFavor": "0"
+    },
+    {
+      "nombre": "el saldo a favor anterior reduce lo que hay que pagar sin cubrirlo",
+      "debitoFiscal": "5000000", "creditoFiscal": "3000000", "saldoAFavorAnterior": "800000",
+      "saldoAPagar": "1200000", "saldoAFavor": "0"
+    },
+    {
+      "nombre": "período sin movimiento",
+      "debitoFiscal": "0", "creditoFiscal": "0", "saldoAFavorAnterior": "0",
+      "saldoAPagar": "0", "saldoAFavor": "0"
+    },
+    {
+      "nombre": "cliente sin ventas acumula todo el crédito de compras",
+      "debitoFiscal": "0", "creditoFiscal": "1750000", "saldoAFavorAnterior": "250000",
+      "saldoAPagar": "0", "saldoAFavor": "2000000"
+    }
+  ]
+}

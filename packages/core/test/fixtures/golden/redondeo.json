@@ -1,0 +1,21 @@
+{
+  "descripcion": "Redondeo a guaraní entero: desde 0,5 se redondea hacia arriba en magnitud.",
+  "fuente_de_la_regla": "Confirmado por EFFORT (Daniel/Laura, jul-2026): 'en guaraníes son siempre números redondos, desde 0,5 va arriba'. Ver docs/adr/0002-representacion-del-dinero.md.",
+  "casos": [
+    { "nombre": "un millón dividido 11 (IVA 10%) trunca porque el resto es menor a la mitad", "numerador": "1000000", "denominador": "11", "esperado": "90909" },
+    { "nombre": "un millón dividido 21 (IVA 5%) trunca porque el resto es menor a la mitad", "numerador": "1000000", "denominador": "21", "esperado": "47619" },
+    { "nombre": "seis millones dividido 11 sube porque el resto supera la mitad", "numerador": "6000000", "denominador": "11", "esperado": "545455" },
+    { "nombre": "exactamente la mitad sube (0,5 -> 1)", "numerador": "1", "denominador": "2", "esperado": "1" },
+    { "nombre": "exactamente la mitad sube (1,5 -> 2)", "numerador": "3", "denominador": "2", "esperado": "2" },
+    { "nombre": "exactamente la mitad sube (2,5 -> 3)", "numerador": "5", "denominador": "2", "esperado": "3" },
+    { "nombre": "exactamente la mitad sube (2,5 -> 3) con otro divisor", "numerador": "10", "denominador": "4", "esperado": "3" },
+    { "nombre": "apenas por debajo de la mitad baja (2,33 -> 2)", "numerador": "7", "denominador": "3", "esperado": "2" },
+    { "nombre": "apenas por encima de la mitad sube (2,67 -> 3)", "numerador": "8", "denominador": "3", "esperado": "3" },
+    { "nombre": "división exacta no altera nada", "numerador": "4", "denominador": "2", "esperado": "2" },
+    { "nombre": "cero dividido cualquier cosa es cero", "numerador": "0", "denominador": "5", "esperado": "0" },
+    { "nombre": "negativo en la mitad redondea en magnitud, no hacia cero (-2,5 -> -3)", "numerador": "-5", "denominador": "2", "esperado": "-3" },
+    { "nombre": "negativo en la mitad con otro divisor (-2,5 -> -3)", "numerador": "-10", "denominador": "4", "esperado": "-3" },
+    { "nombre": "saldo a favor negativo redondea con la misma magnitud que su positivo", "numerador": "-6000000", "denominador": "11", "esperado": "-545455" },
+    { "nombre": "importe grande fuera del rango seguro de number", "numerador": "99999999999999999999", "denominador": "11", "esperado": "9090909090909090909" }
+  ]
+}

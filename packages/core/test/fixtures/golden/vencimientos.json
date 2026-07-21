@@ -1,0 +1,76 @@
+{
+  "descripcion": "Días restantes hasta un vencimiento y nivel de alerta, calculados en la zona horaria de Paraguay.",
+  "fuente_de_la_regla": "Umbrales 30/15/7/2/vencido definidos en Proximos_Pasos_EFFORT_Control_360.md, sección 14. La zona America/Asuncion es la que rige el vencimiento real ante DNIT, IPS, Abogacía y Municipalidad.",
+  "casos": [
+    {
+      "nombre": "vence en una semana",
+      "instanteUtc": "2026-07-21T13:00:00Z", "fechaVencimiento": "2026-07-28",
+      "diasRestantes": 7, "nivel": "ALTA"
+    },
+    {
+      "nombre": "vence hoy",
+      "instanteUtc": "2026-07-21T13:00:00Z", "fechaVencimiento": "2026-07-21",
+      "diasRestantes": 0, "nivel": "CRITICA"
+    },
+    {
+      "nombre": "venció ayer",
+      "instanteUtc": "2026-07-21T13:00:00Z", "fechaVencimiento": "2026-07-20",
+      "diasRestantes": -1, "nivel": "VENCIDO"
+    },
+    {
+      "nombre": "vence en dos días: sigue siendo crítico",
+      "instanteUtc": "2026-07-21T13:00:00Z", "fechaVencimiento": "2026-07-23",
+      "diasRestantes": 2, "nivel": "CRITICA"
+    },
+    {
+      "nombre": "vence en quince días",
+      "instanteUtc": "2026-07-21T13:00:00Z", "fechaVencimiento": "2026-08-05",
+      "diasRestantes": 15, "nivel": "MEDIA"
+    },
+    {
+      "nombre": "vence en treinta días: último umbral con alerta",
+      "instanteUtc": "2026-07-21T13:00:00Z", "fechaVencimiento": "2026-08-20",
+      "diasRestantes": 30, "nivel": "INFORMATIVA"
+    },
+    {
+      "nombre": "vence en treinta y un días: todavía no alerta",
+      "instanteUtc": "2026-07-21T13:00:00Z", "fechaVencimiento": "2026-08-21",
+      "diasRestantes": 31, "nivel": "SIN_ALERTA"
+    },
+    {
+      "nombre": "las 02:00 UTC todavía son el día anterior en Paraguay: un cálculo en UTC daría 0 días y perdería un día de aviso",
+      "instanteUtc": "2026-07-22T02:00:00Z", "fechaVencimiento": "2026-07-22",
+      "diasRestantes": 1, "nivel": "CRITICA"
+    },
+    {
+      "nombre": "las 04:00 UTC ya son el día siguiente en Paraguay",
+      "instanteUtc": "2026-07-22T04:00:00Z", "fechaVencimiento": "2026-07-22",
+      "diasRestantes": 0, "nivel": "CRITICA"
+    },
+    {
+      "nombre": "cruce de fin de mes",
+      "instanteUtc": "2026-07-30T12:00:00Z", "fechaVencimiento": "2026-08-02",
+      "diasRestantes": 3, "nivel": "ALTA"
+    },
+    {
+      "nombre": "cruce de fin de año",
+      "instanteUtc": "2026-12-30T12:00:00Z", "fechaVencimiento": "2027-01-02",
+      "diasRestantes": 3, "nivel": "ALTA"
+    },
+    {
+      "nombre": "año bisiesto: febrero de 2028 tiene 29 días",
+      "instanteUtc": "2028-02-28T12:00:00Z", "fechaVencimiento": "2028-03-01",
+      "diasRestantes": 2, "nivel": "CRITICA"
+    },
+    {
+      "nombre": "año no bisiesto: febrero de 2027 tiene 28 días",
+      "instanteUtc": "2027-02-27T12:00:00Z", "fechaVencimiento": "2027-03-01",
+      "diasRestantes": 2, "nivel": "CRITICA"
+    },
+    {
+      "nombre": "presentación vencida hace mucho, como la multa de Abogacía",
+      "instanteUtc": "2026-07-21T13:00:00Z", "fechaVencimiento": "2026-05-15",
+      "diasRestantes": -67, "nivel": "VENCIDO"
+    }
+  ]
+}

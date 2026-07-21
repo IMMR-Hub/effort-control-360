@@ -1,0 +1,20 @@
+{
+  "descripcion": "Despeje del IVA contenido en un total que ya lo incluye (comprobante paraguayo).",
+  "fuente_de_la_regla": "Tasa 10%: IVA = total/11. Tasa 5%: IVA = total/21. Confirmado por EFFORT (jul-2026). Pendiente de contraste contra una liquidación real ya presentada: ver docs/DISCREPANCIAS.md.",
+  "invariante": "gravado + iva === total, exacto, para todo caso.",
+  "casos": [
+    { "nombre": "un millón al 10%", "total": "1000000", "tasa": "DIEZ", "iva": "90909", "gravado": "909091" },
+    { "nombre": "un millón al 5%", "total": "1000000", "tasa": "CINCO", "iva": "47619", "gravado": "952381" },
+    { "nombre": "un millón exenta", "total": "1000000", "tasa": "EXENTA", "iva": "0", "gravado": "1000000" },
+    { "nombre": "importe redondo al 10%: 110.000 contiene 10.000 de IVA", "total": "110000", "tasa": "DIEZ", "iva": "10000", "gravado": "100000" },
+    { "nombre": "importe redondo al 5%: 105.000 contiene 5.000 de IVA", "total": "105000", "tasa": "CINCO", "iva": "5000", "gravado": "100000" },
+    { "nombre": "el divisor exacto al 10%", "total": "11", "tasa": "DIEZ", "iva": "1", "gravado": "10" },
+    { "nombre": "el divisor exacto al 5%", "total": "21", "tasa": "CINCO", "iva": "1", "gravado": "20" },
+    { "nombre": "importe menor al divisor: el IVA redondea a cero", "total": "5", "tasa": "DIEZ", "iva": "0", "gravado": "5" },
+    { "nombre": "importe menor al divisor pero por encima de la mitad: el IVA es 1", "total": "6", "tasa": "DIEZ", "iva": "1", "gravado": "5" },
+    { "nombre": "cero no genera impuesto", "total": "0", "tasa": "DIEZ", "iva": "0", "gravado": "0" },
+    { "nombre": "la multa de Gs. 6.000.000 desglosada al 10%", "total": "6000000", "tasa": "DIEZ", "iva": "545455", "gravado": "5454545" },
+    { "nombre": "factura grande al 10%", "total": "487650000", "tasa": "DIEZ", "iva": "44331818", "gravado": "443318182" },
+    { "nombre": "nota de crédito (importe negativo) al 10% mantiene la magnitud", "total": "-1000000", "tasa": "DIEZ", "iva": "-90909", "gravado": "-909091" }
+  ]
+}

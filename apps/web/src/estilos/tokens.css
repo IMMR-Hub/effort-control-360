@@ -1,0 +1,198 @@
+/**
+ * Design tokens de EFFORT Control 360.
+ *
+ * Derivados del Manual de Marca EFFORT:
+ *   - Púrpura institucional  #6E2958  -> hsl(319, 46%, 30%)
+ *   - Gris institucional     #E7E8E8  -> canvas de las piezas de marca
+ *   - Negro                  #231F20  -> tinta
+ *   - Tipografías            Bodoni FlF Roman (logotipo) / Raleway (general)
+ *
+ * Criterio de fatiga visual: este panel se mira ocho horas por día. Por eso
+ * el púrpura estructura la interfaz (navegación activa, encabezados, acción
+ * primaria) pero no cubre áreas grandes: una superficie saturada extensa cansa
+ * la vista y hace competir a la marca con los datos. Los colores de estado
+ * están desaturados respecto de un rojo/verde puro por la misma razón, y aun
+ * así superan 4.5:1 sobre las superficies donde se usan.
+ *
+ * Los canales van sueltos (H S L) para que Tailwind pueda aplicar opacidad:
+ * `bg-superficie/60` necesita `hsl(var(--x) / <alpha-value>)`.
+ */
+
+@layer base {
+  :root {
+    /* --- Marca ------------------------------------------------------------ */
+    --marca-50: 319 40% 97%;
+    --marca-100: 319 38% 93%;
+    --marca-200: 319 34% 85%;
+    --marca-300: 319 32% 74%;
+    --marca-400: 319 36% 58%;
+    --marca-500: 319 42% 42%;
+    --marca-600: 319 46% 30%; /* #6E2958 — color institucional exacto */
+    --marca-700: 319 48% 25%;
+    --marca-800: 319 50% 20%;
+    --marca-900: 319 52% 15%;
+    --marca-950: 319 55% 10%;
+
+    /* --- Superficies ------------------------------------------------------ */
+    /* El fondo no es blanco puro: reduce el deslumbramiento en jornadas largas
+       y deja que las tarjetas blancas destaquen como plano de trabajo. */
+    --lienzo: 300 5% 93%;
+    --superficie: 0 0% 100%;
+    --superficie-elevada: 0 0% 100%;
+    --superficie-hundida: 300 6% 96%;
+    --superficie-tenue: 319 20% 97%;
+
+    /* --- Tinta ------------------------------------------------------------ */
+    --tinta: 340 4% 13%; /* #231F20 del manual */
+    --tinta-suave: 320 3% 35%;
+    --tinta-tenue: 320 3% 50%;
+    --tinta-sobre-marca: 0 0% 100%;
+
+    /* --- Bordes ----------------------------------------------------------- */
+    --borde: 320 6% 87%;
+    --borde-fuerte: 320 6% 76%;
+    --borde-marca: 319 30% 80%;
+
+    /* --- Estados operativos ----------------------------------------------- */
+    /* Cada estado tiene tres tonos: fondo del badge, borde y texto.
+       El texto siempre cumple 4.5:1 contra su propio fondo. */
+    --completo: 152 40% 30%;
+    --completo-fondo: 152 40% 94%;
+    --completo-borde: 152 30% 78%;
+
+    --parcial: 38 70% 32%;
+    --parcial-fondo: 38 70% 94%;
+    --parcial-borde: 38 55% 76%;
+
+    --critico: 4 62% 42%;
+    --critico-fondo: 4 70% 95%;
+    --critico-borde: 4 55% 82%;
+
+    --proceso: 215 45% 38%;
+    --proceso-fondo: 215 55% 95%;
+    --proceso-borde: 215 40% 82%;
+
+    --pendiente: 320 4% 40%;
+    --pendiente-fondo: 320 5% 94%;
+    --pendiente-borde: 320 5% 84%;
+
+    /* --- Foco ------------------------------------------------------------- */
+    --anillo-foco: 319 46% 40%;
+
+    /* --- Tipografía ------------------------------------------------------- */
+    /* Bodoni queda reservada al logotipo: sus astas finas se rompen a tamaño
+       de interfaz y no es legible en tablas densas. */
+    --fuente-logotipo: 'Bodoni Moda', 'Bodoni FlF', Georgia, 'Times New Roman', serif;
+    --fuente-interfaz: 'Raleway', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+
+    /* --- Elevación -------------------------------------------------------- */
+    /* Sombras teñidas de púrpura en vez de negro puro: integran las tarjetas
+       con la paleta en lugar de ensuciarlas con gris. */
+    --sombra-1: 0 1px 2px 0 hsl(319 20% 20% / 0.06);
+    --sombra-2: 0 2px 4px -1px hsl(319 20% 20% / 0.08), 0 1px 2px -1px hsl(319 20% 20% / 0.05);
+    --sombra-3: 0 8px 16px -4px hsl(319 20% 20% / 0.1), 0 3px 6px -3px hsl(319 20% 20% / 0.06);
+    --sombra-modal: 0 20px 40px -12px hsl(319 25% 15% / 0.28);
+  }
+
+  /* Modo oscuro: el púrpura se aclara y desatura. Aplicar el color institucional
+     tal cual sobre fondo oscuro lo vuelve ilegible (2.1:1 contra #1A1719). */
+  :root[data-tema='oscuro'] {
+    --marca-50: 319 30% 12%;
+    --marca-100: 319 30% 16%;
+    --marca-200: 319 28% 22%;
+    --marca-300: 319 26% 32%;
+    --marca-400: 319 30% 45%;
+    --marca-500: 319 34% 58%;
+    --marca-600: 319 38% 68%;
+    --marca-700: 319 40% 76%;
+    --marca-800: 319 42% 84%;
+    --marca-900: 319 44% 91%;
+    --marca-950: 319 46% 96%;
+
+    --lienzo: 320 8% 10%;
+    --superficie: 320 7% 14%;
+    --superficie-elevada: 320 7% 17%;
+    --superficie-hundida: 320 8% 11%;
+    --superficie-tenue: 319 12% 16%;
+
+    --tinta: 320 6% 94%;
+    --tinta-suave: 320 5% 74%;
+    --tinta-tenue: 320 4% 58%;
+    --tinta-sobre-marca: 320 20% 10%;
+
+    --borde: 320 6% 24%;
+    --borde-fuerte: 320 6% 34%;
+    --borde-marca: 319 22% 34%;
+
+    --completo: 152 45% 68%;
+    --completo-fondo: 152 30% 16%;
+    --completo-borde: 152 25% 28%;
+
+    --parcial: 38 70% 68%;
+    --parcial-fondo: 38 35% 16%;
+    --parcial-borde: 38 30% 28%;
+
+    --critico: 4 75% 72%;
+    --critico-fondo: 4 35% 17%;
+    --critico-borde: 4 30% 30%;
+
+    --proceso: 215 60% 74%;
+    --proceso-fondo: 215 35% 17%;
+    --proceso-borde: 215 30% 30%;
+
+    --pendiente: 320 5% 68%;
+    --pendiente-fondo: 320 5% 18%;
+    --pendiente-borde: 320 5% 30%;
+
+    --anillo-foco: 319 40% 62%;
+
+    --sombra-1: 0 1px 2px 0 hsl(0 0% 0% / 0.4);
+    --sombra-2: 0 2px 4px -1px hsl(0 0% 0% / 0.45), 0 1px 2px -1px hsl(0 0% 0% / 0.4);
+    --sombra-3: 0 8px 16px -4px hsl(0 0% 0% / 0.5), 0 3px 6px -3px hsl(0 0% 0% / 0.4);
+    --sombra-modal: 0 20px 40px -12px hsl(0 0% 0% / 0.7);
+  }
+}
+
+@layer base {
+  html {
+    /* 16px de base: por debajo de eso iOS hace zoom automático en los campos. */
+    font-size: 100%;
+  }
+
+  body {
+    background-color: hsl(var(--lienzo));
+    color: hsl(var(--tinta));
+    font-family: var(--fuente-interfaz);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Cifras alineadas en columna. Sin esto, los importes bailan de fila en fila
+     y comparar dos montos exige leerlos dígito por dígito. */
+  .cifra,
+  td[data-tipo='cifra'],
+  th[data-tipo='cifra'] {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+    text-align: right;
+  }
+
+  /* El foco nunca se elimina: es la única forma de saber dónde estás cuando
+     navegás con teclado, y en este panel se carga mucho dato con teclado. */
+  :focus-visible {
+    outline: 2px solid hsl(var(--anillo-foco));
+    outline-offset: 2px;
+    border-radius: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
