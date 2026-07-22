@@ -66,6 +66,11 @@ configuración de conexión de forma incompatible.
 Si se resetea la contraseña de Supabase, revisar que los caracteres especiales
 (`#`, `%`, `@`) queden codificados con `encodeURIComponent` en la URL.
 
+**RLS está activo en las 20 tablas.** Cualquier rol de base de datos nuevo
+necesita su política antes de poder leer nada: sin política, RLS devuelve cero
+filas **sin dar error**. El rol de aplicación `effort_app` ya tiene la suya.
+Ver `docs/DISCREPANCIAS.md`, puntos 7 y 8.
+
 ## Al terminar cualquier tarea
 
 1. Correr `npm run verify` y pegar la salida real.

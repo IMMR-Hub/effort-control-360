@@ -94,3 +94,55 @@ sin aviso, y los permisos quedan atados a una persona en vez de a la empresa.
 `EFFORT CONTROL 360 - PILOTO` con esa cuenta como editor, y se registra la app
 en Azure AD. Hasta entonces el adaptador de OneDrive corre contra un doble de
 prueba y `verify:drive` valida contra ese doble, no contra la nube real.
+
+---
+
+## 7. Rol de aplicación en producción — DEFINIDO, FALTA ASIGNAR CONTRASEÑA
+
+**Estado:** el rol `effort_app` ya existe en Supabase con los permisos mínimos y
+sus políticas RLS, pero está creado **sin contraseña y NOLOGIN** a propósito:
+una contraseña en un archivo de migración queda en el historial de git para
+siempre.
+
+**Qué puede y qué no** (verificado con `SET ROLE`, las 9 comprobaciones pasan):
+
+| Operación | `effort_app` |
+|---|---|
+| Leer, insertar y actualizar datos de negocio | Sí |
+| Insertar en `event_log` | Sí |
+| Actualizar o borrar `event_log` | **No** |
+| Borrar en `registro_contacto` | **No** |
+| Borrar en cualquier tabla | **No** |
+
+**Cómo se cierra**, en el despliegue (Parte 8):
+
+```sql
+ALTER ROLE effort_app WITH LOGIN PASSWORD '<generada en el despliegue>';
+```
+
+Y en producción:
+- `DATABASE_URL` (la app en marcha) usa **`effort_app`**.
+- `DIRECT_URL` (las migraciones) sigue usando el dueño del esquema, porque
+  crear tablas y tipos necesita permisos que la aplicación no debe tener.
+
+---
+
+## 8. RLS de Supabase — MINA DESACTIVADA, PERO CONVIENE SABERLO
+
+Al crear el proyecto se activó "Enable automatic RLS", así que las 20 tablas
+tienen Row Level Security habilitado. **No había ninguna política definida**, y
+en PostgreSQL eso significa denegar todo a cualquier rol que no sea el dueño de
+la tabla.
+
+Funcionaba solo porque la aplicación conecta como `postgres`, que es el dueño y
+omite RLS. El día que se conectara con otro rol, **todas las consultas habrían
+devuelto cero filas sin dar error**: una caída silenciosa, sin excepción ni log,
+que se diagnostica muy mal.
+
+Ya está resuelto: la migración `20260722180000_rol_aplicacion_y_rls` crea
+políticas explícitas para `effort_app`.
+
+**Qué recordar hacia adelante:** cualquier rol nuevo de base de datos necesita
+su política RLS antes de poder leer nada. Si alguna vez se habilita la Data API
+de Supabase, los roles `anon` y `authenticated` no tienen políticas y por lo
+tanto no ven absolutamente nada — que es justamente lo que se quiere.

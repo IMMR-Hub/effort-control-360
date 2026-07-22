@@ -26,7 +26,7 @@ skill global **`backend-datos-sensibles`**, reutilizable en otros proyectos.
 tarea marcada sin commit real detrás es peor que no marcarla — hace perder
 confianza en todo el resto del documento.
 
-**Avance: 75 de 111 tareas.** Partes 1, 2, 3, 4A, 4B y 4C cerradas.
+**Avance: 79 de 112 tareas (71%).** Partes 1, 2, 3, 4A, 4B y 4C cerradas. Quedan 2 tareas bloqueadas por EFFORT (carga de datos), que no frenan el código.
 
 Última actualización: 2026-07-22 · Commit de referencia: ver último commit en `git log`
 
@@ -147,26 +147,35 @@ confianza en todo el resto del documento.
 - [x] 50. Correr la migración inicial: 16 tablas de negocio creadas en Supabase
 - [x] 51. Aplicar la migración de triggers de inmutabilidad de `event_log` y `registro_contacto`
 - [x] 52. **Verificado con una prueba real** (no solo "no dio error"): insertar fila → UPDATE rechazado por el trigger → DELETE rechazado por el trigger → fila sigue intacta
-- [ ] 53. Crear el rol `effort_app` en Postgres con permisos mínimos (segunda barrera además del trigger, para cuando exista un usuario de aplicación distinto del de migraciones)
-- [ ] 54. Sembrar los 5 clientes piloto (marcados `origen=SEMILLA`) para poder probar de punta a punta
-- [ ] 55. Crear el primer usuario real de dirección (Laura o Lili) con contraseña temporal + forzar cambio en primer acceso
+- [x] 53. Crear el rol `effort_app` con permisos mínimos, y **las políticas RLS que lo habilitan**
+- [x] 54. **Mina desactivada:** Supabase tenía RLS activo en las 20 tablas con CERO políticas definidas. En PostgreSQL eso es "denegar todo" para cualquier rol que no sea el dueño. Funcionaba solo porque la app conecta como `postgres`; el día que se usara otro rol, todas las consultas habrían devuelto cero filas **sin dar error** — una caída silenciosa muy difícil de diagnosticar
+- [x] 55. **Verificadas las 9 reglas del rol con `SET ROLE` real**, no por declaración: puede leer, insertar y actualizar datos de negocio; puede insertar en `event_log` pero NO actualizarlo ni borrarlo; no puede borrar en `registro_contacto` ni en ninguna otra tabla
 
-**Verificación de la Parte 2:** conexión confirmada, 16 tablas creadas, trigger de inmutabilidad probado con una escritura real — ✅ hecho el 2026-07-22.
-Falta 53-55 antes de poder probar el sistema de punta a punta con datos.
+#### Bloqueadas por EFFORT (no dependen de nosotros)
+
+- [ ] 56. Sembrar los 5 clientes piloto — **bloqueada:** espera que EFFORT confirme los clientes definitivos (`docs/DISCREPANCIAS.md`, punto 3)
+- [ ] 57. Crear el primer usuario de dirección — **bloqueada:** necesita el correo real de Laura o Lili, y que la persona defina su propia contraseña en el primer acceso
+
+**Verificación de la Parte 2:** conexión confirmada, 16 tablas creadas, trigger de
+inmutabilidad probado con escritura real, rol de aplicación creado y sus permisos
+comprobados uno por uno — ✅ hecho el 2026-07-22.
+
+La parte técnica está cerrada. Las tareas 56 y 57 son de carga de datos y
+esperan información de EFFORT: **no bloquean el avance del código.**
 
 ---
 
 ## PARTE 3 — Implementación Prisma de los puertos
 
-- [x] 56. Implementar `RepositorioDeUsuarios` contra Prisma (con `select` explícito, para que agregar una columna sensible al modelo no la filtre sola)
-- [x] 57. Implementar `RepositorioDeSesiones` contra Prisma (el rol se lee del usuario en cada consulta, no queda congelado en la sesión)
-- [x] 58. Implementar `RepositorioDeClientes` contra Prisma, con el filtro de cartera aplicado en SQL vía `asignacion_cliente` con vigencia
-- [x] 59. Implementar `RepositorioDeContactos` contra Prisma (sin métodos de borrado ni edición: es evidencia)
-- [x] 60. Implementar `RepositorioDeBitacora` contra Prisma (solo inserción)
-- [x] 61. Cablear `apps/api/src/index.ts` con las implementaciones reales, un solo cliente Prisma compartido y comprobación de conexión antes de escuchar
-- [x] 62. Tests de integración contra la base real, en un esquema Postgres temporal que se crea y se destruye (31 tests)
-- [x] 63. **Bug encontrado y corregido por los tests de integración:** en `buscarPorId`, combinar la condición de identificador con la de cartera mediante spread hacía que la segunda pisara a la primera. La consulta perdía el id pedido y devolvía cualquier cliente de la cartera — pedir el cliente X devolvía el cliente Y. Los dobles de prueba no lo detectaban porque implementaban la lógica a mano y correctamente. Corregido con `AND` explícito + test de regresión.
-- [ ] 64. Verificar en Supabase que las políticas RLS no bloquean al rol de la aplicación (se activaron como defensa en profundidad; hoy la app usa el rol dueño del esquema, que las omite)
+- [x] 58. Implementar `RepositorioDeUsuarios` contra Prisma (con `select` explícito, para que agregar una columna sensible al modelo no la filtre sola)
+- [x] 59. Implementar `RepositorioDeSesiones` contra Prisma (el rol se lee del usuario en cada consulta, no queda congelado en la sesión)
+- [x] 60. Implementar `RepositorioDeClientes` contra Prisma, con el filtro de cartera aplicado en SQL vía `asignacion_cliente` con vigencia
+- [x] 61. Implementar `RepositorioDeContactos` contra Prisma (sin métodos de borrado ni edición: es evidencia)
+- [x] 62. Implementar `RepositorioDeBitacora` contra Prisma (solo inserción)
+- [x] 63. Cablear `apps/api/src/index.ts` con las implementaciones reales, un solo cliente Prisma compartido y comprobación de conexión antes de escuchar
+- [x] 64. Tests de integración contra la base real, en un esquema Postgres temporal que se crea y se destruye (31 tests)
+- [x] 65. **Bug encontrado y corregido por los tests de integración:** en `buscarPorId`, combinar la condición de identificador con la de cartera mediante spread hacía que la segunda pisara a la primera. La consulta perdía el id pedido y devolvía cualquier cliente de la cartera — pedir el cliente X devolvía el cliente Y. Los dobles de prueba no lo detectaban porque implementaban la lógica a mano y correctamente. Corregido con `AND` explícito + test de regresión.
+- [x] 66. Verificar que las políticas RLS no bloquean al rol de la aplicación — resuelto junto con la creación del rol: se comprobó con `SET ROLE` que `effort_app` ve los datos y opera con normalidad
 
 **Verificación:** `npm run verify` con `test:integration` en verde — ✅ hecho el 2026-07-22.
 El gate pasó de 9 a 10 checks activos: `test:integration` dejó de ser pendiente declarado.
@@ -177,25 +186,25 @@ El gate pasó de 9 a 10 checks activos: `test:integration` dejó de ser pendient
 
 ### 4A — Núcleo operativo (COMPLETA)
 
-- [x] 65. Piezas comunes de rutas: `autorizar()` en un paso, conversión de importes en el borde
-- [x] 66. Módulo Documentos: rutas + repositorio. Exige la terna RUC+timbrado+número completa o ninguna (sin ella no hay conciliación ni detección de duplicados), y rechazar exige motivo
-- [x] 67. Módulo Proceso Mensual: rutas + repositorio. Editar un período que nadie abrió lo crea al vuelo con `upsert`; el IVA no puede quedar a pagar y a favor a la vez
-- [x] 68. Módulo Vencimientos: rutas + repositorio + días restantes y nivel de alerta calculados en el servidor, en zona Paraguay
-- [x] 69. Módulo Balances: rutas + repositorio con la aprobación humana del ADR 0004 en cuatro capas independientes
-- [x] 70. 34 tests de módulos con dobles de persistencia
-- [x] 71. **Dos bugs encontrados por los tests:** (a) las inconsistencias se guardaban con `diferencia` como `bigint`, que `JSON.stringify` no serializa — rompía la escritura en la columna Json y la respuesta HTTP; (b) la re-verificación al aprobar construía un estado de resultados incoherente (ceros contra un resultado distinto de cero), lo que hacía **imposible aprobar cualquier balance**
+- [x] 67. Piezas comunes de rutas: `autorizar()` en un paso, conversión de importes en el borde
+- [x] 68. Módulo Documentos: rutas + repositorio. Exige la terna RUC+timbrado+número completa o ninguna (sin ella no hay conciliación ni detección de duplicados), y rechazar exige motivo
+- [x] 69. Módulo Proceso Mensual: rutas + repositorio. Editar un período que nadie abrió lo crea al vuelo con `upsert`; el IVA no puede quedar a pagar y a favor a la vez
+- [x] 70. Módulo Vencimientos: rutas + repositorio + días restantes y nivel de alerta calculados en el servidor, en zona Paraguay
+- [x] 71. Módulo Balances: rutas + repositorio con la aprobación humana del ADR 0004 en cuatro capas independientes
+- [x] 72. 34 tests de módulos con dobles de persistencia
+- [x] 73. **Dos bugs encontrados por los tests:** (a) las inconsistencias se guardaban con `diferencia` como `bigint`, que `JSON.stringify` no serializa — rompía la escritura en la columna Json y la respuesta HTTP; (b) la re-verificación al aprobar construía un estado de resultados incoherente (ceros contra un resultado distinto de cero), lo que hacía **imposible aprobar cualquier balance**
 
 **Verificación:** `npm run verify` con `verify:modulos` en verde — ✅ hecho el 2026-07-22.
 El gate pasó de 10 a 11 checks activos.
 
 ### 4B — SIGA, liquidaciones y alertas
 
-- [x] 72. Migración: tablas `exportacion_siga`, `comprobante_siga`, `liquidacion` y `alerta` (no existían en el modelo)
-- [x] 73. Módulo Exportaciones SIGA: rutas + repositorio, con la importación de la exportación y sus filas en **una sola transacción** (si fallara a mitad, la conciliación reportaría diferencias inexistentes)
-- [x] 74. Conciliación aplicada con `conciliarConSiga` de `@effort/core` — la ruta transporta datos, no reimplementa la comparación
-- [x] 75. Módulo Liquidaciones: ciclo completo generada → enviada → respondida, con destinatario, canal, fecha y evidencia del envío
-- [x] 76. 28 tests de SIGA y liquidaciones
-- [x] 77. **Bug encontrado por los tests:** el contador `sinIdentificacion` de la conciliación era código muerto — el repositorio ya filtraba los documentos sin número, así que nunca podía contar ninguno. El comentario prometía avisar que la comparación dejaba documentos afuera y el código no lo hacía. Corregido renombrando el método a `documentosDelPeriodo` y quitando el filtro
+- [x] 74. Migración: tablas `exportacion_siga`, `comprobante_siga`, `liquidacion` y `alerta` (no existían en el modelo)
+- [x] 75. Módulo Exportaciones SIGA: rutas + repositorio, con la importación de la exportación y sus filas en **una sola transacción** (si fallara a mitad, la conciliación reportaría diferencias inexistentes)
+- [x] 76. Conciliación aplicada con `conciliarConSiga` de `@effort/core` — la ruta transporta datos, no reimplementa la comparación
+- [x] 77. Módulo Liquidaciones: ciclo completo generada → enviada → respondida, con destinatario, canal, fecha y evidencia del envío
+- [x] 78. 28 tests de SIGA y liquidaciones
+- [x] 79. **Bug encontrado por los tests:** el contador `sinIdentificacion` de la conciliación era código muerto — el repositorio ya filtraba los documentos sin número, así que nunca podía contar ninguno. El comentario prometía avisar que la comparación dejaba documentos afuera y el código no lo hacía. Corregido renombrando el método a `documentosDelPeriodo` y quitando el filtro
 
 **Verificación:** `npm run verify` con `verify:siga` en verde — ✅ hecho el 2026-07-22.
 El gate pasó de 11 a 12 checks activos.
@@ -206,19 +215,18 @@ Se saldó **antes** de avanzar a los módulos restantes: los repositorios de 4A 
 4B tenían solo dobles de prueba, que es exactamente donde se había escondido el
 bug de `buscarPorId`.
 
-- [x] 78. 35 tests de integración contra Postgres real para los seis repositorios de 4A y 4B (`documentos`, `proceso_mensual`, `vencimientos`, `balances`, `exportaciones_siga`, `liquidaciones`)
-- [x] 79. Verificado lo que un doble no puede detectar: que el filtro de cartera no pise las demás condiciones del `where`, que las restricciones de unicidad se apliquen de verdad, que el `upsert` no duplique bajo llamadas simultáneas, que un `BIGINT` por encima de 2^53 vuelva intacto, y que la transacción de importación SIGA **revierta entera** cuando una fila es inválida
+- [x] 80. 35 tests de integración contra Postgres real para los seis repositorios de 4A y 4B (`documentos`, `proceso_mensual`, `vencimientos`, `balances`, `exportaciones_siga`, `liquidaciones`)
+- [x] 81. Verificado lo que un doble no puede detectar: que el filtro de cartera no pise las demás condiciones del `where`, que las restricciones de unicidad se apliquen de verdad, que el `upsert` no duplique bajo llamadas simultáneas, que un `BIGINT` por encima de 2^53 vuelva intacto, y que la transacción de importación SIGA **revierta entera** cuando una fila es inválida
 
 **Verificación:** `npm run verify` con `test:integration` en verde — ✅ hecho el 2026-07-22.
 
 ### 4D — Módulos restantes
 
-- [ ] 80. Módulo Alertas: vista consolidada ordenada por criticidad (la tabla ya existe)
-- [ ] 81. Módulo Equipo/Roles: alta y edición de usuarios (solo dirección)
-- [ ] 82. Módulo Reglas Impositivas: edición de tasas de IVA (solo dirección)
-- [ ] 83. Módulo Reglas de Notificación: alta/edición de reglas de recordatorio (ya tiene motor, falta la ruta)
-- [ ] 84. Módulo Event Log: consulta filtrable del historial (solo dirección/revisor)
-- [ ] 85. Tests de integración de los repositorios de la Parte 4 contra Postgres real (los de 4A todavía solo tienen dobles)
+- [ ] 82. Módulo Alertas: vista consolidada ordenada por criticidad (la tabla ya existe)
+- [ ] 83. Módulo Equipo/Roles: alta y edición de usuarios (solo dirección)
+- [ ] 84. Módulo Reglas Impositivas: edición de tasas de IVA (solo dirección)
+- [ ] 85. Módulo Reglas de Notificación: alta/edición de reglas de recordatorio (ya tiene motor, falta la ruta)
+- [ ] 86. Módulo Event Log: consulta filtrable del historial (solo dirección/revisor)
 
 **Verificación de cada módulo:** su propio test en verde antes de pasar al siguiente
 
@@ -226,13 +234,13 @@ bug de `buscarPorId`.
 
 ## PARTE 5 — Importadores desde OneDrive
 
-- [ ] 86. Registrar la aplicación en Azure AD (requiere que EFFORT cree la cuenta `sistema.effort360@...`)
-- [ ] 87. Implementar `packages/drive` — adaptador Microsoft Graph API + adaptador falso para tests
-- [ ] 88. Espejo automático hacia el OneDrive de respaldo, con manifiesto sha256
-- [ ] 89. Importador de comprobantes (Excel/CSV) con reporte de filas aceptadas/rechazadas
-- [ ] 90. Importador de exportaciones SIGA
-- [ ] 91. Modo simulación (`dry-run`) obligatorio antes de escribir en la base
-- [ ] 92. Idempotencia verificada: importar el mismo archivo dos veces no duplica
+- [ ] 87. Registrar la aplicación en Azure AD (requiere que EFFORT cree la cuenta `sistema.effort360@...`)
+- [ ] 88. Implementar `packages/drive` — adaptador Microsoft Graph API + adaptador falso para tests
+- [ ] 89. Espejo automático hacia el OneDrive de respaldo, con manifiesto sha256
+- [ ] 90. Importador de comprobantes (Excel/CSV) con reporte de filas aceptadas/rechazadas
+- [ ] 91. Importador de exportaciones SIGA
+- [ ] 92. Modo simulación (`dry-run`) obligatorio antes de escribir en la base
+- [ ] 93. Idempotencia verificada: importar el mismo archivo dos veces no duplica
 
 **Verificación:** `npm run verify:drive` → exit 0 contra el adaptador real (o falso si Azure AD no está listo)
 
@@ -240,11 +248,11 @@ bug de `buscarPorId`.
 
 ## PARTE 6 — Despachador de notificaciones
 
-- [ ] 93. Proveedor de envío de correo (a definir: Resend, SES, o el que EFFORT prefiera)
-- [ ] 94. Job programado que corre `planificarProximoRecordatorio` sobre todas las solicitudes abiertas
-- [ ] 95. Registro automático en `registro_contacto` con `origen=AUTOMATICO` por cada envío real
-- [ ] 96. Registro en `envio_notificacion` con el id del proveedor, para poder auditar contra su panel
-- [ ] 97. Manejo de fallos de envío (reintento, alerta a dirección si un correo rebota)
+- [ ] 94. Proveedor de envío de correo (a definir: Resend, SES, o el que EFFORT prefiera)
+- [ ] 95. Job programado que corre `planificarProximoRecordatorio` sobre todas las solicitudes abiertas
+- [ ] 96. Registro automático en `registro_contacto` con `origen=AUTOMATICO` por cada envío real
+- [ ] 97. Registro en `envio_notificacion` con el id del proveedor, para poder auditar contra su panel
+- [ ] 98. Manejo de fallos de envío (reintento, alerta a dirección si un correo rebota)
 
 **Verificación:** test de integración con proveedor de correo en modo sandbox
 
@@ -252,12 +260,12 @@ bug de `buscarPorId`.
 
 ## PARTE 7 — Interfaz completa contra la API real
 
-- [ ] 98. Cliente HTTP tipado en `apps/web`, con manejo de sesión/CSRF
-- [ ] 99. Reemplazar `datos-semilla/` por llamadas reales a la API
-- [ ] 100. Pantalla de login con flujo de 2FA en dos pasos
-- [ ] 101. Las 12 pantallas del handoff, una por una, contra datos reales
-- [ ] 102. Retirar por completo `apps/App.jsx` (la demo original) una vez que todas las pantallas tengan reemplazo
-- [ ] 103. `verify:no-hardcoded-kpi` — ningún número escrito a mano en la interfaz
+- [ ] 99. Cliente HTTP tipado en `apps/web`, con manejo de sesión/CSRF
+- [ ] 100. Reemplazar `datos-semilla/` por llamadas reales a la API
+- [ ] 101. Pantalla de login con flujo de 2FA en dos pasos
+- [ ] 102. Las 12 pantallas del handoff, una por una, contra datos reales
+- [ ] 103. Retirar por completo `apps/App.jsx` (la demo original) una vez que todas las pantallas tengan reemplazo
+- [ ] 104. `verify:no-hardcoded-kpi` — ningún número escrito a mano en la interfaz
 
 **Verificación:** `npm run test:e2e` (Playwright) → exit 0
 
@@ -265,19 +273,19 @@ bug de `buscarPorId`.
 
 ## PARTE 8 — Despliegue
 
-- [ ] 104. Crear la app en DigitalOcean App Platform, conectada al repositorio
-- [ ] 105. Configurar variables de entorno de producción (secretos distintos a los de desarrollo)
-- [ ] 106. Configurar el subdominio `effort360.disaak.com` (registro CNAME)
-- [ ] 107. Verificar HTTPS y que `ORIGEN_PERMITIDO`/cookies funcionan en producción
-- [ ] 108. Corrida de humo completa en producción con el usuario real de dirección
+- [ ] 105. Crear la app en DigitalOcean App Platform, conectada al repositorio
+- [ ] 106. Configurar variables de entorno de producción (secretos distintos a los de desarrollo)
+- [ ] 107. Configurar el subdominio `effort360.disaak.com` (registro CNAME)
+- [ ] 108. Verificar HTTPS y que `ORIGEN_PERMITIDO`/cookies funcionan en producción
+- [ ] 109. Corrida de humo completa en producción con el usuario real de dirección
 
 ---
 
 ## PARTE 9 — Validación final con EFFORT
 
-- [ ] 109. Contrastar el cálculo de IVA contra una liquidación real ya presentada (cierra la discrepancia #1 de `docs/DISCREPANCIAS.md`)
-- [ ] 110. Confirmar los 5 clientes piloto definitivos con Laura/Lili
-- [ ] 111. Primera revisión guiada con EFFORT: los 12 módulos, en vivo, con sus propios datos
+- [ ] 110. Contrastar el cálculo de IVA contra una liquidación real ya presentada (cierra la discrepancia #1 de `docs/DISCREPANCIAS.md`)
+- [ ] 111. Confirmar los 5 clientes piloto definitivos con Laura/Lili
+- [ ] 112. Primera revisión guiada con EFFORT: los 12 módulos, en vivo, con sus propios datos
 
 ---
 
