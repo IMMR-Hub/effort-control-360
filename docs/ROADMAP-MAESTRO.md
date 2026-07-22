@@ -26,6 +26,18 @@ skill global **`backend-datos-sensibles`**, reutilizable en otros proyectos.
 tarea marcada sin commit real detrás es peor que no marcarla — hace perder
 confianza en todo el resto del documento.
 
+**Regla anti-mentira (agregada 2026-07-22 tras encontrar un roadmap que decía
+"Parte 2 y 3 cerradas" con 4 tareas sin marcar adentro):** antes de escribir
+"PARTE X — cerrada" o "COMPLETA" en cualquier lado, **grep todas las líneas
+`- [ ]` de esa parte**. Si hay una sola, la parte NO está cerrada. No alcanza
+con mirar el trabajo que se acaba de hacer — hay que barrer toda la sección.
+
+```bash
+grep -c "^- \[ \]" <(sed -n '/## PARTE X/,/## PARTE X+1/p' docs/ROADMAP-MAESTRO.md)
+```
+
+Si da 0, cerrada. Si no, no.
+
 **Avance: 79 de 112 tareas (71%).** Partes 1, 2, 3, 4A, 4B y 4C cerradas. Quedan 2 tareas bloqueadas por EFFORT (carga de datos), que no frenan el código.
 
 Última actualización: 2026-07-22 · Commit de referencia: ver último commit en `git log`
