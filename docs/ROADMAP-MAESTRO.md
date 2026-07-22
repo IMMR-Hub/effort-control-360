@@ -7,15 +7,41 @@ Si estás retomando esto en una conversación nueva de Claude Code, decile:
 > Leé `docs/ROADMAP-MAESTRO.md` y `docs/DISCREPANCIAS.md` en el repo
 > `effort-control-360`, y seguí desde la primera tarea sin marcar.
 
-Con eso alcanza — no hace falta reexplicar el contexto del proyecto. Este
-archivo y `docs/DISCREPANCIAS.md` son la memoria persistente.
+Con eso alcanza — no hace falta reexplicar el contexto del proyecto.
+
+La memoria persistente del proyecto son cuatro archivos:
+
+| Archivo | Qué guarda |
+|---|---|
+| `docs/ROADMAP-MAESTRO.md` | En qué tarea quedó y qué sigue (este archivo) |
+| `docs/DISCREPANCIAS.md` | Reglas aplicadas que EFFORT todavía no validó |
+| `CLAUDE.md` | Reglas del proyecto — se carga solo en cada sesión |
+| `docs/adr/` | Por qué se decidió cada cosa no obvia |
+
+El criterio de ingeniería general (dinero, RBAC, auditoría, tests) vive en la
+skill global **`backend-datos-sensibles`**, reutilizable en otros proyectos.
 
 **Regla de este documento:** cada tarea se marca `[x]` recién cuando el
 `npm run verify` de esa etapa corrió en verde y quedó commiteado en git. Una
 tarea marcada sin commit real detrás es peor que no marcarla — hace perder
 confianza en todo el resto del documento.
 
+**Avance: 60 de 101 tareas.** Partes 1, 2 y 3 cerradas.
+
 Última actualización: 2026-07-22 · Commit de referencia: ver último commit en `git log`
+
+> El total **no es un número fijo**: sube y baja a medida que el alcance de cada
+> parte se vuelve concreto. Si agregás, quitás o insertás una tarea, **renumerá
+> todo el archivo** antes de commitear, o la próxima conversación va a leer
+> números que no coinciden entre partes. Para renumerar:
+>
+> ```bash
+> node -e "const f='docs/ROADMAP-MAESTRO.md';const fs=require('fs');let n=0;\
+> fs.writeFileSync(f,fs.readFileSync(f,'utf8').split('\n').map(l=>{\
+> const m=l.match(/^- \[([ x~])\] \d+\. (.*)\$/);return m?\`- [\${m[1]}] \${++n}. \${m[2]}\`:l}).join('\n'))"
+> ```
+>
+> Después actualizá el conteo de arriba.
 
 ---
 
@@ -149,17 +175,17 @@ El gate pasó de 9 a 10 checks activos: `test:integration` dejó de ser pendient
 
 ## PARTE 4 — Módulos de negocio restantes (rutas + Prisma)
 
-- [ ] 64. Módulo Documentos: rutas + repositorio (recepción, canal, estado, evidencia)
-- [ ] 65. Módulo Proceso Mensual: rutas + repositorio (el tablero operativo principal)
-- [ ] 66. Módulo Exportaciones SIGA: rutas + repositorio + conciliación aplicada
-- [ ] 67. Módulo Liquidaciones: rutas + repositorio
-- [ ] 68. Módulo Balances: rutas + repositorio, con la aprobación humana obligatoria del ADR 0004
-- [ ] 69. Módulo Vencimientos: rutas + repositorio + cálculo de alertas por umbral
-- [ ] 70. Módulo Alertas: vista consolidada ordenada por criticidad
-- [ ] 71. Módulo Equipo/Roles: alta y edición de usuarios (solo dirección)
-- [ ] 72. Módulo Reglas Impositivas: edición de tasas de IVA (solo dirección)
-- [ ] 73. Módulo Reglas de Notificación: alta/edición de reglas de recordatorio (ya tiene motor, falta la ruta)
-- [ ] 74. Módulo Event Log: consulta filtrable del historial (solo dirección/revisor)
+- [ ] 65. Módulo Documentos: rutas + repositorio (recepción, canal, estado, evidencia)
+- [ ] 66. Módulo Proceso Mensual: rutas + repositorio (el tablero operativo principal)
+- [ ] 67. Módulo Exportaciones SIGA: rutas + repositorio + conciliación aplicada
+- [ ] 68. Módulo Liquidaciones: rutas + repositorio
+- [ ] 69. Módulo Balances: rutas + repositorio, con la aprobación humana obligatoria del ADR 0004
+- [ ] 70. Módulo Vencimientos: rutas + repositorio + cálculo de alertas por umbral
+- [ ] 71. Módulo Alertas: vista consolidada ordenada por criticidad
+- [ ] 72. Módulo Equipo/Roles: alta y edición de usuarios (solo dirección)
+- [ ] 73. Módulo Reglas Impositivas: edición de tasas de IVA (solo dirección)
+- [ ] 74. Módulo Reglas de Notificación: alta/edición de reglas de recordatorio (ya tiene motor, falta la ruta)
+- [ ] 75. Módulo Event Log: consulta filtrable del historial (solo dirección/revisor)
 
 **Verificación de cada módulo:** su propio archivo de test de integración en verde antes de pasar al siguiente
 
@@ -167,13 +193,13 @@ El gate pasó de 9 a 10 checks activos: `test:integration` dejó de ser pendient
 
 ## PARTE 5 — Importadores desde OneDrive
 
-- [ ] 75. Registrar la aplicación en Azure AD (requiere que EFFORT cree la cuenta `sistema.effort360@...`)
-- [ ] 76. Implementar `packages/drive` — adaptador Microsoft Graph API + adaptador falso para tests
-- [ ] 77. Espejo automático hacia el OneDrive de respaldo, con manifiesto sha256
-- [ ] 78. Importador de comprobantes (Excel/CSV) con reporte de filas aceptadas/rechazadas
-- [ ] 79. Importador de exportaciones SIGA
-- [ ] 80. Modo simulación (`dry-run`) obligatorio antes de escribir en la base
-- [ ] 81. Idempotencia verificada: importar el mismo archivo dos veces no duplica
+- [ ] 76. Registrar la aplicación en Azure AD (requiere que EFFORT cree la cuenta `sistema.effort360@...`)
+- [ ] 77. Implementar `packages/drive` — adaptador Microsoft Graph API + adaptador falso para tests
+- [ ] 78. Espejo automático hacia el OneDrive de respaldo, con manifiesto sha256
+- [ ] 79. Importador de comprobantes (Excel/CSV) con reporte de filas aceptadas/rechazadas
+- [ ] 80. Importador de exportaciones SIGA
+- [ ] 81. Modo simulación (`dry-run`) obligatorio antes de escribir en la base
+- [ ] 82. Idempotencia verificada: importar el mismo archivo dos veces no duplica
 
 **Verificación:** `npm run verify:drive` → exit 0 contra el adaptador real (o falso si Azure AD no está listo)
 
@@ -181,11 +207,11 @@ El gate pasó de 9 a 10 checks activos: `test:integration` dejó de ser pendient
 
 ## PARTE 6 — Despachador de notificaciones
 
-- [ ] 82. Proveedor de envío de correo (a definir: Resend, SES, o el que EFFORT prefiera)
-- [ ] 83. Job programado que corre `planificarProximoRecordatorio` sobre todas las solicitudes abiertas
-- [ ] 84. Registro automático en `registro_contacto` con `origen=AUTOMATICO` por cada envío real
-- [ ] 85. Registro en `envio_notificacion` con el id del proveedor, para poder auditar contra su panel
-- [ ] 86. Manejo de fallos de envío (reintento, alerta a dirección si un correo rebota)
+- [ ] 83. Proveedor de envío de correo (a definir: Resend, SES, o el que EFFORT prefiera)
+- [ ] 84. Job programado que corre `planificarProximoRecordatorio` sobre todas las solicitudes abiertas
+- [ ] 85. Registro automático en `registro_contacto` con `origen=AUTOMATICO` por cada envío real
+- [ ] 86. Registro en `envio_notificacion` con el id del proveedor, para poder auditar contra su panel
+- [ ] 87. Manejo de fallos de envío (reintento, alerta a dirección si un correo rebota)
 
 **Verificación:** test de integración con proveedor de correo en modo sandbox
 
@@ -193,12 +219,12 @@ El gate pasó de 9 a 10 checks activos: `test:integration` dejó de ser pendient
 
 ## PARTE 7 — Interfaz completa contra la API real
 
-- [ ] 87. Cliente HTTP tipado en `apps/web`, con manejo de sesión/CSRF
-- [ ] 88. Reemplazar `datos-semilla/` por llamadas reales a la API
-- [ ] 89. Pantalla de login con flujo de 2FA en dos pasos
-- [ ] 90. Las 12 pantallas del handoff, una por una, contra datos reales
-- [ ] 91. Retirar por completo `apps/App.jsx` (la demo original) una vez que todas las pantallas tengan reemplazo
-- [ ] 92. `verify:no-hardcoded-kpi` — ningún número escrito a mano en la interfaz
+- [ ] 88. Cliente HTTP tipado en `apps/web`, con manejo de sesión/CSRF
+- [ ] 89. Reemplazar `datos-semilla/` por llamadas reales a la API
+- [ ] 90. Pantalla de login con flujo de 2FA en dos pasos
+- [ ] 91. Las 12 pantallas del handoff, una por una, contra datos reales
+- [ ] 92. Retirar por completo `apps/App.jsx` (la demo original) una vez que todas las pantallas tengan reemplazo
+- [ ] 93. `verify:no-hardcoded-kpi` — ningún número escrito a mano en la interfaz
 
 **Verificación:** `npm run test:e2e` (Playwright) → exit 0
 
@@ -206,19 +232,19 @@ El gate pasó de 9 a 10 checks activos: `test:integration` dejó de ser pendient
 
 ## PARTE 8 — Despliegue
 
-- [ ] 93. Crear la app en DigitalOcean App Platform, conectada al repositorio
-- [ ] 94. Configurar variables de entorno de producción (secretos distintos a los de desarrollo)
-- [ ] 95. Configurar el subdominio `effort360.disaak.com` (registro CNAME)
-- [ ] 96. Verificar HTTPS y que `ORIGEN_PERMITIDO`/cookies funcionan en producción
-- [ ] 97. Corrida de humo completa en producción con el usuario real de dirección
+- [ ] 94. Crear la app en DigitalOcean App Platform, conectada al repositorio
+- [ ] 95. Configurar variables de entorno de producción (secretos distintos a los de desarrollo)
+- [ ] 96. Configurar el subdominio `effort360.disaak.com` (registro CNAME)
+- [ ] 97. Verificar HTTPS y que `ORIGEN_PERMITIDO`/cookies funcionan en producción
+- [ ] 98. Corrida de humo completa en producción con el usuario real de dirección
 
 ---
 
 ## PARTE 9 — Validación final con EFFORT
 
-- [ ] 98. Contrastar el cálculo de IVA contra una liquidación real ya presentada (cierra la discrepancia #1 de `docs/DISCREPANCIAS.md`)
-- [ ] 99. Confirmar los 5 clientes piloto definitivos con Laura/Lili
-- [ ] 100. Primera revisión guiada con EFFORT: los 12 módulos, en vivo, con sus propios datos
+- [ ] 99. Contrastar el cálculo de IVA contra una liquidación real ya presentada (cierra la discrepancia #1 de `docs/DISCREPANCIAS.md`)
+- [ ] 100. Confirmar los 5 clientes piloto definitivos con Laura/Lili
+- [ ] 101. Primera revisión guiada con EFFORT: los 12 módulos, en vivo, con sus propios datos
 
 ---
 
