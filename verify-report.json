@@ -1,13 +1,13 @@
 {
-  "generado_en": "2026-07-22T11:08:23.294Z",
-  "commit": "99d49ae582a9c6dd8927a8ab7ec79d77b4e0b6c8",
+  "generado_en": "2026-07-22T12:43:02.681Z",
+  "commit": "3e8c5993ec93cd64c7a59962d3ddfe079e3c52b6",
   "checks": [
     {
       "nombre": "typecheck",
       "comando": "npx tsc --build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 1904,
+      "duracion_ms": 3451,
       "detalle": ""
     },
     {
@@ -15,7 +15,7 @@
       "comando": "npx vitest run",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 12918,
+      "duracion_ms": 29594,
       "detalle": ""
     },
     {
@@ -23,7 +23,7 @@
       "comando": "npx vitest run packages/core/test/golden.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 5019,
+      "duracion_ms": 3824,
       "detalle": ""
     },
     {
@@ -37,7 +37,7 @@
       "comando": "npx vitest run apps/api/test/rbac.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4189,
+      "duracion_ms": 3738,
       "detalle": ""
     },
     {
@@ -45,7 +45,7 @@
       "comando": "npx vitest run apps/api/test/seguridad.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 5757,
+      "duracion_ms": 4164,
       "detalle": ""
     },
     {
@@ -53,7 +53,7 @@
       "comando": "npx vitest run packages/schema/test/contratos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4354,
+      "duracion_ms": 3757,
       "detalle": ""
     },
     {
@@ -61,14 +61,16 @@
       "comando": "npx vitest run apps/api/test/servidor.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7976,
+      "duracion_ms": 7082,
       "detalle": ""
     },
     {
       "nombre": "test:integration",
-      "comando": "npm run test:integration --workspace @effort/api",
-      "estado": "PENDIENTE",
-      "detalle": "Los tests contra Postgres real (SQL y disparadores de inmutabilidad) esperan el DATABASE_URL de Supabase. El comportamiento de seguridad ya se verifica en verify:servidor con dobles."
+      "comando": "npx vitest run --project integracion",
+      "estado": "OK",
+      "exit_code": 0,
+      "duracion_ms": 45432,
+      "detalle": ""
     },
     {
       "nombre": "verify:drive",
@@ -93,7 +95,7 @@
       "comando": "npm audit --audit-level=high",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3645,
+      "duracion_ms": 2074,
       "detalle": ""
     },
     {
@@ -101,12 +103,12 @@
       "comando": "npm run build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 11950,
+      "duracion_ms": 6893,
       "detalle": ""
     }
   ],
-  "checks_ok": 9,
-  "checks_pendientes": 5,
+  "checks_ok": 10,
+  "checks_pendientes": 4,
   "checks_fallidos": 0,
   "todo_verde": true
 }

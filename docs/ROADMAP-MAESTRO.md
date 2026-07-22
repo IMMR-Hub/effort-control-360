@@ -132,16 +132,18 @@ Falta 53-55 antes de poder probar el sistema de punta a punta con datos.
 
 ## PARTE 3 — Implementación Prisma de los puertos
 
-- [ ] 56. Implementar `RepositorioDeUsuarios` contra Prisma
-- [ ] 57. Implementar `RepositorioDeSesiones` contra Prisma
-- [ ] 58. Implementar `RepositorioDeClientes` contra Prisma (con el filtro de cartera real, vía tabla `asignacion_cliente`)
-- [ ] 59. Implementar `RepositorioDeContactos` contra Prisma
-- [ ] 60. Implementar `RepositorioDeBitacora` contra Prisma
-- [ ] 61. Cablear `apps/api/src/index.ts` con las implementaciones reales (hoy usa las interfaces sin implementación)
-- [ ] 62. Tests de integración de cada repositorio contra la base real de Supabase
-- [ ] 63. Verificar en Supabase que las políticas RLS no bloquean al rol de la aplicación (dijimos activarlas como defensa en profundidad)
+- [x] 56. Implementar `RepositorioDeUsuarios` contra Prisma (con `select` explícito, para que agregar una columna sensible al modelo no la filtre sola)
+- [x] 57. Implementar `RepositorioDeSesiones` contra Prisma (el rol se lee del usuario en cada consulta, no queda congelado en la sesión)
+- [x] 58. Implementar `RepositorioDeClientes` contra Prisma, con el filtro de cartera aplicado en SQL vía `asignacion_cliente` con vigencia
+- [x] 59. Implementar `RepositorioDeContactos` contra Prisma (sin métodos de borrado ni edición: es evidencia)
+- [x] 60. Implementar `RepositorioDeBitacora` contra Prisma (solo inserción)
+- [x] 61. Cablear `apps/api/src/index.ts` con las implementaciones reales, un solo cliente Prisma compartido y comprobación de conexión antes de escuchar
+- [x] 62. Tests de integración contra la base real, en un esquema Postgres temporal que se crea y se destruye (31 tests)
+- [x] 63. **Bug encontrado y corregido por los tests de integración:** en `buscarPorId`, combinar la condición de identificador con la de cartera mediante spread hacía que la segunda pisara a la primera. La consulta perdía el id pedido y devolvía cualquier cliente de la cartera — pedir el cliente X devolvía el cliente Y. Los dobles de prueba no lo detectaban porque implementaban la lógica a mano y correctamente. Corregido con `AND` explícito + test de regresión.
+- [ ] 64. Verificar en Supabase que las políticas RLS no bloquean al rol de la aplicación (se activaron como defensa en profundidad; hoy la app usa el rol dueño del esquema, que las omite)
 
-**Verificación:** `npm run test:integration` → exit 0 contra la base real
+**Verificación:** `npm run verify` con `test:integration` en verde — ✅ hecho el 2026-07-22.
+El gate pasó de 9 a 10 checks activos: `test:integration` dejó de ser pendiente declarado.
 
 ---
 
@@ -232,3 +234,6 @@ tener que redescubrirla en la próxima conversación.)*
 - **2026-07-22** — La contraseña de Supabase puede traer caracteres especiales (`#`, `%`, etc.) que rompen la URL de conexión si no se codifican con `encodeURIComponent`. Si se resetea la contraseña en el futuro, revisar este punto de nuevo.
 - **2026-07-22** — Supabase entrega dos cadenas de conexión distintas y hacen falta las dos: `DATABASE_URL` (Transaction pooler, puerto 6543) para la app en marcha, `DIRECT_URL` (Session pooler, puerto 5432) para las migraciones de Prisma. Usar solo la de 6543 hace fallar `prisma migrate` con "prepared statement already exists".
 - **2026-07-22** — Base de datos de Supabase conectada y migrada: 16 tablas creadas, trigger de inmutabilidad de `event_log`/`registro_contacto` verificado con una escritura real (insert → update rechazado → delete rechazado → fila intacta).
+- **2026-07-22** — Los tests de integración corren en un esquema Postgres temporal (`pruebas_<aleatorio>`) que se crea, se migra y se destruye por corrida. No usan `public` porque los disparadores append-only impiden borrar filas de `event_log` y `registro_contacto`, así que cualquier test que escriba ahí dejaría basura permanente en la base del piloto.
+- **2026-07-22** — Los tests de integración usan `DIRECT_URL` (Session pooler) y no `DATABASE_URL`: crear esquemas y tipos necesita sentencias preparadas que el pooler de transacción no admite.
+- **2026-07-22** — Lección: los dobles de prueba validan el contrato, no la consulta. El bug de `buscarPorId` (spread pisando la clave `id`) pasó 31 tests con dobles y solo apareció contra Postgres real. Todo repositorio nuevo necesita su test de integración, no alcanza con el doble.

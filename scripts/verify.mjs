@@ -31,7 +31,7 @@ const CHECKS = [
   { nombre: 'verify:seguridad', comando: 'npx vitest run apps/api/test/seguridad.test.ts' },
   { nombre: 'verify:contratos', comando: 'npx vitest run packages/schema/test/contratos.test.ts' },
   { nombre: 'verify:servidor', comando: 'npx vitest run apps/api/test/servidor.test.ts' },
-  { nombre: 'test:integration', comando: 'npm run test:integration --workspace @effort/api', pendiente: 'Los tests contra Postgres real (SQL y disparadores de inmutabilidad) esperan el DATABASE_URL de Supabase. El comportamiento de seguridad ya se verifica en verify:servidor con dobles.' },
+  { nombre: 'test:integration', comando: 'npx vitest run --project integracion' },
   { nombre: 'verify:drive', comando: 'npm run verify:drive --workspace @effort/drive', pendiente: 'packages/drive todavía no existe.' },
   { nombre: 'verify:no-hardcoded-kpi', comando: 'node scripts/verificar-kpi.mjs', pendiente: 'apps/web todavía muestra los datos de la demo anterior.' },
   { nombre: 'test:e2e', comando: 'npx playwright test', pendiente: 'apps/web todavía no consume la API.' },

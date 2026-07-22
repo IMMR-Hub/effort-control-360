@@ -6,11 +6,44 @@
  * y por eso se pueden probar sin levantar nada.
  */
 
-import { cargarConfiguracion } from './configuracion.js';
+import { cargarConfiguracion, type Configuracion } from './configuracion.js';
 import { construirServidor, type Dependencias } from './servidor.js';
 import { registrarRutasDeAutenticacion } from './rutas/autenticacion.js';
 import { registrarRutasDeContactos } from './rutas/contactos.js';
 import { AlmacenEnMemoria } from './seguridad/limites.js';
+import { comprobarConexion, crearClientePrisma } from './repositorios/prisma.js';
+import { UsuariosPrisma } from './repositorios/usuarios.js';
+import { SesionesPrisma } from './repositorios/sesiones.js';
+import { ClientesPrisma } from './repositorios/clientes.js';
+import { ContactosPrisma } from './repositorios/contactos.js';
+import { BitacoraPrisma } from './repositorios/bitacora.js';
+
+export interface DependenciasReales extends Dependencias {
+  readonly cerrar: () => Promise<void>;
+}
+
+/**
+ * Arma las dependencias reales.
+ *
+ * Un solo cliente de Prisma para todos los repositorios: comparten el pool de
+ * conexiones, que en Supabase Nano es de 15 y se agota rápido si cada
+ * repositorio abre el suyo.
+ */
+export function construirDependencias(configuracion: Configuracion): DependenciasReales {
+  const prisma = crearClientePrisma();
+
+  return {
+    configuracion,
+    usuarios: new UsuariosPrisma(prisma),
+    sesiones: new SesionesPrisma(prisma),
+    clientes: new ClientesPrisma(prisma),
+    contactos: new ContactosPrisma(prisma),
+    bitacora: new BitacoraPrisma(prisma),
+    intentosDeAcceso: new AlmacenEnMemoria(),
+    ahora: () => new Date(),
+    cerrar: () => prisma.$disconnect(),
+  };
+}
 
 export async function arrancar(dependencias: Dependencias): Promise<void> {
   const app = await construirServidor(dependencias);
@@ -36,6 +69,27 @@ export async function arrancar(dependencias: Dependencias): Promise<void> {
   }
 
   await app.listen({ port: dependencias.configuracion.PORT, host: '0.0.0.0' });
+}
+
+/**
+ * Arranque completo.
+ *
+ * Comprueba la base ANTES de escuchar peticiones: es preferible que el proceso
+ * muera de entrada con un mensaje claro a que levante, acepte un acceso y falle
+ * recién cuando un usuario intenta guardar algo.
+ */
+export async function principal(): Promise<void> {
+  const configuracion = cargarConfiguracion();
+  const dependencias = construirDependencias(configuracion);
+
+  const prisma = crearClientePrisma();
+  try {
+    await comprobarConexion(prisma);
+  } finally {
+    await prisma.$disconnect();
+  }
+
+  await arrancar(dependencias);
 }
 
 export { cargarConfiguracion, construirServidor, AlmacenEnMemoria };

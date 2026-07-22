@@ -1,0 +1,463 @@
+/**
+ * Tests de integración contra PostgreSQL real.
+ *
+ * Verifican lo que los dobles de prueba no pueden: que el SQL sea correcto, que
+ * las restricciones de la base se apliquen, y que los disparadores de
+ * inmutabilidad frenen de verdad.
+ *
+ * Corren en un esquema propio que se destruye al final. Si no hay base
+ * configurada, se saltean.
+ */
+
+import { afterAll, beforeAll, describe, expect, it } from 'vitest';
+
+import { HAY_BASE_DE_DATOS, crearEntorno, type EntornoDePrueba } from './entorno.js';
+import { UsuariosPrisma } from '../../src/repositorios/usuarios.js';
+import { SesionesPrisma } from '../../src/repositorios/sesiones.js';
+import { ClientesPrisma } from '../../src/repositorios/clientes.js';
+import { ContactosPrisma } from '../../src/repositorios/contactos.js';
+import { BitacoraPrisma } from '../../src/repositorios/bitacora.js';
+import { prepararEntrada } from '../../src/bitacora.js';
+
+const describeSiHayBase = HAY_BASE_DE_DATOS ? describe : describe.skip;
+
+describeSiHayBase('repositorios contra PostgreSQL real', () => {
+  let entorno: EntornoDePrueba;
+  let usuarios: UsuariosPrisma;
+  let sesiones: SesionesPrisma;
+  let clientes: ClientesPrisma;
+  let contactos: ContactosPrisma;
+  let bitacora: BitacoraPrisma;
+
+  let idAuxiliar = '';
+  let idDireccion = '';
+  let idClienteAsignado = '';
+  let idClienteAjeno = '';
+
+  beforeAll(async () => {
+    entorno = await crearEntorno();
+
+    usuarios = new UsuariosPrisma(entorno.prisma);
+    sesiones = new SesionesPrisma(entorno.prisma);
+    clientes = new ClientesPrisma(entorno.prisma);
+    contactos = new ContactosPrisma(entorno.prisma);
+    bitacora = new BitacoraPrisma(entorno.prisma);
+
+    const auxiliar = await entorno.prisma.usuario.create({
+      data: {
+        nombre: 'Aracely', apellido: 'Gaona', email: 'aracely@effort.com.py',
+        rol: 'auxiliar', hashContrasena: '$argon2id$prueba', veTodosLosClientes: false,
+      },
+    });
+    idAuxiliar = auxiliar.id;
+
+    const direccion = await entorno.prisma.usuario.create({
+      data: {
+        nombre: 'Lili', apellido: 'Dirección', email: 'lili@effort.com.py',
+        rol: 'direccion', hashContrasena: '$argon2id$prueba', veTodosLosClientes: true,
+      },
+    });
+    idDireccion = direccion.id;
+
+    const asignado = await entorno.prisma.cliente.create({
+      data: { nombre: 'GARSO S.A.', ruc: '80017726-6', tipoPersona: 'JURIDICA' },
+    });
+    idClienteAsignado = asignado.id;
+
+    const ajeno = await entorno.prisma.cliente.create({
+      data: { nombre: 'CLIENTE AJENO S.A.', ruc: '80019012-2', tipoPersona: 'JURIDICA' },
+    });
+    idClienteAjeno = ajeno.id;
+
+    await entorno.prisma.asignacionCliente.create({
+      data: { clienteId: idClienteAsignado, usuarioId: idAuxiliar, rol: 'auxiliar' },
+    });
+  }, 120_000);
+
+  afterAll(async () => {
+    await entorno?.destruir();
+  }, 60_000);
+
+  /* --- Usuarios ---------------------------------------------------------- */
+
+  describe('usuarios', () => {
+    it('encuentra por correo y devuelve las credenciales que el acceso necesita', async () => {
+      const usuario = await usuarios.buscarPorEmail('aracely@effort.com.py');
+
+      expect(usuario?.id).toBe(idAuxiliar);
+      expect(usuario?.rol).toBe('auxiliar');
+      expect(usuario?.hashContrasena).toBe('$argon2id$prueba');
+    });
+
+    it('devuelve null para un correo inexistente, sin lanzar', async () => {
+      expect(await usuarios.buscarPorEmail('nadie@effort.com.py')).toBeNull();
+    });
+
+    it('el correo es único: no se pueden crear dos usuarios con el mismo', async () => {
+      await expect(
+        entorno.prisma.usuario.create({
+          data: {
+            nombre: 'Impostor', apellido: 'X', email: 'aracely@effort.com.py',
+            rol: 'auxiliar', hashContrasena: '$argon2id$otro',
+          },
+        }),
+      ).rejects.toThrow();
+    });
+
+    it('trae los clientes asignados vigentes', async () => {
+      expect(await usuarios.clientesAsignados(idAuxiliar)).toEqual([idClienteAsignado]);
+    });
+
+    it('una asignación terminada deja de contar', async () => {
+      const temporal = await entorno.prisma.cliente.create({
+        data: { nombre: 'CLIENTE TEMPORAL', ruc: '80022588-0', tipoPersona: 'JURIDICA' },
+      });
+
+      await entorno.prisma.asignacionCliente.create({
+        data: {
+          clienteId: temporal.id, usuarioId: idAuxiliar, rol: 'coordinador',
+          hasta: new Date('2020-01-01'),
+        },
+      });
+
+      const asignados = await usuarios.clientesAsignados(idAuxiliar);
+      expect(asignados).not.toContain(temporal.id);
+    });
+
+    it('un usuario sin asignaciones devuelve lista vacía, no todos', async () => {
+      expect(await usuarios.clientesAsignados(idDireccion)).toEqual([]);
+    });
+
+    it('registra el último acceso', async () => {
+      const momento = new Date('2026-07-22T12:00:00Z');
+      await usuarios.registrarAcceso(idAuxiliar, momento);
+
+      const fila = await entorno.prisma.usuario.findUnique({
+        where: { id: idAuxiliar }, select: { ultimoAccesoEn: true },
+      });
+      expect(fila?.ultimoAccesoEn?.toISOString()).toBe(momento.toISOString());
+    });
+  });
+
+  /* --- Sesiones ---------------------------------------------------------- */
+
+  describe('sesiones', () => {
+    it('crea la sesión trayendo el rol del usuario', async () => {
+      const sesion = await sesiones.crear({
+        hashDelToken: 'a'.repeat(64), usuarioId: idAuxiliar,
+        segundoFactorSuperado: true, ipTruncada: '190.128.50.0', agenteUsuario: 'prueba',
+      });
+
+      expect(sesion.rol).toBe('auxiliar');
+      expect(sesion.revocadaEn).toBeNull();
+    });
+
+    it('el rol se lee del usuario en cada consulta, no queda congelado en la sesión', async () => {
+      const usuario = await entorno.prisma.usuario.create({
+        data: {
+          nombre: 'Cambia', apellido: 'Rol', email: 'cambia@effort.com.py',
+          rol: 'auxiliar', hashContrasena: '$argon2id$prueba',
+        },
+      });
+
+      const hash = 'b'.repeat(64);
+      await sesiones.crear({
+        hashDelToken: hash, usuarioId: usuario.id,
+        segundoFactorSuperado: true, ipTruncada: null, agenteUsuario: null,
+      });
+
+      await entorno.prisma.usuario.update({
+        where: { id: usuario.id }, data: { rol: 'solo_lectura' },
+      });
+
+      // Si el rol estuviera copiado en la tabla sesion, esta sesión seguiría
+      // operando como auxiliar hasta que la persona cerrara sesión.
+      const recuperada = await sesiones.buscarPorHash(hash);
+      expect(recuperada?.rol).toBe('solo_lectura');
+    });
+
+    it('el hash del token es único: no puede haber dos sesiones con el mismo', async () => {
+      const hash = 'c'.repeat(64);
+      await sesiones.crear({
+        hashDelToken: hash, usuarioId: idAuxiliar,
+        segundoFactorSuperado: true, ipTruncada: null, agenteUsuario: null,
+      });
+
+      await expect(
+        sesiones.crear({
+          hashDelToken: hash, usuarioId: idDireccion,
+          segundoFactorSuperado: true, ipTruncada: null, agenteUsuario: null,
+        }),
+      ).rejects.toThrow();
+    });
+
+    it('revoca una sesión con su motivo', async () => {
+      const hash = 'd'.repeat(64);
+      const sesion = await sesiones.crear({
+        hashDelToken: hash, usuarioId: idAuxiliar,
+        segundoFactorSuperado: true, ipTruncada: null, agenteUsuario: null,
+      });
+
+      const momento = new Date();
+      await sesiones.revocar(sesion.id, momento, 'salida_voluntaria');
+
+      const recuperada = await sesiones.buscarPorHash(hash);
+      expect(recuperada?.revocadaEn).not.toBeNull();
+    });
+
+    it('revoca todas las del usuario sin pisar las ya cerradas', async () => {
+      const usuario = await entorno.prisma.usuario.create({
+        data: {
+          nombre: 'Multi', apellido: 'Sesion', email: 'multi@effort.com.py',
+          rol: 'auxiliar', hashContrasena: '$argon2id$prueba',
+        },
+      });
+
+      const cerradaAntes = await sesiones.crear({
+        hashDelToken: 'e'.repeat(64), usuarioId: usuario.id,
+        segundoFactorSuperado: true, ipTruncada: null, agenteUsuario: null,
+      });
+      const revocacionOriginal = new Date('2026-01-01T00:00:00Z');
+      await sesiones.revocar(cerradaAntes.id, revocacionOriginal, 'salida_voluntaria');
+
+      await sesiones.crear({
+        hashDelToken: 'f'.repeat(64), usuarioId: usuario.id,
+        segundoFactorSuperado: true, ipTruncada: null, agenteUsuario: null,
+      });
+
+      await sesiones.revocarTodasDelUsuario(usuario.id, new Date(), 'baja_de_empleado');
+
+      const previa = await sesiones.buscarPorHash('e'.repeat(64));
+      const nueva = await sesiones.buscarPorHash('f'.repeat(64));
+
+      // La ya cerrada conserva su fecha original: no se reescribe el historial.
+      expect(previa?.revocadaEn?.toISOString()).toBe(revocacionOriginal.toISOString());
+      expect(nueva?.revocadaEn).not.toBeNull();
+    });
+
+    it('renueva la ventana de inactividad', async () => {
+      const hash = '1'.repeat(64);
+      const sesion = await sesiones.crear({
+        hashDelToken: hash, usuarioId: idAuxiliar,
+        segundoFactorSuperado: true, ipTruncada: null, agenteUsuario: null,
+      });
+
+      const despues = new Date(Date.now() + 60_000);
+      await sesiones.tocar(sesion.id, despues);
+
+      const recuperada = await sesiones.buscarPorHash(hash);
+      expect(recuperada!.ultimoUsoEn.getTime()).toBeGreaterThan(sesion.ultimoUsoEn.getTime());
+    });
+  });
+
+  /* --- Clientes: el filtro de cartera aplicado en SQL --------------------- */
+
+  describe('clientes', () => {
+    it('sin filtro devuelve toda la cartera', async () => {
+      const lista = await clientes.listar(null);
+      const ids = lista.map((cliente) => cliente.id);
+
+      expect(ids).toContain(idClienteAsignado);
+      expect(ids).toContain(idClienteAjeno);
+    });
+
+    it('con filtro devuelve solo los de la cartera', async () => {
+      const lista = await clientes.listar([idClienteAsignado]);
+
+      expect(lista).toHaveLength(1);
+      expect(lista[0]?.id).toBe(idClienteAsignado);
+    });
+
+    it('un filtro vacío no devuelve nada, en vez de devolver todo', async () => {
+      // Es el caso que suele fallar: tratar el arreglo vacío como "sin filtro"
+      // le mostraría la cartera entera a un usuario sin clientes asignados.
+      expect(await clientes.listar([])).toEqual([]);
+    });
+
+    it('buscar un cliente fuera de la cartera devuelve null', async () => {
+      expect(await clientes.buscarPorId(idClienteAjeno, [idClienteAsignado])).toBeNull();
+    });
+
+    it('buscar un cliente de la cartera lo devuelve', async () => {
+      const cliente = await clientes.buscarPorId(idClienteAsignado, [idClienteAsignado]);
+      expect(cliente?.nombre).toBe('GARSO S.A.');
+    });
+
+    it('devuelve el cliente pedido, no otro de la cartera', async () => {
+      // Regresión: las dos condiciones se expresan sobre `id`, y combinarlas
+      // con spread hacía que la segunda pisara a la primera. La consulta perdía
+      // el identificador solicitado y devolvía cualquier cliente de la cartera:
+      // pedir el cliente X devolvía el cliente Y.
+      const cartera = [idClienteAsignado, idClienteAjeno];
+
+      const primero = await clientes.buscarPorId(idClienteAsignado, cartera);
+      const segundo = await clientes.buscarPorId(idClienteAjeno, cartera);
+
+      expect(primero?.id).toBe(idClienteAsignado);
+      expect(segundo?.id).toBe(idClienteAjeno);
+      expect(primero?.id).not.toBe(segundo?.id);
+    });
+
+    it('devuelve null para un cliente inexistente aunque no haya filtro', async () => {
+      expect(
+        await clientes.buscarPorId('00000000-0000-4000-8000-000000000000', null),
+      ).toBeNull();
+    });
+
+    it('el RUC es único: no se puede cargar dos veces el mismo cliente', async () => {
+      await expect(
+        entorno.prisma.cliente.create({
+          data: { nombre: 'GARSO DUPLICADO', ruc: '80017726-6', tipoPersona: 'JURIDICA' },
+        }),
+      ).rejects.toThrow();
+    });
+  });
+
+  /* --- Contactos --------------------------------------------------------- */
+
+  describe('bitácora de contactos', () => {
+    it('registra un contacto y lo recupera por cliente y período', async () => {
+      await contactos.registrar({
+        clienteId: idClienteAsignado, periodo: '2026-03', canal: 'LLAMADA',
+        direccion: 'SALIENTE', origenContacto: 'MANUAL',
+        ocurridoEn: new Date('2026-04-10T13:00:00Z'), registradoPorUsuarioId: idAuxiliar,
+        huboRespuesta: true, quienAtendio: 'Sra. González',
+        resumen: 'Se pidieron las facturas de marzo.', evidenciaId: null,
+      });
+
+      const lista = await contactos.listarPorCliente(idClienteAsignado, '2026-03');
+
+      expect(lista).toHaveLength(1);
+      expect(lista[0]?.quienAtendio).toBe('Sra. González');
+      expect(lista[0]?.origenContacto).toBe('MANUAL');
+    });
+
+    it('no mezcla períodos', async () => {
+      await contactos.registrar({
+        clienteId: idClienteAsignado, periodo: '2026-04', canal: 'WHATSAPP',
+        direccion: 'SALIENTE', origenContacto: 'AUTOMATICO',
+        ocurridoEn: new Date('2026-05-02T10:00:00Z'), registradoPorUsuarioId: idAuxiliar,
+        huboRespuesta: false, quienAtendio: null,
+        resumen: 'Recordatorio de abril.', evidenciaId: null,
+      });
+
+      expect(await contactos.listarPorCliente(idClienteAsignado, '2026-03')).toHaveLength(1);
+      expect(await contactos.listarPorCliente(idClienteAsignado, '2026-04')).toHaveLength(1);
+      expect(await contactos.listarPorCliente(idClienteAsignado, null)).toHaveLength(2);
+    });
+
+    it('ordena del más reciente al más antiguo', async () => {
+      const lista = await contactos.listarPorCliente(idClienteAsignado, null);
+      expect(lista[0]!.ocurridoEn.getTime()).toBeGreaterThan(lista[1]!.ocurridoEn.getTime());
+    });
+
+    it('un contacto no se puede borrar: es evidencia', async () => {
+      const lista = await contactos.listarPorCliente(idClienteAsignado, '2026-03');
+      const id = lista[0]!.id;
+
+      await expect(
+        entorno.prisma.$executeRawUnsafe(`DELETE FROM registro_contacto WHERE id = '${id}'`),
+      ).rejects.toThrow();
+
+      // Y sigue ahí después del intento.
+      expect(await contactos.listarPorCliente(idClienteAsignado, '2026-03')).toHaveLength(1);
+    });
+  });
+
+  /* --- Bitácora de eventos: inmutabilidad real ---------------------------- */
+
+  describe('registro de eventos', () => {
+    it('escribe una entrada saneada', async () => {
+      await bitacora.registrar(
+        prepararEntrada({
+          usuarioId: idAuxiliar,
+          accion: 'contacto.registrado',
+          entidad: 'registro_contacto',
+          entidadId: 'algun-id',
+          clienteId: idClienteAsignado,
+          datosDespues: { canal: 'LLAMADA', password: 'secreta', email: 'x@y.com' },
+          ip: '190.128.50.77',
+          agenteUsuario: 'Mozilla/5.0',
+          peticionId: 'pet-abc',
+        }),
+      );
+
+      const filas = await entorno.prisma.eventLog.findMany({
+        where: { accion: 'contacto.registrado' },
+      });
+
+      expect(filas).toHaveLength(1);
+      expect(filas[0]?.ipTruncada).toBe('190.128.50.0');
+
+      const datos = filas[0]?.datosDespues as Record<string, unknown>;
+      expect(datos['password']).toBe('[oculto]');
+      expect(datos['email']).toBe('x***@y.com');
+    });
+
+    it('no se puede modificar una entrada ya escrita', async () => {
+      const fila = await entorno.prisma.eventLog.create({
+        data: { accion: 'prueba.inmutable', entidad: 'sistema' },
+      });
+
+      await expect(
+        entorno.prisma.$executeRawUnsafe(
+          `UPDATE event_log SET accion = 'alterado' WHERE id = '${fila.id}'`,
+        ),
+      ).rejects.toThrow();
+
+      const sinCambios = await entorno.prisma.eventLog.findUnique({ where: { id: fila.id } });
+      expect(sinCambios?.accion).toBe('prueba.inmutable');
+    });
+
+    it('no se puede borrar una entrada', async () => {
+      const fila = await entorno.prisma.eventLog.create({
+        data: { accion: 'prueba.no.borrable', entidad: 'sistema' },
+      });
+
+      await expect(
+        entorno.prisma.$executeRawUnsafe(`DELETE FROM event_log WHERE id = '${fila.id}'`),
+      ).rejects.toThrow();
+
+      expect(await entorno.prisma.eventLog.findUnique({ where: { id: fila.id } })).not.toBeNull();
+    });
+
+    it('no se puede vaciar la tabla con TRUNCATE', async () => {
+      // TRUNCATE no dispara los disparadores de fila: sin uno propio a nivel de
+      // sentencia, esta sola línea borraría toda la trazabilidad del sistema.
+      await expect(entorno.prisma.$executeRawUnsafe('TRUNCATE event_log')).rejects.toThrow();
+
+      const cuantas = await entorno.prisma.eventLog.count();
+      expect(cuantas).toBeGreaterThan(0);
+    });
+  });
+
+  /* --- Dinero en la base -------------------------------------------------- */
+
+  describe('dinero', () => {
+    it('guarda y recupera importes grandes sin perder precisión', async () => {
+      // Por encima del entero seguro de JavaScript (2^53). Con una columna
+      // de coma flotante, este número volvería alterado.
+      const importe = 9_007_199_254_740_993n;
+
+      const balance = await entorno.prisma.balance.create({
+        data: {
+          clienteId: idClienteAsignado, periodo: '2026-12',
+          activo: importe, pasivo: 0n, patrimonioNeto: importe, resultadoEjercicio: 0n,
+        },
+      });
+
+      const recuperado = await entorno.prisma.balance.findUnique({ where: { id: balance.id } });
+
+      expect(recuperado?.activo).toBe(importe);
+      expect(typeof recuperado?.activo).toBe('bigint');
+    });
+
+    it('un cliente no puede tener dos balances del mismo período', async () => {
+      await expect(
+        entorno.prisma.balance.create({
+          data: { clienteId: idClienteAsignado, periodo: '2026-12', activo: 1n },
+        }),
+      ).rejects.toThrow();
+    });
+  });
+});
