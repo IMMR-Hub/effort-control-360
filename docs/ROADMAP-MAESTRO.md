@@ -26,7 +26,7 @@ skill global **`backend-datos-sensibles`**, reutilizable en otros proyectos.
 tarea marcada sin commit real detrás es peor que no marcarla — hace perder
 confianza en todo el resto del documento.
 
-**Avance: 73 de 109 tareas.** Partes 1, 2, 3, 4A y 4B cerradas.
+**Avance: 75 de 111 tareas.** Partes 1, 2, 3, 4A, 4B y 4C cerradas.
 
 Última actualización: 2026-07-22 · Commit de referencia: ver último commit en `git log`
 
@@ -200,14 +200,25 @@ El gate pasó de 10 a 11 checks activos.
 **Verificación:** `npm run verify` con `verify:siga` en verde — ✅ hecho el 2026-07-22.
 El gate pasó de 11 a 12 checks activos.
 
-### 4C — Módulos restantes
+### 4C — Deuda de tests de integración (COMPLETA)
 
-- [ ] 78. Módulo Alertas: vista consolidada ordenada por criticidad (la tabla ya existe)
-- [ ] 79. Módulo Equipo/Roles: alta y edición de usuarios (solo dirección)
-- [ ] 80. Módulo Reglas Impositivas: edición de tasas de IVA (solo dirección)
-- [ ] 81. Módulo Reglas de Notificación: alta/edición de reglas de recordatorio (ya tiene motor, falta la ruta)
-- [ ] 82. Módulo Event Log: consulta filtrable del historial (solo dirección/revisor)
-- [ ] 83. Tests de integración de los repositorios de la Parte 4 contra Postgres real (los de 4A todavía solo tienen dobles)
+Se saldó **antes** de avanzar a los módulos restantes: los repositorios de 4A y
+4B tenían solo dobles de prueba, que es exactamente donde se había escondido el
+bug de `buscarPorId`.
+
+- [x] 78. 35 tests de integración contra Postgres real para los seis repositorios de 4A y 4B (`documentos`, `proceso_mensual`, `vencimientos`, `balances`, `exportaciones_siga`, `liquidaciones`)
+- [x] 79. Verificado lo que un doble no puede detectar: que el filtro de cartera no pise las demás condiciones del `where`, que las restricciones de unicidad se apliquen de verdad, que el `upsert` no duplique bajo llamadas simultáneas, que un `BIGINT` por encima de 2^53 vuelva intacto, y que la transacción de importación SIGA **revierta entera** cuando una fila es inválida
+
+**Verificación:** `npm run verify` con `test:integration` en verde — ✅ hecho el 2026-07-22.
+
+### 4D — Módulos restantes
+
+- [ ] 80. Módulo Alertas: vista consolidada ordenada por criticidad (la tabla ya existe)
+- [ ] 81. Módulo Equipo/Roles: alta y edición de usuarios (solo dirección)
+- [ ] 82. Módulo Reglas Impositivas: edición de tasas de IVA (solo dirección)
+- [ ] 83. Módulo Reglas de Notificación: alta/edición de reglas de recordatorio (ya tiene motor, falta la ruta)
+- [ ] 84. Módulo Event Log: consulta filtrable del historial (solo dirección/revisor)
+- [ ] 85. Tests de integración de los repositorios de la Parte 4 contra Postgres real (los de 4A todavía solo tienen dobles)
 
 **Verificación de cada módulo:** su propio test en verde antes de pasar al siguiente
 
@@ -215,13 +226,13 @@ El gate pasó de 11 a 12 checks activos.
 
 ## PARTE 5 — Importadores desde OneDrive
 
-- [ ] 84. Registrar la aplicación en Azure AD (requiere que EFFORT cree la cuenta `sistema.effort360@...`)
-- [ ] 85. Implementar `packages/drive` — adaptador Microsoft Graph API + adaptador falso para tests
-- [ ] 86. Espejo automático hacia el OneDrive de respaldo, con manifiesto sha256
-- [ ] 87. Importador de comprobantes (Excel/CSV) con reporte de filas aceptadas/rechazadas
-- [ ] 88. Importador de exportaciones SIGA
-- [ ] 89. Modo simulación (`dry-run`) obligatorio antes de escribir en la base
-- [ ] 90. Idempotencia verificada: importar el mismo archivo dos veces no duplica
+- [ ] 86. Registrar la aplicación en Azure AD (requiere que EFFORT cree la cuenta `sistema.effort360@...`)
+- [ ] 87. Implementar `packages/drive` — adaptador Microsoft Graph API + adaptador falso para tests
+- [ ] 88. Espejo automático hacia el OneDrive de respaldo, con manifiesto sha256
+- [ ] 89. Importador de comprobantes (Excel/CSV) con reporte de filas aceptadas/rechazadas
+- [ ] 90. Importador de exportaciones SIGA
+- [ ] 91. Modo simulación (`dry-run`) obligatorio antes de escribir en la base
+- [ ] 92. Idempotencia verificada: importar el mismo archivo dos veces no duplica
 
 **Verificación:** `npm run verify:drive` → exit 0 contra el adaptador real (o falso si Azure AD no está listo)
 
@@ -229,11 +240,11 @@ El gate pasó de 11 a 12 checks activos.
 
 ## PARTE 6 — Despachador de notificaciones
 
-- [ ] 91. Proveedor de envío de correo (a definir: Resend, SES, o el que EFFORT prefiera)
-- [ ] 92. Job programado que corre `planificarProximoRecordatorio` sobre todas las solicitudes abiertas
-- [ ] 93. Registro automático en `registro_contacto` con `origen=AUTOMATICO` por cada envío real
-- [ ] 94. Registro en `envio_notificacion` con el id del proveedor, para poder auditar contra su panel
-- [ ] 95. Manejo de fallos de envío (reintento, alerta a dirección si un correo rebota)
+- [ ] 93. Proveedor de envío de correo (a definir: Resend, SES, o el que EFFORT prefiera)
+- [ ] 94. Job programado que corre `planificarProximoRecordatorio` sobre todas las solicitudes abiertas
+- [ ] 95. Registro automático en `registro_contacto` con `origen=AUTOMATICO` por cada envío real
+- [ ] 96. Registro en `envio_notificacion` con el id del proveedor, para poder auditar contra su panel
+- [ ] 97. Manejo de fallos de envío (reintento, alerta a dirección si un correo rebota)
 
 **Verificación:** test de integración con proveedor de correo en modo sandbox
 
@@ -241,12 +252,12 @@ El gate pasó de 11 a 12 checks activos.
 
 ## PARTE 7 — Interfaz completa contra la API real
 
-- [ ] 96. Cliente HTTP tipado en `apps/web`, con manejo de sesión/CSRF
-- [ ] 97. Reemplazar `datos-semilla/` por llamadas reales a la API
-- [ ] 98. Pantalla de login con flujo de 2FA en dos pasos
-- [ ] 99. Las 12 pantallas del handoff, una por una, contra datos reales
-- [ ] 100. Retirar por completo `apps/App.jsx` (la demo original) una vez que todas las pantallas tengan reemplazo
-- [ ] 101. `verify:no-hardcoded-kpi` — ningún número escrito a mano en la interfaz
+- [ ] 98. Cliente HTTP tipado en `apps/web`, con manejo de sesión/CSRF
+- [ ] 99. Reemplazar `datos-semilla/` por llamadas reales a la API
+- [ ] 100. Pantalla de login con flujo de 2FA en dos pasos
+- [ ] 101. Las 12 pantallas del handoff, una por una, contra datos reales
+- [ ] 102. Retirar por completo `apps/App.jsx` (la demo original) una vez que todas las pantallas tengan reemplazo
+- [ ] 103. `verify:no-hardcoded-kpi` — ningún número escrito a mano en la interfaz
 
 **Verificación:** `npm run test:e2e` (Playwright) → exit 0
 
@@ -254,19 +265,19 @@ El gate pasó de 11 a 12 checks activos.
 
 ## PARTE 8 — Despliegue
 
-- [ ] 102. Crear la app en DigitalOcean App Platform, conectada al repositorio
-- [ ] 103. Configurar variables de entorno de producción (secretos distintos a los de desarrollo)
-- [ ] 104. Configurar el subdominio `effort360.disaak.com` (registro CNAME)
-- [ ] 105. Verificar HTTPS y que `ORIGEN_PERMITIDO`/cookies funcionan en producción
-- [ ] 106. Corrida de humo completa en producción con el usuario real de dirección
+- [ ] 104. Crear la app en DigitalOcean App Platform, conectada al repositorio
+- [ ] 105. Configurar variables de entorno de producción (secretos distintos a los de desarrollo)
+- [ ] 106. Configurar el subdominio `effort360.disaak.com` (registro CNAME)
+- [ ] 107. Verificar HTTPS y que `ORIGEN_PERMITIDO`/cookies funcionan en producción
+- [ ] 108. Corrida de humo completa en producción con el usuario real de dirección
 
 ---
 
 ## PARTE 9 — Validación final con EFFORT
 
-- [ ] 107. Contrastar el cálculo de IVA contra una liquidación real ya presentada (cierra la discrepancia #1 de `docs/DISCREPANCIAS.md`)
-- [ ] 108. Confirmar los 5 clientes piloto definitivos con Laura/Lili
-- [ ] 109. Primera revisión guiada con EFFORT: los 12 módulos, en vivo, con sus propios datos
+- [ ] 109. Contrastar el cálculo de IVA contra una liquidación real ya presentada (cierra la discrepancia #1 de `docs/DISCREPANCIAS.md`)
+- [ ] 110. Confirmar los 5 clientes piloto definitivos con Laura/Lili
+- [ ] 111. Primera revisión guiada con EFFORT: los 12 módulos, en vivo, con sus propios datos
 
 ---
 
