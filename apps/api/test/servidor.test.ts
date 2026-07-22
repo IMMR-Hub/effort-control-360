@@ -24,6 +24,12 @@ import {
   SesionesFalsas,
   UsuariosFalsos,
 } from './dobles.js';
+import {
+  BalancesFalsos,
+  DocumentosFalsos,
+  ProcesoMensualFalso,
+  VencimientosFalsos,
+} from './dobles-dominio.js';
 
 const CONTRASENA = 'una frase larga y memorable';
 const CLIENTE_ASIGNADO = '11111111-1111-4111-8111-111111111111';
@@ -91,6 +97,10 @@ async function montar(opciones: { bitacoraRota?: boolean } = {}): Promise<Contex
     clientes,
     contactos,
     bitacora: opciones.bitacoraRota ? new BitacoraRota() : bitacora,
+    documentos: new DocumentosFalsos(),
+    procesoMensual: new ProcesoMensualFalso(),
+    vencimientos: new VencimientosFalsos(),
+    balances: new BalancesFalsos(),
     intentosDeAcceso: new AlmacenEnMemoria(),
     ahora: () => new Date(),
   };

@@ -123,6 +123,14 @@ export const ACCIONES = Object.freeze({
   RECORDATORIO_ENVIADO: 'recordatorio.enviado',
   CONSTANCIA_EMITIDA: 'constancia.emitida',
 
+  DOCUMENTO_REGISTRADO: 'documento.registrado',
+  DOCUMENTO_CAMBIO_ESTADO: 'documento.cambio_estado',
+  PROCESO_MENSUAL_ACTUALIZADO: 'proceso_mensual.actualizado',
+
+  VENCIMIENTO_REGISTRADO: 'vencimiento.registrado',
+  VENCIMIENTO_PRESENTADO: 'vencimiento.presentado',
+
+  BALANCE_ACTUALIZADO: 'balance.actualizado',
   BALANCE_APROBADO: 'balance.aprobado',
   REGLA_IMPOSITIVA_MODIFICADA: 'regla_impositiva.modificada',
   REGLA_NOTIFICACION_MODIFICADA: 'regla_notificacion.modificada',

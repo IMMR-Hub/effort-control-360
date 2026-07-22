@@ -30,6 +30,12 @@ import type {
   RepositorioDeSesiones,
   RepositorioDeUsuarios,
 } from './puertos.js';
+import type {
+  RepositorioDeBalances,
+  RepositorioDeDocumentos,
+  RepositorioDeProcesoMensual,
+  RepositorioDeVencimientos,
+} from './puertos-dominio.js';
 
 export interface Dependencias {
   readonly configuracion: Configuracion;
@@ -38,6 +44,10 @@ export interface Dependencias {
   readonly clientes: RepositorioDeClientes;
   readonly contactos: RepositorioDeContactos;
   readonly bitacora: RepositorioDeBitacora;
+  readonly documentos: RepositorioDeDocumentos;
+  readonly procesoMensual: RepositorioDeProcesoMensual;
+  readonly vencimientos: RepositorioDeVencimientos;
+  readonly balances: RepositorioDeBalances;
   readonly intentosDeAcceso: AlmacenEnMemoria;
   /** Reloj inyectable: los tests de expiración no pueden esperar ocho horas. */
   readonly ahora: () => Date;

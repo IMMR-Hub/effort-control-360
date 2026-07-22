@@ -26,7 +26,7 @@ skill global **`backend-datos-sensibles`**, reutilizable en otros proyectos.
 tarea marcada sin commit real detrás es peor que no marcarla — hace perder
 confianza en todo el resto del documento.
 
-**Avance: 60 de 101 tareas.** Partes 1, 2 y 3 cerradas.
+**Avance: 67 de 105 tareas.** Partes 1, 2, 3 y 4A cerradas.
 
 Última actualización: 2026-07-22 · Commit de referencia: ver último commit en `git log`
 
@@ -175,31 +175,43 @@ El gate pasó de 9 a 10 checks activos: `test:integration` dejó de ser pendient
 
 ## PARTE 4 — Módulos de negocio restantes (rutas + Prisma)
 
-- [ ] 65. Módulo Documentos: rutas + repositorio (recepción, canal, estado, evidencia)
-- [ ] 66. Módulo Proceso Mensual: rutas + repositorio (el tablero operativo principal)
-- [ ] 67. Módulo Exportaciones SIGA: rutas + repositorio + conciliación aplicada
-- [ ] 68. Módulo Liquidaciones: rutas + repositorio
-- [ ] 69. Módulo Balances: rutas + repositorio, con la aprobación humana obligatoria del ADR 0004
-- [ ] 70. Módulo Vencimientos: rutas + repositorio + cálculo de alertas por umbral
-- [ ] 71. Módulo Alertas: vista consolidada ordenada por criticidad
-- [ ] 72. Módulo Equipo/Roles: alta y edición de usuarios (solo dirección)
-- [ ] 73. Módulo Reglas Impositivas: edición de tasas de IVA (solo dirección)
-- [ ] 74. Módulo Reglas de Notificación: alta/edición de reglas de recordatorio (ya tiene motor, falta la ruta)
-- [ ] 75. Módulo Event Log: consulta filtrable del historial (solo dirección/revisor)
+### 4A — Núcleo operativo (COMPLETA)
 
-**Verificación de cada módulo:** su propio archivo de test de integración en verde antes de pasar al siguiente
+- [x] 65. Piezas comunes de rutas: `autorizar()` en un paso, conversión de importes en el borde
+- [x] 66. Módulo Documentos: rutas + repositorio. Exige la terna RUC+timbrado+número completa o ninguna (sin ella no hay conciliación ni detección de duplicados), y rechazar exige motivo
+- [x] 67. Módulo Proceso Mensual: rutas + repositorio. Editar un período que nadie abrió lo crea al vuelo con `upsert`; el IVA no puede quedar a pagar y a favor a la vez
+- [x] 68. Módulo Vencimientos: rutas + repositorio + días restantes y nivel de alerta calculados en el servidor, en zona Paraguay
+- [x] 69. Módulo Balances: rutas + repositorio con la aprobación humana del ADR 0004 en cuatro capas independientes
+- [x] 70. 34 tests de módulos con dobles de persistencia
+- [x] 71. **Dos bugs encontrados por los tests:** (a) las inconsistencias se guardaban con `diferencia` como `bigint`, que `JSON.stringify` no serializa — rompía la escritura en la columna Json y la respuesta HTTP; (b) la re-verificación al aprobar construía un estado de resultados incoherente (ceros contra un resultado distinto de cero), lo que hacía **imposible aprobar cualquier balance**
+
+**Verificación:** `npm run verify` con `verify:modulos` en verde — ✅ hecho el 2026-07-22.
+El gate pasó de 10 a 11 checks activos.
+
+### 4B — Módulos restantes
+
+- [ ] 72. Módulo Exportaciones SIGA: rutas + repositorio + conciliación aplicada
+- [ ] 73. Módulo Liquidaciones: rutas + repositorio
+- [ ] 74. Módulo Alertas: vista consolidada ordenada por criticidad
+- [ ] 75. Módulo Equipo/Roles: alta y edición de usuarios (solo dirección)
+- [ ] 76. Módulo Reglas Impositivas: edición de tasas de IVA (solo dirección)
+- [ ] 77. Módulo Reglas de Notificación: alta/edición de reglas de recordatorio (ya tiene motor, falta la ruta)
+- [ ] 78. Módulo Event Log: consulta filtrable del historial (solo dirección/revisor)
+- [ ] 79. Tests de integración de los repositorios de la Parte 4 contra Postgres real (los de 4A todavía solo tienen dobles)
+
+**Verificación de cada módulo:** su propio test en verde antes de pasar al siguiente
 
 ---
 
 ## PARTE 5 — Importadores desde OneDrive
 
-- [ ] 76. Registrar la aplicación en Azure AD (requiere que EFFORT cree la cuenta `sistema.effort360@...`)
-- [ ] 77. Implementar `packages/drive` — adaptador Microsoft Graph API + adaptador falso para tests
-- [ ] 78. Espejo automático hacia el OneDrive de respaldo, con manifiesto sha256
-- [ ] 79. Importador de comprobantes (Excel/CSV) con reporte de filas aceptadas/rechazadas
-- [ ] 80. Importador de exportaciones SIGA
-- [ ] 81. Modo simulación (`dry-run`) obligatorio antes de escribir en la base
-- [ ] 82. Idempotencia verificada: importar el mismo archivo dos veces no duplica
+- [ ] 80. Registrar la aplicación en Azure AD (requiere que EFFORT cree la cuenta `sistema.effort360@...`)
+- [ ] 81. Implementar `packages/drive` — adaptador Microsoft Graph API + adaptador falso para tests
+- [ ] 82. Espejo automático hacia el OneDrive de respaldo, con manifiesto sha256
+- [ ] 83. Importador de comprobantes (Excel/CSV) con reporte de filas aceptadas/rechazadas
+- [ ] 84. Importador de exportaciones SIGA
+- [ ] 85. Modo simulación (`dry-run`) obligatorio antes de escribir en la base
+- [ ] 86. Idempotencia verificada: importar el mismo archivo dos veces no duplica
 
 **Verificación:** `npm run verify:drive` → exit 0 contra el adaptador real (o falso si Azure AD no está listo)
 
@@ -207,11 +219,11 @@ El gate pasó de 9 a 10 checks activos: `test:integration` dejó de ser pendient
 
 ## PARTE 6 — Despachador de notificaciones
 
-- [ ] 83. Proveedor de envío de correo (a definir: Resend, SES, o el que EFFORT prefiera)
-- [ ] 84. Job programado que corre `planificarProximoRecordatorio` sobre todas las solicitudes abiertas
-- [ ] 85. Registro automático en `registro_contacto` con `origen=AUTOMATICO` por cada envío real
-- [ ] 86. Registro en `envio_notificacion` con el id del proveedor, para poder auditar contra su panel
-- [ ] 87. Manejo de fallos de envío (reintento, alerta a dirección si un correo rebota)
+- [ ] 87. Proveedor de envío de correo (a definir: Resend, SES, o el que EFFORT prefiera)
+- [ ] 88. Job programado que corre `planificarProximoRecordatorio` sobre todas las solicitudes abiertas
+- [ ] 89. Registro automático en `registro_contacto` con `origen=AUTOMATICO` por cada envío real
+- [ ] 90. Registro en `envio_notificacion` con el id del proveedor, para poder auditar contra su panel
+- [ ] 91. Manejo de fallos de envío (reintento, alerta a dirección si un correo rebota)
 
 **Verificación:** test de integración con proveedor de correo en modo sandbox
 
@@ -219,12 +231,12 @@ El gate pasó de 9 a 10 checks activos: `test:integration` dejó de ser pendient
 
 ## PARTE 7 — Interfaz completa contra la API real
 
-- [ ] 88. Cliente HTTP tipado en `apps/web`, con manejo de sesión/CSRF
-- [ ] 89. Reemplazar `datos-semilla/` por llamadas reales a la API
-- [ ] 90. Pantalla de login con flujo de 2FA en dos pasos
-- [ ] 91. Las 12 pantallas del handoff, una por una, contra datos reales
-- [ ] 92. Retirar por completo `apps/App.jsx` (la demo original) una vez que todas las pantallas tengan reemplazo
-- [ ] 93. `verify:no-hardcoded-kpi` — ningún número escrito a mano en la interfaz
+- [ ] 92. Cliente HTTP tipado en `apps/web`, con manejo de sesión/CSRF
+- [ ] 93. Reemplazar `datos-semilla/` por llamadas reales a la API
+- [ ] 94. Pantalla de login con flujo de 2FA en dos pasos
+- [ ] 95. Las 12 pantallas del handoff, una por una, contra datos reales
+- [ ] 96. Retirar por completo `apps/App.jsx` (la demo original) una vez que todas las pantallas tengan reemplazo
+- [ ] 97. `verify:no-hardcoded-kpi` — ningún número escrito a mano en la interfaz
 
 **Verificación:** `npm run test:e2e` (Playwright) → exit 0
 
@@ -232,19 +244,19 @@ El gate pasó de 9 a 10 checks activos: `test:integration` dejó de ser pendient
 
 ## PARTE 8 — Despliegue
 
-- [ ] 94. Crear la app en DigitalOcean App Platform, conectada al repositorio
-- [ ] 95. Configurar variables de entorno de producción (secretos distintos a los de desarrollo)
-- [ ] 96. Configurar el subdominio `effort360.disaak.com` (registro CNAME)
-- [ ] 97. Verificar HTTPS y que `ORIGEN_PERMITIDO`/cookies funcionan en producción
-- [ ] 98. Corrida de humo completa en producción con el usuario real de dirección
+- [ ] 98. Crear la app en DigitalOcean App Platform, conectada al repositorio
+- [ ] 99. Configurar variables de entorno de producción (secretos distintos a los de desarrollo)
+- [ ] 100. Configurar el subdominio `effort360.disaak.com` (registro CNAME)
+- [ ] 101. Verificar HTTPS y que `ORIGEN_PERMITIDO`/cookies funcionan en producción
+- [ ] 102. Corrida de humo completa en producción con el usuario real de dirección
 
 ---
 
 ## PARTE 9 — Validación final con EFFORT
 
-- [ ] 99. Contrastar el cálculo de IVA contra una liquidación real ya presentada (cierra la discrepancia #1 de `docs/DISCREPANCIAS.md`)
-- [ ] 100. Confirmar los 5 clientes piloto definitivos con Laura/Lili
-- [ ] 101. Primera revisión guiada con EFFORT: los 12 módulos, en vivo, con sus propios datos
+- [ ] 103. Contrastar el cálculo de IVA contra una liquidación real ya presentada (cierra la discrepancia #1 de `docs/DISCREPANCIAS.md`)
+- [ ] 104. Confirmar los 5 clientes piloto definitivos con Laura/Lili
+- [ ] 105. Primera revisión guiada con EFFORT: los 12 módulos, en vivo, con sus propios datos
 
 ---
 
@@ -263,3 +275,6 @@ tener que redescubrirla en la próxima conversación.)*
 - **2026-07-22** — Los tests de integración corren en un esquema Postgres temporal (`pruebas_<aleatorio>`) que se crea, se migra y se destruye por corrida. No usan `public` porque los disparadores append-only impiden borrar filas de `event_log` y `registro_contacto`, así que cualquier test que escriba ahí dejaría basura permanente en la base del piloto.
 - **2026-07-22** — Los tests de integración usan `DIRECT_URL` (Session pooler) y no `DATABASE_URL`: crear esquemas y tipos necesita sentencias preparadas que el pooler de transacción no admite.
 - **2026-07-22** — Lección: los dobles de prueba validan el contrato, no la consulta. El bug de `buscarPorId` (spread pisando la clave `id`) pasó 31 tests con dobles y solo apareció contra Postgres real. Todo repositorio nuevo necesita su test de integración, no alcanza con el doble.
+- **2026-07-22** — Todo lo que se persiste en una columna `Json` tiene que convertirse a una forma serializable ANTES de guardarse. Las inconsistencias de balance llevaban `diferencia` como `bigint` y `JSON.stringify` no lo serializa: rompía tanto la escritura como la respuesta HTTP. Regla general: ningún `bigint` cruza el borde de la aplicación sin pasar a `string`.
+- **2026-07-22** — Al re-verificar un balance en el momento de aprobarlo, el estado de resultados NO se puede recalcular porque no se persiste como cifras propias. Se re-verifica solo la ecuación patrimonial y el contexto operativo, y se exige que el estado guardado sea `LISTO_PARA_REVISION` (que ya resume la revisión completa hecha al guardar). Un primer intento pasaba ceros como estado de resultados y hacía imposible aprobar cualquier balance.
+- **2026-07-22** — Cuando dos guardas pueden rechazar la misma petición, va primero la que da el mensaje más específico. "El balance no tiene cifras cargadas" es más útil que "no está en un estado aprobable", aunque las dos sean ciertas.
