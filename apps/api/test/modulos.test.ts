@@ -32,6 +32,8 @@ import {
   DocumentosFalsos,
   ProcesoMensualFalso,
   VencimientosFalsos,
+  ExportacionesSigaFalsas,
+  LiquidacionesFalsas,
 } from './dobles-dominio.js';
 
 const CONTRASENA = 'una frase larga y memorable';
@@ -100,6 +102,8 @@ async function montar(): Promise<Contexto> {
     procesoMensual,
     vencimientos,
     balances,
+    exportacionesSiga: new ExportacionesSigaFalsas(),
+    liquidaciones: new LiquidacionesFalsas(),
     intentosDeAcceso: new AlmacenEnMemoria(),
     ahora: () => HOY,
   };

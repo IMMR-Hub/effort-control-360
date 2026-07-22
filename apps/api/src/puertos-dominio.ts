@@ -66,8 +66,15 @@ export interface RepositorioDeDocumentos {
     motivoRechazo: string | null,
     usuarioId: string,
   ): Promise<DocumentoAlmacenado>;
-  /** Comprobantes computables de un período, para conciliar contra SIGA. */
-  comprobantesDelPeriodo(clienteId: string, periodo: string): Promise<DocumentoAlmacenado[]>;
+  /**
+   * Documentos del período que entran en la conciliación contra SIGA.
+   *
+   * Devuelve TODOS los vigentes, tengan o no la terna de identificación:
+   * los que no la tienen no se pueden comparar, pero hay que saber cuántos
+   * son. Si se filtraran acá, la conciliación informaría "todo cuadra" sobre
+   * un conjunto incompleto sin decir que dejó documentos afuera.
+   */
+  documentosDelPeriodo(clienteId: string, periodo: string): Promise<DocumentoAlmacenado[]>;
 }
 
 /* ========================================================================== */
@@ -246,4 +253,138 @@ export interface RepositorioDeBalances {
     aprobadoPorUsuarioId: string,
     aprobadoEn: Date,
   ): Promise<BalanceAlmacenado>;
+}
+
+/* ========================================================================== */
+/* Exportaciones de SIGA                                                      */
+/* ========================================================================== */
+
+export interface ComprobanteSigaAlmacenado {
+  readonly id: string;
+  readonly exportacionId: string;
+  readonly clienteId: string;
+  readonly periodo: string;
+  readonly rucEmisor: string;
+  readonly timbrado: string;
+  readonly numeroComprobante: string;
+  readonly total: bigint;
+  readonly tasa: string;
+  readonly anulado: boolean;
+  readonly fecha: Date;
+}
+
+export interface ExportacionSigaAlmacenada {
+  readonly id: string;
+  readonly clienteId: string;
+  readonly periodo: string;
+  readonly tipoReporte: string;
+  readonly formato: string;
+  readonly evidenciaId: string | null;
+  readonly importadaEn: Date;
+  readonly filasLeidas: number;
+  readonly estadoRevision: string;
+  readonly proximaAccion: string | null;
+  readonly observaciones: string | null;
+}
+
+/** Fila de comprobante tal como llega desde el archivo exportado por SIGA. */
+export interface FilaSigaEntrante {
+  readonly rucEmisor: string;
+  readonly timbrado: string;
+  readonly numeroComprobante: string;
+  readonly total: bigint;
+  readonly tasa: string;
+  readonly anulado: boolean;
+  readonly fecha: Date;
+}
+
+export interface AltaDeExportacionSiga {
+  readonly clienteId: string;
+  readonly periodo: string;
+  readonly tipoReporte: string;
+  readonly formato: string;
+  readonly evidenciaId: string | null;
+  readonly observaciones: string | null;
+  readonly comprobantes: readonly FilaSigaEntrante[];
+  readonly creadoPorUsuarioId: string;
+}
+
+export interface RepositorioDeExportacionesSiga {
+  listar(
+    clienteId: string,
+    periodo: string | null,
+    filtro: FiltroDeCartera,
+  ): Promise<ExportacionSigaAlmacenada[]>;
+  buscarPorId(id: string, filtro: FiltroDeCartera): Promise<ExportacionSigaAlmacenada | null>;
+  /**
+   * Registra la exportación junto con sus filas, en una sola transacción.
+   *
+   * Si las filas fallaran a mitad de camino, quedaría una exportación que dice
+   * tener N comprobantes con solo algunos cargados, y la conciliación
+   * reportaría diferencias que no existen.
+   */
+  registrar(datos: AltaDeExportacionSiga): Promise<ExportacionSigaAlmacenada>;
+  comprobantesDelPeriodo(clienteId: string, periodo: string): Promise<ComprobanteSigaAlmacenado[]>;
+  actualizarEstadoRevision(
+    id: string,
+    estado: string,
+    proximaAccion: string | null,
+    usuarioId: string,
+  ): Promise<ExportacionSigaAlmacenada>;
+}
+
+/* ========================================================================== */
+/* Liquidaciones                                                              */
+/* ========================================================================== */
+
+export interface LiquidacionAlmacenada {
+  readonly id: string;
+  readonly clienteId: string;
+  readonly periodo: string;
+  readonly tipo: string;
+  readonly archivoEvidenciaId: string | null;
+  readonly destinatario: string | null;
+  readonly canal: string | null;
+  readonly fechaEnvio: Date | null;
+  readonly evidenciaEnvioId: string | null;
+  readonly responsableId: string | null;
+  readonly estado: string;
+  readonly respuestaCliente: string | null;
+  readonly respondidaEn: Date | null;
+  readonly proximaAccion: string | null;
+  readonly observaciones: string | null;
+}
+
+export interface AltaDeLiquidacion {
+  readonly clienteId: string;
+  readonly periodo: string;
+  readonly tipo: string;
+  readonly archivoEvidenciaId: string | null;
+  readonly responsableId: string | null;
+  readonly observaciones: string | null;
+  readonly creadoPorUsuarioId: string;
+}
+
+export interface DatosDeEnvio {
+  readonly destinatario: string;
+  readonly canal: string;
+  readonly fechaEnvio: Date;
+  readonly evidenciaEnvioId: string | null;
+}
+
+export interface RepositorioDeLiquidaciones {
+  listar(periodo: string | null, filtro: FiltroDeCartera): Promise<LiquidacionAlmacenada[]>;
+  listarPorCliente(
+    clienteId: string,
+    filtro: FiltroDeCartera,
+  ): Promise<LiquidacionAlmacenada[]>;
+  buscarPorId(id: string, filtro: FiltroDeCartera): Promise<LiquidacionAlmacenada | null>;
+  registrar(datos: AltaDeLiquidacion): Promise<LiquidacionAlmacenada>;
+  marcarEnviada(id: string, envio: DatosDeEnvio, usuarioId: string): Promise<LiquidacionAlmacenada>;
+  registrarRespuesta(
+    id: string,
+    respuesta: string,
+    respondidaEn: Date,
+    usuarioId: string,
+  ): Promise<LiquidacionAlmacenada>;
 }

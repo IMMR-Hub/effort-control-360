@@ -26,6 +26,9 @@ import {
 import { registrarRutasDeDocumentos } from './rutas/documentos.js';
 import { registrarRutasDeVencimientos } from './rutas/vencimientos.js';
 import { registrarRutasDeBalances } from './rutas/balances.js';
+import { ExportacionesSigaPrisma, LiquidacionesPrisma } from './repositorios/siga.js';
+import { registrarRutasDeSiga } from './rutas/siga.js';
+import { registrarRutasDeLiquidaciones } from './rutas/liquidaciones.js';
 
 export interface DependenciasReales extends Dependencias {
   readonly cerrar: () => Promise<void>;
@@ -52,6 +55,8 @@ export function construirDependencias(configuracion: Configuracion): Dependencia
     procesoMensual: new ProcesoMensualPrisma(prisma),
     vencimientos: new VencimientosPrisma(prisma),
     balances: new BalancesPrisma(prisma),
+    exportacionesSiga: new ExportacionesSigaPrisma(prisma),
+    liquidaciones: new LiquidacionesPrisma(prisma),
     intentosDeAcceso: new AlmacenEnMemoria(),
     ahora: () => new Date(),
     cerrar: () => prisma.$disconnect(),
@@ -66,6 +71,8 @@ export async function arrancar(dependencias: Dependencias): Promise<void> {
   await registrarRutasDeDocumentos(app, dependencias);
   await registrarRutasDeVencimientos(app, dependencias);
   await registrarRutasDeBalances(app, dependencias);
+  await registrarRutasDeSiga(app, dependencias);
+  await registrarRutasDeLiquidaciones(app, dependencias);
 
   // Purga periódica del almacén de intentos: sin esto crece indefinidamente
   // mientras el proceso siga vivo.

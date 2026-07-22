@@ -162,6 +162,8 @@ model Cliente {
   contactos        RegistroContacto[]
   solicitudes      SolicitudDocumentacion[]
   balances         Balance[]
+  exportacionesSiga ExportacionSiga[]
+  liquidaciones    Liquidacion[]
 
   @@index([activo])
   @@map("cliente")
@@ -618,4 +620,200 @@ model EventLog {
   @@index([clienteId, ocurridoEn])
   @@index([usuarioId, ocurridoEn])
   @@map("event_log")
+}
+
+/* ========================================================================== */
+/* Exportaciones de SIGA                                                      */
+/* ========================================================================== */
+
+enum TipoReporteSiga {
+  LIBRO_COMPRAS
+  LIBRO_VENTAS
+  DETERMINACION_IVA
+  COMPROBANTES_CARGADOS
+  RETENCIONES
+  MAYOR_CONTABLE
+  SUMAS_Y_SALDOS
+  BALANCE_GENERAL
+  ESTADO_RESULTADOS
+  OTRO
+}
+
+enum EstadoRevisionSiga {
+  IMPORTADA
+  EN_REVISION
+  CONCILIADA
+  CON_DIFERENCIAS
+}
+
+/// Archivo exportado desde SIGA. El sistema no toca SIGA: trabaja sobre lo que
+/// SIGA produce. Cada exportación queda registrada con su evidencia, para poder
+/// mostrar contra qué archivo se concilió.
+model ExportacionSiga {
+  id        String          @id @default(uuid()) @db.Uuid
+  clienteId String          @map("cliente_id") @db.Uuid
+  periodo   String          @db.VarChar(7)
+  tipoReporte TipoReporteSiga @map("tipo_reporte")
+  formato   String          @db.VarChar(10)
+
+  evidenciaId String? @map("evidencia_id") @db.Uuid
+  importadaEn DateTime @default(now()) @map("importada_en") @db.Timestamptz(3)
+  filasLeidas Int      @default(0) @map("filas_leidas")
+
+  estadoRevision EstadoRevisionSiga @default(IMPORTADA) @map("estado_revision")
+  proximaAccion  String?            @map("proxima_accion") @db.VarChar(4000)
+  observaciones  String?            @db.VarChar(4000)
+
+  creadoEn                DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  creadoPorUsuarioId      String?  @map("creado_por_usuario_id") @db.Uuid
+  actualizadoEn           DateTime @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+  actualizadoPorUsuarioId String?  @map("actualizado_por_usuario_id") @db.Uuid
+  origen                  Origen   @default(REAL)
+
+  cliente      Cliente           @relation(fields: [clienteId], references: [id])
+  comprobantes ComprobanteSiga[]
+
+  @@index([clienteId, periodo])
+  @@map("exportacion_siga")
+}
+
+/// Filas de comprobantes leídas de una exportación de SIGA.
+///
+/// Existen para poder conciliar contra los documentos recibidos usando el mismo
+/// motor de dominio (`conciliarConSiga`). Sin estas filas, "controlar qué ya fue
+/// cargado en SIGA" sería una casilla que alguien tilda a mano.
+model ComprobanteSiga {
+  id            String @id @default(uuid()) @db.Uuid
+  exportacionId String @map("exportacion_id") @db.Uuid
+  clienteId     String @map("cliente_id") @db.Uuid
+  periodo       String @db.VarChar(7)
+
+  rucEmisor         String  @map("ruc_emisor") @db.VarChar(20)
+  timbrado          String  @db.VarChar(20)
+  numeroComprobante String  @map("numero_comprobante") @db.VarChar(30)
+  /// Guaraníes enteros. Ver ADR 0002.
+  total             BigInt
+  tasa              TasaIva
+  anulado           Boolean @default(false)
+  fecha             DateTime @db.Date
+
+  creadoEn DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  origen   Origen   @default(IMPORTADO)
+
+  exportacion ExportacionSiga @relation(fields: [exportacionId], references: [id])
+
+  /// La misma clave natural que usa el dominio: RUC + timbrado + número.
+  @@unique([clienteId, periodo, rucEmisor, timbrado, numeroComprobante], name: "comprobante_siga_unico")
+  @@index([clienteId, periodo])
+  @@map("comprobante_siga")
+}
+
+/* ========================================================================== */
+/* Liquidaciones                                                              */
+/* ========================================================================== */
+
+enum EstadoLiquidacion {
+  PENDIENTE
+  GENERADA
+  ENVIADA
+  RECLAMADA
+  RESPONDIDA
+  CONFIRMADA
+}
+
+/// Liquidación mensual enviada al cliente.
+///
+/// El estado registra el ciclo completo: generada, enviada, y si el cliente
+/// acusó recibo. Esa última parte importa tanto como el envío — "se la mandamos"
+/// y "la recibió" son cosas distintas cuando hay un reclamo de por medio.
+model Liquidacion {
+  id        String @id @default(uuid()) @db.Uuid
+  clienteId String @map("cliente_id") @db.Uuid
+  periodo   String @db.VarChar(7)
+  tipo      String @db.VarChar(60)
+
+  archivoEvidenciaId String? @map("archivo_evidencia_id") @db.Uuid
+
+  destinatario String?   @db.VarChar(254)
+  canal        String?   @db.VarChar(30)
+  fechaEnvio   DateTime? @map("fecha_envio") @db.Timestamptz(3)
+  /// Evidencia del envío: captura del correo, del WhatsApp, lo que corresponda.
+  evidenciaEnvioId String? @map("evidencia_envio_id") @db.Uuid
+
+  responsableId String? @map("responsable_id") @db.Uuid
+
+  estado           EstadoLiquidacion @default(PENDIENTE)
+  respuestaCliente String?           @map("respuesta_cliente") @db.VarChar(4000)
+  respondidaEn     DateTime?         @map("respondida_en") @db.Timestamptz(3)
+
+  proximaAccion String? @map("proxima_accion") @db.VarChar(4000)
+  observaciones String? @db.VarChar(4000)
+
+  creadoEn                DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  creadoPorUsuarioId      String?  @map("creado_por_usuario_id") @db.Uuid
+  actualizadoEn           DateTime @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+  actualizadoPorUsuarioId String?  @map("actualizado_por_usuario_id") @db.Uuid
+  origen                  Origen   @default(REAL)
+
+  cliente Cliente @relation(fields: [clienteId], references: [id])
+
+  @@unique([clienteId, periodo, tipo])
+  @@index([estado])
+  @@map("liquidacion")
+}
+
+/* ========================================================================== */
+/* Alertas                                                                    */
+/* ========================================================================== */
+
+enum Criticidad {
+  CRITICA
+  ALTA
+  MEDIA
+  INFORMATIVA
+}
+
+enum EstadoAlerta {
+  ABIERTA
+  EN_CURSO
+  CERRADA
+  DESCARTADA
+}
+
+/// Alerta operativa consolidada.
+///
+/// Cerrarla exige motivo y queda con nombre y fecha: una alerta que se cierra
+/// sin explicación no se distingue de una que se ignoró, y la diferencia
+/// importa cuando después hay que rendir cuentas de por qué algo no se hizo.
+model Alerta {
+  id        String  @id @default(uuid()) @db.Uuid
+  clienteId String? @map("cliente_id") @db.Uuid
+  periodo   String? @db.VarChar(7)
+
+  origen     String     @db.VarChar(60)
+  criticidad Criticidad
+  titulo     String     @db.VarChar(300)
+  detalle    String     @db.VarChar(4000)
+
+  /// Entidad que originó la alerta, para poder navegar hasta ella.
+  entidadRelacionada   String? @map("entidad_relacionada") @db.VarChar(60)
+  entidadRelacionadaId String? @map("entidad_relacionada_id") @db.Uuid
+
+  responsableId String?   @map("responsable_id") @db.Uuid
+  fechaLimite   DateTime? @map("fecha_limite") @db.Date
+
+  estado            EstadoAlerta @default(ABIERTA)
+  cerradaPorUsuarioId String?    @map("cerrada_por_usuario_id") @db.Uuid
+  cerradaEn         DateTime?    @map("cerrada_en") @db.Timestamptz(3)
+  motivoCierre      String?      @map("motivo_cierre") @db.VarChar(4000)
+
+  creadoEn                DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  creadoPorUsuarioId      String?  @map("creado_por_usuario_id") @db.Uuid
+  actualizadoEn           DateTime @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+  actualizadoPorUsuarioId String?  @map("actualizado_por_usuario_id") @db.Uuid
+  origen_registro         Origen   @default(REAL) @map("origen_registro")
+
+  @@index([estado, criticidad])
+  @@index([clienteId, estado])
+  @@map("alerta")
 }

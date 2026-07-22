@@ -35,6 +35,8 @@ import type {
   RepositorioDeDocumentos,
   RepositorioDeProcesoMensual,
   RepositorioDeVencimientos,
+  RepositorioDeExportacionesSiga,
+  RepositorioDeLiquidaciones,
 } from './puertos-dominio.js';
 
 export interface Dependencias {
@@ -48,6 +50,8 @@ export interface Dependencias {
   readonly procesoMensual: RepositorioDeProcesoMensual;
   readonly vencimientos: RepositorioDeVencimientos;
   readonly balances: RepositorioDeBalances;
+  readonly exportacionesSiga: RepositorioDeExportacionesSiga;
+  readonly liquidaciones: RepositorioDeLiquidaciones;
   readonly intentosDeAcceso: AlmacenEnMemoria;
   /** Reloj inyectable: los tests de expiración no pueden esperar ocho horas. */
   readonly ahora: () => Date;

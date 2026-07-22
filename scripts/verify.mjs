@@ -32,6 +32,7 @@ const CHECKS = [
   { nombre: 'verify:contratos', comando: 'npx vitest run packages/schema/test/contratos.test.ts' },
   { nombre: 'verify:servidor', comando: 'npx vitest run apps/api/test/servidor.test.ts' },
   { nombre: 'verify:modulos', comando: 'npx vitest run apps/api/test/modulos.test.ts' },
+  { nombre: 'verify:siga', comando: 'npx vitest run apps/api/test/siga.test.ts' },
   { nombre: 'test:integration', comando: 'npx vitest run --project integracion' },
   { nombre: 'verify:drive', comando: 'npm run verify:drive --workspace @effort/drive', pendiente: 'packages/drive todavía no existe.' },
   { nombre: 'verify:no-hardcoded-kpi', comando: 'node scripts/verificar-kpi.mjs', pendiente: 'apps/web todavía muestra los datos de la demo anterior.' },

@@ -26,7 +26,7 @@ skill global **`backend-datos-sensibles`**, reutilizable en otros proyectos.
 tarea marcada sin commit real detrás es peor que no marcarla — hace perder
 confianza en todo el resto del documento.
 
-**Avance: 67 de 105 tareas.** Partes 1, 2, 3 y 4A cerradas.
+**Avance: 73 de 109 tareas.** Partes 1, 2, 3, 4A y 4B cerradas.
 
 Última actualización: 2026-07-22 · Commit de referencia: ver último commit en `git log`
 
@@ -188,16 +188,26 @@ El gate pasó de 9 a 10 checks activos: `test:integration` dejó de ser pendient
 **Verificación:** `npm run verify` con `verify:modulos` en verde — ✅ hecho el 2026-07-22.
 El gate pasó de 10 a 11 checks activos.
 
-### 4B — Módulos restantes
+### 4B — SIGA, liquidaciones y alertas
 
-- [ ] 72. Módulo Exportaciones SIGA: rutas + repositorio + conciliación aplicada
-- [ ] 73. Módulo Liquidaciones: rutas + repositorio
-- [ ] 74. Módulo Alertas: vista consolidada ordenada por criticidad
-- [ ] 75. Módulo Equipo/Roles: alta y edición de usuarios (solo dirección)
-- [ ] 76. Módulo Reglas Impositivas: edición de tasas de IVA (solo dirección)
-- [ ] 77. Módulo Reglas de Notificación: alta/edición de reglas de recordatorio (ya tiene motor, falta la ruta)
-- [ ] 78. Módulo Event Log: consulta filtrable del historial (solo dirección/revisor)
-- [ ] 79. Tests de integración de los repositorios de la Parte 4 contra Postgres real (los de 4A todavía solo tienen dobles)
+- [x] 72. Migración: tablas `exportacion_siga`, `comprobante_siga`, `liquidacion` y `alerta` (no existían en el modelo)
+- [x] 73. Módulo Exportaciones SIGA: rutas + repositorio, con la importación de la exportación y sus filas en **una sola transacción** (si fallara a mitad, la conciliación reportaría diferencias inexistentes)
+- [x] 74. Conciliación aplicada con `conciliarConSiga` de `@effort/core` — la ruta transporta datos, no reimplementa la comparación
+- [x] 75. Módulo Liquidaciones: ciclo completo generada → enviada → respondida, con destinatario, canal, fecha y evidencia del envío
+- [x] 76. 28 tests de SIGA y liquidaciones
+- [x] 77. **Bug encontrado por los tests:** el contador `sinIdentificacion` de la conciliación era código muerto — el repositorio ya filtraba los documentos sin número, así que nunca podía contar ninguno. El comentario prometía avisar que la comparación dejaba documentos afuera y el código no lo hacía. Corregido renombrando el método a `documentosDelPeriodo` y quitando el filtro
+
+**Verificación:** `npm run verify` con `verify:siga` en verde — ✅ hecho el 2026-07-22.
+El gate pasó de 11 a 12 checks activos.
+
+### 4C — Módulos restantes
+
+- [ ] 78. Módulo Alertas: vista consolidada ordenada por criticidad (la tabla ya existe)
+- [ ] 79. Módulo Equipo/Roles: alta y edición de usuarios (solo dirección)
+- [ ] 80. Módulo Reglas Impositivas: edición de tasas de IVA (solo dirección)
+- [ ] 81. Módulo Reglas de Notificación: alta/edición de reglas de recordatorio (ya tiene motor, falta la ruta)
+- [ ] 82. Módulo Event Log: consulta filtrable del historial (solo dirección/revisor)
+- [ ] 83. Tests de integración de los repositorios de la Parte 4 contra Postgres real (los de 4A todavía solo tienen dobles)
 
 **Verificación de cada módulo:** su propio test en verde antes de pasar al siguiente
 
@@ -205,13 +215,13 @@ El gate pasó de 10 a 11 checks activos.
 
 ## PARTE 5 — Importadores desde OneDrive
 
-- [ ] 80. Registrar la aplicación en Azure AD (requiere que EFFORT cree la cuenta `sistema.effort360@...`)
-- [ ] 81. Implementar `packages/drive` — adaptador Microsoft Graph API + adaptador falso para tests
-- [ ] 82. Espejo automático hacia el OneDrive de respaldo, con manifiesto sha256
-- [ ] 83. Importador de comprobantes (Excel/CSV) con reporte de filas aceptadas/rechazadas
-- [ ] 84. Importador de exportaciones SIGA
-- [ ] 85. Modo simulación (`dry-run`) obligatorio antes de escribir en la base
-- [ ] 86. Idempotencia verificada: importar el mismo archivo dos veces no duplica
+- [ ] 84. Registrar la aplicación en Azure AD (requiere que EFFORT cree la cuenta `sistema.effort360@...`)
+- [ ] 85. Implementar `packages/drive` — adaptador Microsoft Graph API + adaptador falso para tests
+- [ ] 86. Espejo automático hacia el OneDrive de respaldo, con manifiesto sha256
+- [ ] 87. Importador de comprobantes (Excel/CSV) con reporte de filas aceptadas/rechazadas
+- [ ] 88. Importador de exportaciones SIGA
+- [ ] 89. Modo simulación (`dry-run`) obligatorio antes de escribir en la base
+- [ ] 90. Idempotencia verificada: importar el mismo archivo dos veces no duplica
 
 **Verificación:** `npm run verify:drive` → exit 0 contra el adaptador real (o falso si Azure AD no está listo)
 
@@ -219,11 +229,11 @@ El gate pasó de 10 a 11 checks activos.
 
 ## PARTE 6 — Despachador de notificaciones
 
-- [ ] 87. Proveedor de envío de correo (a definir: Resend, SES, o el que EFFORT prefiera)
-- [ ] 88. Job programado que corre `planificarProximoRecordatorio` sobre todas las solicitudes abiertas
-- [ ] 89. Registro automático en `registro_contacto` con `origen=AUTOMATICO` por cada envío real
-- [ ] 90. Registro en `envio_notificacion` con el id del proveedor, para poder auditar contra su panel
-- [ ] 91. Manejo de fallos de envío (reintento, alerta a dirección si un correo rebota)
+- [ ] 91. Proveedor de envío de correo (a definir: Resend, SES, o el que EFFORT prefiera)
+- [ ] 92. Job programado que corre `planificarProximoRecordatorio` sobre todas las solicitudes abiertas
+- [ ] 93. Registro automático en `registro_contacto` con `origen=AUTOMATICO` por cada envío real
+- [ ] 94. Registro en `envio_notificacion` con el id del proveedor, para poder auditar contra su panel
+- [ ] 95. Manejo de fallos de envío (reintento, alerta a dirección si un correo rebota)
 
 **Verificación:** test de integración con proveedor de correo en modo sandbox
 
@@ -231,12 +241,12 @@ El gate pasó de 10 a 11 checks activos.
 
 ## PARTE 7 — Interfaz completa contra la API real
 
-- [ ] 92. Cliente HTTP tipado en `apps/web`, con manejo de sesión/CSRF
-- [ ] 93. Reemplazar `datos-semilla/` por llamadas reales a la API
-- [ ] 94. Pantalla de login con flujo de 2FA en dos pasos
-- [ ] 95. Las 12 pantallas del handoff, una por una, contra datos reales
-- [ ] 96. Retirar por completo `apps/App.jsx` (la demo original) una vez que todas las pantallas tengan reemplazo
-- [ ] 97. `verify:no-hardcoded-kpi` — ningún número escrito a mano en la interfaz
+- [ ] 96. Cliente HTTP tipado en `apps/web`, con manejo de sesión/CSRF
+- [ ] 97. Reemplazar `datos-semilla/` por llamadas reales a la API
+- [ ] 98. Pantalla de login con flujo de 2FA en dos pasos
+- [ ] 99. Las 12 pantallas del handoff, una por una, contra datos reales
+- [ ] 100. Retirar por completo `apps/App.jsx` (la demo original) una vez que todas las pantallas tengan reemplazo
+- [ ] 101. `verify:no-hardcoded-kpi` — ningún número escrito a mano en la interfaz
 
 **Verificación:** `npm run test:e2e` (Playwright) → exit 0
 
@@ -244,19 +254,19 @@ El gate pasó de 10 a 11 checks activos.
 
 ## PARTE 8 — Despliegue
 
-- [ ] 98. Crear la app en DigitalOcean App Platform, conectada al repositorio
-- [ ] 99. Configurar variables de entorno de producción (secretos distintos a los de desarrollo)
-- [ ] 100. Configurar el subdominio `effort360.disaak.com` (registro CNAME)
-- [ ] 101. Verificar HTTPS y que `ORIGEN_PERMITIDO`/cookies funcionan en producción
-- [ ] 102. Corrida de humo completa en producción con el usuario real de dirección
+- [ ] 102. Crear la app en DigitalOcean App Platform, conectada al repositorio
+- [ ] 103. Configurar variables de entorno de producción (secretos distintos a los de desarrollo)
+- [ ] 104. Configurar el subdominio `effort360.disaak.com` (registro CNAME)
+- [ ] 105. Verificar HTTPS y que `ORIGEN_PERMITIDO`/cookies funcionan en producción
+- [ ] 106. Corrida de humo completa en producción con el usuario real de dirección
 
 ---
 
 ## PARTE 9 — Validación final con EFFORT
 
-- [ ] 103. Contrastar el cálculo de IVA contra una liquidación real ya presentada (cierra la discrepancia #1 de `docs/DISCREPANCIAS.md`)
-- [ ] 104. Confirmar los 5 clientes piloto definitivos con Laura/Lili
-- [ ] 105. Primera revisión guiada con EFFORT: los 12 módulos, en vivo, con sus propios datos
+- [ ] 107. Contrastar el cálculo de IVA contra una liquidación real ya presentada (cierra la discrepancia #1 de `docs/DISCREPANCIAS.md`)
+- [ ] 108. Confirmar los 5 clientes piloto definitivos con Laura/Lili
+- [ ] 109. Primera revisión guiada con EFFORT: los 12 módulos, en vivo, con sus propios datos
 
 ---
 

@@ -132,13 +132,18 @@ export class DocumentosPrisma implements RepositorioDeDocumentos {
   }
 
   /**
-   * Comprobantes que suman en los totales del período.
+   * Documentos vigentes del período, para conciliar contra SIGA.
    *
-   * Excluye los rechazados y los marcados como duplicados, pero **incluye los
-   * anulados**: el libro los sigue conteniendo aunque no sumen, y el dominio
-   * (`comprobantesComputables`) es el que decide qué entra en cada total.
+   * Excluye rechazados y duplicados, pero incluye deliberadamente dos grupos:
+   *
+   *  - los **anulados**, porque el libro los sigue conteniendo aunque no sumen,
+   *    y es el dominio el que decide qué entra en cada total;
+   *  - los que **no tienen número de comprobante** (un contrato, un acta), que
+   *    no se pueden comparar contra SIGA pero sí hay que contar. Filtrarlos acá
+   *    haría que la conciliación informara "todo cuadra" sobre un conjunto
+   *    incompleto, sin avisar que dejó documentos afuera.
    */
-  async comprobantesDelPeriodo(
+  async documentosDelPeriodo(
     clienteId: string,
     periodo: string,
   ): Promise<DocumentoAlmacenado[]> {
@@ -147,7 +152,6 @@ export class DocumentosPrisma implements RepositorioDeDocumentos {
         clienteId,
         periodo,
         estado: { notIn: ['RECHAZADO', 'DUPLICADO'] },
-        numeroComprobante: { not: null },
       },
       select: CAMPOS_DOCUMENTO,
       orderBy: { recibidoEn: 'asc' },

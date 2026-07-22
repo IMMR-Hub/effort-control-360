@@ -24,6 +24,14 @@ import type {
   RepositorioDeProcesoMensual,
   RepositorioDeVencimientos,
   VencimientoAlmacenado,
+  AltaDeExportacionSiga,
+  AltaDeLiquidacion,
+  ComprobanteSigaAlmacenado,
+  DatosDeEnvio,
+  ExportacionSigaAlmacenada,
+  LiquidacionAlmacenada,
+  RepositorioDeExportacionesSiga,
+  RepositorioDeLiquidaciones,
 } from '../src/puertos-dominio.js';
 
 /** Aplica el filtro de cartera igual que lo haría el SQL. */
@@ -85,7 +93,7 @@ export class DocumentosFalsos implements RepositorioDeDocumentos {
     return actualizado;
   }
 
-  async comprobantesDelPeriodo(
+  async documentosDelPeriodo(
     clienteId: string,
     periodo: string,
   ): Promise<DocumentoAlmacenado[]> {
@@ -93,8 +101,7 @@ export class DocumentosFalsos implements RepositorioDeDocumentos {
       (doc) =>
         doc.clienteId === clienteId &&
         doc.periodo === periodo &&
-        !['RECHAZADO', 'DUPLICADO'].includes(doc.estado) &&
-        doc.numeroComprobante !== null,
+        !['RECHAZADO', 'DUPLICADO'].includes(doc.estado),
     );
   }
 }
@@ -315,5 +322,174 @@ export class BalancesFalsos implements RepositorioDeBalances {
     };
     this.balances[indice] = actualizado;
     return actualizado;
+  }
+}
+
+export class ExportacionesSigaFalsas implements RepositorioDeExportacionesSiga {
+  readonly exportaciones: ExportacionSigaAlmacenada[] = [];
+  readonly comprobantes: ComprobanteSigaAlmacenado[] = [];
+
+  async listar(
+    clienteId: string,
+    periodo: string | null,
+    filtro: FiltroDeCartera,
+  ): Promise<ExportacionSigaAlmacenada[]> {
+    if (!alcanza(filtro, clienteId)) return [];
+    return this.exportaciones.filter(
+      (exp) => exp.clienteId === clienteId && (!periodo || exp.periodo === periodo),
+    );
+  }
+
+  async buscarPorId(
+    id: string,
+    filtro: FiltroDeCartera,
+  ): Promise<ExportacionSigaAlmacenada | null> {
+    const exp = this.exportaciones.find((candidata) => candidata.id === id);
+    if (!exp || !alcanza(filtro, exp.clienteId)) return null;
+    return exp;
+  }
+
+  async registrar(datos: AltaDeExportacionSiga): Promise<ExportacionSigaAlmacenada> {
+    const exportacion: ExportacionSigaAlmacenada = {
+      id: randomUUID(),
+      clienteId: datos.clienteId,
+      periodo: datos.periodo,
+      tipoReporte: datos.tipoReporte,
+      formato: datos.formato,
+      evidenciaId: datos.evidenciaId,
+      importadaEn: new Date(),
+      filasLeidas: datos.comprobantes.length,
+      estadoRevision: 'IMPORTADA',
+      proximaAccion: null,
+      observaciones: datos.observaciones,
+    };
+    this.exportaciones.push(exportacion);
+
+    for (const fila of datos.comprobantes) {
+      // Replica la unicidad de la clave natural que impone la base: reimportar
+      // el mismo archivo no debe duplicar comprobantes.
+      const yaEsta = this.comprobantes.some(
+        (c) =>
+          c.clienteId === datos.clienteId &&
+          c.periodo === datos.periodo &&
+          c.rucEmisor === fila.rucEmisor &&
+          c.timbrado === fila.timbrado &&
+          c.numeroComprobante === fila.numeroComprobante,
+      );
+      if (yaEsta) continue;
+
+      this.comprobantes.push({
+        id: randomUUID(),
+        exportacionId: exportacion.id,
+        clienteId: datos.clienteId,
+        periodo: datos.periodo,
+        rucEmisor: fila.rucEmisor,
+        timbrado: fila.timbrado,
+        numeroComprobante: fila.numeroComprobante,
+        total: fila.total,
+        tasa: fila.tasa,
+        anulado: fila.anulado,
+        fecha: fila.fecha,
+      });
+    }
+
+    return exportacion;
+  }
+
+  async comprobantesDelPeriodo(
+    clienteId: string,
+    periodo: string,
+  ): Promise<ComprobanteSigaAlmacenado[]> {
+    return this.comprobantes.filter((c) => c.clienteId === clienteId && c.periodo === periodo);
+  }
+
+  async actualizarEstadoRevision(
+    id: string,
+    estado: string,
+    proximaAccion: string | null,
+  ): Promise<ExportacionSigaAlmacenada> {
+    const indice = this.exportaciones.findIndex((e) => e.id === id);
+    const actualizada = { ...this.exportaciones[indice]!, estadoRevision: estado, proximaAccion };
+    this.exportaciones[indice] = actualizada;
+    return actualizada;
+  }
+}
+
+export class LiquidacionesFalsas implements RepositorioDeLiquidaciones {
+  readonly liquidaciones: LiquidacionAlmacenada[] = [];
+
+  async listar(
+    periodo: string | null,
+    filtro: FiltroDeCartera,
+  ): Promise<LiquidacionAlmacenada[]> {
+    return this.liquidaciones.filter(
+      (l) => (!periodo || l.periodo === periodo) && alcanza(filtro, l.clienteId),
+    );
+  }
+
+  async listarPorCliente(
+    clienteId: string,
+    filtro: FiltroDeCartera,
+  ): Promise<LiquidacionAlmacenada[]> {
+    if (!alcanza(filtro, clienteId)) return [];
+    return this.liquidaciones.filter((l) => l.clienteId === clienteId);
+  }
+
+  async buscarPorId(id: string, filtro: FiltroDeCartera): Promise<LiquidacionAlmacenada | null> {
+    const l = this.liquidaciones.find((candidata) => candidata.id === id);
+    if (!l || !alcanza(filtro, l.clienteId)) return null;
+    return l;
+  }
+
+  async registrar(datos: AltaDeLiquidacion): Promise<LiquidacionAlmacenada> {
+    const liquidacion: LiquidacionAlmacenada = {
+      id: randomUUID(),
+      clienteId: datos.clienteId,
+      periodo: datos.periodo,
+      tipo: datos.tipo,
+      archivoEvidenciaId: datos.archivoEvidenciaId,
+      destinatario: null,
+      canal: null,
+      fechaEnvio: null,
+      evidenciaEnvioId: null,
+      responsableId: datos.responsableId,
+      estado: datos.archivoEvidenciaId ? 'GENERADA' : 'PENDIENTE',
+      respuestaCliente: null,
+      respondidaEn: null,
+      proximaAccion: null,
+      observaciones: datos.observaciones,
+    };
+    this.liquidaciones.push(liquidacion);
+    return liquidacion;
+  }
+
+  async marcarEnviada(id: string, envio: DatosDeEnvio): Promise<LiquidacionAlmacenada> {
+    const indice = this.liquidaciones.findIndex((l) => l.id === id);
+    const actualizada: LiquidacionAlmacenada = {
+      ...this.liquidaciones[indice]!,
+      estado: 'ENVIADA',
+      destinatario: envio.destinatario,
+      canal: envio.canal,
+      fechaEnvio: envio.fechaEnvio,
+      evidenciaEnvioId: envio.evidenciaEnvioId,
+    };
+    this.liquidaciones[indice] = actualizada;
+    return actualizada;
+  }
+
+  async registrarRespuesta(
+    id: string,
+    respuesta: string,
+    respondidaEn: Date,
+  ): Promise<LiquidacionAlmacenada> {
+    const indice = this.liquidaciones.findIndex((l) => l.id === id);
+    const actualizada: LiquidacionAlmacenada = {
+      ...this.liquidaciones[indice]!,
+      estado: 'RESPONDIDA',
+      respuestaCliente: respuesta,
+      respondidaEn,
+    };
+    this.liquidaciones[indice] = actualizada;
+    return actualizada;
   }
 }
