@@ -20,7 +20,12 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
+  // Conexión pooleada (PgBouncer modo transacción): la usa la aplicación en
+  // marcha, donde cada consulta es corta e independiente.
+  url       = env("DATABASE_URL")
+  // Conexión directa/session pooler: la necesitan las migraciones, porque usan
+  // sentencias preparadas y bloqueos que el modo transacción no admite.
+  directUrl = env("DIRECT_URL")
 }
 
 /* ========================================================================== */

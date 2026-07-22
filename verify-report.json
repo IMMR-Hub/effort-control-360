@@ -1,13 +1,13 @@
 {
-  "generado_en": "2026-07-21T20:31:10.739Z",
-  "commit": "2981691e58971b3bca2f9398e835f763aec8c6af",
+  "generado_en": "2026-07-22T11:08:23.294Z",
+  "commit": "99d49ae582a9c6dd8927a8ab7ec79d77b4e0b6c8",
   "checks": [
     {
       "nombre": "typecheck",
       "comando": "npx tsc --build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 1416,
+      "duracion_ms": 1904,
       "detalle": ""
     },
     {
@@ -15,7 +15,7 @@
       "comando": "npx vitest run",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6404,
+      "duracion_ms": 12918,
       "detalle": ""
     },
     {
@@ -23,7 +23,7 @@
       "comando": "npx vitest run packages/core/test/golden.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3138,
+      "duracion_ms": 5019,
       "detalle": ""
     },
     {
@@ -37,7 +37,7 @@
       "comando": "npx vitest run apps/api/test/rbac.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3810,
+      "duracion_ms": 4189,
       "detalle": ""
     },
     {
@@ -45,7 +45,7 @@
       "comando": "npx vitest run apps/api/test/seguridad.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3422,
+      "duracion_ms": 5757,
       "detalle": ""
     },
     {
@@ -53,7 +53,7 @@
       "comando": "npx vitest run packages/schema/test/contratos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3207,
+      "duracion_ms": 4354,
       "detalle": ""
     },
     {
@@ -61,7 +61,7 @@
       "comando": "npx vitest run apps/api/test/servidor.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6756,
+      "duracion_ms": 7976,
       "detalle": ""
     },
     {
@@ -93,7 +93,7 @@
       "comando": "npm audit --audit-level=high",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 2422,
+      "duracion_ms": 3645,
       "detalle": ""
     },
     {
@@ -101,7 +101,7 @@
       "comando": "npm run build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6706,
+      "duracion_ms": 11950,
       "detalle": ""
     }
   ],
