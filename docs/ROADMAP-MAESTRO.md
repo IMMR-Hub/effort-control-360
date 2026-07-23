@@ -38,7 +38,7 @@ grep -c "^- \[ \]" <(sed -n '/## PARTE X/,/## PARTE X+1/p' docs/ROADMAP-MAESTRO.
 
 Si da 0, cerrada. Si no, no.
 
-**Avance: 80 de 112 tareas (71%).** Partes 1, 2, 3, 4A, 4B y 4C cerradas. Quedan 2 tareas bloqueadas por EFFORT (carga de datos), que no frenan el código.
+**Avance: 81 de 112 tareas (72%).** Partes 1, 2, 3, 4A, 4B y 4C cerradas. Quedan 2 tareas bloqueadas por EFFORT (carga de datos), que no frenan el código.
 
 Última actualización: 2026-07-23 · Commit de referencia: ver último commit en `git log`
 
@@ -238,7 +238,9 @@ bug de `buscarPorId`.
 
   **Verificación:** `npm run verify` → exit 0, 12 OK / 4 pendientes declarados / 0 fallidos — hecho el 2026-07-23.
 
-- [ ] 83. Módulo Equipo/Roles: alta y edición de usuarios (solo dirección)
+- [x] 83. Módulo Equipo/Roles: alta y edición de usuarios (solo dirección). `GET/POST /api/v1/usuarios`, `PATCH /api/v1/usuarios/:id`. La contraseña inicial la define dirección al crear (todavía no existe un flujo de "primer acceso" donde la persona la elija ella misma — ver bitácora). La edición reemplaza la cartera asignada completa en una sola operación (`reemplazarCartera`), que cierra con `hasta` las asignaciones que ya no corresponden y abre filas nuevas en vez de mutarlas, para no perder el historial de quién llevó qué cliente y desde cuándo. 24 tests de módulo (dobles, con un flujo de 2FA real vía TOTP para dirección) + 8 de integración contra Postgres real.
+
+  **Verificación:** `npm run verify` → exit 0, 12 OK / 4 pendientes declarados / 0 fallidos — hecho el 2026-07-23.
 - [ ] 84. Módulo Reglas Impositivas: edición de tasas de IVA (solo dirección)
 - [ ] 85. Módulo Reglas de Notificación: alta/edición de reglas de recordatorio (ya tiene motor, falta la ruta)
 - [ ] 86. Módulo Event Log: consulta filtrable del historial (solo dirección/revisor)
@@ -323,3 +325,4 @@ tener que redescubrirla en la próxima conversación.)*
 - **2026-07-22** — Al re-verificar un balance en el momento de aprobarlo, el estado de resultados NO se puede recalcular porque no se persiste como cifras propias. Se re-verifica solo la ecuación patrimonial y el contexto operativo, y se exige que el estado guardado sea `LISTO_PARA_REVISION` (que ya resume la revisión completa hecha al guardar). Un primer intento pasaba ceros como estado de resultados y hacía imposible aprobar cualquier balance.
 - **2026-07-22** — Cuando dos guardas pueden rechazar la misma petición, va primero la que da el mensaje más específico. "El balance no tiene cifras cargadas" es más útil que "no está en un estado aprobable", aunque las dos sean ciertas.
 - **2026-07-23** — Módulo Alertas sin ruta de alta: ningún rol tiene el permiso `crear` sobre el recurso `alerta` en la matriz de RBAC (`apps/api/src/seguridad/rbac.ts`), a propósito — la tabla la alimenta el sistema (vencimientos, conciliaciones, balances), no un usuario a mano. El orden de la vista consolidada por criticidad se apoya en que PostgreSQL ordena un enum nativo por la posición de declaración en `CREATE TYPE`, no alfabéticamente — el enum `Criticidad` en `schema.prisma` está declarado `CRITICA, ALTA, MEDIA, INFORMATIVA` a propósito, y `orderBy: { criticidad: 'asc' }` alcanza. Confirmado con un test de integración real. Si el enum se reordena alguna vez, ese `orderBy` deja de tener sentido sin que ningún tipo lo avise — queda anotado en el comentario del repositorio.
+- **2026-07-23** — Módulo Equipo: dirección define la contraseña inicial de cada usuario nuevo al darlo de alta (campo `contrasenaInicial`, validado con las mismas reglas de fortaleza que cualquier contraseña). Todavía no existe un flujo de "definí tu propia contraseña en el primer acceso" — ni ruta de cambio de contraseña, ni despacho de notificaciones (Parte 6) para avisarle a la persona. `debeCambiarContrasena` ya queda en `true` por defecto en el modelo, a la espera de que ese flujo se construya; hasta entonces, dirección comunica la contraseña inicial por un canal fuera del sistema. La edición de cartera (`clientesAsignados` en `PATCH /api/v1/usuarios/:id`) reemplaza el conjunto entero, no agrega/quita clientes sueltos, y un cambio de rol de una persona en un cliente abre una fila `asignacion_cliente` nueva en vez de mutar la vieja — así el historial dice desde cuándo ejerció cada rol en cada cliente, no solo cuál es el rol actual. `direccion` y `solo_lectura` no admiten cartera acotada (el enum `RolEnCliente` no los incluye): siempre ven todo o nada, nunca un subconjunto.

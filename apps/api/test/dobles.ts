@@ -15,6 +15,8 @@ import type { Rol } from '@effort/schema';
 import type { FilaDeBitacora, RepositorioDeBitacora } from '../src/bitacora.js';
 import type { Sesion } from '../src/seguridad/sesiones.js';
 import type {
+  AltaDeUsuario,
+  CamposEditablesDeUsuario,
   ClienteListado,
   ContactoAlmacenado,
   RepositorioDeClientes,
@@ -22,10 +24,41 @@ import type {
   RepositorioDeSesiones,
   RepositorioDeUsuarios,
   UsuarioConCredenciales,
+  UsuarioListado,
 } from '../src/puertos.js';
 
+/**
+ * Fixture de usuario para los tests de acceso.
+ *
+ * Los campos de ficha (`nombre`, `apellido`, `telefono`, `cargo`,
+ * `ultimoAccesoEn`) son opcionales porque los tests de acceso, sesiones y
+ * módulos no los necesitan y no los cargan — solo los de equipo lo hacen.
+ */
+export interface UsuarioFalso extends UsuarioConCredenciales {
+  nombre?: string;
+  apellido?: string;
+  telefono?: string | null;
+  cargo?: string | null;
+  ultimoAccesoEn?: Date | null;
+}
+
+function aListado(usuario: UsuarioFalso): UsuarioListado {
+  return {
+    id: usuario.id,
+    nombre: usuario.nombre ?? '',
+    apellido: usuario.apellido ?? '',
+    email: usuario.email,
+    telefono: usuario.telefono ?? null,
+    cargo: usuario.cargo ?? null,
+    rol: usuario.rol,
+    activo: usuario.activo,
+    veTodosLosClientes: usuario.veTodosLosClientes,
+    ultimoAccesoEn: usuario.ultimoAccesoEn ?? null,
+  };
+}
+
 export class UsuariosFalsos implements RepositorioDeUsuarios {
-  readonly usuarios: UsuarioConCredenciales[] = [];
+  readonly usuarios: UsuarioFalso[] = [];
   readonly asignaciones = new Map<string, string[]>();
   readonly accesos: { usuarioId: string; momento: Date }[] = [];
 
@@ -43,6 +76,48 @@ export class UsuariosFalsos implements RepositorioDeUsuarios {
 
   async registrarAcceso(usuarioId: string, momento: Date): Promise<void> {
     this.accesos.push({ usuarioId, momento });
+  }
+
+  async listar(): Promise<UsuarioListado[]> {
+    return this.usuarios.map(aListado);
+  }
+
+  async buscarListadoPorId(id: string): Promise<UsuarioListado | null> {
+    const usuario = this.usuarios.find((candidato) => candidato.id === id);
+    return usuario ? aListado(usuario) : null;
+  }
+
+  async crear(datos: AltaDeUsuario): Promise<UsuarioListado> {
+    const usuario: UsuarioFalso = {
+      id: randomUUID(),
+      email: datos.email,
+      rol: datos.rol,
+      activo: true,
+      veTodosLosClientes: datos.veTodosLosClientes,
+      hashContrasena: datos.hashContrasena,
+      secretoTotp: null,
+      segundoFactorActivo: false,
+      debeCambiarContrasena: true,
+      nombre: datos.nombre,
+      apellido: datos.apellido,
+      telefono: datos.telefono,
+      cargo: datos.cargo,
+      ultimoAccesoEn: null,
+    };
+    this.usuarios.push(usuario);
+    return aListado(usuario);
+  }
+
+  async actualizar(id: string, cambios: CamposEditablesDeUsuario): Promise<UsuarioListado> {
+    const indice = this.usuarios.findIndex((usuario) => usuario.id === id);
+    const actualizado: UsuarioFalso = { ...this.usuarios[indice]!, ...cambios };
+    this.usuarios[indice] = actualizado;
+    return aListado(actualizado);
+  }
+
+  /** El doble no modela vigencia por rol: solo reemplaza la lista de ids. */
+  async reemplazarCartera(usuarioId: string, clienteIds: readonly string[]): Promise<void> {
+    this.asignaciones.set(usuarioId, [...clienteIds]);
   }
 }
 

@@ -137,6 +137,138 @@ describeSiHayBase('repositorios contra PostgreSQL real', () => {
       });
       expect(fila?.ultimoAccesoEn?.toISOString()).toBe(momento.toISOString());
     });
+
+    describe('alta, edición y cartera', () => {
+      it('crea un usuario y lo devuelve sin credenciales en el tipo de listado', async () => {
+        const nuevo = await usuarios.crear({
+          nombre: 'Nueva', apellido: 'Persona', email: 'nueva.integracion@effort.com.py',
+          telefono: null, cargo: null, rol: 'auxiliar', veTodosLosClientes: false,
+          hashContrasena: '$argon2id$prueba', creadoPorUsuarioId: idDireccion,
+        });
+
+        expect(nuevo.email).toBe('nueva.integracion@effort.com.py');
+        expect(nuevo.activo).toBe(true);
+        expect('hashContrasena' in nuevo).toBe(false);
+
+        // El hash sí se guardó — se comprueba directo contra la base, no por el
+        // puerto de listado, que a propósito no lo expone.
+        const credenciales = await usuarios.buscarPorEmail('nueva.integracion@effort.com.py');
+        expect(credenciales?.hashContrasena).toBe('$argon2id$prueba');
+      });
+
+      it('la base impide crear dos usuarios con el mismo correo', async () => {
+        await usuarios.crear({
+          nombre: 'Uno', apellido: 'X', email: 'duplicado.integracion@effort.com.py',
+          telefono: null, cargo: null, rol: 'auxiliar', veTodosLosClientes: false,
+          hashContrasena: '$argon2id$prueba', creadoPorUsuarioId: idDireccion,
+        });
+
+        await expect(
+          usuarios.crear({
+            nombre: 'Dos', apellido: 'Y', email: 'duplicado.integracion@effort.com.py',
+            telefono: null, cargo: null, rol: 'auxiliar', veTodosLosClientes: false,
+            hashContrasena: '$argon2id$otro', creadoPorUsuarioId: idDireccion,
+          }),
+        ).rejects.toThrow();
+      });
+
+      it('listar trae el equipo completo, ordenado, y buscarListadoPorId respeta el id', async () => {
+        const lista = await usuarios.listar();
+        expect(lista.map((u) => u.id)).toContain(idAuxiliar);
+
+        const encontrado = await usuarios.buscarListadoPorId(idAuxiliar);
+        expect(encontrado?.email).toBe('aracely@effort.com.py');
+
+        expect(await usuarios.buscarListadoPorId('00000000-0000-4000-8000-000000000000')).toBeNull();
+      });
+
+      it('actualizar cambia solo los campos indicados', async () => {
+        const usuario = await usuarios.crear({
+          nombre: 'Editable', apellido: 'Original', email: 'editable.integracion@effort.com.py',
+          telefono: null, cargo: null, rol: 'auxiliar', veTodosLosClientes: false,
+          hashContrasena: '$argon2id$prueba', creadoPorUsuarioId: idDireccion,
+        });
+
+        const actualizado = await usuarios.actualizar(
+          usuario.id, { activo: false, cargo: 'Auxiliar contable' }, idDireccion,
+        );
+
+        expect(actualizado.activo).toBe(false);
+        expect(actualizado.cargo).toBe('Auxiliar contable');
+        // No se tocó: sigue siendo el mismo nombre con el que se creó.
+        expect(actualizado.nombre).toBe('Editable');
+      });
+
+      it('reemplazarCartera abre lo nuevo y cierra lo que ya no corresponde', async () => {
+        const usuario = await usuarios.crear({
+          nombre: 'Cartera', apellido: 'Prueba', email: 'cartera.integracion@effort.com.py',
+          telefono: null, cargo: null, rol: 'auxiliar', veTodosLosClientes: false,
+          hashContrasena: '$argon2id$prueba', creadoPorUsuarioId: idDireccion,
+        });
+
+        const momento1 = new Date('2026-06-01T00:00:00Z');
+        await usuarios.reemplazarCartera(usuario.id, [idClienteAsignado], 'auxiliar', momento1);
+        expect(await usuarios.clientesAsignados(usuario.id)).toEqual([idClienteAsignado]);
+
+        const momento2 = new Date('2026-06-15T00:00:00Z');
+        await usuarios.reemplazarCartera(usuario.id, [idClienteAjeno], 'auxiliar', momento2);
+
+        // El nuevo cliente entra, el viejo sale.
+        const cartera = await usuarios.clientesAsignados(usuario.id);
+        expect(cartera).toEqual([idClienteAjeno]);
+
+        // Y la fila vieja no se borró: se cerró con `hasta`, para que el
+        // historial siga contando quién llevó qué cliente y hasta cuándo.
+        const filaVieja = await entorno.prisma.asignacionCliente.findFirst({
+          where: { usuarioId: usuario.id, clienteId: idClienteAsignado },
+        });
+        expect(filaVieja?.hasta?.toISOString()).toBe(momento2.toISOString());
+      });
+
+      it('un ascenso de rol abre una fila nueva en el mismo cliente en vez de mutar la vieja', async () => {
+        const usuario = await usuarios.crear({
+          nombre: 'Asciende', apellido: 'Prueba', email: 'asciende.integracion@effort.com.py',
+          telefono: null, cargo: null, rol: 'auxiliar', veTodosLosClientes: false,
+          hashContrasena: '$argon2id$prueba', creadoPorUsuarioId: idDireccion,
+        });
+
+        const momento1 = new Date('2026-06-01T00:00:00Z');
+        await usuarios.reemplazarCartera(usuario.id, [idClienteAsignado], 'auxiliar', momento1);
+
+        const momento2 = new Date('2026-07-01T00:00:00Z');
+        await usuarios.reemplazarCartera(usuario.id, [idClienteAsignado], 'coordinador', momento2);
+
+        // Sigue viendo el mismo cliente...
+        expect(await usuarios.clientesAsignados(usuario.id)).toEqual([idClienteAsignado]);
+
+        // ...pero ahora hay dos filas: la de auxiliar, cerrada, y la de
+        // coordinador, vigente. El historial dice desde cuándo ejerció cada rol.
+        const filas = await entorno.prisma.asignacionCliente.findMany({
+          where: { usuarioId: usuario.id, clienteId: idClienteAsignado },
+          orderBy: { desde: 'asc' },
+        });
+        expect(filas).toHaveLength(2);
+        expect(filas[0]?.rol).toBe('auxiliar');
+        expect(filas[0]?.hasta?.toISOString()).toBe(momento2.toISOString());
+        expect(filas[1]?.rol).toBe('coordinador');
+        expect(filas[1]?.hasta).toBeNull();
+      });
+
+      it('reemplazarCartera con lista vacía cierra toda la cartera vigente', async () => {
+        const usuario = await usuarios.crear({
+          nombre: 'Vacia', apellido: 'Prueba', email: 'vacia.integracion@effort.com.py',
+          telefono: null, cargo: null, rol: 'auxiliar', veTodosLosClientes: false,
+          hashContrasena: '$argon2id$prueba', creadoPorUsuarioId: idDireccion,
+        });
+
+        await usuarios.reemplazarCartera(
+          usuario.id, [idClienteAsignado], 'auxiliar', new Date('2026-06-01T00:00:00Z'),
+        );
+        await usuarios.reemplazarCartera(usuario.id, [], null, new Date('2026-06-20T00:00:00Z'));
+
+        expect(await usuarios.clientesAsignados(usuario.id)).toEqual([]);
+      });
+    });
   });
 
   /* --- Sesiones ---------------------------------------------------------- */

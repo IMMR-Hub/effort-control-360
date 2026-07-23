@@ -31,6 +31,7 @@ import { ExportacionesSigaPrisma, LiquidacionesPrisma } from './repositorios/sig
 import { registrarRutasDeSiga } from './rutas/siga.js';
 import { registrarRutasDeLiquidaciones } from './rutas/liquidaciones.js';
 import { registrarRutasDeAlertas } from './rutas/alertas.js';
+import { registrarRutasDeUsuarios } from './rutas/usuarios.js';
 
 export interface DependenciasReales extends Dependencias {
   readonly cerrar: () => Promise<void>;
@@ -77,6 +78,7 @@ export async function arrancar(dependencias: Dependencias): Promise<void> {
   await registrarRutasDeSiga(app, dependencias);
   await registrarRutasDeLiquidaciones(app, dependencias);
   await registrarRutasDeAlertas(app, dependencias);
+  await registrarRutasDeUsuarios(app, dependencias);
 
   // Purga periódica del almacén de intentos: sin esto crece indefinidamente
   // mientras el proceso siga vivo.

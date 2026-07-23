@@ -10,6 +10,7 @@
 
 import { randomUUID } from 'node:crypto';
 import type { FastifyInstance } from 'fastify';
+import { authenticator } from 'otplib';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
 import type { AlertaAlmacenada } from '../src/puertos-dominio.js';
@@ -19,6 +20,7 @@ import { registrarRutasDeDocumentos } from '../src/rutas/documentos.js';
 import { registrarRutasDeVencimientos } from '../src/rutas/vencimientos.js';
 import { registrarRutasDeBalances } from '../src/rutas/balances.js';
 import { registrarRutasDeAlertas } from '../src/rutas/alertas.js';
+import { registrarRutasDeUsuarios } from '../src/rutas/usuarios.js';
 import { hashearContrasena } from '../src/seguridad/credenciales.js';
 import { AlmacenEnMemoria } from '../src/seguridad/limites.js';
 import { NOMBRE_COOKIE_SESION } from '../src/seguridad/sesiones.js';
@@ -43,6 +45,8 @@ import {
 const CONTRASENA = 'una frase larga y memorable';
 const MIO = '11111111-1111-4111-8111-111111111111';
 const AJENO = '22222222-2222-4222-8222-222222222222';
+/** Secreto de prueba para completar el segundo factor de dirección. */
+const SECRETO_TOTP_DIRECCION = 'JBSWY3DPEHPK3PXP';
 
 /** Reloj congelado: los días restantes de un vencimiento deben ser deterministas. */
 const HOY = new Date('2026-04-21T13:00:00Z');
@@ -64,6 +68,7 @@ interface Contexto {
   vencimientos: VencimientosFalsos;
   balances: BalancesFalsos;
   alertas: AlertasFalsas;
+  usuarios: UsuariosFalsos;
 }
 
 async function montar(): Promise<Contexto> {
@@ -83,6 +88,10 @@ async function montar(): Promise<Contexto> {
   };
 
   usuarios.usuarios.push(
+    {
+      id: 'usr-direccion', email: 'laura@effort.com.py', rol: 'direccion', veTodosLosClientes: true,
+      ...base, secretoTotp: SECRETO_TOTP_DIRECCION, segundoFactorActivo: true,
+    },
     { id: 'usr-auxiliar', email: 'aracely@effort.com.py', rol: 'auxiliar', veTodosLosClientes: false, ...base },
     { id: 'usr-coordinador', email: 'karina@effort.com.py', rol: 'coordinador', veTodosLosClientes: false, ...base },
     { id: 'usr-revisor', email: 'revisor@effort.com.py', rol: 'revisor_balance', veTodosLosClientes: true, ...base },
@@ -121,21 +130,42 @@ async function montar(): Promise<Contexto> {
   await registrarRutasDeVencimientos(app, deps);
   await registrarRutasDeBalances(app, deps);
   await registrarRutasDeAlertas(app, deps);
+  await registrarRutasDeUsuarios(app, deps);
   await app.ready();
 
-  return { app, bitacora, documentos, procesoMensual, vencimientos, balances, alertas };
+  return { app, bitacora, documentos, procesoMensual, vencimientos, balances, alertas, usuarios };
 }
 
+/**
+ * Accede y, si el rol exige segundo factor, lo completa con un código TOTP
+ * real generado a partir del secreto de la persona — la sesión no queda
+ * `VIGENTE` para el resto de las pruebas hasta que eso pasa.
+ */
 async function acceder(ctx: Contexto, email: string): Promise<string> {
   const respuesta = await ctx.app.inject({
     method: 'POST', url: '/api/v1/acceso', payload: { email, contrasena: CONTRASENA },
   });
-  const cookie = respuesta.cookies.find((c) => c.name === NOMBRE_COOKIE_SESION);
-  if (!cookie) throw new Error(`Sin cookie: ${respuesta.body}`);
-  return `${cookie.name}=${cookie.value}`;
+  const cookieObj = respuesta.cookies.find((c) => c.name === NOMBRE_COOKIE_SESION);
+  if (!cookieObj) throw new Error(`Sin cookie: ${respuesta.body}`);
+  const cookie = `${cookieObj.name}=${cookieObj.value}`;
+
+  const { segundoFactorRequerido } = JSON.parse(respuesta.body);
+  if (segundoFactorRequerido) {
+    const usuario = ctx.usuarios.usuarios.find((candidato) => candidato.email === email);
+    if (!usuario?.secretoTotp) throw new Error(`Falta secretoTotp para completar el 2FA de ${email}`);
+
+    const codigo = authenticator.generate(usuario.secretoTotp);
+    await ctx.app.inject({
+      method: 'POST', url: '/api/v1/acceso/segundo-factor',
+      headers: { cookie }, payload: { codigo },
+    });
+  }
+
+  return cookie;
 }
 
 let ctx: Contexto;
+let direccion = '';
 let auxiliar = '';
 let coordinador = '';
 let revisor = '';
@@ -143,6 +173,7 @@ let soloLectura = '';
 
 beforeEach(async () => {
   ctx = await montar();
+  direccion = await acceder(ctx, 'laura@effort.com.py');
   auxiliar = await acceder(ctx, 'aracely@effort.com.py');
   coordinador = await acceder(ctx, 'karina@effort.com.py');
   revisor = await acceder(ctx, 'revisor@effort.com.py');
@@ -908,5 +939,198 @@ describe('alertas', () => {
     expect((entrada?.datosDespues as Record<string, unknown>)['motivoCierre']).toBe(
       'Se presentó a tiempo.',
     );
+  });
+});
+
+describe('usuarios (equipo)', () => {
+  const altaValida = {
+    nombre: 'Nueva',
+    apellido: 'Persona',
+    email: 'nueva.persona@effort.com.py',
+    rol: 'auxiliar',
+    contrasenaInicial: 'una contraseña bien larga',
+  };
+
+  async function darDeAlta(payload: Record<string, unknown>) {
+    return ctx.app.inject({
+      method: 'POST', url: '/api/v1/usuarios',
+      headers: { cookie: direccion }, payload,
+    });
+  }
+
+  it('dirección da de alta un usuario y la respuesta no incluye el hash', async () => {
+    const respuesta = await darDeAlta(altaValida);
+
+    expect(respuesta.statusCode).toBe(201);
+    const { usuario } = JSON.parse(respuesta.body);
+    expect(usuario.email).toBe(altaValida.email);
+    expect(usuario.activo).toBe(true);
+    expect(usuario.hashContrasena).toBeUndefined();
+    expect(usuario.secretoTotp).toBeUndefined();
+  });
+
+  it('un rol distinto de dirección no puede dar de alta un usuario', async () => {
+    const respuesta = await ctx.app.inject({
+      method: 'POST', url: '/api/v1/usuarios',
+      headers: { cookie: auxiliar }, payload: altaValida,
+    });
+
+    expect(respuesta.statusCode).toBe(403);
+  });
+
+  it('no se puede repetir el correo de otro usuario', async () => {
+    const respuesta = await darDeAlta({ ...altaValida, email: 'aracely@effort.com.py' });
+
+    expect(respuesta.statusCode).toBe(409);
+    expect(JSON.parse(respuesta.body).error).toBe('correo_en_uso');
+  });
+
+  it('rechaza una contraseña inicial demasiado corta', async () => {
+    const respuesta = await darDeAlta({
+      ...altaValida, email: 'otra@effort.com.py', contrasenaInicial: 'corta',
+    });
+
+    expect(respuesta.statusCode).toBe(400);
+  });
+
+  it('rechaza una contraseña inicial larga pero previsible', async () => {
+    // Pasa el mínimo de largo del esquema Zod, pero cae en `validarFortaleza`.
+    const respuesta = await darDeAlta({
+      ...altaValida, email: 'otra2@effort.com.py', contrasenaInicial: 'unacontrasenalarga',
+    });
+
+    expect(respuesta.statusCode).toBe(400);
+    expect(JSON.parse(respuesta.body).error).toBe('contrasena_debil');
+  });
+
+  it('un rol sin cartera no puede recibir clientes asignados', async () => {
+    // direccion ve toda la cartera por diseño: no tiene un RolEnCliente válido.
+    const respuesta = await darDeAlta({
+      ...altaValida, email: 'otra2@effort.com.py', rol: 'direccion', clientesAsignados: [MIO],
+    });
+
+    expect(respuesta.statusCode).toBe(400);
+  });
+
+  it('el alta asigna la cartera indicada', async () => {
+    const respuesta = await darDeAlta({
+      ...altaValida, email: 'con.cartera@effort.com.py', clientesAsignados: [MIO],
+    });
+
+    const { usuario } = JSON.parse(respuesta.body);
+    expect(await ctx.usuarios.clientesAsignados(usuario.id)).toEqual([MIO]);
+  });
+
+  it('el alta queda en la bitácora', async () => {
+    await darDeAlta(altaValida);
+
+    const entrada = ctx.bitacora.filas.find((f) => f.accion === 'usuario.creado');
+    expect(entrada).toBeDefined();
+    expect(entrada?.usuarioId).toBe('usr-direccion');
+  });
+
+  it('la vista de equipo solo la ve dirección (según la matriz de RBAC)', async () => {
+    const conAcceso = await ctx.app.inject({
+      method: 'GET', url: '/api/v1/usuarios', headers: { cookie: direccion },
+    });
+    expect(conAcceso.statusCode).toBe(200);
+    expect(JSON.parse(conAcceso.body).usuarios.length).toBeGreaterThan(0);
+
+    const sinAcceso = await ctx.app.inject({
+      method: 'GET', url: '/api/v1/usuarios', headers: { cookie: auxiliar },
+    });
+    expect(sinAcceso.statusCode).toBe(403);
+  });
+
+  describe('edición', () => {
+    async function usuarioDePrueba(payload: Record<string, unknown> = {}) {
+      const alta = await darDeAlta({ ...altaValida, email: `editable-${randomUUID()}@effort.com.py`, ...payload });
+      return JSON.parse(alta.body).usuario as { id: string };
+    }
+
+    it('edita rol y estado', async () => {
+      const usuario = await usuarioDePrueba();
+
+      const respuesta = await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/usuarios/${usuario.id}`,
+        headers: { cookie: direccion }, payload: { rol: 'coordinador', activo: false },
+      });
+
+      expect(respuesta.statusCode).toBe(200);
+      const { usuario: actualizado } = JSON.parse(respuesta.body);
+      expect(actualizado.rol).toBe('coordinador');
+      expect(actualizado.activo).toBe(false);
+    });
+
+    it('reemplaza la cartera asignada', async () => {
+      const usuario = await usuarioDePrueba({ clientesAsignados: [MIO] });
+      expect(await ctx.usuarios.clientesAsignados(usuario.id)).toEqual([MIO]);
+
+      const respuesta = await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/usuarios/${usuario.id}`,
+        headers: { cookie: direccion }, payload: { clientesAsignados: [AJENO] },
+      });
+
+      expect(respuesta.statusCode).toBe(200);
+      expect(await ctx.usuarios.clientesAsignados(usuario.id)).toEqual([AJENO]);
+    });
+
+    it('editar sin mencionar clientesAsignados no toca la cartera existente', async () => {
+      const usuario = await usuarioDePrueba({ clientesAsignados: [MIO] });
+
+      const respuesta = await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/usuarios/${usuario.id}`,
+        headers: { cookie: direccion }, payload: { cargo: 'Auxiliar contable' },
+      });
+
+      expect(respuesta.statusCode).toBe(200);
+      expect(await ctx.usuarios.clientesAsignados(usuario.id)).toEqual([MIO]);
+    });
+
+    it('un rol sin cartera no puede recibir clientes asignados al editar', async () => {
+      const usuario = await usuarioDePrueba();
+
+      const respuesta = await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/usuarios/${usuario.id}`,
+        headers: { cookie: direccion },
+        payload: { rol: 'solo_lectura', clientesAsignados: [MIO] },
+      });
+
+      expect(respuesta.statusCode).toBe(400);
+    });
+
+    it('no se puede editar un usuario inexistente', async () => {
+      const respuesta = await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/usuarios/${randomUUID()}`,
+        headers: { cookie: direccion }, payload: { activo: false },
+      });
+
+      expect(respuesta.statusCode).toBe(404);
+    });
+
+    it('un rol distinto de dirección no puede editar', async () => {
+      const usuario = await usuarioDePrueba();
+
+      const respuesta = await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/usuarios/${usuario.id}`,
+        headers: { cookie: auxiliar }, payload: { activo: false },
+      });
+
+      expect(respuesta.statusCode).toBe(403);
+    });
+
+    it('la edición queda en la bitácora con el estado anterior', async () => {
+      const usuario = await usuarioDePrueba();
+
+      await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/usuarios/${usuario.id}`,
+        headers: { cookie: direccion }, payload: { activo: false },
+      });
+
+      const entrada = ctx.bitacora.filas.find((f) => f.accion === 'usuario.actualizado');
+      expect(entrada).toBeDefined();
+      expect((entrada?.datosAntes as Record<string, unknown>)['activo']).toBe(true);
+      expect((entrada?.datosDespues as Record<string, unknown>)['activo']).toBe(false);
+    });
   });
 });
