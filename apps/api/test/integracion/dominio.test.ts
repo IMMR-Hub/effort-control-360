@@ -19,6 +19,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { HAY_BASE_DE_DATOS, crearEntorno, type EntornoDePrueba } from './entorno.js';
 import {
+  AlertasPrisma,
   BalancesPrisma,
   DocumentosPrisma,
   ProcesoMensualPrisma,
@@ -36,6 +37,7 @@ describeSiHayBase('repositorios de negocio contra PostgreSQL real', () => {
   let balances: BalancesPrisma;
   let siga: ExportacionesSigaPrisma;
   let liquidaciones: LiquidacionesPrisma;
+  let alertas: AlertasPrisma;
 
   let usuario = '';
   let mio = '';
@@ -52,6 +54,7 @@ describeSiHayBase('repositorios de negocio contra PostgreSQL real', () => {
     balances = new BalancesPrisma(entorno.prisma);
     siga = new ExportacionesSigaPrisma(entorno.prisma);
     liquidaciones = new LiquidacionesPrisma(entorno.prisma);
+    alertas = new AlertasPrisma(entorno.prisma);
 
     const u = await entorno.prisma.usuario.create({
       data: {
@@ -584,6 +587,96 @@ describeSiHayBase('repositorios de negocio contra PostgreSQL real', () => {
 
     it('una cartera vacía no devuelve liquidaciones', async () => {
       expect(await liquidaciones.listar(null, [])).toEqual([]);
+    });
+  });
+
+  /* ====================================================================== */
+  /* Alertas                                                                */
+  /* ====================================================================== */
+
+  describe('alertas', () => {
+    async function crearAlerta(
+      clienteId: string | null,
+      criticidad: 'CRITICA' | 'ALTA' | 'MEDIA' | 'INFORMATIVA',
+      titulo: string,
+      estado: 'ABIERTA' | 'EN_CURSO' | 'CERRADA' | 'DESCARTADA' = 'ABIERTA',
+    ) {
+      return entorno.prisma.alerta.create({
+        data: { clienteId, origen: 'vencimiento', criticidad, titulo, detalle: 'Detalle de prueba.', estado },
+      });
+    }
+
+    it('ordena por criticidad usando el orden declarado del enum en Postgres, no alfabético', async () => {
+      // El orden alfabético sería ALTA, CRITICA, INFORMATIVA, MEDIA: si este
+      // test pasara con el `orderBy` alfabético, no estaría probando nada.
+      await crearAlerta(mio, 'MEDIA', 'orden-media');
+      await crearAlerta(mio, 'INFORMATIVA', 'orden-informativa');
+      await crearAlerta(mio, 'CRITICA', 'orden-critica');
+      await crearAlerta(mio, 'ALTA', 'orden-alta');
+
+      const listado = await alertas.listar([mio]);
+      const propias = listado.filter((a) => a.titulo.startsWith('orden-'));
+
+      expect(propias.map((a) => a.titulo)).toEqual([
+        'orden-critica', 'orden-alta', 'orden-media', 'orden-informativa',
+      ]);
+    });
+
+    it('el filtro de cartera no pisa el filtro de estado al listar', async () => {
+      // Regresión del bug de buscarPorId: dos condiciones sobre la misma
+      // consulta combinadas mal pueden pisarse entre sí.
+      const propia = await crearAlerta(mio, 'CRITICA', 'cartera-propia');
+      const ajena = await crearAlerta(ajeno, 'CRITICA', 'cartera-ajena');
+
+      const conAcceso = await alertas.listar([mio, ajeno]);
+      const sinAcceso = await alertas.listar([ajeno]);
+
+      const idsConAcceso = conAcceso.map((a) => a.id);
+      expect(idsConAcceso).toContain(propia.id);
+      expect(idsConAcceso).toContain(ajena.id);
+      expect(sinAcceso.map((a) => a.id)).not.toContain(propia.id);
+    });
+
+    it('buscar por id respeta el filtro de cartera', async () => {
+      const ajena = await crearAlerta(ajeno, 'ALTA', 'buscar-ajena');
+
+      expect(await alertas.buscarPorId(ajena.id, [mio])).toBeNull();
+      expect(await alertas.buscarPorId(ajena.id, [ajeno])).not.toBeNull();
+    });
+
+    it('una alerta sin cliente no aparece con cartera acotada, pero sí sin filtro', async () => {
+      const general = await crearAlerta(null, 'CRITICA', 'general-sin-cliente');
+
+      const acotado = await alertas.listar([mio]);
+      expect(acotado.map((a) => a.id)).not.toContain(general.id);
+
+      const sinFiltro = await alertas.listar(null);
+      expect(sinFiltro.map((a) => a.id)).toContain(general.id);
+    });
+
+    it('listar excluye lo cerrado y lo descartado', async () => {
+      const cerrada = await crearAlerta(mio, 'CRITICA', 'ya-cerrada', 'CERRADA');
+      const descartada = await crearAlerta(mio, 'CRITICA', 'ya-descartada', 'DESCARTADA');
+
+      const listado = await alertas.listar([mio]);
+      const ids = listado.map((a) => a.id);
+
+      expect(ids).not.toContain(cerrada.id);
+      expect(ids).not.toContain(descartada.id);
+    });
+
+    it('cerrar guarda motivo, usuario y momento, y cambia el estado', async () => {
+      const alerta = await crearAlerta(mio, 'ALTA', 'para-cerrar');
+      const momento = new Date('2026-07-20T10:00:00Z');
+
+      const cerrada = await alertas.cerrar(
+        alerta.id, 'Se resolvió con el cliente.', usuario, momento,
+      );
+
+      expect(cerrada.estado).toBe('CERRADA');
+      expect(cerrada.motivoCierre).toBe('Se resolvió con el cliente.');
+      expect(cerrada.cerradaPorUsuarioId).toBe(usuario);
+      expect(cerrada.cerradaEn?.toISOString()).toBe(momento.toISOString());
     });
   });
 });

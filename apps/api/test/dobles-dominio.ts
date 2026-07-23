@@ -11,6 +11,7 @@
 import { randomUUID } from 'node:crypto';
 
 import type {
+  AlertaAlmacenada,
   AltaDeDocumento,
   AltaDeVencimiento,
   BalanceAlmacenado,
@@ -19,6 +20,7 @@ import type {
   DocumentoAlmacenado,
   FiltroDeCartera,
   ProcesoMensualAlmacenado,
+  RepositorioDeAlertas,
   RepositorioDeBalances,
   RepositorioDeDocumentos,
   RepositorioDeProcesoMensual,
@@ -37,6 +39,20 @@ import type {
 /** Aplica el filtro de cartera igual que lo haría el SQL. */
 function alcanza(filtro: FiltroDeCartera, clienteId: string): boolean {
   return filtro === null || filtro.includes(clienteId);
+}
+
+/**
+ * Igual que `alcanza`, pero para columnas de cliente nulleables (alerta).
+ *
+ * Replica `porCartera` de Prisma: sin filtro, `{}` no restringe nada — pasa
+ * hasta lo que no tiene cliente. Con filtro, la condición es `clienteId IN
+ * (...)`, y `NULL` nunca matchea un `IN`, así que una alerta sin cliente queda
+ * afuera para cualquier usuario con cartera acotada.
+ */
+function alcanzaAlerta(filtro: FiltroDeCartera, clienteId: string | null): boolean {
+  if (filtro === null) return true;
+  if (clienteId === null) return false;
+  return filtro.includes(clienteId);
 }
 
 export class DocumentosFalsos implements RepositorioDeDocumentos {
@@ -490,6 +506,47 @@ export class LiquidacionesFalsas implements RepositorioDeLiquidaciones {
       respondidaEn,
     };
     this.liquidaciones[indice] = actualizada;
+    return actualizada;
+  }
+}
+
+/** Mismo orden que el enum `Criticidad` en `schema.prisma`. */
+const ORDEN_CRITICIDAD: Record<string, number> = { CRITICA: 0, ALTA: 1, MEDIA: 2, INFORMATIVA: 3 };
+
+export class AlertasFalsas implements RepositorioDeAlertas {
+  readonly alertas: AlertaAlmacenada[] = [];
+
+  async listar(filtro: FiltroDeCartera): Promise<AlertaAlmacenada[]> {
+    return this.alertas
+      .filter(
+        (alerta) =>
+          ['ABIERTA', 'EN_CURSO'].includes(alerta.estado) &&
+          alcanzaAlerta(filtro, alerta.clienteId),
+      )
+      .sort((a, b) => ORDEN_CRITICIDAD[a.criticidad]! - ORDEN_CRITICIDAD[b.criticidad]!);
+  }
+
+  async buscarPorId(id: string, filtro: FiltroDeCartera): Promise<AlertaAlmacenada | null> {
+    const alerta = this.alertas.find((candidata) => candidata.id === id);
+    if (!alerta || !alcanzaAlerta(filtro, alerta.clienteId)) return null;
+    return alerta;
+  }
+
+  async cerrar(
+    id: string,
+    motivoCierre: string,
+    usuarioId: string,
+    cerradaEn: Date,
+  ): Promise<AlertaAlmacenada> {
+    const indice = this.alertas.findIndex((alerta) => alerta.id === id);
+    const actualizada: AlertaAlmacenada = {
+      ...this.alertas[indice]!,
+      estado: 'CERRADA',
+      motivoCierre,
+      cerradaPorUsuarioId: usuarioId,
+      cerradaEn,
+    };
+    this.alertas[indice] = actualizada;
     return actualizada;
   }
 }

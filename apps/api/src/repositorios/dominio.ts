@@ -9,6 +9,7 @@
  */
 
 import type {
+  AlertaAlmacenada,
   AltaDeDocumento,
   AltaDeVencimiento,
   BalanceAlmacenado,
@@ -17,6 +18,7 @@ import type {
   DocumentoAlmacenado,
   FiltroDeCartera,
   ProcesoMensualAlmacenado,
+  RepositorioDeAlertas,
   RepositorioDeBalances,
   RepositorioDeDocumentos,
   RepositorioDeProcesoMensual,
@@ -494,5 +496,86 @@ export class BalancesPrisma implements RepositorioDeBalances {
     });
 
     return fila as BalanceAlmacenado;
+  }
+}
+
+/* ========================================================================== */
+/* Alertas                                                                    */
+/* ========================================================================== */
+
+const CAMPOS_ALERTA = {
+  id: true,
+  clienteId: true,
+  periodo: true,
+  origen: true,
+  criticidad: true,
+  titulo: true,
+  detalle: true,
+  entidadRelacionada: true,
+  entidadRelacionadaId: true,
+  responsableId: true,
+  fechaLimite: true,
+  estado: true,
+  cerradaPorUsuarioId: true,
+  cerradaEn: true,
+  motivoCierre: true,
+} as const;
+
+export class AlertasPrisma implements RepositorioDeAlertas {
+  constructor(private readonly prisma: PrismaClient) {}
+
+  /**
+   * El radar consolidado: solo lo que sigue abierto, más crítico primero.
+   *
+   * `criticidad: 'asc'` alcanza para ese orden porque en PostgreSQL un enum
+   * nativo ordena según la posición en que se declaró en `CREATE TYPE`, no
+   * alfabéticamente — y `Criticidad` en `schema.prisma` está declarado
+   * `CRITICA, ALTA, MEDIA, INFORMATIVA` a propósito. Si el enum alguna vez se
+   * reordena, este `orderBy` deja de tener sentido sin que ningún tipo lo avise.
+   *
+   * Una alerta sin `clienteId` (de alcance general, no de un cliente puntual)
+   * no entra en el filtro de cartera: el filtro es `clienteId IN (...)` y
+   * `NULL` nunca matchea un `IN`. Es la aplicación del mismo "negar por
+   * defecto" que el resto del sistema — un auxiliar con cartera acotada no ve
+   * alertas generales aunque no tengan dueño.
+   */
+  async listar(filtro: FiltroDeCartera): Promise<AlertaAlmacenada[]> {
+    const filas = await this.prisma.alerta.findMany({
+      where: { estado: { in: ['ABIERTA', 'EN_CURSO'] }, ...porCartera(filtro) },
+      select: CAMPOS_ALERTA,
+      orderBy: [{ criticidad: 'asc' }, { creadoEn: 'asc' }],
+    });
+
+    return filas as AlertaAlmacenada[];
+  }
+
+  async buscarPorId(id: string, filtro: FiltroDeCartera): Promise<AlertaAlmacenada | null> {
+    const fila = await this.prisma.alerta.findFirst({
+      where: { AND: [{ id }, porCartera(filtro)] },
+      select: CAMPOS_ALERTA,
+    });
+
+    return fila as AlertaAlmacenada | null;
+  }
+
+  async cerrar(
+    id: string,
+    motivoCierre: string,
+    usuarioId: string,
+    cerradaEn: Date,
+  ): Promise<AlertaAlmacenada> {
+    const fila = await this.prisma.alerta.update({
+      where: { id },
+      data: {
+        estado: 'CERRADA',
+        motivoCierre,
+        cerradaPorUsuarioId: usuarioId,
+        cerradaEn,
+        actualizadoPorUsuarioId: usuarioId,
+      },
+      select: CAMPOS_ALERTA,
+    });
+
+    return fila as AlertaAlmacenada;
   }
 }

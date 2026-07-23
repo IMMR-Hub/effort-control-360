@@ -141,4 +141,6 @@ export const ACCIONES = Object.freeze({
   BALANCE_APROBADO: 'balance.aprobado',
   REGLA_IMPOSITIVA_MODIFICADA: 'regla_impositiva.modificada',
   REGLA_NOTIFICACION_MODIFICADA: 'regla_notificacion.modificada',
+
+  ALERTA_CERRADA: 'alerta.cerrada',
 } as const);

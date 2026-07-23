@@ -164,6 +164,10 @@ export const tasaIvaSchema = z.enum(['DIEZ', 'CINCO', 'EXENTA']);
 
 export const origenRegistroSchema = z.enum(['REAL', 'SEMILLA', 'IMPORTADO']);
 
+export const criticidadSchema = z.enum(['CRITICA', 'ALTA', 'MEDIA', 'INFORMATIVA']);
+
+export const estadoAlertaSchema = z.enum(['ABIERTA', 'EN_CURSO', 'CERRADA', 'DESCARTADA']);
+
 /** Marca de auditoría que llevan todas las entidades persistidas. */
 export const auditoriaSchema = z
   .object({

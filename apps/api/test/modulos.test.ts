@@ -1,6 +1,6 @@
 /**
- * Tests de los módulos de negocio: documentos, proceso mensual, vencimientos
- * y balances.
+ * Tests de los módulos de negocio: documentos, proceso mensual, vencimientos,
+ * balances y alertas.
  *
  * Ejercitan el servidor completo con dobles de persistencia. Lo que se prueba
  * acá es el comportamiento de las rutas: permisos, alcance de cartera,
@@ -8,14 +8,17 @@
  * prueba aparte, en `test/integracion/`.
  */
 
+import { randomUUID } from 'node:crypto';
 import type { FastifyInstance } from 'fastify';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import type { AlertaAlmacenada } from '../src/puertos-dominio.js';
 import { construirServidor, type Dependencias } from '../src/servidor.js';
 import { registrarRutasDeAutenticacion } from '../src/rutas/autenticacion.js';
 import { registrarRutasDeDocumentos } from '../src/rutas/documentos.js';
 import { registrarRutasDeVencimientos } from '../src/rutas/vencimientos.js';
 import { registrarRutasDeBalances } from '../src/rutas/balances.js';
+import { registrarRutasDeAlertas } from '../src/rutas/alertas.js';
 import { hashearContrasena } from '../src/seguridad/credenciales.js';
 import { AlmacenEnMemoria } from '../src/seguridad/limites.js';
 import { NOMBRE_COOKIE_SESION } from '../src/seguridad/sesiones.js';
@@ -28,6 +31,7 @@ import {
   UsuariosFalsos,
 } from './dobles.js';
 import {
+  AlertasFalsas,
   BalancesFalsos,
   DocumentosFalsos,
   ProcesoMensualFalso,
@@ -59,6 +63,7 @@ interface Contexto {
   procesoMensual: ProcesoMensualFalso;
   vencimientos: VencimientosFalsos;
   balances: BalancesFalsos;
+  alertas: AlertasFalsas;
 }
 
 async function montar(): Promise<Contexto> {
@@ -69,6 +74,7 @@ async function montar(): Promise<Contexto> {
   const procesoMensual = new ProcesoMensualFalso();
   const vencimientos = new VencimientosFalsos();
   const balances = new BalancesFalsos();
+  const alertas = new AlertasFalsas();
   const hash = await hashearContrasena(CONTRASENA);
 
   const base = {
@@ -104,6 +110,7 @@ async function montar(): Promise<Contexto> {
     balances,
     exportacionesSiga: new ExportacionesSigaFalsas(),
     liquidaciones: new LiquidacionesFalsas(),
+    alertas,
     intentosDeAcceso: new AlmacenEnMemoria(),
     ahora: () => HOY,
   };
@@ -113,9 +120,10 @@ async function montar(): Promise<Contexto> {
   await registrarRutasDeDocumentos(app, deps);
   await registrarRutasDeVencimientos(app, deps);
   await registrarRutasDeBalances(app, deps);
+  await registrarRutasDeAlertas(app, deps);
   await app.ready();
 
-  return { app, bitacora, documentos, procesoMensual, vencimientos, balances };
+  return { app, bitacora, documentos, procesoMensual, vencimientos, balances, alertas };
 }
 
 async function acceder(ctx: Contexto, email: string): Promise<string> {
@@ -737,5 +745,168 @@ describe('balances: el sistema no aprueba', () => {
     const { balance } = JSON.parse(respuesta.body);
     expect(balance.activo).toBe('1000000000');
     expect(typeof balance.activo).toBe('string');
+  });
+});
+
+describe('alertas', () => {
+  function fixture(overrides: Partial<AlertaAlmacenada> = {}): AlertaAlmacenada {
+    return {
+      id: randomUUID(),
+      clienteId: MIO,
+      periodo: '2026-03',
+      origen: 'vencimiento',
+      criticidad: 'MEDIA',
+      titulo: 'Vencimiento próximo',
+      detalle: 'La presentación ante Abogacía vence en 5 días.',
+      entidadRelacionada: 'vencimiento',
+      entidadRelacionadaId: randomUUID(),
+      responsableId: null,
+      fechaLimite: null,
+      estado: 'ABIERTA',
+      cerradaPorUsuarioId: null,
+      cerradaEn: null,
+      motivoCierre: null,
+      ...overrides,
+    };
+  }
+
+  it('la vista consolidada ordena por criticidad, más urgente primero', async () => {
+    ctx.alertas.alertas.push(
+      fixture({ criticidad: 'MEDIA', titulo: 'media' }),
+      fixture({ criticidad: 'CRITICA', titulo: 'critica' }),
+      fixture({ criticidad: 'ALTA', titulo: 'alta' }),
+      fixture({ criticidad: 'INFORMATIVA', titulo: 'informativa' }),
+    );
+
+    const respuesta = await ctx.app.inject({
+      method: 'GET', url: '/api/v1/alertas', headers: { cookie: coordinador },
+    });
+
+    expect(respuesta.statusCode).toBe(200);
+    const { alertas, resumen } = JSON.parse(respuesta.body);
+    expect(alertas.map((a: { titulo: string }) => a.titulo)).toEqual([
+      'critica', 'alta', 'media', 'informativa',
+    ]);
+    expect(resumen).toEqual({ CRITICA: 1, ALTA: 1, MEDIA: 1, INFORMATIVA: 1 });
+  });
+
+  it('no muestra alertas cerradas ni descartadas en la vista consolidada', async () => {
+    ctx.alertas.alertas.push(
+      fixture({ estado: 'CERRADA', titulo: 'cerrada' }),
+      fixture({ estado: 'DESCARTADA', titulo: 'descartada' }),
+      fixture({ estado: 'ABIERTA', titulo: 'abierta' }),
+    );
+
+    const respuesta = await ctx.app.inject({
+      method: 'GET', url: '/api/v1/alertas', headers: { cookie: coordinador },
+    });
+
+    const { alertas } = JSON.parse(respuesta.body);
+    expect(alertas).toHaveLength(1);
+    expect(alertas[0].titulo).toBe('abierta');
+  });
+
+  it('un usuario con cartera acotada no ve alertas de un cliente ajeno', async () => {
+    ctx.alertas.alertas.push(fixture({ clienteId: AJENO }));
+
+    const respuesta = await ctx.app.inject({
+      method: 'GET', url: '/api/v1/alertas', headers: { cookie: auxiliar },
+    });
+
+    const { alertas } = JSON.parse(respuesta.body);
+    expect(alertas).toHaveLength(0);
+  });
+
+  it('una alerta sin cliente asignado no llega a un usuario con cartera acotada', async () => {
+    // Una alerta general (sin dueño) no entra por el filtro `IN (...)`: es la
+    // aplicación del mismo "negar por defecto" que el resto del sistema.
+    ctx.alertas.alertas.push(fixture({ clienteId: null }));
+
+    const acotado = await ctx.app.inject({
+      method: 'GET', url: '/api/v1/alertas', headers: { cookie: auxiliar },
+    });
+    expect(JSON.parse(acotado.body).alertas).toHaveLength(0);
+
+    const sinRestriccion = await ctx.app.inject({
+      method: 'GET', url: '/api/v1/alertas', headers: { cookie: revisor },
+    });
+    expect(JSON.parse(sinRestriccion.body).alertas).toHaveLength(1);
+  });
+
+  it('cerrar una alerta exige explicar el motivo', async () => {
+    const alerta = fixture();
+    ctx.alertas.alertas.push(alerta);
+
+    const sinMotivo = await ctx.app.inject({
+      method: 'POST', url: `/api/v1/alertas/${alerta.id}/cerrar`,
+      headers: { cookie: coordinador }, payload: {},
+    });
+    expect(sinMotivo.statusCode).toBe(400);
+
+    const conMotivo = await ctx.app.inject({
+      method: 'POST', url: `/api/v1/alertas/${alerta.id}/cerrar`,
+      headers: { cookie: coordinador }, payload: { motivoCierre: 'Se presentó a tiempo.' },
+    });
+    expect(conMotivo.statusCode).toBe(200);
+    expect(JSON.parse(conMotivo.body).alerta.estado).toBe('CERRADA');
+  });
+
+  it('no se puede cerrar dos veces la misma alerta', async () => {
+    const alerta = fixture();
+    ctx.alertas.alertas.push(alerta);
+
+    await ctx.app.inject({
+      method: 'POST', url: `/api/v1/alertas/${alerta.id}/cerrar`,
+      headers: { cookie: coordinador }, payload: { motivoCierre: 'Resuelta.' },
+    });
+
+    const segunda = await ctx.app.inject({
+      method: 'POST', url: `/api/v1/alertas/${alerta.id}/cerrar`,
+      headers: { cookie: coordinador }, payload: { motivoCierre: 'De nuevo.' },
+    });
+
+    expect(segunda.statusCode).toBe(409);
+    expect(JSON.parse(segunda.body).error).toBe('ya_cerrada');
+  });
+
+  it('no se puede cerrar una alerta de un cliente ajeno a la cartera', async () => {
+    const alerta = fixture({ clienteId: AJENO });
+    ctx.alertas.alertas.push(alerta);
+
+    const respuesta = await ctx.app.inject({
+      method: 'POST', url: `/api/v1/alertas/${alerta.id}/cerrar`,
+      headers: { cookie: coordinador }, payload: { motivoCierre: 'Intento.' },
+    });
+
+    expect(respuesta.statusCode).toBe(404);
+  });
+
+  it('solo_lectura no puede cerrar una alerta', async () => {
+    const alerta = fixture();
+    ctx.alertas.alertas.push(alerta);
+
+    const respuesta = await ctx.app.inject({
+      method: 'POST', url: `/api/v1/alertas/${alerta.id}/cerrar`,
+      headers: { cookie: soloLectura }, payload: { motivoCierre: 'Intento.' },
+    });
+
+    expect(respuesta.statusCode).toBe(403);
+  });
+
+  it('el cierre queda en la bitácora con el motivo y el estado anterior', async () => {
+    const alerta = fixture();
+    ctx.alertas.alertas.push(alerta);
+
+    await ctx.app.inject({
+      method: 'POST', url: `/api/v1/alertas/${alerta.id}/cerrar`,
+      headers: { cookie: coordinador }, payload: { motivoCierre: 'Se presentó a tiempo.' },
+    });
+
+    const entrada = ctx.bitacora.filas.find((f) => f.accion === 'alerta.cerrada');
+    expect(entrada).toBeDefined();
+    expect((entrada?.datosAntes as Record<string, unknown>)['estado']).toBe('ABIERTA');
+    expect((entrada?.datosDespues as Record<string, unknown>)['motivoCierre']).toBe(
+      'Se presentó a tiempo.',
+    );
   });
 });

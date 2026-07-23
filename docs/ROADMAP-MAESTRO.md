@@ -38,9 +38,9 @@ grep -c "^- \[ \]" <(sed -n '/## PARTE X/,/## PARTE X+1/p' docs/ROADMAP-MAESTRO.
 
 Si da 0, cerrada. Si no, no.
 
-**Avance: 79 de 112 tareas (71%).** Partes 1, 2, 3, 4A, 4B y 4C cerradas. Quedan 2 tareas bloqueadas por EFFORT (carga de datos), que no frenan el código.
+**Avance: 80 de 112 tareas (71%).** Partes 1, 2, 3, 4A, 4B y 4C cerradas. Quedan 2 tareas bloqueadas por EFFORT (carga de datos), que no frenan el código.
 
-Última actualización: 2026-07-22 · Commit de referencia: ver último commit en `git log`
+Última actualización: 2026-07-23 · Commit de referencia: ver último commit en `git log`
 
 > El total **no es un número fijo**: sube y baja a medida que el alcance de cada
 > parte se vuelve concreto. Si agregás, quitás o insertás una tarea, **renumerá
@@ -234,7 +234,10 @@ bug de `buscarPorId`.
 
 ### 4D — Módulos restantes
 
-- [ ] 82. Módulo Alertas: vista consolidada ordenada por criticidad (la tabla ya existe)
+- [x] 82. Módulo Alertas: vista consolidada ordenada por criticidad (la tabla ya existe). Repositorio Prisma + rutas (`GET /api/v1/alertas` con resumen por criticidad, `POST /api/v1/alertas/:id/cerrar` con motivo obligatorio). Sin ruta de alta a propósito: ningún rol tiene `crear` sobre `alerta` en la matriz de RBAC — la tabla la alimenta el sistema, no un usuario. 9 tests de módulo (dobles) + 6 de integración contra Postgres real, incluido el orden por criticidad y que el filtro de cartera no se pisa con el de estado.
+
+  **Verificación:** `npm run verify` → exit 0, 12 OK / 4 pendientes declarados / 0 fallidos — hecho el 2026-07-23.
+
 - [ ] 83. Módulo Equipo/Roles: alta y edición de usuarios (solo dirección)
 - [ ] 84. Módulo Reglas Impositivas: edición de tasas de IVA (solo dirección)
 - [ ] 85. Módulo Reglas de Notificación: alta/edición de reglas de recordatorio (ya tiene motor, falta la ruta)
@@ -319,3 +322,4 @@ tener que redescubrirla en la próxima conversación.)*
 - **2026-07-22** — Todo lo que se persiste en una columna `Json` tiene que convertirse a una forma serializable ANTES de guardarse. Las inconsistencias de balance llevaban `diferencia` como `bigint` y `JSON.stringify` no lo serializa: rompía tanto la escritura como la respuesta HTTP. Regla general: ningún `bigint` cruza el borde de la aplicación sin pasar a `string`.
 - **2026-07-22** — Al re-verificar un balance en el momento de aprobarlo, el estado de resultados NO se puede recalcular porque no se persiste como cifras propias. Se re-verifica solo la ecuación patrimonial y el contexto operativo, y se exige que el estado guardado sea `LISTO_PARA_REVISION` (que ya resume la revisión completa hecha al guardar). Un primer intento pasaba ceros como estado de resultados y hacía imposible aprobar cualquier balance.
 - **2026-07-22** — Cuando dos guardas pueden rechazar la misma petición, va primero la que da el mensaje más específico. "El balance no tiene cifras cargadas" es más útil que "no está en un estado aprobable", aunque las dos sean ciertas.
+- **2026-07-23** — Módulo Alertas sin ruta de alta: ningún rol tiene el permiso `crear` sobre el recurso `alerta` en la matriz de RBAC (`apps/api/src/seguridad/rbac.ts`), a propósito — la tabla la alimenta el sistema (vencimientos, conciliaciones, balances), no un usuario a mano. El orden de la vista consolidada por criticidad se apoya en que PostgreSQL ordena un enum nativo por la posición de declaración en `CREATE TYPE`, no alfabéticamente — el enum `Criticidad` en `schema.prisma` está declarado `CRITICA, ALTA, MEDIA, INFORMATIVA` a propósito, y `orderBy: { criticidad: 'asc' }` alcanza. Confirmado con un test de integración real. Si el enum se reordena alguna vez, ese `orderBy` deja de tener sentido sin que ningún tipo lo avise — queda anotado en el comentario del repositorio.

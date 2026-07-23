@@ -388,3 +388,45 @@ export interface RepositorioDeLiquidaciones {
     usuarioId: string,
   ): Promise<LiquidacionAlmacenada>;
 }
+
+/* ========================================================================== */
+/* Alertas                                                                   */
+/* ========================================================================== */
+
+export interface AlertaAlmacenada {
+  readonly id: string;
+  readonly clienteId: string | null;
+  readonly periodo: string | null;
+  readonly origen: string;
+  readonly criticidad: string;
+  readonly titulo: string;
+  readonly detalle: string;
+  readonly entidadRelacionada: string | null;
+  readonly entidadRelacionadaId: string | null;
+  readonly responsableId: string | null;
+  readonly fechaLimite: Date | null;
+  readonly estado: string;
+  readonly cerradaPorUsuarioId: string | null;
+  readonly cerradaEn: Date | null;
+  readonly motivoCierre: string | null;
+}
+
+export interface RepositorioDeAlertas {
+  /**
+   * Vista consolidada de la cartera, ordenada por criticidad y luego por
+   * antigüedad. Solo trae `ABIERTA` y `EN_CURSO`: lo que ya se cerró o se
+   * descartó no compite por atención en el radar del día a día.
+   */
+  listar(filtro: FiltroDeCartera): Promise<AlertaAlmacenada[]>;
+  buscarPorId(id: string, filtro: FiltroDeCartera): Promise<AlertaAlmacenada | null>;
+  /**
+   * Única forma de llegar a `CERRADA`. Exige motivo, usuario y momento: una
+   * alerta cerrada sin explicación no se distingue de una que se ignoró.
+   */
+  cerrar(
+    id: string,
+    motivoCierre: string,
+    usuarioId: string,
+    cerradaEn: Date,
+  ): Promise<AlertaAlmacenada>;
+}
