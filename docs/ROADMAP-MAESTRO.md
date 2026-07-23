@@ -38,7 +38,7 @@ grep -c "^- \[ \]" <(sed -n '/## PARTE X/,/## PARTE X+1/p' docs/ROADMAP-MAESTRO.
 
 Si da 0, cerrada. Si no, no.
 
-**Avance: 83 de 112 tareas (74%).** Partes 1, 2, 3, 4A, 4B y 4C cerradas. Quedan 2 tareas bloqueadas por EFFORT (carga de datos), que no frenan el código.
+**Avance: 84 de 112 tareas (75%).** Partes 1, 2, 3, 4A, 4B, 4C y 4D cerradas. Quedan 2 tareas bloqueadas por EFFORT (carga de datos), que no frenan el código.
 
 Última actualización: 2026-07-23 · Commit de referencia: ver último commit en `git log`
 
@@ -232,7 +232,7 @@ bug de `buscarPorId`.
 
 **Verificación:** `npm run verify` con `test:integration` en verde — ✅ hecho el 2026-07-22.
 
-### 4D — Módulos restantes
+### 4D — Módulos restantes (COMPLETA)
 
 - [x] 82. Módulo Alertas: vista consolidada ordenada por criticidad (la tabla ya existe). Repositorio Prisma + rutas (`GET /api/v1/alertas` con resumen por criticidad, `POST /api/v1/alertas/:id/cerrar` con motivo obligatorio). Sin ruta de alta a propósito: ningún rol tiene `crear` sobre `alerta` en la matriz de RBAC — la tabla la alimenta el sistema, no un usuario. 9 tests de módulo (dobles) + 6 de integración contra Postgres real, incluido el orden por criticidad y que el filtro de cartera no se pisa con el de estado.
 
@@ -247,7 +247,9 @@ bug de `buscarPorId`.
 - [x] 85. Módulo Reglas de Notificación: alta/edición de reglas de recordatorio (ya tenía motor en `@effort/core/seguimiento.ts` desde la Parte 1.3, faltaba la ruta). `GET/POST /api/v1/reglas-notificacion`, `PATCH /:id`. RBAC de tres niveles ya existente: `direccion` crea y edita, `responsable` solo edita (no da de alta), `coordinador` solo mira, el resto de los roles no tiene acceso. Los destinatarios y la cartera alcanzada se guardan como columnas `Json`, validados en el borde con `destinatarioSchema` de `@effort/schema` (ya existía, con su `refine` de que ROL/USUARIO/CORREO_LIBRE exigen `valor`). El job que de verdad envía los avisos usando `planificarProximoRecordatorio` sigue siendo la Parte 6, todavía no construida — esta tarea solo persiste la configuración. 22 tests de módulo + 4 de integración.
 
   **Verificación:** `npm run verify` → exit 0, 12 OK / 4 pendientes declarados / 0 fallidos — hecho el 2026-07-23 (segundo intento; el primero falló por el problema intermitente de concurrencia contra Supabase ya documentado).
-- [ ] 86. Módulo Event Log: consulta filtrable del historial (solo dirección/revisor)
+- [x] 86. Módulo Event Log: consulta filtrable del historial (solo dirección/revisor). `GET /api/v1/eventos`, con filtros por `usuarioId`, `entidad`, `entidadId`, `clienteId` y rango de fechas, más `limite`/`desplazamiento` para paginar — la tabla ya venía indexada exactamente para esas cuatro combinaciones desde la Parte 1.5. RBAC ya tenía el recurso `evento` con `ver` para `direccion`, `responsable` y `revisor_balance` únicamente. El filtro de cartera aplica igual que en el resto del sistema: un evento sin `clienteId` (un acceso, un cambio de tasa) solo lo ve quien tiene cartera completa. Es la primera vez que `RepositorioDeBitacora` gana un método de lectura — hasta ahora solo escribía. 6 tests de módulo + 6 de integración.
+
+  **Verificación:** `npm run verify` → exit 0, 12 OK / 4 pendientes declarados / 0 fallidos — hecho el 2026-07-23.
 
 **Verificación de cada módulo:** su propio test en verde antes de pasar al siguiente
 

@@ -12,7 +12,12 @@ import { randomUUID } from 'node:crypto';
 
 import type { Rol } from '@effort/schema';
 
-import type { FilaDeBitacora, RepositorioDeBitacora } from '../src/bitacora.js';
+import type {
+  EventoAlmacenado,
+  FilaDeBitacora,
+  FiltroDeEventos,
+  RepositorioDeBitacora,
+} from '../src/bitacora.js';
 import type { Sesion } from '../src/seguridad/sesiones.js';
 import type {
   AltaDeUsuario,
@@ -212,15 +217,42 @@ export class ContactosFalsos implements RepositorioDeContactos {
   }
 }
 
+/** Aplica el filtro de cartera igual que lo haría el SQL de `BitacoraPrisma`. */
+function alcanzaEvento(cartera: readonly string[] | null, clienteId: string | null): boolean {
+  if (cartera === null) return true;
+  if (clienteId === null) return false;
+  return cartera.includes(clienteId);
+}
+
 export class BitacoraFalsa implements RepositorioDeBitacora {
-  readonly filas: FilaDeBitacora[] = [];
+  readonly filas: EventoAlmacenado[] = [];
 
   async registrar(fila: FilaDeBitacora): Promise<void> {
-    this.filas.push(fila);
+    this.filas.push({ ...fila, id: randomUUID(), ocurridoEn: new Date() });
   }
 
   accionesRegistradas(): string[] {
     return this.filas.map((fila) => fila.accion);
+  }
+
+  async listar(
+    filtro: FiltroDeEventos,
+    cartera: readonly string[] | null,
+    limite: number,
+    desplazamiento: number,
+  ): Promise<EventoAlmacenado[]> {
+    const filtradas = this.filas
+      .filter((fila) => !filtro.usuarioId || fila.usuarioId === filtro.usuarioId)
+      .filter((fila) => !filtro.entidad || fila.entidad === filtro.entidad)
+      .filter((fila) => !filtro.entidadId || fila.entidadId === filtro.entidadId)
+      .filter((fila) => !filtro.clienteId || fila.clienteId === filtro.clienteId)
+      .filter((fila) => !filtro.desde || fila.ocurridoEn.getTime() >= filtro.desde.getTime())
+      .filter((fila) => !filtro.hasta || fila.ocurridoEn.getTime() <= filtro.hasta.getTime())
+      .filter((fila) => alcanzaEvento(cartera, fila.clienteId))
+      .slice()
+      .sort((a, b) => b.ocurridoEn.getTime() - a.ocurridoEn.getTime());
+
+    return filtradas.slice(desplazamiento, desplazamiento + limite);
   }
 }
 

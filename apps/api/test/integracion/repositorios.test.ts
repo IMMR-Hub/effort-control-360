@@ -561,6 +561,119 @@ describeSiHayBase('repositorios contra PostgreSQL real', () => {
       const cuantas = await entorno.prisma.eventLog.count();
       expect(cuantas).toBeGreaterThan(0);
     });
+
+    describe('consulta filtrable', () => {
+      it('filtra por entidad y entidadId', async () => {
+        await bitacora.registrar(
+          prepararEntrada({
+            usuarioId: idAuxiliar, accion: 'prueba.consulta.uno', entidad: 'prueba_consulta',
+            entidadId: 'id-1', clienteId: null,
+          }),
+        );
+        await bitacora.registrar(
+          prepararEntrada({
+            usuarioId: idAuxiliar, accion: 'prueba.consulta.dos', entidad: 'prueba_consulta',
+            entidadId: 'id-2', clienteId: null,
+          }),
+        );
+
+        const filtrada = await bitacora.listar(
+          { entidad: 'prueba_consulta', entidadId: 'id-1' }, null, 50, 0,
+        );
+
+        expect(filtrada.map((e) => e.accion)).toEqual(['prueba.consulta.uno']);
+      });
+
+      it('filtra por rango de fechas', async () => {
+        const anteayer = new Date('2020-01-01T00:00:00Z');
+        const fila = await entorno.prisma.eventLog.create({
+          data: {
+            accion: 'prueba.fecha.vieja', entidad: 'prueba_fecha', ocurridoEn: anteayer,
+          },
+        });
+
+        // Falla si la fila anterior queda dentro de un rango que empieza hoy.
+        const desdeHoy = await bitacora.listar(
+          { entidad: 'prueba_fecha', desde: new Date('2026-01-01T00:00:00Z') }, null, 50, 0,
+        );
+        expect(desdeHoy.map((e) => e.id)).not.toContain(fila.id);
+
+        const incluyeVieja = await bitacora.listar(
+          { entidad: 'prueba_fecha', hasta: new Date('2020-12-31T00:00:00Z') }, null, 50, 0,
+        );
+        expect(incluyeVieja.map((e) => e.id)).toContain(fila.id);
+      });
+
+      it('devuelve la más reciente primero', async () => {
+        await entorno.prisma.eventLog.create({
+          data: { accion: 'prueba.orden.a', entidad: 'prueba_orden', ocurridoEn: new Date('2026-01-01T00:00:00Z') },
+        });
+        await entorno.prisma.eventLog.create({
+          data: { accion: 'prueba.orden.b', entidad: 'prueba_orden', ocurridoEn: new Date('2026-06-01T00:00:00Z') },
+        });
+
+        const lista = await bitacora.listar({ entidad: 'prueba_orden' }, null, 50, 0);
+
+        expect(lista.map((e) => e.accion)).toEqual(['prueba.orden.b', 'prueba.orden.a']);
+      });
+
+      it('respeta el límite y el desplazamiento', async () => {
+        for (let i = 0; i < 3; i += 1) {
+          await entorno.prisma.eventLog.create({
+            data: { accion: `prueba.pagina.${i}`, entidad: 'prueba_pagina' },
+          });
+        }
+
+        const primeraPagina = await bitacora.listar({ entidad: 'prueba_pagina' }, null, 2, 0);
+        const segundaPagina = await bitacora.listar({ entidad: 'prueba_pagina' }, null, 2, 2);
+
+        expect(primeraPagina).toHaveLength(2);
+        expect(segundaPagina).toHaveLength(1);
+      });
+
+      it('el filtro de cartera excluye eventos de otros clientes y los que no tienen dueño', async () => {
+        await entorno.prisma.eventLog.create({
+          data: { accion: 'prueba.cartera.propia', entidad: 'prueba_cartera', clienteId: idClienteAsignado },
+        });
+        await entorno.prisma.eventLog.create({
+          data: { accion: 'prueba.cartera.ajena', entidad: 'prueba_cartera', clienteId: idClienteAjeno },
+        });
+        await entorno.prisma.eventLog.create({
+          data: { accion: 'prueba.cartera.sin_cliente', entidad: 'prueba_cartera' },
+        });
+
+        const acotado = await bitacora.listar(
+          { entidad: 'prueba_cartera' }, [idClienteAsignado], 50, 0,
+        );
+        expect(acotado.map((e) => e.accion)).toEqual(['prueba.cartera.propia']);
+
+        const sinRestriccion = await bitacora.listar({ entidad: 'prueba_cartera' }, null, 50, 0);
+        expect(sinRestriccion.map((e) => e.accion).sort()).toEqual([
+          'prueba.cartera.ajena', 'prueba.cartera.propia', 'prueba.cartera.sin_cliente',
+        ]);
+      });
+
+      it('el filtro explícito de cliente y el de cartera conviven sin pisarse', async () => {
+        // Regresión de la misma familia que el bug de `buscarPorId`: dos
+        // condiciones sobre `clienteId` en la misma consulta.
+        await entorno.prisma.eventLog.create({
+          data: { accion: 'prueba.doble.propia', entidad: 'prueba_doble', clienteId: idClienteAsignado },
+        });
+        await entorno.prisma.eventLog.create({
+          data: { accion: 'prueba.doble.ajena', entidad: 'prueba_doble', clienteId: idClienteAjeno },
+        });
+
+        const pidiendoAjenaConCarteraPropia = await bitacora.listar(
+          { entidad: 'prueba_doble', clienteId: idClienteAjeno }, [idClienteAsignado], 50, 0,
+        );
+        expect(pidiendoAjenaConCarteraPropia).toEqual([]);
+
+        const pidiendoPropiaConCarteraPropia = await bitacora.listar(
+          { entidad: 'prueba_doble', clienteId: idClienteAsignado }, [idClienteAsignado], 50, 0,
+        );
+        expect(pidiendoPropiaConCarteraPropia.map((e) => e.accion)).toEqual(['prueba.doble.propia']);
+      });
+    });
   });
 
   /* --- Dinero en la base -------------------------------------------------- */

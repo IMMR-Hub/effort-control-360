@@ -23,6 +23,7 @@ import { registrarRutasDeAlertas } from '../src/rutas/alertas.js';
 import { registrarRutasDeUsuarios } from '../src/rutas/usuarios.js';
 import { registrarRutasDeReglasImpositivas } from '../src/rutas/reglas-impositivas.js';
 import { registrarRutasDeReglasDeNotificacion } from '../src/rutas/reglas-notificacion.js';
+import { registrarRutasDeEventos } from '../src/rutas/eventos.js';
 import { hashearContrasena } from '../src/seguridad/credenciales.js';
 import { AlmacenEnMemoria } from '../src/seguridad/limites.js';
 import { NOMBRE_COOKIE_SESION } from '../src/seguridad/sesiones.js';
@@ -147,6 +148,7 @@ async function montar(): Promise<Contexto> {
   await registrarRutasDeUsuarios(app, deps);
   await registrarRutasDeReglasImpositivas(app, deps);
   await registrarRutasDeReglasDeNotificacion(app, deps);
+  await registrarRutasDeEventos(app, deps);
   await app.ready();
 
   return {
@@ -1467,5 +1469,117 @@ describe('reglas de notificación', () => {
       expect((entrada?.datosAntes as Record<string, unknown>)['activa']).toBe(true);
       expect((entrada?.datosDespues as Record<string, unknown>)['activa']).toBe(false);
     });
+  });
+});
+
+describe('eventos (event log)', () => {
+  it('dirección, responsable y revisor pueden consultar el historial', async () => {
+    for (const cookie of [direccion, responsable, revisor]) {
+      const respuesta = await ctx.app.inject({
+        method: 'GET', url: '/api/v1/eventos', headers: { cookie },
+      });
+      expect(respuesta.statusCode).toBe(200);
+    }
+  });
+
+  it('coordinador, auxiliar y solo_lectura no tienen acceso al historial', async () => {
+    for (const cookie of [coordinador, auxiliar, soloLectura]) {
+      const respuesta = await ctx.app.inject({
+        method: 'GET', url: '/api/v1/eventos', headers: { cookie },
+      });
+      expect(respuesta.statusCode).toBe(403);
+    }
+  });
+
+  it('trae los eventos ya generados por otras acciones, más reciente primero', async () => {
+    await ctx.app.inject({
+      method: 'POST', url: `/api/v1/clientes/${MIO}/vencimientos`,
+      headers: { cookie: coordinador },
+      payload: {
+        tipoDocumento: 'CONSTANCIA', descripcion: 'Constancia RUC', entidad: 'SET',
+        fechaVencimiento: '2026-12-31',
+      },
+    });
+
+    const respuesta = await ctx.app.inject({
+      method: 'GET', url: '/api/v1/eventos', headers: { cookie: direccion },
+    });
+
+    const { eventos } = JSON.parse(respuesta.body);
+    expect(eventos.some((e: { accion: string }) => e.accion === 'vencimiento.registrado')).toBe(true);
+  });
+
+  it('filtra por entidad', async () => {
+    await ctx.app.inject({
+      method: 'POST', url: `/api/v1/clientes/${MIO}/vencimientos`,
+      headers: { cookie: coordinador },
+      payload: {
+        tipoDocumento: 'CONSTANCIA', descripcion: 'Constancia RUC', entidad: 'SET',
+        fechaVencimiento: '2026-12-31',
+      },
+    });
+
+    const respuesta = await ctx.app.inject({
+      method: 'GET', url: '/api/v1/eventos?entidad=vencimiento', headers: { cookie: direccion },
+    });
+
+    const { eventos } = JSON.parse(respuesta.body);
+    expect(eventos.length).toBeGreaterThan(0);
+    expect(eventos.every((e: { entidad: string }) => e.entidad === 'vencimiento')).toBe(true);
+  });
+
+  it('respeta el límite pedido', async () => {
+    await ctx.app.inject({
+      method: 'POST', url: `/api/v1/clientes/${MIO}/vencimientos`,
+      headers: { cookie: coordinador },
+      payload: {
+        tipoDocumento: 'CONSTANCIA', descripcion: 'Uno', entidad: 'SET', fechaVencimiento: '2026-12-31',
+      },
+    });
+    await ctx.app.inject({
+      method: 'POST', url: `/api/v1/clientes/${MIO}/vencimientos`,
+      headers: { cookie: coordinador },
+      payload: {
+        tipoDocumento: 'CONSTANCIA', descripcion: 'Dos', entidad: 'SET', fechaVencimiento: '2026-12-31',
+      },
+    });
+
+    const respuesta = await ctx.app.inject({
+      method: 'GET', url: '/api/v1/eventos?limite=1', headers: { cookie: direccion },
+    });
+
+    const { eventos } = JSON.parse(respuesta.body);
+    expect(eventos).toHaveLength(1);
+  });
+
+  it('el filtro de cartera excluye eventos de clientes ajenos, y también los que no tienen cliente', async () => {
+    // Se prueba contra el doble directamente: la restricción de cartera no
+    // depende de qué rol esté logueado, depende de `filtroDeClientes`, y acá
+    // interesa aislar esa lógica sin necesitar un usuario acotado con acceso
+    // al recurso `evento` (en la matriz real, solo lo tienen los roles que
+    // ven toda la cartera).
+    await ctx.bitacora.registrar({
+      usuarioId: 'usr-direccion', accion: 'prueba.propia', entidad: 'prueba', entidadId: null,
+      clienteId: MIO, datosAntes: null, datosDespues: null,
+      ipTruncada: null, agenteUsuario: null, peticionId: null,
+    });
+    await ctx.bitacora.registrar({
+      usuarioId: 'usr-direccion', accion: 'prueba.ajena', entidad: 'prueba', entidadId: null,
+      clienteId: AJENO, datosAntes: null, datosDespues: null,
+      ipTruncada: null, agenteUsuario: null, peticionId: null,
+    });
+    await ctx.bitacora.registrar({
+      usuarioId: 'usr-direccion', accion: 'prueba.sin_cliente', entidad: 'prueba', entidadId: null,
+      clienteId: null, datosAntes: null, datosDespues: null,
+      ipTruncada: null, agenteUsuario: null, peticionId: null,
+    });
+
+    const acotado = await ctx.bitacora.listar({ entidad: 'prueba' }, [MIO], 50, 0);
+    expect(acotado.map((e) => e.accion)).toEqual(['prueba.propia']);
+
+    const completo = await ctx.bitacora.listar({ entidad: 'prueba' }, null, 50, 0);
+    expect(completo.map((e) => e.accion).sort()).toEqual([
+      'prueba.ajena', 'prueba.propia', 'prueba.sin_cliente',
+    ]);
   });
 });

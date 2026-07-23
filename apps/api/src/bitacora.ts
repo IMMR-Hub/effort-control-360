@@ -70,9 +70,40 @@ export function prepararEntrada(entrada: EntradaDeBitacora): FilaDeBitacora {
   };
 }
 
+/** Fila ya persistida, tal como vuelve de la base. */
+export interface EventoAlmacenado extends FilaDeBitacora {
+  readonly id: string;
+  readonly ocurridoEn: Date;
+}
+
+/** Todo campo es opcional: sin ninguno, se lista el historial completo (paginado). */
+export interface FiltroDeEventos {
+  readonly usuarioId?: string | undefined;
+  readonly entidad?: string | undefined;
+  readonly entidadId?: string | undefined;
+  readonly clienteId?: string | undefined;
+  readonly desde?: Date | undefined;
+  readonly hasta?: Date | undefined;
+}
+
 /** Puerto de persistencia. La ruta no conoce Prisma; conoce esta interfaz. */
 export interface RepositorioDeBitacora {
   registrar(fila: FilaDeBitacora): Promise<void>;
+  /**
+   * Consulta filtrable del historial, la más reciente primero.
+   *
+   * `cartera` aplica el mismo alcance que el resto del sistema: `null` no
+   * restringe, un arreglo limita a esos clientes. Un evento sin `clienteId`
+   * (un acceso, un cambio de tasa impositiva) no tiene dueño y por lo tanto
+   * no entra en un `clienteId IN (...)` — solo lo ve quien tiene cartera
+   * completa, igual que las alertas generales.
+   */
+  listar(
+    filtro: FiltroDeEventos,
+    cartera: readonly string[] | null,
+    limite: number,
+    desplazamiento: number,
+  ): Promise<EventoAlmacenado[]>;
 }
 
 export interface RegistradorDeErrores {
