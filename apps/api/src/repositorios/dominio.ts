@@ -11,17 +11,21 @@
 import type {
   AlertaAlmacenada,
   AltaDeDocumento,
+  AltaDeReglaImpositiva,
   AltaDeVencimiento,
   BalanceAlmacenado,
   CamposEditablesDelProceso,
+  CamposEditablesDeReglaImpositiva,
   CifrasDeBalance,
   DocumentoAlmacenado,
   FiltroDeCartera,
   ProcesoMensualAlmacenado,
+  ReglaImpositivaAlmacenada,
   RepositorioDeAlertas,
   RepositorioDeBalances,
   RepositorioDeDocumentos,
   RepositorioDeProcesoMensual,
+  RepositorioDeReglasImpositivas,
   RepositorioDeVencimientos,
   VencimientoAlmacenado,
 } from '../puertos-dominio.js';
@@ -577,5 +581,98 @@ export class AlertasPrisma implements RepositorioDeAlertas {
     });
 
     return fila as AlertaAlmacenada;
+  }
+}
+
+/* ========================================================================== */
+/* Reglas impositivas                                                        */
+/* ========================================================================== */
+
+const CAMPOS_REGLA_IMPOSITIVA = {
+  id: true,
+  nombre: true,
+  tasa: true,
+  divisorIvaIncluido: true,
+  vigenteDesde: true,
+  vigenteHasta: true,
+  requiereConfirmacionCliente: true,
+  fuente: true,
+} as const;
+
+const UN_DIA_MS = 24 * 60 * 60 * 1000;
+
+export class ReglasImpositivasPrisma implements RepositorioDeReglasImpositivas {
+  constructor(private readonly prisma: PrismaClient) {}
+
+  async listar(): Promise<ReglaImpositivaAlmacenada[]> {
+    const filas = await this.prisma.reglaImpositiva.findMany({
+      select: CAMPOS_REGLA_IMPOSITIVA,
+      orderBy: [{ tasa: 'asc' }, { vigenteDesde: 'desc' }],
+    });
+
+    return filas as ReglaImpositivaAlmacenada[];
+  }
+
+  async buscarPorId(id: string): Promise<ReglaImpositivaAlmacenada | null> {
+    const fila = await this.prisma.reglaImpositiva.findUnique({
+      where: { id },
+      select: CAMPOS_REGLA_IMPOSITIVA,
+    });
+
+    return fila as ReglaImpositivaAlmacenada | null;
+  }
+
+  /**
+   * Cierra la vigente de la misma tasa (si hay una) y crea la nueva, en una
+   * sola transacción: sin eso, una petición que fallara justo entre medio
+   * podría dejar dos reglas vigentes para la misma tasa, o ninguna.
+   */
+  async crear(datos: AltaDeReglaImpositiva): Promise<ReglaImpositivaAlmacenada> {
+    return this.prisma.$transaction(async (tx) => {
+      const vigente = await tx.reglaImpositiva.findFirst({
+        where: { tasa: datos.tasa as never, vigenteHasta: null },
+      });
+
+      if (vigente) {
+        await tx.reglaImpositiva.update({
+          where: { id: vigente.id },
+          data: {
+            vigenteHasta: new Date(datos.vigenteDesde.getTime() - UN_DIA_MS),
+            actualizadoPorUsuarioId: datos.creadoPorUsuarioId,
+          },
+        });
+      }
+
+      const fila = await tx.reglaImpositiva.create({
+        data: {
+          nombre: datos.nombre,
+          tasa: datos.tasa as never,
+          divisorIvaIncluido: datos.divisorIvaIncluido,
+          vigenteDesde: datos.vigenteDesde,
+          fuente: datos.fuente,
+          creadoPorUsuarioId: datos.creadoPorUsuarioId,
+          actualizadoPorUsuarioId: datos.creadoPorUsuarioId,
+        },
+        select: CAMPOS_REGLA_IMPOSITIVA,
+      });
+
+      return fila as ReglaImpositivaAlmacenada;
+    });
+  }
+
+  async actualizar(
+    id: string,
+    cambios: CamposEditablesDeReglaImpositiva,
+    usuarioId: string,
+  ): Promise<ReglaImpositivaAlmacenada> {
+    const fila = await this.prisma.reglaImpositiva.update({
+      where: { id },
+      // Los campos llegan ya validados por Zod estricto en la ruta: solo puede
+      // haber claves de la lista permitida.
+      data: { ...cambios, actualizadoPorUsuarioId: usuarioId } as never,
+      select: CAMPOS_REGLA_IMPOSITIVA,
+    });
+
+    return fila as ReglaImpositivaAlmacenada;
   }
 }

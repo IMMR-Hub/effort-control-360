@@ -21,6 +21,7 @@ import { registrarRutasDeVencimientos } from '../src/rutas/vencimientos.js';
 import { registrarRutasDeBalances } from '../src/rutas/balances.js';
 import { registrarRutasDeAlertas } from '../src/rutas/alertas.js';
 import { registrarRutasDeUsuarios } from '../src/rutas/usuarios.js';
+import { registrarRutasDeReglasImpositivas } from '../src/rutas/reglas-impositivas.js';
 import { hashearContrasena } from '../src/seguridad/credenciales.js';
 import { AlmacenEnMemoria } from '../src/seguridad/limites.js';
 import { NOMBRE_COOKIE_SESION } from '../src/seguridad/sesiones.js';
@@ -37,6 +38,7 @@ import {
   BalancesFalsos,
   DocumentosFalsos,
   ProcesoMensualFalso,
+  ReglasImpositivasFalsas,
   VencimientosFalsos,
   ExportacionesSigaFalsas,
   LiquidacionesFalsas,
@@ -69,6 +71,7 @@ interface Contexto {
   balances: BalancesFalsos;
   alertas: AlertasFalsas;
   usuarios: UsuariosFalsos;
+  reglasImpositivas: ReglasImpositivasFalsas;
 }
 
 async function montar(): Promise<Contexto> {
@@ -80,6 +83,7 @@ async function montar(): Promise<Contexto> {
   const vencimientos = new VencimientosFalsos();
   const balances = new BalancesFalsos();
   const alertas = new AlertasFalsas();
+  const reglasImpositivas = new ReglasImpositivasFalsas();
   const hash = await hashearContrasena(CONTRASENA);
 
   const base = {
@@ -120,6 +124,7 @@ async function montar(): Promise<Contexto> {
     exportacionesSiga: new ExportacionesSigaFalsas(),
     liquidaciones: new LiquidacionesFalsas(),
     alertas,
+    reglasImpositivas,
     intentosDeAcceso: new AlmacenEnMemoria(),
     ahora: () => HOY,
   };
@@ -131,9 +136,13 @@ async function montar(): Promise<Contexto> {
   await registrarRutasDeBalances(app, deps);
   await registrarRutasDeAlertas(app, deps);
   await registrarRutasDeUsuarios(app, deps);
+  await registrarRutasDeReglasImpositivas(app, deps);
   await app.ready();
 
-  return { app, bitacora, documentos, procesoMensual, vencimientos, balances, alertas, usuarios };
+  return {
+    app, bitacora, documentos, procesoMensual, vencimientos, balances, alertas, usuarios,
+    reglasImpositivas,
+  };
 }
 
 /**
@@ -1131,6 +1140,170 @@ describe('usuarios (equipo)', () => {
       expect(entrada).toBeDefined();
       expect((entrada?.datosAntes as Record<string, unknown>)['activo']).toBe(true);
       expect((entrada?.datosDespues as Record<string, unknown>)['activo']).toBe(false);
+    });
+  });
+});
+
+describe('reglas impositivas', () => {
+  const altaDiez = {
+    nombre: 'IVA 10% general',
+    tasa: 'DIEZ',
+    divisorIvaIncluido: 11,
+    vigenteDesde: '2026-01-01',
+    fuente: 'Ley 125/91, art. 91.',
+  };
+
+  async function darDeAlta(payload: Record<string, unknown>) {
+    return ctx.app.inject({
+      method: 'POST', url: '/api/v1/reglas-impositivas',
+      headers: { cookie: direccion }, payload,
+    });
+  }
+
+  it('cualquier rol autenticado puede ver las reglas', async () => {
+    const respuesta = await ctx.app.inject({
+      method: 'GET', url: '/api/v1/reglas-impositivas', headers: { cookie: auxiliar },
+    });
+    expect(respuesta.statusCode).toBe(200);
+  });
+
+  it('un rol distinto de dirección no puede dar de alta una regla', async () => {
+    const respuesta = await ctx.app.inject({
+      method: 'POST', url: '/api/v1/reglas-impositivas',
+      headers: { cookie: auxiliar }, payload: altaDiez,
+    });
+    expect(respuesta.statusCode).toBe(403);
+  });
+
+  it('dirección da de alta una regla nueva', async () => {
+    const respuesta = await darDeAlta(altaDiez);
+
+    expect(respuesta.statusCode).toBe(201);
+    const { regla } = JSON.parse(respuesta.body);
+    expect(regla.tasa).toBe('DIEZ');
+    expect(regla.divisorIvaIncluido).toBe(11);
+    expect(regla.vigenteHasta).toBeNull();
+  });
+
+  it('una tasa exenta no puede llevar divisor', async () => {
+    const respuesta = await darDeAlta({
+      ...altaDiez, tasa: 'EXENTA', divisorIvaIncluido: 11,
+    });
+    expect(respuesta.statusCode).toBe(400);
+  });
+
+  it('una tasa gravada exige divisor', async () => {
+    const respuesta = await darDeAlta({ ...altaDiez, divisorIvaIncluido: null });
+    expect(respuesta.statusCode).toBe(400);
+  });
+
+  it('una tasa exenta sin divisor es válida', async () => {
+    const respuesta = await darDeAlta({
+      ...altaDiez, tasa: 'EXENTA', divisorIvaIncluido: null, nombre: 'Exenta',
+    });
+    expect(respuesta.statusCode).toBe(201);
+  });
+
+  it('dar de alta una segunda regla de la misma tasa cierra la anterior', async () => {
+    const primera = await darDeAlta(altaDiez);
+    const { regla: reglaVieja } = JSON.parse(primera.body);
+
+    const segunda = await darDeAlta({ ...altaDiez, vigenteDesde: '2026-07-01', nombre: 'IVA 10% actualizado' });
+    expect(segunda.statusCode).toBe(201);
+
+    const { reglas } = JSON.parse(
+      (await ctx.app.inject({
+        method: 'GET', url: '/api/v1/reglas-impositivas', headers: { cookie: direccion },
+      })).body,
+    );
+
+    const vieja = reglas.find((r: { id: string }) => r.id === reglaVieja.id);
+    expect(vieja.vigenteHasta).toBe('2026-06-30');
+  });
+
+  it('el alta queda en la bitácora', async () => {
+    await darDeAlta(altaDiez);
+    const entrada = ctx.bitacora.filas.find((f) => f.accion === 'regla_impositiva.creada');
+    expect(entrada).toBeDefined();
+    expect(entrada?.usuarioId).toBe('usr-direccion');
+  });
+
+  describe('edición', () => {
+    async function reglaDePrueba() {
+      const alta = await darDeAlta(altaDiez);
+      return JSON.parse(alta.body).regla as { id: string; vigenteDesde: string };
+    }
+
+    it('edita metadata sin tocar la tasa', async () => {
+      const regla = await reglaDePrueba();
+
+      const respuesta = await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/reglas-impositivas/${regla.id}`,
+        headers: { cookie: direccion },
+        payload: { requiereConfirmacionCliente: false, fuente: 'Confirmado contra liquidación real.' },
+      });
+
+      expect(respuesta.statusCode).toBe(200);
+      const { regla: actualizada } = JSON.parse(respuesta.body);
+      expect(actualizada.requiereConfirmacionCliente).toBe(false);
+      expect(actualizada.tasa).toBe('DIEZ');
+    });
+
+    it('no acepta cambiar la tasa ni el divisor por esta vía', async () => {
+      const regla = await reglaDePrueba();
+
+      const respuesta = await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/reglas-impositivas/${regla.id}`,
+        headers: { cookie: direccion }, payload: { tasa: 'CINCO' },
+      });
+
+      expect(respuesta.statusCode).toBe(400);
+    });
+
+    it('la vigencia no puede cerrar antes de haber empezado', async () => {
+      const regla = await reglaDePrueba();
+
+      const respuesta = await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/reglas-impositivas/${regla.id}`,
+        headers: { cookie: direccion }, payload: { vigenteHasta: '2025-01-01' },
+      });
+
+      expect(respuesta.statusCode).toBe(400);
+      expect(JSON.parse(respuesta.body).error).toBe('vigencia_invalida');
+    });
+
+    it('no se puede editar una regla inexistente', async () => {
+      const respuesta = await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/reglas-impositivas/${randomUUID()}`,
+        headers: { cookie: direccion }, payload: { fuente: 'x' },
+      });
+
+      expect(respuesta.statusCode).toBe(404);
+    });
+
+    it('un rol distinto de dirección no puede editar', async () => {
+      const regla = await reglaDePrueba();
+
+      const respuesta = await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/reglas-impositivas/${regla.id}`,
+        headers: { cookie: auxiliar }, payload: { fuente: 'x' },
+      });
+
+      expect(respuesta.statusCode).toBe(403);
+    });
+
+    it('la edición queda en la bitácora', async () => {
+      const regla = await reglaDePrueba();
+
+      await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/reglas-impositivas/${regla.id}`,
+        headers: { cookie: direccion }, payload: { requiereConfirmacionCliente: false },
+      });
+
+      const entrada = ctx.bitacora.filas.find((f) => f.accion === 'regla_impositiva.modificada');
+      expect(entrada).toBeDefined();
+      expect((entrada?.datosAntes as Record<string, unknown>)['requiereConfirmacionCliente']).toBe(true);
+      expect((entrada?.datosDespues as Record<string, unknown>)['requiereConfirmacionCliente']).toBe(false);
     });
   });
 });

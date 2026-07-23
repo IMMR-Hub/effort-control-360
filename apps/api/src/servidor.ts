@@ -35,6 +35,7 @@ import type {
   RepositorioDeBalances,
   RepositorioDeDocumentos,
   RepositorioDeProcesoMensual,
+  RepositorioDeReglasImpositivas,
   RepositorioDeVencimientos,
   RepositorioDeExportacionesSiga,
   RepositorioDeLiquidaciones,
@@ -54,6 +55,7 @@ export interface Dependencias {
   readonly exportacionesSiga: RepositorioDeExportacionesSiga;
   readonly liquidaciones: RepositorioDeLiquidaciones;
   readonly alertas: RepositorioDeAlertas;
+  readonly reglasImpositivas: RepositorioDeReglasImpositivas;
   readonly intentosDeAcceso: AlmacenEnMemoria;
   /** Reloj inyectable: los tests de expiración no pueden esperar ocho horas. */
   readonly ahora: () => Date;

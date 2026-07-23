@@ -146,3 +146,36 @@ políticas explícitas para `effort_app`.
 su política RLS antes de poder leer nada. Si alguna vez se habilita la Data API
 de Supabase, los roles `anon` y `authenticated` no tienen políticas y por lo
 tanto no ven absolutamente nada — que es justamente lo que se quiere.
+
+---
+
+## 9. `regla_impositiva` no está conectada al cálculo de IVA — HALLAZGO 2026-07-23
+
+**Qué se encontró:** al construir el módulo de reglas impositivas (tarea 84),
+se comprobó que `packages/core/src/iva.ts` tiene el divisor del IVA
+**hardcodeado** en la constante `DIVISOR_IVA_INCLUIDO` (`DIEZ: 11n, CINCO: 21n`),
+pese a que el comentario del archivo dice *"las tasas NO están hardcodeadas en
+la lógica de negocio: viven en la tabla `regla_impositiva`"*. Ese comentario
+describe la intención, no el código actual.
+
+**Alcance real, verificado con grep:** ninguna ruta de `apps/api` llama todavía
+a `desglosarIvaIncluido` ni a `totalizar` de `@effort/core`. La determinación
+de IVA del proceso mensual (`ivaSaldoAPagar` / `ivaSaldoAFavor`) se carga a
+mano vía `PATCH` en el módulo de Proceso Mensual (Parte 4A) — nada la calcula
+todavía a partir de los documentos. Es decir: hoy no hay ningún camino de
+código que lea `regla_impositiva.divisorIvaIncluido` para calcular nada.
+
+**Por qué importa:** el módulo de la tarea 84 deja a dirección editar la
+tabla `regla_impositiva` (agregar una tasa nueva, cerrar la vigente). Esa
+edición **no cambia ningún cálculo del sistema hoy**, porque no hay ningún
+cálculo que lea esa tabla. Es tentador asumir lo contrario porque el nombre
+de la tabla lo sugiere.
+
+**Cómo se cierra:** cuando se conecte la determinación automática de IVA a
+partir de los documentos del período (no está en el roadmap todavía como
+tarea numerada), esa lógica tiene que leer el divisor vigente desde
+`regla_impositiva` — filtrando por `tasa` y por vigencia en la fecha del
+comprobante — en vez de seguir usando la constante de `iva.ts`. Mientras tanto,
+`DIVISOR_IVA_INCLUIDO` sigue siendo la única fuente real, y debería coincidir
+con lo que diga la fila vigente de `regla_impositiva` — si alguna vez
+divergen, hay que decidir cuál manda antes de calcular nada.

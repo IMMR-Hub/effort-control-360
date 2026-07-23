@@ -23,6 +23,7 @@ import {
   BalancesPrisma,
   DocumentosPrisma,
   ProcesoMensualPrisma,
+  ReglasImpositivasPrisma,
   VencimientosPrisma,
 } from '../../src/repositorios/dominio.js';
 import { ExportacionesSigaPrisma, LiquidacionesPrisma } from '../../src/repositorios/siga.js';
@@ -38,6 +39,7 @@ describeSiHayBase('repositorios de negocio contra PostgreSQL real', () => {
   let siga: ExportacionesSigaPrisma;
   let liquidaciones: LiquidacionesPrisma;
   let alertas: AlertasPrisma;
+  let reglasImpositivas: ReglasImpositivasPrisma;
 
   let usuario = '';
   let mio = '';
@@ -55,6 +57,7 @@ describeSiHayBase('repositorios de negocio contra PostgreSQL real', () => {
     siga = new ExportacionesSigaPrisma(entorno.prisma);
     liquidaciones = new LiquidacionesPrisma(entorno.prisma);
     alertas = new AlertasPrisma(entorno.prisma);
+    reglasImpositivas = new ReglasImpositivasPrisma(entorno.prisma);
 
     const u = await entorno.prisma.usuario.create({
       data: {
@@ -677,6 +680,89 @@ describeSiHayBase('repositorios de negocio contra PostgreSQL real', () => {
       expect(cerrada.motivoCierre).toBe('Se resolvió con el cliente.');
       expect(cerrada.cerradaPorUsuarioId).toBe(usuario);
       expect(cerrada.cerradaEn?.toISOString()).toBe(momento.toISOString());
+    });
+  });
+
+  /* ====================================================================== */
+  /* Reglas impositivas                                                    */
+  /* ====================================================================== */
+
+  describe('reglas impositivas', () => {
+    it('crea una regla vigente sin fecha de cierre', async () => {
+      const regla = await reglasImpositivas.crear({
+        nombre: 'IVA 10% general', tasa: 'DIEZ', divisorIvaIncluido: 11,
+        vigenteDesde: new Date('2026-01-01T00:00:00Z'), fuente: 'Ley 125/91, art. 91.',
+        creadoPorUsuarioId: usuario,
+      });
+
+      expect(regla.tasa).toBe('DIEZ');
+      expect(regla.vigenteHasta).toBeNull();
+    });
+
+    it('dar de alta una segunda regla de la misma tasa cierra la anterior un día antes', async () => {
+      const primera = await reglasImpositivas.crear({
+        nombre: 'IVA 5% general', tasa: 'CINCO', divisorIvaIncluido: 21,
+        vigenteDesde: new Date('2026-01-01T00:00:00Z'), fuente: 'Ley 125/91, art. 91.',
+        creadoPorUsuarioId: usuario,
+      });
+
+      await reglasImpositivas.crear({
+        nombre: 'IVA 5% actualizado', tasa: 'CINCO', divisorIvaIncluido: 21,
+        vigenteDesde: new Date('2026-07-01T00:00:00Z'), fuente: 'Actualización de prueba.',
+        creadoPorUsuarioId: usuario,
+      });
+
+      const vieja = await reglasImpositivas.buscarPorId(primera.id);
+      expect(vieja?.vigenteHasta?.toISOString().slice(0, 10)).toBe('2026-06-30');
+    });
+
+    it('una regla de otra tasa no se ve afectada al abrir una nueva', async () => {
+      const exenta = await reglasImpositivas.crear({
+        nombre: 'Exenta general', tasa: 'EXENTA', divisorIvaIncluido: null,
+        vigenteDesde: new Date('2026-01-01T00:00:00Z'), fuente: 'Ley 125/91, art. 100.',
+        creadoPorUsuarioId: usuario,
+      });
+
+      await reglasImpositivas.crear({
+        nombre: 'IVA 10% general bis', tasa: 'DIEZ', divisorIvaIncluido: 11,
+        vigenteDesde: new Date('2026-02-01T00:00:00Z'), fuente: 'Ley 125/91, art. 91.',
+        creadoPorUsuarioId: usuario,
+      });
+
+      const sigueVigente = await reglasImpositivas.buscarPorId(exenta.id);
+      expect(sigueVigente?.vigenteHasta).toBeNull();
+    });
+
+    it('listar trae vigentes e históricas', async () => {
+      const lista = await reglasImpositivas.listar();
+      const tasas = new Set(lista.map((r) => r.tasa));
+      expect(tasas.has('DIEZ')).toBe(true);
+      expect(tasas.has('CINCO')).toBe(true);
+    });
+
+    it('actualizar cambia metadata sin tocar tasa ni vigenteDesde', async () => {
+      const regla = await reglasImpositivas.crear({
+        nombre: 'IVA a editar', tasa: 'DIEZ', divisorIvaIncluido: 11,
+        vigenteDesde: new Date('2027-01-01T00:00:00Z'), fuente: 'Fuente original.',
+        creadoPorUsuarioId: usuario,
+      });
+
+      const actualizada = await reglasImpositivas.actualizar(
+        regla.id,
+        { requiereConfirmacionCliente: false, fuente: 'Confirmado contra liquidación real.' },
+        usuario,
+      );
+
+      expect(actualizada.requiereConfirmacionCliente).toBe(false);
+      expect(actualizada.fuente).toBe('Confirmado contra liquidación real.');
+      expect(actualizada.tasa).toBe('DIEZ');
+      expect(actualizada.vigenteDesde.toISOString()).toBe(regla.vigenteDesde.toISOString());
+    });
+
+    it('buscarPorId devuelve null para una regla inexistente', async () => {
+      expect(
+        await reglasImpositivas.buscarPorId('00000000-0000-4000-8000-000000000000'),
+      ).toBeNull();
     });
   });
 });

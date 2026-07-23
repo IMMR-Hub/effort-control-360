@@ -13,17 +13,21 @@ import { randomUUID } from 'node:crypto';
 import type {
   AlertaAlmacenada,
   AltaDeDocumento,
+  AltaDeReglaImpositiva,
   AltaDeVencimiento,
   BalanceAlmacenado,
   CamposEditablesDelProceso,
+  CamposEditablesDeReglaImpositiva,
   CifrasDeBalance,
   DocumentoAlmacenado,
   FiltroDeCartera,
   ProcesoMensualAlmacenado,
+  ReglaImpositivaAlmacenada,
   RepositorioDeAlertas,
   RepositorioDeBalances,
   RepositorioDeDocumentos,
   RepositorioDeProcesoMensual,
+  RepositorioDeReglasImpositivas,
   RepositorioDeVencimientos,
   VencimientoAlmacenado,
   AltaDeExportacionSiga,
@@ -547,6 +551,58 @@ export class AlertasFalsas implements RepositorioDeAlertas {
       cerradaEn,
     };
     this.alertas[indice] = actualizada;
+    return actualizada;
+  }
+}
+
+const UN_DIA_MS = 24 * 60 * 60 * 1000;
+
+export class ReglasImpositivasFalsas implements RepositorioDeReglasImpositivas {
+  readonly reglas: ReglaImpositivaAlmacenada[] = [];
+
+  async listar(): Promise<ReglaImpositivaAlmacenada[]> {
+    return [...this.reglas].sort((a, b) => {
+      if (a.tasa !== b.tasa) return a.tasa < b.tasa ? -1 : 1;
+      return b.vigenteDesde.getTime() - a.vigenteDesde.getTime();
+    });
+  }
+
+  async buscarPorId(id: string): Promise<ReglaImpositivaAlmacenada | null> {
+    return this.reglas.find((candidata) => candidata.id === id) ?? null;
+  }
+
+  async crear(datos: AltaDeReglaImpositiva): Promise<ReglaImpositivaAlmacenada> {
+    const indiceVigente = this.reglas.findIndex(
+      (regla) => regla.tasa === datos.tasa && regla.vigenteHasta === null,
+    );
+    if (indiceVigente >= 0) {
+      this.reglas[indiceVigente] = {
+        ...this.reglas[indiceVigente]!,
+        vigenteHasta: new Date(datos.vigenteDesde.getTime() - UN_DIA_MS),
+      };
+    }
+
+    const nueva: ReglaImpositivaAlmacenada = {
+      id: randomUUID(),
+      nombre: datos.nombre,
+      tasa: datos.tasa,
+      divisorIvaIncluido: datos.divisorIvaIncluido,
+      vigenteDesde: datos.vigenteDesde,
+      vigenteHasta: null,
+      requiereConfirmacionCliente: true,
+      fuente: datos.fuente,
+    };
+    this.reglas.push(nueva);
+    return nueva;
+  }
+
+  async actualizar(
+    id: string,
+    cambios: CamposEditablesDeReglaImpositiva,
+  ): Promise<ReglaImpositivaAlmacenada> {
+    const indice = this.reglas.findIndex((regla) => regla.id === id);
+    const actualizada: ReglaImpositivaAlmacenada = { ...this.reglas[indice]!, ...cambios };
+    this.reglas[indice] = actualizada;
     return actualizada;
   }
 }

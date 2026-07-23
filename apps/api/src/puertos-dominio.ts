@@ -430,3 +430,60 @@ export interface RepositorioDeAlertas {
     cerradaEn: Date,
   ): Promise<AlertaAlmacenada>;
 }
+
+/* ========================================================================== */
+/* Reglas impositivas                                                        */
+/* ========================================================================== */
+
+export interface ReglaImpositivaAlmacenada {
+  readonly id: string;
+  readonly nombre: string;
+  readonly tasa: string;
+  readonly divisorIvaIncluido: number | null;
+  readonly vigenteDesde: Date;
+  readonly vigenteHasta: Date | null;
+  readonly requiereConfirmacionCliente: boolean;
+  readonly fuente: string;
+}
+
+export interface AltaDeReglaImpositiva {
+  readonly nombre: string;
+  readonly tasa: string;
+  readonly divisorIvaIncluido: number | null;
+  readonly vigenteDesde: Date;
+  readonly fuente: string;
+  readonly creadoPorUsuarioId: string;
+}
+
+/**
+ * Campos editables sin abrir una vigencia nueva.
+ *
+ * `tasa`, `divisorIvaIncluido` y `vigenteDesde` no están: son "qué se aplica
+ * y desde cuándo", y cambiarlos sobre una fila que ya pudo haberse usado para
+ * calcular algo reescribiría el historial en vez de registrar el cambio. Para
+ * eso existe `crear`, que cierra la vigente y abre una nueva.
+ */
+export type CamposEditablesDeReglaImpositiva = {
+  nombre?: string | undefined;
+  vigenteHasta?: Date | null | undefined;
+  requiereConfirmacionCliente?: boolean | undefined;
+  fuente?: string | undefined;
+};
+
+export interface RepositorioDeReglasImpositivas {
+  /** Todas, vigentes e históricas: es lo que permite auditar qué tasa regía cuándo. */
+  listar(): Promise<ReglaImpositivaAlmacenada[]>;
+  buscarPorId(id: string): Promise<ReglaImpositivaAlmacenada | null>;
+  /**
+   * Da de alta una regla nueva. Si había una vigente con la misma `tasa`, la
+   * cierra (`vigenteHasta` al día anterior al `vigenteDesde` de la nueva) en
+   * la misma transacción — nunca quedan dos reglas vigentes para la misma
+   * tasa al mismo tiempo.
+   */
+  crear(datos: AltaDeReglaImpositiva): Promise<ReglaImpositivaAlmacenada>;
+  actualizar(
+    id: string,
+    cambios: CamposEditablesDeReglaImpositiva,
+    usuarioId: string,
+  ): Promise<ReglaImpositivaAlmacenada>;
+}
