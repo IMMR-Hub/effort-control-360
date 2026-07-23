@@ -22,6 +22,7 @@ import { registrarRutasDeBalances } from '../src/rutas/balances.js';
 import { registrarRutasDeAlertas } from '../src/rutas/alertas.js';
 import { registrarRutasDeUsuarios } from '../src/rutas/usuarios.js';
 import { registrarRutasDeReglasImpositivas } from '../src/rutas/reglas-impositivas.js';
+import { registrarRutasDeReglasDeNotificacion } from '../src/rutas/reglas-notificacion.js';
 import { hashearContrasena } from '../src/seguridad/credenciales.js';
 import { AlmacenEnMemoria } from '../src/seguridad/limites.js';
 import { NOMBRE_COOKIE_SESION } from '../src/seguridad/sesiones.js';
@@ -38,6 +39,7 @@ import {
   BalancesFalsos,
   DocumentosFalsos,
   ProcesoMensualFalso,
+  ReglasDeNotificacionFalsas,
   ReglasImpositivasFalsas,
   VencimientosFalsos,
   ExportacionesSigaFalsas,
@@ -72,6 +74,7 @@ interface Contexto {
   alertas: AlertasFalsas;
   usuarios: UsuariosFalsos;
   reglasImpositivas: ReglasImpositivasFalsas;
+  reglasDeNotificacion: ReglasDeNotificacionFalsas;
 }
 
 async function montar(): Promise<Contexto> {
@@ -84,6 +87,7 @@ async function montar(): Promise<Contexto> {
   const balances = new BalancesFalsos();
   const alertas = new AlertasFalsas();
   const reglasImpositivas = new ReglasImpositivasFalsas();
+  const reglasDeNotificacion = new ReglasDeNotificacionFalsas();
   const hash = await hashearContrasena(CONTRASENA);
 
   const base = {
@@ -94,6 +98,10 @@ async function montar(): Promise<Contexto> {
   usuarios.usuarios.push(
     {
       id: 'usr-direccion', email: 'laura@effort.com.py', rol: 'direccion', veTodosLosClientes: true,
+      ...base, secretoTotp: SECRETO_TOTP_DIRECCION, segundoFactorActivo: true,
+    },
+    {
+      id: 'usr-responsable', email: 'responsable@effort.com.py', rol: 'responsable', veTodosLosClientes: true,
       ...base, secretoTotp: SECRETO_TOTP_DIRECCION, segundoFactorActivo: true,
     },
     { id: 'usr-auxiliar', email: 'aracely@effort.com.py', rol: 'auxiliar', veTodosLosClientes: false, ...base },
@@ -125,6 +133,7 @@ async function montar(): Promise<Contexto> {
     liquidaciones: new LiquidacionesFalsas(),
     alertas,
     reglasImpositivas,
+    reglasDeNotificacion,
     intentosDeAcceso: new AlmacenEnMemoria(),
     ahora: () => HOY,
   };
@@ -137,11 +146,12 @@ async function montar(): Promise<Contexto> {
   await registrarRutasDeAlertas(app, deps);
   await registrarRutasDeUsuarios(app, deps);
   await registrarRutasDeReglasImpositivas(app, deps);
+  await registrarRutasDeReglasDeNotificacion(app, deps);
   await app.ready();
 
   return {
     app, bitacora, documentos, procesoMensual, vencimientos, balances, alertas, usuarios,
-    reglasImpositivas,
+    reglasImpositivas, reglasDeNotificacion,
   };
 }
 
@@ -175,6 +185,7 @@ async function acceder(ctx: Contexto, email: string): Promise<string> {
 
 let ctx: Contexto;
 let direccion = '';
+let responsable = '';
 let auxiliar = '';
 let coordinador = '';
 let revisor = '';
@@ -183,6 +194,7 @@ let soloLectura = '';
 beforeEach(async () => {
   ctx = await montar();
   direccion = await acceder(ctx, 'laura@effort.com.py');
+  responsable = await acceder(ctx, 'responsable@effort.com.py');
   auxiliar = await acceder(ctx, 'aracely@effort.com.py');
   coordinador = await acceder(ctx, 'karina@effort.com.py');
   revisor = await acceder(ctx, 'revisor@effort.com.py');
@@ -1304,6 +1316,156 @@ describe('reglas impositivas', () => {
       expect(entrada).toBeDefined();
       expect((entrada?.datosAntes as Record<string, unknown>)['requiereConfirmacionCliente']).toBe(true);
       expect((entrada?.datosDespues as Record<string, unknown>)['requiereConfirmacionCliente']).toBe(false);
+    });
+  });
+});
+
+describe('reglas de notificación', () => {
+  const altaValida = {
+    nombre: 'Documentación no entregada',
+    evento: 'DOCUMENTACION_NO_ENTREGADA',
+    diasHabilesDePlazo: 5,
+    horaDeEnvio: '09:00',
+    reintentarCadaDiasHabiles: 2,
+    maximoRecordatorios: 4,
+    escalarAPartirDelRecordatorio: 3,
+    destinatariosIniciales: [{ tipo: 'RESPONSABLE_DEL_CLIENTE', valor: null }],
+  };
+
+  async function darDeAlta(payload: Record<string, unknown>) {
+    return ctx.app.inject({
+      method: 'POST', url: '/api/v1/reglas-notificacion',
+      headers: { cookie: direccion }, payload,
+    });
+  }
+
+  it('coordinador puede ver las reglas, pero no crearlas ni editarlas', async () => {
+    const ver = await ctx.app.inject({
+      method: 'GET', url: '/api/v1/reglas-notificacion', headers: { cookie: coordinador },
+    });
+    expect(ver.statusCode).toBe(200);
+
+    const crear = await ctx.app.inject({
+      method: 'POST', url: '/api/v1/reglas-notificacion',
+      headers: { cookie: coordinador }, payload: altaValida,
+    });
+    expect(crear.statusCode).toBe(403);
+  });
+
+  it('auxiliar no tiene ningún acceso al recurso', async () => {
+    const respuesta = await ctx.app.inject({
+      method: 'GET', url: '/api/v1/reglas-notificacion', headers: { cookie: auxiliar },
+    });
+    expect(respuesta.statusCode).toBe(403);
+  });
+
+  it('dirección da de alta una regla', async () => {
+    const respuesta = await darDeAlta(altaValida);
+
+    expect(respuesta.statusCode).toBe(201);
+    const { regla } = JSON.parse(respuesta.body);
+    expect(regla.evento).toBe('DOCUMENTACION_NO_ENTREGADA');
+    expect(regla.activa).toBe(true);
+    expect(regla.destinatariosDeEscalamiento).toEqual([]);
+    expect(regla.clientesAlcanzados).toEqual([]);
+  });
+
+  it('responsable puede editar reglas existentes, pero no dar de alta una nueva', async () => {
+    const crear = await ctx.app.inject({
+      method: 'POST', url: '/api/v1/reglas-notificacion',
+      headers: { cookie: responsable }, payload: altaValida,
+    });
+    expect(crear.statusCode).toBe(403);
+
+    const alta = await darDeAlta(altaValida);
+    const { regla } = JSON.parse(alta.body);
+
+    const editar = await ctx.app.inject({
+      method: 'PATCH', url: `/api/v1/reglas-notificacion/${regla.id}`,
+      headers: { cookie: responsable }, payload: { activa: false },
+    });
+    expect(editar.statusCode).toBe(200);
+  });
+
+  it('exige al menos un destinatario inicial', async () => {
+    const respuesta = await darDeAlta({ ...altaValida, destinatariosIniciales: [] });
+    expect(respuesta.statusCode).toBe(400);
+  });
+
+  it('un destinatario de tipo ROL exige valor', async () => {
+    const respuesta = await darDeAlta({
+      ...altaValida,
+      destinatariosIniciales: [{ tipo: 'ROL', valor: null }],
+    });
+    expect(respuesta.statusCode).toBe(400);
+  });
+
+  it('rechaza una hora de envío mal formada', async () => {
+    const respuesta = await darDeAlta({ ...altaValida, horaDeEnvio: '25:00' });
+    expect(respuesta.statusCode).toBe(400);
+  });
+
+  it('el alta queda en la bitácora', async () => {
+    await darDeAlta(altaValida);
+    const entrada = ctx.bitacora.filas.find((f) => f.accion === 'regla_notificacion.creada');
+    expect(entrada).toBeDefined();
+    expect(entrada?.usuarioId).toBe('usr-direccion');
+  });
+
+  describe('edición', () => {
+    async function reglaDePrueba() {
+      const alta = await darDeAlta(altaValida);
+      return JSON.parse(alta.body).regla as { id: string };
+    }
+
+    it('puede desactivar una regla sin tocar el resto', async () => {
+      const regla = await reglaDePrueba();
+
+      const respuesta = await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/reglas-notificacion/${regla.id}`,
+        headers: { cookie: direccion }, payload: { activa: false },
+      });
+
+      expect(respuesta.statusCode).toBe(200);
+      const { regla: actualizada } = JSON.parse(respuesta.body);
+      expect(actualizada.activa).toBe(false);
+      expect(actualizada.evento).toBe('DOCUMENTACION_NO_ENTREGADA');
+    });
+
+    it('reemplaza los destinatarios de escalamiento', async () => {
+      const regla = await reglaDePrueba();
+
+      const respuesta = await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/reglas-notificacion/${regla.id}`,
+        headers: { cookie: direccion },
+        payload: { destinatariosDeEscalamiento: [{ tipo: 'ROL', valor: 'direccion' }] },
+      });
+
+      expect(respuesta.statusCode).toBe(200);
+      const { regla: actualizada } = JSON.parse(respuesta.body);
+      expect(actualizada.destinatariosDeEscalamiento).toEqual([{ tipo: 'ROL', valor: 'direccion' }]);
+    });
+
+    it('no se puede editar una regla inexistente', async () => {
+      const respuesta = await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/reglas-notificacion/${randomUUID()}`,
+        headers: { cookie: direccion }, payload: { activa: false },
+      });
+      expect(respuesta.statusCode).toBe(404);
+    });
+
+    it('la edición queda en la bitácora con el estado anterior', async () => {
+      const regla = await reglaDePrueba();
+
+      await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/reglas-notificacion/${regla.id}`,
+        headers: { cookie: direccion }, payload: { activa: false },
+      });
+
+      const entrada = ctx.bitacora.filas.find((f) => f.accion === 'regla_notificacion.modificada');
+      expect(entrada).toBeDefined();
+      expect((entrada?.datosAntes as Record<string, unknown>)['activa']).toBe(true);
+      expect((entrada?.datosDespues as Record<string, unknown>)['activa']).toBe(false);
     });
   });
 });

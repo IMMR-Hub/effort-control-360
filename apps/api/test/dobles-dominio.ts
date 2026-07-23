@@ -13,20 +13,24 @@ import { randomUUID } from 'node:crypto';
 import type {
   AlertaAlmacenada,
   AltaDeDocumento,
+  AltaDeReglaDeNotificacion,
   AltaDeReglaImpositiva,
   AltaDeVencimiento,
   BalanceAlmacenado,
   CamposEditablesDelProceso,
+  CamposEditablesDeReglaDeNotificacion,
   CamposEditablesDeReglaImpositiva,
   CifrasDeBalance,
   DocumentoAlmacenado,
   FiltroDeCartera,
   ProcesoMensualAlmacenado,
+  ReglaDeNotificacionAlmacenada,
   ReglaImpositivaAlmacenada,
   RepositorioDeAlertas,
   RepositorioDeBalances,
   RepositorioDeDocumentos,
   RepositorioDeProcesoMensual,
+  RepositorioDeReglasDeNotificacion,
   RepositorioDeReglasImpositivas,
   RepositorioDeVencimientos,
   VencimientoAlmacenado,
@@ -602,6 +606,48 @@ export class ReglasImpositivasFalsas implements RepositorioDeReglasImpositivas {
   ): Promise<ReglaImpositivaAlmacenada> {
     const indice = this.reglas.findIndex((regla) => regla.id === id);
     const actualizada: ReglaImpositivaAlmacenada = { ...this.reglas[indice]!, ...cambios };
+    this.reglas[indice] = actualizada;
+    return actualizada;
+  }
+}
+
+export class ReglasDeNotificacionFalsas implements RepositorioDeReglasDeNotificacion {
+  readonly reglas: ReglaDeNotificacionAlmacenada[] = [];
+
+  async listar(): Promise<ReglaDeNotificacionAlmacenada[]> {
+    return [...this.reglas].sort((a, b) => a.nombre.localeCompare(b.nombre));
+  }
+
+  async buscarPorId(id: string): Promise<ReglaDeNotificacionAlmacenada | null> {
+    return this.reglas.find((candidata) => candidata.id === id) ?? null;
+  }
+
+  async crear(datos: AltaDeReglaDeNotificacion): Promise<ReglaDeNotificacionAlmacenada> {
+    const nueva: ReglaDeNotificacionAlmacenada = {
+      id: randomUUID(),
+      nombre: datos.nombre,
+      activa: datos.activa,
+      evento: datos.evento,
+      diasHabilesDePlazo: datos.diasHabilesDePlazo,
+      horaDeEnvio: datos.horaDeEnvio,
+      reintentarCadaDiasHabiles: datos.reintentarCadaDiasHabiles,
+      maximoRecordatorios: datos.maximoRecordatorios,
+      escalarAPartirDelRecordatorio: datos.escalarAPartirDelRecordatorio,
+      destinatariosIniciales: datos.destinatariosIniciales,
+      destinatariosDeEscalamiento: datos.destinatariosDeEscalamiento,
+      clientesAlcanzados: datos.clientesAlcanzados,
+      plantillaId: datos.plantillaId,
+    };
+    this.reglas.push(nueva);
+    return nueva;
+  }
+
+  async actualizar(
+    id: string,
+    cambios: CamposEditablesDeReglaDeNotificacion,
+  ): Promise<ReglaDeNotificacionAlmacenada> {
+    const indice = this.reglas.findIndex((regla) => regla.id === id);
+    const actualizada: ReglaDeNotificacionAlmacenada = { ...this.reglas[indice]!, ...cambios };
     this.reglas[indice] = actualizada;
     return actualizada;
   }

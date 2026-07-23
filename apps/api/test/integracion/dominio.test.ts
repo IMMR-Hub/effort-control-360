@@ -23,6 +23,7 @@ import {
   BalancesPrisma,
   DocumentosPrisma,
   ProcesoMensualPrisma,
+  ReglasDeNotificacionPrisma,
   ReglasImpositivasPrisma,
   VencimientosPrisma,
 } from '../../src/repositorios/dominio.js';
@@ -40,6 +41,7 @@ describeSiHayBase('repositorios de negocio contra PostgreSQL real', () => {
   let liquidaciones: LiquidacionesPrisma;
   let alertas: AlertasPrisma;
   let reglasImpositivas: ReglasImpositivasPrisma;
+  let reglasDeNotificacion: ReglasDeNotificacionPrisma;
 
   let usuario = '';
   let mio = '';
@@ -58,6 +60,7 @@ describeSiHayBase('repositorios de negocio contra PostgreSQL real', () => {
     liquidaciones = new LiquidacionesPrisma(entorno.prisma);
     alertas = new AlertasPrisma(entorno.prisma);
     reglasImpositivas = new ReglasImpositivasPrisma(entorno.prisma);
+    reglasDeNotificacion = new ReglasDeNotificacionPrisma(entorno.prisma);
 
     const u = await entorno.prisma.usuario.create({
       data: {
@@ -762,6 +765,70 @@ describeSiHayBase('repositorios de negocio contra PostgreSQL real', () => {
     it('buscarPorId devuelve null para una regla inexistente', async () => {
       expect(
         await reglasImpositivas.buscarPorId('00000000-0000-4000-8000-000000000000'),
+      ).toBeNull();
+    });
+  });
+
+  /* ====================================================================== */
+  /* Reglas de notificación                                                */
+  /* ====================================================================== */
+
+  describe('reglas de notificación', () => {
+    it('persiste los destinatarios y la cartera alcanzada como JSON, intactos', async () => {
+      const regla = await reglasDeNotificacion.crear({
+        nombre: 'Documentación no entregada', activa: true,
+        evento: 'DOCUMENTACION_NO_ENTREGADA', diasHabilesDePlazo: 5, horaDeEnvio: '09:00',
+        reintentarCadaDiasHabiles: 2, maximoRecordatorios: 4, escalarAPartirDelRecordatorio: 3,
+        destinatariosIniciales: [{ tipo: 'RESPONSABLE_DEL_CLIENTE', valor: null }],
+        destinatariosDeEscalamiento: [{ tipo: 'ROL', valor: 'direccion' }],
+        clientesAlcanzados: [mio],
+        plantillaId: null,
+        creadoPorUsuarioId: usuario,
+      });
+
+      expect(regla.destinatariosIniciales).toEqual([
+        { tipo: 'RESPONSABLE_DEL_CLIENTE', valor: null },
+      ]);
+      expect(regla.destinatariosDeEscalamiento).toEqual([{ tipo: 'ROL', valor: 'direccion' }]);
+      expect(regla.clientesAlcanzados).toEqual([mio]);
+
+      const recuperada = await reglasDeNotificacion.buscarPorId(regla.id);
+      expect(recuperada?.destinatariosIniciales).toEqual(regla.destinatariosIniciales);
+    });
+
+    it('listar trae la regla recién creada', async () => {
+      const lista = await reglasDeNotificacion.listar();
+      expect(lista.some((r) => r.evento === 'DOCUMENTACION_NO_ENTREGADA')).toBe(true);
+    });
+
+    it('actualizar reemplaza los destinatarios de escalamiento sin tocar los iniciales', async () => {
+      const regla = await reglasDeNotificacion.crear({
+        nombre: 'Vencimiento próximo', activa: true,
+        evento: 'VENCIMIENTO_PROXIMO', diasHabilesDePlazo: 3, horaDeEnvio: '08:30',
+        reintentarCadaDiasHabiles: 1, maximoRecordatorios: 3, escalarAPartirDelRecordatorio: 2,
+        destinatariosIniciales: [{ tipo: 'RESPONSABLE_DEL_CLIENTE', valor: null }],
+        destinatariosDeEscalamiento: [],
+        clientesAlcanzados: [],
+        plantillaId: null,
+        creadoPorUsuarioId: usuario,
+      });
+
+      const actualizada = await reglasDeNotificacion.actualizar(
+        regla.id,
+        { activa: false, destinatariosDeEscalamiento: [{ tipo: 'USUARIO', valor: usuario }] },
+        usuario,
+      );
+
+      expect(actualizada.activa).toBe(false);
+      expect(actualizada.destinatariosDeEscalamiento).toEqual([{ tipo: 'USUARIO', valor: usuario }]);
+      expect(actualizada.destinatariosIniciales).toEqual([
+        { tipo: 'RESPONSABLE_DEL_CLIENTE', valor: null },
+      ]);
+    });
+
+    it('buscarPorId devuelve null para una regla inexistente', async () => {
+      expect(
+        await reglasDeNotificacion.buscarPorId('00000000-0000-4000-8000-000000000000'),
       ).toBeNull();
     });
   });

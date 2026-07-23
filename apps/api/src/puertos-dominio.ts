@@ -487,3 +487,72 @@ export interface RepositorioDeReglasImpositivas {
     usuarioId: string,
   ): Promise<ReglaImpositivaAlmacenada>;
 }
+
+/* ========================================================================== */
+/* Reglas de notificación                                                    */
+/* ========================================================================== */
+
+export interface DestinatarioRegla {
+  readonly tipo: string;
+  readonly valor: string | null;
+}
+
+export interface ReglaDeNotificacionAlmacenada {
+  readonly id: string;
+  readonly nombre: string;
+  readonly activa: boolean;
+  readonly evento: string;
+  readonly diasHabilesDePlazo: number;
+  readonly horaDeEnvio: string;
+  readonly reintentarCadaDiasHabiles: number;
+  readonly maximoRecordatorios: number;
+  readonly escalarAPartirDelRecordatorio: number;
+  readonly destinatariosIniciales: readonly DestinatarioRegla[];
+  readonly destinatariosDeEscalamiento: readonly DestinatarioRegla[];
+  /** Vacío alcanza a toda la cartera; con ids, solo a esos clientes. */
+  readonly clientesAlcanzados: readonly string[];
+  /** Referencia a una plantilla de contenido. Todavía no existe esa tabla. */
+  readonly plantillaId: string | null;
+}
+
+export interface AltaDeReglaDeNotificacion {
+  readonly nombre: string;
+  readonly activa: boolean;
+  readonly evento: string;
+  readonly diasHabilesDePlazo: number;
+  readonly horaDeEnvio: string;
+  readonly reintentarCadaDiasHabiles: number;
+  readonly maximoRecordatorios: number;
+  readonly escalarAPartirDelRecordatorio: number;
+  readonly destinatariosIniciales: readonly DestinatarioRegla[];
+  readonly destinatariosDeEscalamiento: readonly DestinatarioRegla[];
+  readonly clientesAlcanzados: readonly string[];
+  readonly plantillaId: string | null;
+  readonly creadoPorUsuarioId: string;
+}
+
+export type CamposEditablesDeReglaDeNotificacion = {
+  nombre?: string | undefined;
+  activa?: boolean | undefined;
+  evento?: string | undefined;
+  diasHabilesDePlazo?: number | undefined;
+  horaDeEnvio?: string | undefined;
+  reintentarCadaDiasHabiles?: number | undefined;
+  maximoRecordatorios?: number | undefined;
+  escalarAPartirDelRecordatorio?: number | undefined;
+  destinatariosIniciales?: readonly DestinatarioRegla[] | undefined;
+  destinatariosDeEscalamiento?: readonly DestinatarioRegla[] | undefined;
+  clientesAlcanzados?: readonly string[] | undefined;
+  plantillaId?: string | null | undefined;
+};
+
+export interface RepositorioDeReglasDeNotificacion {
+  listar(): Promise<ReglaDeNotificacionAlmacenada[]>;
+  buscarPorId(id: string): Promise<ReglaDeNotificacionAlmacenada | null>;
+  crear(datos: AltaDeReglaDeNotificacion): Promise<ReglaDeNotificacionAlmacenada>;
+  actualizar(
+    id: string,
+    cambios: CamposEditablesDeReglaDeNotificacion,
+    usuarioId: string,
+  ): Promise<ReglaDeNotificacionAlmacenada>;
+}

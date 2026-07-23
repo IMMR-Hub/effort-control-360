@@ -11,20 +11,24 @@
 import type {
   AlertaAlmacenada,
   AltaDeDocumento,
+  AltaDeReglaDeNotificacion,
   AltaDeReglaImpositiva,
   AltaDeVencimiento,
   BalanceAlmacenado,
   CamposEditablesDelProceso,
+  CamposEditablesDeReglaDeNotificacion,
   CamposEditablesDeReglaImpositiva,
   CifrasDeBalance,
   DocumentoAlmacenado,
   FiltroDeCartera,
   ProcesoMensualAlmacenado,
+  ReglaDeNotificacionAlmacenada,
   ReglaImpositivaAlmacenada,
   RepositorioDeAlertas,
   RepositorioDeBalances,
   RepositorioDeDocumentos,
   RepositorioDeProcesoMensual,
+  RepositorioDeReglasDeNotificacion,
   RepositorioDeReglasImpositivas,
   RepositorioDeVencimientos,
   VencimientoAlmacenado,
@@ -674,5 +678,115 @@ export class ReglasImpositivasPrisma implements RepositorioDeReglasImpositivas {
     });
 
     return fila as ReglaImpositivaAlmacenada;
+  }
+}
+
+/* ========================================================================== */
+/* Reglas de notificación                                                    */
+/* ========================================================================== */
+
+const CAMPOS_REGLA_NOTIFICACION = {
+  id: true,
+  nombre: true,
+  activa: true,
+  evento: true,
+  diasHabilesDePlazo: true,
+  horaDeEnvio: true,
+  reintentarCadaDiasHabiles: true,
+  maximoRecordatorios: true,
+  escalarAPartirDelRecordatorio: true,
+  destinatariosIniciales: true,
+  destinatariosDeEscalamiento: true,
+  clientesAlcanzados: true,
+  plantillaId: true,
+} as const;
+
+/**
+ * Las tres columnas `Json` vuelven de Prisma tipadas como `JsonValue`. Se
+ * confía en que lo que hay adentro tiene la forma que puso la ruta al validar
+ * con Zod antes de escribir: este repositorio no revalida, solo transporta.
+ */
+function aReglaDeNotificacion(fila: {
+  id: string;
+  nombre: string;
+  activa: boolean;
+  evento: string;
+  diasHabilesDePlazo: number;
+  horaDeEnvio: string;
+  reintentarCadaDiasHabiles: number;
+  maximoRecordatorios: number;
+  escalarAPartirDelRecordatorio: number;
+  destinatariosIniciales: unknown;
+  destinatariosDeEscalamiento: unknown;
+  clientesAlcanzados: unknown;
+  plantillaId: string | null;
+}): ReglaDeNotificacionAlmacenada {
+  return {
+    ...fila,
+    destinatariosIniciales: fila.destinatariosIniciales as ReglaDeNotificacionAlmacenada['destinatariosIniciales'],
+    destinatariosDeEscalamiento: fila.destinatariosDeEscalamiento as ReglaDeNotificacionAlmacenada['destinatariosDeEscalamiento'],
+    clientesAlcanzados: fila.clientesAlcanzados as ReglaDeNotificacionAlmacenada['clientesAlcanzados'],
+  };
+}
+
+export class ReglasDeNotificacionPrisma implements RepositorioDeReglasDeNotificacion {
+  constructor(private readonly prisma: PrismaClient) {}
+
+  async listar(): Promise<ReglaDeNotificacionAlmacenada[]> {
+    const filas = await this.prisma.reglaNotificacion.findMany({
+      select: CAMPOS_REGLA_NOTIFICACION,
+      orderBy: { nombre: 'asc' },
+    });
+
+    return filas.map(aReglaDeNotificacion);
+  }
+
+  async buscarPorId(id: string): Promise<ReglaDeNotificacionAlmacenada | null> {
+    const fila = await this.prisma.reglaNotificacion.findUnique({
+      where: { id },
+      select: CAMPOS_REGLA_NOTIFICACION,
+    });
+
+    return fila ? aReglaDeNotificacion(fila) : null;
+  }
+
+  async crear(datos: AltaDeReglaDeNotificacion): Promise<ReglaDeNotificacionAlmacenada> {
+    const fila = await this.prisma.reglaNotificacion.create({
+      data: {
+        nombre: datos.nombre,
+        activa: datos.activa,
+        evento: datos.evento,
+        diasHabilesDePlazo: datos.diasHabilesDePlazo,
+        horaDeEnvio: datos.horaDeEnvio,
+        reintentarCadaDiasHabiles: datos.reintentarCadaDiasHabiles,
+        maximoRecordatorios: datos.maximoRecordatorios,
+        escalarAPartirDelRecordatorio: datos.escalarAPartirDelRecordatorio,
+        destinatariosIniciales: datos.destinatariosIniciales as never,
+        destinatariosDeEscalamiento: datos.destinatariosDeEscalamiento as never,
+        clientesAlcanzados: datos.clientesAlcanzados as never,
+        plantillaId: datos.plantillaId,
+        creadoPorUsuarioId: datos.creadoPorUsuarioId,
+        actualizadoPorUsuarioId: datos.creadoPorUsuarioId,
+      },
+      select: CAMPOS_REGLA_NOTIFICACION,
+    });
+
+    return aReglaDeNotificacion(fila);
+  }
+
+  async actualizar(
+    id: string,
+    cambios: CamposEditablesDeReglaDeNotificacion,
+    usuarioId: string,
+  ): Promise<ReglaDeNotificacionAlmacenada> {
+    const fila = await this.prisma.reglaNotificacion.update({
+      where: { id },
+      // Los campos llegan ya validados por Zod estricto en la ruta: solo puede
+      // haber claves de la lista permitida.
+      data: { ...cambios, actualizadoPorUsuarioId: usuarioId } as never,
+      select: CAMPOS_REGLA_NOTIFICACION,
+    });
+
+    return aReglaDeNotificacion(fila);
   }
 }
