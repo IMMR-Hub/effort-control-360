@@ -3,6 +3,7 @@
   "references": [
     { "path": "./packages/core" },
     { "path": "./packages/schema" },
+    { "path": "./packages/drive" },
     { "path": "./apps/api" }
   ]
 }

@@ -38,7 +38,7 @@ grep -c "^- \[ \]" <(sed -n '/## PARTE X/,/## PARTE X+1/p' docs/ROADMAP-MAESTRO.
 
 Si da 0, cerrada. Si no, no.
 
-**Avance: 84 de 112 tareas (75%).** Partes 1, 2, 3, 4A, 4B, 4C y 4D cerradas. Quedan 2 tareas bloqueadas por EFFORT (carga de datos), que no frenan el código.
+**Avance: 85 de 112 tareas (76%).** Partes 1, 2, 3, 4A, 4B, 4C y 4D cerradas. Quedan 3 tareas bloqueadas por EFFORT (2 de carga de datos + el registro en Azure AD), que no frenan el código.
 
 Última actualización: 2026-07-23 · Commit de referencia: ver último commit en `git log`
 
@@ -257,8 +257,12 @@ bug de `buscarPorId`.
 
 ## PARTE 5 — Importadores desde OneDrive
 
-- [ ] 87. Registrar la aplicación en Azure AD (requiere que EFFORT cree la cuenta `sistema.effort360@...`)
-- [ ] 88. Implementar `packages/drive` — adaptador Microsoft Graph API + adaptador falso para tests
+- [ ] 87. Registrar la aplicación en Azure AD (requiere que EFFORT cree la cuenta `sistema.effort360@...`) — **bloqueada, no depende de nosotros**
+- [x] 88. Implementar `packages/drive` — adaptador Microsoft Graph API + adaptador falso para tests. Puerto único `DriveDeArchivos` (`listar`/`leer`/`escribir`) con dos implementaciones: `DriveFalso` (en memoria, para tests) y `DriveGraph` (real, sin dependencias nuevas — usa `fetch` nativo de Node para el flujo OAuth2 de client credentials, documentado por Microsoft). `DriveGraph` sigue sin poder probarse de punta a punta porque la tarea 87 sigue bloqueada; sus 8 tests reemplazan `fetch` global y verifican que arma las peticiones correctas, no que Microsoft las acepte. 14 tests en total.
+
+  **Corregido de paso:** el check `verify:drive` en `scripts/verify.mjs` invocaba `npm run verify:drive --workspace @effort/drive`, un comando que una sesión anterior escribió como placeholder (`pendiente: 'packages/drive todavía no existe.'`) sin poder probarlo porque el paquete no existía. Al crear el paquete se comprobó que ese comando falla (`vitest run --project drive` resuelve mal las rutas cuando corre con cwd en un subdirectorio del monorepo) — se cambió a `npx vitest run --project drive` desde la raíz, igual que todos los demás checks del archivo.
+
+  **Verificación:** `npm run verify` → exit 0, 13 OK / 3 pendientes declarados / 0 fallidos — hecho el 2026-07-23 (segundo intento; el primero falló por el problema intermitente de concurrencia contra Supabase ya documentado). `verify:drive` deja de estar pendiente.
 - [ ] 89. Espejo automático hacia el OneDrive de respaldo, con manifiesto sha256
 - [ ] 90. Importador de comprobantes (Excel/CSV) con reporte de filas aceptadas/rechazadas
 - [ ] 91. Importador de exportaciones SIGA
