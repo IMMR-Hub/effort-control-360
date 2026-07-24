@@ -9,3 +9,4 @@
 export * from './puerto.js';
 export * from './adaptadorFalso.js';
 export * from './adaptadorGraph.js';
+export * from './espejo.js';
