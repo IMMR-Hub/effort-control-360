@@ -443,6 +443,72 @@ describeSiHayBase('repositorios contra PostgreSQL real', () => {
         }),
       ).rejects.toThrow();
     });
+
+    describe('alta y edición', () => {
+      it('crea un cliente y lo encuentra después por RUC', async () => {
+        const nuevo = await clientes.crear({
+          nombre: 'Nuevo Cliente Integración S.A.', ruc: '80030001-7', tipoPersona: 'JURIDICA',
+          regimenTributario: null, email: null, telefono: null, canalPreferido: null,
+          observaciones: null, creadoPorUsuarioId: idDireccion,
+        });
+
+        expect(nuevo.ruc).toBe('80030001-7');
+        expect(nuevo.activo).toBe(true);
+
+        const encontrado = await clientes.buscarPorRuc('80030001-7');
+        expect(encontrado?.id).toBe(nuevo.id);
+      });
+
+      it('la base impide crear dos clientes con el mismo RUC', async () => {
+        await clientes.crear({
+          nombre: 'Uno', ruc: '80066666-6', tipoPersona: 'JURIDICA',
+          regimenTributario: null, email: null, telefono: null, canalPreferido: null,
+          observaciones: null, creadoPorUsuarioId: idDireccion,
+        });
+
+        await expect(
+          clientes.crear({
+            nombre: 'Dos', ruc: '80066666-6', tipoPersona: 'JURIDICA',
+            regimenTributario: null, email: null, telefono: null, canalPreferido: null,
+            observaciones: null, creadoPorUsuarioId: idDireccion,
+          }),
+        ).rejects.toThrow();
+      });
+
+      it('buscarPorRuc devuelve null para un RUC inexistente', async () => {
+        expect(await clientes.buscarPorRuc('80011111-7')).toBeNull();
+      });
+
+      it('actualizar cambia solo los campos indicados', async () => {
+        const cliente = await clientes.crear({
+          nombre: 'Editable Integración S.A.', ruc: '80022222-9', tipoPersona: 'JURIDICA',
+          regimenTributario: null, email: null, telefono: null, canalPreferido: null,
+          observaciones: null, creadoPorUsuarioId: idDireccion,
+        });
+
+        const actualizado = await clientes.actualizar(
+          cliente.id, { activo: false, observaciones: 'Baja temporal.' }, idDireccion,
+        );
+
+        expect(actualizado.activo).toBe(false);
+        expect(actualizado.observaciones).toBe('Baja temporal.');
+        // No se tocó: sigue siendo el mismo nombre con el que se creó.
+        expect(actualizado.nombre).toBe('Editable Integración S.A.');
+      });
+
+      it('actualizar puede corregir el RUC', async () => {
+        const cliente = await clientes.crear({
+          nombre: 'RUC a corregir S.A.', ruc: '80033333-0', tipoPersona: 'JURIDICA',
+          regimenTributario: null, email: null, telefono: null, canalPreferido: null,
+          observaciones: null, creadoPorUsuarioId: idDireccion,
+        });
+
+        const actualizado = await clientes.actualizar(cliente.id, { ruc: '80044444-2' }, idDireccion);
+
+        expect(actualizado.ruc).toBe('80044444-2');
+        expect(await clientes.buscarPorRuc('80033333-0')).toBeNull();
+      });
+    });
   });
 
   /* --- Contactos --------------------------------------------------------- */

@@ -13,6 +13,8 @@ import type { FastifyInstance } from 'fastify';
 import { authenticator } from 'otplib';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import { calcularDigitoVerificadorRuc } from '@effort/schema';
+
 import type { AlertaAlmacenada } from '../src/puertos-dominio.js';
 import { construirServidor, type Dependencias } from '../src/servidor.js';
 import { registrarRutasDeAutenticacion } from '../src/rutas/autenticacion.js';
@@ -24,6 +26,7 @@ import { registrarRutasDeUsuarios } from '../src/rutas/usuarios.js';
 import { registrarRutasDeReglasImpositivas } from '../src/rutas/reglas-impositivas.js';
 import { registrarRutasDeReglasDeNotificacion } from '../src/rutas/reglas-notificacion.js';
 import { registrarRutasDeEventos } from '../src/rutas/eventos.js';
+import { registrarRutasDeClientes } from '../src/rutas/clientes.js';
 import { hashearContrasena } from '../src/seguridad/credenciales.js';
 import { AlmacenEnMemoria } from '../src/seguridad/limites.js';
 import { NOMBRE_COOKIE_SESION } from '../src/seguridad/sesiones.js';
@@ -31,6 +34,7 @@ import type { Configuracion } from '../src/configuracion.js';
 import {
   BitacoraFalsa,
   ClientesFalsos,
+  clienteMinimo,
   ContactosFalsos,
   SesionesFalsas,
   UsuariosFalsos,
@@ -115,8 +119,8 @@ async function montar(): Promise<Contexto> {
   usuarios.asignaciones.set('usr-coordinador', [MIO]);
 
   clientes.clientes.push(
-    { id: MIO, nombre: 'GARSO S.A.', ruc: '80017726-6', activo: true },
-    { id: AJENO, nombre: 'CLIENTE AJENO S.A.', ruc: '80019012-2', activo: true },
+    clienteMinimo({ id: MIO, nombre: 'GARSO S.A.', ruc: '80017726-6', activo: true }),
+    clienteMinimo({ id: AJENO, nombre: 'CLIENTE AJENO S.A.', ruc: '80019012-2', activo: true }),
   );
 
   const deps: Dependencias = {
@@ -149,6 +153,7 @@ async function montar(): Promise<Contexto> {
   await registrarRutasDeReglasImpositivas(app, deps);
   await registrarRutasDeReglasDeNotificacion(app, deps);
   await registrarRutasDeEventos(app, deps);
+  await registrarRutasDeClientes(app, deps);
   await app.ready();
 
   return {
@@ -1581,5 +1586,142 @@ describe('eventos (event log)', () => {
     expect(completo.map((e) => e.accion).sort()).toEqual([
       'prueba.ajena', 'prueba.propia', 'prueba.sin_cliente',
     ]);
+  });
+});
+
+describe('clientes', () => {
+  const altaValida = {
+    nombre: 'Nuevo Cliente S.A.',
+    ruc: '80099999-1',
+    tipoPersona: 'JURIDICA',
+  };
+
+  async function darDeAlta(payload: Record<string, unknown>, cookie: string) {
+    return ctx.app.inject({ method: 'POST', url: '/api/v1/clientes', headers: { cookie }, payload });
+  }
+
+  it('dirección da de alta un cliente', async () => {
+    const respuesta = await darDeAlta(altaValida, direccion);
+
+    expect(respuesta.statusCode).toBe(201);
+    const { cliente } = JSON.parse(respuesta.body);
+    expect(cliente.ruc).toBe('80099999-1');
+    expect(cliente.activo).toBe(true);
+  });
+
+  it('responsable también puede dar de alta', async () => {
+    const respuesta = await darDeAlta(
+      { ...altaValida, ruc: '80025000-1' }, responsable,
+    );
+    expect(respuesta.statusCode).toBe(201);
+  });
+
+  it('coordinador no puede dar de alta un cliente', async () => {
+    const respuesta = await darDeAlta(altaValida, coordinador);
+    expect(respuesta.statusCode).toBe(403);
+  });
+
+  it('no se puede repetir el RUC de otro cliente', async () => {
+    // MIO ya está sembrado en el fixture con RUC 80017726-6.
+    const respuesta = await darDeAlta({ ...altaValida, ruc: '80017726-6' }, direccion);
+
+    expect(respuesta.statusCode).toBe(409);
+    expect(JSON.parse(respuesta.body).error).toBe('ruc_en_uso');
+  });
+
+  it('auxiliar puede ver la cartera pero no dar de alta', async () => {
+    const ver = await ctx.app.inject({
+      method: 'GET', url: '/api/v1/clientes', headers: { cookie: auxiliar },
+    });
+    expect(ver.statusCode).toBe(200);
+
+    const crear = await darDeAlta(altaValida, auxiliar);
+    expect(crear.statusCode).toBe(403);
+  });
+
+  it('el alta queda en la bitácora', async () => {
+    await darDeAlta(altaValida, direccion);
+    const entrada = ctx.bitacora.filas.find((f) => f.accion === 'cliente.creado');
+    expect(entrada).toBeDefined();
+    expect(entrada?.usuarioId).toBe('usr-direccion');
+  });
+
+  describe('edición', () => {
+    async function clienteDePrueba() {
+      const base = `800${Math.floor(Math.random() * 90000 + 10000)}`;
+      const ruc = `${base}-${calcularDigitoVerificadorRuc(base)}`;
+      const alta = await darDeAlta({ ...altaValida, ruc }, direccion);
+      return JSON.parse(alta.body).cliente as { id: string; ruc: string };
+    }
+
+    it('edita observaciones y estado activo', async () => {
+      const cliente = await clienteDePrueba();
+
+      const respuesta = await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/clientes/${cliente.id}`,
+        headers: { cookie: direccion }, payload: { activo: false, observaciones: 'Baja temporal.' },
+      });
+
+      expect(respuesta.statusCode).toBe(200);
+      const { cliente: actualizado } = JSON.parse(respuesta.body);
+      expect(actualizado.activo).toBe(false);
+      expect(actualizado.observaciones).toBe('Baja temporal.');
+    });
+
+    it('corrige un RUC mal tipeado', async () => {
+      const cliente = await clienteDePrueba();
+
+      const respuesta = await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/clientes/${cliente.id}`,
+        headers: { cookie: direccion }, payload: { ruc: '80054135-9' },
+      });
+
+      expect(respuesta.statusCode).toBe(200);
+      expect(JSON.parse(respuesta.body).cliente.ruc).toBe('80054135-9');
+    });
+
+    it('no permite cambiar el RUC a uno que ya usa otro cliente', async () => {
+      const cliente = await clienteDePrueba();
+
+      const respuesta = await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/clientes/${cliente.id}`,
+        headers: { cookie: direccion }, payload: { ruc: '80017726-6' },
+      });
+
+      expect(respuesta.statusCode).toBe(409);
+      expect(JSON.parse(respuesta.body).error).toBe('ruc_en_uso');
+    });
+
+    it('no se puede editar un cliente inexistente', async () => {
+      const respuesta = await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/clientes/${randomUUID()}`,
+        headers: { cookie: direccion }, payload: { activo: false },
+      });
+      expect(respuesta.statusCode).toBe(404);
+    });
+
+    it('coordinador no puede editar', async () => {
+      const cliente = await clienteDePrueba();
+
+      const respuesta = await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/clientes/${cliente.id}`,
+        headers: { cookie: coordinador }, payload: { activo: false },
+      });
+      expect(respuesta.statusCode).toBe(403);
+    });
+
+    it('la edición queda en la bitácora con el estado anterior', async () => {
+      const cliente = await clienteDePrueba();
+
+      await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/clientes/${cliente.id}`,
+        headers: { cookie: direccion }, payload: { activo: false },
+      });
+
+      const entrada = ctx.bitacora.filas.find((f) => f.accion === 'cliente.actualizado');
+      expect(entrada).toBeDefined();
+      expect((entrada?.datosAntes as Record<string, unknown>)['activo']).toBe(true);
+      expect((entrada?.datosDespues as Record<string, unknown>)['activo']).toBe(false);
+    });
   });
 });

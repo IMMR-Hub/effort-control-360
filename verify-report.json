@@ -1,13 +1,13 @@
 {
-  "generado_en": "2026-07-23T13:10:04.720Z",
-  "commit": "8f3533ce9f6708e60790eaf04066661e95ed54f3",
+  "generado_en": "2026-07-24T11:17:31.562Z",
+  "commit": "0ff43de75e2339904b8b7286085e7224c15a070c",
   "checks": [
     {
       "nombre": "typecheck",
       "comando": "npx tsc --build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 2165,
+      "duracion_ms": 2131,
       "detalle": ""
     },
     {
@@ -15,7 +15,7 @@
       "comando": "npx vitest run",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 46591,
+      "duracion_ms": 66078,
       "detalle": ""
     },
     {
@@ -23,7 +23,7 @@
       "comando": "npx vitest run packages/core/test/golden.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4491,
+      "duracion_ms": 4358,
       "detalle": ""
     },
     {
@@ -37,7 +37,7 @@
       "comando": "npx vitest run apps/api/test/rbac.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4587,
+      "duracion_ms": 4185,
       "detalle": ""
     },
     {
@@ -45,7 +45,7 @@
       "comando": "npx vitest run apps/api/test/seguridad.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4403,
+      "duracion_ms": 4401,
       "detalle": ""
     },
     {
@@ -53,7 +53,7 @@
       "comando": "npx vitest run packages/schema/test/contratos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4594,
+      "duracion_ms": 4638,
       "detalle": ""
     },
     {
@@ -61,7 +61,7 @@
       "comando": "npx vitest run apps/api/test/servidor.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7592,
+      "duracion_ms": 7885,
       "detalle": ""
     },
     {
@@ -69,7 +69,7 @@
       "comando": "npx vitest run apps/api/test/modulos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 28667,
+      "duracion_ms": 30338,
       "detalle": ""
     },
     {
@@ -77,7 +77,7 @@
       "comando": "npx vitest run apps/api/test/siga.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 8661,
+      "duracion_ms": 8520,
       "detalle": ""
     },
     {
@@ -85,7 +85,7 @@
       "comando": "npx vitest run --project integracion",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 46456,
+      "duracion_ms": 46482,
       "detalle": ""
     },
     {
@@ -93,7 +93,7 @@
       "comando": "npx vitest run --project drive",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4236,
+      "duracion_ms": 4376,
       "detalle": ""
     },
     {
@@ -113,7 +113,7 @@
       "comando": "npm audit --audit-level=high",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 2255,
+      "duracion_ms": 4712,
       "detalle": ""
     },
     {
@@ -121,7 +121,7 @@
       "comando": "npm run build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 8558,
+      "duracion_ms": 12861,
       "detalle": ""
     }
   ],

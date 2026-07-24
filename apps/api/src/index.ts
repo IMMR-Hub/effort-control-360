@@ -37,6 +37,7 @@ import { registrarRutasDeUsuarios } from './rutas/usuarios.js';
 import { registrarRutasDeReglasImpositivas } from './rutas/reglas-impositivas.js';
 import { registrarRutasDeReglasDeNotificacion } from './rutas/reglas-notificacion.js';
 import { registrarRutasDeEventos } from './rutas/eventos.js';
+import { registrarRutasDeClientes } from './rutas/clientes.js';
 
 export interface DependenciasReales extends Dependencias {
   readonly cerrar: () => Promise<void>;
@@ -89,6 +90,7 @@ export async function arrancar(dependencias: Dependencias): Promise<void> {
   await registrarRutasDeReglasImpositivas(app, dependencias);
   await registrarRutasDeReglasDeNotificacion(app, dependencias);
   await registrarRutasDeEventos(app, dependencias);
+  await registrarRutasDeClientes(app, dependencias);
 
   // Purga periódica del almacén de intentos: sin esto crece indefinidamente
   // mientras el proceso siga vivo.

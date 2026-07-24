@@ -38,3 +38,7 @@ dist/
 .env
 .env.*
 !.env.example
+
+# Datos reales de clientes (muestras para definir formatos de importación).
+# Nunca al historial de git: RUCs, balances y declaraciones reales.
+docs/Muestras/

@@ -8,10 +8,27 @@
  * no debería estar.
  */
 
-import type { ClienteListado, RepositorioDeClientes } from '../puertos.js';
+import type {
+  AltaDeCliente,
+  CamposEditablesDeCliente,
+  ClienteListado,
+  RepositorioDeClientes,
+} from '../puertos.js';
 import type { PrismaClient } from './prisma.js';
 
-const CAMPOS = { id: true, nombre: true, ruc: true, activo: true } as const;
+const CAMPOS = {
+  id: true,
+  nombre: true,
+  ruc: true,
+  tipoPersona: true,
+  regimenTributario: true,
+  email: true,
+  telefono: true,
+  canalPreferido: true,
+  carpetaOneDriveId: true,
+  activo: true,
+  observaciones: true,
+} as const;
 
 /**
  * Traduce el filtro de cartera a una condición de Prisma.
@@ -33,7 +50,7 @@ export class ClientesPrisma implements RepositorioDeClientes {
       where: { ...condicionDeCartera(filtro) },
       select: CAMPOS,
       orderBy: { nombre: 'asc' },
-    });
+    }) as Promise<ClienteListado[]>;
   }
 
   async buscarPorId(id: string, filtro: readonly string[] | null): Promise<ClienteListado | null> {
@@ -43,11 +60,52 @@ export class ClientesPrisma implements RepositorioDeClientes {
     // perdería el identificador pedido y devolvería cualquier cliente de la
     // cartera. Lo detectó el test de integración; con dobles de prueba no
     // aparecía, porque el doble implementaba la lógica a mano y correctamente.
-    return this.prisma.cliente.findFirst({
+    const fila = await this.prisma.cliente.findFirst({
       where: {
         AND: [{ id }, ...(filtro === null ? [] : [{ id: { in: [...filtro] } }])],
       },
       select: CAMPOS,
     });
+    return fila as ClienteListado | null;
+  }
+
+  /** Sin filtro de cartera: se usa para la comprobación de RUC único antes de crear. */
+  async buscarPorRuc(ruc: string): Promise<ClienteListado | null> {
+    const fila = await this.prisma.cliente.findUnique({ where: { ruc }, select: CAMPOS });
+    return fila as ClienteListado | null;
+  }
+
+  async crear(datos: AltaDeCliente): Promise<ClienteListado> {
+    const fila = await this.prisma.cliente.create({
+      data: {
+        nombre: datos.nombre,
+        ruc: datos.ruc,
+        tipoPersona: datos.tipoPersona as never,
+        regimenTributario: datos.regimenTributario,
+        email: datos.email,
+        telefono: datos.telefono,
+        canalPreferido: datos.canalPreferido,
+        observaciones: datos.observaciones,
+        creadoPorUsuarioId: datos.creadoPorUsuarioId,
+        actualizadoPorUsuarioId: datos.creadoPorUsuarioId,
+      },
+      select: CAMPOS,
+    });
+    return fila as ClienteListado;
+  }
+
+  async actualizar(
+    id: string,
+    cambios: CamposEditablesDeCliente,
+    actorId: string,
+  ): Promise<ClienteListado> {
+    const fila = await this.prisma.cliente.update({
+      where: { id },
+      // Los campos llegan ya validados por Zod estricto en la ruta: solo puede
+      // haber claves de la lista permitida.
+      data: { ...cambios, actualizadoPorUsuarioId: actorId } as never,
+      select: CAMPOS,
+    });
+    return fila as ClienteListado;
   }
 }

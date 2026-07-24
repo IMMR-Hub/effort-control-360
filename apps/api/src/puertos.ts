@@ -132,13 +132,63 @@ export interface ClienteListado {
   readonly id: string;
   readonly nombre: string;
   readonly ruc: string;
+  readonly tipoPersona: string;
+  readonly regimenTributario: string | null;
+  readonly email: string | null;
+  readonly telefono: string | null;
+  readonly canalPreferido: string | null;
+  readonly carpetaOneDriveId: string | null;
   readonly activo: boolean;
+  readonly observaciones: string | null;
 }
+
+export interface AltaDeCliente {
+  readonly nombre: string;
+  readonly ruc: string;
+  readonly tipoPersona: string;
+  readonly regimenTributario: string | null;
+  readonly email: string | null;
+  readonly telefono: string | null;
+  readonly canalPreferido: string | null;
+  readonly observaciones: string | null;
+  readonly creadoPorUsuarioId: string;
+}
+
+/**
+ * Campos editables de un cliente. A diferencia de reglas impositivas, acá no
+ * hay ninguna fila histórica que una edición pueda reescribir: los documentos,
+ * vencimientos y balances de un cliente referencian su `id`, no su RUC ni su
+ * nombre, así que corregir un RUC mal tipeado en la carga inicial no altera
+ * nada de lo ya calculado. Por eso todo el campo, incluido `ruc`, es editable.
+ *
+ * `clienteId`/asignación de equipo no está acá: quién lleva un cliente se
+ * gestiona desde el lado del usuario (`reemplazarCartera`, tarea 83), no
+ * desde acá — un solo lugar escribe `asignacion_cliente`.
+ */
+export type CamposEditablesDeCliente = {
+  nombre?: string | undefined;
+  ruc?: string | undefined;
+  tipoPersona?: string | undefined;
+  regimenTributario?: string | null | undefined;
+  email?: string | null | undefined;
+  telefono?: string | null | undefined;
+  canalPreferido?: string | null | undefined;
+  carpetaOneDriveId?: string | null | undefined;
+  activo?: boolean | undefined;
+  observaciones?: string | null | undefined;
+};
 
 export interface RepositorioDeClientes {
   /** `filtro` en null significa cartera completa; un arreglo, solo esos clientes. */
   listar(filtro: readonly string[] | null): Promise<ClienteListado[]>;
   buscarPorId(id: string, filtro: readonly string[] | null): Promise<ClienteListado | null>;
+  buscarPorRuc(ruc: string): Promise<ClienteListado | null>;
+  crear(datos: AltaDeCliente): Promise<ClienteListado>;
+  actualizar(
+    id: string,
+    cambios: CamposEditablesDeCliente,
+    actorId: string,
+  ): Promise<ClienteListado>;
 }
 
 export interface ContactoAlmacenado {

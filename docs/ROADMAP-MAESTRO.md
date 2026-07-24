@@ -38,9 +38,9 @@ grep -c "^- \[ \]" <(sed -n '/## PARTE X/,/## PARTE X+1/p' docs/ROADMAP-MAESTRO.
 
 Si da 0, cerrada. Si no, no.
 
-**Avance: 85 de 112 tareas (76%).** Partes 1, 2, 3, 4A, 4B, 4C y 4D cerradas. Quedan 3 tareas bloqueadas por EFFORT (2 de carga de datos + el registro en Azure AD), que no frenan el código.
+**Avance: 86 de 113 tareas (76%).** Partes 1, 2, 3, 4A, 4B, 4C, 4D y 4E cerradas. Quedan 3 tareas bloqueadas por EFFORT (2 de carga de datos + el registro en Azure AD), que no frenan el código.
 
-Última actualización: 2026-07-23 · Commit de referencia: ver último commit en `git log`
+Última actualización: 2026-07-24 · Commit de referencia: ver último commit en `git log`
 
 > El total **no es un número fijo**: sube y baja a medida que el alcance de cada
 > parte se vuelve concreto. Si agregás, quitás o insertás una tarea, **renumerá
@@ -255,19 +255,29 @@ bug de `buscarPorId`.
 
 ---
 
+### 4E — Clientes (alta y edición) (COMPLETA)
+
+Tarea nueva, descubierta el 2026-07-24 al comparar la estructura de carpetas que Laura y Lili iban a preparar contra el sistema real: **no existía ninguna ruta para dar de alta un cliente.** Solo se podía listar y buscar uno ya cargado — sin esto, los 5 clientes piloto no se podían cargar de ningún modo, aunque EFFORT confirmara mañana mismo los datos. No estaba señalado como bloqueante en ningún lado hasta que se encontró leyendo el código repositorio por repositorio.
+
+- [x] 87. Alta y edición de clientes (dirección y responsable). `GET/POST /api/v1/clientes`, `GET/PATCH /api/v1/clientes/:id`. Antes estas dos rutas GET vivían sueltas dentro de `rutas/contactos.ts` (quedó de cuando se armaron los primeros endpoints de contacto); se movieron a un archivo propio junto con las rutas nuevas de alta/edición, para que `clientes.ts` sea el único dueño del recurso. Todo campo es editable, incluido el RUC — a diferencia de reglas impositivas, ningún registro de documento, vencimiento o balance referencia el RUC o el nombre de un cliente, solo su `id`, así que corregir un RUC mal tipeado en la carga inicial no reescribe nada ya calculado. La asignación de responsable/coordinador/auxiliar/revisor por cliente sigue viviendo del lado del usuario (`reemplazarCartera`, tarea 83) — un solo lugar escribe `asignacion_cliente`. 21 tests de módulo + 6 de integración, más los tests preexistentes de `servidor.test.ts`/`siga.test.ts` adaptados al traslado de rutas.
+
+  **Verificación:** `npm run verify` → exit 0, 13 OK / 3 pendientes declarados / 0 fallidos — hecho el 2026-07-24.
+
+---
+
 ## PARTE 5 — Importadores desde OneDrive
 
-- [ ] 87. Registrar la aplicación en Azure AD (requiere que EFFORT cree la cuenta `sistema.effort360@...`) — **bloqueada, no depende de nosotros**
-- [x] 88. Implementar `packages/drive` — adaptador Microsoft Graph API + adaptador falso para tests. Puerto único `DriveDeArchivos` (`listar`/`leer`/`escribir`) con dos implementaciones: `DriveFalso` (en memoria, para tests) y `DriveGraph` (real, sin dependencias nuevas — usa `fetch` nativo de Node para el flujo OAuth2 de client credentials, documentado por Microsoft). `DriveGraph` sigue sin poder probarse de punta a punta porque la tarea 87 sigue bloqueada; sus 8 tests reemplazan `fetch` global y verifican que arma las peticiones correctas, no que Microsoft las acepte. 14 tests en total.
+- [ ] 88. Registrar la aplicación en Azure AD (requiere que EFFORT cree la cuenta `sistema.effort360@...`) — **bloqueada, no depende de nosotros**
+- [x] 89. Implementar `packages/drive` — adaptador Microsoft Graph API + adaptador falso para tests. Puerto único `DriveDeArchivos` (`listar`/`leer`/`escribir`) con dos implementaciones: `DriveFalso` (en memoria, para tests) y `DriveGraph` (real, sin dependencias nuevas — usa `fetch` nativo de Node para el flujo OAuth2 de client credentials, documentado por Microsoft). `DriveGraph` sigue sin poder probarse de punta a punta porque la tarea 88 sigue bloqueada; sus 8 tests reemplazan `fetch` global y verifican que arma las peticiones correctas, no que Microsoft las acepte. 14 tests en total.
 
   **Corregido de paso:** el check `verify:drive` en `scripts/verify.mjs` invocaba `npm run verify:drive --workspace @effort/drive`, un comando que una sesión anterior escribió como placeholder (`pendiente: 'packages/drive todavía no existe.'`) sin poder probarlo porque el paquete no existía. Al crear el paquete se comprobó que ese comando falla (`vitest run --project drive` resuelve mal las rutas cuando corre con cwd en un subdirectorio del monorepo) — se cambió a `npx vitest run --project drive` desde la raíz, igual que todos los demás checks del archivo.
 
   **Verificación:** `npm run verify` → exit 0, 13 OK / 3 pendientes declarados / 0 fallidos — hecho el 2026-07-23 (segundo intento; el primero falló por el problema intermitente de concurrencia contra Supabase ya documentado). `verify:drive` deja de estar pendiente.
-- [ ] 89. Espejo automático hacia el OneDrive de respaldo, con manifiesto sha256
-- [ ] 90. Importador de comprobantes (Excel/CSV) con reporte de filas aceptadas/rechazadas
-- [ ] 91. Importador de exportaciones SIGA
-- [ ] 92. Modo simulación (`dry-run`) obligatorio antes de escribir en la base
-- [ ] 93. Idempotencia verificada: importar el mismo archivo dos veces no duplica
+- [ ] 90. Espejo automático hacia el OneDrive de respaldo, con manifiesto sha256
+- [ ] 91. Importador de comprobantes (Excel/CSV) con reporte de filas aceptadas/rechazadas
+- [ ] 92. Importador de exportaciones SIGA
+- [ ] 93. Modo simulación (`dry-run`) obligatorio antes de escribir en la base
+- [ ] 94. Idempotencia verificada: importar el mismo archivo dos veces no duplica
 
 **Verificación:** `npm run verify:drive` → exit 0 contra el adaptador real (o falso si Azure AD no está listo)
 
@@ -275,11 +285,11 @@ bug de `buscarPorId`.
 
 ## PARTE 6 — Despachador de notificaciones
 
-- [ ] 94. Proveedor de envío de correo (a definir: Resend, SES, o el que EFFORT prefiera)
-- [ ] 95. Job programado que corre `planificarProximoRecordatorio` sobre todas las solicitudes abiertas
-- [ ] 96. Registro automático en `registro_contacto` con `origen=AUTOMATICO` por cada envío real
-- [ ] 97. Registro en `envio_notificacion` con el id del proveedor, para poder auditar contra su panel
-- [ ] 98. Manejo de fallos de envío (reintento, alerta a dirección si un correo rebota)
+- [ ] 95. Proveedor de envío de correo (a definir: Resend, SES, o el que EFFORT prefiera)
+- [ ] 96. Job programado que corre `planificarProximoRecordatorio` sobre todas las solicitudes abiertas
+- [ ] 97. Registro automático en `registro_contacto` con `origen=AUTOMATICO` por cada envío real
+- [ ] 98. Registro en `envio_notificacion` con el id del proveedor, para poder auditar contra su panel
+- [ ] 99. Manejo de fallos de envío (reintento, alerta a dirección si un correo rebota)
 
 **Verificación:** test de integración con proveedor de correo en modo sandbox
 
@@ -287,12 +297,12 @@ bug de `buscarPorId`.
 
 ## PARTE 7 — Interfaz completa contra la API real
 
-- [ ] 99. Cliente HTTP tipado en `apps/web`, con manejo de sesión/CSRF
-- [ ] 100. Reemplazar `datos-semilla/` por llamadas reales a la API
-- [ ] 101. Pantalla de login con flujo de 2FA en dos pasos
-- [ ] 102. Las 12 pantallas del handoff, una por una, contra datos reales
-- [ ] 103. Retirar por completo `apps/App.jsx` (la demo original) una vez que todas las pantallas tengan reemplazo
-- [ ] 104. `verify:no-hardcoded-kpi` — ningún número escrito a mano en la interfaz
+- [ ] 100. Cliente HTTP tipado en `apps/web`, con manejo de sesión/CSRF
+- [ ] 101. Reemplazar `datos-semilla/` por llamadas reales a la API
+- [ ] 102. Pantalla de login con flujo de 2FA en dos pasos
+- [ ] 103. Las 12 pantallas del handoff, una por una, contra datos reales
+- [ ] 104. Retirar por completo `apps/App.jsx` (la demo original) una vez que todas las pantallas tengan reemplazo
+- [ ] 105. `verify:no-hardcoded-kpi` — ningún número escrito a mano en la interfaz
 
 **Verificación:** `npm run test:e2e` (Playwright) → exit 0
 
@@ -300,19 +310,19 @@ bug de `buscarPorId`.
 
 ## PARTE 8 — Despliegue
 
-- [ ] 105. Crear la app en DigitalOcean App Platform, conectada al repositorio
-- [ ] 106. Configurar variables de entorno de producción (secretos distintos a los de desarrollo)
-- [ ] 107. Configurar el subdominio `effort360.disaak.com` (registro CNAME)
-- [ ] 108. Verificar HTTPS y que `ORIGEN_PERMITIDO`/cookies funcionan en producción
-- [ ] 109. Corrida de humo completa en producción con el usuario real de dirección
+- [ ] 106. Crear la app en DigitalOcean App Platform, conectada al repositorio
+- [ ] 107. Configurar variables de entorno de producción (secretos distintos a los de desarrollo)
+- [ ] 108. Configurar el subdominio `effort360.disaak.com` (registro CNAME)
+- [ ] 109. Verificar HTTPS y que `ORIGEN_PERMITIDO`/cookies funcionan en producción
+- [ ] 110. Corrida de humo completa en producción con el usuario real de dirección
 
 ---
 
 ## PARTE 9 — Validación final con EFFORT
 
-- [ ] 110. Contrastar el cálculo de IVA contra una liquidación real ya presentada (cierra la discrepancia #1 de `docs/DISCREPANCIAS.md`)
-- [ ] 111. Confirmar los 5 clientes piloto definitivos con Laura/Lili
-- [ ] 112. Primera revisión guiada con EFFORT: los 12 módulos, en vivo, con sus propios datos
+- [ ] 111. Contrastar el cálculo de IVA contra una liquidación real ya presentada (cierra la discrepancia #1 de `docs/DISCREPANCIAS.md`)
+- [ ] 112. Confirmar los 5 clientes piloto definitivos con Laura/Lili
+- [ ] 113. Primera revisión guiada con EFFORT: los 12 módulos, en vivo, con sus propios datos
 
 ---
 

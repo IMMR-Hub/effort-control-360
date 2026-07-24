@@ -21,6 +21,7 @@ import { NOMBRE_COOKIE_SESION } from '../src/seguridad/sesiones.js';
 import type { Configuracion } from '../src/configuracion.js';
 import {
   BitacoraFalsa,
+  clienteMinimo,
   ClientesFalsos,
   ContactosFalsos,
   SesionesFalsas,
@@ -78,8 +79,8 @@ async function montar(): Promise<Contexto> {
   usuarios.asignaciones.set('usr-auxiliar', [MIO]);
 
   clientes.clientes.push(
-    { id: MIO, nombre: 'GARSO S.A.', ruc: '80017726-6', activo: true },
-    { id: AJENO, nombre: 'CLIENTE AJENO S.A.', ruc: '80019012-2', activo: true },
+    clienteMinimo({ id: MIO, nombre: 'GARSO S.A.', ruc: '80017726-6', activo: true }),
+    clienteMinimo({ id: AJENO, nombre: 'CLIENTE AJENO S.A.', ruc: '80019012-2', activo: true }),
   );
 
   const deps: Dependencias = {

@@ -12,12 +12,14 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { construirServidor, type Dependencias } from '../src/servidor.js';
 import { registrarRutasDeAutenticacion } from '../src/rutas/autenticacion.js';
 import { registrarRutasDeContactos } from '../src/rutas/contactos.js';
+import { registrarRutasDeClientes } from '../src/rutas/clientes.js';
 import { hashearContrasena } from '../src/seguridad/credenciales.js';
 import { AlmacenEnMemoria } from '../src/seguridad/limites.js';
 import { NOMBRE_COOKIE_SESION } from '../src/seguridad/sesiones.js';
 import type { Configuracion } from '../src/configuracion.js';
 import {
   BitacoraFalsa,
+  clienteMinimo,
   BitacoraRota,
   ClientesFalsos,
   ContactosFalsos,
@@ -88,8 +90,8 @@ async function montar(opciones: { bitacoraRota?: boolean } = {}): Promise<Contex
   usuarios.asignaciones.set('usr-auxiliar', [CLIENTE_ASIGNADO]);
 
   clientes.clientes.push(
-    { id: CLIENTE_ASIGNADO, nombre: 'GARSO S.A.', ruc: '80017726-6', activo: true },
-    { id: CLIENTE_AJENO, nombre: 'CLIENTE AJENO S.A.', ruc: '80019012-2', activo: true },
+    clienteMinimo({ id: CLIENTE_ASIGNADO, nombre: 'GARSO S.A.', ruc: '80017726-6', activo: true }),
+    clienteMinimo({ id: CLIENTE_AJENO, nombre: 'CLIENTE AJENO S.A.', ruc: '80019012-2', activo: true }),
   );
 
   const deps: Dependencias = {
@@ -112,6 +114,7 @@ async function montar(opciones: { bitacoraRota?: boolean } = {}): Promise<Contex
   const app = await construirServidor(deps);
   await registrarRutasDeAutenticacion(app, deps);
   await registrarRutasDeContactos(app, deps);
+  await registrarRutasDeClientes(app, deps);
   await app.ready();
 
   return { app, deps, usuarios, clientes, contactos, bitacora };

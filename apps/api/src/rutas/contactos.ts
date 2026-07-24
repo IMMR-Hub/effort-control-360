@@ -1,5 +1,5 @@
 /**
- * Clientes y bitácora de contactos.
+ * Bitácora de contactos y constancia de gestión.
  *
  * Cada ruta hace lo mismo, en el mismo orden, sin excepción:
  *   1. exige sesión;
@@ -20,7 +20,7 @@ import { crearRegistroContactoSchema, idSchema, periodoSchema } from '@effort/sc
 
 import { ACCIONES, registrarEvento } from '../bitacora.js';
 import { ErrorDeAplicacion, exigirSesion, type Dependencias } from '../servidor.js';
-import { exigirPermiso, filtroDeClientes } from '../seguridad/rbac.js';
+import { exigirPermiso } from '../seguridad/rbac.js';
 
 const parametrosDeCliente = z.object({ clienteId: idSchema }).strict();
 const consultaDePeriodo = z.object({ periodo: periodoSchema.optional() }).strict();
@@ -29,39 +29,6 @@ export async function registrarRutasDeContactos(
   app: FastifyInstance,
   deps: Dependencias,
 ): Promise<void> {
-  /* --- Clientes ----------------------------------------------------------- */
-
-  app.get('/api/v1/clientes', async (peticion) => {
-    const sujeto = exigirSesion(peticion);
-    exigirPermiso(sujeto, 'cliente', 'ver');
-
-    // El filtro no es opcional: viaja hasta la consulta. Un usuario sin
-    // clientes asignados recibe una lista vacía, no la cartera completa.
-    const clientes = await deps.clientes.listar(filtroDeClientes(sujeto));
-    return { clientes };
-  });
-
-  app.get('/api/v1/clientes/:clienteId', async (peticion) => {
-    const sujeto = exigirSesion(peticion);
-    const { clienteId } = parametrosDeCliente.parse(peticion.params);
-
-    // Se comprueba el permiso de rol, pero deliberadamente NO se pasa el
-    // clienteId: eso daría 403 y confirmaría que el identificador corresponde
-    // a algo. El alcance de cartera se aplica en la consulta, y un cliente
-    // fuera de la cartera vuelve como `null`, igual que uno inexistente.
-    exigirPermiso(sujeto, 'cliente', 'ver');
-
-    const cliente = await deps.clientes.buscarPorId(clienteId, filtroDeClientes(sujeto));
-
-    // Mismo 404 para "no existe" y para "no tenés acceso": sin esa distinción
-    // no hay forma de sondear qué clientes tiene EFFORT en cartera.
-    if (!cliente) {
-      throw new ErrorDeAplicacion(404, 'Recurso inexistente.', 'no_encontrado');
-    }
-
-    return { cliente };
-  });
-
   /* --- Bitácora de contactos ---------------------------------------------- */
 
   app.get('/api/v1/clientes/:clienteId/contactos', async (peticion) => {

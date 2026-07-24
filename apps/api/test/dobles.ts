@@ -20,7 +20,9 @@ import type {
 } from '../src/bitacora.js';
 import type { Sesion } from '../src/seguridad/sesiones.js';
 import type {
+  AltaDeCliente,
   AltaDeUsuario,
+  CamposEditablesDeCliente,
   CamposEditablesDeUsuario,
   ClienteListado,
   ContactoAlmacenado,
@@ -185,6 +187,25 @@ export class SesionesFalsas implements RepositorioDeSesiones {
   }
 }
 
+/**
+ * Completa un fixture de cliente con los campos que la mayoría de los tests
+ * no necesita variar, para no repetirlos en cada `push`.
+ */
+export function clienteMinimo(
+  datos: Pick<ClienteListado, 'id' | 'nombre' | 'ruc' | 'activo'>,
+): ClienteListado {
+  return {
+    ...datos,
+    tipoPersona: 'JURIDICA',
+    regimenTributario: null,
+    email: null,
+    telefono: null,
+    canalPreferido: null,
+    carpetaOneDriveId: null,
+    observaciones: null,
+  };
+}
+
 export class ClientesFalsos implements RepositorioDeClientes {
   readonly clientes: ClienteListado[] = [];
 
@@ -198,6 +219,35 @@ export class ClientesFalsos implements RepositorioDeClientes {
     if (!cliente) return null;
     if (filtro !== null && !filtro.includes(id)) return null;
     return cliente;
+  }
+
+  async buscarPorRuc(ruc: string): Promise<ClienteListado | null> {
+    return this.clientes.find((candidato) => candidato.ruc === ruc) ?? null;
+  }
+
+  async crear(datos: AltaDeCliente): Promise<ClienteListado> {
+    const cliente: ClienteListado = {
+      id: randomUUID(),
+      nombre: datos.nombre,
+      ruc: datos.ruc,
+      tipoPersona: datos.tipoPersona,
+      regimenTributario: datos.regimenTributario,
+      email: datos.email,
+      telefono: datos.telefono,
+      canalPreferido: datos.canalPreferido,
+      carpetaOneDriveId: null,
+      activo: true,
+      observaciones: datos.observaciones,
+    };
+    this.clientes.push(cliente);
+    return cliente;
+  }
+
+  async actualizar(id: string, cambios: CamposEditablesDeCliente): Promise<ClienteListado> {
+    const indice = this.clientes.findIndex((candidato) => candidato.id === id);
+    const actualizado: ClienteListado = { ...this.clientes[indice]!, ...cambios };
+    this.clientes[indice] = actualizado;
+    return actualizado;
   }
 }
 
