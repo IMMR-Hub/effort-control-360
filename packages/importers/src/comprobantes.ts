@@ -14,21 +14,23 @@
  * ajustar el día que aparezca una planilla real.
  */
 
-import ExcelJS from 'exceljs';
-import { parse as parseCsvSync } from 'csv-parse/sync';
-
 import {
   detectarDuplicados,
-  ErrorDeDinero,
-  ErrorDeFecha,
-  fechaCivilDesdeIso,
-  gs,
   type Comprobante,
   type FechaCivil,
   type OrigenComprobante,
   type TipoComprobante,
 } from '@effort/core';
 import { rucSchema } from '@effort/schema';
+
+import {
+  fechaCivilDeCelda,
+  filaVacia,
+  leerFilas,
+  normalizarEncabezado,
+  textoDeCelda,
+  totalDeCelda,
+} from './archivo.js';
 
 const TIPOS_COMPROBANTE: readonly TipoComprobante[] = [
   'FACTURA',
@@ -48,8 +50,19 @@ const TASAS: readonly Comprobante['tasa'][] = ['DIEZ', 'CINCO', 'EXENTA'];
 const VALORES_ANULADO_SI = new Set(['SI', 'SÍ', 'TRUE', '1', 'X']);
 const VALORES_ANULADO_NO = new Set(['NO', 'FALSE', '0', '']);
 
-/** Encabezado canónico → nombres de columna aceptados (normalizados: mayúsculas, sin acentos, sin espacios extra). */
-const ENCABEZADOS: Readonly<Record<string, string>> = {
+type CampoCanonico =
+  | 'rucEmisor'
+  | 'timbrado'
+  | 'numero'
+  | 'tipo'
+  | 'origen'
+  | 'fecha'
+  | 'total'
+  | 'tasa'
+  | 'anulado';
+
+/** Encabezado normalizado (mayúsculas, sin acentos, sin espacios extra) → campo canónico. */
+const ENCABEZADOS: Readonly<Record<string, CampoCanonico>> = {
   'RUC EMISOR': 'rucEmisor',
   'RUC DEL EMISOR': 'rucEmisor',
   TIMBRADO: 'timbrado',
@@ -62,17 +75,6 @@ const ENCABEZADOS: Readonly<Record<string, string>> = {
   TASA: 'tasa',
   ANULADO: 'anulado',
 };
-
-type CampoCanonico =
-  | 'rucEmisor'
-  | 'timbrado'
-  | 'numero'
-  | 'tipo'
-  | 'origen'
-  | 'fecha'
-  | 'total'
-  | 'tasa'
-  | 'anulado';
 
 type FilaCanonica = Partial<Record<CampoCanonico, unknown>>;
 
@@ -89,58 +91,6 @@ export interface ReporteImportacionComprobantes {
   readonly rechazados: readonly FilaRechazada[];
 }
 
-export class ErrorDeImportacion extends Error {
-  override readonly name = 'ErrorDeImportacion';
-}
-
-function normalizarEncabezado(texto: string): string {
-  return texto
-    .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
-    .trim()
-    .toUpperCase()
-    .replace(/\s+/g, ' ');
-}
-
-function filaVacia(valores: Readonly<Record<string, unknown>>): boolean {
-  return Object.values(valores).every(
-    (valor) => valor === null || valor === undefined || String(valor).trim() === '',
-  );
-}
-
-function textoDeCelda(valor: unknown): string {
-  if (valor === null || valor === undefined) return '';
-  if (valor instanceof Date) return valor.toISOString();
-  if (typeof valor === 'object' && 'text' in (valor as Record<string, unknown>)) {
-    return String((valor as { text: unknown }).text ?? '');
-  }
-  if (typeof valor === 'object' && 'result' in (valor as Record<string, unknown>)) {
-    return String((valor as { result: unknown }).result ?? '');
-  }
-  return String(valor).trim();
-}
-
-function fechaCivilDeCelda(valor: unknown): FechaCivil {
-  if (valor instanceof Date) {
-    return { anio: valor.getUTCFullYear(), mes: valor.getUTCMonth() + 1, dia: valor.getUTCDate() };
-  }
-  const texto = textoDeCelda(valor);
-  if (!texto) {
-    throw new ErrorDeFecha('Fecha vacía.');
-  }
-  return fechaCivilDesdeIso(texto);
-}
-
-/** `gs()` ya exige dígitos enteros sin separadores: una celda numérica de Excel no tiene ambigüedad, una celda de texto con puntos/comas se rechaza en vez de adivinar el separador. */
-function totalDeCelda(valor: unknown): Comprobante['total'] {
-  if (typeof valor === 'number') return gs(valor);
-  const texto = textoDeCelda(valor);
-  if (!texto) {
-    throw new ErrorDeDinero('Total vacío.');
-  }
-  return gs(texto);
-}
-
 function anuladoDeCelda(valor: unknown, problemas: string[]): boolean {
   const texto = normalizarEncabezado(textoDeCelda(valor));
   if (VALORES_ANULADO_SI.has(texto)) return true;
@@ -151,7 +101,14 @@ function anuladoDeCelda(valor: unknown, problemas: string[]): boolean {
 
 function validarFila(
   valores: FilaCanonica,
-): { comprobante: Omit<Comprobante, 'total' | 'tasa' | 'fecha'>; total: Comprobante['total']; tasa: Comprobante['tasa']; fecha: FechaCivil } | { motivo: string } {
+):
+  | {
+      comprobante: Omit<Comprobante, 'total' | 'tasa' | 'fecha'>;
+      total: Comprobante['total'];
+      tasa: Comprobante['tasa'];
+      fecha: FechaCivil;
+    }
+  | { motivo: string } {
   const problemas: string[] = [];
 
   const rucEmisor = textoDeCelda(valores.rucEmisor);
@@ -169,7 +126,9 @@ function validarFila(
   const tipoTexto = normalizarEncabezado(textoDeCelda(valores.tipo));
   const tipo = TIPOS_COMPROBANTE.find((candidato) => candidato === tipoTexto);
   if (!tipo) {
-    problemas.push(`Tipo inválido: "${textoDeCelda(valores.tipo)}" (se espera uno de: ${TIPOS_COMPROBANTE.join(', ')}).`);
+    problemas.push(
+      `Tipo inválido: "${textoDeCelda(valores.tipo)}" (se espera uno de: ${TIPOS_COMPROBANTE.join(', ')}).`,
+    );
   }
 
   const origenTexto = normalizarEncabezado(textoDeCelda(valores.origen));
@@ -221,94 +180,18 @@ function validarFila(
   };
 }
 
-interface FilaCruda {
-  readonly numeroFila: number;
-  readonly canonica: FilaCanonica;
-  readonly original: Readonly<Record<string, unknown>>;
-}
-
-async function filasDesdeExcel(contenido: Buffer): Promise<FilaCruda[]> {
-  const libro = new ExcelJS.Workbook();
-  // El .d.ts de exceljs declara su propio `Buffer` local como alias casi
-  // vacío de `ArrayBuffer`, incompatible en tipos con el Buffer real de Node
-  // (defecto del paquete, no del código propio: en tiempo de ejecución acepta
-  // un Buffer normal sin problema). Se referencia su tipo de parámetro real
-  // vía `Parameters<>` en vez de `any`, para no perder el chequeo del resto
-  // de los argumentos si la firma cambia en una futura versión.
-  await libro.xlsx.load(contenido as unknown as Parameters<typeof libro.xlsx.load>[0]);
-  const hoja = libro.worksheets[0];
-  if (!hoja) {
-    throw new ErrorDeImportacion('El archivo Excel no tiene ninguna hoja.');
-  }
-
-  const encabezados = new Map<number, CampoCanonico | null>();
-  const encabezadosOriginales = new Map<number, string>();
-  const filaEncabezado = hoja.getRow(1);
-  filaEncabezado.eachCell({ includeEmpty: false }, (celda, columna) => {
-    const texto = normalizarEncabezado(textoDeCelda(celda.value));
-    encabezadosOriginales.set(columna, texto);
-    encabezados.set(columna, (ENCABEZADOS[texto] as CampoCanonico | undefined) ?? null);
-  });
-
-  const filas: FilaCruda[] = [];
-  hoja.eachRow({ includeEmpty: false }, (fila, numeroFila) => {
-    if (numeroFila === 1) return;
-
-    const canonica: FilaCanonica = {};
-    const original: Record<string, unknown> = {};
-    fila.eachCell({ includeEmpty: true }, (celda, columna) => {
-      const campo = encabezados.get(columna);
-      const nombreOriginal = encabezadosOriginales.get(columna) ?? `COLUMNA_${columna}`;
-      original[nombreOriginal] = celda.value;
-      if (campo) canonica[campo] = celda.value;
-    });
-
-    filas.push({ numeroFila, canonica, original });
-  });
-
-  return filas;
-}
-
-function filasDesdeCsv(contenido: Buffer): FilaCruda[] {
-  const registros = parseCsvSync(contenido, {
-    columns: false,
-    skip_empty_lines: false,
-    trim: true,
-  }) as string[][];
-
-  const [encabezadoCrudo, ...datos] = registros;
-  if (!encabezadoCrudo) {
-    throw new ErrorDeImportacion('El archivo CSV no tiene encabezado.');
-  }
-
-  const columnas = encabezadoCrudo.map((texto) => normalizarEncabezado(texto));
-
-  return datos.map((valores, indice) => {
-    const canonica: FilaCanonica = {};
-    const original: Record<string, unknown> = {};
-    columnas.forEach((nombre, posicion) => {
-      const valor = valores[posicion] ?? '';
-      original[nombre] = valor;
-      const campo = ENCABEZADOS[nombre] as CampoCanonico | undefined;
-      if (campo) canonica[campo] = valor;
-    });
-
-    return { numeroFila: indice + 2, canonica, original };
-  });
-}
-
-function esCsv(nombreArchivo: string): boolean {
-  return nombreArchivo.trim().toLowerCase().endsWith('.csv');
-}
-
 export async function importarComprobantes(
   contenido: Buffer,
   nombreArchivo: string,
 ): Promise<ReporteImportacionComprobantes> {
-  const filas = esCsv(nombreArchivo) ? filasDesdeCsv(contenido) : await filasDesdeExcel(contenido);
+  const filas = await leerFilas(contenido, nombreArchivo, ENCABEZADOS);
 
   const rechazados: FilaRechazada[] = [];
-  const candidatos: { numeroFila: number; comprobante: Comprobante; original: Readonly<Record<string, unknown>> }[] = [];
+  const candidatos: {
+    numeroFila: number;
+    comprobante: Comprobante;
+    original: Readonly<Record<string, unknown>>;
+  }[] = [];
 
   for (const fila of filas) {
     if (filaVacia(fila.original)) {

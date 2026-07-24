@@ -7,4 +7,6 @@
  * listos para que una capa posterior decida qué hacer con ellos.
  */
 
+export * from './archivo.js';
 export * from './comprobantes.js';
+export * from './siga.js';

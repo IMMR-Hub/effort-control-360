@@ -211,3 +211,30 @@ ciegas.
 **Cómo se cierra:** conseguir una planilla real de comprobantes de EFFORT (aunque
 sea de un mes viejo) y correr el importador contra ella. Ajustar `ENCABEZADOS`
 y los valores aceptados de Tipo/Origen/Tasa/Anulado según lo que aparezca.
+
+---
+
+## 11. Layout de columnas del importador de exportaciones SIGA — SIN CONFIRMAR
+
+**Qué se asumió:** igual que el punto 10, pero para `importarExportacionSiga()`
+en `packages/importers/src/siga.ts` (tarea 92). Sin un archivo real exportado
+por SIGA, se asumieron estas columnas:
+
+| Columna esperada | Campo |
+|---|---|
+| RUC Emisor / RUC del Emisor | `rucEmisor` |
+| Timbrado | `timbrado` |
+| Numero Comprobante / Numero de Comprobante / Numero | `numeroComprobante` |
+| Total | `total` |
+| Tasa (DIEZ, CINCO, EXENTA) | `tasa` |
+| Anulado (SI/NO) | `anulado` |
+| Fecha | `fecha` |
+
+A diferencia del importador de comprobantes, acá no hay columna de Tipo ni de
+Origen: un reporte exportado de SIGA ya es "libro de compras" o "libro de
+ventas" entero — esa distinción se guarda en `tipoReporte` al registrar la
+exportación (`POST /api/v1/clientes/:clienteId/siga`), no fila por fila.
+
+**Cómo se cierra:** igual que el punto 10 — conseguir una exportación real de
+SIGA (cualquiera de los `tipoReporte` que ya acepta la ruta: libro de compras,
+libro de ventas, etc.) y ajustar `ENCABEZADOS` según sus columnas reales.
