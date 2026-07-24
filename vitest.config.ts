@@ -29,6 +29,14 @@ export default defineConfig({
       },
       {
         test: {
+          name: 'importers',
+          root: './packages/importers',
+          include: ['test/**/*.test.ts'],
+          environment: 'node',
+        },
+      },
+      {
+        test: {
           name: 'api',
           root: './apps/api',
           // Solo los tests que no tocan la base. Corren en milisegundos y no

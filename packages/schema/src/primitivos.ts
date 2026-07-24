@@ -78,11 +78,19 @@ export function calcularDigitoVerificadorRuc(numeroBase: string): number {
   return resto > 1 ? 11 - resto : 0;
 }
 
+const FORMATO_RUC = /^\d{1,8}-\d$/;
+
 export const rucSchema = z
   .string()
   .trim()
-  .regex(/^\d{1,8}-\d$/, 'Se espera un RUC con formato 80012345-6.')
+  .regex(FORMATO_RUC, 'Se espera un RUC con formato 80012345-6.')
   .refine((valor) => {
+    // Zod no corta la cadena de validaciones cuando el regex de arriba
+    // falla: este refine igual se ejecuta. Sin revalidar acá, un RUC sin
+    // dígitos (o sin guion) llega a calcularDigitoVerificadorRuc(), que
+    // lanza en vez de devolver `false` — convertiría un rechazo normal de
+    // safeParse() en una excepción sin capturar.
+    if (!FORMATO_RUC.test(valor)) return false;
     const [base, verificador] = valor.split('-') as [string, string];
     return calcularDigitoVerificadorRuc(base) === Number(verificador);
   }, 'El dígito verificador del RUC no corresponde.');

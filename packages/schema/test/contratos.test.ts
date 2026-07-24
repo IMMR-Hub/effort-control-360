@@ -50,6 +50,18 @@ describe('RUC paraguayo', () => {
       expect(() => rucSchema.parse(invalido)).toThrow();
     }
   });
+
+  it('safeParse nunca lanza para un RUC malformado: falla como validación, no como excepción', () => {
+    // Regresión: el refine de calcularDigitoVerificadorRuc() se ejecutaba
+    // incluso cuando el regex de formato ya había fallado, y esa función
+    // lanza (en vez de devolver false) cuando la base no tiene dígitos.
+    // Eso convertía cualquier RUC vacío o sin dígitos en un crash de
+    // safeParse(), que por contrato nunca debería lanzar.
+    for (const malformado of ['', 'ABC-1', '-', 'sin ruc', '   ']) {
+      const resultado = rucSchema.safeParse(malformado);
+      expect(resultado.success).toBe(false);
+    }
+  });
 });
 
 describe('fechas', () => {

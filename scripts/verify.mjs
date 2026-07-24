@@ -35,6 +35,7 @@ const CHECKS = [
   { nombre: 'verify:siga', comando: 'npx vitest run apps/api/test/siga.test.ts' },
   { nombre: 'test:integration', comando: 'npx vitest run --project integracion' },
   { nombre: 'verify:drive', comando: 'npx vitest run --project drive' },
+  { nombre: 'verify:importadores', comando: 'npx vitest run --project importers' },
   { nombre: 'verify:no-hardcoded-kpi', comando: 'node scripts/verificar-kpi.mjs', pendiente: 'apps/web todavía muestra los datos de la demo anterior.' },
   { nombre: 'test:e2e', comando: 'npx playwright test', pendiente: 'apps/web todavía no consume la API.' },
   { nombre: 'audit', comando: 'npm audit --audit-level=high' },

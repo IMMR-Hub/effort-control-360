@@ -179,3 +179,35 @@ comprobante — en vez de seguir usando la constante de `iva.ts`. Mientras tanto
 `DIVISOR_IVA_INCLUIDO` sigue siendo la única fuente real, y debería coincidir
 con lo que diga la fila vigente de `regla_impositiva` — si alguna vez
 divergen, hay que decidir cuál manda antes de calcular nada.
+
+---
+
+## 10. Layout de columnas del importador de comprobantes — SIN CONFIRMAR
+
+**Qué se asumió:** al construir `@effort/importers` (tarea 91, Parte 5) no
+había ningún archivo real de EFFORT para copiar el formato exacto, así que se
+definió un layout de columnas razonable pero inventado:
+
+| Columna esperada (acepta variantes de mayúsculas/acentos) | Campo |
+|---|---|
+| RUC Emisor / RUC del Emisor | `rucEmisor` |
+| Timbrado | `timbrado` |
+| Numero / Numero de comprobante | `numero` |
+| Tipo (FACTURA, NOTA_CREDITO, NOTA_DEBITO, RECIBO, RETENCION, EXTRACTO_BANCARIO, COMPROBANTE_PAGO, OTRO) | `tipo` |
+| Origen (COMPRA, VENTA) | `origen` |
+| Fecha (AAAA-MM-DD en CSV, celda de fecha en Excel) | `fecha` |
+| Total (celda numérica; si es texto, exige dígitos sin separadores) | `total` |
+| Tasa (DIEZ, CINCO, EXENTA) | `tasa` |
+| Anulado (SI/NO) | `anulado` |
+
+**Por qué importa:** si la planilla real de EFFORT usa otros nombres de
+columna, otro orden, u otros valores para Tipo/Origen/Tasa, el importador va a
+rechazar todas las filas hasta que se ajuste `ENCABEZADOS` en
+`packages/importers/src/comprobantes.ts`. No rompe nada — el reporte de
+rechazados va a explicar fila por fila qué no matcheó — pero conviene
+confirmarlo antes de usarlo con datos reales para no perder tiempo ajustando a
+ciegas.
+
+**Cómo se cierra:** conseguir una planilla real de comprobantes de EFFORT (aunque
+sea de un mes viejo) y correr el importador contra ella. Ajustar `ENCABEZADOS`
+y los valores aceptados de Tipo/Origen/Tasa/Anulado según lo que aparezca.
