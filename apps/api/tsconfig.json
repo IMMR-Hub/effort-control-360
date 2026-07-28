@@ -2,5 +2,9 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": { "rootDir": "./src", "outDir": "./dist" },
   "include": ["src/**/*.ts"],
-  "references": [{ "path": "../../packages/core" }, { "path": "../../packages/schema" }]
+  "references": [
+    { "path": "../../packages/core" },
+    { "path": "../../packages/schema" },
+    { "path": "../../packages/importers" }
+  ]
 }

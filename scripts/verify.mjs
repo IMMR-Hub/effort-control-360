@@ -33,6 +33,7 @@ const CHECKS = [
   { nombre: 'verify:servidor', comando: 'npx vitest run apps/api/test/servidor.test.ts' },
   { nombre: 'verify:modulos', comando: 'npx vitest run apps/api/test/modulos.test.ts' },
   { nombre: 'verify:siga', comando: 'npx vitest run apps/api/test/siga.test.ts' },
+  { nombre: 'verify:importaciones', comando: 'npx vitest run apps/api/test/importaciones.test.ts' },
   { nombre: 'test:integration', comando: 'npx vitest run --project integracion' },
   { nombre: 'verify:drive', comando: 'npx vitest run --project drive' },
   { nombre: 'verify:importadores', comando: 'npx vitest run --project importers' },

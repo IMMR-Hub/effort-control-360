@@ -21,6 +21,7 @@ import {
   magnitudDeLasDiferencias,
   type Comprobante,
 } from '@effort/core';
+import { importarExportacionSiga } from '@effort/importers';
 import {
   fechaIsoSchema,
   guaraniesSchema,
@@ -72,6 +73,21 @@ const importarExportacionSchema = z
     // Tope alto pero finito: un archivo con cien mil filas es un error de
     // origen, no un mes de trabajo, y sin tope agota la memoria del proceso.
     comprobantes: z.array(filaSigaSchema).max(20_000).default([]),
+  })
+  .strict();
+
+const MAXIMO_CARACTERES_BASE64 = 10_000_000; // ~7,5 MB decodificados: de sobra para una exportación SIGA.
+
+const importarArchivoSigaSchema = z
+  .object({
+    periodo: periodoSchema,
+    tipoReporte: importarExportacionSchema.shape.tipoReporte,
+    formato: importarExportacionSchema.shape.formato,
+    nombreArchivo: z.string().trim().min(1).max(200),
+    contenidoBase64: z.string().min(1).max(MAXIMO_CARACTERES_BASE64),
+    // Sin default a propósito: la tarea 93 exige que el modo sea explícito en
+    // cada llamada, nunca sobreentendido. Omitirlo es un 400, no un dry-run.
+    modo: z.enum(['simulacion', 'real']),
   })
   .strict();
 
@@ -185,6 +201,95 @@ export async function registrarRutasDeSiga(
     });
 
     return respuesta.code(201).send({ exportacion });
+  });
+
+  /**
+   * Importa una exportación SIGA desde un archivo Excel/CSV (tarea 93, Parte 5).
+   *
+   * `modo: 'simulacion'` corre `importarExportacionSiga` de `@effort/importers`
+   * y devuelve el reporte sin tocar la base. `modo: 'real'` registra la
+   * exportación completa con sus filas aceptadas en una sola llamada a
+   * `deps.exportacionesSiga.registrar()` — a diferencia del importador de
+   * comprobantes, esa operación ya es atómica (tarea 74): si fallara a mitad
+   * de camino, no queda una exportación con solo algunas filas cargadas.
+   *
+   * A diferencia de `documentos`, acá la idempotencia de la tarea 94 ya viene
+   * resuelta desde la tarea 74: `comprobante_siga` tiene una restricción única
+   * por (clienteId, período, RUC, timbrado, número) y `registrar()` inserta
+   * con `skipDuplicates: true`. Reimportar el mismo archivo crea una fila
+   * nueva en `exportacion_siga` (cada corrida queda como su propio evento
+   * auditable) pero no duplica ningún `comprobante_siga`.
+   */
+  app.post('/api/v1/clientes/:clienteId/siga/importar', async (peticion, respuesta) => {
+    const { clienteId } = paramsCliente.parse(peticion.params);
+    const sujeto = autorizar(peticion, 'exportacion_siga', 'crear', clienteId);
+    const cuerpo = importarArchivoSigaSchema.parse(peticion.body);
+
+    let reporte: Awaited<ReturnType<typeof importarExportacionSiga>>;
+    try {
+      reporte = await importarExportacionSiga(
+        Buffer.from(cuerpo.contenidoBase64, 'base64'),
+        cuerpo.nombreArchivo,
+      );
+    } catch (error) {
+      throw new ErrorDeAplicacion(
+        400,
+        `No se pudo leer el archivo: ${error instanceof Error ? error.message : 'error desconocido'}`,
+        'archivo_invalido',
+      );
+    }
+
+    const aceptadosParaSalida = reporte.aceptados.map((fila) => ({
+      ...fila,
+      total: fila.total.toString(),
+    }));
+
+    if (cuerpo.modo === 'simulacion') {
+      return respuesta.code(200).send({
+        modo: 'simulacion' as const,
+        totalFilas: reporte.totalFilas,
+        aceptados: aceptadosParaSalida,
+        rechazados: reporte.rechazados,
+      });
+    }
+
+    const exportacion = await deps.exportacionesSiga.registrar({
+      clienteId,
+      periodo: cuerpo.periodo,
+      tipoReporte: cuerpo.tipoReporte,
+      formato: cuerpo.formato,
+      evidenciaId: null,
+      observaciones: `Importado automáticamente desde ${cuerpo.nombreArchivo}.`,
+      comprobantes: reporte.aceptados,
+      creadoPorUsuarioId: sujeto.usuarioId,
+    });
+
+    await registrarEvento(deps.bitacora, peticion.log, {
+      usuarioId: sujeto.usuarioId,
+      accion: ACCIONES.SIGA_EXPORTACION_IMPORTADA,
+      entidad: 'exportacion_siga',
+      entidadId: exportacion.id,
+      clienteId,
+      datosDespues: {
+        nombreArchivo: cuerpo.nombreArchivo,
+        periodo: cuerpo.periodo,
+        tipoReporte: cuerpo.tipoReporte,
+        totalFilas: reporte.totalFilas,
+        aceptados: reporte.aceptados.length,
+        rechazados: reporte.rechazados.length,
+      },
+      ip: peticion.ip,
+      agenteUsuario: peticion.headers['user-agent'] ?? null,
+      peticionId: String(peticion.id),
+    });
+
+    return respuesta.code(201).send({
+      modo: 'real' as const,
+      totalFilas: reporte.totalFilas,
+      aceptados: aceptadosParaSalida,
+      rechazados: reporte.rechazados,
+      exportacion,
+    });
   });
 
   /**

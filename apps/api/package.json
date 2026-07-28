@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@effort/core": "*",
+    "@effort/importers": "*",
     "@effort/schema": "*",
     "@fastify/cookie": "^11.1.2",
     "@fastify/csrf-protection": "^8.0.0",
@@ -22,6 +23,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "exceljs": "^4.4.0",
     "prisma": "^6.19.3"
   }
 }

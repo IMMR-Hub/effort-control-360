@@ -155,6 +155,7 @@ export const ACCIONES = Object.freeze({
   CONSTANCIA_EMITIDA: 'constancia.emitida',
 
   DOCUMENTO_REGISTRADO: 'documento.registrado',
+  DOCUMENTO_IMPORTADO_DESDE_ARCHIVO: 'documento.importado_desde_archivo',
   DOCUMENTO_CAMBIO_ESTADO: 'documento.cambio_estado',
   PROCESO_MENSUAL_ACTUALIZADO: 'proceso_mensual.actualizado',
 

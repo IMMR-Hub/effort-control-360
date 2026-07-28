@@ -238,3 +238,50 @@ exportación (`POST /api/v1/clientes/:clienteId/siga`), no fila por fila.
 **Cómo se cierra:** igual que el punto 10 — conseguir una exportación real de
 SIGA (cualquiera de los `tipoReporte` que ya acepta la ruta: libro de compras,
 libro de ventas, etc.) y ajustar `ENCABEZADOS` según sus columnas reales.
+
+---
+
+## 12. `npm audit` en rojo por `brace-expansion` — EXCEPCIÓN DOCUMENTADA, NO ES UNA REGRESIÓN
+
+**Qué pasó:** el 2026-07-24, sin ningún cambio de dependencias de por medio,
+`npm audit --audit-level=high` (el check `audit` de `scripts/verify.mjs`) pasó
+de 0 vulnerabilidades altas a 14. Se confirmó con `git stash` de
+`package-lock.json` que el árbol de dependencias no cambió — el aviso
+(GHSA-mh99-v99m-4gvg, DoS por expansión sin límite en `brace-expansion`) se
+publicó recién, y pasó a marcar como vulnerables versiones de
+`brace-expansion` que ya estaban instaladas desde la tarea 91.
+
+**Dos caminos hasta la vulnerabilidad, ninguno alcanzable con nuestro uso real:**
+1. `eslint` → `minimatch` → `brace-expansion`. El check `lint` está declarado
+   `pendiente` en `scripts/verify.mjs` — `eslint` no corre nunca en este
+   proyecto todavía, es peso muerto en `node_modules`.
+2. `exceljs` → `archiver` → `archiver-utils`/`readdir-glob` → `minimatch` →
+   `brace-expansion`. `archiver` es la pieza de `exceljs` que **escribe** un
+   `.xlsx` (comprime a zip). El código de producción de
+   `packages/importers/src/archivo.ts` solo **lee** (`workbook.xlsx.load()`);
+   nunca llama a `.writeBuffer()`/`.write()`. Ningún patrón glob con datos de
+   un archivo real llega a esa función en ningún camino de ejecución real —
+   los tests sí usan `writeBuffer()` para armar los `.xlsx` de prueba, pero
+   con contenido que el propio test genera, no con un patrón glob de un
+   tercero.
+
+**Por qué no se fuerza el fix ahora:** no existe todavía una versión de
+`minimatch`, `glob`, `eslint` o `archiver` publicada que dependa de
+`brace-expansion@5.0.8` (la versión parcheada). La única forma de silenciar
+el aviso hoy es `npm audit fix --force`, que sube `eslint` a una major sin
+probar y **baja `exceljs` a 3.4.0** — más vieja que la 4.4.0 ya validada con
+los 18 tests de `@effort/importers`. Cambiar dependencias para tapar una
+vulnerabilidad que no es explotable en como se usa, a cambio de arriesgar una
+regresión real, es peor negocio.
+
+**Estado del gate:** el check `audit` de `npm run verify` queda **en rojo a
+propósito** desde el 2026-07-24 hasta que se cierre este punto — no se bajó el
+umbral de `--audit-level` para taparlo, porque eso dejaría de avisar sobre
+cualquier otra vulnerabilidad alta futura que sí importe. Cuando el roadmap
+diga "X OK / Y pendientes / 1 fallido" con este punto citado, es este caso
+conocido, no una regresión sin diagnosticar.
+
+**Cómo se cierra:** correr `npm audit` de nuevo cada tanto; en cuanto
+`minimatch`/`glob`/`eslint` publiquen una versión que resuelva
+`brace-expansion@>=5.0.8`, correr `npm update` (o `npm audit fix`) y verificar
+que el check vuelva a OK sin tocar `exceljs`.

@@ -9,6 +9,8 @@
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 
+import { importarComprobantes } from '@effort/importers';
+import type { Comprobante } from '@effort/core';
 import {
   canalRecepcionSchema,
   estadoGeneralSchema,
@@ -33,6 +35,32 @@ import {
   paramsClientePeriodo,
   paramsId,
 } from './comun.js';
+
+/**
+ * Traduce el tipo+origen del dominio de comprobantes (`@effort/core`) al
+ * `tipoDocumentoSchema` de la API. Solo FACTURA se bifurca por origen — el
+ * resto de los tipos de `@effort/core` calzan 1 a 1 con el nombre del enum de
+ * documentos.
+ */
+function tipoDocumentoDesdeComprobante(comprobante: Comprobante): z.infer<typeof tipoDocumentoSchema> {
+  if (comprobante.tipo === 'FACTURA') {
+    return comprobante.origen === 'VENTA' ? 'FACTURA_VENTA' : 'FACTURA_COMPRA';
+  }
+  return comprobante.tipo;
+}
+
+const MAXIMO_CARACTERES_BASE64 = 10_000_000; // ~7,5 MB decodificados: de sobra para una planilla de comprobantes.
+
+const importarArchivoDeComprobantesSchema = z
+  .object({
+    periodo: periodoSchema,
+    nombreArchivo: z.string().trim().min(1).max(200),
+    contenidoBase64: z.string().min(1).max(MAXIMO_CARACTERES_BASE64),
+    // Sin default a propósito: la tarea 93 exige que el modo sea explícito en
+    // cada llamada, nunca sobreentendido. Omitirlo es un 400, no un dry-run.
+    modo: z.enum(['simulacion', 'real']),
+  })
+  .strict();
 
 const crearDocumentoSchema = z
   .object({
@@ -140,6 +168,101 @@ export async function registrarRutasDeDocumentos(
     return respuesta.code(201).send({
       documento: importesASalida(documento, IMPORTES_DOCUMENTO),
     });
+  });
+
+  /**
+   * Importa comprobantes desde un archivo Excel/CSV (tarea 93, Parte 5).
+   *
+   * `modo: 'simulacion'` corre el parseo y la validación de
+   * `@effort/importers` y devuelve el reporte sin tocar la base — nada se
+   * persiste. `modo: 'real'` además inserta cada fila aceptada con
+   * `deps.documentos.registrar()`, una por una: a diferencia del importador de
+   * SIGA, `RepositorioDeDocumentos` no tiene una operación atómica de alta
+   * en lote, así que una falla a mitad de camino deja algunas filas
+   * persistidas y otras no. Es una limitación conocida, no silenciada — y la
+   * tarea 94 (idempotencia) todavía no está resuelta: importar el mismo
+   * archivo dos veces en modo real duplica documentos hoy.
+   */
+  app.post('/api/v1/clientes/:clienteId/documentos/importar', async (peticion) => {
+    const { clienteId } = paramsCliente.parse(peticion.params);
+    const sujeto = autorizar(peticion, 'documento', 'crear', clienteId);
+    const cuerpo = importarArchivoDeComprobantesSchema.parse(peticion.body);
+
+    let reporte: Awaited<ReturnType<typeof importarComprobantes>>;
+    try {
+      reporte = await importarComprobantes(
+        Buffer.from(cuerpo.contenidoBase64, 'base64'),
+        cuerpo.nombreArchivo,
+      );
+    } catch (error) {
+      throw new ErrorDeAplicacion(
+        400,
+        `No se pudo leer el archivo: ${error instanceof Error ? error.message : 'error desconocido'}`,
+        'archivo_invalido',
+      );
+    }
+
+    const aceptadosParaSalida = reporte.aceptados.map((comprobante) =>
+      importesASalida(comprobante, ['total']),
+    );
+
+    if (cuerpo.modo === 'simulacion') {
+      return {
+        modo: 'simulacion' as const,
+        totalFilas: reporte.totalFilas,
+        aceptados: aceptadosParaSalida,
+        rechazados: reporte.rechazados,
+        persistidos: [],
+      };
+    }
+
+    const persistidos = [];
+    for (const comprobante of reporte.aceptados) {
+      const documento = await deps.documentos.registrar({
+        clienteId,
+        periodo: cuerpo.periodo,
+        tipo: tipoDocumentoDesdeComprobante(comprobante),
+        canalRecepcion: 'ONEDRIVE',
+        recibidoEn: deps.ahora(),
+        rucEmisor: comprobante.rucEmisor,
+        timbrado: comprobante.timbrado,
+        numeroComprobante: comprobante.numero,
+        total: comprobante.total,
+        tasa: comprobante.tasa,
+        anulado: comprobante.anulado,
+        evidenciaId: null,
+        observaciones: `Importado automáticamente desde ${cuerpo.nombreArchivo}.`,
+        creadoPorUsuarioId: sujeto.usuarioId,
+      });
+      persistidos.push(documento);
+    }
+
+    await registrarEvento(deps.bitacora, peticion.log, {
+      usuarioId: sujeto.usuarioId,
+      accion: ACCIONES.DOCUMENTO_IMPORTADO_DESDE_ARCHIVO,
+      entidad: 'documento',
+      entidadId: null,
+      clienteId,
+      datosDespues: {
+        nombreArchivo: cuerpo.nombreArchivo,
+        periodo: cuerpo.periodo,
+        totalFilas: reporte.totalFilas,
+        aceptados: reporte.aceptados.length,
+        rechazados: reporte.rechazados.length,
+        persistidos: persistidos.length,
+      },
+      ip: peticion.ip,
+      agenteUsuario: peticion.headers['user-agent'] ?? null,
+      peticionId: String(peticion.id),
+    });
+
+    return {
+      modo: 'real' as const,
+      totalFilas: reporte.totalFilas,
+      aceptados: aceptadosParaSalida,
+      rechazados: reporte.rechazados,
+      persistidos: persistidos.map((documento) => importesASalida(documento, IMPORTES_DOCUMENTO)),
+    };
   });
 
   app.patch('/api/v1/documentos/:id/estado', async (peticion) => {
