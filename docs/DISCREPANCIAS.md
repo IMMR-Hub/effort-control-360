@@ -285,3 +285,26 @@ conocido, no una regresión sin diagnosticar.
 `minimatch`/`glob`/`eslint` publiquen una versión que resuelva
 `brace-expansion@>=5.0.8`, correr `npm update` (o `npm audit fix`) y verificar
 que el check vuelva a OK sin tocar `exceljs`.
+
+---
+
+## 13. Proveedor de envío de correo (tarea 95, Parte 6) — SIN CONFIRMAR
+
+**Qué falta:** la tarea 95 (despachador de notificaciones) necesita saber con
+qué servicio EFFORT envía correo hoy. Sabemos que usan **Microsoft 365** (ya
+confirmado, ver bitácora del 2026-07-21 — es la razón por la que se eligió
+OneDrive), pero no está confirmado si el correo lo manejan a través de ese
+mismo Microsoft 365/Exchange Online o con otro proveedor separado.
+
+**Recomendación técnica ya evaluada, pendiente de confirmar:** usar
+**Microsoft Graph** (`/users/{id}/sendMail`) con el mismo mecanismo de
+autenticación client-credentials que `DriveGraph` (tarea 89) — reusa el mismo
+registro de Azure AD de la tarea 88 en vez de sumar un proveedor externo
+(Resend, SES) con un dominio nuevo que verificar. Mejor entregabilidad (el
+correo sale de un `@effort.com.py` real) y sin costo adicional si el plan de
+Microsoft 365 Business Basic ya definido incluye Exchange Online.
+
+**Cómo se cierra:** confirmar con Laura o Lili qué proveedor de correo usa
+EFFORT realmente antes de construir la tarea 95. Si confirman Microsoft 365,
+se sigue con la recomendación de arriba. Si usan otra cosa, hay que
+reevaluar — la tarea 95 queda pausada hasta entonces.
