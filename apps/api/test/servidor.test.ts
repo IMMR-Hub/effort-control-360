@@ -17,6 +17,7 @@ import { hashearContrasena } from '../src/seguridad/credenciales.js';
 import { AlmacenEnMemoria } from '../src/seguridad/limites.js';
 import { NOMBRE_COOKIE_SESION } from '../src/seguridad/sesiones.js';
 import type { Configuracion } from '../src/configuracion.js';
+import { activarCsrfEnInject } from './csrf-en-tests.js';
 import {
   BitacoraFalsa,
   clienteMinimo,
@@ -55,6 +56,8 @@ interface Contexto {
   clientes: ClientesFalsos;
   contactos: ContactosFalsos;
   bitacora: BitacoraFalsa;
+  /** `inject` sin el token CSRF automático, para probar el rechazo. */
+  injectSinCsrf: FastifyInstance['inject'];
 }
 
 async function montar(opciones: { bitacoraRota?: boolean } = {}): Promise<Contexto> {
@@ -116,8 +119,9 @@ async function montar(opciones: { bitacoraRota?: boolean } = {}): Promise<Contex
   await registrarRutasDeContactos(app, deps);
   await registrarRutasDeClientes(app, deps);
   await app.ready();
+  const injectSinCsrf = await activarCsrfEnInject(app);
 
-  return { app, deps, usuarios, clientes, contactos, bitacora };
+  return { app, deps, usuarios, clientes, contactos, bitacora, injectSinCsrf };
 }
 
 /** Accede y devuelve la cookie de sesión ya con el segundo factor resuelto. */
@@ -185,6 +189,56 @@ describe('CORS', () => {
       method: 'GET', url: '/salud', headers: { origin: 'https://sitio-malicioso.com' },
     });
     expect(respuesta.headers['access-control-allow-origin']).toBeUndefined();
+  });
+});
+
+describe('CSRF', () => {
+  it('GET /api/v1/csrf emite un token con su cookie', async () => {
+    const r = await ctx.injectSinCsrf({ method: 'GET', url: '/api/v1/csrf' });
+
+    expect(r.statusCode).toBe(200);
+    expect(JSON.parse(r.body).csrfToken).toEqual(expect.any(String));
+    expect(r.cookies.length).toBeGreaterThan(0);
+  });
+
+  it('rechaza una petición mutante sin token', async () => {
+    const r = await ctx.injectSinCsrf({
+      method: 'POST', url: '/api/v1/acceso',
+      payload: { email: 'quien-sea@effort.com.py', contrasena: 'lo que sea' },
+    });
+
+    expect(r.statusCode).toBe(403);
+  });
+
+  it('rechaza una petición mutante con un token que no corresponde a la cookie', async () => {
+    const r = await ctx.injectSinCsrf({
+      method: 'POST', url: '/api/v1/acceso',
+      headers: { 'x-csrf-token': 'un-token-inventado' },
+      payload: { email: 'quien-sea@effort.com.py', contrasena: 'lo que sea' },
+    });
+
+    expect(r.statusCode).toBe(403);
+  });
+
+  it('una petición GET no necesita token', async () => {
+    const r = await ctx.injectSinCsrf({ method: 'GET', url: '/salud' });
+    expect(r.statusCode).toBe(200);
+  });
+
+  it('con el token y la cookie correctos, la petición mutante pasa el chequeo de CSRF', async () => {
+    const token = await ctx.injectSinCsrf({ method: 'GET', url: '/api/v1/csrf' });
+    const csrfToken = (JSON.parse(token.body) as { csrfToken: string }).csrfToken;
+    const cookieCsrf = token.cookies.map((c) => `${c.name}=${c.value}`).join('; ');
+
+    const r = await ctx.injectSinCsrf({
+      method: 'POST', url: '/api/v1/acceso',
+      headers: { 'x-csrf-token': csrfToken, cookie: cookieCsrf },
+      payload: { email: 'no-existe@effort.com.py', contrasena: 'lo que sea' },
+    });
+
+    // Usuario inexistente: falla el login (401), pero eso ya prueba que pasó
+    // el chequeo de CSRF — si lo hubiera rechazado, el código sería 403.
+    expect(r.statusCode).toBe(401);
   });
 });
 

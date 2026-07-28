@@ -194,6 +194,24 @@ export async function construirServidor(deps: Dependencias): Promise<FastifyInst
     getToken: (peticion) => peticion.headers['x-csrf-token'] as string | undefined,
   });
 
+  /**
+   * Exige el token CSRF en toda petición que cambia estado.
+   *
+   * Un solo hook global, no un `preHandler` por ruta: la alternativa es una
+   * ruta nueva que se olvide de ponerlo, que es exactamente cómo este chequeo
+   * quedó registrado pero nunca aplicado a nada durante la Parte 1 — el
+   * plugin estaba pero no protegía una sola ruta. GET/HEAD no cambian estado
+   * y no lo necesitan; ahí es donde el cliente pide el token la primera vez.
+   */
+  const METODOS_PROTEGIDOS_POR_CSRF = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
+  app.addHook('preHandler', (peticion, respuesta, done) => {
+    if (!METODOS_PROTEGIDOS_POR_CSRF.has(peticion.method)) {
+      done();
+      return;
+    }
+    app.csrfProtection(peticion, respuesta, done);
+  });
+
   /* --- Límite global de peticiones --------------------------------------- */
 
   await app.register(rateLimit, {
@@ -314,6 +332,15 @@ export async function construirServidor(deps: Dependencias): Promise<FastifyInst
   // Sin datos del sistema: la usa el balanceador del hosting y es pública.
   // Devolver versión o estado de la base acá es regalarle información a quien sondea.
   app.get('/salud', async () => ({ estado: 'ok' }));
+
+  /**
+   * Emite el token CSRF. Pública a propósito: el cliente la llama al cargar
+   * la aplicación, antes de que exista una sesión — el login también es una
+   * petición mutante y necesita el token igual que cualquier otra.
+   */
+  app.get('/api/v1/csrf', async (_peticion, respuesta) => ({
+    csrfToken: respuesta.generateCsrf(),
+  }));
 
   return app;
 }

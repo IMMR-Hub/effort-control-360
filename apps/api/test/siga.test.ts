@@ -19,6 +19,7 @@ import { hashearContrasena } from '../src/seguridad/credenciales.js';
 import { AlmacenEnMemoria } from '../src/seguridad/limites.js';
 import { NOMBRE_COOKIE_SESION } from '../src/seguridad/sesiones.js';
 import type { Configuracion } from '../src/configuracion.js';
+import { activarCsrfEnInject } from './csrf-en-tests.js';
 import {
   BitacoraFalsa,
   clienteMinimo,
@@ -106,6 +107,7 @@ async function montar(): Promise<Contexto> {
   await registrarRutasDeSiga(app, deps);
   await registrarRutasDeLiquidaciones(app, deps);
   await app.ready();
+  await activarCsrfEnInject(app);
 
   return { app, bitacora, siga, liquidaciones };
 }

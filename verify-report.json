@@ -1,13 +1,13 @@
 {
-  "generado_en": "2026-07-28T14:52:12.723Z",
-  "commit": "2c866bac994132e9e5a1cec2b8eac7039dd9ce0e",
+  "generado_en": "2026-07-28T17:38:35.264Z",
+  "commit": "732a3fcdaf815eaf1502769c28b0afc114247e02",
   "checks": [
     {
       "nombre": "typecheck",
       "comando": "npx tsc --build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 1391,
+      "duracion_ms": 2518,
       "detalle": ""
     },
     {
@@ -15,7 +15,7 @@
       "comando": "npx vitest run",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 87853,
+      "duracion_ms": 61122,
       "detalle": ""
     },
     {
@@ -23,7 +23,7 @@
       "comando": "npx vitest run packages/core/test/golden.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 2872,
+      "duracion_ms": 4048,
       "detalle": ""
     },
     {
@@ -37,7 +37,7 @@
       "comando": "npx vitest run apps/api/test/rbac.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 2576,
+      "duracion_ms": 3815,
       "detalle": ""
     },
     {
@@ -45,7 +45,7 @@
       "comando": "npx vitest run apps/api/test/seguridad.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 2985,
+      "duracion_ms": 3829,
       "detalle": ""
     },
     {
@@ -53,7 +53,7 @@
       "comando": "npx vitest run packages/schema/test/contratos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 2786,
+      "duracion_ms": 3652,
       "detalle": ""
     },
     {
@@ -61,7 +61,7 @@
       "comando": "npx vitest run apps/api/test/servidor.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 5391,
+      "duracion_ms": 7953,
       "detalle": ""
     },
     {
@@ -69,7 +69,7 @@
       "comando": "npx vitest run apps/api/test/modulos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 24208,
+      "duracion_ms": 31908,
       "detalle": ""
     },
     {
@@ -77,7 +77,7 @@
       "comando": "npx vitest run apps/api/test/siga.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7046,
+      "duracion_ms": 7837,
       "detalle": ""
     },
     {
@@ -85,7 +85,7 @@
       "comando": "npx vitest run apps/api/test/importaciones.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6422,
+      "duracion_ms": 7440,
       "detalle": ""
     },
     {
@@ -93,7 +93,7 @@
       "comando": "npx vitest run --project integracion",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 90563,
+      "duracion_ms": 55938,
       "detalle": ""
     },
     {
@@ -101,7 +101,7 @@
       "comando": "npx vitest run --project drive",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 2977,
+      "duracion_ms": 2857,
       "detalle": ""
     },
     {
@@ -109,7 +109,7 @@
       "comando": "npx vitest run --project importers",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3768,
+      "duracion_ms": 3913,
       "detalle": ""
     },
     {
@@ -129,7 +129,7 @@
       "comando": "npm audit --audit-level=high",
       "estado": "FALLO",
       "exit_code": 1,
-      "duracion_ms": 12186,
+      "duracion_ms": 24120,
       "detalle": "# npm audit report\n\nbrace-expansion  <=5.0.7\nSeverity: high\nbrace-expansion: DoS via unbounded expansion length causing an out-of-memory process crash - https://github.com/advisories/GHSA-mh99-v99m-4gvg\nfix available via `npm audit fix --force`\nWill install eslint@10.8.0, which is a breaking change\nnode_modules/brace-expansion\nnode_modules/glob/node_modules/brace-expansion\nnode_modules/readdir-glob/node_modules/brace-expansion\n  minimatch  2.0.0 - 10.0.2\n  Depends on vulnerable versions of brace-expansion\n  node_modules/glob/node_modules/minimatch\n  node_modules/minimatch\n  node_modules/readdir-glob/node_modules/minimatch\n    @eslint/config-array  <=0.22.0\n    Depends on vulnerable versions of minimatch\n    node_modules/@eslint/config-array\n      eslint  0.12.0 - 2.0.0-rc.1 || 4.1.0 - 10.0.0-rc.2\n      Depends on vulnerable versions of @eslint/config-array\n      Depends on vulnerable versions of @eslint/eslintrc\n      Depends on vulnerable versions of minimatch\n      node_modules/eslint\n    @eslint/eslintrc  0.0.1 || >=0.1.1\n    Depends on vulnerable versions of minimatch\n    node_modules/@eslint/eslintrc\n    glob  4.3.0 - 10.5.0\n    Depends on vulnerable versions of minimatch\n    node_modules/archiver-utils/node_modules/glob\n    node_modules/glob\n    node_modules/rimraf/node_modules/glob\n    node_modules/zip-stream/node_modules/glob\n      archiver-utils  >=0.2.0\n      Depends on vulnerable versions of glob\n      node_modules/archiver-utils\n      node_modules/zip-stream/node_modules/archiver-utils\n        archiver  0.20.0 - 7.0.1\n        Depends on vulnerable versions of archiver-utils\n        Depends on vulnerable versions of readdir-glob\n        Depends on vulnerable versions of zip-stream\n        node_modules/archiver\n          exceljs  >=3.5.0\n          Depends on vulnerable versions of archiver\n          Depends on vulnerable versions of uuid\n          node_modules/exceljs\n        zip-stream  0.8.0 - 6.0.1\n        Depends on vulnerable versions of archiver-utils\n        node_modules/zip-stream\n      rimraf  2.3.0 - 3.0.2 || 4.2.0 - 5.0.10\n      Depends on vulnerable versions of glob\n      node_modules/rimraf\n      test-exclude  5.2.0 - 7.0.2\n      Depends on vulnerable versions of glob\n      node_modules/test-exclude\n        @vitest/coverage-v8  <=3.2.7\n        Depends on vulnerable versions of test-exclude\n        node_modules/@vitest/coverage-v8\n    readdir-glob  <=2.0.3\n    Depends on vulnerable versions of minimatch\n    node_modules/readdir-glob\n\nuuid  <11.1.1\nSeverity: moderate\nuuid: Missing buffer bounds check in v3/v5/v6 when buf is provided - https://github.com/advisories/GHSA-w5hq-g745-h8pq\nfix available via `npm audit fix --force`\nWill install exceljs@3.4.0, which is a breaking change\nnode_modules/uuid\n\n15 vulnerabilities (1 moderate, 14 high)\n\nTo address issues that do not require attention, run:\n  npm audit fix\n\nTo address all issues (including breaking changes), run:\n  npm audit fix --force"
     },
     {
@@ -137,7 +137,7 @@
       "comando": "npm run build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 5713,
+      "duracion_ms": 6705,
       "detalle": ""
     }
   ],
