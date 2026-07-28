@@ -299,8 +299,14 @@ model Documento {
 
   /// Un mismo comprobante no puede cargarse dos veces para el mismo cliente.
   /// La unicidad se impone en la base y no solo en el código: dos peticiones
-  /// simultáneas pasarían las dos por la validación de aplicación.
-  @@unique([clienteId, rucEmisor, timbrado, numeroComprobante], name: "comprobante_unico")
+  /// simultáneas pasarían las dos por la validación de aplicación. Sin
+  /// `name:` a propósito (tarea 94): un `name:` puesto sin migrar generaba
+  /// drift entre este schema y el índice real (`documento_cliente_id_ruc_emisor_timbrado_numero_comprobante_key`,
+  /// creado por la migración inicial con el nombre por defecto de Prisma).
+  /// NULL nunca colisiona con NULL en un índice único de Postgres, así que
+  /// los documentos sin la terna completa (contratos, actas, etc.) siguen sin
+  /// límite de cuántos puede haber.
+  @@unique([clienteId, rucEmisor, timbrado, numeroComprobante])
   @@index([clienteId, periodo])
   @@index([estado])
   @@map("documento")

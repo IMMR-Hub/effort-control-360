@@ -137,6 +137,57 @@ describeSiHayBase('repositorios de negocio contra PostgreSQL real', () => {
       await expect(crearDocumento(ajeno, '001-001-0000200')).resolves.toBeDefined();
     });
 
+    it('registrarLote no lanza con duplicados: los salta y devuelve solo lo nuevo (tarea 94)', async () => {
+      await crearDocumento(mio, '001-001-0000210');
+
+      // A diferencia de registrar() (que rechaza), registrarLote() usa
+      // skipDuplicates: reimportar un archivo no puede tumbar la petición
+      // entera por una sola fila que ya estaba.
+      const insertados = await documentos.registrarLote([
+        {
+          clienteId: mio, periodo: PERIODO, tipo: 'FACTURA_COMPRA', canalRecepcion: 'ONEDRIVE',
+          recibidoEn: new Date('2026-03-15T12:00:00Z'), rucEmisor: '80017726-6', timbrado: '12345678',
+          numeroComprobante: '001-001-0000210', total: 1_100_000n, tasa: 'DIEZ', anulado: false,
+          evidenciaId: null, observaciones: null, creadoPorUsuarioId: usuario,
+        },
+        {
+          clienteId: mio, periodo: PERIODO, tipo: 'FACTURA_COMPRA', canalRecepcion: 'ONEDRIVE',
+          recibidoEn: new Date('2026-03-15T12:00:00Z'), rucEmisor: '80017726-6', timbrado: '12345678',
+          numeroComprobante: '001-001-0000211', total: 500_000n, tasa: 'DIEZ', anulado: false,
+          evidenciaId: null, observaciones: null, creadoPorUsuarioId: usuario,
+        },
+      ]);
+
+      expect(insertados).toHaveLength(1);
+      expect(insertados[0]?.numeroComprobante).toBe('001-001-0000211');
+
+      const enBase = await documentos.listar(mio, PERIODO, null);
+      const porNumero = enBase.filter((d) => d.numeroComprobante === '001-001-0000210');
+      expect(porNumero).toHaveLength(1);
+    });
+
+    it('registrarLote con varios documentos sin terna (contratos) no choca contra sí mismo', async () => {
+      // NULL no colisiona con NULL en la restricción única de Postgres: dos
+      // filas del mismo lote sin RUC/timbrado/número tienen que insertarse
+      // las dos, no solo la primera.
+      const insertados = await documentos.registrarLote([
+        {
+          clienteId: mio, periodo: PERIODO, tipo: 'CONTRATO', canalRecepcion: 'EMAIL',
+          recibidoEn: new Date('2026-03-15T12:00:00Z'), rucEmisor: null, timbrado: null,
+          numeroComprobante: null, total: null, tasa: null, anulado: false,
+          evidenciaId: null, observaciones: 'Contrato A', creadoPorUsuarioId: usuario,
+        },
+        {
+          clienteId: mio, periodo: PERIODO, tipo: 'CONTRATO', canalRecepcion: 'EMAIL',
+          recibidoEn: new Date('2026-03-15T12:00:00Z'), rucEmisor: null, timbrado: null,
+          numeroComprobante: null, total: null, tasa: null, anulado: false,
+          evidenciaId: null, observaciones: 'Contrato B', creadoPorUsuarioId: usuario,
+        },
+      ]);
+
+      expect(insertados).toHaveLength(2);
+    });
+
     it('el filtro de cartera no pisa la condición de cliente al listar', async () => {
       // Regresión del bug de buscarPorId: dos condiciones sobre la misma
       // columna combinadas con spread se pisan entre sí.

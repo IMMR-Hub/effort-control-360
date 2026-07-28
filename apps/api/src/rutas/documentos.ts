@@ -171,17 +171,17 @@ export async function registrarRutasDeDocumentos(
   });
 
   /**
-   * Importa comprobantes desde un archivo Excel/CSV (tarea 93, Parte 5).
+   * Importa comprobantes desde un archivo Excel/CSV (tareas 93 y 94, Parte 5).
    *
    * `modo: 'simulacion'` corre el parseo y la validación de
    * `@effort/importers` y devuelve el reporte sin tocar la base — nada se
-   * persiste. `modo: 'real'` además inserta cada fila aceptada con
-   * `deps.documentos.registrar()`, una por una: a diferencia del importador de
-   * SIGA, `RepositorioDeDocumentos` no tiene una operación atómica de alta
-   * en lote, así que una falla a mitad de camino deja algunas filas
-   * persistidas y otras no. Es una limitación conocida, no silenciada — y la
-   * tarea 94 (idempotencia) todavía no está resuelta: importar el mismo
-   * archivo dos veces en modo real duplica documentos hoy.
+   * persiste. `modo: 'real'` además inserta todas las filas aceptadas con
+   * `deps.documentos.registrarLote()`, en una sola sentencia: la restricción
+   * única de `(clienteId, rucEmisor, timbrado, numeroComprobante)` (ya
+   * existía en la base desde la migración inicial, con nombre distinto al
+   * declarado en `schema.prisma` — corregido en la tarea 94, ver bitácora)
+   * hace que reimportar el mismo archivo salte en silencio las filas que ya
+   * estaban en vez de duplicarlas o de romper todo el lote por una sola.
    */
   app.post('/api/v1/clientes/:clienteId/documentos/importar', async (peticion) => {
     const { clienteId } = paramsCliente.parse(peticion.params);
@@ -216,9 +216,12 @@ export async function registrarRutasDeDocumentos(
       };
     }
 
-    const persistidos = [];
-    for (const comprobante of reporte.aceptados) {
-      const documento = await deps.documentos.registrar({
+    // Una sola sentencia para todo el lote (tarea 94): ni una fila persistida
+    // suelta si algo fallara a mitad de camino, y reimportar el mismo archivo
+    // no duplica — la restricción única de la base salta en silencio lo que
+    // ya existía en vez de romper el lote entero.
+    const persistidos = await deps.documentos.registrarLote(
+      reporte.aceptados.map((comprobante) => ({
         clienteId,
         periodo: cuerpo.periodo,
         tipo: tipoDocumentoDesdeComprobante(comprobante),
@@ -233,9 +236,8 @@ export async function registrarRutasDeDocumentos(
         evidenciaId: null,
         observaciones: `Importado automáticamente desde ${cuerpo.nombreArchivo}.`,
         creadoPorUsuarioId: sujeto.usuarioId,
-      });
-      persistidos.push(documento);
-    }
+      })),
+    );
 
     await registrarEvento(deps.bitacora, peticion.log, {
       usuarioId: sujeto.usuarioId,
@@ -248,8 +250,10 @@ export async function registrarRutasDeDocumentos(
         periodo: cuerpo.periodo,
         totalFilas: reporte.totalFilas,
         aceptados: reporte.aceptados.length,
-        rechazados: reporte.rechazados.length,
+        // Puede ser menor que `aceptados` si el archivo ya se había
+        // importado antes: esas filas se saltean, no se duplican.
         persistidos: persistidos.length,
+        rechazados: reporte.rechazados.length,
       },
       ip: peticion.ip,
       agenteUsuario: peticion.headers['user-agent'] ?? null,

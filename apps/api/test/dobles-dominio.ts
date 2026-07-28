@@ -106,6 +106,35 @@ export class DocumentosFalsos implements RepositorioDeDocumentos {
     return doc;
   }
 
+  /**
+   * Replica la restricción única real de `(clienteId, rucEmisor, timbrado,
+   * numeroComprobante)` con `skipDuplicates`: NULL nunca colisiona con NULL
+   * en un índice único de Postgres, así que una fila sin la terna completa
+   * jamás se considera duplicada acá tampoco.
+   */
+  async registrarLote(datos: readonly AltaDeDocumento[]): Promise<DocumentoAlmacenado[]> {
+    const clavesExistentes = new Set(
+      this.documentos
+        .filter((doc) => doc.rucEmisor && doc.timbrado && doc.numeroComprobante)
+        .map((doc) => `${doc.clienteId}|${doc.rucEmisor}|${doc.timbrado}|${doc.numeroComprobante}`),
+    );
+
+    const insertados: DocumentoAlmacenado[] = [];
+    for (const dato of datos) {
+      const tieneTerna = Boolean(dato.rucEmisor && dato.timbrado && dato.numeroComprobante);
+      const clave = tieneTerna
+        ? `${dato.clienteId}|${dato.rucEmisor}|${dato.timbrado}|${dato.numeroComprobante}`
+        : null;
+
+      if (clave && clavesExistentes.has(clave)) continue;
+      if (clave) clavesExistentes.add(clave);
+
+      const doc = await this.registrar(dato);
+      insertados.push(doc);
+    }
+    return insertados;
+  }
+
   async cambiarEstado(
     id: string,
     estado: string,

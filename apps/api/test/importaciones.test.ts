@@ -305,6 +305,82 @@ describe('POST /clientes/:clienteId/documentos/importar', () => {
     expect(entrada?.clienteId).toBe(MIO);
     expect((entrada?.datosDespues as Record<string, unknown>)['persistidos']).toBe(1);
   });
+
+  it('reimportar el mismo archivo no duplica el documento (tarea 94)', async () => {
+    const contenidoBase64 = await base64Xlsx(ENCABEZADOS_COMPROBANTES, [filaValida]);
+    const payload = { periodo: '2026-03', nombreArchivo: 'marzo.xlsx', contenidoBase64, modo: 'real' as const };
+
+    const primera = await ctx.app.inject({
+      method: 'POST', url: `/api/v1/clientes/${MIO}/documentos/importar`,
+      headers: { cookie: coordinador }, payload,
+    });
+    const segunda = await ctx.app.inject({
+      method: 'POST', url: `/api/v1/clientes/${MIO}/documentos/importar`,
+      headers: { cookie: coordinador }, payload,
+    });
+
+    // La segunda corrida no debe reventar (era el riesgo real antes de esta
+    // tarea: la restricción única de la base ya existía y create() por fila
+    // habría lanzado un error sin capturar) ni duplicar el documento.
+    expect(primera.statusCode).toBe(200);
+    expect(segunda.statusCode).toBe(200);
+    expect(JSON.parse(primera.body).persistidos).toHaveLength(1);
+    expect(JSON.parse(segunda.body).persistidos).toHaveLength(0);
+    expect(ctx.documentos.documentos).toHaveLength(1);
+  });
+
+  it('en un lote con una fila nueva y una ya importada, solo persiste la nueva', async () => {
+    const filaOtra = [
+      RUC_VALIDO, '12345678', '001-001-0000002', 'FACTURA', 'COMPRA',
+      new Date(Date.UTC(2026, 2, 16)), 200000, 'DIEZ', 'NO',
+    ];
+
+    await ctx.app.inject({
+      method: 'POST', url: `/api/v1/clientes/${MIO}/documentos/importar`,
+      headers: { cookie: coordinador },
+      payload: {
+        periodo: '2026-03', nombreArchivo: 'marzo.xlsx',
+        contenidoBase64: await base64Xlsx(ENCABEZADOS_COMPROBANTES, [filaValida]),
+        modo: 'real',
+      },
+    });
+
+    const r = await ctx.app.inject({
+      method: 'POST', url: `/api/v1/clientes/${MIO}/documentos/importar`,
+      headers: { cookie: coordinador },
+      payload: {
+        periodo: '2026-03', nombreArchivo: 'abril.xlsx',
+        contenidoBase64: await base64Xlsx(ENCABEZADOS_COMPROBANTES, [filaValida, filaOtra]),
+        modo: 'real',
+      },
+    });
+
+    expect(JSON.parse(r.body).persistidos).toHaveLength(1);
+    expect(ctx.documentos.documentos).toHaveLength(2);
+  });
+
+  it('dos documentos sin RUC/timbrado/número (ej. contratos) nunca chocan entre sí', async () => {
+    // NULL no colisiona con NULL en la restricción única real: dos filas sin
+    // la terna completa tienen que poder coexistir sin límite.
+    await ctx.documentos.registrar({
+      clienteId: MIO, periodo: '2026-03', tipo: 'CONTRATO', canalRecepcion: 'EMAIL',
+      recibidoEn: HOY, rucEmisor: null, timbrado: null, numeroComprobante: null,
+      total: null, tasa: null, anulado: false, evidenciaId: null, observaciones: null,
+      creadoPorUsuarioId: 'usr-coordinador',
+    });
+
+    const insertados = await ctx.documentos.registrarLote([
+      {
+        clienteId: MIO, periodo: '2026-03', tipo: 'CONTRATO', canalRecepcion: 'EMAIL',
+        recibidoEn: HOY, rucEmisor: null, timbrado: null, numeroComprobante: null,
+        total: null, tasa: null, anulado: false, evidenciaId: null, observaciones: null,
+        creadoPorUsuarioId: 'usr-coordinador',
+      },
+    ]);
+
+    expect(insertados).toHaveLength(1);
+    expect(ctx.documentos.documentos).toHaveLength(2);
+  });
 });
 
 /* ========================================================================== */

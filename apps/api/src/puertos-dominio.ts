@@ -60,6 +60,14 @@ export interface RepositorioDeDocumentos {
   ): Promise<DocumentoAlmacenado[]>;
   buscarPorId(id: string, filtro: FiltroDeCartera): Promise<DocumentoAlmacenado | null>;
   registrar(datos: AltaDeDocumento): Promise<DocumentoAlmacenado>;
+  /**
+   * Alta en lote, en una sola sentencia (tarea 94): usa la restricción única
+   * de `(clienteId, rucEmisor, timbrado, numeroComprobante)` para saltear en
+   * silencio las filas que ya existen, en vez de duplicarlas o de romper todo
+   * el lote por una sola fila repetida. Devuelve solo lo que efectivamente se
+   * insertó — puede ser menos que `datos.length` si algunas ya estaban.
+   */
+  registrarLote(datos: readonly AltaDeDocumento[]): Promise<DocumentoAlmacenado[]>;
   cambiarEstado(
     id: string,
     estado: string,

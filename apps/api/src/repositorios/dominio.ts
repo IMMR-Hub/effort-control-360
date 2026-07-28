@@ -126,6 +126,37 @@ export class DocumentosPrisma implements RepositorioDeDocumentos {
     return fila as DocumentoAlmacenado;
   }
 
+  async registrarLote(datos: readonly AltaDeDocumento[]): Promise<DocumentoAlmacenado[]> {
+    if (datos.length === 0) return [];
+
+    const filas = await this.prisma.documento.createManyAndReturn({
+      data: datos.map((dato) => ({
+        clienteId: dato.clienteId,
+        periodo: dato.periodo,
+        tipo: dato.tipo,
+        canalRecepcion: dato.canalRecepcion,
+        recibidoEn: dato.recibidoEn,
+        rucEmisor: dato.rucEmisor,
+        timbrado: dato.timbrado,
+        numeroComprobante: dato.numeroComprobante,
+        total: dato.total,
+        tasa: dato.tasa as never,
+        anulado: dato.anulado,
+        evidenciaId: dato.evidenciaId,
+        observaciones: dato.observaciones,
+        creadoPorUsuarioId: dato.creadoPorUsuarioId,
+        actualizadoPorUsuarioId: dato.creadoPorUsuarioId,
+      })),
+      select: CAMPOS_DOCUMENTO,
+      // La restricción única de (clienteId, rucEmisor, timbrado,
+      // numeroComprobante) hace que reimportar el mismo archivo salte las
+      // filas que ya existen en vez de romper el lote entero.
+      skipDuplicates: true,
+    });
+
+    return filas as DocumentoAlmacenado[];
+  }
+
   async cambiarEstado(
     id: string,
     estado: string,
