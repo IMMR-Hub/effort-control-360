@@ -47,6 +47,14 @@ export default defineConfig({
       },
       {
         test: {
+          name: 'web',
+          root: './apps/web',
+          include: ['test/**/*.test.ts'],
+          environment: 'node',
+        },
+      },
+      {
+        test: {
           name: 'integracion',
           root: './apps/api',
           include: ['test/integracion/**/*.test.ts'],

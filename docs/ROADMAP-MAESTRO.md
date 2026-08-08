@@ -38,7 +38,7 @@ grep -c "^- \[ \]" <(sed -n '/## PARTE X/,/## PARTE X+1/p' docs/ROADMAP-MAESTRO.
 
 Si da 0, cerrada. Si no, no.
 
-**Avance: 91 de 113 tareas (81%).** Partes 1, 2, 3, 4A, 4B, 4C, 4D y 4E cerradas. Quedan 3 tareas bloqueadas por EFFORT (2 de carga de datos + el registro en Azure AD), que no frenan el código.
+**Avance: 92 de 113 tareas (81%).** Partes 1, 2, 3, 4A, 4B, 4C, 4D y 4E cerradas. Quedan 3 tareas bloqueadas por EFFORT (2 de carga de datos + el registro en Azure AD), que no frenan el código.
 
 Última actualización: 2026-07-24 · Commit de referencia: ver último commit en `git log`
 
@@ -331,7 +331,17 @@ Tarea nueva, descubierta el 2026-07-24 al comparar la estructura de carpetas que
 
 ## PARTE 7 — Interfaz completa contra la API real
 
-- [ ] 100. Cliente HTTP tipado en `apps/web`, con manejo de sesión/CSRF
+- [x] 100. Cliente HTTP tipado en `apps/web`, con manejo de sesión/CSRF.
+
+  **Decisión previa:** `apps/web` era JavaScript puro (`.jsx`, sin TypeScript), a diferencia del resto del monorepo (TS estricto en `core`, `schema`, `api`, `drive`, `importers`). Un cliente HTTP genuinamente "tipado" necesita TS de verdad, no JSDoc — se convirtió `apps/web` a TypeScript ahora (tooling: `tsconfig.json`, `vite.config.ts`, script `typecheck`) en vez de esperar a las 12 pantallas de la tarea 103, cuando reconvertir hubiera tocado mucho más código. La demo original (`App.jsx` y sus componentes) sigue en `.jsx` sin tocar — `allowJs`+`checkJs:false` los deja compilar sin exigirles tipos, hasta que la tarea 104 los retire.
+
+  **El cliente en sí:** `apps/web/src/api/cliente.ts` — `peticion<T>(metodo, ruta, cuerpo?, query?)` maneja sesión (`credentials: 'include'`, la cookie es `httpOnly` así que el navegador la lleva sola) y CSRF (token de `GET /api/v1/csrf`, cacheado en memoria, con un reintento automático si el servidor lo rechaza con 403 — puede vencer o cerrarse sesión en otra pestaña). Los errores del servidor (`{error, mensaje, peticionId?}`) se traducen a una clase `ErrorDeApi` en vez de inventar una forma nueva del lado del cliente. `apps/web/src/api/autenticacion.ts` cablea las cuatro rutas de acceso (`iniciarAcceso`, `confirmarSegundoFactor`, `cerrarSesion`, `obtenerSesionActual`) como primer caso de uso real — `obtenerSesionActual()` devuelve `null` en un 401 en vez de lanzar, porque "no hay sesión" es el caso esperado al cargar la app, no un error.
+
+  11 tests nuevos (`apps/web/test/`), con `fetch` global mockeado — no hace falta un servidor real para probar la caché del token, el reintento ante un 403, o el mapeo de errores. Nuevo proyecto `web` en `vitest.config.ts` y dos checks nuevos en `scripts/verify.mjs` (`verify:web-typecheck`, `verify:web`).
+
+  **Hallazgo real encontrado en el camino (no es parte de esta tarea, va en un commit aparte):** el CSRF double-submit de la tarea 39 (Parte 1, marcada completa) nunca estuvo aplicado a ninguna ruta — ver bitácora del 2026-07-28. Se corrigió antes de seguir, porque un cliente que maneja CSRF contra un servidor que no lo exige no se puede probar de verdad.
+
+  **Verificación:** `npm run verify` → 16 OK / 3 pendientes declarados / **1 fallido (`audit`, excepción documentada desde la tarea 93, sin relación con esta tarea)** — hecho el 2026-07-28 (dos intentos intermedios fallaron por el problema intermitente de conectividad contra Supabase de siempre, en `test:unit` al correr todos los proyectos juntos; reintentado y confirmado en verde).
 - [ ] 101. Reemplazar `datos-semilla/` por llamadas reales a la API
 - [ ] 102. Pantalla de login con flujo de 2FA en dos pasos
 - [ ] 103. Las 12 pantallas del handoff, una por una, contra datos reales

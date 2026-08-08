@@ -21,6 +21,7 @@ const raiz = join(dirname(fileURLToPath(import.meta.url)), '..');
 /** @type {{nombre: string, comando: string, pendiente?: string}[]} */
 const CHECKS = [
   { nombre: 'typecheck', comando: 'npx tsc --build' },
+  { nombre: 'verify:web-typecheck', comando: 'npm run typecheck --workspace @effort/web' },
   { nombre: 'test:unit', comando: 'npx vitest run' },
   { nombre: 'verify:accounting', comando: 'npx vitest run packages/core/test/golden.test.ts' },
 
@@ -37,6 +38,7 @@ const CHECKS = [
   { nombre: 'test:integration', comando: 'npx vitest run --project integracion' },
   { nombre: 'verify:drive', comando: 'npx vitest run --project drive' },
   { nombre: 'verify:importadores', comando: 'npx vitest run --project importers' },
+  { nombre: 'verify:web', comando: 'npx vitest run --project web' },
   { nombre: 'verify:no-hardcoded-kpi', comando: 'node scripts/verificar-kpi.mjs', pendiente: 'apps/web todavía muestra los datos de la demo anterior.' },
   { nombre: 'test:e2e', comando: 'npx playwright test', pendiente: 'apps/web todavía no consume la API.' },
   { nombre: 'audit', comando: 'npm audit --audit-level=high' },
