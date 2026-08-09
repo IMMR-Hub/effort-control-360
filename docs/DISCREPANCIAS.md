@@ -80,20 +80,64 @@ olvidarse el último día.
 
 ---
 
-## 6. Acceso a OneDrive — DEFINIDO, FALTA EJECUTAR
+## 6. Acceso a OneDrive — EN EJECUCIÓN (avance real 2026-08-09)
 
-**Definido:** cuenta de sistema dedicada (`sistema.effort360@...`) con licencia
-Microsoft 365 Business Basic (USD 7/usuario/mes desde julio 2026), acceso vía
-Microsoft Graph API con registro de aplicación en Azure AD.
+**Definido:** cuenta de sistema dedicada (`effort360@effort.com.py`, tenant
+"EFFORT CONSULTORA E.A.S.") con acceso vía Microsoft Graph API con registro de
+aplicación en Azure AD.
 
 **Por qué una cuenta dedicada y no la de Laura o Lili:** si el sistema usa una
 cuenta personal, un cambio de contraseña o un reseteo de 2FA lo deja sin acceso
 sin aviso, y los permisos quedan atados a una persona en vez de a la empresa.
 
-**Cómo se cierra:** EFFORT crea el usuario, comparte la carpeta raíz
-`EFFORT CONTROL 360 - PILOTO` con esa cuenta como editor, y se registra la app
-en Azure AD. Hasta entonces el adaptador de OneDrive corre contra un doble de
-prueba y `verify:drive` valida contra ese doble, no contra la nube real.
+**Avance real, hecho junto con Daniel el 2026-08-09** (los datos no sensibles
+quedan acá; el secreto vive únicamente en `.env`, nunca en este documento ni
+en el chat):
+
+1. La cuenta `effort360@effort.com.py` resultó tener permisos de administrador
+   en Microsoft Entra ID del tenant de EFFORT — alcanzó para hacer todo esto
+   sin depender de que alguien más lo hiciera.
+2. Registro de aplicación creado en Azure AD: **"EFFORT Control 360"**.
+   - `Tenant ID`: `ae2788f8-bef0-48e0-80f8-574443fc3cc7`
+   - `Client ID`: `08a003d4-ec28-4229-a35b-2db115e3c325`
+   - `Client Secret`: generado, cargado en `.env` local (`AZURE_TENANT_ID`,
+     `AZURE_CLIENT_ID`, `AZURE_CLIENT_SECRET` — ver `.env.example`).
+3. **Verificado con una llamada real** (no solo "se guardó"): se pidió un
+   token contra `https://login.microsoftonline.com/{tenant}/oauth2/v2.0/token`
+   con `grant_type=client_credentials` — devolvió un token Bearer válido. Las
+   tres credenciales son correctas.
+4. **Todavía sin permisos de Graph asignados**: una llamada de prueba a
+   `/v1.0/users/effort360@effort.com.py/drive/root/children` devolvió
+   `404 ResourceNotFound — User's mysite not found`, no un 403 de permisos.
+   Puede ser que el OneDrive de esa cuenta no esté aprovisionado todavía, o
+   que simplemente falten los permisos de aplicación — no se puede saber cuál
+   de las dos causas es hasta completar el paso 5.
+5. Se agregaron los permisos de aplicación de Microsoft Graph
+   `Files.ReadWrite.All` (OneDrive) y `Mail.Send` (tarea 95 — mismo registro
+   sirve para las dos, no hace falta repetir el registro completo). Quedaron
+   marcados como **"No concedido para EFFORT CONSULTORA E.A.S."**
+6. **Bloqueado en el último paso, no depende de nosotros:** el botón
+   "Conceder consentimiento de administrador" está deshabilitado para
+   `effort360@effort.com.py` — esa cuenta puede crear y configurar
+   aplicaciones, pero **no es Administrador Global** del tenant. Se verificó
+   en Entra ID → Roles y administradores → "Administrador global": **solo
+   Laura y Lili tienen ese rol.** Una de las dos tiene que entrar una vez a
+   portal.azure.com y hacer un solo clic (Registros de aplicaciones → EFFORT
+   Control 360 → Permisos de API → "Conceder consentimiento de
+   administrador") — no necesita entender nada técnico, es confirmar "sí,
+   autorizo". Mensaje ya redactado para reenviarles, ver conversación del
+   2026-08-09.
+
+**Cómo se cierra:** en cuanto Laura o Lili concedan el consentimiento, repetir
+la llamada de prueba del punto 4 (`GET /v1.0/users/effort360@effort.com.py/drive/root/children`)
+para confirmar si el 404 anterior era por falta de permisos o porque el
+OneDrive de esa cuenta todavía no está aprovisionado — recién ahí se sabe si
+falta algo más. Después: confirmar con EFFORT cuál es la carpeta raíz real a
+usar (con `Files.ReadWrite.All` de aplicación el acceso ya es a nivel de todo
+el tenant, no hace falta compartir una carpeta puntual como se planeó
+originalmente), y cerrar la tarea 88. Hasta entonces el adaptador de OneDrive
+sigue probándose contra el doble de prueba (`DriveFalso`) en los tests
+automáticos.
 
 ---
 
