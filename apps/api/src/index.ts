@@ -24,10 +24,12 @@ import {
   ProcesoMensualPrisma,
   ReglasDeNotificacionPrisma,
   ReglasImpositivasPrisma,
+  SolicitudesPrisma,
   VencimientosPrisma,
 } from './repositorios/dominio.js';
 import { registrarRutasDeDocumentos } from './rutas/documentos.js';
 import { registrarRutasDeVencimientos } from './rutas/vencimientos.js';
+import { registrarRutasDeSolicitudes } from './rutas/solicitudes.js';
 import { registrarRutasDeBalances } from './rutas/balances.js';
 import { ExportacionesSigaPrisma, LiquidacionesPrisma } from './repositorios/siga.js';
 import { registrarRutasDeSiga } from './rutas/siga.js';
@@ -63,6 +65,7 @@ export function construirDependencias(configuracion: Configuracion): Dependencia
     documentos: new DocumentosPrisma(prisma),
     procesoMensual: new ProcesoMensualPrisma(prisma),
     vencimientos: new VencimientosPrisma(prisma),
+    solicitudes: new SolicitudesPrisma(prisma),
     balances: new BalancesPrisma(prisma),
     exportacionesSiga: new ExportacionesSigaPrisma(prisma),
     liquidaciones: new LiquidacionesPrisma(prisma),
@@ -82,6 +85,7 @@ export async function arrancar(dependencias: Dependencias): Promise<void> {
   await registrarRutasDeContactos(app, dependencias);
   await registrarRutasDeDocumentos(app, dependencias);
   await registrarRutasDeVencimientos(app, dependencias);
+  await registrarRutasDeSolicitudes(app, dependencias);
   await registrarRutasDeBalances(app, dependencias);
   await registrarRutasDeSiga(app, dependencias);
   await registrarRutasDeLiquidaciones(app, dependencias);

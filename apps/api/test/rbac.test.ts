@@ -25,7 +25,7 @@ const ROLES = [
 const RECURSOS: Recurso[] = [
   'cliente', 'usuario', 'documento', 'evidencia', 'proceso_mensual', 'exportacion_siga',
   'liquidacion', 'balance', 'vencimiento', 'alerta', 'obligacion', 'regla_notificacion',
-  'contacto', 'constancia', 'evento', 'configuracion', 'regla_impositiva',
+  'solicitud', 'contacto', 'constancia', 'evento', 'configuracion', 'regla_impositiva',
 ];
 
 const ACCIONES: Accion[] = ['ver', 'crear', 'editar', 'eliminar', 'aprobar', 'exportar', 'cerrar'];
@@ -55,9 +55,9 @@ describe('la matriz cubre toda combinación posible', () => {
       }
     }
 
-    // 6 roles x 17 recursos x 7 acciones. Si crece un recurso y nadie decide
+    // 6 roles x 18 recursos x 7 acciones. Si crece un recurso y nadie decide
     // sus permisos, este número cambia y el test obliga a mirarlo.
-    expect(celdas).toHaveLength(6 * 17 * 7);
+    expect(celdas).toHaveLength(6 * 18 * 7);
   });
 
   it('niega por defecto: un recurso que no figura en el rol queda cerrado', () => {

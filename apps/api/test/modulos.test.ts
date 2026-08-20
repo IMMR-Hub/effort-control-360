@@ -20,6 +20,7 @@ import { construirServidor, type Dependencias } from '../src/servidor.js';
 import { registrarRutasDeAutenticacion } from '../src/rutas/autenticacion.js';
 import { registrarRutasDeDocumentos } from '../src/rutas/documentos.js';
 import { registrarRutasDeVencimientos } from '../src/rutas/vencimientos.js';
+import { registrarRutasDeSolicitudes } from '../src/rutas/solicitudes.js';
 import { registrarRutasDeBalances } from '../src/rutas/balances.js';
 import { registrarRutasDeAlertas } from '../src/rutas/alertas.js';
 import { registrarRutasDeUsuarios } from '../src/rutas/usuarios.js';
@@ -47,6 +48,7 @@ import {
   ProcesoMensualFalso,
   ReglasDeNotificacionFalsas,
   ReglasImpositivasFalsas,
+  SolicitudesFalsas,
   VencimientosFalsos,
   ExportacionesSigaFalsas,
   LiquidacionesFalsas,
@@ -76,6 +78,7 @@ interface Contexto {
   documentos: DocumentosFalsos;
   procesoMensual: ProcesoMensualFalso;
   vencimientos: VencimientosFalsos;
+  solicitudes: SolicitudesFalsas;
   balances: BalancesFalsos;
   alertas: AlertasFalsas;
   usuarios: UsuariosFalsos;
@@ -90,6 +93,7 @@ async function montar(): Promise<Contexto> {
   const documentos = new DocumentosFalsos();
   const procesoMensual = new ProcesoMensualFalso();
   const vencimientos = new VencimientosFalsos();
+  const solicitudes = new SolicitudesFalsas();
   const balances = new BalancesFalsos();
   const alertas = new AlertasFalsas();
   const reglasImpositivas = new ReglasImpositivasFalsas();
@@ -134,6 +138,7 @@ async function montar(): Promise<Contexto> {
     documentos,
     procesoMensual,
     vencimientos,
+    solicitudes,
     balances,
     exportacionesSiga: new ExportacionesSigaFalsas(),
     liquidaciones: new LiquidacionesFalsas(),
@@ -148,6 +153,7 @@ async function montar(): Promise<Contexto> {
   await registrarRutasDeAutenticacion(app, deps);
   await registrarRutasDeDocumentos(app, deps);
   await registrarRutasDeVencimientos(app, deps);
+  await registrarRutasDeSolicitudes(app, deps);
   await registrarRutasDeBalances(app, deps);
   await registrarRutasDeAlertas(app, deps);
   await registrarRutasDeUsuarios(app, deps);
@@ -159,8 +165,8 @@ async function montar(): Promise<Contexto> {
   await activarCsrfEnInject(app);
 
   return {
-    app, bitacora, documentos, procesoMensual, vencimientos, balances, alertas, usuarios,
-    reglasImpositivas, reglasDeNotificacion,
+    app, bitacora, documentos, procesoMensual, vencimientos, solicitudes, balances, alertas,
+    usuarios, reglasImpositivas, reglasDeNotificacion,
   };
 }
 
@@ -577,6 +583,125 @@ describe('radar de vencimientos', () => {
     });
 
     expect(JSON.parse(respuesta.body).vencimientos).toHaveLength(0);
+  });
+});
+
+/* ========================================================================== */
+
+describe('solicitudes de documentación', () => {
+  const PERIODO = '2026-03';
+
+  it('abrir el seguimiento de un cliente para un período lo deja ABIERTA', async () => {
+    const respuesta = await ctx.app.inject({
+      method: 'POST', url: `/api/v1/clientes/${MIO}/solicitudes-documentacion`,
+      headers: { cookie: coordinador },
+      payload: { periodo: PERIODO, cuentaDesde: '2026-04-01' },
+    });
+
+    expect(respuesta.statusCode).toBe(201);
+    const { solicitud } = JSON.parse(respuesta.body);
+    expect(solicitud.estado).toBe('ABIERTA');
+    expect(solicitud.recordatoriosEnviados).toBe(0);
+  });
+
+  it('abrir el mismo (cliente, período) dos veces no duplica', async () => {
+    const primera = await ctx.app.inject({
+      method: 'POST', url: `/api/v1/clientes/${MIO}/solicitudes-documentacion`,
+      headers: { cookie: coordinador },
+      payload: { periodo: PERIODO, cuentaDesde: '2026-04-01' },
+    });
+    const segunda = await ctx.app.inject({
+      method: 'POST', url: `/api/v1/clientes/${MIO}/solicitudes-documentacion`,
+      headers: { cookie: coordinador },
+      payload: { periodo: PERIODO, cuentaDesde: '2026-04-01' },
+    });
+
+    expect(JSON.parse(primera.body).solicitud.id).toBe(JSON.parse(segunda.body).solicitud.id);
+    expect(ctx.solicitudes.solicitudes).toHaveLength(1);
+  });
+
+  it('la vista por período respeta la cartera del usuario', async () => {
+    await ctx.app.inject({
+      method: 'POST', url: `/api/v1/clientes/${MIO}/solicitudes-documentacion`,
+      headers: { cookie: direccion }, payload: { periodo: PERIODO, cuentaDesde: '2026-04-01' },
+    });
+    await ctx.app.inject({
+      method: 'POST', url: `/api/v1/clientes/${AJENO}/solicitudes-documentacion`,
+      headers: { cookie: direccion }, payload: { periodo: PERIODO, cuentaDesde: '2026-04-01' },
+    });
+
+    const respuesta = await ctx.app.inject({
+      method: 'GET', url: `/api/v1/solicitudes-documentacion?periodo=${PERIODO}`,
+      headers: { cookie: coordinador },
+    });
+
+    const { solicitudes } = JSON.parse(respuesta.body);
+    expect(solicitudes).toHaveLength(1);
+    expect(solicitudes[0].clienteId).toBe(MIO);
+  });
+
+  it('cerrar marca el estado indicado y queda en la bitácora', async () => {
+    const alta = await ctx.app.inject({
+      method: 'POST', url: `/api/v1/clientes/${MIO}/solicitudes-documentacion`,
+      headers: { cookie: coordinador }, payload: { periodo: PERIODO, cuentaDesde: '2026-04-01' },
+    });
+    const { solicitud } = JSON.parse(alta.body);
+
+    const cierre = await ctx.app.inject({
+      method: 'POST', url: `/api/v1/solicitudes-documentacion/${solicitud.id}/cerrar`,
+      headers: { cookie: coordinador }, payload: { estado: 'ENTREGADA' },
+    });
+
+    expect(cierre.statusCode).toBe(200);
+    expect(JSON.parse(cierre.body).solicitud.estado).toBe('ENTREGADA');
+
+    const entrada = ctx.bitacora.filas.find((f) => f.accion === 'solicitud.cerrada');
+    expect(entrada?.usuarioId).toBe('usr-coordinador');
+    expect((entrada?.datosDespues as Record<string, unknown>)['estado']).toBe('ENTREGADA');
+  });
+
+  it('no se puede cerrar dos veces la misma solicitud', async () => {
+    const alta = await ctx.app.inject({
+      method: 'POST', url: `/api/v1/clientes/${MIO}/solicitudes-documentacion`,
+      headers: { cookie: coordinador }, payload: { periodo: PERIODO, cuentaDesde: '2026-04-01' },
+    });
+    const { solicitud } = JSON.parse(alta.body);
+
+    await ctx.app.inject({
+      method: 'POST', url: `/api/v1/solicitudes-documentacion/${solicitud.id}/cerrar`,
+      headers: { cookie: coordinador }, payload: { estado: 'ENTREGADA' },
+    });
+    const segunda = await ctx.app.inject({
+      method: 'POST', url: `/api/v1/solicitudes-documentacion/${solicitud.id}/cerrar`,
+      headers: { cookie: coordinador }, payload: { estado: 'CERRADA_MANUALMENTE' },
+    });
+
+    expect(segunda.statusCode).toBe(409);
+  });
+
+  it('no se puede cerrar una solicitud de un cliente fuera de la cartera', async () => {
+    const alta = await ctx.app.inject({
+      method: 'POST', url: `/api/v1/clientes/${AJENO}/solicitudes-documentacion`,
+      headers: { cookie: direccion }, payload: { periodo: PERIODO, cuentaDesde: '2026-04-01' },
+    });
+    const { solicitud } = JSON.parse(alta.body);
+
+    const respuesta = await ctx.app.inject({
+      method: 'POST', url: `/api/v1/solicitudes-documentacion/${solicitud.id}/cerrar`,
+      headers: { cookie: coordinador }, payload: { estado: 'ENTREGADA' },
+    });
+
+    expect(respuesta.statusCode).toBe(404);
+  });
+
+  it('un auxiliar no puede abrir el seguimiento de un período (solo ver)', async () => {
+    const respuesta = await ctx.app.inject({
+      method: 'POST', url: `/api/v1/clientes/${MIO}/solicitudes-documentacion`,
+      headers: { cookie: auxiliar },
+      payload: { periodo: PERIODO, cuentaDesde: '2026-04-01' },
+    });
+
+    expect(respuesta.statusCode).toBe(403);
   });
 });
 

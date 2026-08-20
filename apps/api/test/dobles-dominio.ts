@@ -32,7 +32,10 @@ import type {
   RepositorioDeProcesoMensual,
   RepositorioDeReglasDeNotificacion,
   RepositorioDeReglasImpositivas,
+  RepositorioDeSolicitudes,
   RepositorioDeVencimientos,
+  SolicitudAlmacenada,
+  AltaDeSolicitud,
   VencimientoAlmacenado,
   AltaDeExportacionSiga,
   AltaDeLiquidacion,
@@ -295,6 +298,63 @@ export class VencimientosFalsos implements RepositorioDeVencimientos {
     };
     this.vencimientos[indice] = actualizado;
     return actualizado;
+  }
+}
+
+export class SolicitudesFalsas implements RepositorioDeSolicitudes {
+  readonly solicitudes: SolicitudAlmacenada[] = [];
+
+  async listarPorPeriodo(
+    periodo: string,
+    filtro: FiltroDeCartera,
+  ): Promise<SolicitudAlmacenada[]> {
+    return this.solicitudes.filter(
+      (sol) => sol.periodo === periodo && alcanza(filtro, sol.clienteId),
+    );
+  }
+
+  async listarPorCliente(
+    clienteId: string,
+    filtro: FiltroDeCartera,
+  ): Promise<SolicitudAlmacenada[]> {
+    if (!alcanza(filtro, clienteId)) return [];
+    return this.solicitudes.filter((sol) => sol.clienteId === clienteId);
+  }
+
+  async buscarPorId(id: string, filtro: FiltroDeCartera): Promise<SolicitudAlmacenada | null> {
+    const sol = this.solicitudes.find((candidata) => candidata.id === id);
+    if (!sol || !alcanza(filtro, sol.clienteId)) return null;
+    return sol;
+  }
+
+  async registrar(datos: AltaDeSolicitud): Promise<SolicitudAlmacenada> {
+    const existente = this.solicitudes.find(
+      (sol) => sol.clienteId === datos.clienteId && sol.periodo === datos.periodo,
+    );
+    if (existente) return existente;
+
+    const sol: SolicitudAlmacenada = {
+      id: randomUUID(),
+      clienteId: datos.clienteId,
+      periodo: datos.periodo,
+      estado: 'ABIERTA',
+      cuentaDesde: datos.cuentaDesde,
+      recordatoriosEnviados: 0,
+      ultimoRecordatorioEn: null,
+      reglaId: datos.reglaId,
+    };
+    this.solicitudes.push(sol);
+    return sol;
+  }
+
+  async cerrar(
+    id: string,
+    estado: 'ENTREGADA' | 'CERRADA_MANUALMENTE',
+  ): Promise<SolicitudAlmacenada> {
+    const indice = this.solicitudes.findIndex((sol) => sol.id === id);
+    const actualizada: SolicitudAlmacenada = { ...this.solicitudes[indice]!, estado };
+    this.solicitudes[indice] = actualizada;
+    return actualizada;
   }
 }
 

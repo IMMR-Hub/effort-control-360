@@ -25,6 +25,7 @@ import {
   ProcesoMensualPrisma,
   ReglasDeNotificacionPrisma,
   ReglasImpositivasPrisma,
+  SolicitudesPrisma,
   VencimientosPrisma,
 } from '../../src/repositorios/dominio.js';
 import { ExportacionesSigaPrisma, LiquidacionesPrisma } from '../../src/repositorios/siga.js';
@@ -36,6 +37,7 @@ describeSiHayBase('repositorios de negocio contra PostgreSQL real', () => {
   let documentos: DocumentosPrisma;
   let procesoMensual: ProcesoMensualPrisma;
   let vencimientos: VencimientosPrisma;
+  let solicitudes: SolicitudesPrisma;
   let balances: BalancesPrisma;
   let siga: ExportacionesSigaPrisma;
   let liquidaciones: LiquidacionesPrisma;
@@ -55,6 +57,7 @@ describeSiHayBase('repositorios de negocio contra PostgreSQL real', () => {
     documentos = new DocumentosPrisma(entorno.prisma);
     procesoMensual = new ProcesoMensualPrisma(entorno.prisma);
     vencimientos = new VencimientosPrisma(entorno.prisma);
+    solicitudes = new SolicitudesPrisma(entorno.prisma);
     balances = new BalancesPrisma(entorno.prisma);
     siga = new ExportacionesSigaPrisma(entorno.prisma);
     liquidaciones = new LiquidacionesPrisma(entorno.prisma);
@@ -380,6 +383,64 @@ describeSiHayBase('repositorios de negocio contra PostgreSQL real', () => {
 
       expect(await vencimientos.buscarPorId(venc.id, [mio])).toBeNull();
       expect(await vencimientos.buscarPorId(venc.id, null)).not.toBeNull();
+    });
+  });
+
+  /* ====================================================================== */
+  /* Solicitudes de documentación                                          */
+  /* ====================================================================== */
+
+  describe('solicitudes de documentación', () => {
+    it('abrir el mismo (cliente, período) dos veces no duplica la fila', async () => {
+      // La restricción única de la base es la que de verdad lo impide, no el
+      // código: acá se prueba justamente eso, no lo que ya cubre el doble.
+      const primera = await solicitudes.registrar({
+        clienteId: mio, periodo: '2026-05', cuentaDesde: new Date('2026-06-01'), reglaId: null,
+      });
+      const segunda = await solicitudes.registrar({
+        clienteId: mio, periodo: '2026-05', cuentaDesde: new Date('2026-06-01'), reglaId: null,
+      });
+
+      expect(segunda.id).toBe(primera.id);
+
+      const todas = await solicitudes.listarPorCliente(mio, null);
+      expect(todas.filter((sol) => sol.periodo === '2026-05')).toHaveLength(1);
+    });
+
+    it('reabrir un período ya cerrado no le pisa el progreso hecho', async () => {
+      const abierta = await solicitudes.registrar({
+        clienteId: mio, periodo: '2026-06', cuentaDesde: new Date('2026-07-01'), reglaId: null,
+      });
+      const cerrada = await solicitudes.cerrar(abierta.id, 'ENTREGADA', usuario);
+
+      const reintento = await solicitudes.registrar({
+        clienteId: mio, periodo: '2026-06', cuentaDesde: new Date('2026-07-01'), reglaId: null,
+      });
+
+      expect(reintento.id).toBe(cerrada.id);
+      expect(reintento.estado).toBe('ENTREGADA');
+    });
+
+    it('la vista por período no incluye solicitudes de clientes fuera de la cartera', async () => {
+      await solicitudes.registrar({
+        clienteId: mio, periodo: '2026-07', cuentaDesde: new Date('2026-08-01'), reglaId: null,
+      });
+      await solicitudes.registrar({
+        clienteId: ajeno, periodo: '2026-07', cuentaDesde: new Date('2026-08-01'), reglaId: null,
+      });
+
+      const vista = await solicitudes.listarPorPeriodo('2026-07', [mio]);
+
+      expect(vista.every((sol) => sol.clienteId === mio)).toBe(true);
+    });
+
+    it('buscar por id respeta el alcance de cartera', async () => {
+      const sol = await solicitudes.registrar({
+        clienteId: ajeno, periodo: '2026-08', cuentaDesde: new Date('2026-09-01'), reglaId: null,
+      });
+
+      expect(await solicitudes.buscarPorId(sol.id, [mio])).toBeNull();
+      expect(await solicitudes.buscarPorId(sol.id, null)).not.toBeNull();
     });
   });
 

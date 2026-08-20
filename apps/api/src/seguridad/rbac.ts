@@ -31,6 +31,7 @@ export type Recurso =
   | 'alerta'
   | 'obligacion'
   | 'regla_notificacion'
+  | 'solicitud'
   | 'contacto'
   | 'constancia'
   | 'evento'
@@ -62,6 +63,7 @@ export const MATRIZ: MatrizDePermisos = Object.freeze({
     alerta: ['ver', 'cerrar', 'exportar'],
     obligacion: ['ver', 'crear', 'editar'],
     regla_notificacion: ['ver', 'crear', 'editar'],
+    solicitud: ['ver', 'crear', 'cerrar', 'exportar'],
     contacto: ['ver', 'crear', 'exportar'],
     constancia: ['ver', 'exportar'],
     evento: ['ver', 'exportar'],
@@ -82,6 +84,7 @@ export const MATRIZ: MatrizDePermisos = Object.freeze({
     alerta: ['ver', 'cerrar', 'exportar'],
     obligacion: ['ver'],
     regla_notificacion: ['ver', 'editar'],
+    solicitud: ['ver', 'crear', 'cerrar', 'exportar'],
     contacto: ['ver', 'crear', 'exportar'],
     constancia: ['ver', 'exportar'],
     evento: ['ver'],
@@ -101,6 +104,7 @@ export const MATRIZ: MatrizDePermisos = Object.freeze({
     alerta: ['ver', 'cerrar'],
     obligacion: ['ver'],
     regla_notificacion: ['ver'],
+    solicitud: ['ver', 'crear', 'cerrar'],
     contacto: ['ver', 'crear'],
     constancia: ['ver', 'exportar'],
     configuracion: ['ver'],
@@ -118,6 +122,7 @@ export const MATRIZ: MatrizDePermisos = Object.freeze({
     vencimiento: ['ver'],
     alerta: ['ver'],
     obligacion: ['ver'],
+    solicitud: ['ver'],
     contacto: ['ver', 'crear'],
     constancia: ['ver'],
     regla_impositiva: ['ver'],
@@ -135,6 +140,7 @@ export const MATRIZ: MatrizDePermisos = Object.freeze({
     vencimiento: ['ver'],
     alerta: ['ver'],
     obligacion: ['ver'],
+    solicitud: ['ver'],
     contacto: ['ver'],
     constancia: ['ver'],
     evento: ['ver'],
@@ -151,6 +157,7 @@ export const MATRIZ: MatrizDePermisos = Object.freeze({
     vencimiento: ['ver'],
     alerta: ['ver'],
     obligacion: ['ver'],
+    solicitud: ['ver'],
     contacto: ['ver'],
     constancia: ['ver'],
     regla_impositiva: ['ver'],

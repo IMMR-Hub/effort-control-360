@@ -30,7 +30,10 @@ import type {
   RepositorioDeProcesoMensual,
   RepositorioDeReglasDeNotificacion,
   RepositorioDeReglasImpositivas,
+  RepositorioDeSolicitudes,
   RepositorioDeVencimientos,
+  SolicitudAlmacenada,
+  AltaDeSolicitud,
   VencimientoAlmacenado,
 } from '../puertos-dominio.js';
 import type { PrismaClient } from './prisma.js';
@@ -419,6 +422,95 @@ export class VencimientosPrisma implements RepositorioDeVencimientos {
     });
 
     return fila as VencimientoAlmacenado;
+  }
+}
+
+/* ========================================================================== */
+/* Solicitudes de documentación                                              */
+/* ========================================================================== */
+
+const CAMPOS_SOLICITUD = {
+  id: true,
+  clienteId: true,
+  periodo: true,
+  estado: true,
+  cuentaDesde: true,
+  recordatoriosEnviados: true,
+  ultimoRecordatorioEn: true,
+  reglaId: true,
+} as const;
+
+export class SolicitudesPrisma implements RepositorioDeSolicitudes {
+  constructor(private readonly prisma: PrismaClient) {}
+
+  async listarPorPeriodo(
+    periodo: string,
+    filtro: FiltroDeCartera,
+  ): Promise<SolicitudAlmacenada[]> {
+    const filas = await this.prisma.solicitudDocumentacion.findMany({
+      where: { AND: [{ periodo }, porCartera(filtro)] },
+      select: CAMPOS_SOLICITUD,
+      orderBy: { cuentaDesde: 'asc' },
+    });
+
+    return filas as SolicitudAlmacenada[];
+  }
+
+  async listarPorCliente(
+    clienteId: string,
+    filtro: FiltroDeCartera,
+  ): Promise<SolicitudAlmacenada[]> {
+    const filas = await this.prisma.solicitudDocumentacion.findMany({
+      where: { AND: [{ clienteId }, porCartera(filtro)] },
+      select: CAMPOS_SOLICITUD,
+      orderBy: { periodo: 'desc' },
+    });
+
+    return filas as SolicitudAlmacenada[];
+  }
+
+  async buscarPorId(id: string, filtro: FiltroDeCartera): Promise<SolicitudAlmacenada | null> {
+    const fila = await this.prisma.solicitudDocumentacion.findFirst({
+      where: { AND: [{ id }, porCartera(filtro)] },
+      select: CAMPOS_SOLICITUD,
+    });
+
+    return fila as SolicitudAlmacenada | null;
+  }
+
+  /**
+   * Idempotente por `(clienteId, periodo)` vía `upsert`: abrir el seguimiento
+   * de un período que ya estaba abierto no crea una fila duplicada ni pisa el
+   * progreso ya hecho (recordatorios enviados, estado) — solo lo devuelve.
+   */
+  async registrar(datos: AltaDeSolicitud): Promise<SolicitudAlmacenada> {
+    const fila = await this.prisma.solicitudDocumentacion.upsert({
+      where: { clienteId_periodo: { clienteId: datos.clienteId, periodo: datos.periodo } },
+      update: {},
+      create: {
+        clienteId: datos.clienteId,
+        periodo: datos.periodo,
+        cuentaDesde: datos.cuentaDesde,
+        reglaId: datos.reglaId,
+      },
+      select: CAMPOS_SOLICITUD,
+    });
+
+    return fila as SolicitudAlmacenada;
+  }
+
+  async cerrar(
+    id: string,
+    estado: 'ENTREGADA' | 'CERRADA_MANUALMENTE',
+    usuarioId: string,
+  ): Promise<SolicitudAlmacenada> {
+    const fila = await this.prisma.solicitudDocumentacion.update({
+      where: { id },
+      data: { estado, actualizadoPorUsuarioId: usuarioId },
+      select: CAMPOS_SOLICITUD,
+    });
+
+    return fila as SolicitudAlmacenada;
   }
 }
 

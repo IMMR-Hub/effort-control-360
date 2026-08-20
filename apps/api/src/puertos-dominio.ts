@@ -207,6 +207,47 @@ export interface RepositorioDeVencimientos {
 }
 
 /* ========================================================================== */
+/* Solicitudes de documentación                                              */
+/* ========================================================================== */
+
+export interface SolicitudAlmacenada {
+  readonly id: string;
+  readonly clienteId: string;
+  readonly periodo: string;
+  readonly estado: string;
+  readonly cuentaDesde: Date;
+  readonly recordatoriosEnviados: number;
+  readonly ultimoRecordatorioEn: Date | null;
+  readonly reglaId: string | null;
+}
+
+export interface AltaDeSolicitud {
+  readonly clienteId: string;
+  readonly periodo: string;
+  readonly cuentaDesde: Date;
+  readonly reglaId: string | null;
+}
+
+export interface RepositorioDeSolicitudes {
+  /** Todas las de un período, en la cartera: es la vista de la pantalla de seguimiento. */
+  listarPorPeriodo(periodo: string, filtro: FiltroDeCartera): Promise<SolicitudAlmacenada[]>;
+  listarPorCliente(clienteId: string, filtro: FiltroDeCartera): Promise<SolicitudAlmacenada[]>;
+  buscarPorId(id: string, filtro: FiltroDeCartera): Promise<SolicitudAlmacenada | null>;
+  /**
+   * Abre el seguimiento de un cliente para un período. Idempotente: pedirlo
+   * de nuevo para el mismo (cliente, período) no crea una fila duplicada, la
+   * devuelve tal cual — abrir el seguimiento dos veces no es un error.
+   */
+  registrar(datos: AltaDeSolicitud): Promise<SolicitudAlmacenada>;
+  /** Cierra manualmente: entregó, o se decidió no seguir insistiendo. */
+  cerrar(
+    id: string,
+    estado: 'ENTREGADA' | 'CERRADA_MANUALMENTE',
+    usuarioId: string,
+  ): Promise<SolicitudAlmacenada>;
+}
+
+/* ========================================================================== */
 /* Balances                                                                   */
 /* ========================================================================== */
 

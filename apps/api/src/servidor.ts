@@ -37,6 +37,7 @@ import type {
   RepositorioDeProcesoMensual,
   RepositorioDeReglasDeNotificacion,
   RepositorioDeReglasImpositivas,
+  RepositorioDeSolicitudes,
   RepositorioDeVencimientos,
   RepositorioDeExportacionesSiga,
   RepositorioDeLiquidaciones,
@@ -52,6 +53,7 @@ export interface Dependencias {
   readonly documentos: RepositorioDeDocumentos;
   readonly procesoMensual: RepositorioDeProcesoMensual;
   readonly vencimientos: RepositorioDeVencimientos;
+  readonly solicitudes: RepositorioDeSolicitudes;
   readonly balances: RepositorioDeBalances;
   readonly exportacionesSiga: RepositorioDeExportacionesSiga;
   readonly liquidaciones: RepositorioDeLiquidaciones;

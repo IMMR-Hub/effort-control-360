@@ -150,6 +150,8 @@ export const ACCIONES = Object.freeze({
   USUARIO_CREADO: 'usuario.creado',
   USUARIO_ACTUALIZADO: 'usuario.actualizado',
 
+  SOLICITUD_REGISTRADA: 'solicitud.registrada',
+  SOLICITUD_CERRADA: 'solicitud.cerrada',
   CONTACTO_REGISTRADO: 'contacto.registrado',
   RECORDATORIO_ENVIADO: 'recordatorio.enviado',
   CONSTANCIA_EMITIDA: 'constancia.emitida',
