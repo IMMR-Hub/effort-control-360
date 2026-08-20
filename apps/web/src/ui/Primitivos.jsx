@@ -96,6 +96,14 @@ const ESTILOS_BOTON = {
     'bg-transparent text-tinta-suave border-transparent hover:bg-superficie-hundida hover:text-tinta',
 };
 
+/**
+ * @param {{
+ *   variante?: string,
+ *   icono?: import('lucide-react').LucideIcon | null,
+ *   children?: import('react').ReactNode,
+ *   className?: string,
+ * } & import('react').ButtonHTMLAttributes<HTMLButtonElement>} props
+ */
 export function Boton({ variante = 'secundario', icono: Icono = null, children, className = '', ...resto }) {
   return (
     <button

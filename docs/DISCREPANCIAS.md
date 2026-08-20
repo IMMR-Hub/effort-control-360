@@ -406,3 +406,10 @@ proyecto está pausado (reanudarlo con un clic si es así) o si cambió algo má
 serio (contraseña reseteada, proyecto movido). Una vez resuelto, correr
 `npm run verify` de nuevo para confirmar que `test:integration` vuelve a
 pasar.
+
+**Seguía caído el 2026-08-20**, diez días después, mismo `FATAL: (ENOTFOUND)
+tenant/user postgres.nrslhqtdyybmtvvwgirq not found`. Además de los tests ya
+mencionados, quedaron sin poder correr contra la base real los 4 tests de
+integración nuevos de `SolicitudesPrisma` (tarea 101 del roadmap). No es un
+problema nuevo — es el mismo punto 15, todavía sin resolver del lado de
+Supabase.

@@ -10,8 +10,8 @@ import { ProveedorDeSesion, useSesion } from './contexts/SesionContext.js';
 import { Acceso } from './pantallas/Acceso.js';
 // La demo anterior sigue en src/App.jsx con sus datos inventados, sin tocar,
 // hasta que cada una de sus pantallas tenga reemplazo contra la API real
-// (tarea 104). Seguimiento.jsx es la primera pantalla ya real (tarea 101).
-import Seguimiento from './pantallas/Seguimiento.jsx';
+// (tarea 104). Seguimiento.tsx es la primera pantalla ya real (tarea 101).
+import Seguimiento from './pantallas/Seguimiento.js';
 
 function Enrutador() {
   const { sesion } = useSesion();
