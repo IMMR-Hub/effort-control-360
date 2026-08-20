@@ -40,7 +40,11 @@ Si da 0, cerrada. Si no, no.
 
 **Avance: 93 de 113 tareas (82%).** Partes 1, 2, 3, 4A, 4B, 4C, 4D y 4E cerradas. Quedan 3 tareas bloqueadas por EFFORT (2 de carga de datos + el registro en Azure AD, este último en curso — ver `docs/DISCREPANCIAS.md` punto 6), que no frenan el código.
 
-Última actualización: 2026-07-24 · Commit de referencia: ver último commit en `git log`
+**Dos cosas pendientes de fuera del código, ninguna bloquea seguir con la tarea 101:**
+- **Azure AD (tarea 88):** registro de app ya creado y probado, falta que Laura o Lili concedan el consentimiento de administrador — no depende de nosotros. Ver `docs/DISCREPANCIAS.md`, punto 6.
+- **Supabase posiblemente pausado (2026-08-10):** `test:integration` no pudo conectarse — el DNS resuelve bien pero el proyecto no fue reconocido. Antes de correr `npm run verify` completo, confirmar en el dashboard de Supabase si sigue activo. Ver `docs/DISCREPANCIAS.md`, punto 15. Si ya se resolvió, borrar este párrafo y el punto 15.
+
+Última actualización: 2026-08-10 · Commit de referencia: ver último commit en `git log`
 
 > El total **no es un número fijo**: sube y baja a medida que el alcance de cada
 > parte se vuelve concreto. Si agregás, quitás o insertás una tarea, **renumerá
