@@ -388,7 +388,17 @@ Tarea nueva, descubierta el 2026-07-24 al comparar la estructura de carpetas que
 
   **Verificación:** `npx tsc --build` → exit 0. `npx vitest run --project web` → exit 0 (30 tests, sin regresiones). `npm run build` → exit 0. Verificado en el navegador real que el bundle sigue cargando sin errores y mostrando el login. `npm run verify` → 16 OK / 3 pendientes declarados / 1 fallido (`audit`, excepción de siempre, sin relación).
 
-  **Quedan 10 pantallas.** Próxima: Documentos/IVA.
+  **2026-08-20 — Pantalla Documentos/IVA (3 de 12) construida.** `apps/web/src/pantallas/Documentos.tsx`, dos tableros apilados: **Proceso mensual** (una fila por cliente activo del período elegido — el que no tiene fila todavía se muestra igual, marcado "Sin iniciar": guardar el panel de edición lo crea al vuelo, mismo `asegurar()` que ya usaba el servidor) y **Documentos** del cliente seleccionado en esa fila, con alta y cambio de estado (marcar cargado en SIGA, observar, rechazar — rechazar pide el motivo, que el servidor exige). Cliente HTTP nuevo `apps/web/src/api/documentos.ts`. El período es editable (input de texto `AAAA-MM`, con el mismo cálculo de "período activo" que ya usaba Seguimiento como valor por defecto) porque a diferencia de Clientes, estos dos módulos son por período. Importes (`total`, `ivaSaldoAPagar`, `ivaSaldoAFavor`) formateados con `gs()`/`formatearGs()` de `@effort/core`, nunca a mano — y la regla de negocio de que un período no puede tener saldo de IVA a pagar y a favor a la vez se muestra como advertencia en el formulario, aunque la valide el servidor.
+
+  RBAC reflejado tal cual el servidor ya lo tenía: `direccion`/`responsable`/`coordinador`/`auxiliar` editan el proceso mensual y dan de alta documentos; cambiar el estado de un documento (SIGA/observar/rechazar) es solo para `direccion`/`responsable`/`coordinador` — `auxiliar` puede cargar documentos pero no decidir su estado. `revisor_balance`/`solo_lectura` solo miran.
+
+  **Vencimiento nuevo agregado a `Encabezado.tsx`** ("Documentos / IVA"), tercer enlace de la navegación compartida.
+
+  **Tests nuevos:** 10 en `apps/web/test/Documentos.test.tsx` (tablero con "Sin iniciar", formateo de IVA, selección de fila carga documentos, formulario vacío al abrir un cliente sin proceso, RBAC del panel de edición y de los botones de estado, guardado del proceso con el saldo de IVA como texto, cambio de estado a SIGA, rechazo con motivo vía `window.prompt`, cancelar el rechazo sin motivo no llama al servidor). El período de las pruebas se calcula con la misma `hoyEnParaguay(new Date())` que usa la pantalla, para no depender de una fecha fija que se desactualice.
+
+  **Verificación:** `npx tsc --build` → exit 0. `npx vitest run --project web` → exit 0 (40 tests, sin regresiones). `npm run build` → exit 0. Verificado en el navegador real que el bundle carga sin errores. `npm run verify` → 16 OK / 3 pendientes declarados / 1 fallido (`audit`, excepción de siempre, sin relación) — el primer intento marcó `test:unit` en rojo por el problema intermitente de concurrencia ya documentado varias veces en esta bitácora; reintentado solo (`npx vitest run`, 600/600) y confirmado en verde antes de repetir `npm run verify` completo.
+
+  **Quedan 9 pantallas.** Próxima: Vencimientos.
 - [ ] 105. Retirar por completo `apps/App.jsx` (la demo original) una vez que todas las pantallas tengan reemplazo
 - [ ] 106. `verify:no-hardcoded-kpi` — ningún número escrito a mano en la interfaz
 

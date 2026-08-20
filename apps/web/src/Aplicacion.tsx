@@ -16,10 +16,12 @@ import { Encabezado, type Pantalla } from './layout/Encabezado.js';
 // (tarea 104). Seguimiento.tsx y Clientes.tsx son las dos primeras ya reales.
 import Seguimiento from './pantallas/Seguimiento.js';
 import Clientes from './pantallas/Clientes.js';
+import Documentos from './pantallas/Documentos.js';
 
 const PANTALLAS: Record<Pantalla, () => JSX.Element> = {
   seguimiento: Seguimiento,
   clientes: Clientes,
+  documentos: Documentos,
 };
 
 function AppShell() {
