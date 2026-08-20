@@ -35,6 +35,12 @@ import {
 import { ErrorDeApi } from '../api/cliente.js';
 import { listarClientes, type Cliente } from '../api/clientes.js';
 import {
+  ETIQUETA_TIPO_DOCUMENTO,
+  OPCIONES_RIESGO,
+  OPCIONES_TIPO_DOCUMENTO,
+  TONO_RIESGO,
+} from '../ui/etiquetas.js';
+import {
   actualizarProcesoMensual,
   cambiarEstadoDocumento,
   crearDocumento,
@@ -65,38 +71,12 @@ const TONO_ESTADO_GENERAL: Record<EstadoGeneral, 'completo' | 'parcial' | 'pendi
   CRITICO: 'critico',
 };
 
-const TONO_RIESGO: Record<NivelRiesgo, 'completo' | 'pendiente' | 'parcial' | 'critico'> = {
-  BAJO: 'completo',
-  MEDIO: 'pendiente',
-  ALTO: 'parcial',
-  CRITICO: 'critico',
-};
-
 const TONO_ESTADO_DOCUMENTO: Record<EstadoDocumento, 'proceso' | 'parcial' | 'critico' | 'completo'> = {
   RECIBIDO: 'proceso',
   OBSERVADO: 'parcial',
   RECHAZADO: 'critico',
   DUPLICADO: 'critico',
   CARGADO_EN_SIGA: 'completo',
-};
-
-const ETIQUETA_TIPO_DOCUMENTO: Record<TipoDocumento, string> = {
-  FACTURA_COMPRA: 'Factura de compra',
-  FACTURA_VENTA: 'Factura de venta',
-  RECIBO: 'Recibo',
-  RETENCION: 'Retención',
-  NOTA_CREDITO: 'Nota de crédito',
-  NOTA_DEBITO: 'Nota de débito',
-  EXTRACTO_BANCARIO: 'Extracto bancario',
-  COMPROBANTE_PAGO: 'Comprobante de pago',
-  CONTRATO: 'Contrato',
-  PODER: 'Poder',
-  ACTA: 'Acta',
-  ESTATUTO: 'Estatuto',
-  CERTIFICADO: 'Certificado',
-  CONSTANCIA: 'Constancia',
-  LIQUIDACION: 'Liquidación',
-  OTRO: 'Otro',
 };
 
 const ETIQUETA_TASA: Record<TasaIva, string> = { DIEZ: '10%', CINCO: '5%', EXENTA: 'Exenta' };
@@ -110,11 +90,6 @@ const ETIQUETA_CANAL: Record<CanalRecepcionDocumento, string> = {
 };
 
 const OPCIONES_ESTADO_GENERAL = Object.keys(TONO_ESTADO_GENERAL).map((v) => ({ valor: v, etiqueta: v }));
-const OPCIONES_RIESGO = Object.keys(TONO_RIESGO).map((v) => ({ valor: v, etiqueta: v }));
-const OPCIONES_TIPO_DOCUMENTO = Object.entries(ETIQUETA_TIPO_DOCUMENTO).map(([valor, etiqueta]) => ({
-  valor,
-  etiqueta,
-}));
 const OPCIONES_TASA = Object.entries(ETIQUETA_TASA).map(([valor, etiqueta]) => ({ valor, etiqueta }));
 const OPCIONES_CANAL = Object.entries(ETIQUETA_CANAL).map(([valor, etiqueta]) => ({ valor, etiqueta }));
 

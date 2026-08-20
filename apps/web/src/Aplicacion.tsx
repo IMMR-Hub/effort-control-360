@@ -17,11 +17,13 @@ import { Encabezado, type Pantalla } from './layout/Encabezado.js';
 import Seguimiento from './pantallas/Seguimiento.js';
 import Clientes from './pantallas/Clientes.js';
 import Documentos from './pantallas/Documentos.js';
+import Vencimientos from './pantallas/Vencimientos.js';
 
 const PANTALLAS: Record<Pantalla, () => JSX.Element> = {
   seguimiento: Seguimiento,
   clientes: Clientes,
   documentos: Documentos,
+  vencimientos: Vencimientos,
 };
 
 function AppShell() {

@@ -399,6 +399,16 @@ Tarea nueva, descubierta el 2026-07-24 al comparar la estructura de carpetas que
   **Verificación:** `npx tsc --build` → exit 0. `npx vitest run --project web` → exit 0 (40 tests, sin regresiones). `npm run build` → exit 0. Verificado en el navegador real que el bundle carga sin errores. `npm run verify` → 16 OK / 3 pendientes declarados / 1 fallido (`audit`, excepción de siempre, sin relación) — el primer intento marcó `test:unit` en rojo por el problema intermitente de concurrencia ya documentado varias veces en esta bitácora; reintentado solo (`npx vitest run`, 600/600) y confirmado en verde antes de repetir `npm run verify` completo.
 
   **Quedan 9 pantallas.** Próxima: Vencimientos.
+
+  **2026-08-20 — Pantalla Vencimientos (4 de 12) construida.** `apps/web/src/pantallas/Vencimientos.tsx`: el radar completo de la cartera, ordenado por fecha, con días restantes y nivel de alerta que manda el servidor ya calculados en zona Paraguay — la pantalla no recalcula nada. Alta de vencimiento (con selector de cliente, a diferencia de Documentos que ya tenía un cliente elegido) y acción "Presentar" por fila, que pide la fecha con `window.prompt` y llama a `POST /api/v1/vencimientos/:id/presentar`. RBAC: `direccion`/`responsable`/`coordinador` editan, `auxiliar`/`revisor_balance`/`solo_lectura` solo miran — mismo patrón que ya venían mostrando las pantallas anteriores.
+
+  **Antes de que se triplicara:** `TipoDocumento` (compartido con Documentos) y `NivelRiesgo` (compartido con Proceso Mensual) estaban declarados dos veces cada uno. Se extrajeron a `apps/web/src/api/tipos-compartidos.ts`, y las etiquetas/tonos de badge correspondientes a `apps/web/src/ui/etiquetas.ts` — `Documentos.tsx` se ajustó para importarlas de ahí en vez de tener su propia copia.
+
+  **Tests nuevos:** 6 en `apps/web/test/Vencimientos.test.tsx` (radar con días/alerta del servidor, resumen por nivel, RBAC de los botones, alta con selector de cliente, presentar con `window.prompt`, cancelar el prompt no llama al servidor).
+
+  **Verificación:** `npx tsc --build` → exit 0. `npx vitest run --project web` → exit 0 (46 tests, sin regresiones). `npm run build` → exit 0. Verificado en el navegador real que el bundle carga sin errores. `npm run verify` → 16 OK / 3 pendientes declarados / 1 fallido (`audit`, excepción de siempre, sin relación).
+
+  **Quedan 8 pantallas.** Próxima: Balances.
 - [ ] 105. Retirar por completo `apps/App.jsx` (la demo original) una vez que todas las pantallas tengan reemplazo
 - [ ] 106. `verify:no-hardcoded-kpi` — ningún número escrito a mano en la interfaz
 

@@ -8,24 +8,9 @@
  */
 
 import { peticion, type QueryParams } from './cliente.js';
+import type { NivelRiesgo, TipoDocumento } from './tipos-compartidos.js';
 
-export type TipoDocumento =
-  | 'FACTURA_COMPRA'
-  | 'FACTURA_VENTA'
-  | 'RECIBO'
-  | 'RETENCION'
-  | 'NOTA_CREDITO'
-  | 'NOTA_DEBITO'
-  | 'EXTRACTO_BANCARIO'
-  | 'COMPROBANTE_PAGO'
-  | 'CONTRATO'
-  | 'PODER'
-  | 'ACTA'
-  | 'ESTATUTO'
-  | 'CERTIFICADO'
-  | 'CONSTANCIA'
-  | 'LIQUIDACION'
-  | 'OTRO';
+export type { NivelRiesgo, TipoDocumento };
 
 export type CanalRecepcionDocumento = 'WHATSAPP' | 'EMAIL' | 'ONEDRIVE' | 'FISICO_ESCANEADO' | 'SISTEMA';
 export type TasaIva = 'DIEZ' | 'CINCO' | 'EXENTA';
@@ -94,7 +79,6 @@ export function cambiarEstadoDocumento(
 /* ========================================================================== */
 
 export type EstadoGeneral = 'COMPLETO' | 'PARCIAL' | 'PENDIENTE' | 'OBSERVADO' | 'CRITICO';
-export type NivelRiesgo = 'BAJO' | 'MEDIO' | 'ALTO' | 'CRITICO';
 
 export interface ProcesoMensual {
   readonly id: string;
