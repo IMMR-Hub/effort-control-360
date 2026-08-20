@@ -96,7 +96,7 @@ const ESTILOS_BOTON = {
     'bg-transparent text-tinta-suave border-transparent hover:bg-superficie-hundida hover:text-tinta',
 };
 
-export function Boton({ variante = 'secundario', icono: Icono, children, className = '', ...resto }) {
+export function Boton({ variante = 'secundario', icono: Icono = null, children, className = '', ...resto }) {
   return (
     <button
       type="button"
@@ -107,6 +107,39 @@ export function Boton({ variante = 'secundario', icono: Icono, children, classNa
       {Icono && <Icono size={15} strokeWidth={2} aria-hidden="true" />}
       {children}
     </button>
+  );
+}
+
+/* --- Formularios ------------------------------------------------------------ */
+
+/**
+ * Campo de formulario con rótulo y error asociados por `aria-describedby`.
+ *
+ * El error se anuncia junto al campo, no en un cartel aparte: quien usa un
+ * lector de pantalla tiene que enterarse de qué campo falló sin tener que
+ * buscarlo.
+ */
+export function CampoTexto({ etiqueta, id, error = null, className = '', ...resto }) {
+  return (
+    <div className={`flex flex-col gap-1.5 ${className}`}>
+      <label htmlFor={id} className="text-xs font-medium text-tinta-suave">
+        {etiqueta}
+      </label>
+      <input
+        id={id}
+        className={`min-h-9 rounded border bg-superficie px-3 py-1.5 text-sm text-tinta focus-visible:outline-none ${
+          error ? 'border-critico' : 'border-borde-fuerte'
+        }`}
+        aria-invalid={error ? 'true' : undefined}
+        aria-describedby={error ? `${id}-error` : undefined}
+        {...resto}
+      />
+      {error && (
+        <p id={`${id}-error`} className="text-xs text-critico">
+          {error}
+        </p>
+      )}
+    </div>
   );
 }
 

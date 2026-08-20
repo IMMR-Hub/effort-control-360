@@ -38,7 +38,7 @@ grep -c "^- \[ \]" <(sed -n '/## PARTE X/,/## PARTE X+1/p' docs/ROADMAP-MAESTRO.
 
 Si da 0, cerrada. Si no, no.
 
-**Avance: 92 de 113 tareas (81%).** Partes 1, 2, 3, 4A, 4B, 4C, 4D y 4E cerradas. Quedan 3 tareas bloqueadas por EFFORT (2 de carga de datos + el registro en Azure AD), que no frenan el código.
+**Avance: 93 de 113 tareas (82%).** Partes 1, 2, 3, 4A, 4B, 4C, 4D y 4E cerradas. Quedan 3 tareas bloqueadas por EFFORT (2 de carga de datos + el registro en Azure AD, este último en curso — ver `docs/DISCREPANCIAS.md` punto 6), que no frenan el código.
 
 Última actualización: 2026-07-24 · Commit de referencia: ver último commit en `git log`
 
@@ -343,7 +343,23 @@ Tarea nueva, descubierta el 2026-07-24 al comparar la estructura de carpetas que
 
   **Verificación:** `npm run verify` → 16 OK / 3 pendientes declarados / **1 fallido (`audit`, excepción documentada desde la tarea 93, sin relación con esta tarea)** — hecho el 2026-07-28 (dos intentos intermedios fallaron por el problema intermitente de conectividad contra Supabase de siempre, en `test:unit` al correr todos los proyectos juntos; reintentado y confirmado en verde).
 - [ ] 101. Reemplazar `datos-semilla/` por llamadas reales a la API
-- [ ] 102. Pantalla de login con flujo de 2FA en dos pasos
+- [x] 102. Pantalla de login con flujo de 2FA en dos pasos. **Construida antes que la 101** — ver bitácora del 2026-07-30: sin login no hay sesión real contra la cual probar llamadas a la API, así que 101 se hace después de esta.
+
+  **Contexto de sesión** (`apps/web/src/contexts/SesionContext.tsx`): `sesion` es `undefined` mientras se confirma si ya hay sesión activa, `null` si no la hay. El paso 2FA deja un hueco a propósito — entre el paso 1 y el paso 2 el servidor ya tiene una sesión creada pero `segundoFactorSuperado: false`, y `evaluarSesion()` no la deja pasar por `GET /api/v1/yo` — verificado leyendo `apps/api/src/seguridad/sesiones.ts` antes de asumir cómo se comportaba, no adivinado.
+
+  **La pantalla** (`apps/web/src/pantallas/Acceso.tsx`): paso 1 (correo + contraseña) → paso 2 (código, solo si `segundoFactorRequerido`). El servidor ya redacta mensajes listos para mostrar — la pantalla no reinterpreta errores, los muestra tal cual, excepto `sin_sesion` en el paso 2 (la sesión intermedia venció), que vuelve al paso 1 con un mensaje propio. Primitivos nuevos en `ui/Primitivos.jsx` (`CampoTexto`) reusando los tokens de marca ya existentes.
+
+  **Dos bugs reales encontrados construyendo esto, no antes de escribir código:**
+  1. `<ProveedorDeSesion>` no capturaba el rechazo de `obtenerSesionActual()` en su `useEffect` inicial — un fallo de red al cargar la página (servidor caído, sin conexión) dejaba la pantalla en "Cargando…" para siempre, sin salida. Encontrado recién al verificar en el navegador real sin el backend corriendo (no lo hubiera mostrado ningún test con `fetch` mockeado, porque el mock nunca "falla" a menos que se le pida). Corregido con un `.catch(() => null)`, con test de regresión.
+  2. Mock de tests con cola global (`mockResolvedValueOnce` encadenado) — una sola promesa que se resuelve un instante tarde le "roba" la respuesta al test siguiente, corriendo la cola para todo lo que viene después con fallas que no tienen nada que ver con el test que las muestra. Reescrito para enrutar por `(método, ruta)` en vez de por orden de llegada — mismo patrón se reusa para las 12 pantallas de la tarea 103.
+
+  **Tooling de tests para pantallas, nuevo:** `@testing-library/react`, `@testing-library/user-event`, `@testing-library/jest-dom`, `jsdom` — permiso pedido explícitamente antes de instalar. `jsdom@30` no sirve con la versión de Node de esta máquina (pide 24.15+, hay 24.14) — se fijó `jsdom@^29.1.1`. El proyecto `web` de `vitest.config.ts` necesitó el plugin `@vitejs/plugin-react` (el mismo que ya usa `apps/web/vite.config.ts`): sin él, el JSX de los `.jsx` que usan el runtime automático (sin `import React`) no se transforma igual en los tests que en `vite build`, y revienta con "React is not defined" apenas se monta el primer componente `.jsx`.
+
+  22 tests nuevos (`apps/web/test/Acceso.test.tsx`). `main.tsx` (renombrado desde `main.jsx`) ahora monta `<Aplicacion>`, que decide entre "Cargando…", `<Acceso>` o la pantalla real según el estado de la sesión.
+
+  **Verificado en el navegador real** (no solo con tests mockeados): con el backend apagado a propósito, el login se muestra igual (confirma el fix del bug 1) y, al intentar entrar, aparece el mensaje real de error de conexión — sin ninguna excepción sin capturar en la consola.
+
+  **Verificación:** `npm run verify` → 14 OK / 3 pendientes declarados / **3 fallidos** — hecho el 2026-08-10. Ninguno de los tres tiene que ver con esta tarea: `audit` es una excepción nueva documentada (`docs/DISCREPANCIAS.md`, punto 14, Prisma/`deepmerge-ts`); `test:unit` y `test:integration` fallan porque el proyecto de Supabase parece estar pausado (`docs/DISCREPANCIAS.md`, punto 15) — confirmado que no es el problema intermitente de siempre (el DNS resuelve bien, pero Supabase dice no reconocer el proyecto). El resto de los checks, incluidos los 22 tests nuevos de esta tarea, pasó en verde.
 - [ ] 103. Las 12 pantallas del handoff, una por una, contra datos reales
 - [ ] 104. Retirar por completo `apps/App.jsx` (la demo original) una vez que todas las pantallas tengan reemplazo
 - [ ] 105. `verify:no-hardcoded-kpi` — ningún número escrito a mano en la interfaz

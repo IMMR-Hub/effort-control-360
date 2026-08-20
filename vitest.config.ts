@@ -1,3 +1,4 @@
+import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
@@ -46,11 +47,20 @@ export default defineConfig({
         },
       },
       {
+        // Mismo plugin que apps/web/vite.config.ts: sin esto, el JSX de los
+        // .jsx que usan el runtime automático (sin `import React`) no se
+        // transforma igual en los tests que en `vite build`, y revienta con
+        // "React is not defined" apenas se monta el primer componente .jsx.
+        plugins: [react()],
         test: {
           name: 'web',
           root: './apps/web',
-          include: ['test/**/*.test.ts'],
-          environment: 'node',
+          include: ['test/**/*.test.{ts,tsx}'],
+          // jsdom y no 'node': las pantallas se prueban como las ve una
+          // persona (hacer clic, escribir, leer un mensaje de error), no
+          // inspeccionando el estado interno de React.
+          environment: 'jsdom',
+          setupFiles: ['./test/configuracion.ts'],
         },
       },
       {

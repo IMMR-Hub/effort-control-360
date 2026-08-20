@@ -352,3 +352,57 @@ Microsoft 365 Business Basic ya definido incluye Exchange Online.
 EFFORT realmente antes de construir la tarea 95. Si confirman Microsoft 365,
 se sigue con la recomendación de arriba. Si usan otra cosa, hay que
 reevaluar — la tarea 95 queda pausada hasta entonces.
+
+---
+
+## 14. `npm audit` en rojo por `deepmerge-ts` (vía Prisma) — EXCEPCIÓN DOCUMENTADA, NO ES UNA REGRESIÓN
+
+**Qué pasó:** el 2026-08-10, sin cambiar ninguna dependencia de Prisma, el
+check `audit` empezó a fallar por un aviso nuevo (GHSA-ggr8-5vv4-36mx,
+agotamiento de pila al combinar objetos recursivos) en `deepmerge-ts`, que
+llega transitivamente vía `@prisma/config` → `prisma` (devDependency). Mismo
+patrón que el punto 12: un aviso recién publicado que empieza a marcar una
+dependencia que ya estaba instalada, sin que el código propio haya cambiado.
+
+**Por qué no se aplica el fix:** `npm audit fix --force` instalaría
+`prisma@6.12.0` — **una versión por debajo de la fijada en el proyecto
+(6.19.3, ver `CLAUDE.md`)**. Prisma 7 ya está descartado ahí mismo porque
+cambia la configuración de conexión de forma incompatible; bajar a 6.12.0 es
+el mismo tipo de riesgo, no una mejora. Además, la vulnerabilidad es en una
+herramienta de build/CLI que combina el propio archivo de configuración del
+proyecto — no procesa ningún dato de un usuario ni corre en producción.
+
+**Cómo se cierra:** esperar a que `prisma`/`@prisma/config` publiquen una
+versión ≥6.19.3 que dependa de `deepmerge-ts` parcheado, y correr
+`npm update`. Revisar en cada `npm run verify` (ya pasa automáticamente).
+
+---
+
+## 15. Supabase inalcanzable el 2026-08-10 — probablemente el proyecto pausado
+
+**Qué pasó:** `npm run verify` falló dos veces seguidas en `test:integration`
+con `FATAL: (ENOTFOUND) tenant/user postgres.nrslhqtdyybmtvvwgirq not found`.
+No es el problema intermitente de concurrencia ya documentado en otras
+entradas de la bitácora (ese da `tuple concurrently updated` o
+`Can't reach database server`, y se resuelve reintentando). Se verificó por
+partes antes de asumir nada:
+
+- El DNS de `aws-0-sa-east-1.pooler.supabase.com` resuelve bien
+  (`54.94.90.106`) — no es un problema de red.
+- El pooler de Supabase responde, pero dice explícitamente que no reconoce el
+  proyecto `nrslhqtdyybmtvvwgirq` como un tenant válido.
+
+Esto apunta a que el proyecto de Supabase esté **pausado** — el plan
+gratuito/Nano se pausa solo después de varios días sin actividad — o que algo
+haya cambiado del lado de la cuenta.
+
+**No bloquea nada más:** el resto de `npm run verify` (14 checks, incluidos
+los 22 tests nuevos de la tarea 102 y una verificación real en el navegador)
+pasó en verde. Solo los 2 tests que necesitan una conexión real a Postgres
+quedan sin poder correr hasta que se confirme el estado del proyecto.
+
+**Cómo se cierra:** entrar al dashboard de Supabase y confirmar si el
+proyecto está pausado (reanudarlo con un clic si es así) o si cambió algo más
+serio (contraseña reseteada, proyecto movido). Una vez resuelto, correr
+`npm run verify` de nuevo para confirmar que `test:integration` vuelve a
+pasar.
