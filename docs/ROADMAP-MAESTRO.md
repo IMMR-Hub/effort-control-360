@@ -421,6 +421,16 @@ Tarea nueva, descubierta el 2026-07-24 al comparar la estructura de carpetas que
   **Verificación:** `npx tsc --build` → exit 0. `npx vitest run --project web` → exit 0 (55 tests, sin regresiones). `npm run build` → exit 0. Verificado en el navegador real que el bundle carga sin errores. `npm run verify` → 16 OK / 3 pendientes declarados / 1 fallido (`audit`, excepción de siempre, sin relación).
 
   **Quedan 7 pantallas.** Próxima: SIGA / Conciliación.
+
+  **2026-08-20 — Pantalla SIGA/Conciliación (6 de 12) construida.** `apps/web/src/pantallas/Siga.tsx`. A diferencia de las pantallas anteriores, acá no hay un endpoint cartera-wide (`GET /api/v1/clientes/:id/siga` es por cliente) — la pantalla arranca con un selector de cliente en vez de un tablero de toda la cartera. Dos partes: **importar** (archivo → `modo: 'simulacion'` primero, que solo lee y muestra el reporte de aceptados/rechazados sin persistir nada; recién "Confirmar importación" manda el mismo archivo con `modo: 'real'` — el paso de simulación no se puede saltear porque el botón de confirmar solo aparece después de simular) y **conciliación** (de solo lectura: qué falta cargar en SIGA, qué está en SIGA sin respaldo documental, y las diferencias de monto — todo lo calcula `conciliarConSiga` de `@effort/core`, la pantalla solo muestra el resultado).
+
+  El archivo se lee en el navegador con `FileReader.readAsDataURL()` y se manda como `contenidoBase64` en el cuerpo JSON, mismo criterio que ya usa la API desde la tarea 93 (sin subir `@fastify/multipart` como dependencia nueva). Helper nuevo `archivoABase64()` en `apps/web/src/api/siga.ts`.
+
+  **Tests nuevos:** 5 en `apps/web/test/Siga.test.tsx`, con `FileReader` mockeado (jsdom no lo implementa completo) — cubren el reporte de simulación con aceptados/rechazados, que confirmar manda el mismo archivo con `modo: 'real'`, RBAC del formulario de importación, y que la conciliación con diferencias las muestra formateadas.
+
+  **Verificación:** `npx tsc --build` → exit 0. `npx vitest run --project web` → exit 0 (60 tests, sin regresiones). `npm run build` → exit 0. Verificado en el navegador real que el bundle carga sin errores. `npm run verify` → 16 OK / 3 pendientes declarados / 1 fallido (`audit`, excepción de siempre, sin relación).
+
+  **Quedan 6 pantallas.** Próxima: Liquidaciones.
 - [ ] 105. Retirar por completo `apps/App.jsx` (la demo original) una vez que todas las pantallas tengan reemplazo
 - [ ] 106. `verify:no-hardcoded-kpi` — ningún número escrito a mano en la interfaz
 

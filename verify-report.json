@@ -1,13 +1,13 @@
 {
-  "generado_en": "2026-08-20T20:20:48.800Z",
-  "commit": "dfad369c5de6ec276793aca6ce5bac44609cff1d",
+  "generado_en": "2026-08-20T20:38:17.278Z",
+  "commit": "7f7e845bbd36e6a3afdb8f73f50e49df1f23138e",
   "checks": [
     {
       "nombre": "typecheck",
       "comando": "npx tsc --build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 1506,
+      "duracion_ms": 1758,
       "detalle": ""
     },
     {
@@ -15,7 +15,7 @@
       "comando": "npm run typecheck --workspace @effort/web",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4675,
+      "duracion_ms": 5793,
       "detalle": ""
     },
     {
@@ -23,7 +23,7 @@
       "comando": "npx vitest run",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 167315,
+      "duracion_ms": 133250,
       "detalle": ""
     },
     {
@@ -31,7 +31,7 @@
       "comando": "npx vitest run packages/core/test/golden.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3265,
+      "duracion_ms": 3914,
       "detalle": ""
     },
     {
@@ -45,7 +45,7 @@
       "comando": "npx vitest run apps/api/test/rbac.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3194,
+      "duracion_ms": 3664,
       "detalle": ""
     },
     {
@@ -53,7 +53,7 @@
       "comando": "npx vitest run apps/api/test/seguridad.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3544,
+      "duracion_ms": 4023,
       "detalle": ""
     },
     {
@@ -61,7 +61,7 @@
       "comando": "npx vitest run packages/schema/test/contratos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3714,
+      "duracion_ms": 3742,
       "detalle": ""
     },
     {
@@ -69,7 +69,7 @@
       "comando": "npx vitest run apps/api/test/servidor.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6705,
+      "duracion_ms": 7020,
       "detalle": ""
     },
     {
@@ -77,7 +77,7 @@
       "comando": "npx vitest run apps/api/test/modulos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 29589,
+      "duracion_ms": 29595,
       "detalle": ""
     },
     {
@@ -85,7 +85,7 @@
       "comando": "npx vitest run apps/api/test/siga.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 8047,
+      "duracion_ms": 8108,
       "detalle": ""
     },
     {
@@ -93,7 +93,7 @@
       "comando": "npx vitest run apps/api/test/importaciones.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7283,
+      "duracion_ms": 7007,
       "detalle": ""
     },
     {
@@ -101,7 +101,7 @@
       "comando": "npx vitest run --project integracion",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 153765,
+      "duracion_ms": 133314,
       "detalle": ""
     },
     {
@@ -109,7 +109,7 @@
       "comando": "npx vitest run --project drive",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3041,
+      "duracion_ms": 3919,
       "detalle": ""
     },
     {
@@ -117,7 +117,7 @@
       "comando": "npx vitest run --project importers",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3832,
+      "duracion_ms": 4530,
       "detalle": ""
     },
     {
@@ -125,7 +125,7 @@
       "comando": "npx vitest run --project web",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 18697,
+      "duracion_ms": 19991,
       "detalle": ""
     },
     {
@@ -145,7 +145,7 @@
       "comando": "npm audit --audit-level=high",
       "estado": "FALLO",
       "exit_code": 1,
-      "duracion_ms": 4009,
+      "duracion_ms": 3733,
       "detalle": "# npm audit report\n\ndeepmerge-ts  <8.0.0\nSeverity: high\nDeepmergeTS has stack exhaustion when merging recursive object graphs - https://github.com/advisories/GHSA-ggr8-5vv4-36mx\nfix available via `npm audit fix --force`\nWill install prisma@6.12.0, which is a breaking change\nnode_modules/deepmerge-ts\n  @prisma/config  >=6.13.0-dev.1\n  Depends on vulnerable versions of deepmerge-ts\n  apps/api/node_modules/@prisma/config\n    prisma  6.13.0-dev.1 - 7.10.0-integration-fix-prisma-publish-token.1\n    Depends on vulnerable versions of @prisma/config\n    apps/api/node_modules/prisma\n\nuuid  <11.1.1\nSeverity: moderate\nuuid: Missing buffer bounds check in v3/v5/v6 when buf is provided - https://github.com/advisories/GHSA-w5hq-g745-h8pq\nfix available via `npm audit fix --force`\nWill install exceljs@3.4.0, which is a breaking change\nnode_modules/uuid\n  exceljs  >=3.5.0\n  Depends on vulnerable versions of uuid\n  node_modules/exceljs\n\n5 vulnerabilities (2 moderate, 3 high)\n\nTo address all issues (including breaking changes), run:\n  npm audit fix --force"
     },
     {
@@ -153,7 +153,7 @@
       "comando": "npm run build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 8035,
+      "duracion_ms": 7735,
       "detalle": ""
     }
   ],
