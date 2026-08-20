@@ -378,7 +378,7 @@ versión ≥6.19.3 que dependa de `deepmerge-ts` parcheado, y correr
 
 ---
 
-## 15. Supabase inalcanzable el 2026-08-10 — probablemente el proyecto pausado
+## 15. Supabase inalcanzable el 2026-08-10 — CERRADO el 2026-08-20 (proyecto pausado)
 
 **Qué pasó:** `npm run verify` falló dos veces seguidas en `test:integration`
 con `FATAL: (ENOTFOUND) tenant/user postgres.nrslhqtdyybmtvvwgirq not found`.
@@ -413,3 +413,18 @@ mencionados, quedaron sin poder correr contra la base real los 4 tests de
 integración nuevos de `SolicitudesPrisma` (tarea 101 del roadmap). No es un
 problema nuevo — es el mismo punto 15, todavía sin resolver del lado de
 Supabase.
+
+**Cerrado el 2026-08-20, mismo día:** Daniel confirmó en el dashboard de
+Supabase que el proyecto estaba efectivamente **pausado** (pantalla "Project
+'Effort-Control-360' is paused", resumible hasta el 09-sep-2027) — exactamente
+la causa sospechada arriba, no una credencial rota ni un cambio de cuenta. Lo
+reanudó con el botón "Resume project". El primer reintento inmediatamente
+después todavía dio el mismo `ENOTFOUND` (el pooler tarda un par de minutos en
+volver a reconocer el tenant); un segundo reintento ~3 minutos más tarde
+conectó sin problemas. `npx vitest run --project integracion` → **106/106
+tests en verde**, incluidos los 4 nuevos de `SolicitudesPrisma`. `npm run
+verify` completo → 16 OK / 3 pendientes declarados / 1 fallido (`audit`,
+excepción de los puntos 12 y 14, sin relación). No hace falta ninguna acción
+de código — el punto queda como referencia de qué hacer la próxima vez que el
+proyecto se pause solo por inactividad: entrar al dashboard, reanudar, y
+esperar un par de minutos antes de reintentar `test:integration`.

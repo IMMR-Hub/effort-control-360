@@ -1,13 +1,13 @@
 {
-  "generado_en": "2026-08-20T10:53:58.447Z",
-  "commit": "38dfd532548e661baca807878e75afba1b3c0ea4",
+  "generado_en": "2026-08-20T11:26:10.405Z",
+  "commit": "ed3505e96014ce1be3cb692d9dd2ca701e80eddf",
   "checks": [
     {
       "nombre": "typecheck",
       "comando": "npx tsc --build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 1549,
+      "duracion_ms": 1786,
       "detalle": ""
     },
     {
@@ -15,23 +15,23 @@
       "comando": "npm run typecheck --workspace @effort/web",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4637,
+      "duracion_ms": 3668,
       "detalle": ""
     },
     {
       "nombre": "test:unit",
       "comando": "npx vitest run",
-      "estado": "FALLO",
-      "exit_code": 1,
-      "duracion_ms": 40797,
-      "detalle": "deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:11088) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:11088) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:11088) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n\n\u001b[31m⎯⎯⎯⎯⎯⎯\u001b[39m\u001b[1m\u001b[41m Failed Suites 2 \u001b[49m\u001b[22m\u001b[31m⎯⎯⎯⎯⎯⎯⎯\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[42m integracion \u001b[49m\u001b[39m test/integracion/dominio.test.ts\u001b[2m > \u001b[22mrepositorios de negocio contra PostgreSQL real\n\u001b[31m\u001b[1mPrismaClientInitializationError\u001b[22m: \nInvalid `prisma.$executeRawUnsafe()` invocation:\n\n\nError querying the database: FATAL: (ENOTFOUND) tenant/user postgres.nrslhqtdyybmtvvwgirq not found\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m242:13\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleAndLogRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m174:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.request node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m143:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m a node_modules/@prisma/client/src/runtime/getPrismaClient.ts:\u001b[2m833:24\u001b[22m\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m crearEntorno test/integracion/entorno.ts:\u001b[2m118:3\u001b[22m\u001b[39m\n    \u001b[90m116| \u001b[39m  // Cliente sobre `public` solo para crear y destruir el esquema de p…\n    \u001b[90m117| \u001b[39m  \u001b[35mconst\u001b[39m administrador \u001b[33m=\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mPrismaClient\u001b[39m({ datasourceUrl\u001b[33m:\u001b[39m \u001b[33mURL_BASE\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m118| \u001b[39m  await administrador.$executeRawUnsafe(`CREATE SCHEMA IF NOT EXISTS \"…\n    \u001b[90m   | \u001b[39m  \u001b[31m^\u001b[39m\n    \u001b[90m119| \u001b[39m  \u001b[35mawait\u001b[39m administrador\u001b[33m.\u001b[39m\u001b[34m$disconnect\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m120| \u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m test/integracion/dominio.test.ts:\u001b[2m55:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[42m integracion \u001b[49m\u001b[39m test/integracion/repositorios.test.ts\u001b[2m > \u001b[22mrepositorios contra PostgreSQL real\n\u001b[31m\u001b[1mPrismaClientInitializationError\u001b[22m: \nInvalid `prisma.$executeRawUnsafe()` invocation:\n\n\nError querying the database: FATAL: (ENOTFOUND) tenant/user postgres.nrslhqtdyybmtvvwgirq not found\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m242:13\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleAndLogRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m174:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.request node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m143:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m a node_modules/@prisma/client/src/runtime/getPrismaClient.ts:\u001b[2m833:24\u001b[22m\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m crearEntorno test/integracion/entorno.ts:\u001b[2m118:3\u001b[22m\u001b[39m\n    \u001b[90m116| \u001b[39m  // Cliente sobre `public` solo para crear y destruir el esquema de p…\n    \u001b[90m117| \u001b[39m  \u001b[35mconst\u001b[39m administrador \u001b[33m=\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mPrismaClient\u001b[39m({ datasourceUrl\u001b[33m:\u001b[39m \u001b[33mURL_BASE\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m118| \u001b[39m  await administrador.$executeRawUnsafe(`CREATE SCHEMA IF NOT EXISTS \"…\n    \u001b[90m   | \u001b[39m  \u001b[31m^\u001b[39m\n    \u001b[90m119| \u001b[39m  \u001b[35mawait\u001b[39m administrador\u001b[33m.\u001b[39m\u001b[34m$disconnect\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m120| \u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m test/integracion/repositorios.test.ts:\u001b[2m38:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯\u001b[22m\u001b[39m"
+      "estado": "OK",
+      "exit_code": 0,
+      "duracion_ms": 145821,
+      "detalle": ""
     },
     {
       "nombre": "verify:accounting",
       "comando": "npx vitest run packages/core/test/golden.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3826,
+      "duracion_ms": 3151,
       "detalle": ""
     },
     {
@@ -45,7 +45,7 @@
       "comando": "npx vitest run apps/api/test/rbac.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3551,
+      "duracion_ms": 2969,
       "detalle": ""
     },
     {
@@ -53,7 +53,7 @@
       "comando": "npx vitest run apps/api/test/seguridad.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3727,
+      "duracion_ms": 3206,
       "detalle": ""
     },
     {
@@ -61,7 +61,7 @@
       "comando": "npx vitest run packages/schema/test/contratos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3539,
+      "duracion_ms": 3582,
       "detalle": ""
     },
     {
@@ -69,7 +69,7 @@
       "comando": "npx vitest run apps/api/test/servidor.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6867,
+      "duracion_ms": 6545,
       "detalle": ""
     },
     {
@@ -77,7 +77,7 @@
       "comando": "npx vitest run apps/api/test/modulos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 28576,
+      "duracion_ms": 28482,
       "detalle": ""
     },
     {
@@ -85,7 +85,7 @@
       "comando": "npx vitest run apps/api/test/siga.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 8034,
+      "duracion_ms": 7788,
       "detalle": ""
     },
     {
@@ -93,23 +93,23 @@
       "comando": "npx vitest run apps/api/test/importaciones.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6849,
+      "duracion_ms": 6788,
       "detalle": ""
     },
     {
       "nombre": "test:integration",
       "comando": "npx vitest run --project integracion",
-      "estado": "FALLO",
-      "exit_code": 1,
-      "duracion_ms": 6777,
-      "detalle": "egocio contra PostgreSQL real\u001b[2m > \u001b[22mreglas de notificación\u001b[2m > \u001b[22mpersiste los destinatarios y la cartera alcanzada como JSON, intactos\n   \u001b[2m\u001b[90m↓\u001b[39m\u001b[22m repositorios de negocio contra PostgreSQL real\u001b[2m > \u001b[22mreglas de notificación\u001b[2m > \u001b[22mlistar trae la regla recién creada\n   \u001b[2m\u001b[90m↓\u001b[39m\u001b[22m repositorios de negocio contra PostgreSQL real\u001b[2m > \u001b[22mreglas de notificación\u001b[2m > \u001b[22mactualizar reemplaza los destinatarios de escalamiento sin tocar los iniciales\n   \u001b[2m\u001b[90m↓\u001b[39m\u001b[22m repositorios de negocio contra PostgreSQL real\u001b[2m > \u001b[22mreglas de notificación\u001b[2m > \u001b[22mbuscarPorId devuelve null para una regla inexistente\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[31m2 failed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[33m106 skipped\u001b[39m\u001b[90m (106)\u001b[39m\n\u001b[2m   Start at \u001b[22m 07:53:07\n\u001b[2m   Duration \u001b[22m 4.50s\u001b[2m (transform 366ms, setup 0ms, collect 600ms, tests 6.61s, environment 1ms, prepare 596ms)\u001b[22m\n\n\n\u001b[31m⎯⎯⎯⎯⎯⎯\u001b[39m\u001b[1m\u001b[41m Failed Suites 2 \u001b[49m\u001b[22m\u001b[31m⎯⎯⎯⎯⎯⎯⎯\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[42m integracion \u001b[49m\u001b[39m test/integracion/dominio.test.ts\u001b[2m > \u001b[22mrepositorios de negocio contra PostgreSQL real\n\u001b[31m\u001b[1mPrismaClientInitializationError\u001b[22m: \nInvalid `prisma.$executeRawUnsafe()` invocation:\n\n\nError querying the database: FATAL: (ENOTFOUND) tenant/user postgres.nrslhqtdyybmtvvwgirq not found\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m242:13\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleAndLogRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m174:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.request node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m143:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m a node_modules/@prisma/client/src/runtime/getPrismaClient.ts:\u001b[2m833:24\u001b[22m\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m crearEntorno test/integracion/entorno.ts:\u001b[2m118:3\u001b[22m\u001b[39m\n    \u001b[90m116| \u001b[39m  // Cliente sobre `public` solo para crear y destruir el esquema de p…\n    \u001b[90m117| \u001b[39m  \u001b[35mconst\u001b[39m administrador \u001b[33m=\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mPrismaClient\u001b[39m({ datasourceUrl\u001b[33m:\u001b[39m \u001b[33mURL_BASE\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m118| \u001b[39m  await administrador.$executeRawUnsafe(`CREATE SCHEMA IF NOT EXISTS \"…\n    \u001b[90m   | \u001b[39m  \u001b[31m^\u001b[39m\n    \u001b[90m119| \u001b[39m  \u001b[35mawait\u001b[39m administrador\u001b[33m.\u001b[39m\u001b[34m$disconnect\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m120| \u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m test/integracion/dominio.test.ts:\u001b[2m55:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[42m integracion \u001b[49m\u001b[39m test/integracion/repositorios.test.ts\u001b[2m > \u001b[22mrepositorios contra PostgreSQL real\n\u001b[31m\u001b[1mPrismaClientInitializationError\u001b[22m: \nInvalid `prisma.$executeRawUnsafe()` invocation:\n\n\nError querying the database: FATAL: (ENOTFOUND) tenant/user postgres.nrslhqtdyybmtvvwgirq not found\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m242:13\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleAndLogRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m174:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.request node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m143:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m a node_modules/@prisma/client/src/runtime/getPrismaClient.ts:\u001b[2m833:24\u001b[22m\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m crearEntorno test/integracion/entorno.ts:\u001b[2m118:3\u001b[22m\u001b[39m\n    \u001b[90m116| \u001b[39m  // Cliente sobre `public` solo para crear y destruir el esquema de p…\n    \u001b[90m117| \u001b[39m  \u001b[35mconst\u001b[39m administrador \u001b[33m=\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mPrismaClient\u001b[39m({ datasourceUrl\u001b[33m:\u001b[39m \u001b[33mURL_BASE\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m118| \u001b[39m  await administrador.$executeRawUnsafe(`CREATE SCHEMA IF NOT EXISTS \"…\n    \u001b[90m   | \u001b[39m  \u001b[31m^\u001b[39m\n    \u001b[90m119| \u001b[39m  \u001b[35mawait\u001b[39m administrador\u001b[33m.\u001b[39m\u001b[34m$disconnect\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m120| \u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m test/integracion/repositorios.test.ts:\u001b[2m38:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯\u001b[22m\u001b[39m"
+      "estado": "OK",
+      "exit_code": 0,
+      "duracion_ms": 166376,
+      "detalle": ""
     },
     {
       "nombre": "verify:drive",
       "comando": "npx vitest run --project drive",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3364,
+      "duracion_ms": 2858,
       "detalle": ""
     },
     {
@@ -117,7 +117,7 @@
       "comando": "npx vitest run --project importers",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4424,
+      "duracion_ms": 3734,
       "detalle": ""
     },
     {
@@ -125,7 +125,7 @@
       "comando": "npx vitest run --project web",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 15248,
+      "duracion_ms": 14945,
       "detalle": ""
     },
     {
@@ -145,7 +145,7 @@
       "comando": "npm audit --audit-level=high",
       "estado": "FALLO",
       "exit_code": 1,
-      "duracion_ms": 5752,
+      "duracion_ms": 3721,
       "detalle": "# npm audit report\n\ndeepmerge-ts  <8.0.0\nSeverity: high\nDeepmergeTS has stack exhaustion when merging recursive object graphs - https://github.com/advisories/GHSA-ggr8-5vv4-36mx\nfix available via `npm audit fix --force`\nWill install prisma@6.12.0, which is a breaking change\nnode_modules/deepmerge-ts\n  @prisma/config  >=6.13.0-dev.1\n  Depends on vulnerable versions of deepmerge-ts\n  apps/api/node_modules/@prisma/config\n    prisma  6.13.0-dev.1 - 7.10.0-integration-fix-prisma-publish-token.1\n    Depends on vulnerable versions of @prisma/config\n    apps/api/node_modules/prisma\n\nuuid  <11.1.1\nSeverity: moderate\nuuid: Missing buffer bounds check in v3/v5/v6 when buf is provided - https://github.com/advisories/GHSA-w5hq-g745-h8pq\nfix available via `npm audit fix --force`\nWill install exceljs@3.4.0, which is a breaking change\nnode_modules/uuid\n  exceljs  >=3.5.0\n  Depends on vulnerable versions of uuid\n  node_modules/exceljs\n\n5 vulnerabilities (2 moderate, 3 high)\n\nTo address all issues (including breaking changes), run:\n  npm audit fix --force"
     },
     {
@@ -153,12 +153,12 @@
       "comando": "npm run build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 17004,
+      "duracion_ms": 16366,
       "detalle": ""
     }
   ],
-  "checks_ok": 14,
+  "checks_ok": 16,
   "checks_pendientes": 3,
-  "checks_fallidos": 3,
+  "checks_fallidos": 1,
   "todo_verde": false
 }
