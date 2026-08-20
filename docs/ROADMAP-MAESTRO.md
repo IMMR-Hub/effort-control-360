@@ -409,6 +409,18 @@ Tarea nueva, descubierta el 2026-07-24 al comparar la estructura de carpetas que
   **Verificación:** `npx tsc --build` → exit 0. `npx vitest run --project web` → exit 0 (46 tests, sin regresiones). `npm run build` → exit 0. Verificado en el navegador real que el bundle carga sin errores. `npm run verify` → 16 OK / 3 pendientes declarados / 1 fallido (`audit`, excepción de siempre, sin relación).
 
   **Quedan 8 pantallas.** Próxima: Balances.
+
+  **2026-08-20 — Pantalla Balances (5 de 12) construida.** La más sensible de las doce: por el ADR 0004 (`docs/adr/0004-el-sistema-no-aprueba-balances.md`) el sistema nunca aprueba un balance solo. `apps/web/src/pantallas/Balances.tsx`: tablero cartera-wide del período (mismo patrón "Sin iniciar" que Documentos y Vencimientos), panel de cifras (balance general + estado de resultados) que al guardar (`PUT`) devuelve y muestra la revisión (`bloqueantes`/`advertencias`/`inconsistencias`) sin esperar a un recargado, y un checklist con el botón "Aprobar balance". Ese botón: **(a)** solo aparece para `direccion`/`revisor_balance` (RBAC del servidor, `balance.aprobar`), **(b)** queda deshabilitado si el balance no está en `LISTO_PARA_REVISION` o si tiene algún bloqueante, y **(c)** pide una confirmación explícita (`window.confirm`, nombra al cliente, el período y que la acción "queda registrada con tu nombre y la fecha") antes de llamar al servidor. Ninguna de las tres es la que de verdad protege la regla — eso lo hacen las cuatro capas del servidor que ya describe el ADR — son un cinturón de seguridad extra del lado de la UI para que un clic apurado no dispare la llamada.
+
+  Si se edita un balance ya `APROBADO`, se muestra una advertencia explícita ("guardar cifras nuevas lo va a sacar de aprobado") en vez de dejarlo pasar en silencio — el servidor ya permitía este re-guardado desde antes de esta tarea (no es un comportamiento nuevo, `guardarCifras()` hace `upsert` sin comprobar el estado previo), la pantalla solo lo hace visible.
+
+  Cliente HTTP nuevo `apps/web/src/api/balances.ts`. Los ocho códigos de inconsistencia (`ECUACION_PATRIMONIAL_NO_CIERRA`, `DOCUMENTOS_FALTANTES`, etc., de `@effort/core/balance.ts`) tienen su propia frase legible en español; la diferencia numérica, cuando la trae la inconsistencia, se formatea con `gs()`/`formatearGs()`.
+
+  **Tests nuevos:** 9 en `apps/web/test/Balances.test.tsx`, con foco explícito en el ADR: RBAC del botón de aprobar por rol, deshabilitado con bloqueantes aunque el rol pueda aprobar, cancelar la confirmación no llama al servidor, confirmar sí la llama, guardar cifras manda los importes como texto y muestra el checklist que devuelve el `PUT`.
+
+  **Verificación:** `npx tsc --build` → exit 0. `npx vitest run --project web` → exit 0 (55 tests, sin regresiones). `npm run build` → exit 0. Verificado en el navegador real que el bundle carga sin errores. `npm run verify` → 16 OK / 3 pendientes declarados / 1 fallido (`audit`, excepción de siempre, sin relación).
+
+  **Quedan 7 pantallas.** Próxima: SIGA / Conciliación.
 - [ ] 105. Retirar por completo `apps/App.jsx` (la demo original) una vez que todas las pantallas tengan reemplazo
 - [ ] 106. `verify:no-hardcoded-kpi` — ningún número escrito a mano en la interfaz
 
