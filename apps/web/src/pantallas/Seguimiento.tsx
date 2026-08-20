@@ -46,7 +46,6 @@ import {
   Boton,
   EncabezadoTarjeta,
   Indicador,
-  Logotipo,
   Tabla,
   Tarjeta,
   Td,
@@ -302,7 +301,7 @@ export default function Seguimiento() {
 
   if (cargando) {
     return (
-      <div className="flex min-h-dvh items-center justify-center bg-lienzo font-interfaz text-tinta">
+      <div className="flex items-center justify-center py-24">
         <p className="text-sm text-tinta-tenue">Cargando…</p>
       </div>
     );
@@ -310,26 +309,15 @@ export default function Seguimiento() {
 
   if (error) {
     return (
-      <div className="flex min-h-dvh items-center justify-center bg-lienzo font-interfaz text-tinta">
+      <div className="flex items-center justify-center py-24">
         <p className="text-sm text-critico">{error}</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-dvh bg-lienzo font-interfaz text-tinta">
-      <header className="sticky top-0 z-20 border-b border-borde bg-superficie/95 backdrop-blur">
-        <div className="mx-auto flex max-w-[86rem] flex-wrap items-center justify-between gap-3 px-5 py-3">
-          <Logotipo />
-          <div className="flex items-center gap-2">
-            <span className="hidden text-xs text-tinta-tenue sm:inline">Período</span>
-            <Badge tono="proceso" conIcono={false}>{formatearPeriodo(periodoActivo)}</Badge>
-            <Boton variante="fantasma" icono={Settings2}>Reglas de aviso</Boton>
-          </div>
-        </div>
-      </header>
-
-      <main className="mx-auto max-w-[86rem] space-y-5 px-5 py-6">
+    <main className="mx-auto max-w-[86rem] space-y-5 px-5 py-6">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <h1 className="text-lg font-semibold">Seguimiento al cliente</h1>
           <p className="mt-1 max-w-2xl text-sm text-tinta-suave">
@@ -337,6 +325,12 @@ export default function Seguimiento() {
             según la regla configurada; cada intento queda registrado para poder demostrarlo después.
           </p>
         </div>
+        <div className="flex items-center gap-2">
+          <span className="hidden text-xs text-tinta-tenue sm:inline">Período</span>
+          <Badge tono="proceso" conIcono={false}>{formatearPeriodo(periodoActivo)}</Badge>
+          <Boton variante="fantasma" icono={Settings2}>Reglas de aviso</Boton>
+        </div>
+      </div>
 
         <section
           className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4"
@@ -578,7 +572,6 @@ export default function Seguimiento() {
             )}
           </Tarjeta>
         </div>
-      </main>
-    </div>
+    </main>
   );
 }

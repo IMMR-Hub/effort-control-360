@@ -42,6 +42,13 @@ export function Tarjeta({ children, className = '', ...resto }) {
   );
 }
 
+/**
+ * @param {{
+ *   titulo: import('react').ReactNode,
+ *   descripcion?: import('react').ReactNode,
+ *   acciones?: import('react').ReactNode,
+ * }} props
+ */
 export function EncabezadoTarjeta({ titulo, descripcion, acciones }) {
   return (
     <header className="flex flex-wrap items-start justify-between gap-3 border-b border-borde px-5 py-4">
@@ -151,6 +158,64 @@ export function CampoTexto({ etiqueta, id, error = null, className = '', ...rest
   );
 }
 
+/**
+ * Selector de formulario, mismo contrato visual y de accesibilidad que
+ * `CampoTexto` (rótulo asociado, error anunciado por `aria-describedby`).
+ * `opciones` es `{ valor, etiqueta }[]`; `placeholder`, si se pasa, agrega una
+ * primera opción deshabilitada con `value=""` para forzar una elección.
+ *
+ * @param {{
+ *   etiqueta: import('react').ReactNode,
+ *   id: string,
+ *   opciones: { valor: string, etiqueta: string }[],
+ *   placeholder?: string | null,
+ *   error?: import('react').ReactNode | null,
+ *   className?: string,
+ * } & import('react').SelectHTMLAttributes<HTMLSelectElement>} props
+ */
+export function CampoSelect({
+  etiqueta,
+  id,
+  opciones,
+  placeholder = null,
+  error = null,
+  className = '',
+  ...resto
+}) {
+  return (
+    <div className={`flex flex-col gap-1.5 ${className}`}>
+      <label htmlFor={id} className="text-xs font-medium text-tinta-suave">
+        {etiqueta}
+      </label>
+      <select
+        id={id}
+        className={`min-h-9 rounded border bg-superficie px-3 py-1.5 text-sm text-tinta focus-visible:outline-none ${
+          error ? 'border-critico' : 'border-borde-fuerte'
+        }`}
+        aria-invalid={error ? 'true' : undefined}
+        aria-describedby={error ? `${id}-error` : undefined}
+        {...resto}
+      >
+        {placeholder !== null && (
+          <option value="" disabled>
+            {placeholder}
+          </option>
+        )}
+        {opciones.map((opcion) => (
+          <option key={opcion.valor} value={opcion.valor}>
+            {opcion.etiqueta}
+          </option>
+        ))}
+      </select>
+      {error && (
+        <p id={`${id}-error`} className="text-xs text-critico">
+          {error}
+        </p>
+      )}
+    </div>
+  );
+}
+
 /* --- Indicadores ---------------------------------------------------------- */
 
 /**
@@ -159,6 +224,15 @@ export function CampoTexto({ etiqueta, id, error = null, className = '', ...rest
  * `valor` llega ya calculado y formateado desde arriba. Este componente no
  * hace cuentas: si hiciera aritmética, habría cálculo de negocio escondido
  * en la capa de presentación, que es exactamente donde nadie lo audita.
+ */
+/**
+ * @param {{
+ *   etiqueta: import('react').ReactNode,
+ *   valor: import('react').ReactNode,
+ *   detalle?: import('react').ReactNode,
+ *   tono?: string,
+ *   destacado?: boolean,
+ * }} props
  */
 export function Indicador({ etiqueta, valor, detalle, tono = 'pendiente', destacado = false }) {
   const barra = {

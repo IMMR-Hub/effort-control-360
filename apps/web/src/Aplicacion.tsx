@@ -6,12 +6,33 @@
  * `null` significa que ya se confirmó que no hay ninguna.
  */
 
+import { useState } from 'react';
+
 import { ProveedorDeSesion, useSesion } from './contexts/SesionContext.js';
 import { Acceso } from './pantallas/Acceso.js';
+import { Encabezado, type Pantalla } from './layout/Encabezado.js';
 // La demo anterior sigue en src/App.jsx con sus datos inventados, sin tocar,
 // hasta que cada una de sus pantallas tenga reemplazo contra la API real
-// (tarea 104). Seguimiento.tsx es la primera pantalla ya real (tarea 101).
+// (tarea 104). Seguimiento.tsx y Clientes.tsx son las dos primeras ya reales.
 import Seguimiento from './pantallas/Seguimiento.js';
+import Clientes from './pantallas/Clientes.js';
+
+const PANTALLAS: Record<Pantalla, () => JSX.Element> = {
+  seguimiento: Seguimiento,
+  clientes: Clientes,
+};
+
+function AppShell() {
+  const [pantallaActiva, setPantallaActiva] = useState<Pantalla>('seguimiento');
+  const PantallaActual = PANTALLAS[pantallaActiva];
+
+  return (
+    <div className="min-h-dvh bg-lienzo font-interfaz text-tinta">
+      <Encabezado activa={pantallaActiva} onCambiar={setPantallaActiva} />
+      <PantallaActual />
+    </div>
+  );
+}
 
 function Enrutador() {
   const { sesion } = useSesion();
@@ -28,7 +49,7 @@ function Enrutador() {
     return <Acceso />;
   }
 
-  return <Seguimiento />;
+  return <AppShell />;
 }
 
 export function Aplicacion() {

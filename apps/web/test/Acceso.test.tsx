@@ -8,8 +8,8 @@
  * que viene después, con fallas que no tienen nada que ver con el test que
  * las muestra. Enrutar por `(método, ruta)` hace que una llamada tardía a
  * `/api/v1/yo` de un test anterior siga yendo a la respuesta de `/api/v1/yo`,
- * nunca a la de otra ruta — el mismo patrón sirve para las 12 pantallas de la
- * tarea 103, así que vale la pena resolverlo bien acá una sola vez.
+ * nunca a la de otra ruta. El helper vive en `ayuda-fetch-mock.ts` — el mismo
+ * patrón sirve para las 11 pantallas restantes de la tarea 104.
  *
  * `<ProveedorDeSesion>` pide la sesión actual apenas se monta (para saber si
  * ya hay una sesión activa) — por eso `montarConMockDeSesionVacia()` deja
@@ -21,45 +21,7 @@ import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-function respuestaJson(cuerpo: unknown, init: { status?: number } = {}): Response {
-  return new Response(JSON.stringify(cuerpo), {
-    status: init.status ?? 200,
-    headers: { 'content-type': 'application/json' },
-  });
-}
-
-type ClaveRuta = 'GET /api/v1/csrf' | 'POST /api/v1/acceso' | 'POST /api/v1/acceso/segundo-factor' | 'GET /api/v1/yo';
-
-/** Enruta cada llamada de `fetch` por `(método, ruta)`, no por orden de llegada. */
-function crearFetchMock() {
-  const manejadores = new Map<ClaveRuta, () => Response>();
-
-  const fetchMock = vi.fn((entrada: RequestInfo | URL, opciones?: RequestInit) => {
-    const ruta = new URL(String(entrada)).pathname;
-    const metodo = (opciones?.method ?? 'GET').toUpperCase();
-    const clave = `${metodo} ${ruta}` as ClaveRuta;
-    const manejador = manejadores.get(clave);
-    if (!manejador) {
-      throw new Error(`Ruta no mockeada en este test: ${clave}`);
-    }
-    return Promise.resolve(manejador());
-  });
-
-  return {
-    fetchMock,
-    /** Reemplaza la respuesta de una ruta. Se puede llamar de nuevo para cambiarla a mitad de un test. */
-    mockDeRuta(clave: ClaveRuta, fabrica: () => Response) {
-      manejadores.set(clave, fabrica);
-    },
-    llamadasA(clave: ClaveRuta) {
-      return fetchMock.mock.calls.filter(([entrada, opciones]) => {
-        const ruta = new URL(String(entrada)).pathname;
-        const metodo = String((opciones as RequestInit | undefined)?.method ?? 'GET').toUpperCase();
-        return `${metodo} ${ruta}` === clave;
-      });
-    },
-  };
-}
+import { crearFetchMock, respuestaJson } from './ayuda-fetch-mock.js';
 
 let mock: ReturnType<typeof crearFetchMock>;
 let usuario: ReturnType<typeof userEvent.setup>;
