@@ -12,7 +12,14 @@ import { LogOut } from 'lucide-react';
 import { Boton, Logotipo } from '../ui/Primitivos.jsx';
 import { useSesion } from '../contexts/SesionContext.js';
 
-export type Pantalla = 'seguimiento' | 'clientes' | 'documentos' | 'vencimientos' | 'balances' | 'siga';
+export type Pantalla =
+  | 'seguimiento'
+  | 'clientes'
+  | 'documentos'
+  | 'vencimientos'
+  | 'balances'
+  | 'siga'
+  | 'liquidaciones';
 
 interface EnlaceDeNav {
   readonly id: Pantalla;
@@ -27,6 +34,7 @@ const ENLACES: readonly EnlaceDeNav[] = [
   { id: 'vencimientos', etiqueta: 'Vencimientos' },
   { id: 'balances', etiqueta: 'Balances' },
   { id: 'siga', etiqueta: 'SIGA / Conciliación' },
+  { id: 'liquidaciones', etiqueta: 'Liquidaciones' },
 ];
 
 interface Props {

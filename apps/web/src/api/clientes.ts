@@ -3,6 +3,9 @@
  */
 
 import { peticion } from './cliente.js';
+import type { CanalRecepcion } from './tipos-compartidos.js';
+
+export type { CanalRecepcion };
 
 export interface Cliente {
   readonly id: string;
@@ -23,9 +26,6 @@ export function listarClientes(): Promise<{ clientes: readonly Cliente[] }> {
 }
 
 export type TipoPersona = 'FISICA' | 'JURIDICA';
-
-/** Mismos cinco valores que `canalRecepcionSchema` en `@effort/schema`. */
-export type CanalRecepcion = 'WHATSAPP' | 'EMAIL' | 'ONEDRIVE' | 'FISICO_ESCANEADO' | 'SISTEMA';
 
 export interface AltaDeCliente {
   readonly nombre: string;

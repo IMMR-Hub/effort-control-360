@@ -26,3 +26,6 @@ export type TipoDocumento =
   | 'OTRO';
 
 export type NivelRiesgo = 'BAJO' | 'MEDIO' | 'ALTO' | 'CRITICO';
+
+/** Canal por el que EFFORT recibe o envía algo — mismos cinco valores en todo el dominio. */
+export type CanalRecepcion = 'WHATSAPP' | 'EMAIL' | 'ONEDRIVE' | 'FISICO_ESCANEADO' | 'SISTEMA';
