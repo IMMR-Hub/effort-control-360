@@ -27,5 +27,7 @@ export type TipoDocumento =
 
 export type NivelRiesgo = 'BAJO' | 'MEDIO' | 'ALTO' | 'CRITICO';
 
+export type TasaIva = 'DIEZ' | 'CINCO' | 'EXENTA';
+
 /** Canal por el que EFFORT recibe o envía algo — mismos cinco valores en todo el dominio. */
 export type CanalRecepcion = 'WHATSAPP' | 'EMAIL' | 'ONEDRIVE' | 'FISICO_ESCANEADO' | 'SISTEMA';

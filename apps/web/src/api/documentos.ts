@@ -8,13 +8,12 @@
  */
 
 import { peticion, type QueryParams } from './cliente.js';
-import type { CanalRecepcion, NivelRiesgo, TipoDocumento } from './tipos-compartidos.js';
+import type { CanalRecepcion, NivelRiesgo, TasaIva, TipoDocumento } from './tipos-compartidos.js';
 
-export type { NivelRiesgo, TipoDocumento };
+export type { NivelRiesgo, TasaIva, TipoDocumento };
 
 /** Alias histórico de `CanalRecepcion` — se mantiene para no tocar `Documentos.tsx` de paso. */
 export type CanalRecepcionDocumento = CanalRecepcion;
-export type TasaIva = 'DIEZ' | 'CINCO' | 'EXENTA';
 export type EstadoDocumento = 'RECIBIDO' | 'OBSERVADO' | 'RECHAZADO' | 'DUPLICADO' | 'CARGADO_EN_SIGA';
 
 export interface Documento {

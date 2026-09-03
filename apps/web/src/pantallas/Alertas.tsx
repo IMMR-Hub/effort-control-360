@@ -12,26 +12,13 @@ import { useEffect, useMemo, useState } from 'react';
 import { CheckCircle2 } from 'lucide-react';
 
 import { Badge, Boton, EncabezadoTarjeta, Indicador, Tabla, Tarjeta, Td, Th } from '../ui/Primitivos.jsx';
+import { ETIQUETA_CRITICIDAD, TONO_CRITICIDAD } from '../ui/etiquetas.js';
 import { ErrorDeApi } from '../api/cliente.js';
 import { listarClientes, type Cliente } from '../api/clientes.js';
-import { cerrarAlerta, obtenerAlertas, type Alerta, type Criticidad, type ResumenPorCriticidad } from '../api/alertas.js';
+import { cerrarAlerta, obtenerAlertas, type Alerta, type ResumenPorCriticidad } from '../api/alertas.js';
 import { useSesion } from '../contexts/SesionContext.js';
 
 const ROLES_QUE_CIERRAN = new Set(['direccion', 'responsable', 'coordinador']);
-
-const TONO_CRITICIDAD: Record<Criticidad, 'critico' | 'parcial' | 'pendiente' | 'proceso'> = {
-  CRITICA: 'critico',
-  ALTA: 'parcial',
-  MEDIA: 'pendiente',
-  INFORMATIVA: 'proceso',
-};
-
-const ETIQUETA_CRITICIDAD: Record<Criticidad, string> = {
-  CRITICA: 'Crítica',
-  ALTA: 'Alta',
-  MEDIA: 'Media',
-  INFORMATIVA: 'Informativa',
-};
 
 const RESUMEN_VACIO: ResumenPorCriticidad = { CRITICA: 0, ALTA: 0, MEDIA: 0, INFORMATIVA: 0 };
 

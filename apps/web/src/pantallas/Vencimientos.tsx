@@ -22,14 +22,20 @@ import {
   Td,
   Th,
 } from '../ui/Primitivos.jsx';
-import { ETIQUETA_TIPO_DOCUMENTO, OPCIONES_RIESGO, OPCIONES_TIPO_DOCUMENTO, TONO_RIESGO } from '../ui/etiquetas.js';
+import {
+  ETIQUETA_NIVEL_ALERTA,
+  ETIQUETA_TIPO_DOCUMENTO,
+  OPCIONES_RIESGO,
+  OPCIONES_TIPO_DOCUMENTO,
+  TONO_NIVEL_ALERTA,
+  TONO_RIESGO,
+} from '../ui/etiquetas.js';
 import { ErrorDeApi } from '../api/cliente.js';
 import { listarClientes, type Cliente } from '../api/clientes.js';
 import {
   crearVencimiento,
   marcarPresentado,
   obtenerRadar,
-  type NivelAlerta,
   type NivelRiesgo,
   type ResumenPorNivel,
   type TipoDocumento,
@@ -38,24 +44,6 @@ import {
 import { useSesion } from '../contexts/SesionContext.js';
 
 const ROLES_QUE_EDITAN = new Set(['direccion', 'responsable', 'coordinador']);
-
-const TONO_ALERTA: Record<NivelAlerta, 'critico' | 'parcial' | 'pendiente' | 'proceso' | 'completo'> = {
-  VENCIDO: 'critico',
-  CRITICA: 'critico',
-  ALTA: 'parcial',
-  MEDIA: 'pendiente',
-  INFORMATIVA: 'proceso',
-  SIN_ALERTA: 'completo',
-};
-
-const ETIQUETA_ALERTA: Record<NivelAlerta, string> = {
-  VENCIDO: 'Vencido',
-  CRITICA: 'Crítica',
-  ALTA: 'Alta',
-  MEDIA: 'Media',
-  INFORMATIVA: 'Informativa',
-  SIN_ALERTA: 'Sin alerta',
-};
 
 const RESUMEN_VACIO: ResumenPorNivel = {
   VENCIDO: 0,
@@ -254,8 +242,8 @@ export default function Vencimientos() {
                   {v.diasRestantes}
                 </Td>
                 <Td>
-                  <Badge tono={TONO_ALERTA[v.nivelAlerta]} conIcono={false}>
-                    {ETIQUETA_ALERTA[v.nivelAlerta]}
+                  <Badge tono={TONO_NIVEL_ALERTA[v.nivelAlerta]} conIcono={false}>
+                    {ETIQUETA_NIVEL_ALERTA[v.nivelAlerta]}
                   </Badge>
                 </Td>
                 <Td>
