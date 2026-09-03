@@ -116,20 +116,27 @@ en el chat):
    `Files.ReadWrite.All` (OneDrive) y `Mail.Send` (tarea 95 — mismo registro
    sirve para las dos, no hace falta repetir el registro completo). Quedaron
    marcados como **"No concedido para EFFORT CONSULTORA E.A.S."**
-6. **Bloqueado en el último paso, no depende de nosotros:** el botón
-   "Conceder consentimiento de administrador" está deshabilitado para
-   `effort360@effort.com.py` — esa cuenta puede crear y configurar
-   aplicaciones, pero **no es Administrador Global** del tenant. Se verificó
-   en Entra ID → Roles y administradores → "Administrador global": **solo
-   Laura y Lili tienen ese rol.** Una de las dos tiene que entrar una vez a
-   portal.azure.com y hacer un solo clic (Registros de aplicaciones → EFFORT
-   Control 360 → Permisos de API → "Conceder consentimiento de
-   administrador") — no necesita entender nada técnico, es confirmar "sí,
-   autorizo". Mensaje ya redactado para reenviarles, ver conversación del
-   2026-08-09.
+6. **Bloqueado en el último paso el 2026-08-09** (ya no lo está, ver
+   corrección abajo): el botón "Conceder consentimiento de administrador"
+   estaba deshabilitado para `effort360@effort.com.py` porque esa cuenta
+   podía crear y configurar aplicaciones, pero no era Administrador Global
+   del tenant. Se había verificado en Entra ID → Roles y administradores →
+   "Administrador global": solo Laura y Lili tenían ese rol.
 
-**Cómo se cierra:** en cuanto Laura o Lili concedan el consentimiento, repetir
-la llamada de prueba del punto 4 (`GET /v1.0/users/effort360@effort.com.py/drive/root/children`)
+**Corregido el 2026-09-03:** `effort360@effort.com.py` es la cuenta de
+Daniel — confirmado por él directamente, y verificado en una captura de
+Entra ID → Roles y administradores → "Administrador global" → Asignaciones,
+que ahora lista a `effort360`, `lsosa@effort.com.py` (Laura) y
+`llaconich@effort.com.py` (Lilian) como Administradores Globales. No se sabe
+si el rol se agregó después del 2026-08-09 o si la comprobación de esa fecha
+tenía un error — no importa para seguir: **el bloqueo ya no existe.** Daniel
+puede entrar directo con `effort360@effort.com.py` (ya confirmado que
+funciona sin errores de tenant) y completar él mismo: Registros de
+aplicaciones → EFFORT Control 360 → Permisos de API → "Conceder
+consentimiento de administrador".
+
+**Cómo se cierra:** una vez concedido el consentimiento, repetir la llamada
+de prueba del punto 4 (`GET /v1.0/users/effort360@effort.com.py/drive/root/children`)
 para confirmar si el 404 anterior era por falta de permisos o porque el
 OneDrive de esa cuenta todavía no está aprovisionado — recién ahí se sabe si
 falta algo más. Después: confirmar con EFFORT cuál es la carpeta raíz real a
