@@ -84,6 +84,29 @@ export async function registrarRutasDeUsuarios(
     return { usuarios };
   });
 
+  /**
+   * Cartera vigente de un usuario, para precargar el formulario de edición.
+   *
+   * `POST`/`PATCH` de este archivo ya aceptan `clientesAsignados` para
+   * escribir la cartera, pero hasta ahora no había ninguna ruta para
+   * leerla de vuelta — la única lectura existente (`clientesAsignados` en
+   * el puerto) solo se usaba para armar la sesión del propio usuario
+   * logueado (`GET /api/v1/yo`), no para que dirección viera la cartera de
+   * un tercero.
+   */
+  app.get('/api/v1/usuarios/:id/clientes', async (peticion) => {
+    const { id } = paramsId.parse(peticion.params);
+    autorizar(peticion, 'usuario', 'ver');
+
+    const previo = await deps.usuarios.buscarListadoPorId(id);
+    if (!previo) {
+      throw new ErrorDeAplicacion(404, 'Recurso inexistente.', 'no_encontrado');
+    }
+
+    const clienteIds = await deps.usuarios.clientesAsignados(id);
+    return { clienteIds };
+  });
+
   app.post('/api/v1/usuarios', async (peticion, respuesta) => {
     const sujeto = autorizar(peticion, 'usuario', 'crear');
     const cuerpo = altaSchema.parse(peticion.body);

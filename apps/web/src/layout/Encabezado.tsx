@@ -20,7 +20,8 @@ export type Pantalla =
   | 'balances'
   | 'siga'
   | 'liquidaciones'
-  | 'alertas';
+  | 'alertas'
+  | 'equipo';
 
 interface EnlaceDeNav {
   readonly id: Pantalla;
@@ -37,6 +38,7 @@ const ENLACES: readonly EnlaceDeNav[] = [
   { id: 'siga', etiqueta: 'SIGA / Conciliación' },
   { id: 'liquidaciones', etiqueta: 'Liquidaciones' },
   { id: 'alertas', etiqueta: 'Alertas' },
+  { id: 'equipo', etiqueta: 'Equipo' },
 ];
 
 interface Props {

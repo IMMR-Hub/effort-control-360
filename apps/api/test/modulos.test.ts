@@ -1288,6 +1288,57 @@ describe('usuarios (equipo)', () => {
       expect((entrada?.datosDespues as Record<string, unknown>)['activo']).toBe(false);
     });
   });
+
+  describe('cartera de un usuario', () => {
+    async function usuarioDePrueba(payload: Record<string, unknown> = {}) {
+      const alta = await darDeAlta({ ...altaValida, email: `cartera-${randomUUID()}@effort.com.py`, ...payload });
+      return JSON.parse(alta.body).usuario as { id: string };
+    }
+
+    it('devuelve la cartera vigente, para precargar el formulario de edición', async () => {
+      const usuario = await usuarioDePrueba({ clientesAsignados: [MIO] });
+
+      const respuesta = await ctx.app.inject({
+        method: 'GET', url: `/api/v1/usuarios/${usuario.id}/clientes`,
+        headers: { cookie: direccion },
+      });
+
+      expect(respuesta.statusCode).toBe(200);
+      expect(JSON.parse(respuesta.body).clienteIds).toEqual([MIO]);
+    });
+
+    it('un usuario sin cartera propia devuelve la lista vacía, no un error', async () => {
+      const usuario = await usuarioDePrueba();
+
+      const respuesta = await ctx.app.inject({
+        method: 'GET', url: `/api/v1/usuarios/${usuario.id}/clientes`,
+        headers: { cookie: direccion },
+      });
+
+      expect(respuesta.statusCode).toBe(200);
+      expect(JSON.parse(respuesta.body).clienteIds).toEqual([]);
+    });
+
+    it('un usuario inexistente da 404, no una lista vacía silenciosa', async () => {
+      const respuesta = await ctx.app.inject({
+        method: 'GET', url: `/api/v1/usuarios/${randomUUID()}/clientes`,
+        headers: { cookie: direccion },
+      });
+
+      expect(respuesta.statusCode).toBe(404);
+    });
+
+    it('un rol distinto de dirección/responsable no puede leer la cartera de otro usuario', async () => {
+      const usuario = await usuarioDePrueba();
+
+      const respuesta = await ctx.app.inject({
+        method: 'GET', url: `/api/v1/usuarios/${usuario.id}/clientes`,
+        headers: { cookie: auxiliar },
+      });
+
+      expect(respuesta.statusCode).toBe(403);
+    });
+  });
 });
 
 describe('reglas impositivas', () => {

@@ -432,9 +432,10 @@ esperar un par de minutos antes de reintentar `test:integration`.
 **Recurrió el 2026-09-03** (tarea 104, pantalla Alertas): mismo síntoma,
 primero `ENOTFOUND tenant/user postgres.nrslhqtdyybmtvvwgirq not found` y
 luego, en un reintento posterior en la misma sesión, `Can't reach database
-server at aws-0-sa-east-1.pooler.supabase.com:5432` — no se entró al
-dashboard todavía para confirmar si es el mismo motivo (pausado por
-inactividad) porque no bloqueaba el trabajo de esa tarea. Mismo arreglo de
-siempre cuando alguien lo retome: dashboard de Supabase → "Resume project" →
-esperar un par de minutos → reintentar `npx vitest run --project
-integracion`.
+server at aws-0-sa-east-1.pooler.supabase.com:5432`.
+
+**Cerrado el mismo día:** Daniel confirmó que Supabase ya respondía;
+`npx vitest run --project integracion` → **106/106 en verde**, sin tocar
+nada de código. Mismo patrón de siempre — plan gratuito/Nano que se pausa
+solo por inactividad. Arreglo de referencia para la próxima vez: dashboard
+de Supabase → "Resume project" → esperar un par de minutos → reintentar.

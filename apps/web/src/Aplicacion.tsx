@@ -22,6 +22,7 @@ import Balances from './pantallas/Balances.js';
 import Siga from './pantallas/Siga.js';
 import Liquidaciones from './pantallas/Liquidaciones.js';
 import Alertas from './pantallas/Alertas.js';
+import Equipo from './pantallas/Equipo.js';
 
 const PANTALLAS: Record<Pantalla, () => JSX.Element> = {
   seguimiento: Seguimiento,
@@ -32,6 +33,7 @@ const PANTALLAS: Record<Pantalla, () => JSX.Element> = {
   siga: Siga,
   liquidaciones: Liquidaciones,
   alertas: Alertas,
+  equipo: Equipo,
 };
 
 function AppShell() {
