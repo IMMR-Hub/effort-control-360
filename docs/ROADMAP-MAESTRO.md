@@ -40,12 +40,14 @@ Si da 0, cerrada. Si no, no.
 
 **Avance: 95 de 114 tareas (83%).** Partes 1, 2, 3, 4A, 4B, 4C, 4D y 4E cerradas. Quedan 3 tareas bloqueadas por EFFORT (2 de carga de datos + el registro en Azure AD, este último en curso — ver `docs/DISCREPANCIAS.md` punto 6), que no frenan el código.
 
-**Una cosa pendiente de fuera del código, no bloquea seguir con la tarea 104:**
+**Una cosa pendiente de fuera del código, no bloquea seguir:**
 - **Azure AD (tarea 88):** registro de app ya creado y probado, falta que Laura o Lili concedan el consentimiento de administrador — no depende de nosotros. Ver `docs/DISCREPANCIAS.md`, punto 6.
 
 **Supabase (punto 15 de discrepancias) cerrado el 2026-08-20:** estaba pausado por inactividad, se reanudó desde el dashboard y `test:integration` volvió a correr en verde (106/106). Si vuelve a pausarse solo (plan gratuito, se pausa después de varios días sin actividad), el arreglo es el mismo: dashboard de Supabase → "Resume project" → esperar un par de minutos → reintentar.
 
-Última actualización: 2026-08-20 · Commit de referencia: ver último commit en `git log`
+**Dentro de la tarea 104 (12 pantallas), la próxima es la pantalla 8 de 12: Alertas.** Ya están hechas Seguimiento, Clientes, Documentos/IVA, Vencimientos, Balances, SIGA/Conciliación y Liquidaciones (7 de 12) — el detalle completo de cada una, con sus verificaciones, está en la entrada de la tarea 104 más abajo. "La primera tarea sin marcar" es literalmente la 104 (queda `[~]`, no `[x]`, hasta que las 12 estén), pero dentro de ella el trabajo sigue en orden: Alertas → Equipo → Reglas → Eventos → Panel general.
+
+Última actualización: 2026-08-22 · Commit de referencia: `a8d6f97` (ver último commit real en `git log`)
 
 > El total **no es un número fijo**: sube y baja a medida que el alcance de cada
 > parte se vuelve concreto. Si agregás, quitás o insertás una tarea, **renumerá
