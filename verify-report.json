@@ -1,13 +1,13 @@
 {
-  "generado_en": "2026-08-22T15:54:09.379Z",
-  "commit": "0edc4a70d907117ec498b0440b5823346f893d5e",
+  "generado_en": "2026-09-03T17:01:17.099Z",
+  "commit": "4cd883ccb9dd28d45549983d4a188c8c328d1042",
   "checks": [
     {
       "nombre": "typecheck",
       "comando": "npx tsc --build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 1846,
+      "duracion_ms": 1362,
       "detalle": ""
     },
     {
@@ -15,7 +15,7 @@
       "comando": "npm run typecheck --workspace @effort/web",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6513,
+      "duracion_ms": 4277,
       "detalle": ""
     },
     {
@@ -23,15 +23,15 @@
       "comando": "npx vitest run",
       "estado": "FALLO",
       "exit_code": 1,
-      "duracion_ms": 144333,
-      "detalle": "9m=\u001b[32m\"archivo\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"file\"\u001b[39m\n              \u001b[36m/>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<button\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"inline-flex min-h-9 items-center justify-center gap-2 rounded border px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 bg-superficie text-tinta border-borde-fuerte hover:bg-superficie-hundida active:bg-superficie-tenue \"\u001b[39m\n              \u001b[33mdisabled\u001b[39m=\u001b[32m\"\"\u001b[39m\n              \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<svg\u001b[39m\n                \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-cloud-upload\"\u001b[39m\n                \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                \u001b[33mheight\u001b[39m=\u001b[32m\"15\"\u001b[39m\n                \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                \u001b[33mwidth\u001b[39m=\u001b[32m\"15\"\u001b[39m\n                \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<path\u001b[39m\n                  \u001b[33md\u001b[39m=\u001b[32m\"M12 13v8\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n                \u001b[36m<path\u001b[39m\n                  \u001b[33md\u001b[39m=\u001b[32m\"M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n                \u001b[36m<path\u001b[39m\n                  \u001b[33md\u001b[39m=\u001b[32m\"m8 17 4-4 4 4\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n              \u001b[36m</svg>\u001b[39m\n              \u001b[0mSimular (no guarda nada)\u001b[0m\n            \u001b[36m</button>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n        \u001b[36m</section>\u001b[39m\n        \u001b[36m<section\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"rounded-md border border-borde bg-superficie shadow-1 \"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<header\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"flex flex-wrap items-start justify-between gap-3 border-b border-borde px-5 py-4\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div>\u001b[39m\n              \u001b[36m<h2\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-sm font-semibold text-tinta\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mConciliación\u001b[0m\n              \u001b[36m</h2>\u001b[39m\n              \u001b[36m<p\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"mt-0.5 text-xs text-tinta-tenue\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mSolo lectura: compara y señala, no ajusta nada.\u001b[0m\n              \u001b[36m</p>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n          \u001b[36m</header>\u001b[39m\n          \u001b[36m<p\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"px-5 py-8 text-center text-sm text-tinta-tenue\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mElegí un cliente para conciliar.\u001b[0m\n          \u001b[36m</p>\u001b[39m\n        \u001b[36m</section>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</main>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n\u001b[36m</body>\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:\u001b[2m37:19\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:\u001b[2m76:38\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:\u001b[2m52:17\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:\u001b[2m95:19\u001b[22m\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m test/Siga.test.tsx:\u001b[2m129:19\u001b[22m\u001b[39m\n    \u001b[90m127| \u001b[39m    \u001b[35mawait\u001b[39m \u001b[34mmontar\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m128| \u001b[39m\n    \u001b[90m129| \u001b[39m    \u001b[34mexpect\u001b[39m(screen\u001b[33m.\u001b[39m\u001b[34mgetByText\u001b[39m(\u001b[32m'IMPORTADA'\u001b[39m))\u001b[33m.\u001b[39m\u001b[34mtoBeVisible\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m   | \u001b[39m                  \u001b[31m^\u001b[39m\n    \u001b[90m130| \u001b[39m    \u001b[34mexpect\u001b[39m(screen\u001b[33m.\u001b[39m\u001b[34mgetAllByText\u001b[39m(\u001b[32m'Nada pendiente.'\u001b[39m))\u001b[33m.\u001b[39m\u001b[34mtoHaveLength\u001b[39m(\u001b[34m3\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m131| \u001b[39m  })\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯\u001b[22m\u001b[39m"
+      "duracion_ms": 52159,
+      "detalle": "is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:4404) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:4404) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:4404) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n\n\u001b[31m⎯⎯⎯⎯⎯⎯\u001b[39m\u001b[1m\u001b[41m Failed Suites 2 \u001b[49m\u001b[22m\u001b[31m⎯⎯⎯⎯⎯⎯⎯\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[42m integracion \u001b[49m\u001b[39m test/integracion/dominio.test.ts\u001b[2m > \u001b[22mrepositorios de negocio contra PostgreSQL real\n\u001b[31m\u001b[1mPrismaClientInitializationError\u001b[22m: \nInvalid `prisma.$executeRawUnsafe()` invocation:\n\n\nError querying the database: FATAL: (ENOTFOUND) tenant/user postgres.nrslhqtdyybmtvvwgirq not found\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m242:13\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleAndLogRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m174:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.request node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m143:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m a node_modules/@prisma/client/src/runtime/getPrismaClient.ts:\u001b[2m833:24\u001b[22m\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m crearEntorno test/integracion/entorno.ts:\u001b[2m118:3\u001b[22m\u001b[39m\n    \u001b[90m116| \u001b[39m  // Cliente sobre `public` solo para crear y destruir el esquema de p…\n    \u001b[90m117| \u001b[39m  \u001b[35mconst\u001b[39m administrador \u001b[33m=\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mPrismaClient\u001b[39m({ datasourceUrl\u001b[33m:\u001b[39m \u001b[33mURL_BASE\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m118| \u001b[39m  await administrador.$executeRawUnsafe(`CREATE SCHEMA IF NOT EXISTS \"…\n    \u001b[90m   | \u001b[39m  \u001b[31m^\u001b[39m\n    \u001b[90m119| \u001b[39m  \u001b[35mawait\u001b[39m administrador\u001b[33m.\u001b[39m\u001b[34m$disconnect\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m120| \u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m test/integracion/dominio.test.ts:\u001b[2m55:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[42m integracion \u001b[49m\u001b[39m test/integracion/repositorios.test.ts\u001b[2m > \u001b[22mrepositorios contra PostgreSQL real\n\u001b[31m\u001b[1mPrismaClientInitializationError\u001b[22m: \nInvalid `prisma.$executeRawUnsafe()` invocation:\n\n\nError querying the database: FATAL: (ENOTFOUND) tenant/user postgres.nrslhqtdyybmtvvwgirq not found\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m242:13\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleAndLogRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m174:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.request node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m143:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m a node_modules/@prisma/client/src/runtime/getPrismaClient.ts:\u001b[2m833:24\u001b[22m\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m crearEntorno test/integracion/entorno.ts:\u001b[2m118:3\u001b[22m\u001b[39m\n    \u001b[90m116| \u001b[39m  // Cliente sobre `public` solo para crear y destruir el esquema de p…\n    \u001b[90m117| \u001b[39m  \u001b[35mconst\u001b[39m administrador \u001b[33m=\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mPrismaClient\u001b[39m({ datasourceUrl\u001b[33m:\u001b[39m \u001b[33mURL_BASE\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m118| \u001b[39m  await administrador.$executeRawUnsafe(`CREATE SCHEMA IF NOT EXISTS \"…\n    \u001b[90m   | \u001b[39m  \u001b[31m^\u001b[39m\n    \u001b[90m119| \u001b[39m  \u001b[35mawait\u001b[39m administrador\u001b[33m.\u001b[39m\u001b[34m$disconnect\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m120| \u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m test/integracion/repositorios.test.ts:\u001b[2m38:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯\u001b[22m\u001b[39m"
     },
     {
       "nombre": "verify:accounting",
       "comando": "npx vitest run packages/core/test/golden.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3221,
+      "duracion_ms": 3896,
       "detalle": ""
     },
     {
@@ -45,7 +45,7 @@
       "comando": "npx vitest run apps/api/test/rbac.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 2990,
+      "duracion_ms": 3581,
       "detalle": ""
     },
     {
@@ -53,7 +53,7 @@
       "comando": "npx vitest run apps/api/test/seguridad.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3254,
+      "duracion_ms": 4154,
       "detalle": ""
     },
     {
@@ -61,7 +61,7 @@
       "comando": "npx vitest run packages/schema/test/contratos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3022,
+      "duracion_ms": 3752,
       "detalle": ""
     },
     {
@@ -69,7 +69,7 @@
       "comando": "npx vitest run apps/api/test/servidor.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6251,
+      "duracion_ms": 6661,
       "detalle": ""
     },
     {
@@ -77,7 +77,7 @@
       "comando": "npx vitest run apps/api/test/modulos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 29090,
+      "duracion_ms": 29151,
       "detalle": ""
     },
     {
@@ -85,7 +85,7 @@
       "comando": "npx vitest run apps/api/test/siga.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7779,
+      "duracion_ms": 8016,
       "detalle": ""
     },
     {
@@ -93,23 +93,23 @@
       "comando": "npx vitest run apps/api/test/importaciones.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7159,
+      "duracion_ms": 6943,
       "detalle": ""
     },
     {
       "nombre": "test:integration",
       "comando": "npx vitest run --project integracion",
-      "estado": "OK",
-      "exit_code": 0,
-      "duracion_ms": 134949,
-      "detalle": ""
+      "estado": "FALLO",
+      "exit_code": 1,
+      "duracion_ms": 8712,
+      "detalle": "y los que no tienen dueño\n   \u001b[2m\u001b[90m↓\u001b[39m\u001b[22m repositorios contra PostgreSQL real\u001b[2m > \u001b[22mregistro de eventos\u001b[2m > \u001b[22mconsulta filtrable\u001b[2m > \u001b[22mel filtro explícito de cliente y el de cartera conviven sin pisarse\n   \u001b[2m\u001b[90m↓\u001b[39m\u001b[22m repositorios contra PostgreSQL real\u001b[2m > \u001b[22mdinero\u001b[2m > \u001b[22mguarda y recupera importes grandes sin perder precisión\n   \u001b[2m\u001b[90m↓\u001b[39m\u001b[22m repositorios contra PostgreSQL real\u001b[2m > \u001b[22mdinero\u001b[2m > \u001b[22mun cliente no puede tener dos balances del mismo período\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[31m2 failed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[33m106 skipped\u001b[39m\u001b[90m (106)\u001b[39m\n\u001b[2m   Start at \u001b[22m 14:00:27\n\u001b[2m   Duration \u001b[22m 6.39s\u001b[2m (transform 388ms, setup 0ms, collect 731ms, tests 10.18s, environment 1ms, prepare 565ms)\u001b[22m\n\n\n\u001b[31m⎯⎯⎯⎯⎯⎯\u001b[39m\u001b[1m\u001b[41m Failed Suites 2 \u001b[49m\u001b[22m\u001b[31m⎯⎯⎯⎯⎯⎯⎯\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[42m integracion \u001b[49m\u001b[39m test/integracion/dominio.test.ts\u001b[2m > \u001b[22mrepositorios de negocio contra PostgreSQL real\n\u001b[31m\u001b[1mPrismaClientInitializationError\u001b[22m: \nInvalid `prisma.$executeRawUnsafe()` invocation:\n\n\nCan't reach database server at `aws-0-sa-east-1.pooler.supabase.com:5432`\n\nPlease make sure your database server is running at `aws-0-sa-east-1.pooler.supabase.com:5432`.\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m242:13\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleAndLogRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m174:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.request node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m143:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m a node_modules/@prisma/client/src/runtime/getPrismaClient.ts:\u001b[2m833:24\u001b[22m\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m crearEntorno test/integracion/entorno.ts:\u001b[2m118:3\u001b[22m\u001b[39m\n    \u001b[90m116| \u001b[39m  // Cliente sobre `public` solo para crear y destruir el esquema de p…\n    \u001b[90m117| \u001b[39m  \u001b[35mconst\u001b[39m administrador \u001b[33m=\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mPrismaClient\u001b[39m({ datasourceUrl\u001b[33m:\u001b[39m \u001b[33mURL_BASE\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m118| \u001b[39m  await administrador.$executeRawUnsafe(`CREATE SCHEMA IF NOT EXISTS \"…\n    \u001b[90m   | \u001b[39m  \u001b[31m^\u001b[39m\n    \u001b[90m119| \u001b[39m  \u001b[35mawait\u001b[39m administrador\u001b[33m.\u001b[39m\u001b[34m$disconnect\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m120| \u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m test/integracion/dominio.test.ts:\u001b[2m55:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[42m integracion \u001b[49m\u001b[39m test/integracion/repositorios.test.ts\u001b[2m > \u001b[22mrepositorios contra PostgreSQL real\n\u001b[31m\u001b[1mPrismaClientInitializationError\u001b[22m: \nInvalid `prisma.$executeRawUnsafe()` invocation:\n\n\nCan't reach database server at `aws-0-sa-east-1.pooler.supabase.com:5432`\n\nPlease make sure your database server is running at `aws-0-sa-east-1.pooler.supabase.com:5432`.\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m242:13\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleAndLogRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m174:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.request node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m143:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m a node_modules/@prisma/client/src/runtime/getPrismaClient.ts:\u001b[2m833:24\u001b[22m\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m crearEntorno test/integracion/entorno.ts:\u001b[2m118:3\u001b[22m\u001b[39m\n    \u001b[90m116| \u001b[39m  // Cliente sobre `public` solo para crear y destruir el esquema de p…\n    \u001b[90m117| \u001b[39m  \u001b[35mconst\u001b[39m administrador \u001b[33m=\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mPrismaClient\u001b[39m({ datasourceUrl\u001b[33m:\u001b[39m \u001b[33mURL_BASE\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m118| \u001b[39m  await administrador.$executeRawUnsafe(`CREATE SCHEMA IF NOT EXISTS \"…\n    \u001b[90m   | \u001b[39m  \u001b[31m^\u001b[39m\n    \u001b[90m119| \u001b[39m  \u001b[35mawait\u001b[39m administrador\u001b[33m.\u001b[39m\u001b[34m$disconnect\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m120| \u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m test/integracion/repositorios.test.ts:\u001b[2m38:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯\u001b[22m\u001b[39m"
     },
     {
       "nombre": "verify:drive",
       "comando": "npx vitest run --project drive",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6117,
+      "duracion_ms": 3505,
       "detalle": ""
     },
     {
@@ -117,16 +117,16 @@
       "comando": "npx vitest run --project importers",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 8060,
+      "duracion_ms": 4663,
       "detalle": ""
     },
     {
       "nombre": "verify:web",
       "comando": "npx vitest run --project web",
-      "estado": "OK",
-      "exit_code": 0,
-      "duracion_ms": 23584,
-      "detalle": ""
+      "estado": "FALLO",
+      "exit_code": 1,
+      "duracion_ms": 20283,
+      "detalle": "9m=\u001b[32m\"archivo\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"file\"\u001b[39m\n              \u001b[36m/>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<button\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"inline-flex min-h-9 items-center justify-center gap-2 rounded border px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 bg-superficie text-tinta border-borde-fuerte hover:bg-superficie-hundida active:bg-superficie-tenue \"\u001b[39m\n              \u001b[33mdisabled\u001b[39m=\u001b[32m\"\"\u001b[39m\n              \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<svg\u001b[39m\n                \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-cloud-upload\"\u001b[39m\n                \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                \u001b[33mheight\u001b[39m=\u001b[32m\"15\"\u001b[39m\n                \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                \u001b[33mwidth\u001b[39m=\u001b[32m\"15\"\u001b[39m\n                \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<path\u001b[39m\n                  \u001b[33md\u001b[39m=\u001b[32m\"M12 13v8\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n                \u001b[36m<path\u001b[39m\n                  \u001b[33md\u001b[39m=\u001b[32m\"M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n                \u001b[36m<path\u001b[39m\n                  \u001b[33md\u001b[39m=\u001b[32m\"m8 17 4-4 4 4\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n              \u001b[36m</svg>\u001b[39m\n              \u001b[0mSimular (no guarda nada)\u001b[0m\n            \u001b[36m</button>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n        \u001b[36m</section>\u001b[39m\n        \u001b[36m<section\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"rounded-md border border-borde bg-superficie shadow-1 \"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<header\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"flex flex-wrap items-start justify-between gap-3 border-b border-borde px-5 py-4\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div>\u001b[39m\n              \u001b[36m<h2\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-sm font-semibold text-tinta\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mConciliación\u001b[0m\n              \u001b[36m</h2>\u001b[39m\n              \u001b[36m<p\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"mt-0.5 text-xs text-tinta-tenue\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mSolo lectura: compara y señala, no ajusta nada.\u001b[0m\n              \u001b[36m</p>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n          \u001b[36m</header>\u001b[39m\n          \u001b[36m<p\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"px-5 py-8 text-center text-sm text-tinta-tenue\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mElegí un cliente para conciliar.\u001b[0m\n          \u001b[36m</p>\u001b[39m\n        \u001b[36m</section>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</main>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n\u001b[36m</body>\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:\u001b[2m37:19\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:\u001b[2m76:38\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:\u001b[2m52:17\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:\u001b[2m95:19\u001b[22m\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m test/Siga.test.tsx:\u001b[2m129:19\u001b[22m\u001b[39m\n    \u001b[90m127| \u001b[39m    \u001b[35mawait\u001b[39m \u001b[34mmontar\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m128| \u001b[39m\n    \u001b[90m129| \u001b[39m    \u001b[34mexpect\u001b[39m(screen\u001b[33m.\u001b[39m\u001b[34mgetByText\u001b[39m(\u001b[32m'IMPORTADA'\u001b[39m))\u001b[33m.\u001b[39m\u001b[34mtoBeVisible\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m   | \u001b[39m                  \u001b[31m^\u001b[39m\n    \u001b[90m130| \u001b[39m    \u001b[34mexpect\u001b[39m(screen\u001b[33m.\u001b[39m\u001b[34mgetAllByText\u001b[39m(\u001b[32m'Nada pendiente.'\u001b[39m))\u001b[33m.\u001b[39m\u001b[34mtoHaveLength\u001b[39m(\u001b[34m3\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m131| \u001b[39m  })\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯\u001b[22m\u001b[39m"
     },
     {
       "nombre": "verify:no-hardcoded-kpi",
@@ -145,20 +145,20 @@
       "comando": "npm audit --audit-level=high",
       "estado": "FALLO",
       "exit_code": 1,
-      "duracion_ms": 4998,
-      "detalle": "# npm audit report\n\ndeepmerge-ts  <8.0.0\nSeverity: high\nDeepmergeTS has stack exhaustion when merging recursive object graphs - https://github.com/advisories/GHSA-ggr8-5vv4-36mx\nfix available via `npm audit fix --force`\nWill install prisma@6.12.0, which is a breaking change\nnode_modules/deepmerge-ts\n  @prisma/config  >=6.13.0-dev.1\n  Depends on vulnerable versions of deepmerge-ts\n  apps/api/node_modules/@prisma/config\n    prisma  6.13.0-dev.1 - 7.10.0-integration-fix-prisma-publish-token.1\n    Depends on vulnerable versions of @prisma/config\n    apps/api/node_modules/prisma\n\nuuid  <11.1.1\nSeverity: moderate\nuuid: Missing buffer bounds check in v3/v5/v6 when buf is provided - https://github.com/advisories/GHSA-w5hq-g745-h8pq\nfix available via `npm audit fix --force`\nWill install exceljs@3.4.0, which is a breaking change\nnode_modules/uuid\n  exceljs  >=3.5.0\n  Depends on vulnerable versions of uuid\n  node_modules/exceljs\n\n5 vulnerabilities (2 moderate, 3 high)\n\nTo address all issues (including breaking changes), run:\n  npm audit fix --force"
+      "duracion_ms": 4829,
+      "detalle": "# npm audit report\n\nbrowserslist  <=4.28.6\nSeverity: high\nBrowserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM - https://github.com/advisories/GHSA-c83g-rgw3-j3cx\nBrowserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats) - https://github.com/advisories/GHSA-73wf-gq98-2v4g\nfix available via `npm audit fix`\nnode_modules/browserslist\n\ndeepmerge-ts  <8.0.0\nSeverity: high\nDeepmergeTS has stack exhaustion when merging recursive object graphs - https://github.com/advisories/GHSA-ggr8-5vv4-36mx\nfix available via `npm audit fix --force`\nWill install prisma@6.12.0, which is a breaking change\nnode_modules/deepmerge-ts\n  @prisma/config  6.13.0-dev.1 - 8.1.0-dev.4\n  Depends on vulnerable versions of deepmerge-ts\n  apps/api/node_modules/@prisma/config\n    prisma  6.13.0-dev.1 - 8.1.0-dev.4\n    Depends on vulnerable versions of @prisma/config\n    apps/api/node_modules/prisma\n\nfast-uri  3.0.0 - 3.1.5 || 4.0.0 - 4.1.2\nSeverity: high\nfast-uri vulnerable to host confusion via skipped IDN canonicalization on scheme-relative references - https://github.com/advisories/GHSA-5jgf-p345-68v8\nfast-uri vulnerable to host confusion via skipped IDN canonicalization on scheme-relative references - https://github.com/advisories/GHSA-5jgf-p345-68v8\nfast-uri vulnerable to server-side request forgery via malformed IPv6 normalization - https://github.com/advisories/GHSA-f65p-4m7j-42xc\nfast-uri vulnerable to server-side request forgery via malformed IPv6 normalization - https://github.com/advisories/GHSA-f65p-4m7j-42xc\nfast-uri vulnerable to server-side request forgery via repeated hostname percent-decoding - https://github.com/advisories/GHSA-fph4-wmhf-6fwf\nfast-uri vulnerable to server-side request forgery via repeated hostname percent-decoding - https://github.com/advisories/GHSA-fph4-wmhf-6fwf\nfast-uri vulnerable to host confusion via percent-encoded scheme normalization - https://github.com/advisories/GHSA-jqff-g426-hqxp\nfast-uri vulnerable to host confusion via percent-encoded scheme normalization - https://github.com/advisories/GHSA-jqff-g426-hqxp\nfix available via `npm audit fix`\nnode_modules/fast-json-stringify/node_modules/ajv/node_modules/fast-uri\nnode_modules/fast-json-stringify/node_modules/fast-uri\nnode_modules/fast-uri\n\nfastify  <=5.12.0\nSeverity: moderate\nfastify vulnerable to schema validation bypass via root primitive coercion mismatch - https://github.com/advisories/GHSA-w2qp-rph6-63g4\nfastify vulnerable to X-Forwarded-* spoofing under trustProxy hop-count - https://github.com/advisories/GHSA-3m5p-2c4r-xxw2\nfix available via `npm audit fix`\nnode_modules/fastify\n\nuuid  <11.1.1\nSeverity: moderate\nuuid: Missing buffer bounds check in v3/v5/v6 when buf is provided - https://github.com/advisories/GHSA-w5hq-g745-h8pq\nfix available via `npm audit fix --force`\nWill install exceljs@3.4.0, which is a breaking change\nnode_modules/uuid\n  exceljs  >=3.5.0\n  Depends on vulnerable versions of uuid\n  node_modules/exceljs\n\n8 vulnerabilities (3 moderate, 5 high)\n\nTo address issues that do not require attention, run:\n  npm audit fix\n\nTo address all issues (including breaking changes), run:\n  npm audit fix --force"
     },
     {
       "nombre": "build",
       "comando": "npm run build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 10497,
+      "duracion_ms": 9063,
       "detalle": ""
     }
   ],
-  "checks_ok": 15,
+  "checks_ok": 13,
   "checks_pendientes": 3,
-  "checks_fallidos": 2,
+  "checks_fallidos": 4,
   "todo_verde": false
 }

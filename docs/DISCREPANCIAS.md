@@ -428,3 +428,13 @@ excepción de los puntos 12 y 14, sin relación). No hace falta ninguna acción
 de código — el punto queda como referencia de qué hacer la próxima vez que el
 proyecto se pause solo por inactividad: entrar al dashboard, reanudar, y
 esperar un par de minutos antes de reintentar `test:integration`.
+
+**Recurrió el 2026-09-03** (tarea 104, pantalla Alertas): mismo síntoma,
+primero `ENOTFOUND tenant/user postgres.nrslhqtdyybmtvvwgirq not found` y
+luego, en un reintento posterior en la misma sesión, `Can't reach database
+server at aws-0-sa-east-1.pooler.supabase.com:5432` — no se entró al
+dashboard todavía para confirmar si es el mismo motivo (pausado por
+inactividad) porque no bloqueaba el trabajo de esa tarea. Mismo arreglo de
+siempre cuando alguien lo retome: dashboard de Supabase → "Resume project" →
+esperar un par de minutos → reintentar `npx vitest run --project
+integracion`.
