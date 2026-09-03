@@ -47,7 +47,7 @@ Si da 0, cerrada. Si no, no.
 
 **Dentro de la tarea 104 (12 pantallas), la próxima es la pantalla 10 de 12: Reglas.** Ya están hechas Seguimiento, Clientes, Documentos/IVA, Vencimientos, Balances, SIGA/Conciliación, Liquidaciones, Alertas y Equipo (9 de 12) — el detalle completo de cada una, con sus verificaciones, está en la entrada de la tarea 104 más abajo. "La primera tarea sin marcar" es literalmente la 104 (queda `[~]`, no `[x]`, hasta que las 12 estén), pero dentro de ella el trabajo sigue en orden: Reglas → Eventos → Panel general.
 
-Última actualización: 2026-09-03 · Commit de referencia: `b27ef48` (ver último commit real en `git log`)
+Última actualización: 2026-09-03 · Commit de referencia: `59519f6` (ver último commit real en `git log`)
 
 > El total **no es un número fijo**: sube y baja a medida que el alcance de cada
 > parte se vuelve concreto. Si agregás, quitás o insertás una tarea, **renumerá
