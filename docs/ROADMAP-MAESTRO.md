@@ -53,7 +53,7 @@ Si da 0, cerrada. Si no, no.
 
 **Tareas 104, 105 y 106 cerradas (2026-09-03/04):** las 12 pantallas, retiro de la demo original, y el chequeo de que ninguna cifra de KPI está escrita a mano. **Ojo:** aunque no queda ninguna tarea numerada `[ ]` dentro de la Parte 7, **la Parte 7 todavía no está cerrada** — su criterio de verificación explícito (`npm run test:e2e` con Playwright → exit 0) sigue en `pendiente` en `scripts/verify.mjs`: Playwright no está instalado ni hay ningún test end-to-end escrito todavía. No declarar "Parte 7 completa" hasta que eso pase de verdad, por la regla anti-mentira de arriba. **"La primera tarea sin marcar" pasa a la Parte 8 (Despliegue), tarea 107** — a menos que se decida armar la suite de Playwright antes de desplegar.
 
-Última actualización: 2026-09-04 · Commit de referencia: `576a570` (ver último commit real en `git log`)
+Última actualización: 2026-09-04 · Commit de referencia: `7396a2e` (ver último commit real en `git log`)
 
 > El total **no es un número fijo**: sube y baja a medida que el alcance de cada
 > parte se vuelve concreto. Si agregás, quitás o insertás una tarea, **renumerá
