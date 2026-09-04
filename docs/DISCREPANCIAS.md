@@ -80,7 +80,7 @@ olvidarse el último día.
 
 ---
 
-## 6. Acceso a OneDrive — EN EJECUCIÓN (avance real 2026-08-09)
+## 6. Acceso a OneDrive — CERRADO (2026-09-04)
 
 **Definido:** cuenta de sistema dedicada (`effort360@effort.com.py`, tenant
 "EFFORT CONSULTORA E.A.S.") con acceso vía Microsoft Graph API con registro de
@@ -159,19 +159,24 @@ se probaron tres lecturas más:
 aprovisionó** — pasa cuando una cuenta nunca abrió OneDrive al menos una vez,
 o no tiene licencia de OneDrive/SharePoint asignada.
 
-**Cómo se cierra:** (a) entrar una vez a portal.office.com con
-`effort360@effort.com.py` y abrir la app OneDrive (dispara el
-aprovisionamiento automático), o (b) si eso no alcanza, revisar en el admin
-center de Microsoft 365 que esa cuenta tenga una licencia asignada que
-incluya OneDrive/SharePoint. Después, repetir la llamada de prueba del punto
-4 una vez más — si ya no da 404, confirmar con EFFORT cuál es la carpeta raíz
-real a usar (con `Files.ReadWrite.All` de aplicación el acceso ya es a nivel
-de todo el tenant, no hace falta compartir una carpeta puntual como se
-planeó originalmente), y recién ahí cerrar la tarea 88. Hasta entonces el
-adaptador de OneDrive sigue probándose contra el doble de prueba
-(`DriveFalso`) en los tests automáticos — **no se apunta contra una carpeta
-real de EFFORT hasta probarlo primero contra una carpeta de prueba
-separada.**
+**Cerrado el mismo día:** Daniel entró una vez con `effort360@effort.com.py`
+a `https://effortconsultora-my.sharepoint.com` y abrió OneDrive (pantalla
+vacía, "Los archivos recientes se mostrarán aquí" — alcanza con que cargue,
+no hacía falta subir nada). Eso disparó el aprovisionamiento. Se repitió la
+llamada de prueba del punto 4 una vez más: **`200 OK`, `{"value": []}`** —
+ya no da 404. Acceso real a OneDrive confirmado de punta a punta: token →
+consentimiento → lectura real de la carpeta raíz.
+
+**Tarea 88 cerrada.** Único pendiente, no bloqueante: confirmar con EFFORT
+cuál es la carpeta raíz real a usar como origen de los importadores — con
+`Files.ReadWrite.All` de aplicación el acceso ya es a nivel de todo el
+tenant, no hace falta compartir una carpeta puntual como se planeó
+originalmente. El adaptador real (`DriveGraph`) sigue sin cablearse contra
+esa carpeta todavía — los tests automáticos siguen usando el doble en
+memoria (`DriveFalso`); cablear el real contra una carpeta de EFFORT de
+verdad es trabajo de la Parte 5 en adelante, **primero contra una carpeta de
+prueba separada**, nunca directo contra la carpeta real de producción (ver
+`CLAUDE.md`, regla 5).
 
 ---
 
