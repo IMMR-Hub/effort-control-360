@@ -53,7 +53,7 @@ Si da 0, cerrada. Si no, no.
 
 **Tarea 104 cerrada el 2026-09-03: las 12 pantallas del handoff están hechas** (Seguimiento, Clientes, Documentos/IVA, Vencimientos, Balances, SIGA/Conciliación, Liquidaciones, Alertas, Equipo, Reglas, Eventos, Panel general). **Tarea 105 cerrada el 2026-09-04:** se retiró toda la demo original (`App.jsx` y los 43 archivos que solo él usaba, 44 en total). **"La primera tarea sin marcar" es ahora la 106:** `verify:no-hardcoded-kpi` — escribir `scripts/verificar-kpi.mjs`, que todavía no existe.
 
-Última actualización: 2026-09-04 · Commit de referencia: `48cbf0e` (ver último commit real en `git log`)
+Última actualización: 2026-09-04 · Commit de referencia: `c27e636` (ver último commit real en `git log`)
 
 > El total **no es un número fijo**: sube y baja a medida que el alcance de cada
 > parte se vuelve concreto. Si agregás, quitás o insertás una tarea, **renumerá
