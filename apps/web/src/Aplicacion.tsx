@@ -11,9 +11,6 @@ import { useState } from 'react';
 import { ProveedorDeSesion, useSesion } from './contexts/SesionContext.js';
 import { Acceso } from './pantallas/Acceso.js';
 import { Encabezado, type Pantalla } from './layout/Encabezado.js';
-// La demo anterior sigue en src/App.jsx con sus datos inventados, sin tocar,
-// hasta que cada una de sus pantallas tenga reemplazo contra la API real
-// (tarea 104). Seguimiento.tsx y Clientes.tsx son las dos primeras ya reales.
 import Seguimiento from './pantallas/Seguimiento.js';
 import Clientes from './pantallas/Clientes.js';
 import Documentos from './pantallas/Documentos.js';
