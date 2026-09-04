@@ -135,16 +135,43 @@ funciona sin errores de tenant) y completar él mismo: Registros de
 aplicaciones → EFFORT Control 360 → Permisos de API → "Conceder
 consentimiento de administrador".
 
-**Cómo se cierra:** una vez concedido el consentimiento, repetir la llamada
-de prueba del punto 4 (`GET /v1.0/users/effort360@effort.com.py/drive/root/children`)
-para confirmar si el 404 anterior era por falta de permisos o porque el
-OneDrive de esa cuenta todavía no está aprovisionado — recién ahí se sabe si
-falta algo más. Después: confirmar con EFFORT cuál es la carpeta raíz real a
-usar (con `Files.ReadWrite.All` de aplicación el acceso ya es a nivel de todo
-el tenant, no hace falta compartir una carpeta puntual como se planeó
-originalmente), y cerrar la tarea 88. Hasta entonces el adaptador de OneDrive
-sigue probándose contra el doble de prueba (`DriveFalso`) en los tests
-automáticos.
+**Consentimiento concedido el 2026-09-04** (captura de "Permisos de API"
+mostrando "Se ha otorgado correctamente el consentimiento del administrador"
+y los tres permisos —`Files.ReadWrite.All`, `Mail.Send`, `User.Read`— como
+"Concedido para EFFORT..."). Se repitió la llamada de prueba del punto 4
+(lectura únicamente, nada se escribió) y **el 404 sigue igual** — eso ya
+descarta la causa "faltaban permisos": no era eso.
+
+**Diagnóstico completo, mismo día:** con el token de la app ya autorizado,
+se probaron tres lecturas más:
+- `GET /v1.0/sites/root` → **200 OK**, devuelve
+  `effortconsultora.sharepoint.com` — el SharePoint del tenant existe y
+  responde bien.
+- `GET /v1.0/users/effort360@effort.com.py/drive` → mismo
+  `404 ResourceNotFound — User's mysite not found`.
+- `GET /v1.0/users/effort360@effort.com.py` → `403 Authorization_RequestDenied`
+  (falta el permiso `User.Read.All` de aplicación para leer perfiles de
+  usuario — no es del OneDrive, es un permiso que no se pidió porque no hace
+  falta para nada de lo que este sistema necesita hacer).
+
+**Conclusión:** el tenant y los permisos están bien. Lo que falta es que el
+**OneDrive personal de la cuenta `effort360@effort.com.py` nunca se
+aprovisionó** — pasa cuando una cuenta nunca abrió OneDrive al menos una vez,
+o no tiene licencia de OneDrive/SharePoint asignada.
+
+**Cómo se cierra:** (a) entrar una vez a portal.office.com con
+`effort360@effort.com.py` y abrir la app OneDrive (dispara el
+aprovisionamiento automático), o (b) si eso no alcanza, revisar en el admin
+center de Microsoft 365 que esa cuenta tenga una licencia asignada que
+incluya OneDrive/SharePoint. Después, repetir la llamada de prueba del punto
+4 una vez más — si ya no da 404, confirmar con EFFORT cuál es la carpeta raíz
+real a usar (con `Files.ReadWrite.All` de aplicación el acceso ya es a nivel
+de todo el tenant, no hace falta compartir una carpeta puntual como se
+planeó originalmente), y recién ahí cerrar la tarea 88. Hasta entonces el
+adaptador de OneDrive sigue probándose contra el doble de prueba
+(`DriveFalso`) en los tests automáticos — **no se apunta contra una carpeta
+real de EFFORT hasta probarlo primero contra una carpeta de prueba
+separada.**
 
 ---
 

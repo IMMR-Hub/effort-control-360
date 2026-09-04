@@ -9,6 +9,13 @@ Si estás retomando esto en una conversación nueva de Claude Code, decile:
 
 Con eso alcanza — no hace falta reexplicar el contexto del proyecto.
 
+> **Regla que no se rompe nunca, bajo ninguna circunstancia:** EFFORT no
+> tiene copia de seguridad de sus propios archivos. Ninguna tarea de este
+> roadmap borra, sobreescribe fuera de la subcarpeta de salidas, ni
+> renombra/mueve un archivo real de EFFORT en OneDrive — ni ahora ni en
+> ninguna tarea futura, sin excepción. Detalle completo en `CLAUDE.md`,
+> regla 5, y en `docs/DISCREPANCIAS.md`, punto 6.
+
 La memoria persistente del proyecto son cuatro archivos:
 
 | Archivo | Qué guarda |
