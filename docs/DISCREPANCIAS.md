@@ -167,16 +167,35 @@ llamada de prueba del punto 4 una vez más: **`200 OK`, `{"value": []}`** —
 ya no da 404. Acceso real a OneDrive confirmado de punta a punta: token →
 consentimiento → lectura real de la carpeta raíz.
 
-**Tarea 88 cerrada.** Único pendiente, no bloqueante: confirmar con EFFORT
-cuál es la carpeta raíz real a usar como origen de los importadores — con
-`Files.ReadWrite.All` de aplicación el acceso ya es a nivel de todo el
-tenant, no hace falta compartir una carpeta puntual como se planeó
-originalmente. El adaptador real (`DriveGraph`) sigue sin cablearse contra
-esa carpeta todavía — los tests automáticos siguen usando el doble en
-memoria (`DriveFalso`); cablear el real contra una carpeta de EFFORT de
-verdad es trabajo de la Parte 5 en adelante, **primero contra una carpeta de
-prueba separada**, nunca directo contra la carpeta real de producción (ver
-`CLAUDE.md`, regla 5).
+**Tarea 88 cerrada.**
+
+**Carpeta raíz definida el 2026-09-04, acordada con Daniel:** en vez de
+apuntar el sistema a la carpeta real donde Laura/Lili ya trabajan a diario
+(el lugar con los archivos irremplazables, sin backup propio), se usa una
+carpeta **nueva, que hoy no existe**, dueña por completo del sistema, en el
+OneDrive de `effort360@effort.com.py`:
+
+```
+/EFFORT Control 360/
+    /Entrada/    ← EFFORT copia (no mueve) ahí lo que el sistema tiene que leer
+    /Salida/     ← lo que el sistema genera (reportes, liquidaciones, etc.)
+    /Respaldo/   ← espejo de seguridad de lo ya procesado
+```
+
+**Por qué:** como la carpeta no tiene nada adentro hoy, es imposible que el
+sistema cruce con un archivo real de un cliente — no por promesa de código,
+sino porque ese archivo no está ahí. El costo es un paso manual: alguien de
+EFFORT tiene que copiar los comprobantes/exportaciones de SIGA del período a
+`/Entrada/` antes de que el sistema los procese. Automatizar ese copiado
+desde la carpeta real de trabajo diario queda como decisión futura, a
+evaluar recién cuando haya confianza acumulada — no ahora.
+
+El adaptador real (`DriveGraph`) sigue sin cablearse contra esta carpeta
+todavía — los tests automáticos siguen usando el doble en memoria
+(`DriveFalso`). Cablearlo contra `/EFFORT Control 360/` de verdad es trabajo
+de la Parte 5 en adelante, **probado primero contra una carpeta de prueba
+separada** antes de apuntar contra la real, aunque la real ya sea "solo del
+sistema" (ver `CLAUDE.md`, regla 5).
 
 ---
 
