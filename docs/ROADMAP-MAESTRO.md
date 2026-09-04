@@ -53,7 +53,7 @@ Si da 0, cerrada. Si no, no.
 
 **Tarea 104 cerrada el 2026-09-03: las 12 pantallas del handoff están hechas** (Seguimiento, Clientes, Documentos/IVA, Vencimientos, Balances, SIGA/Conciliación, Liquidaciones, Alertas, Equipo, Reglas, Eventos, Panel general) — el detalle completo de cada una, con sus verificaciones, está en la entrada de la tarea 104 más abajo. **"La primera tarea sin marcar" es ahora la 105:** retirar `apps/App.jsx` (la demo original), ya que las 12 pantallas reales tienen reemplazo.
 
-Última actualización: 2026-09-03 · Commit de referencia: `c0b16c0` (ver último commit real en `git log`)
+Última actualización: 2026-09-04 · Commit de referencia: `48cbf0e` (ver último commit real en `git log`)
 
 > El total **no es un número fijo**: sube y baja a medida que el alcance de cada
 > parte se vuelve concreto. Si agregás, quitás o insertás una tarea, **renumerá
