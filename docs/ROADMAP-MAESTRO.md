@@ -57,7 +57,7 @@ Si da 0, cerrada. Si no, no.
 
 **Tarea 107 en curso (`[~]`) desde el 2026-09-04:** la preparación de código (`.do/app.yaml`, `docs/DESPLIEGUE.md`) está lista — falta el paso real en la cuenta de DigitalOcean de Daniel (conectar el repo, confirmar el plan), que no se automatiza.
 
-Última actualización: 2026-09-04 · Commit de referencia: `c5e21d8` (ver último commit real en `git log`)
+Última actualización: 2026-09-04 · Commit de referencia: `abc4101` (ver último commit real en `git log`)
 
 > El total **no es un número fijo**: sube y baja a medida que el alcance de cada
 > parte se vuelve concreto. Si agregás, quitás o insertás una tarea, **renumerá
