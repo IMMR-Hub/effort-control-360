@@ -1,0 +1,105 @@
+# Especificación de la app en DigitalOcean App Platform (tarea 107).
+#
+# Arquitectura: un solo dominio (effort360.disaak.com), dos componentes —
+# el sitio estático (apps/web) sirve "/", el servicio (apps/api) sirve
+# "/api" — ruteo por path, no por subdominio. Con esto la interfaz y la API
+# quedan en el MISMO origen: nada de CORS entre ellos, y la cookie de sesión
+# (que en producción exige HTTPS por el prefijo `__Host-`, ver
+# apps/api/src/seguridad/sesiones.ts) funciona de la forma más simple y más
+# segura posible, sin ningún caso especial.
+#
+# Esto es un punto de partida para revisar juntos, no algo para pegar e
+# importar a ciegas — nadie lo probó contra una cuenta real todavía. Los
+# valores entre <> hay que completarlos antes de usarlo.
+#
+# Referencia: https://docs.digitalocean.com/products/app-platform/reference/app-spec/
+
+name: effort-control-360
+region: nyc
+# No hay región de DigitalOcean en Sudamérica; nyc es la más cercana a
+# Supabase (São Paulo) de las disponibles. Si más adelante aparece una
+# opción más cercana, es un cambio de una sola línea.
+
+services:
+  - name: api
+    github:
+      repo: IMMR-Hub/effort-control-360
+      branch: main
+      deploy_on_push: true
+    source_dir: /
+    build_command: npm ci && npx tsc --build
+    run_command: node apps/api/dist/arrancar.js
+    http_port: 3000
+    instance_size_slug: apps-s-1vcpu-0.5gb
+    instance_count: 1
+    health_check:
+      http_path: /salud
+      # Ruta pública real, ya existe (apps/api/src/servidor.ts) y no vive
+      # bajo /api — DigitalOcean la consulta directo contra el puerto del
+      # contenedor, no a través del ruteo público de más abajo, así que
+      # queda fuera de la ruta /api sin problema.
+    routes:
+      - path: /api
+    envs:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "3000"
+      - key: NIVEL_LOG
+        value: info
+      - key: ORIGEN_PERMITIDO
+        value: https://effort360.disaak.com
+      # Secretos — se cargan en el panel de DigitalOcean, nunca en este
+      # archivo ni en git. Todos DISTINTOS a los de desarrollo (tarea 108):
+      # generar SECRETO_COOKIES de nuevo, no copiar el de .env local.
+      - key: DATABASE_URL
+        type: SECRET
+      - key: DIRECT_URL
+        type: SECRET
+      - key: SECRETO_COOKIES
+        type: SECRET
+      - key: TURNSTILE_SECRET
+        type: SECRET
+      - key: AZURE_TENANT_ID
+        type: SECRET
+      - key: AZURE_CLIENT_ID
+        type: SECRET
+      - key: AZURE_CLIENT_SECRET
+        type: SECRET
+
+static_sites:
+  - name: web
+    github:
+      repo: IMMR-Hub/effort-control-360
+      branch: main
+      deploy_on_push: true
+    source_dir: /
+    build_command: npm ci && npx tsc --build && npm run build --workspace @effort/web
+    output_dir: apps/web/dist
+    routes:
+      - path: /
+    envs:
+      - key: VITE_API_URL
+        value: https://effort360.disaak.com
+        scope: BUILD_TIME
+        # Mismo origen que el sitio: técnicamente podría ser una ruta
+        # relativa, pero `cliente.ts` espera una URL absoluta — se deja
+        # explícita para no tener que tocar código por esto.
+
+# Corre una sola vez por despliegue, antes de que el servicio nuevo reciba
+# tráfico — así una migración nueva ya está aplicada cuando el código que la
+# necesita empieza a atender pedidos.
+jobs:
+  - name: migrar-base
+    kind: PRE_DEPLOY
+    github:
+      repo: IMMR-Hub/effort-control-360
+      branch: main
+    source_dir: /
+    build_command: npm ci
+    run_command: npx prisma migrate deploy --schema apps/api/prisma/schema.prisma
+    envs:
+      - key: DATABASE_URL
+        type: SECRET
+      - key: DIRECT_URL
+        type: SECRET

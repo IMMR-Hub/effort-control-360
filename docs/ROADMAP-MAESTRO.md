@@ -55,7 +55,7 @@ Si da 0, cerrada. Si no, no.
 
 **`lint` configurado el mismo día:** `eslint.config.js` nuevo, 7 hallazgos reales corregidos (imports sin usar, un array usado solo como tipo, y un `useMemo` con una dependencia inestable en `Seguimiento.tsx`). **`scripts/verify.mjs` ya no tiene un solo check declarado `pendiente` — los 19 corren de verdad.**
 
-**"La primera tarea sin marcar" es ahora la 107** (Parte 8 — Despliegue): crear la app en DigitalOcean App Platform.
+**Tarea 107 en curso (`[~]`) desde el 2026-09-04:** la preparación de código (`.do/app.yaml`, `docs/DESPLIEGUE.md`) está lista — falta el paso real en la cuenta de DigitalOcean de Daniel (conectar el repo, confirmar el plan), que no se automatiza.
 
 Última actualización: 2026-09-04 · Commit de referencia: `c5e21d8` (ver último commit real en `git log`)
 
@@ -546,7 +546,7 @@ Tarea nueva, descubierta el 2026-07-24 al comparar la estructura de carpetas que
 
 ## PARTE 8 — Despliegue
 
-- [ ] 107. Crear la app en DigitalOcean App Platform, conectada al repositorio
+- [~] 107. Crear la app en DigitalOcean App Platform, conectada al repositorio — **preparación lista el 2026-09-04, falta el paso real (cuenta de Daniel, no automatizable).** `.do/app.yaml`: un dominio (`effort360.disaak.com`), dos componentes — sitio estático `web` en `/`, servicio `api` en `/api`, mismo origen a propósito (sin CORS entre los dos, y la cookie `__Host-` de producción funciona sin caso especial). `health_check` apunta a `/salud` (ruta ya existente, DigitalOcean la consulta directo contra el contenedor, no por el ruteo público). Job `PRE_DEPLOY` que corre `prisma migrate deploy` antes de que el servicio nuevo reciba tráfico. `apps/api/src/arrancar.ts` pasa de ser "solo para e2e" a ser también el `run_command` real de producción — comentario actualizado. Guía completa de las 5 tareas de esta parte en `docs/DESPLIEGUE.md`. Daniel ya tiene cuenta de DigitalOcean creada; el DNS de `disaak.com` (tarea 109) todavía no está confirmado. Ningún recurso real creado todavía — connectar el repo y confirmar el costo del plan es un clic que tiene que hacer Daniel, no algo que se automatiza.
 - [ ] 108. Configurar variables de entorno de producción (secretos distintos a los de desarrollo)
 - [ ] 109. Configurar el subdominio `effort360.disaak.com` (registro CNAME)
 - [ ] 110. Verificar HTTPS y que `ORIGEN_PERMITIDO`/cookies funcionan en producción
