@@ -15,7 +15,7 @@ import { registrarRutasDeContactos } from '../src/rutas/contactos.js';
 import { registrarRutasDeClientes } from '../src/rutas/clientes.js';
 import { hashearContrasena } from '../src/seguridad/credenciales.js';
 import { AlmacenEnMemoria } from '../src/seguridad/limites.js';
-import { NOMBRE_COOKIE_SESION } from '../src/seguridad/sesiones.js';
+import { nombreCookieSesion } from '../src/seguridad/sesiones.js';
 import type { Configuracion } from '../src/configuracion.js';
 import { activarCsrfEnInject } from './csrf-en-tests.js';
 import {
@@ -132,7 +132,7 @@ async function acceder(ctx: Contexto, email: string): Promise<string> {
     payload: { email, contrasena: CONTRASENA },
   });
 
-  const cookie = respuesta.cookies.find((c) => c.name === NOMBRE_COOKIE_SESION);
+  const cookie = respuesta.cookies.find((c) => c.name === nombreCookieSesion(false));
   if (!cookie) throw new Error(`El acceso no devolvió cookie: ${respuesta.body}`);
   return `${cookie.name}=${cookie.value}`;
 }
@@ -250,7 +250,7 @@ describe('acceso', () => {
     });
 
     expect(respuesta.statusCode).toBe(200);
-    const cookie = respuesta.cookies.find((c) => c.name === NOMBRE_COOKIE_SESION);
+    const cookie = respuesta.cookies.find((c) => c.name === nombreCookieSesion(false));
     expect(cookie?.httpOnly).toBe(true);
     expect(cookie?.sameSite).toBe('Strict');
   });
@@ -347,7 +347,7 @@ describe('acceso', () => {
   it('una cookie inventada no sirve', async () => {
     const respuesta = await ctx.app.inject({
       method: 'GET', url: '/api/v1/clientes',
-      headers: { cookie: `${NOMBRE_COOKIE_SESION}=token-inventado` },
+      headers: { cookie: `${nombreCookieSesion(false)}=token-inventado` },
     });
     expect(respuesta.statusCode).toBe(401);
   });

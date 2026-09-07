@@ -17,9 +17,9 @@ import { ZodError } from 'zod';
 import { esProduccion, type Configuracion } from './configuracion.js';
 import { ErrorDeAutorizacion, type SujetoAutenticado } from './seguridad/rbac.js';
 import {
-  NOMBRE_COOKIE_SESION,
   evaluarSesion,
   hashDelToken,
+  nombreCookieSesion,
 } from './seguridad/sesiones.js';
 import { mensajePublicoDeError, sanear, truncarIp } from './seguridad/privacidad.js';
 import { AlmacenEnMemoria } from './seguridad/limites.js';
@@ -241,7 +241,7 @@ export async function construirServidor(deps: Dependencias): Promise<FastifyInst
    * comprobación de salud) no necesitan una excepción.
    */
   app.addHook('preHandler', async (peticion) => {
-    const token = peticion.cookies[NOMBRE_COOKIE_SESION];
+    const token = peticion.cookies[nombreCookieSesion(produccion)];
     if (!token) return;
 
     const sesion = await deps.sesiones.buscarPorHash(hashDelToken(token));

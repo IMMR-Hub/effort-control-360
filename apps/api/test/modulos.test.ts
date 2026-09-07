@@ -30,7 +30,7 @@ import { registrarRutasDeEventos } from '../src/rutas/eventos.js';
 import { registrarRutasDeClientes } from '../src/rutas/clientes.js';
 import { hashearContrasena } from '../src/seguridad/credenciales.js';
 import { AlmacenEnMemoria } from '../src/seguridad/limites.js';
-import { NOMBRE_COOKIE_SESION } from '../src/seguridad/sesiones.js';
+import { nombreCookieSesion } from '../src/seguridad/sesiones.js';
 import type { Configuracion } from '../src/configuracion.js';
 import { activarCsrfEnInject } from './csrf-en-tests.js';
 import {
@@ -179,7 +179,7 @@ async function acceder(ctx: Contexto, email: string): Promise<string> {
   const respuesta = await ctx.app.inject({
     method: 'POST', url: '/api/v1/acceso', payload: { email, contrasena: CONTRASENA },
   });
-  const cookieObj = respuesta.cookies.find((c) => c.name === NOMBRE_COOKIE_SESION);
+  const cookieObj = respuesta.cookies.find((c) => c.name === nombreCookieSesion(false));
   if (!cookieObj) throw new Error(`Sin cookie: ${respuesta.body}`);
   const cookie = `${cookieObj.name}=${cookieObj.value}`;
 

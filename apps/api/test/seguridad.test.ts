@@ -13,11 +13,11 @@ import {
 import {
   DURACION_ABSOLUTA_MS,
   DURACION_POR_INACTIVIDAD_MS,
-  NOMBRE_COOKIE_SESION,
   evaluarSesion,
   generarTokenDeSesion,
   hashDelToken,
   hashesCoinciden,
+  nombreCookieSesion,
   opcionesDeCookie,
   sesionUtilizable,
   type Sesion,
@@ -173,18 +173,26 @@ describe('sesiones', () => {
     expect(sesionUtilizable(aMedias, AHORA)).toBe(false);
   });
 
-  it('la cookie es httpOnly, SameSite strict y con prefijo __Host-', () => {
+  it('la cookie es httpOnly, SameSite strict y con prefijo __Host- en producción', () => {
     const opciones = opcionesDeCookie(true);
     expect(opciones.httpOnly).toBe(true);
     expect(opciones.sameSite).toBe('strict');
     expect(opciones.secure).toBe(true);
     expect(opciones.path).toBe('/');
-    expect(NOMBRE_COOKIE_SESION.startsWith('__Host-')).toBe(true);
+    expect(nombreCookieSesion(true).startsWith('__Host-')).toBe(true);
   });
 
-  it('secure solo se apaga fuera de producción', () => {
+  it('secure y el prefijo __Host- solo se apagan fuera de producción', () => {
+    // El prefijo `__Host-` obliga al navegador a exigir `Secure` — con
+    // `secure: false` (fuera de producción, sin HTTPS local), un nombre con
+    // ese prefijo haría que el navegador descarte el `Set-Cookie` en
+    // silencio: el login devolvería 200 pero la sesión nunca quedaría
+    // guardada. Encontrado con los tests end-to-end de Playwright (`e2e/`),
+    // el primer lugar que ejercitó un navegador real contra HTTP real.
     expect(opcionesDeCookie(false).secure).toBe(false);
     expect(opcionesDeCookie(true).secure).toBe(true);
+    expect(nombreCookieSesion(false).startsWith('__Host-')).toBe(false);
+    expect(nombreCookieSesion(true).startsWith('__Host-')).toBe(true);
   });
 });
 

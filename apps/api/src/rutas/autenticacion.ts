@@ -23,9 +23,9 @@ import {
 } from '../seguridad/limites.js';
 import { requiereSegundoFactor } from '../seguridad/rbac.js';
 import {
-  NOMBRE_COOKIE_SESION,
   generarTokenDeSesion,
   hashDelToken,
+  nombreCookieSesion,
   opcionesDeCookie,
 } from '../seguridad/sesiones.js';
 import { truncarIp } from '../seguridad/privacidad.js';
@@ -58,6 +58,7 @@ export async function registrarRutasDeAutenticacion(
   deps: Dependencias,
 ): Promise<void> {
   const produccion = esProduccion(deps.configuracion);
+  const nombreCookie = nombreCookieSesion(produccion);
 
   app.post('/api/v1/acceso', async (peticion, respuesta) => {
     const { email, contrasena } = accesoSchema.parse(peticion.body);
@@ -134,7 +135,7 @@ export async function registrarRutasDeAutenticacion(
       agenteUsuario: peticion.headers['user-agent']?.slice(0, 300) ?? null,
     });
 
-    respuesta.setCookie(NOMBRE_COOKIE_SESION, token, opcionesDeCookie(produccion));
+    respuesta.setCookie(nombreCookie, token, opcionesDeCookie(produccion));
 
     await registrarEvento(deps.bitacora, peticion.log, {
       usuarioId: usuario.id,
@@ -160,7 +161,7 @@ export async function registrarRutasDeAutenticacion(
 
   app.post('/api/v1/acceso/segundo-factor', async (peticion, respuesta) => {
     const { codigo } = segundoFactorSchema.parse(peticion.body);
-    const token = peticion.cookies[NOMBRE_COOKIE_SESION];
+    const token = peticion.cookies[nombreCookie];
 
     if (!token) {
       throw new ErrorDeAplicacion(401, 'No hay un acceso en curso.', 'sin_sesion');
@@ -243,7 +244,7 @@ export async function registrarRutasDeAutenticacion(
 
     // La cookie se borra siempre, haya o no sesión: si el navegador quedó con
     // una cookie inválida, cerrar sesión tiene que limpiarla igual.
-    respuesta.clearCookie(NOMBRE_COOKIE_SESION, { path: '/' });
+    respuesta.clearCookie(nombreCookie, { path: '/' });
     return respuesta.code(200).send({ salida: 'ok' });
   });
 

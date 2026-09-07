@@ -96,6 +96,8 @@ function separarSentencias(sql: string): string[] {
 export interface EntornoDePrueba {
   readonly prisma: PrismaClient;
   readonly esquema: string;
+  /** Cadena de conexión al esquema aislado — la usan los tests e2e para arrancar un servidor real contra él. */
+  readonly urlDeConexion: string;
   destruir: () => Promise<void>;
 }
 
@@ -145,6 +147,7 @@ export async function crearEntorno(): Promise<EntornoDePrueba> {
   return {
     prisma,
     esquema,
+    urlDeConexion: urlConEsquema(esquema),
     destruir: async () => {
       await prisma.$disconnect();
       const limpiador = new PrismaClient({ datasourceUrl: URL_BASE });

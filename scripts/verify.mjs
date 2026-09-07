@@ -40,7 +40,8 @@ const CHECKS = [
   { nombre: 'verify:importadores', comando: 'npx vitest run --project importers' },
   { nombre: 'verify:web', comando: 'npx vitest run --project web' },
   { nombre: 'verify:no-hardcoded-kpi', comando: 'node scripts/verificar-kpi.mjs' },
-  { nombre: 'test:e2e', comando: 'npx playwright test', pendiente: 'apps/web todavía no consume la API.' },
+  { nombre: 'verify:e2e-typecheck', comando: 'npm run typecheck:e2e' },
+  { nombre: 'test:e2e', comando: 'npx playwright test' },
   { nombre: 'audit', comando: 'npm audit --audit-level=high' },
   { nombre: 'build', comando: 'npm run build' },
 ];

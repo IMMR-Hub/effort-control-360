@@ -123,4 +123,21 @@ export function opcionesDeCookie(esProduccion: boolean): OpcionesDeCookie {
   };
 }
 
-export const NOMBRE_COOKIE_SESION = '__Host-effort_sesion';
+/**
+ * Nombre de la cookie de sesión.
+ *
+ * El prefijo `__Host-` es una garantía que hace cumplir el propio navegador:
+ * exige `Secure`, `Path=/` y ningún `Domain` — y por eso mismo exige que la
+ * respuesta haya viajado por HTTPS, sin excepción. Si el nombre llevara ese
+ * prefijo con `secure: false` (que es exactamente lo que pasa fuera de
+ * producción, ver `opcionesDeCookie`), el navegador no rechazaría la
+ * petición: directamente **descartaría el `Set-Cookie` en silencio**, sin
+ * ningún error visible — la sesión "se crea" (200) pero nunca queda guardada
+ * en el navegador. Encontrado recién con los tests end-to-end de Playwright
+ * (`e2e/`): ningún test anterior pasaba por un navegador real ni por HTTP de
+ * verdad, así que nada lo había disparado hasta ahora. Mismo criterio que ya
+ * usa `opcionesDeCookie`: la garantía fuerte solo aplica en producción.
+ */
+export function nombreCookieSesion(esProduccion: boolean): string {
+  return esProduccion ? '__Host-effort_sesion' : 'effort_sesion';
+}

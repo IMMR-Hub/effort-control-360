@@ -14,14 +14,17 @@
     "dev": "npm run dev --workspace @effort/web",
     "build": "npm run build --workspaces --if-present",
     "typecheck": "tsc --build",
+    "typecheck:e2e": "tsc --noEmit --project e2e/tsconfig.json",
     "lint": "eslint .",
     "test:unit": "vitest run",
     "test:watch": "vitest",
     "verify:accounting": "vitest run packages/core/test/golden.test.ts",
-    "verify": "node scripts/verify.mjs"
+    "verify": "node scripts/verify.mjs",
+    "test:e2e": "npx tsc --build && npm run typecheck:e2e && playwright test"
   },
   "devDependencies": {
     "@eslint/js": "^9.13.0",
+    "@playwright/test": "^1.63.0",
     "@types/node": "^22.7.5",
     "@vitest/coverage-v8": "^3.2.7",
     "eslint": "^9.13.0",
