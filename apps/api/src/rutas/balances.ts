@@ -26,7 +26,7 @@ import {
   type CifrasBalance,
   type CifrasEstadoResultados,
 } from '@effort/core';
-import { guaraniesSchema, periodoSchema } from '@effort/schema';
+import { guaraniesSchema } from '@effort/schema';
 
 import { ACCIONES, registrarEvento } from '../bitacora.js';
 import { ErrorDeAplicacion, type Dependencias } from '../servidor.js';

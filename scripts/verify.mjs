@@ -27,7 +27,7 @@ const CHECKS = [
 
   // Checks previstos que todavía no tienen sobre qué correr. Se declaran
   // explícitamente para que el reporte muestre la cobertura real del sistema.
-  { nombre: 'lint', comando: 'npx eslint .', pendiente: 'Falta configurar ESLint (slice de calidad).' },
+  { nombre: 'lint', comando: 'npx eslint .' },
   { nombre: 'verify:rbac', comando: 'npx vitest run apps/api/test/rbac.test.ts' },
   { nombre: 'verify:seguridad', comando: 'npx vitest run apps/api/test/seguridad.test.ts' },
   { nombre: 'verify:contratos', comando: 'npx vitest run packages/schema/test/contratos.test.ts' },

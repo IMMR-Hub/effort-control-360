@@ -46,7 +46,6 @@ import {
   crearDocumento,
   listarDocumentos,
   listarProcesoMensualPorPeriodo,
-  obtenerProcesoMensual,
   type CamposEditablesDeProceso,
   type CanalRecepcionDocumento,
   type Documento,

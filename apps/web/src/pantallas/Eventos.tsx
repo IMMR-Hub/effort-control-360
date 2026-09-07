@@ -89,7 +89,6 @@ export default function Eventos() {
       }
     })();
     void buscar(FILTRO_VACIO);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function manejarBusqueda(evento: FormEvent<HTMLFormElement>) {

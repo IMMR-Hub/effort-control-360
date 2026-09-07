@@ -237,7 +237,12 @@ export default function Seguimiento() {
     };
   }, [periodoActivo]);
 
-  const hoy = new Date();
+  // Memoizado: si se recalculara en cada render, cambiaría de referencia
+  // todo el tiempo y el `useMemo` de más abajo (que lo usa) recalcularía en
+  // cada render también, sin ningún beneficio — encontrado al configurar
+  // `react-hooks/exhaustive-deps`, que marcaba `hoy` como dependencia
+  // faltante ahí abajo.
+  const hoy = useMemo(() => new Date(), []);
 
   const filas: readonly FilaDeSeguimiento[] = useMemo(
     () =>
@@ -268,7 +273,7 @@ export default function Seguimiento() {
           respondioAlgunaVez: contactosDelCliente.some((c) => c.huboRespuesta),
         };
       }),
-    [solicitudes, clientes, contactosPorCliente, regla, calendario],
+    [solicitudes, clientes, contactosPorCliente, regla, calendario, hoy],
   );
 
   const contactosDelCliente = useMemo(

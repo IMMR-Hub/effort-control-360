@@ -8,7 +8,6 @@
  */
 
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { crearFetchMock, respuestaJson } from './ayuda-fetch-mock.js';
@@ -106,12 +105,10 @@ const LIQUIDACION_PENDIENTE = {
 };
 
 let mock: ReturnType<typeof crearFetchMock>;
-let usuario: ReturnType<typeof userEvent.setup>;
 
 beforeEach(() => {
   mock = crearFetchMock();
   vi.stubGlobal('fetch', mock.fetchMock);
-  usuario = userEvent.setup();
 });
 
 afterEach(() => {

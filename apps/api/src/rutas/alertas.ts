@@ -24,7 +24,7 @@ const cerrarSchema = z
   .strict();
 
 /** Mismo orden que el enum `Criticidad` en `schema.prisma`, para el resumen. */
-const CRITICIDADES = ['CRITICA', 'ALTA', 'MEDIA', 'INFORMATIVA'] as const;
+type Criticidad = 'CRITICA' | 'ALTA' | 'MEDIA' | 'INFORMATIVA';
 
 export async function registrarRutasDeAlertas(
   app: FastifyInstance,
@@ -41,14 +41,14 @@ export async function registrarRutasDeAlertas(
 
     const alertas = await deps.alertas.listar(filtroDeClientes(sujeto));
 
-    const resumen: Record<(typeof CRITICIDADES)[number], number> = {
+    const resumen: Record<Criticidad, number> = {
       CRITICA: 0,
       ALTA: 0,
       MEDIA: 0,
       INFORMATIVA: 0,
     };
     for (const alerta of alertas) {
-      resumen[alerta.criticidad as (typeof CRITICIDADES)[number]] += 1;
+      resumen[alerta.criticidad as Criticidad] += 1;
     }
 
     return { resumen, alertas };

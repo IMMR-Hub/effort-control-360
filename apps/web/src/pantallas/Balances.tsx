@@ -22,7 +22,6 @@ import {
   aprobarBalance as aprobarBalanceApi,
   guardarBalance,
   listarBalances,
-  obtenerBalance,
   type Balance,
   type CifrasDeBalance,
   type EstadoBalance,
