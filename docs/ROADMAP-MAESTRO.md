@@ -55,7 +55,7 @@ Si da 0, cerrada. Si no, no.
 
 **"La primera tarea sin marcar" es ahora la 107** (Parte 8 — Despliegue): crear la app en DigitalOcean App Platform.
 
-Última actualización: 2026-09-04 · Commit de referencia: `7396a2e` (ver último commit real en `git log`, se actualiza después de commitear esto)
+Última actualización: 2026-09-04 · Commit de referencia: `dfa40d9` (ver último commit real en `git log`)
 
 > El total **no es un número fijo**: sube y baja a medida que el alcance de cada
 > parte se vuelve concreto. Si agregás, quitás o insertás una tarea, **renumerá
