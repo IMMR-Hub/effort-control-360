@@ -35,6 +35,15 @@ también el punto de entrada de producción (`apps/api/src/arrancar.ts`).
    está gastando dinero real. Confirmar con Daniel antes del clic final si
    hay cualquier duda sobre el plan/tamaño.
 
+**Importante — el App Spec de una app ya creada no se sincroniza solo con
+cambios en `.do/app.yaml` del repo.** Si se edita ese archivo después de
+crear la app (como pasó al agregar `npx prisma generate` al
+`build_command`, ver bitácora del roadmap), hay que reflejar el cambio a
+mano en el panel: Settings → el componente `api` → **Commands** → Edit, o
+Settings → **Manage App Spec**. Un `git push` con `Autodeploy: On` sí
+dispara un build nuevo, pero usa el `build_command` que la app tiene
+guardado en DigitalOcean, no el del archivo del repo.
+
 ## Tarea 108 — Variables de entorno de producción
 
 **Ninguna se copia de `.env` local — todas nuevas, generadas para
