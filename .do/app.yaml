@@ -27,7 +27,11 @@ services:
       branch: main
       deploy_on_push: true
     source_dir: /
-    build_command: npm ci && npx tsc --build
+    # El cliente de Prisma ya se genera solo via el `postinstall` de
+    # apps/api/package.json — el `npx prisma generate` explícito de acá es
+    # una segunda red de seguridad, por si el entorno de build corre `npm
+    # ci` con los scripts de instalación desactivados.
+    build_command: npm ci && npx prisma generate --schema apps/api/prisma/schema.prisma && npx tsc --build
     run_command: node apps/api/dist/arrancar.js
     http_port: 3000
     instance_size_slug: apps-s-1vcpu-0.5gb
