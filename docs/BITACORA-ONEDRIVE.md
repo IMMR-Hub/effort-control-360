@@ -104,6 +104,21 @@ En concreto:
   producción el mismo día (tarea 56, `docs/DISCREPANCIAS.md` punto 3 —
   ambos cerrados).
 
+- **2026-09-09, ~20:15** — Daniel pidió configurar el acceso correcto de
+  `effort360@effort.com.py` al OneDrive de Laura, sin depender de que su
+  sesión quede abierta. Hecho desde el Centro de administración de
+  SharePoint → Más características → Perfiles de usuario → Administrar
+  perfiles de usuario → buscar `lsosa` → menú del perfil → **"Administrar
+  propietarios de la colección de sitios"**: se agregó `effort360` a la
+  lista de "Administradores de la colección de sitios" (sin sacar a Laura,
+  que sigue como administradora principal). Verificado reabriendo el mismo
+  diálogo después de guardar: quedó `effort360; Laura Sosa;`. **Esto es una
+  configuración persistente del tenant, no una lectura de archivos** — se
+  registra acá por transparencia, aunque la regla de bitácora de arriba
+  hablaba en principio de archivos, no de permisos. De ahora en más,
+  `effort360` puede entrar directo al OneDrive de Laura sin necesitar que
+  su sesión esté abierta en el navegador.
+
 - **2026-09-09, ~19:30** — Daniel preguntó por qué, siendo Administrador
   Global, no ve los mismos archivos que Laura/Lili — se le explicó que ser
   admin no da acceso automático al contenido de un OneDrive ajeno (es
