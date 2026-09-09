@@ -557,7 +557,7 @@ El primer build falló con errores de TypeScript en `apps/api` (`Cannot find nam
 
 **Verificado con el mismo escenario real antes de decirle a Daniel que reintentara:** `npm ci` desde cero + `npx tsc --build --force` → 0 errores. `npx vitest run apps/api/test/modulos.test.ts apps/api/test/servidor.test.ts` → 150/150. Commit `48a2ffa`, subido a `main` con confirmación explícita de Daniel (dispara un build nuevo solo, por el auto-deploy). Resultado del segundo intento: pendiente de confirmar.
 - [ ] 108. Configurar variables de entorno de producción (secretos distintos a los de desarrollo)
-- [ ] 109. Configurar el subdominio `effort360.disaak.com` (registro CNAME)
+- [~] 109. Configurar el subdominio `effort360.disaak.com` (registro CNAME) — **cargado el 2026-09-09, esperando propagación.** DNS de `disaak.com` administrado en Namecheap (no en DigitalOcean). Dominio agregado en DigitalOcean (Networking → Domains → `effort360.disaak.com`, opción "You manage your domain" — a propósito, no "We manage your domain": esa segunda opción mueve los nameservers de *todo* `disaak.com` a DigitalOcean, afectando el sitio principal). CNAME cargado en Namecheap: `effort360` → `effort-control-360-xiffl.ondigitalocean.app`. Los registros existentes de `disaak.com` (`A` en `@` hacia `75.2.60.5`, `CNAME` en `www` hacia Netlify) no se tocaron. No marcar `[x]` hasta confirmar que el DNS resuelve de verdad.
 - [ ] 110. Verificar HTTPS y que `ORIGEN_PERMITIDO`/cookies funcionan en producción
 - [ ] 111. Corrida de humo completa en producción con el usuario real de dirección
 
