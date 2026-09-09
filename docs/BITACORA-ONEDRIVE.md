@@ -72,3 +72,26 @@ En concreto:
   ciegas — falta que Daniel diga el correo específico de la persona (Laura o
   Lili) cuyo OneDrive sí tiene los archivos, o confirme que ese material
   solo existe localmente en una computadora, no en la nube.
+
+- **2026-09-09, ~19:30** — Daniel preguntó por qué, siendo Administrador
+  Global, no ve los mismos archivos que Laura/Lili — se le explicó que ser
+  admin no da acceso automático al contenido de un OneDrive ajeno (es
+  privado por diseño) y que "Mis Teams" solo muestra sitios de los que uno
+  es miembro, no todos los que existen. Para confirmarlo con datos reales en
+  vez de solo teoría, se entró al **Centro de administración de SharePoint**
+  (`effortconsultora-admin.sharepoint.com`, con la sesión de Daniel como
+  admin global) → **Sitios activos**, que sí lista TODOS los sitios del
+  tenant sin importar membresía. **Resultado, definitivo:** existen
+  exactamente 3 sitios en todo el tenant — "All Company", "EFFORT
+  CONSULTORA E.A.S." y el "Sitio de comunicación" raíz — los tres con
+  **0.00 GB usados**, y el tenant completo marca **15.00 MB de 1.11 TB**
+  disponibles. De paso, se descubrió el correo real de Laura Sosa
+  (`lsosa@effort.com.py`) porque su sesión ya estaba conectada en el
+  navegador de Daniel — no se inició sesión como ella ni se accedió a nada
+  suyo, ese dato solo apareció en el selector de cuentas de Microsoft.
+  **Conclusión:** no es un problema de acceso — los archivos reales de
+  EFFORT nunca estuvieron en Microsoft 365 (ni SharePoint ni Teams ni ningún
+  OneDrive de la organización). Tienen que estar guardados localmente en
+  alguna computadora, o en un servicio en la nube ajeno a este tenant
+  (Google Drive personal, Dropbox, etc.). Le queda a Daniel confirmar cuál
+  de los dos casos es.

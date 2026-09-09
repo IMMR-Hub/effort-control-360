@@ -209,6 +209,26 @@ de la Parte 5 en adelante, **probado primero contra una carpeta de prueba
 separada** antes de apuntar contra la real, aunque la real ya sea "solo del
 sistema" (ver `CLAUDE.md`, regla 5).
 
+**2026-09-09 — Corrección importante a un supuesto de este punto: "la
+carpeta real donde Laura/Lili ya trabajan a diario" (mencionada arriba) no
+está en Microsoft 365.** Con permiso de Daniel de leer (nunca escribir) las
+carpetas reales, se exploró a fondo, solo lectura: el OneDrive de
+`effort360@effort.com.py`, el sitio raíz de SharePoint, y el sitio de Teams
+"EFFORT CONSULTORA E.A.S." — los tres vacíos. Confirmado de forma
+concluyente desde el **Centro de administración de SharePoint** (que lista
+todos los sitios del tenant, sin importar membresía): existen exactamente 3
+sitios en total, los tres con 0.00 GB, y **el tenant completo usa 15.00 MB
+de 1.11 TB disponibles**. Detalle completo en `docs/BITACORA-ONEDRIVE.md`.
+
+**Esto no es un problema de permisos — es que los archivos reales de EFFORT
+nunca estuvieron guardados en Microsoft 365.** Tienen que vivir localmente
+en alguna computadora, o en un servicio en la nube ajeno a este tenant.
+Cambia el supuesto de fondo de la Parte 5: no hay ninguna "carpeta real en
+OneDrive" de la que copiar automáticamente — el paso manual de copiar a
+`/Entrada/` (arriba) puede terminar siendo la única forma posible, no un
+paso transitorio hasta poder automatizarlo. **Pendiente de confirmar con
+Daniel:** dónde viven realmente los archivos hoy.
+
 ---
 
 ## 7. Rol de aplicación en producción — DEFINIDO, FALTA ASIGNAR CONTRASEÑA
