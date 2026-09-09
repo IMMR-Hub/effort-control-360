@@ -52,7 +52,14 @@ services:
       # contenedor, no a través del ruteo público de más abajo, así que
       # queda fuera de la ruta /api sin problema.
     routes:
+      # preserve_path_prefix: sin esto, DigitalOcean le saca el /api a la
+      # ruta ANTES de reenviarla al contenedor — pero las rutas de Fastify
+      # ya están escritas con el /api adentro del string (`/api/v1/csrf`,
+      # ver servidor.ts), no como un prefijo aparte. Sin esta bandera,
+      # /api/v1/csrf le llega a la app como /v1/csrf y no matchea con nada
+      # (probado: /api/api/v1/csrf sí daba 200, confirmando el recorte).
       - path: /api
+        preserve_path_prefix: true
     envs:
       - key: NODE_ENV
         value: production
