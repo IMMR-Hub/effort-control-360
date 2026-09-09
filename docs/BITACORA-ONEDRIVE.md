@@ -50,3 +50,25 @@ En concreto:
   dónde vive realmente el material de trabajo diario (¿OneDrive de Laura o
   Lili? ¿un sitio de Teams/SharePoint con otro nombre?) antes de seguir
   explorando.
+
+- **2026-09-09, ~19:20** — Daniel pidió revisar
+  `https://effortconsultora.sharepoint.com/.../onedrive` a través del
+  navegador (Claude in Chrome, sesión ya logueada como Daniel, administrador
+  global). Se encontró un sitio de Teams real, **"EFFORT CONSULTORA
+  E.A.S."**, que la búsqueda por API no había podido ver antes
+  (`/sites?search=*` daba 403 — sin ese permiso concedido). Se navegó su
+  biblioteca de documentos, solo lectura, primero por la interfaz (sin
+  éxito: la vista "En canales" mostraba una carpeta "General" pero ningún
+  clic — simple, doble, ni la URL directa — lograba abrirla) y después con
+  una llamada de Graph directa: `GET /sites/{id}/drives` → un único drive
+  "Documentos"; `GET /drives/{id}/root/children` → **0 elementos, la raíz
+  está completamente vacía**, ni siquiera existe la carpeta "General" a
+  nivel de archivo (Teams solo crea la carpeta real de un canal la primera
+  vez que alguien comparte un archivo ahí — nunca pasó). **Conclusión, con
+  bastante confianza ahora:** el Team "EFFORT CONSULTORA E.A.S." existe como
+  objeto de Teams pero nunca se usó para guardar archivos. No es donde vive
+  el material real de Laura/Lili. Se agotaron las vías de descubrimiento
+  disponibles sin necesitar más permisos ni nombrar cuentas de terceros a
+  ciegas — falta que Daniel diga el correo específico de la persona (Laura o
+  Lili) cuyo OneDrive sí tiene los archivos, o confirme que ese material
+  solo existe localmente en una computadora, no en la nube.
