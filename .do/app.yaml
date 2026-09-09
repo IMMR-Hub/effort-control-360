@@ -47,6 +47,22 @@ services:
     envs:
       - key: NODE_ENV
         value: production
+      # Sin esto el build falla, y de formas que despistan mucho. El
+      # buildpack de Heroku lee NODE_ENV=production y le pasa a npm la
+      # configuración de producción, así que `npm ci` NO instala las
+      # devDependencies — donde viven typescript, @types/node y el CLI de
+      # prisma, es decir todo lo que el build necesita. Los síntomas no se
+      # parecen entre sí y ninguno nombra la causa: errores de tipos
+      # (`Cannot find name 'process'`), `prisma: not found` (exit 127), y
+      # builds colgados 30 minutos sin salida ni uso de CPU (`npx tsc`
+      # intentando descargar typescript del registry). `include` gana sobre
+      # `omit`/`production` en la resolución de configuración de npm, así
+      # que esta línea alcanza y no hace falta tocar NODE_ENV — que sí se
+      # necesita en tiempo de ejecución, porque de él depende el prefijo
+      # `__Host-` de la cookie de sesión.
+      - key: NPM_CONFIG_INCLUDE
+        value: dev
+        scope: BUILD_TIME
       - key: PORT
         value: "3000"
       - key: NIVEL_LOG
@@ -103,6 +119,19 @@ jobs:
     build_command: npm ci
     run_command: npx prisma migrate deploy --schema apps/api/prisma/schema.prisma
     envs:
+      # El CLI de prisma es una devDependency: sin esto, `npm ci` no lo
+      # instala y este job no lo encuentra. Ver la nota larga en el
+      # servicio `api`.
+      #
+      # Sin verificar todavía: este job aún no existe en la app real (por
+      # ahora solo está el servicio `api`), y acá prisma hace falta en el
+      # `run_command`, no solo durante el build. Si el buildpack poda las
+      # devDependencies al cerrar la imagen, esta variable no alcanza y hay
+      # que resolverlo de otra forma. Comprobarlo al crear el job de verdad,
+      # no darlo por hecho.
+      - key: NPM_CONFIG_INCLUDE
+        value: dev
+        scope: BUILD_TIME
       - key: DATABASE_URL
         type: SECRET
       - key: DIRECT_URL

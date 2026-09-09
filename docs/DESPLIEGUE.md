@@ -35,6 +35,31 @@ también el punto de entrada de producción (`apps/api/src/arrancar.ts`).
    está gastando dinero real. Confirmar con Daniel antes del clic final si
    hay cualquier duda sobre el plan/tamaño.
 
+### El build necesita `NPM_CONFIG_INCLUDE=dev`
+
+Sin esta variable (alcance **Build Time**) el build falla siempre, y por
+caminos que no se parecen entre sí. El buildpack de Heroku lee
+`NODE_ENV=production` y le pasa a npm la configuración de producción, así
+que `npm ci` **no instala las devDependencies** — donde están `typescript`,
+`@types/node` y el CLI de `prisma`, o sea todo lo que el build usa.
+
+Cuesta reconocerlo porque ningún síntoma nombra la causa:
+
+| Síntoma | Falta en realidad |
+|---|---|
+| `Cannot find name 'process'` / `Buffer` / `node:crypto` | `@types/node` |
+| `sh: 1: prisma: not found` (exit 127) | CLI de `prisma` |
+| Build colgado 30 min, sin salida y con 0% de CPU | `typescript` — `npx tsc` se queda intentando bajarlo del registry |
+
+Cómo confirmarlo en un log de build, sin adivinar: comparar el conteo de
+`npm ci`. La instalación completa son 626 paquetes ("136 packages are
+looking for funding"); la de producción, 270 ("42 packages are looking for
+funding"). Si el log dice 42, faltan las devDependencies.
+
+No hay que tocar `NODE_ENV`: en la resolución de configuración de npm,
+`include` gana sobre `omit`/`production`, y `NODE_ENV=production` sí se
+necesita en ejecución (de él depende el prefijo `__Host-` de la cookie).
+
 **Importante — el App Spec de una app ya creada no se sincroniza solo con
 cambios en `.do/app.yaml` del repo.** Si se edita ese archivo después de
 crear la app (como pasó al agregar `npx prisma generate` al
