@@ -45,7 +45,7 @@ grep -c "^- \[ \]" <(sed -n '/## PARTE X/,/## PARTE X+1/p' docs/ROADMAP-MAESTRO.
 
 Si da 0, cerrada. Si no, no.
 
-**Avance: 102 de 114 tareas (89%).** Partes 1, 2, 3, 4A, 4B, 4C, 4D y 4E cerradas. App en producción en `https://effort360.disaak.com`, con dominio propio, HTTPS y variables de entorno de producción (tareas 107-109). Quedan 3 tareas bloqueadas por EFFORT (carga de datos: los 5 clientes piloto y el primer usuario de dirección — tareas 56/57/110), que no frenan el código.
+**Avance: 103 de 114 tareas (90%).** Partes 1, 2, 3, 4A, 4B, 4C, 4D y 4E cerradas. App en producción en `https://effort360.disaak.com`, con dominio propio, HTTPS, variables de entorno y los 5 clientes piloto reales ya sembrados (tareas 107-109, 56). Quedan 2 tareas bloqueadas por EFFORT (el primer usuario de dirección y la verificación de cookies que depende de él — tareas 57/110), que no frenan el código.
 
 **Azure AD (tarea 88) cerrado el 2026-09-04:** registro de app, consentimiento de administrador y acceso real a OneDrive, los tres verificados con llamadas reales de punta a punta. Ver `docs/DISCREPANCIAS.md`, punto 6.
 
@@ -182,7 +182,7 @@ Si da 0, cerrada. Si no, no.
 
 #### Bloqueadas por EFFORT (no dependen de nosotros)
 
-- [ ] 56. Sembrar los 5 clientes piloto — **bloqueada:** espera que EFFORT confirme los clientes definitivos (`docs/DISCREPANCIAS.md`, punto 3)
+- [x] 56. Sembrar los 5 clientes piloto — **hecho el 2026-09-09.** Fumipro S.A. (RUC 80119631-0), Copesa Construcciones SA (80003112-1), Sipar S.A./Silicatos Paraguayos SA (80012742-0), Ecoagro SA (80022319-5), Dibec Sociedad Anónima (80082006-1) — RUC oficiales de Marangatú, no inventados, leídos del registro real de EFFORT en el OneDrive de Laura (solo lectura), ver `docs/BITACORA-ONEDRIVE.md`. Cargados directo contra la base real (`origen: REAL`), verificado: 5 de 5 persistidos, activos. `Dibec` tenía dos entidades legales distintas en el registro de EFFORT (una sociedad anónima y un unipersonal a nombre de una persona física) — Daniel confirmó cuál de las dos es la del piloto antes de cargarla.
 - [ ] 57. Crear el primer usuario de dirección — **bloqueada:** necesita el correo real de Laura o Lili, y que la persona defina su propia contraseña en el primer acceso
 
 **Verificación de la Parte 2:** conexión confirmada, 16 tablas creadas, trigger de

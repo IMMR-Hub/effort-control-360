@@ -43,7 +43,7 @@ caiga justo en la mitad y confirmar el criterio. Ver
 
 ---
 
-## 3. Clientes piloto — NOMBRES CONFIRMADOS, FALTA RUC Y RAZÓN SOCIAL
+## 3. Clientes piloto — CERRADO (2026-09-09)
 
 El handoff original listaba: GARSO S.A., LAURA SOSA, RAMIRO GARCIA, GERARDO
 SOSA, NR REGISTROS GANADEROS — desactualizado, reemplazado.
@@ -59,10 +59,24 @@ EFFORT antes de pedírselos de nuevo a Daniel — ver
 `effort360@effort.com.py` (la de Daniel dentro del tenant) tiene el OneDrive
 vacío, no es donde Laura/Lili trabajan a diario.
 
-**Cómo se cierra:** Daniel o Laura/Lili confirman RUC + razón social de los 5
-(tarea 113), o indican dónde vive el archivo real que ya los tiene (¿el
-OneDrive de qué persona? ¿qué sitio de SharePoint/Teams?) para leerlo de ahí,
-en modo solo lectura.
+**Cerrado el mismo día:** el archivo sí existía — en el OneDrive de Laura
+Sosa (`CLIENTES EFFORT E.A.S/CLIENTES/`, 144 subcarpetas, una por cliente
+real de EFFORT), leído en modo solo lectura (ver `docs/BITACORA-ONEDRIVE.md`).
+Cada carpeta de cliente tiene su constancia oficial de RUC de Marangatú (SET
+Paraguay). Datos finales, sembrados en la base real (tarea 56):
+
+| Cliente | RUC | Razón social oficial |
+|---|---|---|
+| Fumipro | 80119631-0 | FUMIPRO S.A. |
+| Copesa | 80003112-1 | COPESA CONSTRUCCIONES SA |
+| Sipar | 80012742-0 | SILICATOS PARAGUAYOS SA (SIPAR S.A.) |
+| Ecoagro | 80022319-5 | ECOAGRO SA |
+| Dibec | 80082006-1 | DIBEC SOCIEDAD ANONIMA |
+
+`Dibec` tenía dos entidades legales distintas en el registro de EFFORT: la
+sociedad anónima de arriba, y un "DIBEC UNIPERSONAL" a nombre de una persona
+física (Diego Beconi) — no la misma cosa con otro nombre. Daniel confirmó
+que la del piloto es la S.A., no la unipersonal, antes de cargar nada.
 
 ---
 
