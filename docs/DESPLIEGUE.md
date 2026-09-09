@@ -60,6 +60,25 @@ No hay que tocar `NODE_ENV`: en la resolución de configuración de npm,
 `include` gana sobre `omit`/`production`, y `NODE_ENV=production` sí se
 necesita en ejecución (de él depende el prefijo `__Host-` de la cookie).
 
+### El CLI de `prisma` no se puede invocar desde la raíz del repo
+
+`npx prisma ...` en el Build Command falla con `sh: 1: prisma: not found`
+(exit 127), aunque el paquete esté instalado. El comando corre desde la raíz
+del repo, y `prisma` es devDependency del workspace `apps/api`: npm enlaza su
+binario en `apps/api/node_modules/.bin`, **no** en el `.bin` de la raíz, que
+es el único donde `npx` mira desde ahí. `npx tsc` sí funciona, porque
+`typescript` es devDependency de la raíz.
+
+Por eso **el Build Command no lleva ningún `prisma generate`**: el cliente lo
+genera el `postinstall` de `apps/api/package.json`, que corre dentro de
+`npm ci` y sí lo encuentra (npm arma el PATH de los scripts de ciclo de vida
+con el `.bin` del propio workspace). Agregar un `prisma generate` "por las
+dudas" no es redundancia inofensiva: rompe el build entero.
+
+Si alguna vez hace falta invocar el CLI desde la raíz, la forma que funciona
+es `npm exec --workspace @effort/api -- prisma <lo que sea>` (además cambia
+el directorio de trabajo a `apps/api`, así que el schema se resuelve solo).
+
 **Importante — el App Spec de una app ya creada no se sincroniza solo con
 cambios en `.do/app.yaml` del repo.** Si se edita ese archivo después de
 crear la app (como pasó al agregar `npx prisma generate` al

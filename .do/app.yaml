@@ -27,11 +27,20 @@ services:
       branch: main
       deploy_on_push: true
     source_dir: /
-    # El cliente de Prisma ya se genera solo via el `postinstall` de
-    # apps/api/package.json — el `npx prisma generate` explícito de acá es
-    # una segunda red de seguridad, por si el entorno de build corre `npm
-    # ci` con los scripts de instalación desactivados.
-    build_command: npm ci && npx prisma generate --schema apps/api/prisma/schema.prisma && npx tsc --build
+    # El cliente de Prisma lo genera el `postinstall` de
+    # apps/api/package.json, que corre solo dentro de `npm ci`.
+    #
+    # No agregar acá un `npx prisma generate` "por las dudas": no funciona y
+    # rompe el build entero. El comando corre desde la raíz del repo, y
+    # `prisma` es devDependency del workspace apps/api, así que npm enlaza su
+    # binario en apps/api/node_modules/.bin — NO en el .bin de la raíz, que es
+    # el único donde npx mira desde acá. Da `sh: 1: prisma: not found`
+    # (exit 127). El postinstall sí lo encuentra porque npm arma el PATH de
+    # los scripts de ciclo de vida con el .bin del propio workspace.
+    # `npx tsc` sí funciona: typescript es devDependency de la raíz.
+    # Si alguna vez hiciera falta invocar el CLI de prisma desde la raíz, la
+    # forma que funciona es `npm exec --workspace @effort/api -- prisma ...`.
+    build_command: npm ci && npx tsc --build
     run_command: node apps/api/dist/arrancar.js
     http_port: 3000
     instance_size_slug: apps-s-1vcpu-0.5gb
@@ -117,7 +126,12 @@ jobs:
       branch: main
     source_dir: /
     build_command: npm ci
-    run_command: npx prisma migrate deploy --schema apps/api/prisma/schema.prisma
+    # `npm exec --workspace`, no `npx`: desde la raíz del repo npx no
+    # encuentra el binario de prisma (vive en apps/api/node_modules/.bin).
+    # Ver la nota larga en el servicio `api`. Al correr por workspace el
+    # directorio de trabajo pasa a ser apps/api, así que el schema se
+    # resuelve solo y no hace falta `--schema`.
+    run_command: npm exec --workspace @effort/api -- prisma migrate deploy
     envs:
       # El CLI de prisma es una devDependency: sin esto, `npm ci` no lo
       # instala y este job no lo encuentra. Ver la nota larga en el
