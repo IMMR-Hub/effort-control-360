@@ -18,7 +18,12 @@
  * inventar una forma nueva del lado del cliente.
  */
 
-const URL_BASE = import.meta.env['VITE_API_URL'] ?? 'http://localhost:3000';
+// En desarrollo, interfaz (5173) y API (3000) son orígenes distintos: hace
+// falta la URL completa. En producción son el mismo origen (ruteo por path,
+// sin CORS — ver .do/app.yaml), así que basta con `window.location.origin`;
+// eso evita tener que fijar de antemano cuál va a ser el dominio final.
+const URL_BASE =
+  import.meta.env['VITE_API_URL'] ?? (import.meta.env.DEV ? 'http://localhost:3000' : window.location.origin);
 
 const METODOS_MUTANTES = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
 

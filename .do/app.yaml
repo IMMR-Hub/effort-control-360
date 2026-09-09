@@ -114,13 +114,11 @@ static_sites:
     output_dir: apps/web/dist
     routes:
       - path: /
-    envs:
-      - key: VITE_API_URL
-        value: https://effort360.disaak.com
-        scope: BUILD_TIME
-        # Mismo origen que el sitio: técnicamente podría ser una ruta
-        # relativa, pero `cliente.ts` espera una URL absoluta — se deja
-        # explícita para no tener que tocar código por esto.
+    # Sin VITE_API_URL a propósito: en producción, cliente.ts usa
+    # `window.location.origin` solo — mismo origen que el sitio, sin CORS.
+    # Así no hace falta saber de antemano cuál va a ser el dominio final
+    # (hoy la URL temporal de DigitalOcean, después effort360.disaak.com) ni
+    # volver a desplegar cuando cambie.
 
 # Corre una sola vez por despliegue, antes de que el servicio nuevo reciba
 # tráfico — así una migración nueva ya está aplicada cuando el código que la
