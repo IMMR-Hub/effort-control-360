@@ -43,14 +43,26 @@ caiga justo en la mitad y confirmar el criterio. Ver
 
 ---
 
-## 3. Clientes piloto — SIN CONFIRMAR
+## 3. Clientes piloto — NOMBRES CONFIRMADOS, FALTA RUC Y RAZÓN SOCIAL
 
-El handoff lista: GARSO S.A., LAURA SOSA, RAMIRO GARCIA, GERARDO SOSA,
-NR REGISTROS GANADEROS. El propio handoff pide confirmarlos antes de cargar la
-estructura final.
+El handoff original listaba: GARSO S.A., LAURA SOSA, RAMIRO GARCIA, GERARDO
+SOSA, NR REGISTROS GANADEROS — desactualizado, reemplazado.
 
-**Cómo se cierra:** confirmación de Laura o Lili. Si cambian, cambian filas de
-datos, no código.
+**2026-09-09, confirmado por Daniel:** los 5 clientes piloto son **Ecoagro,
+Dibec, SIPAR, Fumipro, Copesa**. Solo los nombres — para sembrarlos (tarea 56)
+todavía hace falta, por cada uno: RUC, razón social completa, y al menos un
+contacto (nombre + correo). No se pueden inventar estos datos (regla del
+proyecto de cero datos falsos, y un RUC inventado podría chocar con el de una
+empresa real). Se buscó si estos datos ya estaban en el OneDrive real de
+EFFORT antes de pedírselos de nuevo a Daniel — ver
+`docs/BITACORA-ONEDRIVE.md`, entrada 2026-09-09 — sin resultado: la cuenta
+`effort360@effort.com.py` (la de Daniel dentro del tenant) tiene el OneDrive
+vacío, no es donde Laura/Lili trabajan a diario.
+
+**Cómo se cierra:** Daniel o Laura/Lili confirman RUC + razón social de los 5
+(tarea 113), o indican dónde vive el archivo real que ya los tiene (¿el
+OneDrive de qué persona? ¿qué sitio de SharePoint/Teams?) para leerlo de ahí,
+en modo solo lectura.
 
 ---
 

@@ -25,24 +25,31 @@ de 2026.
 3. **Vencimientos en `America/Asuncion`**, vía base IANA. Nunca offset fijo.
 4. **No se toca SIGA.** Se trabaja sobre sus exportaciones Excel/CSV/PDF. No
    hay API de SIGA confirmada por el proveedor.
-5. **No se borra nada en OneDrive, nunca — EFFORT no tiene copia de
-   seguridad de sus propios archivos, así que un error acá no tiene forma de
-   deshacerse.** El sistema lee de la carpeta de EFFORT y escribe solo en su
-   propia subcarpeta de salidas, con espejo de respaldo. En concreto:
-   - El puerto `DriveDeArchivos` (`packages/drive`) no tiene, y no debe
-     ganar nunca, ningún método de borrado, sobreescritura fuera de la
-     subcarpeta de salidas, ni renombrado/movido de algo que EFFORT ya
-     tenía. Si algún día hiciera falta algo así, es una decisión nueva que
-     se toma con EFFORT presente y por escrito — no algo que se agrega
-     calladamente en una tarea de otra cosa.
-   - Ninguna integración real con el OneDrive de producción de EFFORT se
-     prueba por primera vez contra una carpeta real — primero contra una
-     carpeta de prueba separada, y solo después de confirmar que funciona
-     ahí se apunta contra algo real, con aviso explícito antes de hacerlo.
-   - Hasta la Parte 5 (importadores desde OneDrive) esto es en gran parte
-     teórico: el adaptador real (`DriveGraph`) todavía no tocó ningún
-     archivo de producción, solo se prueba contra el doble en memoria
-     (`DriveFalso`). Ver `docs/DISCREPANCIAS.md`, punto 6.
+5. **No se borra ni se modifica nada en las carpetas reales de EFFORT,
+   nunca — EFFORT no tiene copia de seguridad de sus propios archivos, así
+   que un error acá no tiene forma de deshacerse.** Regla vigente desde
+   2026-09-09, precisada por Daniel:
+   - **Carpetas reales de EFFORT** (donde Laura/Lili trabajan a diario) —
+     **solo lectura**, siempre. Nunca `escribir()`, nunca ningún método de
+     borrado (no existe ninguno en `DriveDeArchivos`, `packages/drive`, y no
+     debe ganar uno nunca).
+   - **`/EFFORT Control 360/Entrada|Salida|Respaldo/`** (la carpeta nueva
+     dedicada a este proyecto) — ahí sí se puede leer y escribir, incluido
+     duplicar datos reales para pruebas.
+   - **Todo acceso de lectura a una carpeta real de EFFORT, y toda escritura
+     en la carpeta nueva, se registra en `docs/BITACORA-ONEDRIVE.md`**
+     (cuándo, qué, por qué, para qué) — sirve de auditoría y de material de
+     entrenamiento a futuro.
+   - Si algún día hiciera falta escribir o borrar algo en una carpeta real,
+     es una decisión nueva que se toma con EFFORT presente y por escrito —
+     no algo que se agrega calladamente en una tarea de otra cosa.
+   - Hasta el 2026-09-09 esto era en gran parte teórico: el adaptador real
+     (`DriveGraph`) nunca había tocado ningún archivo de producción, solo se
+     probaba contra el doble en memoria (`DriveFalso`). La primera lectura
+     real (`effort360@effort.com.py`, cuenta de Daniel dentro del tenant —
+     no la de uso diario de Laura/Lili) está documentada en
+     `docs/BITACORA-ONEDRIVE.md`. Ver también `docs/DISCREPANCIAS.md`,
+     punto 6.
 6. **Ninguna cifra de la interfaz está escrita a mano.** Toda sale de un cálculo
    sobre datos importados.
 7. **Todo el código, comentarios, nombres y textos de interfaz en español.**
