@@ -551,3 +551,56 @@ server at aws-0-sa-east-1.pooler.supabase.com:5432`.
 nada de código. Mismo patrón de siempre — plan gratuito/Nano que se pausa
 solo por inactividad. Arreglo de referencia para la próxima vez: dashboard
 de Supabase → "Resume project" → esperar un par de minutos → reintentar.
+
+---
+
+## 16. No existe forma de que un usuario gestione sus propias credenciales — HALLAZGO 2026-09-10, BLOQUEA LA AUDITORÍA REAL
+
+**Encontrado** al ir a sembrar los 10 usuarios reales de EFFORT (tarea 57
+ampliada). Verificado con `grep` sobre las rutas, no supuesto:
+
+- **No hay ruta de cambio de contraseña.** Las únicas rutas que tocan
+  usuarios son `POST /api/v1/usuarios` (alta, solo dirección, recibe
+  `contrasenaInicial`) y `PATCH /api/v1/usuarios/:id` (edición) — y el
+  `edicionSchema` **no tiene ningún campo de contraseña**. Ni la persona
+  puede cambiar la suya, ni dirección puede resetearla.
+- **`debeCambiarContrasena` es una bandera que nada lee.** Está en el modelo
+  y se pone en `true` al crear, pero no existe ningún flujo que la haga
+  cumplir ni que permita cumplirla.
+- **No hay flujo de alta del segundo factor.** `generarSecretoTotp()` y
+  `urlDeConfiguracionTotp()` existen en `seguridad/credenciales.ts` pero
+  **no se llaman desde ninguna ruta**. Y como `direccion` y `responsable`
+  tienen segundo factor obligatorio (`ROLES_CON_SEGUNDO_FACTOR_OBLIGATORIO`),
+  un usuario de esos roles sin `secretoTotp` recibe un 403 en el login y
+  **no se le crea sesión** — así que no puede llegar a ningún endpoint de
+  configuración. Es un círculo cerrado.
+
+**Por qué importa, y por qué no es un detalle cosmético:** Daniel pidió el
+2026-09-10 que el sistema *"siempre tiene que decir quién hizo qué
+modificación"*. La bitácora hace exactamente eso (ver `bitacora.ts`:
+registra `usuarioId`, acción, entidad, valores antes/después, IP y fecha).
+Pero si la contraseña de cada persona la fija un administrador y esa persona
+no puede cambiarla nunca, entonces **quien dio de alta la cuenta conoce para
+siempre la credencial de esa persona**, y la línea "Karina modificó X" deja
+de ser prueba de que lo hizo Karina. Para una consultora cuyo producto es
+evidencia auditable, eso vacía de valor el registro.
+
+**Consecuencia práctica:** sembrar los 10 usuarios *antes* de construir
+esto significaría repartir 10 credenciales permanentes conocidas por el
+administrador, y volver a repartirlas cuando el flujo exista. Es
+exactamente el retrabajo que Daniel pidió evitar.
+
+**Cómo se cierra:** construir, antes de sembrar el equipo:
+1. Cambio de contraseña propia (exigiendo la actual), que baje
+   `debeCambiarContrasena` y actualice `contrasenaActualizadaEn`.
+2. Primer acceso obligatorio: con `debeCambiarContrasena = true`, la sesión
+   solo habilita cambiar la contraseña, nada más.
+3. Alta del segundo factor por autoservicio: mostrar secreto/QR una vez,
+   confirmar con un código válido, recién ahí `segundoFactorActivo = true`.
+   Requiere decidir cómo se emite una sesión limitada de configuración para
+   un rol con segundo factor obligatorio que todavía no lo tiene — hoy ese
+   caso se corta con 403 antes de crear sesión (`rutas/autenticacion.ts`).
+
+**Nota:** el usuario `effort360` pudo entrar porque su secreto TOTP se
+cargó directamente en la base con un script, no por un flujo del producto.
+Es la prueba de que el hueco existe.
