@@ -670,14 +670,19 @@ por terminación (0 a 9), en `obligacion_tributaria.dias_por_terminacion_ruc`.
 No hay ningún día escrito en el código ni cargado en la base: la tabla está
 vacía a propósito.
 
-**b) Cuál es la "terminación" del RUC.** El RUC se escribe `80012742-0`: número
-y, después del guion, dígito verificador. El código toma **la última cifra del
-número** (el 2 de `80012742-0`), no la del verificador. Es lo que se entiende
-habitualmente por "RUC terminado en 2", pero **nadie de EFFORT lo confirmó por
-escrito todavía**. Si estuviera al revés, TODOS los vencimientos de TODOS los
-clientes caerían en el día equivocado — y el sistema estaría avisando tarde
-justo de aquello para lo que existe. Está aislado en una sola función
-(`terminacionDeRuc`) para que corregirlo sea cambiar una línea.
+**b) Cuál es la "terminación" del RUC — RESUELTO el 2026-09-10.** El RUC se
+escribe `80012742-0`: número y, después del guion, dígito verificador. La
+primera versión de `terminacionDeRuc` tomaba la última cifra del NÚMERO (el 2).
+**Daniel confirmó que es el DÍGITO VERIFICADOR** (el 0), y se corrigió el mismo
+día, con sus tests.
+
+Vale la pena dejarlo escrito porque es el ejemplo exacto de por qué existe este
+documento: era una suposición razonable, estaba a punto de quedar enterrada
+como si fuera un hecho, y de haber seguido así TODOS los vencimientos de TODOS
+los clientes habrían caído en el día equivocado — el sistema avisando tarde
+justo de aquello para lo que existe. Se salvó porque estaba aislada en una
+función propia y marcada como pendiente de confirmar, no porque alguien la
+hubiera revisado por casualidad.
 
 **c) Qué obligaciones tiene cada uno de los 5 clientes.** IVA general, IRE,
 IRP, anticipos, retenciones: no todos deben lo mismo, y lo que deben cambia con

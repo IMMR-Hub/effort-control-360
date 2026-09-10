@@ -27,29 +27,33 @@ const calendario2026 = crearCalendario([
 ]);
 
 describe('terminación del RUC', () => {
-  it('lee el último dígito del número, no el verificador', () => {
-    // 80012742-0 es SIPAR: termina en 2, aunque el verificador sea 0.
-    expect(terminacionDeRuc('80012742-0')).toBe(2);
-    expect(terminacionDeRuc('80119631-0')).toBe(1);
-    expect(terminacionDeRuc('80003112-1')).toBe(2);
+  // Confirmado por EFFORT el 2026-09-10: es el dígito verificador, el de
+  // después del guion. Con RUCs reales de los clientes del piloto.
+  it('lee el dígito verificador, no la última cifra del número', () => {
+    expect(terminacionDeRuc('80012742-0')).toBe(0); // SIPAR
+    expect(terminacionDeRuc('80003112-1')).toBe(1); // COPESA
+    expect(terminacionDeRuc('80022319-5')).toBe(5); // ECOAGRO
   });
 
   it('tolera espacios alrededor', () => {
-    expect(terminacionDeRuc('  80022319-5  ')).toBe(9);
+    expect(terminacionDeRuc('  80022319-5  ')).toBe(5);
   });
 
   it('falla en vez de adivinar si el RUC no tiene la forma esperada', () => {
     expect(() => terminacionDeRuc('sin-numero')).toThrow(ErrorDeVencimiento);
     expect(() => terminacionDeRuc('')).toThrow(ErrorDeVencimiento);
+    // Sin guion no hay verificador que leer: antes esto devolvía la última
+    // cifra del número en silencio, que es el error que se está corrigiendo.
+    expect(() => terminacionDeRuc('80012742')).toThrow(ErrorDeVencimiento);
   });
 });
 
 describe('fecha de vencimiento', () => {
   it('lo mensual se presenta al mes siguiente del período liquidado', () => {
-    // RUC terminado en 2 → día 11. El IVA de marzo se presenta en abril, y el
-    // 11 de abril de 2026 cae sábado: corre al lunes 13.
+    // Verificador 2 → día 11. El IVA de marzo se presenta en abril, y el 11 de
+    // abril de 2026 cae sábado: corre al lunes 13.
     const fecha = fechaDeVencimiento({
-      ruc: '80012742-0',
+      ruc: '80012742-2',
       periodo: { anio: 2026, mes: 3 },
       periodicidad: 'MENSUAL',
       diasPorTerminacion: DIAS_DE_PRUEBA,
@@ -61,21 +65,21 @@ describe('fecha de vencimiento', () => {
 
   it('cruza el año: diciembre se presenta en enero del año siguiente', () => {
     const fecha = fechaDeVencimiento({
-      ruc: '80119631-0',
+      ruc: '80119631-1',
       periodo: { anio: 2026, mes: 12 },
       periodicidad: 'MENSUAL',
       diasPorTerminacion: DIAS_DE_PRUEBA,
       calendario: calendario2026,
     });
 
-    // Terminación 1 → día 9, que en enero de 2027 cae sábado: corre al lunes 11.
+    // Verificador 1 → día 9, que en enero de 2027 cae sábado: corre al lunes 11.
     expect(fechaCivilAIso(fecha)).toBe('2027-01-11');
   });
 
   it('si el día asignado cae en fin de semana, corre al lunes — nunca hacia atrás', () => {
-    // Terminación 4 → día 15. El 15 de marzo de 2026 es domingo.
+    // Verificador 4 → día 15. El 15 de marzo de 2026 es domingo.
     const fecha = fechaDeVencimiento({
-      ruc: '80000004-7',
+      ruc: '80000004-4',
       periodo: { anio: 2026, mes: 2 },
       periodicidad: 'MENSUAL',
       diasPorTerminacion: DIAS_DE_PRUEBA,
@@ -104,7 +108,7 @@ describe('fecha de vencimiento', () => {
 
   it('lo anual se presenta en el mes de cierre del año siguiente', () => {
     const fecha = fechaDeVencimiento({
-      ruc: '80012742-0',
+      ruc: '80012742-2',
       periodo: { anio: 2026, mes: 12 },
       periodicidad: 'ANUAL',
       mesDeCierreAnual: 4,
@@ -118,7 +122,7 @@ describe('fecha de vencimiento', () => {
   it('una obligación anual sin mes de presentación falla en vez de suponer uno', () => {
     expect(() =>
       fechaDeVencimiento({
-        ruc: '80012742-0',
+        ruc: '80012742-2',
         periodo: { anio: 2026, mes: 12 },
         periodicidad: 'ANUAL',
         diasPorTerminacion: DIAS_DE_PRUEBA,
@@ -132,7 +136,7 @@ describe('fecha de vencimiento', () => {
 
     expect(() =>
       fechaDeVencimiento({
-        ruc: '80000009-1',
+        ruc: '80000009-9',
         periodo: { anio: 2026, mes: 1 },
         periodicidad: 'MENSUAL',
         diasPorTerminacion: diasInvalidos,

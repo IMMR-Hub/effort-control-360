@@ -33,28 +33,30 @@ export class ErrorDeVencimiento extends Error {
 }
 
 /**
- * Terminación de un RUC paraguayo.
+ * Terminación de un RUC paraguayo: el DÍGITO VERIFICADOR.
  *
  * El RUC se escribe `80012742-0`: el número y, después del guion, el dígito
  * verificador. La terminación que usa el calendario de la DNIT es la del
- * NÚMERO, no la del verificador — `80012742-0` termina en 2, no en 0.
+ * VERIFICADOR — `80012742-0` termina en 0, no en 2.
  *
- * Esa distinción está registrada en `docs/DISCREPANCIAS.md` a la espera de que
- * EFFORT la confirme por escrito: equivocarla corre TODOS los vencimientos de
- * un cliente al día que no es, y el sistema estaría avisando tarde justo de lo
- * que existe para no dejar pasar.
+ * Confirmado por Daniel (EFFORT) el 2026-09-10, contra la interpretación
+ * contraria que este módulo tenía en su primera versión. Ver
+ * `docs/DISCREPANCIAS.md`, punto 17: equivocar esto corre TODOS los
+ * vencimientos de TODOS los clientes al día que no es, y el sistema estaría
+ * avisando tarde justo de lo que existe para no dejar pasar. Por eso vive en
+ * una función propia y no en línea dentro del cálculo.
  */
 export function terminacionDeRuc(ruc: string): number {
-  const numero = ruc.trim().split('-')[0] ?? '';
-  const ultimo = numero.slice(-1);
+  const partes = ruc.trim().split('-');
+  const verificador = partes.length > 1 ? (partes[partes.length - 1] ?? '') : '';
 
-  if (!/^\d$/.test(ultimo)) {
+  if (!/^\d$/.test(verificador)) {
     throw new ErrorDeVencimiento(
-      `No se pudo leer la terminación del RUC "${ruc}": se esperaba un número antes del guion.`,
+      `No se pudo leer la terminación del RUC "${ruc}": se esperaba un dígito verificador después del guion.`,
     );
   }
 
-  return Number(ultimo);
+  return Number(verificador);
 }
 
 /**

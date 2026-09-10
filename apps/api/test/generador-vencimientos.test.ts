@@ -15,7 +15,7 @@ import { ClientesFalsos, clienteMinimo } from './dobles.js';
 import { ObligacionesFalsas, VencimientosFalsos } from './dobles-dominio.js';
 
 const FUMIPRO = '11111111-1111-4111-8111-111111111111';
-const SIPAR = '22222222-2222-4222-8222-222222222222';
+const ECOAGRO = '22222222-2222-4222-8222-222222222222';
 const USUARIO = 'usr-direccion';
 
 const IVA: ObligacionAlmacenada = {
@@ -38,15 +38,16 @@ function armar() {
   const vencimientos = new VencimientosFalsos();
 
   clientes.clientes.push(
-    // Termina en 1 → día 9; termina en 2 → día 11.
+    // RUCs reales del piloto. La terminación es el dígito verificador:
+    // Fumipro -0 → día 7; Ecoagro -5 → día 17.
     clienteMinimo({ id: FUMIPRO, nombre: 'FUMIPRO S.A.', ruc: '80119631-0', activo: true }),
-    clienteMinimo({ id: SIPAR, nombre: 'SIPAR S.A.', ruc: '80012742-0', activo: true }),
+    clienteMinimo({ id: ECOAGRO, nombre: 'ECOAGRO SA', ruc: '80022319-5', activo: true }),
   );
 
   obligaciones.obligaciones.push(IVA);
   obligaciones.asignaciones.push(
     { id: 'a1', clienteId: FUMIPRO, obligacionId: 'obl-iva', desde: new Date('2026-01-01'), hasta: null },
-    { id: 'a2', clienteId: SIPAR, obligacionId: 'obl-iva', desde: new Date('2026-01-01'), hasta: null },
+    { id: 'a2', clienteId: ECOAGRO, obligacionId: 'obl-iva', desde: new Date('2026-01-01'), hasta: null },
   );
 
   return { clientes, obligaciones, vencimientos };
@@ -62,10 +63,10 @@ describe('generador de vencimientos', () => {
     expect(resumen.omitidos).toEqual([]);
 
     const porCliente = new Map(deps.vencimientos.vencimientos.map((v) => [v.clienteId, v]));
-    // Terminación 1 → día 9 de abril de 2026 (jueves, hábil).
-    expect(porCliente.get(FUMIPRO)!.fechaVencimiento.toISOString().slice(0, 10)).toBe('2026-04-09');
-    // Terminación 2 → día 11, que cae sábado: corre al lunes 13.
-    expect(porCliente.get(SIPAR)!.fechaVencimiento.toISOString().slice(0, 10)).toBe('2026-04-13');
+    // Verificador 0 → día 7 de abril de 2026 (martes, hábil).
+    expect(porCliente.get(FUMIPRO)!.fechaVencimiento.toISOString().slice(0, 10)).toBe('2026-04-07');
+    // Verificador 5 → día 17 de abril de 2026 (viernes, hábil).
+    expect(porCliente.get(ECOAGRO)!.fechaVencimiento.toISOString().slice(0, 10)).toBe('2026-04-17');
   });
 
   it('volver a generar el mismo período no duplica nada', async () => {
@@ -92,7 +93,7 @@ describe('generador de vencimientos', () => {
   it('no genera para un cliente dado de baja, y lo dice', async () => {
     const deps = armar();
     deps.clientes.clientes[1] = clienteMinimo({
-      id: SIPAR, nombre: 'SIPAR S.A.', ruc: '80012742-0', activo: false,
+      id: ECOAGRO, nombre: 'ECOAGRO SA', ruc: '80022319-5', activo: false,
     });
 
     const resumen = await generarVencimientosDelPeriodo(deps, '2026-03', USUARIO);
@@ -112,7 +113,7 @@ describe('generador de vencimientos', () => {
     const resumen = await generarVencimientosDelPeriodo(deps, '2026-03', USUARIO);
 
     expect(resumen.creados).toBe(1);
-    expect(deps.vencimientos.vencimientos[0]!.clienteId).toBe(SIPAR);
+    expect(deps.vencimientos.vencimientos[0]!.clienteId).toBe(ECOAGRO);
   });
 
   it('lo anual se genera al cerrar el ejercicio, no todos los meses', async () => {
@@ -142,7 +143,7 @@ describe('generador de vencimientos', () => {
     expect(resumen.creados).toBe(1);
     expect(resumen.omitidos).toHaveLength(1);
     expect(resumen.omitidos[0]!.cliente).toBe('FUMIPRO S.A.');
-    expect(deps.vencimientos.vencimientos[0]!.clienteId).toBe(SIPAR);
+    expect(deps.vencimientos.vencimientos[0]!.clienteId).toBe(ECOAGRO);
   });
 
   it('un calendario incompleto no genera fechas inventadas', async () => {
