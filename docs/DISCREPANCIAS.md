@@ -653,3 +653,42 @@ temporal (`Can't reach database server`), y `test:integration` cortó con
 `reemplazarCartera` — código que nadie había tocado. Las dos pasaron al
 reintentar sin cambiar nada (3/3 y 106/106). Antes de investigar un fallo
 así como si fuera de código: **reintentar una vez**. Si pasa, era esto.
+
+---
+
+## 17. Calendario tributario de la DNIT — ABIERTO, BLOQUEA AL MOTOR (2026-09-10)
+
+El motor de vencimientos ya está construido y probado
+(`packages/core/src/vencimientosTributarios.ts`,
+`apps/api/src/servicios/generadorDeVencimientos.ts`), pero **no puede generar
+nada todavía** porque le falta el dato que solo EFFORT puede confirmar.
+
+Son tres cosas distintas, y las tres hacen falta:
+
+**a) Qué día vence cada terminación de RUC.** El sistema guarda diez días, uno
+por terminación (0 a 9), en `obligacion_tributaria.dias_por_terminacion_ruc`.
+No hay ningún día escrito en el código ni cargado en la base: la tabla está
+vacía a propósito.
+
+**b) Cuál es la "terminación" del RUC.** El RUC se escribe `80012742-0`: número
+y, después del guion, dígito verificador. El código toma **la última cifra del
+número** (el 2 de `80012742-0`), no la del verificador. Es lo que se entiende
+habitualmente por "RUC terminado en 2", pero **nadie de EFFORT lo confirmó por
+escrito todavía**. Si estuviera al revés, TODOS los vencimientos de TODOS los
+clientes caerían en el día equivocado — y el sistema estaría avisando tarde
+justo de aquello para lo que existe. Está aislado en una sola función
+(`terminacionDeRuc`) para que corregirlo sea cambiar una línea.
+
+**c) Qué obligaciones tiene cada uno de los 5 clientes.** IVA general, IRE,
+IRP, anticipos, retenciones: no todos deben lo mismo, y lo que deben cambia con
+el tiempo. Por eso `obligacion_de_cliente` lleva `desde`/`hasta`.
+
+**Cómo está protegido mientras tanto:** toda obligación nace con
+`confirmada_por_effort = false`, y el generador **ignora** las no confirmadas.
+Se pueden cargar y revisar sin que produzcan un solo aviso. Hasta que alguien
+de EFFORT las confirme contra la resolución vigente de la DNIT, el sistema no
+genera vencimientos — que es preferible a generarlos mal.
+
+Mismo criterio que los feriados (`diasHabiles.ts`) y que las reglas impositivas
+(punto 9): el dato regulatorio se inyecta y se confirma, no se entierra en el
+código.
