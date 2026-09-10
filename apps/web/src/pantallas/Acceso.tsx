@@ -13,17 +13,19 @@ import { useId, useState, type FormEvent } from 'react';
 
 import { Boton, CampoTexto, Logotipo, Tarjeta } from '../ui/Primitivos.jsx';
 import { ErrorDeApi } from '../api/cliente.js';
+import { iniciarAltaDeSegundoFactor, type AltaDeSegundoFactor } from '../api/autenticacion.js';
 import { useSesion } from '../contexts/SesionContext.js';
 
-type Paso = 'contrasena' | 'segundoFactor';
+type Paso = 'contrasena' | 'segundoFactor' | 'altaSegundoFactor';
 
 export function Acceso() {
-  const { iniciarAcceso, confirmarSegundoFactor } = useSesion();
+  const { iniciarAcceso, confirmarSegundoFactor, confirmarAltaDeSegundoFactor } = useSesion();
 
   const [paso, setPaso] = useState<Paso>('contrasena');
   const [email, setEmail] = useState('');
   const [contrasena, setContrasena] = useState('');
   const [codigo, setCodigo] = useState('');
+  const [alta, setAlta] = useState<AltaDeSegundoFactor | null>(null);
   const [enviando, setEnviando] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -37,9 +39,32 @@ export function Acceso() {
     setEnviando(true);
     try {
       const respuesta = await iniciarAcceso(email, contrasena);
+
+      // El rol exige segundo factor y esta persona todavía no lo dio de alta.
+      // La sesión que acaba de recibir no habilita nada más que esto.
+      if (respuesta.segundoFactorPorConfigurar) {
+        setAlta(await iniciarAltaDeSegundoFactor());
+        setPaso('altaSegundoFactor');
+        return;
+      }
+
       if (respuesta.segundoFactorRequerido) {
         setPaso('segundoFactor');
       }
+    } catch (excepcion) {
+      setError(mensajeDeError(excepcion));
+    } finally {
+      setEnviando(false);
+    }
+  }
+
+  async function manejarAltaDeSegundoFactor(evento: FormEvent<HTMLFormElement>) {
+    evento.preventDefault();
+    setError(null);
+    setEnviando(true);
+    try {
+      await confirmarAltaDeSegundoFactor(codigo);
+      // La sesión queda habilitada: el guardia de sesión deja de mostrar esto.
     } catch (excepcion) {
       setError(mensajeDeError(excepcion));
     } finally {
@@ -79,7 +104,7 @@ export function Acceso() {
         </div>
 
         <Tarjeta className="p-6">
-          {paso === 'contrasena' ? (
+          {paso === 'contrasena' && (
             <form onSubmit={manejarPaso1} noValidate>
               <h1 className="mb-4 text-sm font-semibold text-tinta">Ingresar</h1>
 
@@ -116,7 +141,48 @@ export function Acceso() {
                 {enviando ? 'Ingresando…' : 'Ingresar'}
               </Boton>
             </form>
-          ) : (
+          )}
+
+          {paso === 'altaSegundoFactor' && alta && (
+            <form onSubmit={manejarAltaDeSegundoFactor} noValidate>
+              <h1 className="mb-1 text-sm font-semibold text-tinta">
+                Configurá tu verificación en dos pasos
+              </h1>
+              <p className="mb-4 text-xs text-tinta-tenue">
+                Tu rol la exige. Cargá esta clave en tu aplicación de autenticación
+                (Google Authenticator, Authy o similar) y confirmá con el código que te muestre.
+              </p>
+
+              <div className="mb-4 rounded border border-borde bg-lienzo p-3">
+                <p className="mb-1 text-xs font-medium text-tinta-tenue">Tu clave</p>
+                <code className="block break-all font-mono text-sm text-tinta">{alta.secreto}</code>
+                <p className="mt-2 text-xs text-tinta-tenue">
+                  Tipo de clave: <strong>basada en tiempo</strong>. Anotala en un lugar seguro:
+                  no se vuelve a mostrar.
+                </p>
+              </div>
+
+              <CampoTexto
+                etiqueta="Código de tu aplicación"
+                id={idCodigo}
+                type="text"
+                inputMode="numeric"
+                autoComplete="one-time-code"
+                autoFocus
+                required
+                value={codigo}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => setCodigo(e.target.value)}
+              />
+
+              <MensajeDeError mensaje={error} />
+
+              <Boton type="submit" variante="primario" className="mt-5 w-full" disabled={enviando}>
+                {enviando ? 'Confirmando…' : 'Confirmar y entrar'}
+              </Boton>
+            </form>
+          )}
+
+          {paso === 'segundoFactor' && (
             <form onSubmit={manejarPaso2} noValidate>
               <h1 className="mb-1 text-sm font-semibold text-tinta">Verificación en dos pasos</h1>
               <p className="mb-4 text-xs text-tinta-tenue">

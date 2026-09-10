@@ -10,6 +10,7 @@ import { useState } from 'react';
 
 import { ProveedorDeSesion, useSesion } from './contexts/SesionContext.js';
 import { Acceso } from './pantallas/Acceso.js';
+import { CambioDeContrasena } from './pantallas/CambioDeContrasena.js';
 import { Encabezado, type Pantalla } from './layout/Encabezado.js';
 import Seguimiento from './pantallas/Seguimiento.js';
 import Clientes from './pantallas/Clientes.js';
@@ -64,6 +65,12 @@ function Enrutador() {
 
   if (sesion === null) {
     return <Acceso />;
+  }
+
+  // Con la contraseña por cambiar el servidor rechaza todo lo demás, así que
+  // mostrar el panel sería mostrar una pantalla incapaz de cargar nada.
+  if (sesion.debeCambiarContrasena) {
+    return <CambioDeContrasena />;
   }
 
   return <AppShell />;

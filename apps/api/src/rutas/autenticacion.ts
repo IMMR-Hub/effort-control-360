@@ -254,11 +254,20 @@ export async function registrarRutasDeAutenticacion(
 
   app.get('/api/v1/yo', async (peticion) => {
     const sujeto = exigirSesion(peticion);
+
+    // `debeCambiarContrasena` no vive en el sujeto: ese describe permisos, no
+    // el estado de las credenciales. Se consulta acá porque la interfaz lo
+    // necesita al cargar — si alguien recarga la página con la contraseña
+    // pendiente, tiene que volver a la pantalla de cambio y no al panel, que
+    // le rechazaría todas las llamadas.
+    const usuario = await deps.usuarios.buscarPorId(sujeto.usuarioId);
+
     return {
       usuarioId: sujeto.usuarioId,
       rol: sujeto.rol,
       veTodosLosClientes: sujeto.veTodosLosClientes,
       cantidadDeClientesAsignados: sujeto.clientesAsignados.length,
+      debeCambiarContrasena: usuario?.debeCambiarContrasena ?? false,
     };
   });
 }

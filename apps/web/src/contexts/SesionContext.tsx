@@ -14,6 +14,7 @@ import { createContext, useCallback, useContext, useEffect, useState, type React
 
 import {
   cerrarSesion as cerrarSesionApi,
+  confirmarAltaDeSegundoFactor as confirmarAltaDeSegundoFactorApi,
   confirmarSegundoFactor as confirmarSegundoFactorApi,
   iniciarAcceso as iniciarAccesoApi,
   obtenerSesionActual,
@@ -27,6 +28,12 @@ interface ContextoSesion {
   iniciarAcceso(email: string, contrasena: string): Promise<RespuestaAcceso>;
   /** Confirma el segundo factor y, si es válido, deja `sesion` establecida. */
   confirmarSegundoFactor(codigo: string): Promise<void>;
+  /**
+   * Confirma el alta del segundo factor (la primera vez, con el código recién
+   * cargado en la aplicación de autenticación). La misma sesión con la que se
+   * dio de alta queda habilitada, así que no hay que volver a ingresar.
+   */
+  confirmarAltaDeSegundoFactor(codigo: string): Promise<void>;
   cerrarSesion(): Promise<void>;
 }
 
@@ -64,13 +71,26 @@ export function ProveedorDeSesion({ children }: { children: ReactNode }) {
     setSesion(await obtenerSesionActual());
   }, []);
 
+  const confirmarAltaDeSegundoFactor = useCallback(async (codigo: string) => {
+    await confirmarAltaDeSegundoFactorApi(codigo);
+    setSesion(await obtenerSesionActual());
+  }, []);
+
   const cerrarSesion = useCallback(async () => {
     await cerrarSesionApi();
     setSesion(null);
   }, []);
 
   return (
-    <Contexto.Provider value={{ sesion, iniciarAcceso, confirmarSegundoFactor, cerrarSesion }}>
+    <Contexto.Provider
+      value={{
+        sesion,
+        iniciarAcceso,
+        confirmarSegundoFactor,
+        confirmarAltaDeSegundoFactor,
+        cerrarSesion,
+      }}
+    >
       {children}
     </Contexto.Provider>
   );
