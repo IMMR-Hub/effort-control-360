@@ -208,6 +208,14 @@ OneDrive de `effort360@effort.com.py`:
     /Respaldo/   ← espejo de seguridad de lo ya procesado
 ```
 
+**Creada de verdad el 2026-09-10** (hasta esa fecha existía solo como
+decisión escrita acá: el OneDrive de `effort360` estaba vacío). Verificada
+leyéndola de vuelta: `/EFFORT Control 360/` con `Entrada/`, `Salida/` y
+`Respaldo/`, en el OneDrive de `effort360@effort.com.py`. **Es la única
+carpeta donde el sistema escribe.** Todo lo demás —incluido el registro de
+clientes de EFFORT, que vive en el OneDrive de Laura— es de **solo
+lectura**: se copia desde ahí hacia `/Entrada/`, nunca al revés.
+
 **Por qué:** como la carpeta no tiene nada adentro hoy, es imposible que el
 sistema cruce con un archivo real de un cliente — no por promesa de código,
 sino porque ese archivo no está ahí. El costo es un paso manual: alguien de

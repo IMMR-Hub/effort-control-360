@@ -119,6 +119,47 @@ En concreto:
   `effort360` puede entrar directo al OneDrive de Laura sin necesitar que
   su sesión esté abierta en el navegador.
 
+- **2026-09-10 — PRIMERA ESCRITURA, y en la carpeta propia.** Daniel aclaró
+  el alcance con más énfasis: *"No borres ni modifiques nada de las carpetas
+  creadas por otras personas. Copia los datos y pegalos a la carpeta que tu
+  hiciste como carpeta raiz y solo modifica esas. NUNCA las que no creaste,
+  esas SOLAMENTE puedes leer y copiar a TU CARPETA"*. Al ir a aplicarlo se
+  descubrió que **la carpeta raíz nunca había existido**: estaba decidida en
+  `docs/DISCREPANCIAS.md` punto 6 desde el 2026-09-04, pero nadie la había
+  creado — el OneDrive de `effort360` estaba completamente vacío. **Creada
+  ahora, en el OneDrive de `effort360@effort.com.py` (no en el de nadie
+  más):** `/EFFORT Control 360/` con `Entrada/`, `Salida/` y `Respaldo/`.
+  Verificado leyéndola de vuelta después de crearla. Esta es, de acá en
+  adelante, la única carpeta donde el sistema escribe.
+  **Aclaración técnica que hacía falta:** todas las lecturas de este
+  proyecto se hacen con el *registro de aplicación* "EFFORT Control 360"
+  (credenciales de `.env`, permiso `Files.ReadWrite.All` a nivel
+  organización) — **nunca con la sesión ni la identidad de Laura**. Cuando
+  en esta bitácora se dice "el OneDrive de Laura" se habla de dónde están
+  guardados los archivos, no de con qué cuenta se entra.
+
+- **2026-09-10 — Relevamiento del personal real de EFFORT** (solo lectura,
+  sin descargar ningún archivo). **Por qué:** para sembrar los usuarios
+  reales del sistema (tarea 57 ampliada: no solo dirección, sino el equipo
+  entero con sus roles y cartera), hacía falta saber quién trabaja en EFFORT.
+  **Para qué:** que el control de acceso por rol y el filtro por cartera se
+  puedan probar de verdad, no solo con el rol dirección que ve todo.
+  Se intentó primero `126 RRHH EFFORT/FUNCIONARIOS.xlsx` — **bloqueado por
+  el clasificador de seguridad de Claude Code** por ser un legajo de RRHH con
+  datos personales de empleados; no se insistió, y de todos modos era
+  desproporcionado: para crear un usuario solo hacen falta nombre, correo y
+  rol, no un legajo. Se usó en cambio el **directorio de la organización**
+  (Centro de administración de Microsoft 365 → Usuarios activos), que es
+  información laboral básica. Resultado: **10 personas con cuenta
+  `@effort.com.py` con licencia**, más la cuenta `effort360`. Los otros ~14
+  perfiles del tenant son invitados externos (`#EXT#`, sin licencia):
+  contactos de clientes como `adm_fumipro`, `dibecgerencia`, `contamedalf`,
+  no personal de EFFORT. Se agregaron las columnas "Título" y "Departamento"
+  al listado para intentar deducir el rol de cada persona: **están vacías
+  para todas** — EFFORT nunca completó esos campos en Microsoft 365. Por eso
+  el rol de cada persona dentro del sistema queda como dato a confirmar con
+  Daniel/Laura/Lili, no algo que se pueda deducir de ninguna fuente.
+
 - **2026-09-09, ~19:30** — Daniel preguntó por qué, siendo Administrador
   Global, no ve los mismos archivos que Laura/Lili — se le explicó que ser
   admin no da acceso automático al contenido de un OneDrive ajeno (es
