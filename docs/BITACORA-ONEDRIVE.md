@@ -182,3 +182,63 @@ En concreto:
   alguna computadora, o en un servicio en la nube ajeno a este tenant
   (Google Drive personal, Dropbox, etc.). Le queda a Daniel confirmar cuál
   de los dos casos es.
+
+- **2026-09-10 — Primera carga real de documentos, los 5 clientes piloto,
+  período completo (enero-junio 2026).** Daniel pidió cargar "uno por uno
+  todos los documentos sin repetirlos". Se acotó el alcance al período del
+  piloto (`docs/DISCREPANCIAS.md`, punto 4) por ser lo que efectivamente
+  ejercita vencimientos/alertas/IVA, no todo el historial de cada cliente
+  (eso queda para más adelante si hace falta). **Solo lectura** sobre el
+  registro real de EFFORT en el OneDrive de Laura
+  (`CLIENTES EFFORT E.A.S/CLIENTES/<cliente>/PERIODO 2026`); **solo
+  escritura** en la carpeta propia (`/EFFORT Control 360/Entrada/<cliente>/`,
+  en el OneDrive de `effort360`) — cada archivo se copió ahí antes de
+  registrarse, nunca se tocó ni se modificó nada del lado de Laura.
+
+  Mecanismo, replicado del código real (no inventado aparte):
+  `repositorios/dominio.ts` ya define cómo se registra un documento —
+  `Evidencia.sha256` único (un mismo archivo no se importa dos veces aunque
+  se reintente todo el proceso) y `Documento` único por
+  (cliente, RUC emisor, timbrado, número) vía `skipDuplicates: true`. El
+  script de una sola vez usado para esto reprodujo exactamente esas dos
+  garantías, en vez de escribir una lógica de deduplicación paralela.
+
+  **Resultado, verificado contra la base real:** 671 documentos, 671
+  evidencias, cero huérfanos.
+
+  | Cliente | Documentos |
+  |---|---|
+  | Copesa Construcciones SA | 195 |
+  | Fumipro S.A. | 174 |
+  | Ecoagro SA | 153 |
+  | Silicatos Paraguayos SA (Sipar) | 77 |
+  | Dibec Sociedad Anónima | 72 |
+
+  Clasificación por nombre de archivo (metadato, no una cifra): 479 `OTRO`,
+  53 `CERTIFICADO`, 46 `ACTA`, 40 `COMPROBANTE_PAGO`, 16 `RETENCION`, 14
+  `FACTURA_COMPRA`, 11 `ESTATUTO`, 4 `CONSTANCIA`, 3 `CONTRATO`, 3
+  `EXTRACTO_BANCARIO`, 1 `RECIBO`, 1 `NOTA_CREDITO`.
+
+  **Identidad de comprobante (RUC+timbrado+número+total+tasa) solo para 5
+  facturas electrónicas**, extraída leyendo el texto real del PDF — nunca
+  inventada. De los 14 archivos clasificados como `FACTURA_COMPRA` por su
+  nombre, la mayoría son escaneos o formatos que el extractor no pudo leer
+  con certeza; quedaron sin esos campos (`null`, un estado válido del
+  modelo) en vez de adivinarlos. Es una limitación real del extractor
+  actual, no un problema de los datos — si más adelante se necesita el
+  monto real de esas facturas, hay que mejorar la extracción o cargarlas a
+  mano, nunca completar un total sin poder verificarlo contra el documento.
+
+  Errores transitorios de red durante la carga (mismo patrón que ya venía
+  pasando hoy con Supabase): 1 en Fumipro, 2 en Sipar — los tres se
+  resolvieron reintentando el mismo cliente completo, que gracias al
+  `sha256` volvió a saltar todo lo ya cargado y solo completó lo que había
+  fallado. Cero pérdida de datos, cero duplicados.
+
+  El script usado (`scratchpad_importar_documentos.mjs`) no quedó en el
+  repositorio: fue una migración real de datos de una sola vez, con RUC y
+  rutas de OneDrive de los 5 clientes hardcodeados a propósito, no una
+  herramienta genérica. La conexión automática y reutilizable entre
+  OneDrive y el sistema (que un archivo nuevo se importe solo, sin correr
+  un script a mano) sigue siendo trabajo pendiente — ver
+  `docs/DISCREPANCIAS.md`, punto 6.
