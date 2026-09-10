@@ -21,12 +21,13 @@ import {
   nivelAlertaPorDias,
   type NivelAlerta,
 } from '@effort/core';
-import { fechaIsoSchema, idSchema, nivelRiesgoSchema, textoCorto, textoLargo, tipoDocumentoSchema } from '@effort/schema';
+import { fechaIsoSchema, idSchema, nivelRiesgoSchema, periodoSchema, textoCorto, textoLargo, tipoDocumentoSchema } from '@effort/schema';
 
 import { ACCIONES, registrarEvento } from '../bitacora.js';
 import { ErrorDeAplicacion, type Dependencias } from '../servidor.js';
 import { filtroDeClientes } from '../seguridad/rbac.js';
 import type { VencimientoAlmacenado } from '../puertos-dominio.js';
+import { generarVencimientosDelPeriodo } from '../servicios/generadorDeVencimientos.js';
 import { autorizar, paramsCliente, paramsId } from './comun.js';
 
 const crearVencimientoSchema = z
@@ -120,6 +121,47 @@ export async function registrarRutasDeVencimientos(
       resumen,
       vencimientos: conAlertas.map(aSalida),
     };
+  });
+
+  /**
+   * Genera los vencimientos del período a partir del calendario tributario.
+   *
+   * Se puede repetir sin miedo: lo que ya existe no se duplica ni se pisa (ver
+   * `registrarGenerados`). Devuelve además qué NO se generó y por qué — una
+   * generación que "salió bien" pero dejó un cliente afuera en silencio es
+   * exactamente el tipo de falla que este sistema existe para evitar.
+   */
+  app.post('/api/v1/vencimientos/generar', async (peticion) => {
+    const sujeto = autorizar(peticion, 'vencimiento', 'crear');
+    const { periodo } = z
+      .object({ periodo: periodoSchema })
+      .strict()
+      .parse(peticion.body);
+
+    const resumen = await generarVencimientosDelPeriodo(
+      { clientes: deps.clientes, obligaciones: deps.obligaciones, vencimientos: deps.vencimientos },
+      periodo,
+      sujeto.usuarioId,
+    );
+
+    await registrarEvento(deps.bitacora, peticion.log, {
+      usuarioId: sujeto.usuarioId,
+      accion: ACCIONES.VENCIMIENTOS_GENERADOS,
+      entidad: 'vencimiento',
+      entidadId: null,
+      clienteId: null,
+      datosDespues: {
+        periodo,
+        creados: resumen.creados,
+        yaExistian: resumen.yaExistian,
+        omitidos: resumen.omitidos.length,
+      },
+      ip: peticion.ip,
+      agenteUsuario: peticion.headers['user-agent'] ?? null,
+      peticionId: String(peticion.id),
+    });
+
+    return resumen;
   });
 
   app.get('/api/v1/clientes/:clienteId/vencimientos', async (peticion) => {

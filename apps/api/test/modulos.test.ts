@@ -52,6 +52,7 @@ import {
   VencimientosFalsos,
   ExportacionesSigaFalsas,
   LiquidacionesFalsas,
+  ObligacionesFalsas,
 } from './dobles-dominio.js';
 
 const CONTRASENA = 'una frase larga y memorable';
@@ -78,6 +79,7 @@ interface Contexto {
   documentos: DocumentosFalsos;
   procesoMensual: ProcesoMensualFalso;
   vencimientos: VencimientosFalsos;
+  obligaciones: ObligacionesFalsas;
   solicitudes: SolicitudesFalsas;
   balances: BalancesFalsos;
   alertas: AlertasFalsas;
@@ -93,6 +95,7 @@ async function montar(): Promise<Contexto> {
   const documentos = new DocumentosFalsos();
   const procesoMensual = new ProcesoMensualFalso();
   const vencimientos = new VencimientosFalsos();
+  const obligaciones = new ObligacionesFalsas();
   const solicitudes = new SolicitudesFalsas();
   const balances = new BalancesFalsos();
   const alertas = new AlertasFalsas();
@@ -138,6 +141,7 @@ async function montar(): Promise<Contexto> {
     documentos,
     procesoMensual,
     vencimientos,
+    obligaciones,
     solicitudes,
     balances,
     exportacionesSiga: new ExportacionesSigaFalsas(),
@@ -165,7 +169,7 @@ async function montar(): Promise<Contexto> {
   await activarCsrfEnInject(app);
 
   return {
-    app, bitacora, documentos, procesoMensual, vencimientos, solicitudes, balances, alertas,
+    app, bitacora, documentos, procesoMensual, vencimientos, obligaciones, solicitudes, balances, alertas,
     usuarios, reglasImpositivas, reglasDeNotificacion,
   };
 }

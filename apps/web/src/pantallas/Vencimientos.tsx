@@ -8,7 +8,10 @@
  */
 
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
-import { CalendarCheck, Plus } from 'lucide-react';
+import { CalendarCheck, CalendarClock, Plus } from 'lucide-react';
+
+import { hoyEnParaguay } from '@effort/core';
+import { periodoSchema } from '@effort/schema';
 
 import {
   Badge,
@@ -34,9 +37,11 @@ import { ErrorDeApi } from '../api/cliente.js';
 import { listarClientes, type Cliente } from '../api/clientes.js';
 import {
   crearVencimiento,
+  generarVencimientos,
   marcarPresentado,
   obtenerRadar,
   type NivelRiesgo,
+  type ResumenDeGeneracion,
   type ResumenPorNivel,
   type TipoDocumento,
   type Vencimiento,
@@ -92,6 +97,28 @@ export default function Vencimientos() {
   const [formulario, setFormulario] = useState<FormularioAlta>(formularioVacio(''));
   const [guardando, setGuardando] = useState(false);
   const [errorFormulario, setErrorFormulario] = useState<string | null>(null);
+
+  const periodoPorDefecto = useMemo(() => {
+    const hoy = hoyEnParaguay(new Date());
+    return `${hoy.anio}-${String(hoy.mes).padStart(2, '0')}`;
+  }, []);
+  const [periodoAGenerar, setPeriodoAGenerar] = useState(periodoPorDefecto);
+  const [generando, setGenerando] = useState(false);
+  const [resumenGeneracion, setResumenGeneracion] = useState<ResumenDeGeneracion | null>(null);
+
+  async function generarDelPeriodo() {
+    if (!periodoSchema.safeParse(periodoAGenerar).success) return;
+    setGenerando(true);
+    setError(null);
+    try {
+      setResumenGeneracion(await generarVencimientos(periodoAGenerar));
+      await recargar();
+    } catch (motivo) {
+      setError(motivo instanceof ErrorDeApi ? motivo.message : 'No se pudo conectar con el servidor.');
+    } finally {
+      setGenerando(false);
+    }
+  }
 
   async function recargar() {
     setCargando(true);
@@ -199,11 +226,56 @@ export default function Vencimientos() {
           </p>
         </div>
         {puedeEditar && (
-          <Boton variante="primario" icono={Plus} onClick={abrirAlta}>
-            Nuevo vencimiento
-          </Boton>
+          <div className="flex flex-wrap items-end gap-3">
+            <CampoTexto
+              id="periodoAGenerar"
+              etiqueta="Generar período"
+              type="month"
+              value={periodoAGenerar}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPeriodoAGenerar(e.target.value)}
+              className="w-40"
+            />
+            <Boton
+              variante="secundario"
+              icono={CalendarClock}
+              onClick={() => void generarDelPeriodo()}
+              disabled={generando}
+            >
+              {generando ? 'Generando…' : 'Generar del calendario'}
+            </Boton>
+            <Boton variante="primario" icono={Plus} onClick={abrirAlta}>
+              Nuevo vencimiento
+            </Boton>
+          </div>
         )}
       </div>
+
+      {resumenGeneracion && (
+        <div
+          role="status"
+          className="rounded border border-borde-marca bg-superficie-tenue px-4 py-3 text-sm text-tinta-suave"
+        >
+          <p>
+            Período {resumenGeneracion.periodo}: {resumenGeneracion.creados} vencimientos generados
+            {resumenGeneracion.yaExistian > 0 && `, ${resumenGeneracion.yaExistian} ya existían`}.
+          </p>
+          {resumenGeneracion.creados === 0 && resumenGeneracion.yaExistian === 0 && (
+            <p className="mt-1 text-tinta-tenue">
+              No se generó nada. Falta cargar el calendario tributario y asignarle sus obligaciones
+              a cada cliente — hasta entonces el sistema no tiene de dónde deducir qué vence.
+            </p>
+          )}
+          {resumenGeneracion.omitidos.length > 0 && (
+            <ul className="mt-2 space-y-0.5">
+              {resumenGeneracion.omitidos.map((omision) => (
+                <li key={`${omision.cliente}-${omision.obligacion}`} className="text-critico">
+                  {omision.cliente} · {omision.obligacion}: {omision.motivo}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
 
       <section className="grid gap-3 sm:grid-cols-3 xl:grid-cols-6" aria-label="Resumen por nivel de alerta">
         <Indicador etiqueta="Vencidos" valor={resumen.VENCIDO} tono="critico" destacado={resumen.VENCIDO > 0} />

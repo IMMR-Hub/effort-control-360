@@ -156,6 +156,7 @@ model Cliente {
   origen                  Origen   @default(REAL)
 
   asignaciones     AsignacionCliente[]
+  obligaciones     ObligacionDeCliente[]
   documentos       Documento[]
   procesosMensuales ProcesoMensual[]
   vencimientos     Vencimiento[]
@@ -431,9 +432,97 @@ enum EstadoVencimiento {
   NO_APLICA
 }
 
+enum Periodicidad {
+  MENSUAL
+  ANUAL
+}
+
+/**
+ * Catálogo de obligaciones tributarias y el calendario que les corresponde.
+ *
+ * `diasPorTerminacionRuc` tiene diez posiciones (0 a 9): el día del mes en que
+ * vence cada terminación de RUC. Es un DATO, no una constante en el código, por
+ * la misma razón que los feriados: la DNIT lo cambia por resolución, y cuando
+ * eso pase tiene que poder corregirse sin desplegar una versión nueva.
+ *
+ * `fuente` es obligatoria y sin valor por defecto a propósito: una obligación
+ * cuyo origen nadie puede citar no debería estar generando vencimientos que
+ * después alguien va a presentar ante la DNIT. Misma disciplina que
+ * `ReglaImpositiva`.
+ */
+model ObligacionTributaria {
+  id     String @id @default(uuid()) @db.Uuid
+  codigo String @unique @db.VarChar(40)
+  nombre String @db.VarChar(200)
+  /// Quién la exige: DNIT, Municipalidad, IPS…
+  entidad    String  @db.VarChar(200)
+  formulario String? @db.VarChar(40)
+
+  periodicidad Periodicidad
+  /// Solo para las anuales: mes del año siguiente en que se presenta.
+  mesDeCierreAnual Int? @map("mes_de_cierre_anual")
+
+  diasPorTerminacionRuc Int[] @map("dias_por_terminacion_ruc")
+
+  /// Mientras esté en false, el generador la ignora: sirve para cargar una
+  /// obligación y revisarla con EFFORT antes de que empiece a producir avisos.
+  confirmadaPorEffort Boolean @default(false) @map("confirmada_por_effort")
+  activa              Boolean @default(true)
+  fuente              String  @db.VarChar(4000)
+
+  creadoEn                DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  creadoPorUsuarioId      String?  @map("creado_por_usuario_id") @db.Uuid
+  actualizadoEn           DateTime @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+  actualizadoPorUsuarioId String?  @map("actualizado_por_usuario_id") @db.Uuid
+  origen                  Origen   @default(REAL)
+
+  clientes     ObligacionDeCliente[]
+  vencimientos Vencimiento[]
+
+  @@map("obligacion_tributaria")
+}
+
+/**
+ * Qué obligaciones tiene cada cliente, y desde cuándo.
+ *
+ * No todos los clientes deben lo mismo, y lo que deben cambia con el tiempo
+ * (alta de un impuesto, cambio de régimen). `desde`/`hasta` evitan que el
+ * generador invente vencimientos de un período en el que el cliente todavía no
+ * estaba obligado — o de uno en el que ya no lo está.
+ */
+model ObligacionDeCliente {
+  id           String @id @default(uuid()) @db.Uuid
+  clienteId    String @map("cliente_id") @db.Uuid
+  obligacionId String @map("obligacion_id") @db.Uuid
+
+  desde DateTime  @db.Date
+  hasta DateTime? @db.Date
+
+  creadoEn           DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  creadoPorUsuarioId String?  @map("creado_por_usuario_id") @db.Uuid
+  origen             Origen   @default(REAL)
+
+  cliente    Cliente              @relation(fields: [clienteId], references: [id])
+  obligacion ObligacionTributaria @relation(fields: [obligacionId], references: [id])
+
+  @@unique([clienteId, obligacionId])
+  @@index([clienteId])
+  @@map("obligacion_de_cliente")
+}
+
 model Vencimiento {
   id        String @id @default(uuid()) @db.Uuid
   clienteId String @map("cliente_id") @db.Uuid
+
+  /**
+   * Presentes solo en los vencimientos generados por el calendario; nulos en
+   * los que alguien carga a mano. Es lo que hace la generación idempotente:
+   * con la única de más abajo, volver a generar el mismo período no duplica
+   * nada, y en Postgres un NULL nunca colisiona, así que los manuales quedan
+   * fuera de la restricción — el mismo criterio que ya usa `Documento`.
+   */
+  obligacionId String? @map("obligacion_id") @db.Uuid
+  periodo      String? @db.VarChar(7)
 
   tipoDocumento String @map("tipo_documento") @db.VarChar(40)
   descripcion   String @db.VarChar(400)
@@ -455,8 +544,10 @@ model Vencimiento {
   actualizadoPorUsuarioId String?  @map("actualizado_por_usuario_id") @db.Uuid
   origen                  Origen   @default(REAL)
 
-  cliente Cliente @relation(fields: [clienteId], references: [id])
+  cliente    Cliente               @relation(fields: [clienteId], references: [id])
+  obligacion ObligacionTributaria? @relation(fields: [obligacionId], references: [id])
 
+  @@unique([clienteId, obligacionId, periodo])
   @@index([fechaVencimiento, estado])
   @@index([clienteId])
   @@map("vencimiento")

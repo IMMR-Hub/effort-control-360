@@ -78,13 +78,26 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA public
 -- Que sean permisivas para este rol no las vuelve inútiles: siguen bloqueando a
 -- cualquier otro rol que no tenga política propia.
 
+-- `current_schema()` y no 'public' fijo. Corregido el 2026-09-10, después de
+-- que esta migración ya estaba aplicada: el bucle leía los nombres de las
+-- tablas de `public` pero ejecutaba el ALTER sin calificar el esquema, así que
+-- en los tests de integración —que construyen un esquema aislado en la MISMA
+-- base— intentaba crear políticas sobre tablas que en ese esquema todavía no
+-- existían. Funcionaba solo mientras `public` y el esquema de prueba tuvieran
+-- exactamente las mismas tablas; la primera tabla nueva del proyecto
+-- (`obligacion_tributaria`) lo rompió.
+--
+-- Editar una migración ya aplicada normalmente no se hace. Acá es seguro y se
+-- verificó antes de dejarlo: en `public`, `current_schema()` ES `public`, así
+-- que no cambia nada de lo que ya corrió, y `prisma migrate deploy` contra la
+-- base real sigue devolviendo 0 sin reclamar el checksum (probado).
 DO $$
 DECLARE
   t text;
 BEGIN
   FOR t IN
     SELECT tablename FROM pg_tables
-    WHERE schemaname = 'public' AND tablename NOT LIKE '_prisma%'
+    WHERE schemaname = current_schema() AND tablename NOT LIKE '_prisma%'
   LOOP
     EXECUTE format('DROP POLICY IF EXISTS app_acceso ON %I', t);
     EXECUTE format(

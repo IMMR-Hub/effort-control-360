@@ -11,6 +11,10 @@
 import { randomUUID } from 'node:crypto';
 
 import type {
+  AltaDeVencimientoGenerado,
+  ObligacionAlmacenada,
+  ObligacionDeClienteAlmacenada,
+  RepositorioDeObligaciones,
   AlertaAlmacenada,
   AltaDeDocumento,
   AltaDeReglaDeNotificacion,
@@ -238,8 +242,26 @@ export class ProcesoMensualFalso implements RepositorioDeProcesoMensual {
   }
 }
 
+export class ObligacionesFalsas implements RepositorioDeObligaciones {
+  readonly obligaciones: ObligacionAlmacenada[] = [];
+  readonly asignaciones: ObligacionDeClienteAlmacenada[] = [];
+
+  async listar(): Promise<ObligacionAlmacenada[]> {
+    return this.obligaciones;
+  }
+
+  async listarGenerables(): Promise<ObligacionAlmacenada[]> {
+    return this.obligaciones.filter((o) => o.activa && o.confirmadaPorEffort);
+  }
+
+  async asignacionesDeClientes(): Promise<ObligacionDeClienteAlmacenada[]> {
+    return this.asignaciones;
+  }
+}
+
 export class VencimientosFalsos implements RepositorioDeVencimientos {
   readonly vencimientos: VencimientoAlmacenado[] = [];
+  readonly generados: AltaDeVencimientoGenerado[] = [];
 
   async listar(filtro: FiltroDeCartera): Promise<VencimientoAlmacenado[]> {
     return this.vencimientos
@@ -282,6 +304,31 @@ export class VencimientosFalsos implements RepositorioDeVencimientos {
     };
     this.vencimientos.push(venc);
     return venc;
+  }
+
+  /**
+   * Reproduce la restricción única `(cliente, obligación, período)` de la base:
+   * sin eso, el doble aceptaría duplicados que la base real rechaza y el test
+   * de "regenerar no duplica" pasaría sin probar nada.
+   */
+  async registrarGenerados(altas: readonly AltaDeVencimientoGenerado[]): Promise<number> {
+    let creados = 0;
+
+    for (const alta of altas) {
+      const yaEsta = this.generados.some(
+        (previo) =>
+          previo.clienteId === alta.clienteId &&
+          previo.obligacionId === alta.obligacionId &&
+          previo.periodo === alta.periodo,
+      );
+      if (yaEsta) continue;
+
+      this.generados.push(alta);
+      await this.registrar(alta);
+      creados += 1;
+    }
+
+    return creados;
   }
 
   async marcarPresentado(

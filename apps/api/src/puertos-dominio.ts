@@ -192,18 +192,73 @@ export interface AltaDeVencimiento {
   readonly creadoPorUsuarioId: string;
 }
 
+/**
+ * Alta de un vencimiento generado por el calendario, no cargado a mano.
+ *
+ * Lleva `obligacionId` y `periodo`, que son justamente los que la restricción
+ * única usa para que regenerar el mismo período no duplique nada.
+ */
+export interface AltaDeVencimientoGenerado extends AltaDeVencimiento {
+  readonly obligacionId: string;
+  readonly periodo: string;
+}
+
 export interface RepositorioDeVencimientos {
   /** Todos los de la cartera, ordenados por fecha: es el radar. */
   listar(filtro: FiltroDeCartera): Promise<VencimientoAlmacenado[]>;
   listarPorCliente(clienteId: string, filtro: FiltroDeCartera): Promise<VencimientoAlmacenado[]>;
   buscarPorId(id: string, filtro: FiltroDeCartera): Promise<VencimientoAlmacenado | null>;
   registrar(datos: AltaDeVencimiento): Promise<VencimientoAlmacenado>;
+  /**
+   * Inserta en lote saltando los que ya existen, y devuelve cuántos entraron
+   * de verdad. Sin el "saltar", regenerar un período que ya se generó sería un
+   * error en vez de una operación segura de repetir.
+   */
+  registrarGenerados(altas: readonly AltaDeVencimientoGenerado[]): Promise<number>;
   marcarPresentado(
     id: string,
     fechaPresentacion: Date,
     evidenciaId: string | null,
     usuarioId: string,
   ): Promise<VencimientoAlmacenado>;
+}
+
+/* ========================================================================== */
+/* Obligaciones tributarias (el calendario que genera los vencimientos)      */
+/* ========================================================================== */
+
+export interface ObligacionAlmacenada {
+  readonly id: string;
+  readonly codigo: string;
+  readonly nombre: string;
+  readonly entidad: string;
+  readonly formulario: string | null;
+  readonly periodicidad: 'MENSUAL' | 'ANUAL';
+  readonly mesDeCierreAnual: number | null;
+  readonly diasPorTerminacionRuc: readonly number[];
+  readonly confirmadaPorEffort: boolean;
+  readonly activa: boolean;
+  readonly fuente: string;
+}
+
+/** Una obligación vigente para un cliente, con su ventana de vigencia. */
+export interface ObligacionDeClienteAlmacenada {
+  readonly id: string;
+  readonly clienteId: string;
+  readonly obligacionId: string;
+  readonly desde: Date;
+  readonly hasta: Date | null;
+}
+
+export interface RepositorioDeObligaciones {
+  listar(): Promise<ObligacionAlmacenada[]>;
+  /**
+   * Solo las que EFFORT confirmó y están activas: son las únicas que el
+   * generador puede usar. Una obligación sin confirmar existe para poder
+   * revisarla, no para producir avisos que alguien va a creer.
+   */
+  listarGenerables(): Promise<ObligacionAlmacenada[]>;
+  asignacionesDeClientes(): Promise<ObligacionDeClienteAlmacenada[]>;
 }
 
 /* ========================================================================== */

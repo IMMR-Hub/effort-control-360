@@ -14,6 +14,10 @@ import type {
   AltaDeReglaDeNotificacion,
   AltaDeReglaImpositiva,
   AltaDeVencimiento,
+  AltaDeVencimientoGenerado,
+  ObligacionAlmacenada,
+  ObligacionDeClienteAlmacenada,
+  RepositorioDeObligaciones,
   BalanceAlmacenado,
   CamposEditablesDelProceso,
   CamposEditablesDeReglaDeNotificacion,
@@ -399,6 +403,41 @@ export class VencimientosPrisma implements RepositorioDeVencimientos {
   }
 
   /**
+   * Alta en lote de lo que generó el calendario.
+   *
+   * `skipDuplicates` se apoya en la única `(cliente, obligación, período)`: si
+   * alguien vuelve a generar marzo, los que ya estaban no se tocan y no se
+   * duplican. Sin eso, regenerar sería una operación peligrosa en vez de una
+   * que se puede repetir sin pensarlo — y con vencimientos duplicados el radar
+   * miente, que es peor que no tenerlo.
+   */
+  async registrarGenerados(altas: readonly AltaDeVencimientoGenerado[]): Promise<number> {
+    if (altas.length === 0) return 0;
+
+    const resultado = await this.prisma.vencimiento.createMany({
+      data: altas.map((alta) => ({
+        clienteId: alta.clienteId,
+        obligacionId: alta.obligacionId,
+        periodo: alta.periodo,
+        tipoDocumento: alta.tipoDocumento,
+        descripcion: alta.descripcion,
+        entidad: alta.entidad,
+        fechaEmision: alta.fechaEmision,
+        fechaVencimiento: alta.fechaVencimiento,
+        responsableId: alta.responsableId,
+        riesgo: alta.riesgo as never,
+        evidenciaId: alta.evidenciaId,
+        proximaAccion: alta.proximaAccion,
+        creadoPorUsuarioId: alta.creadoPorUsuarioId,
+        actualizadoPorUsuarioId: alta.creadoPorUsuarioId,
+      })),
+      skipDuplicates: true,
+    });
+
+    return resultado.count;
+  }
+
+  /**
    * Marca una obligación como presentada.
    *
    * Guarda la fecha real de presentación, que puede no ser hoy: alguien puede
@@ -422,6 +461,64 @@ export class VencimientosPrisma implements RepositorioDeVencimientos {
     });
 
     return fila as VencimientoAlmacenado;
+  }
+}
+
+/* ========================================================================== */
+/* Obligaciones tributarias                                                   */
+/* ========================================================================== */
+
+const CAMPOS_OBLIGACION = {
+  id: true,
+  codigo: true,
+  nombre: true,
+  entidad: true,
+  formulario: true,
+  periodicidad: true,
+  mesDeCierreAnual: true,
+  diasPorTerminacionRuc: true,
+  confirmadaPorEffort: true,
+  activa: true,
+  fuente: true,
+} as const;
+
+export class ObligacionesPrisma implements RepositorioDeObligaciones {
+  constructor(private readonly prisma: PrismaClient) {}
+
+  async listar(): Promise<ObligacionAlmacenada[]> {
+    const filas = await this.prisma.obligacionTributaria.findMany({
+      select: CAMPOS_OBLIGACION,
+      orderBy: { codigo: 'asc' },
+    });
+
+    return filas as ObligacionAlmacenada[];
+  }
+
+  /**
+   * Las que el generador puede usar.
+   *
+   * El filtro por `confirmadaPorEffort` no es una formalidad: el calendario de
+   * la DNIT cambia por resolución, y un día equivocado hace que el sistema
+   * avise tarde justo de lo que existe para no dejar pasar. Hasta que alguien
+   * de EFFORT lo confirme contra la resolución vigente, la obligación se puede
+   * cargar y revisar, pero no produce un solo aviso.
+   */
+  async listarGenerables(): Promise<ObligacionAlmacenada[]> {
+    const filas = await this.prisma.obligacionTributaria.findMany({
+      where: { activa: true, confirmadaPorEffort: true },
+      select: CAMPOS_OBLIGACION,
+      orderBy: { codigo: 'asc' },
+    });
+
+    return filas as ObligacionAlmacenada[];
+  }
+
+  async asignacionesDeClientes(): Promise<ObligacionDeClienteAlmacenada[]> {
+    const filas = await this.prisma.obligacionDeCliente.findMany({
+      select: { id: true, clienteId: true, obligacionId: true, desde: true, hasta: true },
+    });
+
+    return filas as ObligacionDeClienteAlmacenada[];
   }
 }
 

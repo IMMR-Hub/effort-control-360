@@ -49,6 +49,29 @@ export function listarVencimientosDeCliente(
   return peticion('GET', `/api/v1/clientes/${clienteId}/vencimientos`);
 }
 
+/** Un cliente y una obligación que no produjeron vencimiento, y por qué. */
+export interface OmisionDeGeneracion {
+  readonly cliente: string;
+  readonly obligacion: string;
+  readonly motivo: string;
+}
+
+export interface ResumenDeGeneracion {
+  readonly periodo: string;
+  readonly creados: number;
+  readonly yaExistian: number;
+  readonly omitidos: readonly OmisionDeGeneracion[];
+}
+
+/**
+ * Genera los vencimientos del período desde el calendario tributario.
+ *
+ * Se puede repetir: el servidor no duplica lo que ya existe.
+ */
+export function generarVencimientos(periodo: string): Promise<ResumenDeGeneracion> {
+  return peticion('POST', '/api/v1/vencimientos/generar', { periodo });
+}
+
 export interface AltaDeVencimiento {
   readonly tipoDocumento: TipoDocumento;
   readonly descripcion: string;

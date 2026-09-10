@@ -25,6 +25,7 @@ import {
   ReglasDeNotificacionPrisma,
   ReglasImpositivasPrisma,
   SolicitudesPrisma,
+  ObligacionesPrisma,
   VencimientosPrisma,
 } from './repositorios/dominio.js';
 import { registrarRutasDeDocumentos } from './rutas/documentos.js';
@@ -66,6 +67,7 @@ export function construirDependencias(configuracion: Configuracion): Dependencia
     documentos: new DocumentosPrisma(prisma),
     procesoMensual: new ProcesoMensualPrisma(prisma),
     vencimientos: new VencimientosPrisma(prisma),
+    obligaciones: new ObligacionesPrisma(prisma),
     solicitudes: new SolicitudesPrisma(prisma),
     balances: new BalancesPrisma(prisma),
     exportacionesSiga: new ExportacionesSigaPrisma(prisma),
