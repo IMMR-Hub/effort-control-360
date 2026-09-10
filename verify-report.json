@@ -1,13 +1,13 @@
 {
-  "generado_en": "2026-09-10T19:55:05.134Z",
-  "commit": "e83d8b707b4b331a067d5edc063416f33180c707",
+  "generado_en": "2026-09-10T20:13:45.614Z",
+  "commit": "f70f53bd85351c9ba8fc1d02caf56e9472a61962",
   "checks": [
     {
       "nombre": "typecheck",
       "comando": "npx tsc --build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 1223,
+      "duracion_ms": 1325,
       "detalle": ""
     },
     {
@@ -15,7 +15,7 @@
       "comando": "npm run typecheck --workspace @effort/web",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3846,
+      "duracion_ms": 3865,
       "detalle": ""
     },
     {
@@ -23,7 +23,7 @@
       "comando": "npx vitest run",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 53457,
+      "duracion_ms": 54299,
       "detalle": ""
     },
     {
@@ -31,7 +31,7 @@
       "comando": "npx vitest run packages/core/test/golden.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4115,
+      "duracion_ms": 3433,
       "detalle": ""
     },
     {
@@ -39,7 +39,7 @@
       "comando": "npx eslint .",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6787,
+      "duracion_ms": 7011,
       "detalle": ""
     },
     {
@@ -47,7 +47,7 @@
       "comando": "npx vitest run apps/api/test/rbac.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3381,
+      "duracion_ms": 3546,
       "detalle": ""
     },
     {
@@ -55,7 +55,7 @@
       "comando": "npx vitest run apps/api/test/seguridad.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3516,
+      "duracion_ms": 3610,
       "detalle": ""
     },
     {
@@ -63,7 +63,7 @@
       "comando": "npx vitest run packages/schema/test/contratos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3325,
+      "duracion_ms": 3279,
       "detalle": ""
     },
     {
@@ -71,7 +71,7 @@
       "comando": "npx vitest run apps/api/test/servidor.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 5971,
+      "duracion_ms": 6350,
       "detalle": ""
     },
     {
@@ -79,7 +79,7 @@
       "comando": "npx vitest run apps/api/test/modulos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 26667,
+      "duracion_ms": 29802,
       "detalle": ""
     },
     {
@@ -87,7 +87,7 @@
       "comando": "npx vitest run apps/api/test/siga.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6864,
+      "duracion_ms": 7064,
       "detalle": ""
     },
     {
@@ -95,7 +95,7 @@
       "comando": "npx vitest run apps/api/test/importaciones.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6961,
+      "duracion_ms": 6401,
       "detalle": ""
     },
     {
@@ -103,7 +103,7 @@
       "comando": "npx vitest run --project integracion",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 57011,
+      "duracion_ms": 57121,
       "detalle": ""
     },
     {
@@ -111,7 +111,7 @@
       "comando": "npx vitest run --project drive",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 2748,
+      "duracion_ms": 2882,
       "detalle": ""
     },
     {
@@ -119,7 +119,7 @@
       "comando": "npx vitest run --project importers",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3432,
+      "duracion_ms": 3673,
       "detalle": ""
     },
     {
@@ -127,7 +127,7 @@
       "comando": "npx vitest run --project web",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 24846,
+      "duracion_ms": 26816,
       "detalle": ""
     },
     {
@@ -135,7 +135,7 @@
       "comando": "node scripts/verificar-kpi.mjs",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 90,
+      "duracion_ms": 101,
       "detalle": ""
     },
     {
@@ -143,7 +143,7 @@
       "comando": "npm run typecheck:e2e",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3479,
+      "duracion_ms": 3530,
       "detalle": ""
     },
     {
@@ -151,7 +151,7 @@
       "comando": "npx playwright test",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 58156,
+      "duracion_ms": 49492,
       "detalle": ""
     },
     {
@@ -159,7 +159,7 @@
       "comando": "npm audit --audit-level=high",
       "estado": "FALLO",
       "exit_code": 1,
-      "duracion_ms": 7205,
+      "duracion_ms": 7451,
       "detalle": "pm audit fix --force`\nWill install vitest@5.0.0, which is a breaking change\nnode_modules/@vitest/mocker\n  vitest  2.1.0-beta.1 - 4.1.10\n  Depends on vulnerable versions of @vitest/mocker\n  node_modules/vitest\n    @vitest/coverage-v8  2.1.0-beta.1 - 4.1.10\n    Depends on vulnerable versions of vitest\n    node_modules/@vitest/coverage-v8\n\nbrowserslist  <=4.28.6\nSeverity: high\nBrowserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM - https://github.com/advisories/GHSA-c83g-rgw3-j3cx\nBrowserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats) - https://github.com/advisories/GHSA-73wf-gq98-2v4g\nfix available via `npm audit fix`\nnode_modules/browserslist\n\ncsv-parse  <7.0.2\nSeverity: moderate\nnode-csv: Prototype replacement still reachable via columns path - https://github.com/advisories/GHSA-8cw4-87c7-c6xx\nfix available via `npm audit fix`\nnode_modules/csv-parse\n\ndeepmerge-ts  <8.0.0\nSeverity: high\nDeepmergeTS has stack exhaustion when merging recursive object graphs - https://github.com/advisories/GHSA-ggr8-5vv4-36mx\nfix available via `npm audit fix --force`\nWill install prisma@6.12.0, which is a breaking change\nnode_modules/deepmerge-ts\n  @prisma/config  6.13.0-dev.1 - 8.1.0-dev.4\n  Depends on vulnerable versions of deepmerge-ts\n  apps/api/node_modules/@prisma/config\n    prisma  6.13.0-dev.1 - 8.1.0-dev.4\n    Depends on vulnerable versions of @prisma/config\n    apps/api/node_modules/prisma\n\nfast-uri  3.0.0 - 3.1.5 || 4.0.0 - 4.1.2\nSeverity: high\nfast-uri vulnerable to host confusion via skipped IDN canonicalization on scheme-relative references - https://github.com/advisories/GHSA-5jgf-p345-68v8\nfast-uri vulnerable to host confusion via skipped IDN canonicalization on scheme-relative references - https://github.com/advisories/GHSA-5jgf-p345-68v8\nfast-uri vulnerable to server-side request forgery via malformed IPv6 normalization - https://github.com/advisories/GHSA-f65p-4m7j-42xc\nfast-uri vulnerable to server-side request forgery via malformed IPv6 normalization - https://github.com/advisories/GHSA-f65p-4m7j-42xc\nfast-uri vulnerable to server-side request forgery via repeated hostname percent-decoding - https://github.com/advisories/GHSA-fph4-wmhf-6fwf\nfast-uri vulnerable to server-side request forgery via repeated hostname percent-decoding - https://github.com/advisories/GHSA-fph4-wmhf-6fwf\nfast-uri vulnerable to host confusion via percent-encoded scheme normalization - https://github.com/advisories/GHSA-jqff-g426-hqxp\nfast-uri vulnerable to host confusion via percent-encoded scheme normalization - https://github.com/advisories/GHSA-jqff-g426-hqxp\nfix available via `npm audit fix`\nnode_modules/fast-json-stringify/node_modules/ajv/node_modules/fast-uri\nnode_modules/fast-json-stringify/node_modules/fast-uri\nnode_modules/fast-uri\n\nfastify  <=5.12.0\nSeverity: moderate\nfastify vulnerable to schema validation bypass via root primitive coercion mismatch - https://github.com/advisories/GHSA-w2qp-rph6-63g4\nfastify vulnerable to X-Forwarded-* spoofing under trustProxy hop-count - https://github.com/advisories/GHSA-3m5p-2c4r-xxw2\nfix available via `npm audit fix`\nnode_modules/fastify\n\njs-yaml  4.0.0 - 4.3.1\nSeverity: high\njs-yaml: maxTotalMergeKeys does not limit CPU use for empty merge sources - https://github.com/advisories/GHSA-2883-xcg3-v3hh\nfix available via `npm audit fix`\nnode_modules/js-yaml\n\nuuid  <11.1.1\nSeverity: moderate\nuuid: Missing buffer bounds check in v3/v5/v6 when buf is provided - https://github.com/advisories/GHSA-w5hq-g745-h8pq\nfix available via `npm audit fix --force`\nWill install exceljs@3.4.0, which is a breaking change\nnode_modules/uuid\n  exceljs  >=3.5.0\n  Depends on vulnerable versions of uuid\n  node_modules/exceljs\n\n\n13 vulnerabilities (7 moderate, 6 high)\n\nTo address issues that do not require attention, run:\n  npm audit fix\n\nTo address all issues (including breaking changes), run:\n  npm audit fix --force"
     },
     {
@@ -167,7 +167,7 @@
       "comando": "npm run build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6759,
+      "duracion_ms": 6130,
       "detalle": ""
     }
   ],

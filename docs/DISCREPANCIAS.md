@@ -656,33 +656,45 @@ así como si fuera de código: **reintentar una vez**. Si pasa, era esto.
 
 ---
 
-## 17. Calendario tributario de la DNIT — ABIERTO, BLOQUEA AL MOTOR (2026-09-10)
+## 17. Calendario tributario de la DNIT — CASI CERRADO (2026-09-10)
 
-El motor de vencimientos ya está construido y probado
-(`packages/core/src/vencimientosTributarios.ts`,
-`apps/api/src/servicios/generadorDeVencimientos.ts`), pero **no puede generar
-nada todavía** porque le falta el dato que solo EFFORT puede confirmar.
+El motor de vencimientos está construido, probado y **ya generando** con el
+calendario que EFFORT confirmó. Queda un solo punto abierto, el (d).
 
-Son tres cosas distintas, y las tres hacen falta:
+**a) Qué día vence cada terminación de RUC — CERRADO.** Los diez días viven en
+`obligacion_tributaria.dias_por_terminacion_ruc`, como dato editable y no como
+constante en el código. Ninguno está escrito en el código fuente.
 
-**a) Qué día vence cada terminación de RUC.** El sistema guarda diez días, uno
-por terminación (0 a 9), en `obligacion_tributaria.dias_por_terminacion_ruc`.
-No hay ningún día escrito en el código ni cargado en la base: la tabla está
-vacía a propósito.
+**b) Cuál es la "terminación" del RUC — CERRADO el 2026-09-10.** Es **la última
+cifra del NÚMERO, sin contar el dígito verificador**. En `80007729-6` la
+terminación es **9**, no 6. Confirmado por EFFORT con la tabla oficial y ese
+ejemplo textual, que quedó como test en
+`packages/core/test/vencimientosTributarios.test.ts`.
 
-**b) Cuál es la "terminación" del RUC — RESUELTO el 2026-09-10.** El RUC se
-escribe `80012742-0`: número y, después del guion, dígito verificador. La
-primera versión de `terminacionDeRuc` tomaba la última cifra del NÚMERO (el 2).
-**Daniel confirmó que es el DÍGITO VERIFICADOR** (el 0), y se corrigió el mismo
-día, con sus tests.
+Vale la pena dejar escrito el camino, porque es la mejor defensa de por qué
+existe este documento: el dato dio una vuelta completa antes de asentarse.
+Primera implementación: la cifra del número (correcta, pero sin confirmar).
+Consulta a EFFORT: respondieron "el dígito verificador", y se cambió.
+Al día siguiente llegó la tabla oficial con el ejemplo textual, que decía lo
+contrario, y se volvió a la primera versión. Todo eso pasó en horas y sin
+consecuencias **porque la regla vivía en una función propia, marcada como
+pendiente de confirmar, y no enterrada en línea dentro del cálculo**. Si
+hubiera estado dispersa, corregirla habría sido otra historia.
 
-Vale la pena dejarlo escrito porque es el ejemplo exacto de por qué existe este
-documento: era una suposición razonable, estaba a punto de quedar enterrada
-como si fuera un hecho, y de haber seguido así TODOS los vencimientos de TODOS
-los clientes habrían caído en el día equivocado — el sistema avisando tarde
-justo de aquello para lo que existe. Se salvó porque estaba aislada en una
-función propia y marcada como pendiente de confirmar, no porque alguien la
-hubiera revisado por casualidad.
+**a-bis) Los días confirmados.** Tabla provista por EFFORT el 2026-09-10:
+
+| Termina en | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Día | 7 | 9 | 11 | 13 | 15 | 17 | 19 | 21 | 23 | 25 |
+
+**d) Qué pasa cuando el día cae en fin de semana o feriado — SIN CONFIRMAR.**
+La tabla dice "fecha fija de cada mes" y no aclara el traslado. El sistema hoy
+**corre el vencimiento al día hábil siguiente**, nunca hacia atrás, que es la
+práctica habitual de la DNIT. Importa aclararlo porque es la dirección
+riesgosa: si la fecha fuera realmente fija y no se trasladara, el sistema
+estaría dando por vigente algo que ya venció el domingo anterior. Ejemplo real
+del piloto: Ecoagro (RUC 80022319-5, terminación 9 → día 25) en abril de 2026
+cae sábado, y el sistema lo pone el lunes 27. **Confirmar con EFFORT.**
 
 **c) Qué obligaciones tiene cada uno de los 5 clientes.** IVA general, IRE,
 IRP, anticipos, retenciones: no todos deben lo mismo, y lo que deben cambia con

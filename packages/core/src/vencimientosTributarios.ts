@@ -33,30 +33,31 @@ export class ErrorDeVencimiento extends Error {
 }
 
 /**
- * Terminación de un RUC paraguayo: el DÍGITO VERIFICADOR.
+ * Terminación de un RUC paraguayo: la última cifra del NÚMERO, sin contar el
+ * dígito verificador.
  *
- * El RUC se escribe `80012742-0`: el número y, después del guion, el dígito
+ * El RUC se escribe `80007729-6`: el número y, después del guion, el dígito
  * verificador. La terminación que usa el calendario de la DNIT es la del
- * VERIFICADOR — `80012742-0` termina en 0, no en 2.
+ * NÚMERO — `80007729-6` termina en **9**, no en 6.
  *
- * Confirmado por Daniel (EFFORT) el 2026-09-10, contra la interpretación
- * contraria que este módulo tenía en su primera versión. Ver
- * `docs/DISCREPANCIAS.md`, punto 17: equivocar esto corre TODOS los
- * vencimientos de TODOS los clientes al día que no es, y el sistema estaría
- * avisando tarde justo de lo que existe para no dejar pasar. Por eso vive en
- * una función propia y no en línea dentro del cálculo.
+ * Confirmado por EFFORT el 2026-09-10, con la tabla oficial y ese ejemplo
+ * textual. El dato dio una vuelta completa antes de asentarse (ver
+ * `docs/DISCREPANCIAS.md`, punto 17), y por eso queda acá el ejemplo real al
+ * lado de la regla: equivocarlo corre TODOS los vencimientos de TODOS los
+ * clientes al día que no es, y el sistema estaría avisando tarde justo de lo
+ * que existe para no dejar pasar.
  */
 export function terminacionDeRuc(ruc: string): number {
-  const partes = ruc.trim().split('-');
-  const verificador = partes.length > 1 ? (partes[partes.length - 1] ?? '') : '';
+  const numero = ruc.trim().split('-')[0] ?? '';
+  const ultima = numero.slice(-1);
 
-  if (!/^\d$/.test(verificador)) {
+  if (!/^\d$/.test(ultima)) {
     throw new ErrorDeVencimiento(
-      `No se pudo leer la terminación del RUC "${ruc}": se esperaba un dígito verificador después del guion.`,
+      `No se pudo leer la terminación del RUC "${ruc}": se esperaba un número antes del guion.`,
     );
   }
 
-  return Number(verificador);
+  return Number(ultima);
 }
 
 /**

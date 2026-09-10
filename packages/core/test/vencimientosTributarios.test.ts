@@ -1,10 +1,12 @@
 /**
  * Cálculo del vencimiento de una obligación tributaria.
  *
- * El calendario que se usa acá es de PRUEBA: días 7, 9, 11… 25 por terminación.
- * No se afirma que sea el vigente de la DNIT — eso lo confirma EFFORT y vive en
- * la base de datos, no en el código. Lo que estos tests fijan es la REGLA:
- * qué terminación se lee, a qué mes se presenta, y qué pasa cuando el día cae
+ * El calendario que se usa acá coincide con el que EFFORT confirmó el 2026-09-10
+ * (7, 9, 11… 25), pero se pasa como parámetro igual: el vigente vive en la base
+
+ * de datos, no en el código, porque la DNIT lo cambia por resolución.
+ *
+ * Lo que estos tests fijan es la REGLA: qué terminación se lee, a qué mes se presenta, y qué pasa cuando el día cae
  * en fin de semana o feriado.
  */
 
@@ -27,33 +29,36 @@ const calendario2026 = crearCalendario([
 ]);
 
 describe('terminación del RUC', () => {
-  // Confirmado por EFFORT el 2026-09-10: es el dígito verificador, el de
-  // después del guion. Con RUCs reales de los clientes del piloto.
-  it('lee el dígito verificador, no la última cifra del número', () => {
-    expect(terminacionDeRuc('80012742-0')).toBe(0); // SIPAR
-    expect(terminacionDeRuc('80003112-1')).toBe(1); // COPESA
-    expect(terminacionDeRuc('80022319-5')).toBe(5); // ECOAGRO
+  // El ejemplo textual que dio EFFORT el 2026-09-10 al mandar la tabla
+  // oficial. Queda como test porque es la frase exacta que zanjó la duda.
+  it('en 80007729-6 la terminación es 9, no 6', () => {
+    expect(terminacionDeRuc('80007729-6')).toBe(9);
+  });
+
+  it('lee la última cifra del número, no el dígito verificador', () => {
+    expect(terminacionDeRuc('80012742-0')).toBe(2); // SIPAR
+    expect(terminacionDeRuc('80003112-1')).toBe(2); // COPESA
+    expect(terminacionDeRuc('80022319-5')).toBe(9); // ECOAGRO
+    expect(terminacionDeRuc('80119631-0')).toBe(1); // FUMIPRO
+    expect(terminacionDeRuc('80082006-1')).toBe(6); // DIBEC
   });
 
   it('tolera espacios alrededor', () => {
-    expect(terminacionDeRuc('  80022319-5  ')).toBe(5);
+    expect(terminacionDeRuc('  80022319-5  ')).toBe(9);
   });
 
   it('falla en vez de adivinar si el RUC no tiene la forma esperada', () => {
     expect(() => terminacionDeRuc('sin-numero')).toThrow(ErrorDeVencimiento);
     expect(() => terminacionDeRuc('')).toThrow(ErrorDeVencimiento);
-    // Sin guion no hay verificador que leer: antes esto devolvía la última
-    // cifra del número en silencio, que es el error que se está corrigiendo.
-    expect(() => terminacionDeRuc('80012742')).toThrow(ErrorDeVencimiento);
   });
 });
 
 describe('fecha de vencimiento', () => {
   it('lo mensual se presenta al mes siguiente del período liquidado', () => {
-    // Verificador 2 → día 11. El IVA de marzo se presenta en abril, y el 11 de
-    // abril de 2026 cae sábado: corre al lunes 13.
+    // Terminación 2 (última cifra del número) → día 11. El IVA de marzo se
+    // presenta en abril, y el 11 de abril de 2026 cae sábado: corre al lunes 13.
     const fecha = fechaDeVencimiento({
-      ruc: '80012742-2',
+      ruc: '80012742-0',
       periodo: { anio: 2026, mes: 3 },
       periodicidad: 'MENSUAL',
       diasPorTerminacion: DIAS_DE_PRUEBA,
@@ -65,21 +70,21 @@ describe('fecha de vencimiento', () => {
 
   it('cruza el año: diciembre se presenta en enero del año siguiente', () => {
     const fecha = fechaDeVencimiento({
-      ruc: '80119631-1',
+      ruc: '80119631-0',
       periodo: { anio: 2026, mes: 12 },
       periodicidad: 'MENSUAL',
       diasPorTerminacion: DIAS_DE_PRUEBA,
       calendario: calendario2026,
     });
 
-    // Verificador 1 → día 9, que en enero de 2027 cae sábado: corre al lunes 11.
+    // Terminación 1 → día 9, que en enero de 2027 cae sábado: corre al lunes 11.
     expect(fechaCivilAIso(fecha)).toBe('2027-01-11');
   });
 
   it('si el día asignado cae en fin de semana, corre al lunes — nunca hacia atrás', () => {
-    // Verificador 4 → día 15. El 15 de marzo de 2026 es domingo.
+    // Terminación 4 → día 15. El 15 de marzo de 2026 es domingo.
     const fecha = fechaDeVencimiento({
-      ruc: '80000004-4',
+      ruc: '80000004-7',
       periodo: { anio: 2026, mes: 2 },
       periodicidad: 'MENSUAL',
       diasPorTerminacion: DIAS_DE_PRUEBA,
@@ -108,7 +113,7 @@ describe('fecha de vencimiento', () => {
 
   it('lo anual se presenta en el mes de cierre del año siguiente', () => {
     const fecha = fechaDeVencimiento({
-      ruc: '80012742-2',
+      ruc: '80012742-0',
       periodo: { anio: 2026, mes: 12 },
       periodicidad: 'ANUAL',
       mesDeCierreAnual: 4,
@@ -122,7 +127,7 @@ describe('fecha de vencimiento', () => {
   it('una obligación anual sin mes de presentación falla en vez de suponer uno', () => {
     expect(() =>
       fechaDeVencimiento({
-        ruc: '80012742-2',
+        ruc: '80012742-0',
         periodo: { anio: 2026, mes: 12 },
         periodicidad: 'ANUAL',
         diasPorTerminacion: DIAS_DE_PRUEBA,
@@ -136,7 +141,7 @@ describe('fecha de vencimiento', () => {
 
     expect(() =>
       fechaDeVencimiento({
-        ruc: '80000009-9',
+        ruc: '80000009-1',
         periodo: { anio: 2026, mes: 1 },
         periodicidad: 'MENSUAL',
         diasPorTerminacion: diasInvalidos,

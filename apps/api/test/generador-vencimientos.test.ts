@@ -38,8 +38,8 @@ function armar() {
   const vencimientos = new VencimientosFalsos();
 
   clientes.clientes.push(
-    // RUCs reales del piloto. La terminación es el dígito verificador:
-    // Fumipro -0 → día 7; Ecoagro -5 → día 17.
+    // RUCs reales del piloto. La terminación es la última cifra del número,
+    // sin el verificador: Fumipro 8011963_1_ → día 9; Ecoagro 8002231_9_ → día 25.
     clienteMinimo({ id: FUMIPRO, nombre: 'FUMIPRO S.A.', ruc: '80119631-0', activo: true }),
     clienteMinimo({ id: ECOAGRO, nombre: 'ECOAGRO SA', ruc: '80022319-5', activo: true }),
   );
@@ -63,10 +63,10 @@ describe('generador de vencimientos', () => {
     expect(resumen.omitidos).toEqual([]);
 
     const porCliente = new Map(deps.vencimientos.vencimientos.map((v) => [v.clienteId, v]));
-    // Verificador 0 → día 7 de abril de 2026 (martes, hábil).
-    expect(porCliente.get(FUMIPRO)!.fechaVencimiento.toISOString().slice(0, 10)).toBe('2026-04-07');
-    // Verificador 5 → día 17 de abril de 2026 (viernes, hábil).
-    expect(porCliente.get(ECOAGRO)!.fechaVencimiento.toISOString().slice(0, 10)).toBe('2026-04-17');
+    // Terminación 1 → día 9 de abril de 2026 (jueves, hábil).
+    expect(porCliente.get(FUMIPRO)!.fechaVencimiento.toISOString().slice(0, 10)).toBe('2026-04-09');
+    // Terminación 9 → día 25, que en abril de 2026 cae sábado: corre al lunes 27.
+    expect(porCliente.get(ECOAGRO)!.fechaVencimiento.toISOString().slice(0, 10)).toBe('2026-04-27');
   });
 
   it('volver a generar el mismo período no duplica nada', async () => {
