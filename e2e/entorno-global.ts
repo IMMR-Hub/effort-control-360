@@ -44,14 +44,25 @@ const SECRETO_TOTP_DIRECCION = 'HVVTSECMMVLXYZQKKFKAOUSSPEOBS7IF';
 
 export const CREDENCIALES = {
   // `direccion` está en `ROLES_CON_SEGUNDO_FACTOR_OBLIGATORIO` (ver
-  // `apps/api/src/seguridad/rbac.ts`) — sin `secretoTotp`, el servidor
-  // rechaza el login con 403 antes de emitir ninguna sesión.
+  // `apps/api/src/seguridad/rbac.ts`). Se siembra con `secretoTotp` ya puesto
+  // para que estos tests entren directo al segundo paso del login, sin pasar
+  // por el alta del factor — eso lo cubre `primer-acceso.spec.ts`.
   direccion: {
     email: 'e2e.direccion@effort.com.py',
     password: 'clave-de-pruebas-e2e-para-playwright-2026',
     secretoTotp: SECRETO_TOTP_DIRECCION,
   },
   auxiliar: { email: 'e2e.auxiliar@effort.com.py', password: 'clave-de-pruebas-e2e-para-playwright-2026' },
+  /**
+   * Cuenta recién creada: rol con segundo factor obligatorio, sin configurar,
+   * y con la contraseña inicial por cambiar. Es el estado exacto en el que
+   * queda cualquier persona a la que dirección da de alta.
+   */
+  primerAcceso: {
+    email: 'e2e.primer.acceso@effort.com.py',
+    password: 'clave-inicial-de-pruebas-e2e-2026',
+    passwordNueva: 'la frase que elige la persona 2026',
+  },
 } as const;
 
 export const CLIENTE_SEMBRADO = { nombre: 'GARSO S.A.', ruc: '80017726-6' };
@@ -132,6 +143,22 @@ export default async function entornoGlobal(): Promise<() => Promise<void>> {
       veTodosLosClientes: true,
       hashContrasena: hashAuxiliar,
       debeCambiarContrasena: false,
+    },
+  });
+
+  // Sin `secretoTotp` y con la contraseña por cambiar: el estado en el que
+  // queda una cuenta recién dada de alta por dirección.
+  await entorno.prisma.usuario.create({
+    data: {
+      nombre: 'Primer',
+      apellido: 'Acceso',
+      email: CREDENCIALES.primerAcceso.email,
+      rol: 'direccion',
+      veTodosLosClientes: true,
+      hashContrasena: await hashearContrasena(CREDENCIALES.primerAcceso.password),
+      debeCambiarContrasena: true,
+      secretoTotp: null,
+      segundoFactorActivo: false,
     },
   });
 

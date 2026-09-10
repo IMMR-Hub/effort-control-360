@@ -554,7 +554,7 @@ de Supabase → "Resume project" → esperar un par de minutos → reintentar.
 
 ---
 
-## 16. No existe forma de que un usuario gestione sus propias credenciales — HALLAZGO 2026-09-10, BLOQUEA LA AUDITORÍA REAL
+## 16. No existía forma de que un usuario gestione sus propias credenciales — CERRADO (2026-09-10)
 
 **Encontrado** al ir a sembrar los 10 usuarios reales de EFFORT (tarea 57
 ampliada). Verificado con `grep` sobre las rutas, no supuesto:
@@ -604,3 +604,52 @@ exactamente el retrabajo que Daniel pidió evitar.
 **Nota:** el usuario `effort360` pudo entrar porque su secreto TOTP se
 cargó directamente en la base con un script, no por un flujo del producto.
 Es la prueba de que el hueco existe.
+
+**Cerrado el mismo día.** Construido lo que faltaba, backend e interfaz:
+
+1. `POST /api/v1/mi/segundo-factor` entrega el secreto **una sola vez**. Si ya
+   hay uno configurado responde 409 y no lo regenera: hacerlo con la sesión de
+   la víctima es justo el ataque que el segundo factor debería frenar. La
+   condición está en la propia consulta (`where: { secretoTotp: null }`), no
+   solo en la ruta.
+2. `POST /api/v1/mi/segundo-factor/confirmar` exige un código real del
+   dispositivo antes de activar. Guardar el secreto no prueba que la persona
+   llegó a cargarlo en su aplicación; si se activara al entregarlo, quien
+   cierra la pantalla a mitad de camino quedaría bloqueado con un secreto que
+   nadie tiene.
+3. `POST /api/v1/mi/contrasena` exige la contraseña actual y cierra **todas**
+   las sesiones, incluida la propia: si alguien más conocía la vieja y tenía
+   sesión abierta, el cambio tiene que echarlo.
+
+El login ya no responde 403 sin sesión cuando falta configurar el segundo
+factor: emite una sesión **pendiente**. `evaluarSesion` ya la rechazaba para
+toda ruta de negocio (devuelve `SEGUNDO_FACTOR_PENDIENTE`, no `VIGENTE`), así
+que lo único que habilita es configurar el propio segundo factor — se
+aprovechó una garantía que ya existía en vez de agregar un estado nuevo.
+
+`debeCambiarContrasena` se hace cumplir con una **guarda global** en el
+`preHandler`, con una lista corta de rutas permitidas, no ruta por ruta: mismo
+criterio que el hook de CSRF, porque una ruta nueva que se olvide de
+comprobarlo es exactamente cómo se abre un agujero sin que nadie lo note.
+
+**Verificado, no asumido:** 12 tests nuevos en `apps/api/test/mi-cuenta.test.ts`,
+6 en `apps/web/test/CredencialesPropias.test.tsx`, y sobre todo
+`e2e/pruebas/primer-acceso.spec.ts` — que recorre el camino entero en un
+navegador real contra servidor y base reales: entra con la contraseña inicial,
+**lee el secreto de la pantalla** (no uno hardcodeado, así comprueba que lo que
+se le muestra a la persona sirve de verdad), lo confirma, cambia la contraseña,
+comprueba que la vieja ya no sirve y vuelve a entrar con la nueva.
+
+Queda pendiente, y es una decisión de EFFORT, no un hueco: **qué hacer si
+alguien pierde su dispositivo**. Hoy no hay forma de regenerar un segundo
+factor ya configurado, a propósito. Corresponde un procedimiento con dirección
+de por medio, no un botón de autoservicio.
+
+**Variante del mismo problema, 2026-09-10:** con el proyecto **despierto y
+respondiendo**, dos corridas fallaron igual por saturación momentánea del
+pooler, no por pausa: `npx playwright test` no pudo ni crear el esquema
+temporal (`Can't reach database server`), y `test:integration` cortó con
+`Transaction API error: Unable to start a transaction in the given time` en
+`reemplazarCartera` — código que nadie había tocado. Las dos pasaron al
+reintentar sin cambiar nada (3/3 y 106/106). Antes de investigar un fallo
+así como si fuera de código: **reintentar una vez**. Si pasa, era esto.
