@@ -24,6 +24,7 @@ import {
 } from '../api/liquidaciones.js';
 import { useSesion } from '../contexts/SesionContext.js';
 import { hoyEnParaguay } from '@effort/core';
+import { periodoSchema } from '@effort/schema';
 
 const ROLES_QUE_EDITAN = new Set(['direccion', 'responsable', 'coordinador']);
 
@@ -88,6 +89,12 @@ export default function Liquidaciones() {
   const [fechaRespuesta, setFechaRespuesta] = useState('');
 
   async function recargar() {
+    if (!periodoSchema.safeParse(periodo).success) {
+      setClientes([]);
+      setLiquidaciones([]);
+      setCargando(false);
+      return;
+    }
     setCargando(true);
     setError(null);
     try {
@@ -222,10 +229,9 @@ export default function Liquidaciones() {
           <CampoTexto
             id="periodo"
             etiqueta="Período"
+            type="month"
             value={periodo}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPeriodo(e.target.value)}
-            pattern="\d{4}-\d{2}"
-            placeholder="2026-03"
             className="w-40"
           />
           {puedeEditar && (

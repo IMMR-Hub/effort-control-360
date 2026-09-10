@@ -15,6 +15,8 @@ import { ShieldCheck } from 'lucide-react';
 
 import { formatearGs, gs, hoyEnParaguay } from '@effort/core';
 
+import { periodoSchema } from '@effort/schema';
+
 import { Badge, Boton, CampoTexto, EncabezadoTarjeta, Indicador, Tabla, Tarjeta, Td, Th } from '../ui/Primitivos.jsx';
 import { ErrorDeApi } from '../api/cliente.js';
 import { listarClientes, type Cliente } from '../api/clientes.js';
@@ -135,6 +137,12 @@ export default function Balances() {
   const [aprobando, setAprobando] = useState(false);
 
   async function cargarTablero() {
+    if (!periodoSchema.safeParse(periodo).success) {
+      setClientes([]);
+      setBalances([]);
+      setCargando(false);
+      return;
+    }
     setCargando(true);
     setError(null);
     try {
@@ -267,10 +275,9 @@ export default function Balances() {
         <CampoTexto
           id="periodo"
           etiqueta="Período"
+          type="month"
           value={periodo}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPeriodo(e.target.value)}
-          pattern="\d{4}-\d{2}"
-          placeholder="2026-03"
           className="w-40"
         />
       </div>

@@ -30,6 +30,7 @@ import {
 } from '../api/siga.js';
 import { useSesion } from '../contexts/SesionContext.js';
 import { hoyEnParaguay } from '@effort/core';
+import { periodoSchema } from '@effort/schema';
 
 const ROLES_QUE_IMPORTAN = new Set(['direccion', 'responsable', 'coordinador', 'auxiliar']);
 
@@ -115,7 +116,10 @@ export default function Siga() {
   }, []);
 
   async function recargarExportaciones() {
-    if (!clienteId) return;
+    if (!clienteId || !periodoSchema.safeParse(periodo).success) {
+      setExportaciones([]);
+      return;
+    }
     setCargandoExportaciones(true);
     try {
       const { exportaciones: lista } = await listarExportaciones(clienteId, periodo);
@@ -128,7 +132,10 @@ export default function Siga() {
   }
 
   async function recargarConciliacion() {
-    if (!clienteId) return;
+    if (!clienteId || !periodoSchema.safeParse(periodo).success) {
+      setConciliacion(null);
+      return;
+    }
     setCargandoConciliacion(true);
     try {
       const datos = await obtenerConciliacion(clienteId, periodo);
@@ -248,11 +255,10 @@ export default function Siga() {
             </label>
             <input
               id="periodo"
+              type="month"
               value={periodo}
               onChange={(e) => setPeriodo(e.target.value)}
-              pattern="\d{4}-\d{2}"
-              placeholder="2026-03"
-              className="min-h-9 w-32 rounded border border-borde-fuerte bg-superficie px-3 py-1.5 text-sm text-tinta focus-visible:outline-none"
+              className="min-h-9 w-40 rounded border border-borde-fuerte bg-superficie px-3 py-1.5 text-sm text-tinta focus-visible:outline-none"
             />
           </div>
         </div>

@@ -11,6 +11,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import { hoyEnParaguay } from '@effort/core';
+import { periodoSchema } from '@effort/schema';
 
 import { Badge, CampoTexto, EncabezadoTarjeta, Indicador, Tabla, Tarjeta, Td, Th } from '../ui/Primitivos.jsx';
 import { ETIQUETA_NIVEL_ALERTA, ETIQUETA_CRITICIDAD, TONO_NIVEL_ALERTA, TONO_CRITICIDAD } from '../ui/etiquetas.js';
@@ -58,6 +59,14 @@ export default function Panel() {
   const [liquidaciones, setLiquidaciones] = useState<readonly Liquidacion[]>([]);
 
   async function recargar() {
+    if (!periodoSchema.safeParse(periodo).success) {
+      setClientes([]);
+      setSolicitudes([]);
+      setBalances([]);
+      setLiquidaciones([]);
+      setCargando(false);
+      return;
+    }
     setCargando(true);
     setError(null);
     try {
@@ -149,10 +158,9 @@ export default function Panel() {
         <CampoTexto
           id="periodoPanel"
           etiqueta="Período"
+          type="month"
           value={periodo}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPeriodo(e.target.value)}
-          pattern="\d{4}-\d{2}"
-          placeholder="2026-03"
           className="w-40"
         />
       </div>

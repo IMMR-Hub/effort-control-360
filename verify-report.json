@@ -1,13 +1,13 @@
 {
-  "generado_en": "2026-09-07T13:21:59.339Z",
-  "commit": "4285d4f31e2bf8f0c97b26ef6e3ada5ffdf72200",
+  "generado_en": "2026-09-10T18:09:54.093Z",
+  "commit": "5b22cdd4359061c9f946d97f3b804fdc0592741a",
   "checks": [
     {
       "nombre": "typecheck",
       "comando": "npx tsc --build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 1920,
+      "duracion_ms": 1525,
       "detalle": ""
     },
     {
@@ -15,39 +15,39 @@
       "comando": "npm run typecheck --workspace @effort/web",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 5128,
+      "duracion_ms": 5783,
       "detalle": ""
     },
     {
       "nombre": "test:unit",
       "comando": "npx vitest run",
-      "estado": "FALLO",
-      "exit_code": 1,
-      "duracion_ms": 70649,
-      "detalle": "9m=\u001b[32m\"archivo\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"file\"\u001b[39m\n              \u001b[36m/>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<button\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"inline-flex min-h-9 items-center justify-center gap-2 rounded border px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 bg-superficie text-tinta border-borde-fuerte hover:bg-superficie-hundida active:bg-superficie-tenue \"\u001b[39m\n              \u001b[33mdisabled\u001b[39m=\u001b[32m\"\"\u001b[39m\n              \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<svg\u001b[39m\n                \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-cloud-upload\"\u001b[39m\n                \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                \u001b[33mheight\u001b[39m=\u001b[32m\"15\"\u001b[39m\n                \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                \u001b[33mwidth\u001b[39m=\u001b[32m\"15\"\u001b[39m\n                \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<path\u001b[39m\n                  \u001b[33md\u001b[39m=\u001b[32m\"M12 13v8\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n                \u001b[36m<path\u001b[39m\n                  \u001b[33md\u001b[39m=\u001b[32m\"M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n                \u001b[36m<path\u001b[39m\n                  \u001b[33md\u001b[39m=\u001b[32m\"m8 17 4-4 4 4\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n              \u001b[36m</svg>\u001b[39m\n              \u001b[0mSimular (no guarda nada)\u001b[0m\n            \u001b[36m</button>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n        \u001b[36m</section>\u001b[39m\n        \u001b[36m<section\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"rounded-md border border-borde bg-superficie shadow-1 \"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<header\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"flex flex-wrap items-start justify-between gap-3 border-b border-borde px-5 py-4\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div>\u001b[39m\n              \u001b[36m<h2\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-sm font-semibold text-tinta\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mConciliación\u001b[0m\n              \u001b[36m</h2>\u001b[39m\n              \u001b[36m<p\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"mt-0.5 text-xs text-tinta-tenue\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mSolo lectura: compara y señala, no ajusta nada.\u001b[0m\n              \u001b[36m</p>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n          \u001b[36m</header>\u001b[39m\n          \u001b[36m<p\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"px-5 py-8 text-center text-sm text-tinta-tenue\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mElegí un cliente para conciliar.\u001b[0m\n          \u001b[36m</p>\u001b[39m\n        \u001b[36m</section>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</main>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n\u001b[36m</body>\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:\u001b[2m37:19\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:\u001b[2m76:38\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:\u001b[2m52:17\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:\u001b[2m95:19\u001b[22m\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m test/Siga.test.tsx:\u001b[2m129:19\u001b[22m\u001b[39m\n    \u001b[90m127| \u001b[39m    \u001b[35mawait\u001b[39m \u001b[34mmontar\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m128| \u001b[39m\n    \u001b[90m129| \u001b[39m    \u001b[34mexpect\u001b[39m(screen\u001b[33m.\u001b[39m\u001b[34mgetByText\u001b[39m(\u001b[32m'IMPORTADA'\u001b[39m))\u001b[33m.\u001b[39m\u001b[34mtoBeVisible\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m   | \u001b[39m                  \u001b[31m^\u001b[39m\n    \u001b[90m130| \u001b[39m    \u001b[34mexpect\u001b[39m(screen\u001b[33m.\u001b[39m\u001b[34mgetAllByText\u001b[39m(\u001b[32m'Nada pendiente.'\u001b[39m))\u001b[33m.\u001b[39m\u001b[34mtoHaveLength\u001b[39m(\u001b[34m3\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m131| \u001b[39m  })\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯\u001b[22m\u001b[39m"
+      "estado": "OK",
+      "exit_code": 0,
+      "duracion_ms": 114489,
+      "detalle": ""
     },
     {
       "nombre": "verify:accounting",
       "comando": "npx vitest run packages/core/test/golden.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 9060,
+      "duracion_ms": 4889,
       "detalle": ""
     },
     {
       "nombre": "lint",
       "comando": "npx eslint .",
-      "estado": "OK",
-      "exit_code": 0,
-      "duracion_ms": 6874,
-      "detalle": ""
+      "estado": "FALLO",
+      "exit_code": 1,
+      "duracion_ms": 38618,
+      "detalle": "C:\\Users\\Daniel\\NexusFlow AI\\effort-control-360\\apps\\api\\scratchpad_check_docs.mjs\n   5:1  error  'console' is not defined  no-undef\n   6:1  error  'console' is not defined  no-undef\n  10:1  error  'console' is not defined  no-undef\n  14:3  error  'console' is not defined  no-undef\n\nC:\\Users\\Daniel\\NexusFlow AI\\effort-control-360\\apps\\api\\scratchpad_check_periodos.mjs\n   5:1  error  'console' is not defined  no-undef\n  10:3  error  'console' is not defined  no-undef\n  11:3  error  'console' is not defined  no-undef\n  13:3  error  'console' is not defined  no-undef\n\nC:\\Users\\Daniel\\NexusFlow AI\\effort-control-360\\apps\\api\\scratchpad_check_user.mjs\n  12:1  error  'console' is not defined  no-undef\n\n✖ 9 problems (9 errors, 0 warnings)"
     },
     {
       "nombre": "verify:rbac",
       "comando": "npx vitest run apps/api/test/rbac.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4466,
+      "duracion_ms": 4035,
       "detalle": ""
     },
     {
@@ -55,7 +55,7 @@
       "comando": "npx vitest run apps/api/test/seguridad.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4876,
+      "duracion_ms": 4581,
       "detalle": ""
     },
     {
@@ -63,7 +63,7 @@
       "comando": "npx vitest run packages/schema/test/contratos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4090,
+      "duracion_ms": 5903,
       "detalle": ""
     },
     {
@@ -71,7 +71,7 @@
       "comando": "npx vitest run apps/api/test/servidor.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7291,
+      "duracion_ms": 7420,
       "detalle": ""
     },
     {
@@ -79,7 +79,7 @@
       "comando": "npx vitest run apps/api/test/modulos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 31628,
+      "duracion_ms": 33712,
       "detalle": ""
     },
     {
@@ -87,7 +87,7 @@
       "comando": "npx vitest run apps/api/test/siga.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 10112,
+      "duracion_ms": 9303,
       "detalle": ""
     },
     {
@@ -95,7 +95,7 @@
       "comando": "npx vitest run apps/api/test/importaciones.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7798,
+      "duracion_ms": 8066,
       "detalle": ""
     },
     {
@@ -103,7 +103,7 @@
       "comando": "npx vitest run --project integracion",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 81884,
+      "duracion_ms": 88402,
       "detalle": ""
     },
     {
@@ -111,7 +111,7 @@
       "comando": "npx vitest run --project drive",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3358,
+      "duracion_ms": 4783,
       "detalle": ""
     },
     {
@@ -119,7 +119,7 @@
       "comando": "npx vitest run --project importers",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3836,
+      "duracion_ms": 5936,
       "detalle": ""
     },
     {
@@ -127,7 +127,7 @@
       "comando": "npx vitest run --project web",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 26105,
+      "duracion_ms": 34128,
       "detalle": ""
     },
     {
@@ -135,7 +135,7 @@
       "comando": "node scripts/verificar-kpi.mjs",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 141,
+      "duracion_ms": 131,
       "detalle": ""
     },
     {
@@ -143,7 +143,7 @@
       "comando": "npm run typecheck:e2e",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4139,
+      "duracion_ms": 3661,
       "detalle": ""
     },
     {
@@ -151,7 +151,7 @@
       "comando": "npx playwright test",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 133747,
+      "duracion_ms": 72986,
       "detalle": ""
     },
     {
@@ -159,15 +159,15 @@
       "comando": "npm audit --audit-level=high",
       "estado": "FALLO",
       "exit_code": 1,
-      "duracion_ms": 10547,
-      "detalle": "# npm audit report\n\nbrowserslist  <=4.28.6\nSeverity: high\nBrowserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM - https://github.com/advisories/GHSA-c83g-rgw3-j3cx\nBrowserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats) - https://github.com/advisories/GHSA-73wf-gq98-2v4g\nfix available via `npm audit fix`\nnode_modules/browserslist\n\ndeepmerge-ts  <8.0.0\nSeverity: high\nDeepmergeTS has stack exhaustion when merging recursive object graphs - https://github.com/advisories/GHSA-ggr8-5vv4-36mx\nfix available via `npm audit fix --force`\nWill install prisma@6.12.0, which is a breaking change\nnode_modules/deepmerge-ts\n  @prisma/config  6.13.0-dev.1 - 8.1.0-dev.4\n  Depends on vulnerable versions of deepmerge-ts\n  apps/api/node_modules/@prisma/config\n    prisma  6.13.0-dev.1 - 8.1.0-dev.4\n    Depends on vulnerable versions of @prisma/config\n    apps/api/node_modules/prisma\n\nfast-uri  3.0.0 - 3.1.5 || 4.0.0 - 4.1.2\nSeverity: high\nfast-uri vulnerable to host confusion via skipped IDN canonicalization on scheme-relative references - https://github.com/advisories/GHSA-5jgf-p345-68v8\nfast-uri vulnerable to host confusion via skipped IDN canonicalization on scheme-relative references - https://github.com/advisories/GHSA-5jgf-p345-68v8\nfast-uri vulnerable to server-side request forgery via malformed IPv6 normalization - https://github.com/advisories/GHSA-f65p-4m7j-42xc\nfast-uri vulnerable to server-side request forgery via malformed IPv6 normalization - https://github.com/advisories/GHSA-f65p-4m7j-42xc\nfast-uri vulnerable to server-side request forgery via repeated hostname percent-decoding - https://github.com/advisories/GHSA-fph4-wmhf-6fwf\nfast-uri vulnerable to server-side request forgery via repeated hostname percent-decoding - https://github.com/advisories/GHSA-fph4-wmhf-6fwf\nfast-uri vulnerable to host confusion via percent-encoded scheme normalization - https://github.com/advisories/GHSA-jqff-g426-hqxp\nfast-uri vulnerable to host confusion via percent-encoded scheme normalization - https://github.com/advisories/GHSA-jqff-g426-hqxp\nfix available via `npm audit fix`\nnode_modules/fast-json-stringify/node_modules/ajv/node_modules/fast-uri\nnode_modules/fast-json-stringify/node_modules/fast-uri\nnode_modules/fast-uri\n\nfastify  <=5.12.0\nSeverity: moderate\nfastify vulnerable to schema validation bypass via root primitive coercion mismatch - https://github.com/advisories/GHSA-w2qp-rph6-63g4\nfastify vulnerable to X-Forwarded-* spoofing under trustProxy hop-count - https://github.com/advisories/GHSA-3m5p-2c4r-xxw2\nfix available via `npm audit fix`\nnode_modules/fastify\n\nuuid  <11.1.1\nSeverity: moderate\nuuid: Missing buffer bounds check in v3/v5/v6 when buf is provided - https://github.com/advisories/GHSA-w5hq-g745-h8pq\nfix available via `npm audit fix --force`\nWill install exceljs@3.4.0, which is a breaking change\nnode_modules/uuid\n  exceljs  >=3.5.0\n  Depends on vulnerable versions of uuid\n  node_modules/exceljs\n\n8 vulnerabilities (3 moderate, 5 high)\n\nTo address issues that do not require attention, run:\n  npm audit fix\n\nTo address all issues (including breaking changes), run:\n  npm audit fix --force"
+      "duracion_ms": 18846,
+      "detalle": "pm audit fix --force`\nWill install vitest@5.0.0, which is a breaking change\nnode_modules/@vitest/mocker\n  vitest  2.1.0-beta.1 - 4.1.10\n  Depends on vulnerable versions of @vitest/mocker\n  node_modules/vitest\n    @vitest/coverage-v8  2.1.0-beta.1 - 4.1.10\n    Depends on vulnerable versions of vitest\n    node_modules/@vitest/coverage-v8\n\nbrowserslist  <=4.28.6\nSeverity: high\nBrowserslist: Unbounded memory growth (no cache eviction) via distinct query results, leading to eventual OOM - https://github.com/advisories/GHSA-c83g-rgw3-j3cx\nBrowserslist: Uncaught crash / prototype write via untrusted browserslist-stats.json custom stats (normalizeStats) - https://github.com/advisories/GHSA-73wf-gq98-2v4g\nfix available via `npm audit fix`\nnode_modules/browserslist\n\ncsv-parse  <7.0.2\nSeverity: moderate\nnode-csv: Prototype replacement still reachable via columns path - https://github.com/advisories/GHSA-8cw4-87c7-c6xx\nfix available via `npm audit fix`\nnode_modules/csv-parse\n\ndeepmerge-ts  <8.0.0\nSeverity: high\nDeepmergeTS has stack exhaustion when merging recursive object graphs - https://github.com/advisories/GHSA-ggr8-5vv4-36mx\nfix available via `npm audit fix --force`\nWill install prisma@6.12.0, which is a breaking change\nnode_modules/deepmerge-ts\n  @prisma/config  6.13.0-dev.1 - 8.1.0-dev.4\n  Depends on vulnerable versions of deepmerge-ts\n  apps/api/node_modules/@prisma/config\n    prisma  6.13.0-dev.1 - 8.1.0-dev.4\n    Depends on vulnerable versions of @prisma/config\n    apps/api/node_modules/prisma\n\nfast-uri  3.0.0 - 3.1.5 || 4.0.0 - 4.1.2\nSeverity: high\nfast-uri vulnerable to host confusion via skipped IDN canonicalization on scheme-relative references - https://github.com/advisories/GHSA-5jgf-p345-68v8\nfast-uri vulnerable to host confusion via skipped IDN canonicalization on scheme-relative references - https://github.com/advisories/GHSA-5jgf-p345-68v8\nfast-uri vulnerable to server-side request forgery via malformed IPv6 normalization - https://github.com/advisories/GHSA-f65p-4m7j-42xc\nfast-uri vulnerable to server-side request forgery via malformed IPv6 normalization - https://github.com/advisories/GHSA-f65p-4m7j-42xc\nfast-uri vulnerable to server-side request forgery via repeated hostname percent-decoding - https://github.com/advisories/GHSA-fph4-wmhf-6fwf\nfast-uri vulnerable to server-side request forgery via repeated hostname percent-decoding - https://github.com/advisories/GHSA-fph4-wmhf-6fwf\nfast-uri vulnerable to host confusion via percent-encoded scheme normalization - https://github.com/advisories/GHSA-jqff-g426-hqxp\nfast-uri vulnerable to host confusion via percent-encoded scheme normalization - https://github.com/advisories/GHSA-jqff-g426-hqxp\nfix available via `npm audit fix`\nnode_modules/fast-json-stringify/node_modules/ajv/node_modules/fast-uri\nnode_modules/fast-json-stringify/node_modules/fast-uri\nnode_modules/fast-uri\n\nfastify  <=5.12.0\nSeverity: moderate\nfastify vulnerable to schema validation bypass via root primitive coercion mismatch - https://github.com/advisories/GHSA-w2qp-rph6-63g4\nfastify vulnerable to X-Forwarded-* spoofing under trustProxy hop-count - https://github.com/advisories/GHSA-3m5p-2c4r-xxw2\nfix available via `npm audit fix`\nnode_modules/fastify\n\njs-yaml  4.0.0 - 4.3.1\nSeverity: high\njs-yaml: maxTotalMergeKeys does not limit CPU use for empty merge sources - https://github.com/advisories/GHSA-2883-xcg3-v3hh\nfix available via `npm audit fix`\nnode_modules/js-yaml\n\nuuid  <11.1.1\nSeverity: moderate\nuuid: Missing buffer bounds check in v3/v5/v6 when buf is provided - https://github.com/advisories/GHSA-w5hq-g745-h8pq\nfix available via `npm audit fix --force`\nWill install exceljs@3.4.0, which is a breaking change\nnode_modules/uuid\n  exceljs  >=3.5.0\n  Depends on vulnerable versions of uuid\n  node_modules/exceljs\n\n\n13 vulnerabilities (7 moderate, 6 high)\n\nTo address issues that do not require attention, run:\n  npm audit fix\n\nTo address all issues (including breaking changes), run:\n  npm audit fix --force"
     },
     {
       "nombre": "build",
       "comando": "npm run build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7555,
+      "duracion_ms": 6671,
       "detalle": ""
     }
   ],

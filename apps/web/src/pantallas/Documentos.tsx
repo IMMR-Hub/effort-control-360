@@ -19,6 +19,7 @@ import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { AlertOctagon, Ban, CheckCircle2, FileText, Plus } from 'lucide-react';
 
 import { formatearGs, gs, hoyEnParaguay } from '@effort/core';
+import { periodoSchema } from '@effort/schema';
 
 import {
   Badge,
@@ -234,6 +235,15 @@ export default function Documentos() {
   const [errorDoc, setErrorDoc] = useState<string | null>(null);
 
   async function cargarTablero() {
+    // Con el selector nativo, un período a medio elegir (o recién borrado)
+    // pasa por acá como '' o algo que no cumple AAAA-MM: no tiene sentido
+    // pedirle nada al servidor todavía, y menos mostrar su error de validación.
+    if (!periodoSchema.safeParse(periodo).success) {
+      setClientes([]);
+      setProcesos([]);
+      setCargando(false);
+      return;
+    }
     setCargando(true);
     setError(null);
     try {
@@ -256,6 +266,10 @@ export default function Documentos() {
   }, [periodo]);
 
   async function cargarDocumentos(clienteId: string) {
+    if (!periodoSchema.safeParse(periodo).success) {
+      setDocumentos([]);
+      return;
+    }
     setCargandoDocumentos(true);
     try {
       const { documentos: lista } = await listarDocumentos(clienteId, periodo);
@@ -420,10 +434,9 @@ export default function Documentos() {
         <CampoTexto
           id="periodo"
           etiqueta="Período"
+          type="month"
           value={periodo}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPeriodo(e.target.value)}
-          pattern="\d{4}-\d{2}"
-          placeholder="2026-03"
           className="w-40"
         />
       </div>
