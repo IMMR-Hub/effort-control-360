@@ -186,7 +186,31 @@ describe('conciliación contra la exportación de SIGA', () => {
     expect(resultado.coincidentes).toBe(2);
   });
 
-  it('dos conjuntos vacíos concilian', () => {
-    expect(conciliarConSiga([], []).conciliado).toBe(true);
+  // Este test afirmaba lo contrario ("dos conjuntos vacíos concilian") y por
+  // eso la pantalla de SIGA mostraba "Conciliado: Sí" en un período donde no se
+  // había importado nada. Un período vacío no está conciliado: no se miró nada.
+  // La diferencia importa porque el indicador verde es lo que habilita a cerrar
+  // el período.
+  it('dos conjuntos vacíos NO concilian: no hay nada que comparar', () => {
+    const resultado = conciliarConSiga([], []);
+
+    expect(resultado.conciliado).toBe(false);
+    expect(resultado.sinDatos).toBe(true);
+  });
+
+  it('un período con datos y sin diferencias sí concilia, y no queda "sin datos"', () => {
+    const mismos = [comprobante({ numero: '001-001-0000001' })];
+    const resultado = conciliarConSiga(mismos, mismos);
+
+    expect(resultado.conciliado).toBe(true);
+    expect(resultado.sinDatos).toBe(false);
+  });
+
+  it('con documentos recibidos pero SIGA vacío no concilia ni es "sin datos"', () => {
+    const resultado = conciliarConSiga([comprobante({ numero: '001-001-0000001' })], []);
+
+    expect(resultado.sinDatos).toBe(false);
+    expect(resultado.conciliado).toBe(false);
+    expect(resultado.faltaCargarEnSiga).toHaveLength(1);
   });
 });

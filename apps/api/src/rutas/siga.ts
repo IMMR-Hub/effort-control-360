@@ -327,6 +327,7 @@ export async function registrarRutasDeSiga(
 
     return {
       periodo,
+      sinDatos: resultado.sinDatos,
       conciliado: resultado.conciliado,
       totalRecibidos: resultado.totalRecibidos,
       totalEnSiga: resultado.totalEnSiga,

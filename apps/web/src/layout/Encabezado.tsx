@@ -29,6 +29,14 @@ export type Pantalla =
 interface EnlaceDeNav {
   readonly id: Pantalla;
   readonly etiqueta: string;
+  /**
+   * Roles que pueden entrar. Sin esto, la pestaña aparece para todos.
+   *
+   * Es solo cosmético: quien decide de verdad es el servidor, que rechaza la
+   * petición igual. Ocultar la pestaña evita que alguien la abra y se choque
+   * con un error que no explica nada.
+   */
+  readonly soloRoles?: readonly string[];
 }
 
 /** Se completa a medida que la tarea 104 va reemplazando el resto de las pantallas. */
@@ -43,7 +51,7 @@ const ENLACES: readonly EnlaceDeNav[] = [
   { id: 'alertas', etiqueta: 'Alertas' },
   { id: 'equipo', etiqueta: 'Equipo' },
   { id: 'reglas', etiqueta: 'Reglas' },
-  { id: 'eventos', etiqueta: 'Eventos' },
+  { id: 'eventos', etiqueta: 'Eventos', soloRoles: ['direccion'] },
   { id: 'panel', etiqueta: 'Panel general' },
 ];
 
@@ -53,7 +61,11 @@ interface Props {
 }
 
 export function Encabezado({ activa, onCambiar }: Props) {
-  const { cerrarSesion } = useSesion();
+  const { cerrarSesion, sesion } = useSesion();
+  const rol = sesion?.rol ?? '';
+  const enlacesVisibles = ENLACES.filter(
+    (enlace) => !enlace.soloRoles || enlace.soloRoles.includes(rol),
+  );
 
   return (
     <header className="sticky top-0 z-20 border-b border-borde bg-superficie/95 backdrop-blur">
@@ -61,7 +73,7 @@ export function Encabezado({ activa, onCambiar }: Props) {
         <div className="flex items-center gap-6">
           <Logotipo />
           <nav aria-label="Navegación principal" className="flex items-center gap-1">
-            {ENLACES.map((enlace) => (
+            {enlacesVisibles.map((enlace) => (
               <button
                 key={enlace.id}
                 type="button"

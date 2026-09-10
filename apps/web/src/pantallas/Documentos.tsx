@@ -286,6 +286,23 @@ export default function Documentos() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clienteSeleccionado, periodo]);
 
+  /**
+   * Preselecciona el primer cliente para que la tabla de documentos se vea al
+   * entrar.
+   *
+   * Antes había que adivinar que la lista de documentos aparecía recién al
+   * hacer clic en una fila del tablero de arriba, sin nada que lo indicara.
+   * Daniel entró el 2026-09-10, eligió septiembre, no vio ningún documento y
+   * concluyó —con razón— que no funcionaba: había 17 documentos de Fumipro y
+   * 15 de Copesa en ese mismo período, a un clic no señalizado de distancia.
+   */
+  useEffect(() => {
+    if (clienteSeleccionado === null && clientes.length > 0) {
+      const primero = clientes.find((cliente) => cliente.activo);
+      if (primero) setClienteSeleccionado(primero.id);
+    }
+  }, [clientes, clienteSeleccionado]);
+
   const filas = useMemo(
     () =>
       clientes
@@ -451,7 +468,7 @@ export default function Documentos() {
       <Tarjeta>
         <EncabezadoTarjeta
           titulo="Proceso mensual"
-          descripcion={`Período ${periodo} · ${filas.length} clientes`}
+          descripcion={`Período ${periodo} · ${filas.length} clientes · hacé clic en un cliente para ver sus documentos`}
         />
         <Tabla etiqueta="Proceso mensual por cliente">
           <thead>
@@ -753,13 +770,28 @@ export default function Documentos() {
         <Tarjeta>
           <EncabezadoTarjeta
             titulo={`Documentos — ${nombreClienteSeleccionado}`}
-            descripcion={`Período ${periodo}`}
+            descripcion={`Período ${periodo} · ${documentos.length} documento${documentos.length === 1 ? '' : 's'}`}
             acciones={
-              puedeCrearDocumento && (
-                <Boton variante="primario" icono={Plus} onClick={abrirAltaDocumento}>
-                  Nuevo documento
-                </Boton>
-              )
+              <div className="flex flex-wrap items-end gap-3">
+                {/* Cambiar de cliente sin volver a la tabla de arriba. */}
+                <CampoSelect
+                  id="clienteDeDocumentos"
+                  etiqueta="Cliente"
+                  opciones={clientes
+                    .filter((cliente) => cliente.activo)
+                    .map((cliente) => ({ valor: cliente.id, etiqueta: cliente.nombre }))}
+                  value={clienteSeleccionado ?? ''}
+                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                    setClienteSeleccionado(e.target.value)
+                  }
+                  className="w-56"
+                />
+                {puedeCrearDocumento && (
+                  <Boton variante="primario" icono={Plus} onClick={abrirAltaDocumento}>
+                    Nuevo documento
+                  </Boton>
+                )}
+              </div>
             }
           />
           {cargandoDocumentos ? (

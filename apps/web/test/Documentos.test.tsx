@@ -79,6 +79,16 @@ const DOCUMENTO_GARSO = {
   observaciones: null,
 };
 
+/**
+ * El nombre del cliente aparece en dos lugares desde que la tarjeta de
+ * documentos tiene su propio selector: en el tablero de arriba y en el
+ * <select>. Estas consultas apuntan siempre al tablero.
+ */
+function filaDelTablero(nombre: string): HTMLElement {
+  const tablero = screen.getByRole("table", { name: "Proceso mensual por cliente" });
+  return within(tablero).getByText(nombre);
+}
+
 let mock: ReturnType<typeof crearFetchMock>;
 let usuario: ReturnType<typeof userEvent.setup>;
 
@@ -118,7 +128,7 @@ async function montar(rol: string = 'direccion') {
     </ProveedorDeSesion>,
   );
 
-  await screen.findByText('GARSO S.A.');
+  await screen.findAllByText('GARSO S.A.');
   // Esperar a que el rol ya se haya aplicado antes de que el test siga.
   await waitFor(() => {
     expect(mock.llamadasA('GET /api/v1/yo')).toHaveLength(1);
@@ -129,10 +139,10 @@ describe('pantalla de documentos / IVA', () => {
   it('el tablero muestra el proceso de cada cliente, y "Sin iniciar" para el que no tiene fila', async () => {
     await montar();
 
-    const filaGarso = screen.getByText('GARSO S.A.').closest('tr')!;
+    const filaGarso = filaDelTablero('GARSO S.A.').closest('tr')!;
     expect(within(filaGarso).getByText('PARCIAL')).toBeVisible();
 
-    const filaSinProceso = screen.getByText('CLIENTE SIN PROCESO S.A.').closest('tr')!;
+    const filaSinProceso = filaDelTablero('CLIENTE SIN PROCESO S.A.').closest('tr')!;
     expect(within(filaSinProceso).getByText('Sin iniciar')).toBeVisible();
   });
 
@@ -145,7 +155,7 @@ describe('pantalla de documentos / IVA', () => {
   it('seleccionar una fila carga los documentos de ese cliente', async () => {
     await montar();
 
-    await usuario.click(screen.getByText('GARSO S.A.'));
+    await usuario.click(filaDelTablero('GARSO S.A.'));
 
     expect(await screen.findByText('Documentos — GARSO S.A.')).toBeVisible();
     expect(screen.getByText('80019012-2 · 12345678 · 001-001-0000001')).toBeVisible();
@@ -154,7 +164,7 @@ describe('pantalla de documentos / IVA', () => {
   it('abrir el panel de un cliente sin proceso precarga el formulario vacío, no undefined', async () => {
     await montar();
 
-    await usuario.click(screen.getByText('CLIENTE SIN PROCESO S.A.'));
+    await usuario.click(filaDelTablero('CLIENTE SIN PROCESO S.A.'));
 
     expect(await screen.findByLabelText('Documentos recibidos')).toHaveValue(0);
     expect(screen.getByLabelText('Estado general')).toHaveValue('PENDIENTE');
@@ -163,7 +173,7 @@ describe('pantalla de documentos / IVA', () => {
   it('un rol sin permiso de edición no ve el panel de proceso mensual', async () => {
     await montar('revisor_balance');
 
-    await usuario.click(screen.getByText('GARSO S.A.'));
+    await usuario.click(filaDelTablero('GARSO S.A.'));
 
     expect(await screen.findByText('Documentos — GARSO S.A.')).toBeVisible();
     expect(screen.queryByLabelText('Estado general')).not.toBeInTheDocument();
@@ -172,7 +182,7 @@ describe('pantalla de documentos / IVA', () => {
   it('un rol sin permiso de edición tampoco ve los botones de cambiar estado del documento', async () => {
     await montar('auxiliar');
 
-    await usuario.click(screen.getByText('GARSO S.A.'));
+    await usuario.click(filaDelTablero('GARSO S.A.'));
 
     expect(await screen.findByText('Documentos — GARSO S.A.')).toBeVisible();
     expect(screen.queryByRole('button', { name: /cargado en SIGA/ })).not.toBeInTheDocument();
@@ -183,7 +193,7 @@ describe('pantalla de documentos / IVA', () => {
   it('guardar el proceso mensual manda el saldo de IVA como texto, no como número', async () => {
     await montar();
 
-    await usuario.click(screen.getByText('GARSO S.A.'));
+    await usuario.click(filaDelTablero('GARSO S.A.'));
     await screen.findByLabelText('Estado general');
 
     mock.mockDeRuta(`PUT /api/v1/clientes/cli-garso/proceso-mensual/${PERIODO}`, () =>
@@ -208,7 +218,7 @@ describe('pantalla de documentos / IVA', () => {
   it('marcar un documento como cargado en SIGA llama a la ruta de cambio de estado', async () => {
     await montar();
 
-    await usuario.click(screen.getByText('GARSO S.A.'));
+    await usuario.click(filaDelTablero('GARSO S.A.'));
     await screen.findByText('80019012-2 · 12345678 · 001-001-0000001');
 
     mock.mockDeRuta('PATCH /api/v1/documentos/doc-1/estado', () =>
@@ -228,7 +238,7 @@ describe('pantalla de documentos / IVA', () => {
     await montar();
     vi.spyOn(window, 'prompt').mockReturnValue('Falta la firma del RUC.');
 
-    await usuario.click(screen.getByText('GARSO S.A.'));
+    await usuario.click(filaDelTablero('GARSO S.A.'));
     await screen.findByText('80019012-2 · 12345678 · 001-001-0000001');
 
     mock.mockDeRuta('PATCH /api/v1/documentos/doc-1/estado', () =>
@@ -287,7 +297,7 @@ describe('pantalla de documentos / IVA', () => {
     await montar();
     vi.spyOn(window, 'prompt').mockReturnValue(null);
 
-    await usuario.click(screen.getByText('GARSO S.A.'));
+    await usuario.click(filaDelTablero('GARSO S.A.'));
     await screen.findByText('80019012-2 · 12345678 · 001-001-0000001');
 
     await usuario.click(screen.getByRole('button', { name: /^Rechazar/ }));

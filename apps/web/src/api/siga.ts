@@ -122,6 +122,7 @@ export interface DiferenciaDeMonto {
 
 export interface Conciliacion {
   readonly periodo: string;
+  readonly sinDatos: boolean;
   readonly conciliado: boolean;
   readonly totalRecibidos: number;
   readonly totalEnSiga: number;

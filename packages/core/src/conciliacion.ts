@@ -32,7 +32,23 @@ export interface ResultadoConciliacion {
   readonly coincidentes: number;
   readonly totalRecibidos: number;
   readonly totalEnSiga: number;
-  /** True solo si no hay ninguna diferencia de ningún tipo. */
+  /**
+   * No hay nada que comparar: ni documentos recibidos ni filas de SIGA.
+   *
+   * Se informa aparte de `conciliado` porque son cosas distintas y confundirlas
+   * es peligroso: "no encontré diferencias" y "no miré nada" se ven igual en un
+   * indicador verde, y el segundo caso no autoriza a cerrar un período.
+   */
+  readonly sinDatos: boolean;
+  /**
+   * True solo si había algo que comparar y no hay ninguna diferencia.
+   *
+   * Un período vacío NO concilia. Antes sí lo hacía —las tres listas de
+   * diferencias estaban vacías, así que la condición se cumplía sola— y la
+   * pantalla mostraba "Conciliado: Sí" sobre un período en el que no se había
+   * importado nada. Daniel lo detectó el 2026-09-10 al ver "CONCILIADO" junto
+   * a "Todavía no se importó ninguna exportación para este período".
+   */
   readonly conciliado: boolean;
 }
 
@@ -93,7 +109,9 @@ export function conciliarConSiga(
     coincidentes,
     totalRecibidos: indiceRecibidos.size,
     totalEnSiga: indiceSiga.size,
+    sinDatos: indiceRecibidos.size === 0 && indiceSiga.size === 0,
     conciliado:
+      (indiceRecibidos.size > 0 || indiceSiga.size > 0) &&
       faltaCargarEnSiga.length === 0 &&
       sinRespaldoDocumental.length === 0 &&
       diferenciasDeMonto.length === 0,

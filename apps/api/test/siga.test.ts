@@ -356,10 +356,16 @@ describe('conciliación contra SIGA', () => {
     expect(resultado['conciliado']).toBe(true);
   });
 
-  it('un período sin nada concilia en vacío', async () => {
+  // Este test afirmaba que un período vacío "concilia en vacío". Por eso la
+  // pantalla mostraba "Conciliado: Sí" junto a "Todavía no se importó ninguna
+  // exportación para este período" — lo que Daniel señaló el 2026-09-10. No
+  // haber encontrado diferencias y no haber mirado nada se veían igual, y solo
+  // uno de los dos casos autoriza a cerrar un período.
+  it('un período sin nada NO concilia: queda como "sin datos"', async () => {
     const resultado = await conciliar();
 
-    expect(resultado['conciliado']).toBe(true);
+    expect(resultado['conciliado']).toBe(false);
+    expect(resultado['sinDatos']).toBe(true);
     expect(resultado['totalRecibidos']).toBe(0);
     expect(resultado['totalEnSiga']).toBe(0);
   });

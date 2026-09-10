@@ -1660,17 +1660,19 @@ describe('reglas de notificación', () => {
 });
 
 describe('eventos (event log)', () => {
-  it('dirección, responsable y revisor pueden consultar el historial', async () => {
-    for (const cookie of [direccion, responsable, revisor]) {
-      const respuesta = await ctx.app.inject({
-        method: 'GET', url: '/api/v1/eventos', headers: { cookie },
-      });
-      expect(respuesta.statusCode).toBe(200);
-    }
+  it('solo dirección puede consultar el historial', async () => {
+    const respuesta = await ctx.app.inject({
+      method: 'GET', url: '/api/v1/eventos', headers: { cookie: direccion },
+    });
+    expect(respuesta.statusCode).toBe(200);
   });
 
-  it('coordinador, auxiliar y solo_lectura no tienen acceso al historial', async () => {
-    for (const cookie of [coordinador, auxiliar, soloLectura]) {
+  // Restringido el 2026-09-10 a pedido de Daniel: antes `responsable` y
+  // `revisor_balance` también entraban. La bitácora registra quién hizo cada
+  // cosa, y eso incluye el trabajo de los compañeros — quién puede leerla
+  // cambia lo que la herramienta significa para el equipo.
+  it('ningún otro rol accede al historial, ni siquiera responsable o revisor', async () => {
+    for (const cookie of [responsable, revisor, coordinador, auxiliar, soloLectura]) {
       const respuesta = await ctx.app.inject({
         method: 'GET', url: '/api/v1/eventos', headers: { cookie },
       });

@@ -41,6 +41,19 @@ const EVENTO_BALANCE = {
   ocurridoEn: '2026-08-15T13:30:00.000Z',
 };
 
+/** La bitácora muestra el nombre de la persona, no su id. */
+const USUARIO_LAURA = {
+  id: 'usr-1',
+  nombre: 'Laura',
+  apellido: 'Sosa',
+  email: 'lsosa@effort.com.py',
+  telefono: null,
+  cargo: null,
+  rol: 'direccion',
+  activo: true,
+  veTodosLosClientes: true,
+};
+
 let mock: ReturnType<typeof crearFetchMock>;
 let usuario: ReturnType<typeof userEvent.setup>;
 
@@ -60,6 +73,7 @@ async function montar(rol: string = 'direccion') {
   );
   mock.mockDeRuta('GET /api/v1/csrf', () => respuestaJson({ csrfToken: 'token-de-prueba' }));
   mock.mockDeRuta('GET /api/v1/clientes', () => respuestaJson({ clientes: [GARSO] }));
+  mock.mockDeRuta('GET /api/v1/usuarios', () => respuestaJson({ usuarios: [USUARIO_LAURA] }));
   mock.mockDeRuta('GET /api/v1/eventos', () => respuestaJson({ eventos: [EVENTO_BALANCE] }));
 
   vi.resetModules();
@@ -94,6 +108,7 @@ describe('pantalla de eventos', () => {
     );
     mock.mockDeRuta('GET /api/v1/csrf', () => respuestaJson({ csrfToken: 'token-de-prueba' }));
     mock.mockDeRuta('GET /api/v1/clientes', () => respuestaJson({ clientes: [GARSO] }));
+  mock.mockDeRuta('GET /api/v1/usuarios', () => respuestaJson({ usuarios: [USUARIO_LAURA] }));
     mock.mockDeRuta('GET /api/v1/eventos', () =>
       respuestaJson({ error: 'no_autorizado', mensaje: 'No tenés permiso para realizar esta acción.' }, { status: 403 }),
     );
@@ -150,6 +165,7 @@ describe('pantalla de eventos', () => {
     );
     mock.mockDeRuta('GET /api/v1/csrf', () => respuestaJson({ csrfToken: 'token-de-prueba' }));
     mock.mockDeRuta('GET /api/v1/clientes', () => respuestaJson({ clientes: [GARSO] }));
+  mock.mockDeRuta('GET /api/v1/usuarios', () => respuestaJson({ usuarios: [USUARIO_LAURA] }));
 
     vi.resetModules();
     const { ProveedorDeSesion } = await import('../src/contexts/SesionContext.js');

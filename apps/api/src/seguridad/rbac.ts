@@ -69,6 +69,14 @@ export const MATRIZ: MatrizDePermisos = Object.freeze({
     solicitud: ['ver', 'crear', 'cerrar', 'exportar'],
     contacto: ['ver', 'crear', 'exportar'],
     constancia: ['ver', 'exportar'],
+    /**
+     * La bitácora la ve SOLO dirección (Daniel, Lili y Laura).
+     *
+     * Restringido el 2026-09-10 a pedido de Daniel: antes también la veían
+     * `responsable` y `revisor_balance`. Registra quién hizo cada cosa, y eso
+     * incluye el trabajo de los compañeros — que todo el equipo pueda leerlo
+     * cambia lo que la herramienta significa para quienes la usan.
+     */
     evento: ['ver', 'exportar'],
     configuracion: ['ver', 'editar'],
     regla_impositiva: ['ver', 'crear', 'editar'],
@@ -93,7 +101,6 @@ export const MATRIZ: MatrizDePermisos = Object.freeze({
     solicitud: ['ver', 'crear', 'cerrar', 'exportar'],
     contacto: ['ver', 'crear', 'exportar'],
     constancia: ['ver', 'exportar'],
-    evento: ['ver'],
     configuracion: ['ver'],
     regla_impositiva: ['ver'],
   },
@@ -149,7 +156,6 @@ export const MATRIZ: MatrizDePermisos = Object.freeze({
     solicitud: ['ver'],
     contacto: ['ver'],
     constancia: ['ver'],
-    evento: ['ver'],
     regla_impositiva: ['ver'],
   },
 

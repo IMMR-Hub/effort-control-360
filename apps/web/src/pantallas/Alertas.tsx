@@ -9,7 +9,7 @@
  */
 
 import { useEffect, useMemo, useState } from 'react';
-import { CheckCircle2, RefreshCw } from 'lucide-react';
+import { CalendarCheck, CheckCircle2, RefreshCw } from 'lucide-react';
 
 import { hoyEnParaguay } from '@effort/core';
 
@@ -17,6 +17,7 @@ import { Badge, Boton, EncabezadoTarjeta, Indicador, Tabla, Tarjeta, Td, Th } fr
 import { ETIQUETA_CRITICIDAD, TONO_CRITICIDAD } from '../ui/etiquetas.js';
 import { ErrorDeApi } from '../api/cliente.js';
 import { listarClientes, type Cliente } from '../api/clientes.js';
+import { marcarPresentado } from '../api/vencimientos.js';
 import {
   cerrarAlerta,
   evaluarAlertas,
@@ -88,6 +89,32 @@ export default function Alertas() {
     const mapa = new Map(clientes.map((c) => [c.id, c.nombre]));
     return (clienteId: string | null) => (clienteId ? mapa.get(clienteId) ?? clienteId : '—');
   }, [clientes]);
+
+  /**
+   * Registra la presentación del vencimiento que originó la alerta.
+   *
+   * Al quedar presentado, el vencimiento sale del radar y la alerta se cierra
+   * con un motivo que dice qué pasó -- en vez de quedar cerrada "porque sí",
+   * que es lo que no permite rendir cuentas después.
+   */
+  async function manejarPresentar(alerta: Alerta) {
+    if (!alerta.entidadRelacionadaId) return;
+
+    const hoy = new Date().toISOString().slice(0, 10);
+    const fecha = window.prompt(
+      `¿Qué día se presentó "${alerta.titulo}"? (AAAA-MM-DD)`,
+      alerta.fechaLimite ?? hoy,
+    );
+    if (!fecha || !fecha.trim()) return;
+
+    try {
+      await marcarPresentado(alerta.entidadRelacionadaId, fecha.trim());
+      await cerrarAlerta(alerta.id, `Presentado el ${fecha.trim()}.`);
+      await recargar();
+    } catch (motivo) {
+      setError(motivo instanceof ErrorDeApi ? motivo.message : 'No se pudo conectar con el servidor.');
+    }
+  }
 
   async function manejarCerrar(alerta: Alerta) {
     const motivo = window.prompt(`¿Por qué se cierra "${alerta.titulo}"?`);
@@ -187,14 +214,34 @@ export default function Alertas() {
                 <Td className="cifra text-tinta-suave">{a.fechaLimite ?? '—'}</Td>
                 {puedeCerrar && (
                   <Td>
-                    <Boton
-                      variante="fantasma"
-                      icono={CheckCircle2}
-                      aria-label={`Cerrar alerta: ${a.titulo}`}
-                      onClick={() => void manejarCerrar(a)}
-                    >
-                      Cerrar
-                    </Boton>
+                    <div className="flex gap-1">
+                      {/*
+                        Cerrar una alerta de vencimiento sin registrar la
+                        presentación sería tapar el aviso sin resolver nada: el
+                        vencimiento sigue figurando como no presentado y la
+                        alerta vuelve a levantarse en la próxima evaluación.
+                        Por eso el camino corto es "registrar la presentación",
+                        que además cierra la alerta sola.
+                      */}
+                      {a.entidadRelacionada === 'vencimiento' && a.entidadRelacionadaId && (
+                        <Boton
+                          variante="secundario"
+                          icono={CalendarCheck}
+                          aria-label={`Registrar la presentación de: ${a.titulo}`}
+                          onClick={() => void manejarPresentar(a)}
+                        >
+                          Registrar presentación
+                        </Boton>
+                      )}
+                      <Boton
+                        variante="fantasma"
+                        icono={CheckCircle2}
+                        aria-label={`Cerrar alerta: ${a.titulo}`}
+                        onClick={() => void manejarCerrar(a)}
+                      >
+                        Cerrar
+                      </Boton>
+                    </div>
                   </Td>
                 )}
               </tr>

@@ -274,11 +274,18 @@ export default function Siga() {
             valor={conciliacion.sinIdentificacion}
             tono="pendiente"
           />
+          {/*
+            Tres estados, no dos: "sin datos" no es lo mismo que "hay
+            diferencias", y ninguno de los dos es "conciliado". Mostrarlo como
+            un sí/no hacía que un período sin nada importado apareciera en
+            verde.
+          */}
           <Indicador
             etiqueta="Conciliado"
-            valor={conciliacion.conciliado ? 'Sí' : 'No'}
-            tono={conciliacion.conciliado ? 'completo' : 'critico'}
-            destacado={!conciliacion.conciliado}
+            valor={conciliacion.sinDatos ? 'Sin datos' : conciliacion.conciliado ? 'Sí' : 'No'}
+            detalle={conciliacion.sinDatos ? 'Todavía no hay nada que comparar' : undefined}
+            tono={conciliacion.sinDatos ? 'pendiente' : conciliacion.conciliado ? 'completo' : 'critico'}
+            destacado={!conciliacion.conciliado && !conciliacion.sinDatos}
           />
         </section>
       )}
