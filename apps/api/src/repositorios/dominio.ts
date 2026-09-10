@@ -13,6 +13,7 @@ import type {
   AltaDeDocumento,
   AltaDeReglaDeNotificacion,
   AltaDeReglaImpositiva,
+  AltaDeAlerta,
   AltaDeVencimiento,
   AltaDeVencimientoGenerado,
   ObligacionAlmacenada,
@@ -784,6 +785,37 @@ export class AlertasPrisma implements RepositorioDeAlertas {
     });
 
     return fila as AlertaAlmacenada | null;
+  }
+
+  /**
+   * Alta en lote de lo que detectó el motor.
+   *
+   * `skipDuplicates` se apoya en el índice único parcial `alerta_abierta_unica`
+   * (ver la migración `20260910170000_motor_de_alertas`), que impide dos
+   * alertas ABIERTAS del mismo origen sobre la misma entidad. Es lo que evita
+   * que correr el motor cada 15 minutos llene la pantalla con la misma alerta
+   * repetida hasta volverla inútil — y lo hace la base, no el código que la
+   * llama, que es el único lugar donde no depende de que alguien se acuerde.
+   */
+  async crear(altas: readonly AltaDeAlerta[]): Promise<number> {
+    if (altas.length === 0) return 0;
+
+    const resultado = await this.prisma.alerta.createMany({
+      data: altas.map((alta) => ({
+        clienteId: alta.clienteId,
+        periodo: alta.periodo,
+        origen: alta.origen,
+        criticidad: alta.criticidad as never,
+        titulo: alta.titulo,
+        detalle: alta.detalle,
+        entidadRelacionada: alta.entidadRelacionada,
+        entidadRelacionadaId: alta.entidadRelacionadaId,
+        fechaLimite: alta.fechaLimite,
+      })),
+      skipDuplicates: true,
+    });
+
+    return resultado.count;
   }
 
   async cerrar(

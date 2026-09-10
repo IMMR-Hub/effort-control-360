@@ -11,6 +11,7 @@
 import { randomUUID } from 'node:crypto';
 
 import type {
+  AltaDeAlerta,
   AltaDeVencimientoGenerado,
   ObligacionAlmacenada,
   ObligacionDeClienteAlmacenada,
@@ -674,6 +675,47 @@ export class AlertasFalsas implements RepositorioDeAlertas {
     const alerta = this.alertas.find((candidata) => candidata.id === id);
     if (!alerta || !alcanzaAlerta(filtro, alerta.clienteId)) return null;
     return alerta;
+  }
+
+  /**
+   * Reproduce el índice único parcial de la base: no puede haber dos alertas
+   * ABIERTAS del mismo origen sobre la misma entidad. Sin esto, el doble
+   * aceptaría repetidas que la base real rechaza.
+   */
+  async crear(altas: readonly AltaDeAlerta[]): Promise<number> {
+    let creadas = 0;
+
+    for (const alta of altas) {
+      const yaAbierta = this.alertas.some(
+        (previa) =>
+          previa.origen === alta.origen &&
+          previa.entidadRelacionadaId === alta.entidadRelacionadaId &&
+          alta.entidadRelacionadaId !== null &&
+          ['ABIERTA', 'EN_CURSO'].includes(previa.estado),
+      );
+      if (yaAbierta) continue;
+
+      this.alertas.push({
+        id: randomUUID(),
+        clienteId: alta.clienteId,
+        periodo: alta.periodo,
+        origen: alta.origen,
+        criticidad: alta.criticidad,
+        titulo: alta.titulo,
+        detalle: alta.detalle,
+        entidadRelacionada: alta.entidadRelacionada,
+        entidadRelacionadaId: alta.entidadRelacionadaId,
+        responsableId: null,
+        fechaLimite: alta.fechaLimite,
+        estado: 'ABIERTA',
+        cerradaPorUsuarioId: null,
+        cerradaEn: null,
+        motivoCierre: null,
+      });
+      creadas += 1;
+    }
+
+    return creadas;
   }
 
   async cerrar(

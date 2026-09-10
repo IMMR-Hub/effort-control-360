@@ -515,6 +515,19 @@ export interface AlertaAlmacenada {
   readonly motivoCierre: string | null;
 }
 
+export interface AltaDeAlerta {
+  readonly clienteId: string | null;
+  readonly periodo: string | null;
+  /** Qué regla la levantó: `vencimiento_vencido`, `documentacion_faltante`… */
+  readonly origen: string;
+  readonly criticidad: string;
+  readonly titulo: string;
+  readonly detalle: string;
+  readonly entidadRelacionada: string | null;
+  readonly entidadRelacionadaId: string | null;
+  readonly fechaLimite: Date | null;
+}
+
 export interface RepositorioDeAlertas {
   /**
    * Vista consolidada de la cartera, ordenada por criticidad y luego por
@@ -523,6 +536,19 @@ export interface RepositorioDeAlertas {
    */
   listar(filtro: FiltroDeCartera): Promise<AlertaAlmacenada[]>;
   buscarPorId(id: string, filtro: FiltroDeCartera): Promise<AlertaAlmacenada | null>;
+  /**
+   * Alta en lote de lo que detectó el motor.
+   *
+   * Hasta el 2026-09-10 este método no existía: la tabla `alerta` se podía
+   * leer y cerrar, pero NINGUNA línea del sistema podía crear una. La pantalla
+   * de Alertas iba a estar vacía para siempre, y nadie lo había notado porque
+   * "vacía" se parece mucho a "no hay nada que avisar".
+   *
+   * Devuelve cuántas entraron de verdad: las que ya estaban abiertas para la
+   * misma entidad se saltan, para no volver a avisar de lo mismo cada vez que
+   * el motor corre.
+   */
+  crear(altas: readonly AltaDeAlerta[]): Promise<number>;
   /**
    * Única forma de llegar a `CERRADA`. Exige motivo, usuario y momento: una
    * alerta cerrada sin explicación no se distingue de una que se ignoró.

@@ -9,16 +9,27 @@
  */
 
 import { useEffect, useMemo, useState } from 'react';
-import { CheckCircle2 } from 'lucide-react';
+import { CheckCircle2, RefreshCw } from 'lucide-react';
+
+import { hoyEnParaguay } from '@effort/core';
 
 import { Badge, Boton, EncabezadoTarjeta, Indicador, Tabla, Tarjeta, Td, Th } from '../ui/Primitivos.jsx';
 import { ETIQUETA_CRITICIDAD, TONO_CRITICIDAD } from '../ui/etiquetas.js';
 import { ErrorDeApi } from '../api/cliente.js';
 import { listarClientes, type Cliente } from '../api/clientes.js';
-import { cerrarAlerta, obtenerAlertas, type Alerta, type ResumenPorCriticidad } from '../api/alertas.js';
+import {
+  cerrarAlerta,
+  evaluarAlertas,
+  obtenerAlertas,
+  type Alerta,
+  type ResumenDeEvaluacion,
+  type ResumenPorCriticidad,
+} from '../api/alertas.js';
 import { useSesion } from '../contexts/SesionContext.js';
 
 const ROLES_QUE_CIERRAN = new Set(['direccion', 'responsable', 'coordinador']);
+/** Mismos roles que la matriz de permisos deja pedir una evaluación. */
+const ROLES_QUE_EVALUAN = new Set(['direccion', 'responsable']);
 
 const RESUMEN_VACIO: ResumenPorCriticidad = { CRITICA: 0, ALTA: 0, MEDIA: 0, INFORMATIVA: 0 };
 
@@ -31,6 +42,25 @@ export default function Alertas() {
   const [clientes, setClientes] = useState<readonly Cliente[]>([]);
   const [alertas, setAlertas] = useState<readonly Alerta[]>([]);
   const [resumen, setResumen] = useState<ResumenPorCriticidad>(RESUMEN_VACIO);
+  const [evaluando, setEvaluando] = useState(false);
+  const [ultimaEvaluacion, setUltimaEvaluacion] = useState<ResumenDeEvaluacion | null>(null);
+
+  const puedeEvaluar = ROLES_QUE_EVALUAN.has(sesion?.rol ?? '');
+
+  async function evaluarAhora() {
+    const hoy = hoyEnParaguay(new Date());
+    const periodo = `${hoy.anio}-${String(hoy.mes).padStart(2, '0')}`;
+    setEvaluando(true);
+    setError(null);
+    try {
+      setUltimaEvaluacion(await evaluarAlertas(periodo));
+      await recargar();
+    } catch (motivo) {
+      setError(motivo instanceof ErrorDeApi ? motivo.message : 'No se pudo conectar con el servidor.');
+    } finally {
+      setEvaluando(false);
+    }
+  }
 
   async function recargar() {
     setCargando(true);
@@ -88,13 +118,38 @@ export default function Alertas() {
 
   return (
     <main className="mx-auto max-w-[86rem] space-y-5 px-5 py-6">
-      <div>
-        <h1 className="text-lg font-semibold">Alertas</h1>
-        <p className="mt-1 max-w-2xl text-sm text-tinta-suave">
-          Vencimientos vencidos, diferencias de conciliación y balances con inconsistencias —
-          consolidados por criticidad. La genera el sistema, no un usuario a mano.
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-lg font-semibold">Alertas</h1>
+          <p className="mt-1 max-w-2xl text-sm text-tinta-suave">
+            Vencimientos por vencer o vencidos y documentación faltante, consolidados por
+            criticidad. Las genera el sistema, no un usuario a mano.
+          </p>
+        </div>
+        {puedeEvaluar && (
+          <Boton
+            variante="secundario"
+            icono={RefreshCw}
+            onClick={() => void evaluarAhora()}
+            disabled={evaluando}
+          >
+            {evaluando ? 'Evaluando…' : 'Evaluar ahora'}
+          </Boton>
+        )}
       </div>
+
+      {ultimaEvaluacion && (
+        <p
+          role="status"
+          className="rounded border border-borde-marca bg-superficie-tenue px-4 py-3 text-sm text-tinta-suave"
+        >
+          Se revisaron {ultimaEvaluacion.evaluadas} registros:{' '}
+          {ultimaEvaluacion.creadas} alertas nuevas
+          {ultimaEvaluacion.yaEstabanAbiertas > 0 &&
+            `, ${ultimaEvaluacion.yaEstabanAbiertas} ya estaban abiertas`}
+          .
+        </p>
+      )}
 
       <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-label="Resumen por criticidad">
         <Indicador etiqueta="Críticas" valor={resumen.CRITICA} tono="critico" destacado={resumen.CRITICA > 0} />

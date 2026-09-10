@@ -39,6 +39,20 @@ export function obtenerAlertas(): Promise<{
   return peticion('GET', '/api/v1/alertas');
 }
 
+export interface ResumenDeEvaluacion {
+  readonly creadas: number;
+  readonly yaEstabanAbiertas: number;
+  readonly evaluadas: number;
+}
+
+/**
+ * Le pide al sistema que vuelva a mirar el estado real y levante las alertas
+ * que correspondan. Se puede repetir: no reabre lo que ya está abierto.
+ */
+export function evaluarAlertas(periodo: string): Promise<ResumenDeEvaluacion> {
+  return peticion('POST', '/api/v1/alertas/evaluar', { periodo });
+}
+
 export function cerrarAlerta(id: string, motivoCierre: string): Promise<{ alerta: Alerta }> {
   return peticion('POST', `/api/v1/alertas/${id}/cerrar`, { motivoCierre });
 }

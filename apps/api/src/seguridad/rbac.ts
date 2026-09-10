@@ -60,7 +60,10 @@ export const MATRIZ: MatrizDePermisos = Object.freeze({
     liquidacion: ['ver', 'crear', 'editar', 'exportar'],
     balance: ['ver', 'crear', 'editar', 'aprobar', 'exportar'],
     vencimiento: ['ver', 'crear', 'editar', 'exportar'],
-    alerta: ['ver', 'cerrar', 'exportar'],
+    // 'crear' acá significa 'puede pedirle al sistema que evalúe y levante las
+    // que correspondan', no 'puede inventar una alerta a mano': no existe ruta
+    // de alta manual. Ver rutas/alertas.ts.
+    alerta: ['ver', 'crear', 'cerrar', 'exportar'],
     obligacion: ['ver', 'crear', 'editar'],
     regla_notificacion: ['ver', 'crear', 'editar'],
     solicitud: ['ver', 'crear', 'cerrar', 'exportar'],
@@ -81,7 +84,10 @@ export const MATRIZ: MatrizDePermisos = Object.freeze({
     liquidacion: ['ver', 'crear', 'editar', 'exportar'],
     balance: ['ver', 'crear', 'editar', 'exportar'],
     vencimiento: ['ver', 'crear', 'editar', 'exportar'],
-    alerta: ['ver', 'cerrar', 'exportar'],
+    // 'crear' acá significa 'puede pedirle al sistema que evalúe y levante las
+    // que correspondan', no 'puede inventar una alerta a mano': no existe ruta
+    // de alta manual. Ver rutas/alertas.ts.
+    alerta: ['ver', 'crear', 'cerrar', 'exportar'],
     obligacion: ['ver'],
     regla_notificacion: ['ver', 'editar'],
     solicitud: ['ver', 'crear', 'cerrar', 'exportar'],

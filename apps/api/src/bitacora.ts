@@ -168,6 +168,7 @@ export const ACCIONES = Object.freeze({
   VENCIMIENTO_REGISTRADO: 'vencimiento.registrado',
   VENCIMIENTO_PRESENTADO: 'vencimiento.presentado',
   VENCIMIENTOS_GENERADOS: 'vencimiento.generados_del_periodo',
+  ALERTAS_EVALUADAS: 'alerta.evaluadas',
 
   SIGA_EXPORTACION_IMPORTADA: 'siga.exportacion_importada',
   SIGA_CONCILIACION_REVISADA: 'siga.conciliacion_revisada',
