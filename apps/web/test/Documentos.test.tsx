@@ -6,7 +6,7 @@
  * mockear sin depender de una fecha fija que se desactualice.
  */
 
-import { render, screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -245,6 +245,42 @@ describe('pantalla de documentos / IVA', () => {
       estado: 'RECHAZADO',
       motivoRechazo: 'Falta la firma del RUC.',
     });
+  });
+
+  it('el período se elige con un selector de mes, no escribiendo texto', async () => {
+    await montar();
+
+    expect(screen.getByLabelText('Período')).toHaveAttribute('type', 'month');
+  });
+
+  it('elegir otro mes recarga el tablero con ese período', async () => {
+    await montar();
+
+    mock.mockDeRuta('GET /api/v1/proceso-mensual/2026-04', () =>
+      respuestaJson({ periodo: '2026-04', procesos: [] }),
+    );
+
+    fireEvent.change(screen.getByLabelText('Período'), { target: { value: '2026-04' } });
+
+    await waitFor(() => {
+      expect(mock.llamadasA('GET /api/v1/proceso-mensual/2026-04')).toHaveLength(1);
+    });
+  });
+
+  // El bug real: el campo era texto libre y cada tecla disparaba la petición,
+  // así que borrarlo mandaba un período incompleto y el servidor respondía
+  // "Los datos enviados no son válidos" sin forma de corregirlo desde la
+  // pantalla. Ahora un período inválido no llega a salir del navegador.
+  it('borrar el período no dispara ninguna petición al servidor', async () => {
+    await montar();
+    const llamadasPrevias = mock.fetchMock.mock.calls.length;
+
+    fireEvent.change(screen.getByLabelText('Período'), { target: { value: '' } });
+
+    await waitFor(() => {
+      expect(screen.queryByText('GARSO S.A.')).not.toBeInTheDocument();
+    });
+    expect(mock.fetchMock.mock.calls.length).toBe(llamadasPrevias);
   });
 
   it('cancelar el rechazo (sin escribir motivo) no llama al servidor', async () => {
