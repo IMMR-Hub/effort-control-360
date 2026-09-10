@@ -65,11 +65,43 @@ export interface Dependencias {
   readonly ahora: () => Date;
 }
 
+/**
+ * Sesión probada por contraseña pero todavía sin segundo factor.
+ *
+ * No es un sujeto autenticado y no se puede usar como tal: no lleva rol ni
+ * cartera a propósito, para que sea imposible pasarla por error a `exigirPermiso`.
+ * Lo único que habilita es el alta del propio segundo factor.
+ */
+export interface SesionEnConfiguracion {
+  readonly sesionId: string;
+  readonly usuarioId: string;
+}
+
 declare module 'fastify' {
   interface FastifyRequest {
     sujeto: SujetoAutenticado | null;
     sesionId: string | null;
+    sesionEnConfiguracion: SesionEnConfiguracion | null;
   }
+}
+
+/**
+ * Lo único alcanzable mientras la contraseña esté por cambiar.
+ *
+ * `salida` y `yo` están para que la interfaz pueda mostrar quién es y ofrecer
+ * cerrar sesión sin quedar en un callejón; `csrf` porque cambiar la contraseña
+ * es una petición mutante y necesita el token.
+ */
+const RUTAS_CON_CONTRASENA_PENDIENTE: ReadonlySet<string> = new Set([
+  'POST /api/v1/mi/contrasena',
+  'POST /api/v1/salida',
+  'GET /api/v1/yo',
+  'GET /api/v1/csrf',
+]);
+
+/** Identifica la ruta por su patrón, no por la URL concreta con sus parámetros. */
+function rutaDe(peticion: FastifyRequest): string {
+  return `${peticion.method} ${peticion.routeOptions?.url ?? ''}`;
 }
 
 export class ErrorDeAplicacion extends Error {
@@ -232,6 +264,7 @@ export async function construirServidor(deps: Dependencias): Promise<FastifyInst
 
   app.decorateRequest('sujeto', null);
   app.decorateRequest('sesionId', null);
+  app.decorateRequest('sesionEnConfiguracion', null);
 
   /**
    * Resuelve la sesión en cada petición.
@@ -248,12 +281,22 @@ export async function construirServidor(deps: Dependencias): Promise<FastifyInst
     if (!sesion) return;
 
     const momento = deps.ahora();
-    if (evaluarSesion(sesion, momento) !== 'VIGENTE') return;
+    const estado = evaluarSesion(sesion, momento);
+    if (estado !== 'VIGENTE' && estado !== 'SEGUNDO_FACTOR_PENDIENTE') return;
 
     const usuario = await deps.usuarios.buscarPorId(sesion.usuarioId);
     if (!usuario || !usuario.activo) return;
 
     peticion.sesionId = sesion.id;
+
+    // Contraseña probada, segundo factor todavía no. No se puebla `sujeto`, así
+    // que ninguna ruta de negocio la acepta: lo único que habilita es dar de
+    // alta el propio segundo factor (`rutas/mi-cuenta.ts`).
+    if (estado === 'SEGUNDO_FACTOR_PENDIENTE') {
+      peticion.sesionEnConfiguracion = { sesionId: sesion.id, usuarioId: usuario.id };
+      return;
+    }
+
     peticion.sujeto = {
       usuarioId: usuario.id,
       rol: usuario.rol,
@@ -263,6 +306,18 @@ export async function construirServidor(deps: Dependencias): Promise<FastifyInst
         ? []
         : await deps.usuarios.clientesAsignados(usuario.id),
     };
+
+    // Contraseña por cambiar: la sesión es válida, pero lo único que habilita
+    // es cambiarla. Va como guarda global y no ruta por ruta, por el mismo
+    // criterio que el hook de CSRF: una ruta nueva que se olvide de
+    // comprobarlo es exactamente cómo se abre un agujero sin que nadie lo note.
+    if (usuario.debeCambiarContrasena && !RUTAS_CON_CONTRASENA_PENDIENTE.has(rutaDe(peticion))) {
+      throw new ErrorDeAplicacion(
+        403,
+        'Tenés que cambiar tu contraseña antes de continuar.',
+        'contrasena_por_cambiar',
+      );
+    }
 
     // Renueva la ventana de inactividad. Sin esto, alguien trabajando ocho
     // horas seguidas se quedaría afuera a mitad de la jornada.
@@ -353,4 +408,22 @@ export function exigirSesion(peticion: FastifyRequest): SujetoAutenticado {
     throw new ErrorDeAplicacion(401, 'Necesitás iniciar sesión.', 'sin_sesion');
   }
   return peticion.sujeto;
+}
+
+/**
+ * Exige una sesión con la contraseña ya probada, con o sin segundo factor.
+ *
+ * Solo la usan las rutas de alta del segundo factor: son las únicas que tienen
+ * que atender a alguien que todavía no lo configuró. Devuelve el id del usuario
+ * y el de la sesión, nunca un `SujetoAutenticado` — así no hay forma de pasarla
+ * por descuido a una comprobación de permisos.
+ */
+export function exigirSesionEnConfiguracion(peticion: FastifyRequest): SesionEnConfiguracion {
+  if (peticion.sesionEnConfiguracion) return peticion.sesionEnConfiguracion;
+
+  if (peticion.sujeto && peticion.sesionId) {
+    return { sesionId: peticion.sesionId, usuarioId: peticion.sujeto.usuarioId };
+  }
+
+  throw new ErrorDeAplicacion(401, 'Necesitás iniciar sesión.', 'sin_sesion');
 }

@@ -149,6 +149,10 @@ export const ACCIONES = Object.freeze({
   CLIENTE_ACTUALIZADO: 'cliente.actualizado',
   USUARIO_CREADO: 'usuario.creado',
   USUARIO_ACTUALIZADO: 'usuario.actualizado',
+  /* Credenciales propias: las ejecuta la persona sobre sí misma, no dirección. */
+  CONTRASENA_CAMBIADA: 'usuario.contrasena_cambiada',
+  SEGUNDO_FACTOR_INICIADO: 'usuario.segundo_factor_iniciado',
+  SEGUNDO_FACTOR_ACTIVADO: 'usuario.segundo_factor_activado',
 
   SOLICITUD_REGISTRADA: 'solicitud.registrada',
   SOLICITUD_CERRADA: 'solicitud.cerrada',

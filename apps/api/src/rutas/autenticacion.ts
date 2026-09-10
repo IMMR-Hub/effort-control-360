@@ -117,14 +117,17 @@ export async function registrarRutasDeAutenticacion(
     const necesitaSegundoFactor =
       requiereSegundoFactor(usuario.rol) || usuario.segundoFactorActivo;
 
-    // Dirección y responsable no pueden entrar sin segundo factor configurado:
-    // son los roles que ven toda la cartera.
-    if (requiereSegundoFactor(usuario.rol) && !usuario.secretoTotp) {
-      return respuesta.code(403).send({
-        error: 'segundo_factor_no_configurado',
-        mensaje: 'Tu rol requiere segundo factor. Configuralo antes de acceder.',
-      });
-    }
+    // Dirección y responsable tienen segundo factor obligatorio. Si todavía no
+    // lo configuraron, igual se les emite sesión, pero queda PENDIENTE:
+    // `evaluarSesion` la rechaza para toda ruta de negocio, así que lo único
+    // que habilita es dar de alta el propio segundo factor.
+    //
+    // Antes acá había un 403 sin crear sesión, y eso dejaba a la persona
+    // encerrada: sin sesión no podía llegar a ningún endpoint de
+    // configuración, y sin configurar no obtenía sesión. Ver
+    // `docs/DISCREPANCIAS.md`, punto 16.
+    const segundoFactorPorConfigurar =
+      requiereSegundoFactor(usuario.rol) && !usuario.secretoTotp;
 
     const token = generarTokenDeSesion();
     const sesion = await deps.sesiones.crear({
@@ -155,6 +158,7 @@ export async function registrarRutasDeAutenticacion(
 
     return respuesta.code(200).send({
       segundoFactorRequerido: necesitaSegundoFactor,
+      segundoFactorPorConfigurar,
       debeCambiarContrasena: usuario.debeCambiarContrasena,
     });
   });

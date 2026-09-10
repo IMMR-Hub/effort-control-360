@@ -126,6 +126,30 @@ export class UsuariosFalsos implements RepositorioDeUsuarios {
   async reemplazarCartera(usuarioId: string, clienteIds: readonly string[]): Promise<void> {
     this.asignaciones.set(usuarioId, [...clienteIds]);
   }
+
+  /* --- Credenciales propias ---------------------------------------------- */
+
+  /** Rechaza sobrescribir un secreto ya puesto, igual que la implementación real. */
+  async guardarSecretoTotp(usuarioId: string, secreto: string): Promise<void> {
+    const usuario = this.usuarios.find((candidato) => candidato.id === usuarioId);
+    if (!usuario || usuario.secretoTotp) {
+      throw new Error('El segundo factor ya estaba configurado para este usuario.');
+    }
+    usuario.secretoTotp = secreto;
+  }
+
+  async activarSegundoFactor(usuarioId: string): Promise<void> {
+    const usuario = this.usuarios.find((candidato) => candidato.id === usuarioId);
+    if (usuario) usuario.segundoFactorActivo = true;
+  }
+
+  async cambiarContrasena(usuarioId: string, hashContrasena: string): Promise<void> {
+    const usuario = this.usuarios.find((candidato) => candidato.id === usuarioId);
+    if (usuario) {
+      usuario.hashContrasena = hashContrasena;
+      usuario.debeCambiarContrasena = false;
+    }
+  }
 }
 
 export class SesionesFalsas implements RepositorioDeSesiones {

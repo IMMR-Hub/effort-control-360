@@ -301,13 +301,28 @@ describe('acceso', () => {
     expect(respuesta.statusCode).toBe(401);
   });
 
-  it('dirección sin segundo factor configurado no puede acceder', async () => {
+  it('dirección sin segundo factor configurado recibe sesión, pero solo para configurarlo', async () => {
+    // Antes esto devolvía 403 sin crear sesión, y dejaba a la persona
+    // encerrada: sin sesión no llegaba a configurar el segundo factor, y sin
+    // configurarlo no obtenía sesión. Ver docs/DISCREPANCIAS.md, punto 16.
     const respuesta = await ctx.app.inject({
       method: 'POST', url: '/api/v1/acceso',
       payload: { email: 'laura@effort.com.py', contrasena: CONTRASENA },
     });
-    expect(respuesta.statusCode).toBe(403);
-    expect(JSON.parse(respuesta.body).error).toBe('segundo_factor_no_configurado');
+
+    expect(respuesta.statusCode).toBe(200);
+    const cuerpo = JSON.parse(respuesta.body);
+    expect(cuerpo.segundoFactorPorConfigurar).toBe(true);
+    expect(cuerpo.segundoFactorRequerido).toBe(true);
+
+    // Lo que importa: esa sesión no habilita nada de negocio.
+    const galleta = respuesta.cookies.find((c) => c.name === nombreCookieSesion(false));
+    if (!galleta) throw new Error('El acceso no devolvió cookie de sesión.');
+    const cookie = `${galleta.name}=${galleta.value}`;
+    const protegida = await ctx.app.inject({
+      method: 'GET', url: '/api/v1/clientes', headers: { cookie },
+    });
+    expect(protegida.statusCode).toBe(401);
   });
 
   it('bloquea tras cinco intentos fallidos', async () => {

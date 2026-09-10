@@ -111,6 +111,28 @@ export interface RepositorioDeUsuarios {
     rolEnCliente: RolEnCliente | null,
     momento: Date,
   ): Promise<void>;
+
+  /*
+   * Credenciales propias.
+   *
+   * Van aparte de `actualizar` a propósito: esa la usa dirección sobre otra
+   * persona, y estas las usa cada quien sobre sí mismo. Mezclarlas abriría la
+   * puerta a que una edición de perfil termine tocando una contraseña.
+   */
+
+  /** Guarda el secreto TOTP. Solo para el alta inicial del segundo factor. */
+  guardarSecretoTotp(usuarioId: string, secreto: string): Promise<void>;
+
+  /** Marca el segundo factor como activo, ya confirmado con un código válido. */
+  activarSegundoFactor(usuarioId: string): Promise<void>;
+
+  /**
+   * Reemplaza la contraseña y baja `debeCambiarContrasena`.
+   *
+   * Recibe el hash ya calculado: el repositorio no conoce el algoritmo, igual
+   * que no lo conoce para el alta.
+   */
+  cambiarContrasena(usuarioId: string, hashContrasena: string, momento: Date): Promise<void>;
 }
 
 export interface RepositorioDeSesiones {

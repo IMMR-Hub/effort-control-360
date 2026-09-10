@@ -230,4 +230,45 @@ export class UsuariosPrisma implements RepositorioDeUsuarios {
       }
     });
   }
+
+  /* --- Credenciales propias ---------------------------------------------- */
+
+  /**
+   * `secretoTotp: null` en el `where` no es decorativo: impide sobrescribir un
+   * secreto ya configurado. Sin esa condición, cualquiera con la sesión de
+   * alguien podría regenerarle el segundo factor y quedarse con el nuevo
+   * secreto, que es justamente lo que el segundo factor existe para evitar.
+   */
+  async guardarSecretoTotp(usuarioId: string, secreto: string): Promise<void> {
+    const resultado = await this.prisma.usuario.updateMany({
+      where: { id: usuarioId, secretoTotp: null },
+      data: { secretoTotp: secreto },
+    });
+
+    if (resultado.count === 0) {
+      throw new Error('El segundo factor ya estaba configurado para este usuario.');
+    }
+  }
+
+  async activarSegundoFactor(usuarioId: string): Promise<void> {
+    await this.prisma.usuario.update({
+      where: { id: usuarioId },
+      data: { segundoFactorActivo: true },
+    });
+  }
+
+  async cambiarContrasena(
+    usuarioId: string,
+    hashContrasena: string,
+    momento: Date,
+  ): Promise<void> {
+    await this.prisma.usuario.update({
+      where: { id: usuarioId },
+      data: {
+        hashContrasena,
+        contrasenaActualizadaEn: momento,
+        debeCambiarContrasena: false,
+      },
+    });
+  }
 }
