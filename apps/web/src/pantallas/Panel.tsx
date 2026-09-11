@@ -179,7 +179,7 @@ export default function Panel() {
         <Tarjeta>
           <EncabezadoTarjeta
             titulo="Alertas más urgentes"
-            descripcion={alertasUrgentes.length === 0 ? 'Sin alertas críticas o altas activas' : `${alertasUrgentes.length} de ${alertas.length} alertas activas`}
+            descripcion={alertasUrgentes.length === 0 ? 'Sin alertas críticas o altas activas' : `Las ${alertasUrgentes.length} más urgentes de ${alertas.length} activas — el resto, en la pantalla Alertas`}
           />
           <Tabla etiqueta="Alertas más urgentes">
             <thead>
@@ -215,7 +215,7 @@ export default function Panel() {
         <Tarjeta>
           <EncabezadoTarjeta
             titulo="Vencimientos más urgentes"
-            descripcion={vencimientosUrgentes.length === 0 ? 'Sin vencimientos con alerta activa' : `${vencimientosUrgentes.length} de ${vencimientos.length} en el radar`}
+            descripcion={vencimientosUrgentes.length === 0 ? 'Sin vencimientos con alerta activa' : `Los ${vencimientosUrgentes.length} más urgentes de ${vencimientos.length} en el radar — el resto, en la pantalla Vencimientos`}
           />
           <Tabla etiqueta="Vencimientos más urgentes">
             <thead>

@@ -6,6 +6,8 @@
  * y por eso se pueden probar sin levantar nada.
  */
 
+import { DriveGraph } from '@effort/drive';
+
 import { cargarConfiguracion, type Configuracion } from './configuracion.js';
 import { construirServidor, type Dependencias } from './servidor.js';
 import { registrarRutasDeAutenticacion } from './rutas/autenticacion.js';
@@ -25,6 +27,7 @@ import {
   ReglasDeNotificacionPrisma,
   ReglasImpositivasPrisma,
   SolicitudesPrisma,
+  EvidenciasPrisma,
   ObligacionesPrisma,
   VencimientosPrisma,
 } from './repositorios/dominio.js';
@@ -48,6 +51,29 @@ export interface DependenciasReales extends Dependencias {
 }
 
 /**
+ * Adaptador de OneDrive, o `null` si faltan las credenciales.
+ *
+ * Devolver `null` en vez de fallar es deliberado: sin esto, olvidar una
+ * variable de Azure impediría que EFFORT entre a trabajar, cuando lo único que
+ * se pierde es poder abrir archivos. La ruta que lo usa devuelve un error que
+ * dice exactamente eso.
+ */
+function crearDrive(configuracion: Configuracion): DriveGraph | null {
+  const { AZURE_TENANT_ID, AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_DRIVE_ID } = configuracion;
+
+  if (!AZURE_TENANT_ID || !AZURE_CLIENT_ID || !AZURE_CLIENT_SECRET || !AZURE_DRIVE_ID) {
+    return null;
+  }
+
+  return new DriveGraph({
+    tenantId: AZURE_TENANT_ID,
+    clientId: AZURE_CLIENT_ID,
+    clientSecret: AZURE_CLIENT_SECRET,
+    driveId: AZURE_DRIVE_ID,
+  });
+}
+
+/**
  * Arma las dependencias reales.
  *
  * Un solo cliente de Prisma para todos los repositorios: comparten el pool de
@@ -68,6 +94,8 @@ export function construirDependencias(configuracion: Configuracion): Dependencia
     procesoMensual: new ProcesoMensualPrisma(prisma),
     vencimientos: new VencimientosPrisma(prisma),
     obligaciones: new ObligacionesPrisma(prisma),
+    evidencias: new EvidenciasPrisma(prisma),
+    drive: crearDrive(configuracion),
     solicitudes: new SolicitudesPrisma(prisma),
     balances: new BalancesPrisma(prisma),
     exportacionesSiga: new ExportacionesSigaPrisma(prisma),

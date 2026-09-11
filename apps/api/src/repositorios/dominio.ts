@@ -14,6 +14,8 @@ import type {
   AltaDeReglaDeNotificacion,
   AltaDeReglaImpositiva,
   AltaDeAlerta,
+  EvidenciaAlmacenada,
+  RepositorioDeEvidencias,
   AltaDeVencimiento,
   AltaDeVencimientoGenerado,
   ObligacionAlmacenada,
@@ -462,6 +464,36 @@ export class VencimientosPrisma implements RepositorioDeVencimientos {
     });
 
     return fila as VencimientoAlmacenado;
+  }
+}
+
+/* ========================================================================== */
+/* Evidencias                                                                 */
+/* ========================================================================== */
+
+export class EvidenciasPrisma implements RepositorioDeEvidencias {
+  constructor(private readonly prisma: PrismaClient) {}
+
+  /**
+   * Sin filtro de cartera a propósito: quien llama ya comprobó el permiso
+   * sobre el CLIENTE del documento, que es el dueño real del archivo. La
+   * evidencia por sí sola no alcanza para decidir — puede no tener cliente.
+   */
+  async buscarPorId(id: string): Promise<EvidenciaAlmacenada | null> {
+    const fila = await this.prisma.evidencia.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        clienteId: true,
+        nombreArchivo: true,
+        rutaOneDrive: true,
+        itemIdOneDrive: true,
+        tipoMime: true,
+        tamanoBytes: true,
+      },
+    });
+
+    return fila as EvidenciaAlmacenada | null;
   }
 }
 

@@ -224,6 +224,24 @@ export interface RepositorioDeVencimientos {
 }
 
 /* ========================================================================== */
+/* Evidencias (el archivo real detrás de cada documento)                     */
+/* ========================================================================== */
+
+export interface EvidenciaAlmacenada {
+  readonly id: string;
+  readonly clienteId: string | null;
+  readonly nombreArchivo: string;
+  readonly rutaOneDrive: string;
+  readonly itemIdOneDrive: string | null;
+  readonly tipoMime: string;
+  readonly tamanoBytes: bigint;
+}
+
+export interface RepositorioDeEvidencias {
+  buscarPorId(id: string): Promise<EvidenciaAlmacenada | null>;
+}
+
+/* ========================================================================== */
 /* Obligaciones tributarias (el calendario que genera los vencimientos)      */
 /* ========================================================================== */
 

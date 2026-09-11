@@ -29,6 +29,18 @@ const configuracionSchema = z
     /** Clave de Cloudflare Turnstile. Si falta, queda solo el límite de intentos. */
     TURNSTILE_SECRET: z.string().optional(),
 
+    /**
+     * Credenciales de Microsoft Graph y drive de la cuenta del sistema.
+     *
+     * Opcionales: sin ellas el sistema arranca igual y solo se pierde la
+     * descarga de archivos desde OneDrive. Es a propósito -- que falte una
+     * variable de un módulo no puede impedir que EFFORT entre a trabajar.
+     */
+    AZURE_TENANT_ID: z.string().optional(),
+    AZURE_CLIENT_ID: z.string().optional(),
+    AZURE_CLIENT_SECRET: z.string().optional(),
+    AZURE_DRIVE_ID: z.string().optional(),
+
     NIVEL_LOG: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
   })
   .strict()
@@ -67,6 +79,10 @@ export function cargarConfiguracion(entorno: NodeJS.ProcessEnv = process.env): C
     SECRETO_COOKIES: entorno['SECRETO_COOKIES'],
     ORIGEN_PERMITIDO: entorno['ORIGEN_PERMITIDO'],
     TURNSTILE_SECRET: entorno['TURNSTILE_SECRET'],
+    AZURE_TENANT_ID: entorno['AZURE_TENANT_ID'],
+    AZURE_CLIENT_ID: entorno['AZURE_CLIENT_ID'],
+    AZURE_CLIENT_SECRET: entorno['AZURE_CLIENT_SECRET'],
+    AZURE_DRIVE_ID: entorno['AZURE_DRIVE_ID'],
     NIVEL_LOG: entorno['NIVEL_LOG'],
   };
 

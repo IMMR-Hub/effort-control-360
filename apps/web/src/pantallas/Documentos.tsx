@@ -16,7 +16,7 @@
  */
 
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
-import { AlertOctagon, Ban, CheckCircle2, FileText, Plus } from 'lucide-react';
+import { AlertOctagon, Ban, CheckCircle2, FileText, Plus, Eye } from 'lucide-react';
 
 import { formatearGs, gs, hoyEnParaguay } from '@effort/core';
 import { periodoSchema } from '@effort/schema';
@@ -33,7 +33,7 @@ import {
   Td,
   Th,
 } from '../ui/Primitivos.jsx';
-import { ErrorDeApi } from '../api/cliente.js';
+import { ErrorDeApi, urlDeApi } from '../api/cliente.js';
 import { listarClientes, type Cliente } from '../api/clientes.js';
 import {
   ETIQUETA_TIPO_DOCUMENTO,
@@ -800,6 +800,7 @@ export default function Documentos() {
             <Tabla etiqueta="Documentos del cliente">
               <thead>
                 <tr>
+                  <Th>Archivo</Th>
                   <Th>Tipo</Th>
                   <Th>Comprobante</Th>
                   <Th numerica>Total</Th>
@@ -811,6 +812,21 @@ export default function Documentos() {
               <tbody>
                 {documentos.map((doc) => (
                   <tr key={doc.id}>
+                    <Td>
+                      {doc.evidenciaId ? (
+                        <a
+                          href={urlDeApi(`/api/v1/documentos/${doc.id}/archivo`)}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1.5 text-sm text-marca-600 underline-offset-2 hover:underline"
+                        >
+                          <Eye size={14} aria-hidden="true" />
+                          Ver
+                        </a>
+                      ) : (
+                        <span className="text-tinta-tenue">—</span>
+                      )}
+                    </Td>
                     <Td className="font-medium">{ETIQUETA_TIPO_DOCUMENTO[doc.tipo]}</Td>
                     <Td className="cifra text-tinta-suave">
                       {doc.numeroComprobante
@@ -864,7 +880,7 @@ export default function Documentos() {
                 ))}
                 {documentos.length === 0 && (
                   <tr>
-                    <td colSpan={puedeCambiarEstado ? 6 : 5} className="px-4 py-8 text-center text-sm text-tinta-tenue">
+                    <td colSpan={puedeCambiarEstado ? 7 : 6} className="px-4 py-8 text-center text-sm text-tinta-tenue">
                       Todavía no hay documentos cargados para este período.
                     </td>
                   </tr>

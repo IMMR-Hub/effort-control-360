@@ -27,6 +27,17 @@ const URL_BASE =
 
 const METODOS_MUTANTES = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);
 
+/**
+ * URL absoluta de una ruta de la API, para lo que no pasa por `fetch`.
+ *
+ * Lo usa el botón de abrir un archivo: el navegador tiene que navegar a la
+ * dirección, no recibir el contenido por JavaScript. La cookie de sesión viaja
+ * sola porque es del mismo origen.
+ */
+export function urlDeApi(ruta: string): string {
+  return new URL(ruta, URL_BASE).toString();
+}
+
 export class ErrorDeApi extends Error {
   constructor(
     readonly statusCode: number,

@@ -53,6 +53,8 @@ import {
   ExportacionesSigaFalsas,
   LiquidacionesFalsas,
   ObligacionesFalsas,
+  EvidenciasFalsas,
+  DriveFalsoDePrueba,
 } from './dobles-dominio.js';
 
 const CONTRASENA = 'una frase larga y memorable';
@@ -80,6 +82,8 @@ interface Contexto {
   procesoMensual: ProcesoMensualFalso;
   vencimientos: VencimientosFalsos;
   obligaciones: ObligacionesFalsas;
+  evidencias: EvidenciasFalsas;
+  drive: DriveFalsoDePrueba;
   solicitudes: SolicitudesFalsas;
   balances: BalancesFalsos;
   alertas: AlertasFalsas;
@@ -96,6 +100,8 @@ async function montar(): Promise<Contexto> {
   const procesoMensual = new ProcesoMensualFalso();
   const vencimientos = new VencimientosFalsos();
   const obligaciones = new ObligacionesFalsas();
+  const evidencias = new EvidenciasFalsas();
+  const drive = new DriveFalsoDePrueba();
   const solicitudes = new SolicitudesFalsas();
   const balances = new BalancesFalsos();
   const alertas = new AlertasFalsas();
@@ -142,6 +148,8 @@ async function montar(): Promise<Contexto> {
     procesoMensual,
     vencimientos,
     obligaciones,
+    evidencias,
+    drive,
     solicitudes,
     balances,
     exportacionesSiga: new ExportacionesSigaFalsas(),
@@ -169,7 +177,7 @@ async function montar(): Promise<Contexto> {
   await activarCsrfEnInject(app);
 
   return {
-    app, bitacora, documentos, procesoMensual, vencimientos, obligaciones, solicitudes, balances, alertas,
+    app, bitacora, documentos, procesoMensual, vencimientos, obligaciones, evidencias, drive, solicitudes, balances, alertas,
     usuarios, reglasImpositivas, reglasDeNotificacion,
   };
 }
@@ -238,6 +246,97 @@ describe('documentos', () => {
     total: '1100000',
     tasa: 'DIEZ',
   };
+
+  /**
+   * Abrir el archivo de un documento.
+   *
+   * Lo que importa probar acá no es que descargue, sino que NO descargue
+   * cuando no corresponde: el archivo de un cliente es información contable de
+   * un tercero, y el sistema existe para que eso no se mezcle.
+   */
+  describe('abrir el archivo de un documento', () => {
+    async function documentoConArchivo(clienteId: string): Promise<string> {
+      const evidenciaId = randomUUID();
+      ctx.evidencias.evidencias.push({
+        id: evidenciaId,
+        clienteId,
+        nombreArchivo: 'Factura enero.pdf',
+        rutaOneDrive: 'EFFORT Control 360/Entrada/x/Factura enero.pdf',
+        itemIdOneDrive: 'item-1',
+        tipoMime: 'application/pdf',
+        tamanoBytes: 1024n,
+      });
+      ctx.drive.archivos.set('item-1', Buffer.from('%PDF-1.4 contenido de prueba'));
+
+      const doc = await ctx.documentos.registrar({
+        clienteId,
+        periodo: '2026-03',
+        tipo: 'FACTURA_COMPRA',
+        canalRecepcion: 'ONEDRIVE',
+        recibidoEn: new Date('2026-03-10T12:00:00Z'),
+        rucEmisor: null, timbrado: null, numeroComprobante: null,
+        total: null, tasa: null, anulado: false,
+        evidenciaId,
+        observaciones: null,
+        creadoPorUsuarioId: 'usr-direccion',
+      });
+      return doc.id;
+    }
+
+    it('devuelve el archivo con su tipo y su nombre', async () => {
+      const id = await documentoConArchivo(MIO);
+
+      const respuesta = await ctx.app.inject({
+        method: 'GET', url: `/api/v1/documentos/${id}/archivo`, headers: { cookie: direccion },
+      });
+
+      expect(respuesta.statusCode).toBe(200);
+      expect(respuesta.headers['content-type']).toBe('application/pdf');
+      expect(String(respuesta.headers['content-disposition'])).toContain('Factura%20enero.pdf');
+      expect(respuesta.rawPayload.toString()).toContain('contenido de prueba');
+    });
+
+    it('deja constancia en la bitácora de quién abrió qué archivo', async () => {
+      const id = await documentoConArchivo(MIO);
+
+      await ctx.app.inject({
+        method: 'GET', url: `/api/v1/documentos/${id}/archivo`, headers: { cookie: direccion },
+      });
+
+      const evento = ctx.bitacora.filas.find((e) => e.accion === 'evidencia.archivo_abierto');
+      expect(evento).toBeDefined();
+      expect(evento?.clienteId).toBe(MIO);
+    });
+
+    it('un usuario sin acceso a ese cliente no puede abrir su archivo', async () => {
+      const id = await documentoConArchivo(AJENO);
+
+      const respuesta = await ctx.app.inject({
+        // El auxiliar solo tiene MIO en su cartera.
+        method: 'GET', url: `/api/v1/documentos/${id}/archivo`, headers: { cookie: auxiliar },
+      });
+
+      expect(respuesta.statusCode).toBe(404);
+      expect(ctx.drive.leidos).toHaveLength(0);
+    });
+
+    it('un documento sin archivo asociado lo dice, no falla de forma confusa', async () => {
+      const doc = await ctx.documentos.registrar({
+        clienteId: MIO, periodo: '2026-03', tipo: 'ACTA', canalRecepcion: 'ONEDRIVE',
+        recibidoEn: new Date('2026-03-10T12:00:00Z'),
+        rucEmisor: null, timbrado: null, numeroComprobante: null,
+        total: null, tasa: null, anulado: false, evidenciaId: null, observaciones: null,
+        creadoPorUsuarioId: 'usr-direccion',
+      });
+
+      const respuesta = await ctx.app.inject({
+        method: 'GET', url: `/api/v1/documentos/${doc.id}/archivo`, headers: { cookie: direccion },
+      });
+
+      expect(respuesta.statusCode).toBe(404);
+      expect(respuesta.json()['error']).toBe('sin_archivo');
+    });
+  });
 
   it('registra un comprobante y devuelve el importe como texto, no como número', async () => {
     const respuesta = await ctx.app.inject({

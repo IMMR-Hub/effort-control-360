@@ -14,6 +14,8 @@ import csrf from '@fastify/csrf-protection';
 import { randomUUID } from 'node:crypto';
 import { ZodError } from 'zod';
 
+import type { DriveDeArchivos } from '@effort/drive';
+
 import { esProduccion, type Configuracion } from './configuracion.js';
 import { ErrorDeAutorizacion, type SujetoAutenticado } from './seguridad/rbac.js';
 import {
@@ -35,6 +37,7 @@ import type {
   RepositorioDeBalances,
   RepositorioDeDocumentos,
   RepositorioDeProcesoMensual,
+  RepositorioDeEvidencias,
   RepositorioDeObligaciones,
   RepositorioDeReglasDeNotificacion,
   RepositorioDeReglasImpositivas,
@@ -55,6 +58,13 @@ export interface Dependencias {
   readonly procesoMensual: RepositorioDeProcesoMensual;
   readonly vencimientos: RepositorioDeVencimientos;
   readonly obligaciones: RepositorioDeObligaciones;
+  readonly evidencias: RepositorioDeEvidencias;
+  /**
+   * Acceso a OneDrive. Opcional: si faltan las credenciales de Azure el
+   * sistema arranca igual y solo se pierde abrir archivos, en vez de no
+   * arrancar por una variable de un modulo.
+   */
+  readonly drive: DriveDeArchivos | null;
   readonly solicitudes: RepositorioDeSolicitudes;
   readonly balances: RepositorioDeBalances;
   readonly exportacionesSiga: RepositorioDeExportacionesSiga;

@@ -26,7 +26,7 @@ import {
 
 import { ACCIONES, registrarEvento } from '../bitacora.js';
 import { ErrorDeAplicacion, type Dependencias } from '../servidor.js';
-import { filtroDeClientes } from '../seguridad/rbac.js';
+import { exigirPermiso, filtroDeClientes } from '../seguridad/rbac.js';
 import {
   autorizar,
   consultaPeriodoOpcional,
@@ -129,6 +129,76 @@ export async function registrarRutasDeDocumentos(
     );
 
     return { documentos: documentos.map((doc) => importesASalida(doc, IMPORTES_DOCUMENTO)) };
+  });
+
+  /**
+   * Devuelve el archivo real de un documento, traído de OneDrive.
+   *
+   * Pasa por acá y no por un enlace directo de OneDrive por tres razones:
+   * el permiso se comprueba contra el cliente dueño del documento, la apertura
+   * queda registrada en la bitácora (quién abrió qué archivo de qué cliente, que
+   * es exactamente el tipo de acceso que EFFORT necesita poder auditar), y no
+   * se reparte una URL de OneDrive que después circula sin control.
+   */
+  app.get('/api/v1/documentos/:id/archivo', async (peticion, respuesta) => {
+    const { id } = paramsId.parse(peticion.params);
+    const sujeto = autorizar(peticion, 'evidencia', 'ver');
+
+    const documento = await deps.documentos.buscarPorId(id, filtroDeClientes(sujeto));
+    if (!documento) {
+      throw new ErrorDeAplicacion(404, 'Recurso inexistente.', 'no_encontrado');
+    }
+    exigirPermiso(sujeto, 'evidencia', 'ver', documento.clienteId);
+
+    if (!documento.evidenciaId) {
+      throw new ErrorDeAplicacion(
+        404,
+        'Este documento no tiene un archivo asociado.',
+        'sin_archivo',
+      );
+    }
+
+    const evidencia = await deps.evidencias.buscarPorId(documento.evidenciaId);
+    if (!evidencia?.itemIdOneDrive) {
+      throw new ErrorDeAplicacion(
+        404,
+        'El archivo no está disponible en OneDrive.',
+        'sin_archivo',
+      );
+    }
+
+    if (!deps.drive) {
+      throw new ErrorDeAplicacion(
+        503,
+        'La conexión con OneDrive no está configurada en este entorno.',
+        'drive_no_configurado',
+      );
+    }
+
+    const contenido = await deps.drive.leer(evidencia.itemIdOneDrive);
+
+    await registrarEvento(deps.bitacora, peticion.log, {
+      usuarioId: sujeto.usuarioId,
+      accion: ACCIONES.ARCHIVO_ABIERTO,
+      entidad: 'evidencia',
+      entidadId: evidencia.id,
+      clienteId: documento.clienteId,
+      datosDespues: { nombreArchivo: evidencia.nombreArchivo },
+      ip: peticion.ip,
+      agenteUsuario: peticion.headers['user-agent'] ?? null,
+      peticionId: String(peticion.id),
+    });
+
+    // `inline` para que el navegador muestre el PDF en vez de bajarlo. El
+    // nombre va entre comillas y con el original en UTF-8: los archivos de
+    // EFFORT tienen tildes, ñ y espacios.
+    return respuesta
+      .header('content-type', evidencia.tipoMime)
+      .header(
+        'content-disposition',
+        `inline; filename*=UTF-8''${encodeURIComponent(evidencia.nombreArchivo)}`,
+      )
+      .send(contenido);
   });
 
   app.post('/api/v1/clientes/:clienteId/documentos', async (peticion, respuesta) => {

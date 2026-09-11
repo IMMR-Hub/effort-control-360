@@ -12,6 +12,8 @@ import { randomUUID } from 'node:crypto';
 
 import type {
   AltaDeAlerta,
+  EvidenciaAlmacenada,
+  RepositorioDeEvidencias,
   AltaDeVencimientoGenerado,
   ObligacionAlmacenada,
   ObligacionDeClienteAlmacenada,
@@ -240,6 +242,35 @@ export class ProcesoMensualFalso implements RepositorioDeProcesoMensual {
     const actualizado = { ...this.procesos[indice]!, ...cambios };
     this.procesos[indice] = actualizado;
     return actualizado;
+  }
+}
+
+export class EvidenciasFalsas implements RepositorioDeEvidencias {
+  readonly evidencias: EvidenciaAlmacenada[] = [];
+
+  async buscarPorId(id: string): Promise<EvidenciaAlmacenada | null> {
+    return this.evidencias.find((e) => e.id === id) ?? null;
+  }
+}
+
+/** Drive en memoria: guarda lo que se le pide leer, sin salir a la red. */
+export class DriveFalsoDePrueba {
+  readonly archivos = new Map<string, Buffer>();
+  readonly leidos: string[] = [];
+
+  async listar(): Promise<never[]> {
+    return [];
+  }
+
+  async leer(itemId: string): Promise<Buffer> {
+    this.leidos.push(itemId);
+    const contenido = this.archivos.get(itemId);
+    if (!contenido) throw new Error('No existe ese archivo en el drive de prueba.');
+    return contenido;
+  }
+
+  async escribir(): Promise<never> {
+    throw new Error('El doble no escribe.');
   }
 }
 
