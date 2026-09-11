@@ -62,6 +62,13 @@ Si da 0, cerrada. Si no, no.
 
 **Sobre la lentitud, medido y no supuesto:** cada consulta a la base cuesta ~310 ms de ida y vuelta — `SELECT 1` tarda lo mismo que listar 671 documentos. No es el código: la interfaz está en Paraguay, la API en Nueva York y la base en São Paulo, así que cada dato viaja al norte y vuelve al sur. Una pantalla que hace 6 llamadas paga eso 6 veces. Ver `docs/DISCREPANCIAS.md`, punto 18.
 
+**Tanda del 2026-09-11 — la suite entera en verde por primera vez (21 OK, 0 fallidos).**
+
+- **`npm audit` dejó de estar en rojo.** Arreglado lo arreglable de verdad (fastify 5.12.4, csv-parse 7.0.2, overrides de js-yaml y browserslist): de 13 vulnerabilidades a 9. Las 9 restantes no se pueden arreglar sin romper algo y cada una quedó con su motivo escrito en `scripts/auditar-dependencias.mjs`. El check ahora falla solo ante algo **nuevo** — un check permanentemente rojo no protege, enseña a ignorar el rojo. Comprobado a propósito: sacando una excepción de la lista, falla.
+- **El N+1 de Seguimiento**, que pedía los contactos cliente por cliente (144 consultas con la cartera real), pasó a una sola llamada por período.
+- **Registrar contacto funciona**, con formulario completo. Los otros tres botones que no hacían nada se sacaron.
+- **Cerrado el hallazgo 17(d):** si el vencimiento cae sábado, domingo o feriado pasa al día hábil siguiente — confirmado por Daniel, y es lo que el sistema ya hacía.
+
 **Obligaciones confirmadas por Lili:** IVA, IRE, EEFF y Planilla RG90. Las cuatro están cargadas y asignadas a los 5 clientes; solo IVA genera vencimientos. Las otras tres esperan un dato que falta: en qué mes se presenta cada una.
 
 **Azure AD (tarea 88) cerrado el 2026-09-04:** registro de app, consentimiento de administrador y acceso real a OneDrive, los tres verificados con llamadas reales de punta a punta. Ver `docs/DISCREPANCIAS.md`, punto 6.
