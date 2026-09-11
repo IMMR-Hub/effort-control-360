@@ -102,6 +102,12 @@ services:
         type: SECRET
       - key: AZURE_CLIENT_SECRET
         type: SECRET
+      # Id del OneDrive de la cuenta del sistema (effort360). No es un secreto
+      # —es un identificador— pero sin él la ruta que abre un archivo responde
+      # 503 y el botón "Ver" de Documentos no funciona. Se obtiene con
+      # GET /v1.0/users/effort360@effort.com.py/drive.
+      - key: AZURE_DRIVE_ID
+        value: b!4n3mpG3ab0GlYDNvfh6fIsPQgN8rA7FEma-kkIzEHcNM-moD_FXnRpChuXmw42Nb
 
 static_sites:
   - name: web

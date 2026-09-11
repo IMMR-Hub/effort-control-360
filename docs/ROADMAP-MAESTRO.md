@@ -51,6 +51,19 @@ Si da 0, cerrada. Si no, no.
 
 **Motor encendido el mismo día.** EFFORT confirmó el calendario esa tarde (días 7, 9, 11 … 25 por terminación, siendo la terminación la última cifra del RUC **sin** el dígito verificador — en `80007729-6` es el 9, no el 6). Cargado como configuración en la base: obligación IVA General asignada a los 5 clientes desde 2026-01. Resultado verificado contra la base real: **45 vencimientos** (5 clientes × 9 meses) y **40 alertas**, con las fechas corridas a día hábil donde correspondía, y comprobado idempotente (segunda corrida: cero creados). Queda una sola pregunta abierta, en `docs/DISCREPANCIAS.md` punto 17(d): si el día cae inhábil, ¿se traslada o la fecha es fija? El sistema traslada, que es la práctica habitual, pero es la dirección riesgosa.
 
+**Segunda tanda de hallazgos de Daniel usando el sistema (2026-09-10/11).** Todos reales, todos corregidos:
+
+1. **SIGA decía "CONCILIADO" sobre un período vacío.** El cálculo era "no hay diferencias", condición que se cumple sola cuando no hay nada que comparar: luz verde sobre la nada. Ahora hay un tercer estado, "Sin datos". Había un test que afirmaba el comportamiento viejo; quedó dado vuelta.
+2. **Documentos no mostraba nada.** La lista aparecía recién al hacer clic en una fila, sin indicarlo. Ahora preselecciona cliente, tiene selector propio y lo dice.
+3. **La bitácora era ilegible** (UUIDs, códigos y JSON crudo) y **la veían los 8 responsables**. Traducida a castellano sin perder el código exacto, y restringida a `direccion`.
+4. **El Panel mostraba 5 alertas de 36 sin aclarar que era un recorte.**
+5. **No se podía abrir ningún archivo.** Resuelto: `GET /api/v1/documentos/:id/archivo` trae el archivo de OneDrive pasando por permisos y bitácora — nunca un enlace suelto de OneDrive. Botón "Ver" en cada fila. Necesita `AZURE_DRIVE_ID` en el entorno.
+6. **Alertas solo dejaba cerrar.** Ahora permite registrar la presentación del vencimiento que originó el aviso, que es lo que realmente lo resuelve.
+
+**Sobre la lentitud, medido y no supuesto:** cada consulta a la base cuesta ~310 ms de ida y vuelta — `SELECT 1` tarda lo mismo que listar 671 documentos. No es el código: la interfaz está en Paraguay, la API en Nueva York y la base en São Paulo, así que cada dato viaja al norte y vuelve al sur. Una pantalla que hace 6 llamadas paga eso 6 veces. Ver `docs/DISCREPANCIAS.md`, punto 18.
+
+**Obligaciones confirmadas por Lili:** IVA, IRE, EEFF y Planilla RG90. Las cuatro están cargadas y asignadas a los 5 clientes; solo IVA genera vencimientos. Las otras tres esperan un dato que falta: en qué mes se presenta cada una.
+
 **Azure AD (tarea 88) cerrado el 2026-09-04:** registro de app, consentimiento de administrador y acceso real a OneDrive, los tres verificados con llamadas reales de punta a punta. Ver `docs/DISCREPANCIAS.md`, punto 6.
 
 **Supabase se pausa solo de tanto en tanto** (plan gratuito, se pausa después de varios días sin actividad — recurrió otra vez el 2026-09-04, sin relación con ninguna tarea de código). El arreglo es siempre el mismo: dashboard de Supabase → "Resume project" → esperar un par de minutos → reintentar `test:integration`. Ver `docs/DISCREPANCIAS.md`, punto 15.

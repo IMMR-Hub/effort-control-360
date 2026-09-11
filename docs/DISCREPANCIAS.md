@@ -709,3 +709,38 @@ genera vencimientos — que es preferible a generarlos mal.
 Mismo criterio que los feriados (`diasHabiles.ts`) y que las reglas impositivas
 (punto 9): el dato regulatorio se inyecta y se confirma, no se entierra en el
 código.
+
+---
+
+## 18. Latencia: la base está lejos de la API — MEDIDO, DECISIÓN PENDIENTE (2026-09-11)
+
+Daniel reportó que cada pantalla tarda en cargar. Medido, no supuesto:
+
+| Consulta | Tiempo |
+|---|---|
+| `SELECT 1` (ida y vuelta pura) | 313 ms |
+| Listar los 5 clientes | 323 ms |
+| Radar de vencimientos | 397 ms |
+| Alertas abiertas | 408 ms |
+| Documentos de un período | 348 ms |
+
+**Lo que dice esta tabla:** `SELECT 1` tarda lo mismo que una consulta real. El
+costo no está en la consulta sino en el viaje. La interfaz corre en Paraguay, la
+API en Nueva York (DigitalOcean no tiene región en Sudamérica) y la base en São
+Paulo: cada dato baja, sube y vuelve a bajar. Una pantalla que hace 6 llamadas
+paga ese viaje 6 veces.
+
+**Opciones, para decidir con EFFORT:**
+
+1. **Mover la base a una región de EE.UU.** (misma que la API). El viaje
+   API↔base pasaría de ~310 ms a ~5 ms, que es la mejora más grande y de lejos.
+   Contra: los datos contables de EFFORT saldrían de Sudamérica — es una
+   decisión de la empresa, no técnica, y por eso no se toma acá.
+2. **Reducir llamadas por pantalla.** `Seguimiento` hace una consulta de
+   contactos POR CLIENTE (patrón N+1); con 144 clientes reales eso no escala.
+   Arreglarlo es código nuestro y no depende de nadie más.
+3. **Dejarlo así.** Con 5 clientes es incómodo pero usable. Con 144 no.
+
+Ninguna es urgente hoy, pero la 2 conviene hacerla igual, y la 1 conviene
+decidirla antes de cargar los 144 clientes reales — mover una base con datos
+es mucho más caro que elegir bien la región al principio.
