@@ -284,6 +284,15 @@ export class ContactosFalsos implements RepositorioDeContactos {
     );
   }
 
+  async listarDelPeriodo(
+    periodo: string,
+    filtro: readonly string[] | null,
+  ): Promise<ContactoAlmacenado[]> {
+    return this.contactos.filter(
+      (c) => c.periodo === periodo && (filtro === null || filtro.includes(c.clienteId)),
+    );
+  }
+
   async registrar(datos: Omit<ContactoAlmacenado, 'id'>): Promise<ContactoAlmacenado> {
     const contacto: ContactoAlmacenado = { id: randomUUID(), ...datos };
     this.contactos.push(contacto);

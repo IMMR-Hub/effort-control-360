@@ -230,5 +230,14 @@ export interface ContactoAlmacenado {
 
 export interface RepositorioDeContactos {
   listarPorCliente(clienteId: string, periodo: string | null): Promise<ContactoAlmacenado[]>;
+  /**
+   * Todos los contactos del periodo en la cartera alcanzable, de una sola vez.
+   *
+   * Existe para que la pantalla de Seguimiento no tenga que pedir los contactos
+   * cliente por cliente: con 5 clientes eran 5 consultas, con los 144 reales de
+   * EFFORT serian 144. Cada consulta a la base cuesta ~310 ms de ida y vuelta
+   * (ver DISCREPANCIAS.md punto 18), asi que el N+1 no era un detalle de estilo.
+   */
+  listarDelPeriodo(periodo: string, filtro: readonly string[] | null): Promise<ContactoAlmacenado[]>;
   registrar(datos: Omit<ContactoAlmacenado, 'id'>): Promise<ContactoAlmacenado>;
 }

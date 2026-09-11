@@ -18,7 +18,7 @@
   "dependencies": {
     "@effort/core": "*",
     "@effort/schema": "*",
-    "csv-parse": "^7.0.1",
+    "csv-parse": "^7.0.2",
     "exceljs": "^4.4.0"
   }
 }

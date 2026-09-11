@@ -12,15 +12,13 @@
  * esta pantalla cambia sola.
  */
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import {
   ArrowUpRight,
   CalendarClock,
-  FileText,
   MessageSquare,
   Phone,
   Send,
-  Settings2,
   Users,
 } from 'lucide-react';
 
@@ -44,6 +42,8 @@ import {
 import {
   Badge,
   Boton,
+  CampoSelect,
+  CampoTexto,
   EncabezadoTarjeta,
   Indicador,
   Tabla,
@@ -53,7 +53,7 @@ import {
 } from '../ui/Primitivos.jsx';
 import { ErrorDeApi } from '../api/cliente.js';
 import { listarClientes, type Cliente } from '../api/clientes.js';
-import { listarContactos, type Contacto } from '../api/contactos.js';
+import { listarContactosDelPeriodo, registrarContacto, type Contacto } from '../api/contactos.js';
 import { listarReglasDeNotificacion } from '../api/reglasNotificacion.js';
 import { listarSolicitudesPorPeriodo, type SolicitudDocumentacion } from '../api/solicitudes.js';
 
@@ -135,6 +135,34 @@ function aContactoCore(contacto: Contacto): RegistroContactoCore {
   };
 }
 
+interface FormularioDeContacto {
+  canal: Contacto['canal'];
+  direccion: Contacto['direccion'];
+  fecha: string;
+  huboRespuesta: boolean;
+  quienAtendio: string;
+  resumen: string;
+}
+
+const CONTACTO_VACIO: FormularioDeContacto = {
+  canal: 'LLAMADA',
+  direccion: 'SALIENTE',
+  fecha: '',
+  huboRespuesta: false,
+  quienAtendio: '',
+  resumen: '',
+};
+
+const OPCIONES_CANAL = Object.keys(ICONO_CANAL).map((valor) => ({
+  valor,
+  etiqueta: valor.charAt(0) + valor.slice(1).toLowerCase(),
+}));
+
+const OPCIONES_DIRECCION = [
+  { valor: 'SALIENTE', etiqueta: 'Lo llamamos nosotros' },
+  { valor: 'ENTRANTE', etiqueta: 'Nos contactó el cliente' },
+];
+
 interface FilaDeSeguimiento {
   readonly solicitud: SolicitudDocumentacion;
   readonly cliente: Cliente | undefined;
@@ -166,6 +194,11 @@ export default function Seguimiento() {
   >({});
   const [clienteSeleccionado, setClienteSeleccionado] = useState<string | null>(null);
 
+  const [altaAbierta, setAltaAbierta] = useState(false);
+  const [guardando, setGuardando] = useState(false);
+  const [errorAlta, setErrorAlta] = useState<string | null>(null);
+  const [formulario, setFormulario] = useState<FormularioDeContacto>(CONTACTO_VACIO);
+
   useEffect(() => {
     let cancelado = false;
 
@@ -173,12 +206,17 @@ export default function Seguimiento() {
       setCargando(true);
       setError(null);
       try {
-        const [{ clientes: listaDeClientes }, { solicitudes: listaDeSolicitudes }, { reglas }] =
-          await Promise.all([
-            listarClientes(),
-            listarSolicitudesPorPeriodo(periodoActivo),
-            listarReglasDeNotificacion(),
-          ]);
+        const [
+          { clientes: listaDeClientes },
+          { solicitudes: listaDeSolicitudes },
+          { reglas },
+          { contactos: todosLosContactos },
+        ] = await Promise.all([
+          listarClientes(),
+          listarSolicitudesPorPeriodo(periodoActivo),
+          listarReglasDeNotificacion(),
+          listarContactosDelPeriodo(periodoActivo),
+        ]);
 
         if (cancelado) return;
 
@@ -186,16 +224,11 @@ export default function Seguimiento() {
           (candidata) => candidata.evento === 'DOCUMENTACION_NO_ENTREGADA' && candidata.activa,
         );
 
-        const idsDeClientes = [...new Set(listaDeSolicitudes.map((s) => s.clienteId))];
-        const contactosPorId: Record<string, readonly Contacto[]> = {};
-        await Promise.all(
-          idsDeClientes.map(async (clienteId) => {
-            const { contactos } = await listarContactos(clienteId, periodoActivo);
-            contactosPorId[clienteId] = contactos;
-          }),
-        );
-
-        if (cancelado) return;
+        // Se agrupan acá, en memoria, en vez de pedirlos cliente por cliente.
+        const contactosPorId: Record<string, Contacto[]> = {};
+        for (const contacto of todosLosContactos) {
+          (contactosPorId[contacto.clienteId] ??= []).push(contacto);
+        }
 
         setClientes(listaDeClientes);
         setSolicitudes(listaDeSolicitudes);
@@ -276,6 +309,42 @@ export default function Seguimiento() {
     [solicitudes, clientes, contactosPorCliente, regla, calendario, hoy],
   );
 
+  async function guardarContacto(evento: FormEvent<HTMLFormElement>) {
+    evento.preventDefault();
+    if (!clienteSeleccionado) return;
+
+    setGuardando(true);
+    setErrorAlta(null);
+    try {
+      await registrarContacto(clienteSeleccionado, {
+        periodo: periodoActivo,
+        canal: formulario.canal,
+        direccion: formulario.direccion,
+        // Sin hora elegida se usa la de ahora: lo que importa registrar es el
+        // día, y pedir hora y minuto para cada llamada sería fricción inútil.
+        ocurridoEn: new Date(`${formulario.fecha}T12:00:00`).toISOString(),
+        huboRespuesta: formulario.huboRespuesta,
+        quienAtendio: formulario.quienAtendio.trim() === '' ? null : formulario.quienAtendio.trim(),
+        resumen: formulario.resumen.trim(),
+      });
+
+      const { contactos } = await listarContactosDelPeriodo(periodoActivo);
+      const agrupados: Record<string, Contacto[]> = {};
+      for (const contacto of contactos) {
+        (agrupados[contacto.clienteId] ??= []).push(contacto);
+      }
+      setContactosPorCliente(agrupados);
+      setAltaAbierta(false);
+      setFormulario(CONTACTO_VACIO);
+    } catch (motivo) {
+      setErrorAlta(
+        motivo instanceof ErrorDeApi ? motivo.message : 'No se pudo conectar con el servidor.',
+      );
+    } finally {
+      setGuardando(false);
+    }
+  }
+
   const contactosDelCliente = useMemo(
     () =>
       (clienteSeleccionado ? contactosPorCliente[clienteSeleccionado] ?? [] : [])
@@ -333,7 +402,13 @@ export default function Seguimiento() {
         <div className="flex items-center gap-2">
           <span className="hidden text-xs text-tinta-tenue sm:inline">Período</span>
           <Badge tono="proceso" conIcono={false}>{formatearPeriodo(periodoActivo)}</Badge>
-          <Boton variante="fantasma" icono={Settings2}>Reglas de aviso</Boton>
+          {/*
+            Acá había tres botones más —"Reglas de aviso", "Exportar" y "PDF"—
+            que no hacían nada al hacer clic. Se sacaron el 2026-09-11 en vez de
+            dejarlos: un botón que no responde hace dudar de todo lo demás de la
+            pantalla, incluso de lo que sí funciona. Vuelven cuando tengan su
+            función escrita.
+          */}
         </div>
       </div>
 
@@ -376,7 +451,6 @@ export default function Seguimiento() {
                 ? `Plazo: ${regla.diasHabilesDePlazo}º día hábil · Aviso ${regla.horaDeEnvio} · Insiste cada ${regla.reintentarCadaDiasHabiles} días hábiles`
                 : 'Sin regla de "Entrega de documentación" configurada todavía.'
             }
-            acciones={<Boton variante="secundario" icono={FileText}>Exportar</Boton>}
           />
           <Tabla etiqueta="Estado de entrega de documentación por cliente">
             <thead>
@@ -459,8 +533,108 @@ export default function Seguimiento() {
             <EncabezadoTarjeta
               titulo={`Bitácora de contactos — ${nombreCliente}`}
               descripcion="Cada intento, con vía, fecha, quién lo hizo y si contestaron."
-              acciones={<Boton variante="primario" icono={Phone}>Registrar contacto</Boton>}
+              acciones={
+                clienteSeleccionado && (
+                  <Boton
+                    variante="primario"
+                    icono={Phone}
+                    onClick={() => {
+                      setFormulario({ ...CONTACTO_VACIO, fecha: fechaCivilAIso(hoyEnParaguay(new Date())) });
+                      setErrorAlta(null);
+                      setAltaAbierta(true);
+                    }}
+                  >
+                    Registrar contacto
+                  </Boton>
+                )
+              }
             />
+            {altaAbierta && (
+              <form onSubmit={guardarContacto} className="space-y-4 border-b border-borde px-5 py-4">
+                {errorAlta && (
+                  <p className="rounded border border-critico-borde bg-critico-fondo px-3 py-2 text-sm text-critico">
+                    {errorAlta}
+                  </p>
+                )}
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <CampoSelect
+                    id="canalContacto"
+                    etiqueta="Vía"
+                    opciones={OPCIONES_CANAL}
+                    value={formulario.canal}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                      setFormulario({ ...formulario, canal: e.target.value as Contacto['canal'] })
+                    }
+                  />
+                  <CampoSelect
+                    id="direccionContacto"
+                    etiqueta="Quién inició"
+                    opciones={OPCIONES_DIRECCION}
+                    value={formulario.direccion}
+                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                      setFormulario({ ...formulario, direccion: e.target.value as Contacto['direccion'] })
+                    }
+                  />
+                  <CampoTexto
+                    id="fechaContacto"
+                    etiqueta="Cuándo"
+                    type="date"
+                    required
+                    value={formulario.fecha}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setFormulario({ ...formulario, fecha: e.target.value })
+                    }
+                  />
+                  <CampoTexto
+                    id="quienAtendio"
+                    etiqueta="Quién atendió"
+                    placeholder="Nombre, o vacío si no atendió nadie"
+                    value={formulario.quienAtendio}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setFormulario({ ...formulario, quienAtendio: e.target.value })
+                    }
+                  />
+                </div>
+
+                <label className="flex items-center gap-2 text-sm text-tinta-suave">
+                  <input
+                    type="checkbox"
+                    checked={formulario.huboRespuesta}
+                    onChange={(e) => setFormulario({ ...formulario, huboRespuesta: e.target.checked })}
+                  />
+                  Hubo respuesta del cliente
+                </label>
+
+                <div className="flex flex-col gap-1.5">
+                  <label htmlFor="resumenContacto" className="text-xs font-medium text-tinta-suave">
+                    Qué se habló
+                  </label>
+                  <textarea
+                    id="resumenContacto"
+                    rows={2}
+                    required
+                    value={formulario.resumen}
+                    onChange={(e) => setFormulario({ ...formulario, resumen: e.target.value })}
+                    className="rounded border border-borde-fuerte bg-superficie px-3 py-1.5 text-sm text-tinta focus-visible:outline-none"
+                  />
+                </div>
+
+                <div className="flex justify-end gap-2">
+                  <Boton
+                    variante="fantasma"
+                    type="button"
+                    onClick={() => setAltaAbierta(false)}
+                    disabled={guardando}
+                  >
+                    Cancelar
+                  </Boton>
+                  <Boton variante="primario" type="submit" disabled={guardando}>
+                    {guardando ? 'Guardando…' : 'Registrar contacto'}
+                  </Boton>
+                </div>
+              </form>
+            )}
+
             <ol className="divide-y divide-borde">
               {contactosDelCliente.map((contacto) => {
                 const Icono = ICONO_CANAL[contacto.canal];
@@ -517,7 +691,6 @@ export default function Seguimiento() {
             <EncabezadoTarjeta
               titulo="Constancia de gestión"
               descripcion="Lo que se le muestra al cliente que reclama."
-              acciones={<Boton variante="secundario" icono={FileText}>PDF</Boton>}
             />
             {constancia ? (
               <div className="space-y-4 px-5 py-4">

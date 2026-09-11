@@ -38,6 +38,17 @@ export class ContactosPrisma implements RepositorioDeContactos {
     });
   }
 
+  async listarDelPeriodo(
+    periodo: string,
+    filtro: readonly string[] | null,
+  ): Promise<ContactoAlmacenado[]> {
+    return this.prisma.registroContacto.findMany({
+      where: { periodo, ...(filtro === null ? {} : { clienteId: { in: [...filtro] } }) },
+      select: CAMPOS,
+      orderBy: { ocurridoEn: 'desc' },
+    });
+  }
+
   async registrar(datos: Omit<ContactoAlmacenado, 'id'>): Promise<ContactoAlmacenado> {
     return this.prisma.registroContacto.create({
       data: {

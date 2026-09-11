@@ -20,7 +20,7 @@ import { crearRegistroContactoSchema, idSchema, periodoSchema } from '@effort/sc
 
 import { ACCIONES, registrarEvento } from '../bitacora.js';
 import { ErrorDeAplicacion, exigirSesion, type Dependencias } from '../servidor.js';
-import { exigirPermiso } from '../seguridad/rbac.js';
+import { exigirPermiso, filtroDeClientes } from '../seguridad/rbac.js';
 
 const parametrosDeCliente = z.object({ clienteId: idSchema }).strict();
 const consultaDePeriodo = z.object({ periodo: periodoSchema.optional() }).strict();
@@ -39,6 +39,21 @@ export async function registrarRutasDeContactos(
     exigirPermiso(sujeto, 'contacto', 'ver', clienteId);
 
     const contactos = await deps.contactos.listarPorCliente(clienteId, periodo ?? null);
+    return { contactos };
+  });
+
+  /**
+   * Los contactos de todo el periodo, en una sola consulta.
+   *
+   * La pantalla de Seguimiento los pedia cliente por cliente. Ver el puerto.
+   */
+  app.get('/api/v1/contactos', async (peticion) => {
+    const sujeto = exigirSesion(peticion);
+    const { periodo } = z.object({ periodo: periodoSchema }).strict().parse(peticion.query ?? {});
+
+    exigirPermiso(sujeto, 'contacto', 'ver');
+
+    const contactos = await deps.contactos.listarDelPeriodo(periodo, filtroDeClientes(sujeto));
     return { contactos };
   });
 

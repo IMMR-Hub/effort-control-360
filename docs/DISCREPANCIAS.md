@@ -687,14 +687,21 @@ hubiera estado dispersa, corregirla habría sido otra historia.
 |---|---|---|---|---|---|---|---|---|---|---|
 | Día | 7 | 9 | 11 | 13 | 15 | 17 | 19 | 21 | 23 | 25 |
 
-**d) Qué pasa cuando el día cae en fin de semana o feriado — SIN CONFIRMAR.**
-La tabla dice "fecha fija de cada mes" y no aclara el traslado. El sistema hoy
-**corre el vencimiento al día hábil siguiente**, nunca hacia atrás, que es la
-práctica habitual de la DNIT. Importa aclararlo porque es la dirección
-riesgosa: si la fecha fuera realmente fija y no se trasladara, el sistema
-estaría dando por vigente algo que ya venció el domingo anterior. Ejemplo real
-del piloto: Ecoagro (RUC 80022319-5, terminación 9 → día 25) en abril de 2026
-cae sábado, y el sistema lo pone el lunes 27. **Confirmar con EFFORT.**
+**d) Qué pasa cuando el día cae en fin de semana o feriado — CERRADO el
+2026-09-11.** Daniel lo confirmó textualmente: *"si cae sábado, domingo o
+feriado, pasa al siguiente día hábil"*. Es exactamente lo que el sistema ya
+hacía (`proximoDiaHabil` en `packages/core/src/vencimientosTributarios.ts`),
+así que no hubo nada que cambiar.
+
+Queda anotado igual porque la confirmación vale por sí sola: era la dirección
+riesgosa del error. Si la fecha hubiera sido fija y el sistema la trasladaba,
+habría dado por vigente algo ya vencido el domingo anterior. Ejemplo real del
+piloto: Ecoagro (RUC 80022319-5, terminación 9 → día 25) en abril de 2026 cae
+sábado, y el sistema lo pone el lunes 27 — ahora se sabe que está bien.
+
+**Con esto el punto 17 queda cerrado entero, salvo el (c):** falta el mes de
+presentación de IRE, EEFF y Planilla RG90. Las tres están cargadas y asignadas
+a los 5 clientes, pero sin confirmar, así que no generan vencimientos.
 
 **c) Qué obligaciones tiene cada uno de los 5 clientes.** IVA general, IRE,
 IRP, anticipos, retenciones: no todos deben lo mismo, y lo que deben cambia con

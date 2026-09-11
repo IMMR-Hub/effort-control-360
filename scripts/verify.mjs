@@ -42,7 +42,7 @@ const CHECKS = [
   { nombre: 'verify:no-hardcoded-kpi', comando: 'node scripts/verificar-kpi.mjs' },
   { nombre: 'verify:e2e-typecheck', comando: 'npm run typecheck:e2e' },
   { nombre: 'test:e2e', comando: 'npx playwright test' },
-  { nombre: 'audit', comando: 'npm audit --audit-level=high' },
+  { nombre: 'audit', comando: 'node scripts/auditar-dependencias.mjs' },
   { nombre: 'build', comando: 'npm run build' },
 ];
 

@@ -33,5 +33,21 @@
     "typescript": "^5.6.3",
     "typescript-eslint": "^8.10.0",
     "vitest": "^3.2.7"
+  },
+  "overrides": {
+    "js-yaml": "^4.3.2",
+    "browserslist": "^4.28.9",
+    "ajv": {
+      "fast-uri": "^3.1.7"
+    },
+    "@fastify/ajv-compiler": {
+      "fast-uri": "^3.1.7"
+    },
+    "fast-json-stringify": {
+      "fast-uri": "^4.1.4",
+      "ajv": {
+        "fast-uri": "^3.1.7"
+      }
+    }
   }
 }

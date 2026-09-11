@@ -30,6 +30,18 @@ export function listarContactos(
   return peticion('GET', `/api/v1/clientes/${clienteId}/contactos`, undefined, { periodo });
 }
 
+/**
+ * Todos los contactos del periodo, en una sola llamada.
+ *
+ * Seguimiento los pedia cliente por cliente: con 5 clientes eran 5 viajes a la
+ * base, con los 144 reales serian 144, y cada uno cuesta ~310 ms.
+ */
+export function listarContactosDelPeriodo(
+  periodo: string,
+): Promise<{ contactos: readonly Contacto[] }> {
+  return peticion('GET', '/api/v1/contactos', undefined, { periodo });
+}
+
 export interface RegistrarContacto {
   readonly periodo: string;
   readonly canal: Contacto['canal'];
