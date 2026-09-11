@@ -39,8 +39,18 @@ const configuracionSchema = z
     AZURE_TENANT_ID: z.string().optional(),
     AZURE_CLIENT_ID: z.string().optional(),
     AZURE_CLIENT_SECRET: z.string().optional(),
+    /**
+     * Los drives se identifican por el correo de su dueño, no por el id.
+     *
+     * Con valor por defecto a propósito: así el despliegue no depende de que
+     * alguien cargue una cadena opaca de 66 caracteres en el panel del
+     * hosting. El id igual se puede forzar con `AZURE_DRIVE_ID` si alguna vez
+     * hiciera falta, pero no es el camino normal.
+     */
+    ONEDRIVE_USUARIO_SISTEMA: z.string().default('effort360@effort.com.py'),
+    /** Cuenta donde EFFORT trabaja a diario. De ahí se LEE, nunca se escribe. */
+    ONEDRIVE_USUARIO_ORIGEN: z.string().default('lsosa@effort.com.py'),
     AZURE_DRIVE_ID: z.string().optional(),
-    /** Drive de EFFORT, del que se LEE para sincronizar. */
     AZURE_DRIVE_ID_ORIGEN: z.string().optional(),
 
     NIVEL_LOG: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
@@ -86,6 +96,8 @@ export function cargarConfiguracion(entorno: NodeJS.ProcessEnv = process.env): C
     AZURE_CLIENT_SECRET: entorno['AZURE_CLIENT_SECRET'],
     AZURE_DRIVE_ID: entorno['AZURE_DRIVE_ID'],
     AZURE_DRIVE_ID_ORIGEN: entorno['AZURE_DRIVE_ID_ORIGEN'],
+    ONEDRIVE_USUARIO_SISTEMA: entorno['ONEDRIVE_USUARIO_SISTEMA'],
+    ONEDRIVE_USUARIO_ORIGEN: entorno['ONEDRIVE_USUARIO_ORIGEN'],
     NIVEL_LOG: entorno['NIVEL_LOG'],
   };
 

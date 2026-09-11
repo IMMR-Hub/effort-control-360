@@ -63,17 +63,24 @@ export interface DependenciasReales extends Dependencias {
  * se pierde es poder abrir archivos. La ruta que lo usa devuelve un error que
  * dice exactamente eso.
  */
-function crearDrive(configuracion: Configuracion, driveId: string | undefined): DriveGraph | null {
+function crearDrive(
+  configuracion: Configuracion,
+  usuarioPrincipal: string,
+  driveId: string | undefined,
+): DriveGraph | null {
   const { AZURE_TENANT_ID, AZURE_CLIENT_ID, AZURE_CLIENT_SECRET } = configuracion;
 
-  if (!AZURE_TENANT_ID || !AZURE_CLIENT_ID || !AZURE_CLIENT_SECRET || !driveId) {
-    return null;
-  }
+  // Las credenciales sí son imprescindibles y sí son secretas. El id del drive,
+  // no: se deduce del correo del dueño, así que no hace falta cargarlo en el
+  // panel del hosting — que es justo donde se perdió al desplegar el
+  // 2026-09-11 y dejó la apertura de archivos respondiendo 503.
+  if (!AZURE_TENANT_ID || !AZURE_CLIENT_ID || !AZURE_CLIENT_SECRET) return null;
 
   return new DriveGraph({
     tenantId: AZURE_TENANT_ID,
     clientId: AZURE_CLIENT_ID,
     clientSecret: AZURE_CLIENT_SECRET,
+    usuarioPrincipal,
     driveId,
   });
 }
@@ -100,10 +107,18 @@ export function construirDependencias(configuracion: Configuracion): Dependencia
     vencimientos: new VencimientosPrisma(prisma),
     obligaciones: new ObligacionesPrisma(prisma),
     evidencias: new EvidenciasPrisma(prisma),
-    drive: crearDrive(configuracion, configuracion.AZURE_DRIVE_ID),
+    drive: crearDrive(
+      configuracion,
+      configuracion.ONEDRIVE_USUARIO_SISTEMA,
+      configuracion.AZURE_DRIVE_ID,
+    ),
     // Instancia aparte, apuntando al drive de EFFORT. Que sean dos objetos
     // distintos es lo que hace imposible escribir ahí por descuido.
-    driveDeOrigen: crearDrive(configuracion, configuracion.AZURE_DRIVE_ID_ORIGEN),
+    driveDeOrigen: crearDrive(
+      configuracion,
+      configuracion.ONEDRIVE_USUARIO_ORIGEN,
+      configuracion.AZURE_DRIVE_ID_ORIGEN,
+    ),
     solicitudes: new SolicitudesPrisma(prisma),
     balances: new BalancesPrisma(prisma),
     exportacionesSiga: new ExportacionesSigaPrisma(prisma),

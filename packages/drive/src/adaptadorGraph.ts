@@ -19,8 +19,21 @@ export interface ConfiguracionGraph {
   readonly tenantId: string;
   readonly clientId: string;
   readonly clientSecret: string;
-  /** Id del drive de la cuenta dedicada del sistema (no el de una persona). */
-  readonly driveId: string;
+  /**
+   * Id del drive, si se conoce. Puede omitirse: con `usuarioPrincipal`
+   * alcanza, y el adaptador se lo pregunta a Graph la primera vez.
+   */
+  readonly driveId?: string | undefined;
+  /**
+   * Correo del dueño del drive (`effort360@effort.com.py`).
+   *
+   * Es la forma preferida de configurarlo. El id del drive no es un secreto ni
+   * un dato que alguien recuerde: es una cadena opaca de 66 caracteres que hay
+   * que ir a buscar. El correo, en cambio, lo sabe cualquiera del equipo, y de
+   * él se deduce el id. Menos configuración que puede faltar o quedar mal
+   * copiada — que es exactamente lo que pasó al desplegar el 2026-09-11.
+   */
+  readonly usuarioPrincipal?: string | undefined;
 }
 
 interface RespuestaToken {
@@ -65,8 +78,32 @@ function normalizarCarpeta(carpeta: string): string {
 
 export class DriveGraph implements DriveDeArchivos {
   #tokenEnCache: { token: string; expiraEn: number } | null = null;
+  #driveEnCache: string | null = null;
 
-  constructor(private readonly configuracion: ConfiguracionGraph) {}
+  constructor(private readonly configuracion: ConfiguracionGraph) {
+    if (!configuracion.driveId && !configuracion.usuarioPrincipal) {
+      throw new Error(
+        'DriveGraph necesita el id del drive o el correo de su dueño para poder deducirlo.',
+      );
+    }
+  }
+
+  /**
+   * Id del drive, preguntándoselo a Graph si hace falta.
+   *
+   * Se resuelve una sola vez por instancia: el id de un drive no cambia.
+   */
+  async #drive(): Promise<string> {
+    if (this.configuracion.driveId) return this.configuracion.driveId;
+    if (this.#driveEnCache) return this.#driveEnCache;
+
+    const respuesta = await this.#peticion(
+      `/users/${encodeURIComponent(this.configuracion.usuarioPrincipal!)}/drive?$select=id`,
+    );
+    const { id } = (await respuesta.json()) as { id: string };
+    this.#driveEnCache = id;
+    return id;
+  }
 
   async #token(): Promise<string> {
     if (this.#tokenEnCache && Date.now() < this.#tokenEnCache.expiraEn) {
@@ -122,7 +159,7 @@ export class DriveGraph implements DriveDeArchivos {
   async listar(carpeta: string): Promise<ArchivoDrive[]> {
     const ruta = normalizarCarpeta(carpeta);
     const respuesta = await this.#peticion(
-      `/drives/${this.configuracion.driveId}/root:/${encodeURI(ruta)}:/children`,
+      `/drives/${await this.#drive()}/root:/${encodeURI(ruta)}:/children`,
     );
     const datos = (await respuesta.json()) as ListadoGraph;
 
@@ -140,6 +177,7 @@ export class DriveGraph implements DriveDeArchivos {
    * (`CLAUDE.md`) no depende de acordarse de pasar el parámetro correcto.
    */
   async listarRecursivoPorId(itemId: string): Promise<ArchivoDrive[]> {
+    const drive = await this.#drive();
     const encontrados: ArchivoDrive[] = [];
     // Iterativo y no recursivo: una jerarquía profunda no debe poder agotar la
     // pila, y así el tope de carpetas de más abajo es fácil de hacer cumplir.
@@ -157,7 +195,7 @@ export class DriveGraph implements DriveDeArchivos {
       }
 
       let url: string | null =
-        `/drives/${this.configuracion.driveId}/items/${actual.id}/children` +
+        `/drives/${drive}/items/${actual.id}/children` +
         '?$top=200&$select=id,name,size,lastModifiedDateTime,file,folder';
 
       while (url) {
@@ -185,7 +223,7 @@ export class DriveGraph implements DriveDeArchivos {
 
   async leer(itemId: string): Promise<Buffer> {
     const respuesta = await this.#peticion(
-      `/drives/${this.configuracion.driveId}/items/${itemId}/content`,
+      `/drives/${await this.#drive()}/items/${itemId}/content`,
     );
     return Buffer.from(await respuesta.arrayBuffer());
   }
@@ -206,7 +244,7 @@ export class DriveGraph implements DriveDeArchivos {
 
     const ruta = normalizarCarpeta(carpeta);
     const respuesta = await this.#peticion(
-      `/drives/${this.configuracion.driveId}/root:/${encodeURI(ruta)}/${encodeURIComponent(nombre)}:/content`,
+      `/drives/${await this.#drive()}/root:/${encodeURI(ruta)}/${encodeURIComponent(nombre)}:/content`,
       {
         method: 'PUT',
         body: contenido,
@@ -237,7 +275,7 @@ export class DriveGraph implements DriveDeArchivos {
   ): Promise<ArchivoDrive> {
     const ruta = normalizarCarpeta(carpeta);
     const sesion = await this.#peticion(
-      `/drives/${this.configuracion.driveId}/root:/${encodeURI(ruta)}/${encodeURIComponent(nombre)}:/createUploadSession`,
+      `/drives/${await this.#drive()}/root:/${encodeURI(ruta)}/${encodeURIComponent(nombre)}:/createUploadSession`,
       {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
