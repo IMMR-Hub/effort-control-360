@@ -34,10 +34,21 @@ export interface DependenciasDelMotorDeAlertas {
   readonly procesoMensual: RepositorioDeProcesoMensual;
 }
 
+/**
+ * Usuario al que se le atribuye un cierre automático.
+ *
+ * Se deja explícito en la bitácora que cerró el sistema y no una persona: una
+ * alerta cerrada por alguien y una que se resolvió sola son cosas distintas
+ * cuando después hay que rendir cuentas.
+ */
+const CERRADA_POR_EL_SISTEMA = 'El problema que la originó ya no existe.';
+
 export interface ResumenDeAlertas {
   readonly creadas: number;
   readonly yaEstabanAbiertas: number;
   readonly evaluadas: number;
+  /** Cerradas solas porque el problema que las originó ya no existe. */
+  readonly resueltas: number;
 }
 
 export const ORIGEN_VENCIMIENTO = 'vencimiento_por_vencer';
@@ -65,6 +76,7 @@ export async function evaluarAlertas(
   deps: DependenciasDelMotorDeAlertas,
   ahora: Date,
   periodo: string,
+  usuarioId: string,
 ): Promise<ResumenDeAlertas> {
   const [vencimientos, procesos, abiertas] = await Promise.all([
     deps.vencimientos.listar(null),
@@ -129,9 +141,37 @@ export async function evaluarAlertas(
 
   const creadas = await deps.alertas.crear(nuevas);
 
+  /*
+   * Cierre automático: una alerta abierta cuya causa ya no aparece entre las
+   * candidatas es una alerta resuelta.
+   *
+   * Esto es lo que reemplaza al "ignorar". Daniel fue explícito el 2026-09-11:
+   * el sistema NUNCA puede dejar que se ignore una alerta. La única forma de
+   * sacarla de la pantalla es que el problema deje de existir — que el
+   * vencimiento quede presentado, o que los documentos faltantes se carguen.
+   * Entonces se cierra sola, acá, y queda escrito por qué.
+   */
+  const vigentes = new Set(
+    candidatas.map((alta) => `${alta.origen}|${alta.entidadRelacionadaId ?? ''}`),
+  );
+
+  let resueltas = 0;
+  for (const alerta of abiertas) {
+    // Solo las que levanta este motor. Una alerta de otro origen no se toca:
+    // no se sabe qué la resuelve.
+    if (alerta.origen !== ORIGEN_VENCIMIENTO && alerta.origen !== ORIGEN_DOCUMENTACION) continue;
+
+    const clave = `${alerta.origen}|${alerta.entidadRelacionadaId ?? ''}`;
+    if (vigentes.has(clave)) continue;
+
+    await deps.alertas.cerrar(alerta.id, CERRADA_POR_EL_SISTEMA, usuarioId, ahora);
+    resueltas += 1;
+  }
+
   return {
     creadas,
     yaEstabanAbiertas: candidatas.length - creadas,
     evaluadas: vencimientos.length + procesos.length,
+    resueltas,
   };
 }

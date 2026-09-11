@@ -46,7 +46,7 @@ describe('motor de alertas', () => {
     const deps = armar();
     await agregarVencimiento(deps, '2026-04-13');
 
-    const resumen = await evaluarAlertas(deps, HOY, '2026-03');
+    const resumen = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
 
     expect(resumen.creadas).toBe(1);
     const alerta = deps.alertas.alertas[0]!;
@@ -60,7 +60,7 @@ describe('motor de alertas', () => {
     // Faltan más de 30 días.
     await agregarVencimiento(deps, '2026-07-15');
 
-    const resumen = await evaluarAlertas(deps, HOY, '2026-03');
+    const resumen = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
 
     expect(resumen.creadas).toBe(0);
     expect(deps.alertas.alertas).toHaveLength(0);
@@ -72,7 +72,7 @@ describe('motor de alertas', () => {
     await agregarVencimiento(deps, '2026-04-27'); // faltan 6 → ALTA
     await agregarVencimiento(deps, '2026-05-05'); // faltan 14 → MEDIA
 
-    await evaluarAlertas(deps, HOY, '2026-03');
+    await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
 
     const criticidades = deps.alertas.alertas.map((a) => a.criticidad).sort();
     expect(criticidades).toEqual(['ALTA', 'CRITICA', 'MEDIA']);
@@ -84,9 +84,9 @@ describe('motor de alertas', () => {
     const deps = armar();
     await agregarVencimiento(deps, '2026-04-13');
 
-    await evaluarAlertas(deps, HOY, '2026-03');
-    const segunda = await evaluarAlertas(deps, HOY, '2026-03');
-    const tercera = await evaluarAlertas(deps, HOY, '2026-03');
+    await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+    const segunda = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+    const tercera = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
 
     expect(segunda.creadas).toBe(0);
     expect(tercera.creadas).toBe(0);
@@ -104,18 +104,68 @@ describe('motor de alertas', () => {
       'usr-1',
     );
 
-    const resumen = await evaluarAlertas(deps, HOY, '2026-03');
+    const resumen = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
 
     expect(resumen.creadas).toBe(1);
     expect(deps.alertas.alertas[0]!.origen).toBe(ORIGEN_DOCUMENTACION);
     expect(deps.alertas.alertas[0]!.titulo).toMatch(/Faltan 3 documentos/);
   });
 
+  /**
+   * La regla que pidió Daniel el 2026-09-11, textual: "en NINGÚN punto el
+   * sistema puede ignorarlas". No hay forma de descartar una alerta; la única
+   * manera de que salga de la pantalla es que el problema deje de existir.
+   * Acá se comprueba el otro lado de eso: cuando el vencimiento queda
+   * presentado, la alerta se cierra sola.
+   */
+  it('al presentar el vencimiento, la alerta se cierra sola', async () => {
+    const deps = armar();
+    const vencimiento = await agregarVencimiento(deps, '2026-04-13');
+    await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+    expect(deps.alertas.alertas[0]!.estado).toBe('ABIERTA');
+
+    await deps.vencimientos.marcarPresentado(vencimiento.id, new Date('2026-04-12'), null, 'usr-1');
+    const segunda = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+
+    expect(segunda.resueltas).toBe(1);
+    expect(deps.alertas.alertas[0]!.estado).toBe('CERRADA');
+    expect(deps.alertas.alertas[0]!.motivoCierre).toMatch(/ya no existe/);
+  });
+
+  it('mientras el problema siga, la alerta NO se cierra sola', async () => {
+    const deps = armar();
+    await agregarVencimiento(deps, '2026-04-13');
+
+    await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+    const segunda = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+
+    expect(segunda.resueltas).toBe(0);
+    expect(deps.alertas.alertas[0]!.estado).toBe('ABIERTA');
+  });
+
+  it('al cargarse los documentos faltantes, esa alerta también se cierra sola', async () => {
+    const deps = armar();
+    const proceso = await deps.procesoMensual.asegurar(CLIENTE, '2026-03', 'usr-1');
+    await deps.procesoMensual.actualizar(
+      CLIENTE, '2026-03', { ...proceso, documentosFaltantes: 3 } as never, 'usr-1',
+    );
+    await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+
+    // Los cargaron: ya no falta ninguno.
+    await deps.procesoMensual.actualizar(
+      CLIENTE, '2026-03', { ...proceso, documentosFaltantes: 0 } as never, 'usr-1',
+    );
+    const segunda = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+
+    expect(segunda.resueltas).toBe(1);
+    expect(deps.alertas.alertas[0]!.estado).toBe('CERRADA');
+  });
+
   it('un período sin faltantes no genera nada', async () => {
     const deps = armar();
     await deps.procesoMensual.asegurar(CLIENTE, '2026-03', 'usr-1');
 
-    const resumen = await evaluarAlertas(deps, HOY, '2026-03');
+    const resumen = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
 
     expect(resumen.creadas).toBe(0);
   });

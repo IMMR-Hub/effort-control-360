@@ -23,6 +23,11 @@ export const ETIQUETA_TIPO_DOCUMENTO: Record<TipoDocumento, string> = {
   CERTIFICADO: 'Certificado',
   CONSTANCIA: 'Constancia',
   LIQUIDACION: 'Liquidación',
+  BALANCE: 'Balance',
+  ESTADO_RESULTADOS: 'Estado de resultados',
+  DECLARACION_JURADA: 'Declaración jurada',
+  LIBRO_COMPRAS: 'Libro de compras',
+  LIBRO_VENTAS: 'Libro de ventas',
   OTRO: 'Otro',
 };
 

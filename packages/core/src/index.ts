@@ -15,3 +15,4 @@ export * from './balance.js';
 export * from './diasHabiles.js';
 export * from './seguimiento.js';
 export * from './vencimientosTributarios.js';
+export * from './clasificacionDeDocumentos.js';

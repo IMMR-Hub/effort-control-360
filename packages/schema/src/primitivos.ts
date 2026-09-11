@@ -165,6 +165,14 @@ export const tipoDocumentoSchema = z.enum([
   'CERTIFICADO',
   'CONSTANCIA',
   'LIQUIDACION',
+  // Agregados el 2026-09-11: los documentos reales de EFFORT incluyen balances,
+  // estados de resultados, planillas de determinación y libros de SIGA. Sin
+  // estos tipos, 831 de 1023 documentos quedaban como 'OTRO'.
+  'BALANCE',
+  'ESTADO_RESULTADOS',
+  'DECLARACION_JURADA',
+  'LIBRO_COMPRAS',
+  'LIBRO_VENTAS',
   'OTRO',
 ]);
 

@@ -54,6 +54,7 @@ export async function registrarRutasDeAlertas(
       },
       deps.ahora(),
       periodo,
+      sujeto.usuarioId,
     );
 
     await registrarEvento(deps.bitacora, peticion.log, {

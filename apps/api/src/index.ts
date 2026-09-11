@@ -46,7 +46,10 @@ import { registrarRutasDeEventos } from './rutas/eventos.js';
 import { registrarRutasDeClientes } from './rutas/clientes.js';
 import { registrarRutasDeMiCuenta } from './rutas/mi-cuenta.js';
 import { registrarRutasDeOneDrive } from './rutas/onedrive.js';
-import { programarSincronizacionDeOneDrive } from './servicios/programador.js';
+import {
+  programarCalculoDeVencimientosYAlertas,
+  programarSincronizacionDeOneDrive,
+} from './servicios/programador.js';
 
 export interface DependenciasReales extends Dependencias {
   readonly cerrar: () => Promise<void>;
@@ -135,6 +138,7 @@ export async function arrancar(dependencias: Dependencias): Promise<void> {
   await registrarRutasDeOneDrive(app, dependencias);
 
   programarSincronizacionDeOneDrive(dependencias, app.log);
+  programarCalculoDeVencimientosYAlertas(dependencias, app.log);
 
   // Purga periódica del almacén de intentos: sin esto crece indefinidamente
   // mientras el proceso siga vivo.

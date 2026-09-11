@@ -14,11 +14,23 @@
 
 import type { FastifyBaseLogger } from 'fastify';
 
+import { hoyEnParaguay } from '@effort/core';
+
 import type { Dependencias } from '../servidor.js';
+import { generarVencimientosDelPeriodo } from './generadorDeVencimientos.js';
+import { evaluarAlertas } from './motorDeAlertas.js';
 import { sincronizarDesdeOneDrive } from './sincronizadorDeOneDrive.js';
 
 /** Cada cuánto se revisa la carpeta de EFFORT. Confirmado con Daniel. */
 const CADA_15_MINUTOS = 15 * 60 * 1000;
+
+/**
+ * Cada cuánto se generan vencimientos y se evalúan alertas.
+ *
+ * Una hora y no 15 minutos porque un vencimiento no aparece de un momento a
+ * otro: lo que cambia seguido es qué documentos hay, no qué días vencen.
+ */
+const CADA_HORA = 60 * 60 * 1000;
 
 /**
  * Espera antes de la primera corrida.
@@ -38,6 +50,106 @@ const ESPERA_INICIAL = 2 * 60 * 1000;
  * ella no hizo sería peor que no atribuirla.
  */
 const CORREO_DEL_SISTEMA = 'effort360@effort.com.py';
+
+/**
+ * Genera los vencimientos del período y levanta las alertas que correspondan.
+ *
+ * Corre solo, y esto NO es un detalle de comodidad. Hasta el 2026-09-11 las dos
+ * cosas dependían de que alguien entrara a la pantalla y apretara un botón: si
+ * nadie lo hacía en octubre, no había vencimientos de octubre y por lo tanto
+ * tampoco alertas. Un sistema que existe para que no se pase una fecha no puede
+ * depender de que alguien se acuerde de pedirle que mire.
+ *
+ * Es seguro repetirlo: generar no duplica (restricción única por cliente,
+ * obligación y período) y evaluar no reabre lo que ya está abierto.
+ */
+export function programarCalculoDeVencimientosYAlertas(
+  deps: Dependencias,
+  registrador: FastifyBaseLogger,
+): void {
+  let enCurso = false;
+
+  async function correr(): Promise<void> {
+    if (enCurso) return;
+    enCurso = true;
+
+    try {
+      const usuario = await deps.usuarios.buscarPorEmail(CORREO_DEL_SISTEMA);
+      if (!usuario) {
+        registrador.error(
+          `No existe el usuario ${CORREO_DEL_SISTEMA}: no se puede atribuir el cálculo a nadie.`,
+        );
+        return;
+      }
+
+      const hoy = hoyEnParaguay(deps.ahora());
+      const periodo = `${hoy.anio}-${String(hoy.mes).padStart(2, '0')}`;
+
+      // El mes anterior también: el IVA de septiembre se presenta en octubre,
+      // así que en los primeros días del mes lo que urge es el período pasado.
+      const anterior =
+        hoy.mes === 1
+          ? `${hoy.anio - 1}-12`
+          : `${hoy.anio}-${String(hoy.mes - 1).padStart(2, '0')}`;
+
+      let generados = 0;
+      for (const cual of [anterior, periodo]) {
+        const resumen = await generarVencimientosDelPeriodo(
+          { clientes: deps.clientes, obligaciones: deps.obligaciones, vencimientos: deps.vencimientos },
+          cual,
+          usuario.id,
+        );
+        generados += resumen.creados;
+      }
+
+      const alertas = await evaluarAlertas(
+        { alertas: deps.alertas, vencimientos: deps.vencimientos, procesoMensual: deps.procesoMensual },
+        deps.ahora(),
+        periodo,
+        usuario.id,
+      );
+
+      if (generados > 0 || alertas.creadas > 0) {
+        await deps.bitacora.registrar({
+          usuarioId: usuario.id,
+          accion: 'alerta.evaluadas',
+          entidad: 'alerta',
+          entidadId: null,
+          clienteId: null,
+          datosAntes: null,
+          datosDespues: {
+            periodo,
+            vencimientosGenerados: generados,
+            alertasCreadas: alertas.creadas,
+            disparo: 'automático',
+          },
+          ipTruncada: null,
+          agenteUsuario: 'cálculo automático',
+          peticionId: null,
+        });
+
+        registrador.info(
+          { periodo, generados, alertas: alertas.creadas },
+          'Cálculo automático de vencimientos y alertas terminado.',
+        );
+      }
+    } catch (error) {
+      registrador.error({ err: error }, 'Falló el cálculo automático de vencimientos y alertas.');
+    } finally {
+      enCurso = false;
+    }
+  }
+
+  // Más tarde que la sincronización: conviene que primero entren los
+  // documentos del día y recién después se evalúe qué falta.
+  const primera = setTimeout(() => {
+    void correr();
+    const periodico = setInterval(() => void correr(), CADA_HORA);
+    periodico.unref();
+  }, 5 * 60 * 1000);
+
+  primera.unref();
+}
 
 export function programarSincronizacionDeOneDrive(
   deps: Dependencias,
