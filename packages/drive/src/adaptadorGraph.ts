@@ -55,6 +55,9 @@ function aArchivoDrive(item: ElementoGraph, carpeta: string): ArchivoDrive {
 /** Tope de carpetas a recorrer. Ver `listarRecursivoPorId`. */
 const MAXIMO_DE_CARPETAS = 500;
 
+/** Arriba de esto, Graph exige abrir una sesión de carga. */
+const LIMITE_DE_CARGA_SIMPLE = 4 * 1024 * 1024;
+
 /** Recorta barras iniciales/finales: Graph las rechaza en las rutas `root:/...:/`. */
 function normalizarCarpeta(carpeta: string): string {
   return carpeta.replace(/^\/+/, '').replace(/\/+$/, '');
@@ -188,17 +191,17 @@ export class DriveGraph implements DriveDeArchivos {
   }
 
   /**
-   * Sube el contenido completo en una sola petición ("simple upload" de
-   * Graph). Válido hasta 4 MiB — los archivos de EFFORT (planillas de
-   * comprobantes, exportaciones SIGA) están muy por debajo de ese límite. Un
-   * archivo más grande necesitaría una sesión de carga por partes, que este
-   * adaptador no implementa porque el caso de uso actual no la necesita.
+   * Sube un archivo, eligiendo el mecanismo según su tamaño.
+   *
+   * Hasta 4 MiB va en una sola petición ("simple upload"). Arriba de eso Graph
+   * la rechaza y hay que abrir una sesión de carga — ver `#escribirPorSesion`.
    */
   async escribir(carpeta: string, nombre: string, contenido: Buffer): Promise<ArchivoDrive> {
-    if (contenido.byteLength > 4 * 1024 * 1024) {
-      throw new Error(
-        `Archivo de ${contenido.byteLength} bytes supera el límite de 4 MiB de la carga simple de Graph.`,
-      );
+    // Arriba de 4 MiB la carga simple no sirve y hay que abrir una sesión.
+    // Antes esto era un error: al sincronizar el OneDrive real de EFFORT, el
+    // estatuto social de Copesa (5,7 MB) fallaba en cada corrida, para siempre.
+    if (contenido.byteLength > LIMITE_DE_CARGA_SIMPLE) {
+      return this.#escribirPorSesion(carpeta, nombre, contenido);
     }
 
     const ruta = normalizarCarpeta(carpeta);
@@ -214,4 +217,54 @@ export class DriveGraph implements DriveDeArchivos {
     const item = (await respuesta.json()) as ElementoGraph;
     return aArchivoDrive(item, carpeta);
   }
+
+  /**
+   * Sube un archivo grande abriendo una sesión de carga.
+   *
+   * Se manda el contenido completo en un solo `PUT` con su `Content-Range`, que
+   * Graph admite: partirlo en trozos solo haría falta para archivos muy
+   * grandes o conexiones que se cortan, y ninguna de las dos cosas describe a
+   * los documentos de EFFORT.
+   *
+   * La sesión NO lleva el token de autorización en el `PUT`: la URL que
+   * devuelve Graph ya viene firmada, y mandar el token ahí hace fallar la
+   * subida.
+   */
+  async #escribirPorSesion(
+    carpeta: string,
+    nombre: string,
+    contenido: Buffer,
+  ): Promise<ArchivoDrive> {
+    const ruta = normalizarCarpeta(carpeta);
+    const sesion = await this.#peticion(
+      `/drives/${this.configuracion.driveId}/root:/${encodeURI(ruta)}/${encodeURIComponent(nombre)}:/createUploadSession`,
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ item: { '@microsoft.graph.conflictBehavior': 'replace' } }),
+      },
+    );
+
+    const { uploadUrl } = (await sesion.json()) as { uploadUrl: string };
+    const total = contenido.byteLength;
+
+    const subida = await fetch(uploadUrl, {
+      method: 'PUT',
+      headers: {
+        'content-length': String(total),
+        'content-range': `bytes 0-${total - 1}/${total}`,
+      },
+      body: new Uint8Array(contenido),
+    });
+
+    if (!subida.ok) {
+      throw new Error(
+        `No se pudo subir ${nombre} (${total} bytes) por sesión: ${subida.status} ${await subida.text()}`,
+      );
+    }
+
+    const item = (await subida.json()) as ElementoGraph;
+    return aArchivoDrive(item, carpeta);
+  }
+
 }

@@ -143,17 +143,51 @@ describe('DriveGraph', () => {
     expect(llamadaGraph?.url).toContain('/root:/EFFORT/comprobantes/marzo.xlsx:/content');
   });
 
-  it('rechaza subir un archivo por encima de 4 MiB sin llegar a llamar a la red', async () => {
-    const fetchSimulado = vi.fn();
-    vi.stubGlobal('fetch', fetchSimulado);
+  /**
+   * Antes esto era un error. Se cambió el 2026-09-11 porque al sincronizar el
+   * OneDrive real de EFFORT, el estatuto social de Copesa (5,7 MB) fallaba en
+   * cada corrida y nunca iba a entrar.
+   */
+  it('un archivo de más de 4 MiB se sube abriendo una sesión de carga', async () => {
+    const llamadas: { url: string; metodo: string | undefined; cabeceras: HeadersInit | undefined }[] = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string, opciones?: RequestInit) => {
+        const direccion = url.toString();
+        llamadas.push({ url: direccion, metodo: opciones?.method, cabeceras: opciones?.headers });
+
+        if (direccion.includes('login.microsoftonline.com')) return respuestaToken();
+        if (direccion.includes('createUploadSession')) {
+          return new Response(JSON.stringify({ uploadUrl: 'https://subida.example/sesion-1' }), {
+            status: 200,
+          });
+        }
+        return new Response(
+          JSON.stringify({
+            id: 'item-grande', name: 'estatuto.pdf', size: 5_733_684,
+            lastModifiedDateTime: '2026-03-15T12:00:00Z',
+          }),
+          { status: 200 },
+        );
+      }),
+    );
 
     const drive = new DriveGraph(CONFIGURACION);
     const enorme = Buffer.alloc(4 * 1024 * 1024 + 1);
+    const meta = await drive.escribir('EFFORT/legales', 'estatuto.pdf', enorme);
 
-    await expect(drive.escribir('EFFORT/comprobantes', 'grande.xlsx', enorme)).rejects.toThrow(
-      /4 MiB/,
+    expect(meta.itemId).toBe('item-grande');
+
+    const sesion = llamadas.find((l) => l.url.includes('createUploadSession'));
+    expect(sesion?.metodo).toBe('POST');
+
+    const subida = llamadas.find((l) => l.url.startsWith('https://subida.example/'));
+    expect(subida?.metodo).toBe('PUT');
+    expect((subida?.cabeceras as Record<string, string>)['content-range']).toBe(
+      `bytes 0-${enorme.byteLength - 1}/${enorme.byteLength}`,
     );
-    expect(fetchSimulado).not.toHaveBeenCalled();
+    // La URL de la sesión ya viene firmada: mandarle el token la hace fallar.
+    expect((subida?.cabeceras as Record<string, string>)['authorization']).toBeUndefined();
   });
 
   it('un error de Graph incluye el código de estado y el cuerpo de la respuesta', async () => {

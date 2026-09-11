@@ -15,6 +15,8 @@ import type {
   AltaDeReglaImpositiva,
   AltaDeAlerta,
   AltaDeEvidencia,
+  HuellaDeOrigen,
+  ResultadoDeRegistro,
   EvidenciaAlmacenada,
   RepositorioDeEvidencias,
   AltaDeVencimiento,
@@ -472,6 +474,16 @@ export class VencimientosPrisma implements RepositorioDeVencimientos {
 /* Evidencias                                                                 */
 /* ========================================================================== */
 
+const CAMPOS_EVIDENCIA = {
+  id: true,
+  clienteId: true,
+  nombreArchivo: true,
+  rutaOneDrive: true,
+  itemIdOneDrive: true,
+  tipoMime: true,
+  tamanoBytes: true,
+} as const;
+
 export class EvidenciasPrisma implements RepositorioDeEvidencias {
   constructor(private readonly prisma: PrismaClient) {}
 
@@ -497,7 +509,16 @@ export class EvidenciasPrisma implements RepositorioDeEvidencias {
     return fila as EvidenciaAlmacenada | null;
   }
 
-  async registrarSiEsNueva(datos: AltaDeEvidencia): Promise<EvidenciaAlmacenada | null> {
+  async huellasDeOrigen(clienteId: string): Promise<HuellaDeOrigen[]> {
+    const filas = await this.prisma.evidencia.findMany({
+      where: { clienteId, itemIdOrigen: { not: null } },
+      select: { itemIdOrigen: true, modificadoEnOrigen: true },
+    });
+
+    return filas as HuellaDeOrigen[];
+  }
+
+  async registrarOVincular(datos: AltaDeEvidencia): Promise<ResultadoDeRegistro> {
     // `createMany` con skipDuplicates en vez de un `findFirst` previo: entre la
     // consulta y la inserción podría entrar otra corrida y meter el mismo
     // archivo. Con la única sobre `sha256`, la base decide y no hay carrera.
@@ -512,21 +533,30 @@ export class EvidenciasPrisma implements RepositorioDeEvidencias {
           tamanoBytes: datos.tamanoBytes,
           sha256: datos.sha256,
           subidoPorUsuarioId: datos.subidoPorUsuarioId,
+          itemIdOrigen: datos.itemIdOrigen,
+          modificadoEnOrigen: datos.modificadoEnOrigen,
         },
       ],
-      select: {
-        id: true,
-        clienteId: true,
-        nombreArchivo: true,
-        rutaOneDrive: true,
-        itemIdOneDrive: true,
-        tipoMime: true,
-        tamanoBytes: true,
-      },
+      select: CAMPOS_EVIDENCIA,
       skipDuplicates: true,
     });
 
-    return (insertadas[0] as EvidenciaAlmacenada | undefined) ?? null;
+    if (insertadas[0]) {
+      return { evidencia: insertadas[0] as EvidenciaAlmacenada, esNueva: true };
+    }
+
+    // Ese contenido ya estaba. Se le anota de dónde vino para no volver a
+    // descargarlo nunca más: sin esto, cada corrida lo bajaría de nuevo.
+    const existente = await this.prisma.evidencia.update({
+      where: { sha256: datos.sha256 },
+      data: {
+        itemIdOrigen: datos.itemIdOrigen,
+        modificadoEnOrigen: datos.modificadoEnOrigen,
+      },
+      select: CAMPOS_EVIDENCIA,
+    });
+
+    return { evidencia: existente as EvidenciaAlmacenada, esNueva: false };
   }
 }
 

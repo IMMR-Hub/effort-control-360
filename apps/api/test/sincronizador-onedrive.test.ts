@@ -29,11 +29,21 @@ function crearRegistro() {
   return {
     altas,
     async registrar(datos: AltaDeEvidencia) {
-      if (porSha.has(datos.sha256)) return null;
+      const yaEstaba = porSha.get(datos.sha256);
+      if (yaEstaba) {
+        // Igual que la base: se le anota el origen para no volver a bajarlo.
+        altas.push(datos);
+        return { evidencia: yaEstaba, esNueva: false };
+      }
       const evidencia = { id: randomUUID() };
       porSha.set(datos.sha256, evidencia);
       altas.push(datos);
-      return evidencia;
+      return { evidencia, esNueva: true };
+    },
+    async huellas(clienteId: string) {
+      return altas
+        .filter((a) => a.clienteId === clienteId && a.itemIdOrigen !== null)
+        .map((a) => ({ itemIdOrigen: a.itemIdOrigen!, modificadoEnOrigen: a.modificadoEnOrigen }));
     },
   };
 }
@@ -64,6 +74,7 @@ function armar() {
       origen,
       destino,
       registrarEvidencia: (datos: AltaDeEvidencia) => registro.registrar(datos),
+      huellasDeOrigen: (clienteId: string) => registro.huellas(clienteId),
       ahora: () => new Date('2026-09-11T12:00:00Z'),
     },
   };
@@ -116,7 +127,8 @@ describe('sincronización desde OneDrive', () => {
     const segunda = await sincronizarDesdeOneDrive(ctx.deps, USUARIO);
 
     expect(segunda.nuevosEnTotal).toBe(0);
-    expect(segunda.clientes[0]!.yaEstaban).toBe(1);
+    // Se saltea sin descargar: mismo archivo, misma fecha.
+    expect(segunda.clientes[0]!.sinCambios).toBe(1);
     expect(ctx.documentos.documentos).toHaveLength(1);
   });
 
@@ -136,6 +148,53 @@ describe('sincronización desde OneDrive', () => {
 
     expect(segunda.nuevosEnTotal).toBe(0);
     expect(ctx.documentos.documentos).toHaveLength(1);
+  });
+
+  /**
+   * El caso que justifica toda la marca de origen: probando contra el OneDrive
+   * real, la primera corrida no terminaba porque bajaba los ~700 archivos para
+   * calcular su huella y recién ahí descubría que ya los tenía. Corriendo cada
+   * 15 minutos, eso no se sostiene.
+   */
+  it('en la segunda corrida NO vuelve a descargar lo que no cambió', async () => {
+    const ctx = armar();
+    ctx.origen.sembrar('CLIENTES/002 FUMIPRO', 'contrato.pdf', Buffer.from('uno'));
+    ctx.origen.sembrar('CLIENTES/002 FUMIPRO', 'acta.pdf', Buffer.from('dos'));
+
+    await sincronizarDesdeOneDrive(ctx.deps, USUARIO);
+
+    let descargas = 0;
+    const leerOriginal = ctx.origen.leer.bind(ctx.origen);
+    ctx.origen.leer = async (itemId: string) => {
+      descargas += 1;
+      return leerOriginal(itemId);
+    };
+
+    const segunda = await sincronizarDesdeOneDrive(ctx.deps, USUARIO);
+
+    expect(descargas).toBe(0);
+    expect(segunda.clientes[0]!.sinCambios).toBe(2);
+    expect(segunda.nuevosEnTotal).toBe(0);
+  });
+
+  it('si el archivo cambió en el origen, sí se vuelve a leer', async () => {
+    const ctx = armar();
+    ctx.origen.sembrar('CLIENTES/002 FUMIPRO', 'contrato.pdf', Buffer.from('uno'), {
+      itemId: 'item-contrato',
+      modificadoEn: new Date('2026-09-01T10:00:00Z'),
+    });
+    await sincronizarDesdeOneDrive(ctx.deps, USUARIO);
+
+    // El MISMO archivo (mismo id), con contenido y fecha nuevos: lo editaron.
+    ctx.origen.sembrar('CLIENTES/002 FUMIPRO', 'contrato.pdf', Buffer.from('uno corregido'), {
+      itemId: 'item-contrato',
+      modificadoEn: new Date('2026-09-10T16:00:00Z'),
+    });
+
+    const segunda = await sincronizarDesdeOneDrive(ctx.deps, USUARIO);
+
+    expect(segunda.clientes[0]!.sinCambios).toBe(0);
+    expect(segunda.nuevosEnTotal).toBe(1);
   });
 
   it('un cliente sin carpeta asignada se saltea sin romper la corrida', async () => {

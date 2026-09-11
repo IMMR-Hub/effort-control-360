@@ -244,6 +244,19 @@ model Evidencia {
   /// el archivo que se está mirando es el que se recibió.
   sha256 String @unique @db.Char(64)
 
+  /// Identidad del archivo en el drive de ORIGEN (donde EFFORT trabaja), con
+  /// su fecha de modificación de allá.
+  ///
+  /// Existen para poder saltear, SIN DESCARGARLO, un archivo que ya se
+  /// importó. Sin esto la sincronización tiene que bajar cada archivo para
+  /// calcular su huella y recién ahí descubrir que ya lo tenía — con cientos
+  /// de archivos y una corrida cada 15 minutos, eso no se sostiene.
+  ///
+  /// Nulos en las evidencias anteriores a la sincronización automática: esas
+  /// se importaron con un script y no se registró de dónde venían.
+  itemIdOrigen       String?   @map("item_id_origen") @db.VarChar(200)
+  modificadoEnOrigen DateTime? @map("modificado_en_origen") @db.Timestamptz(3)
+
   /// Cuándo se copió al OneDrive espejo de respaldo.
   respaldadoEn      DateTime? @map("respaldado_en") @db.Timestamptz(3)
   subidoPorUsuarioId String   @map("subido_por_usuario_id") @db.Uuid
@@ -254,6 +267,7 @@ model Evidencia {
   documentos Documento[]
 
   @@index([clienteId, periodo])
+  @@index([clienteId, itemIdOrigen])
   @@map("evidencia")
 }
 

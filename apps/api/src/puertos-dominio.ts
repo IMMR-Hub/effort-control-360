@@ -246,20 +246,46 @@ export interface AltaDeEvidencia {
   readonly tamanoBytes: bigint;
   readonly sha256: string;
   readonly subidoPorUsuarioId: string;
+  /** Identidad del archivo en el drive de origen, para poder saltearlo luego. */
+  readonly itemIdOrigen: string | null;
+  readonly modificadoEnOrigen: Date | null;
+}
+
+export interface ResultadoDeRegistro {
+  readonly evidencia: EvidenciaAlmacenada;
+  /** False cuando ese contenido ya estaba y solo se le anotó el origen. */
+  readonly esNueva: boolean;
+}
+
+/** Lo mínimo para decidir si un archivo del origen ya se importó. */
+export interface HuellaDeOrigen {
+  readonly itemIdOrigen: string;
+  readonly modificadoEnOrigen: Date | null;
 }
 
 export interface RepositorioDeEvidencias {
   buscarPorId(id: string): Promise<EvidenciaAlmacenada | null>;
   /**
-   * Registra un archivo, o devuelve `null` si ese contenido ya estaba.
+   * Qué archivos del origen ya tiene este cliente.
+   *
+   * Es lo que permite que una corrida normal no descargue nada: se listan los
+   * archivos (barato) y solo se baja lo que no está en este conjunto o cambió
+   * de fecha.
+   */
+  huellasDeOrigen(clienteId: string): Promise<HuellaDeOrigen[]>;
+  /**
+   * Registra un archivo; si ese contenido ya estaba, le anota de dónde vino.
    *
    * La unicidad la decide la huella `sha256` del contenido, no el nombre ni la
    * ruta: el mismo archivo renombrado, o copiado a otra carpeta, sigue siendo
-   * el mismo archivo. Devolver `null` en vez de fallar hace que sincronizar sea
-   * una operación que se puede repetir sin pensarlo — que es justo lo que hace
-   * falta para que corra sola cada 15 minutos.
+   * el mismo archivo.
+   *
+   * Lo importante del caso "ya estaba": igual se le graba el `itemIdOrigen`.
+   * Sin eso, un archivo ya importado se volvería a descargar en cada corrida
+   * para siempre — es exactamente lo que pasaba con los 671 documentos que se
+   * habían cargado con un script, antes de que existiera esta marca.
    */
-  registrarSiEsNueva(datos: AltaDeEvidencia): Promise<EvidenciaAlmacenada | null>;
+  registrarOVincular(datos: AltaDeEvidencia): Promise<ResultadoDeRegistro>;
 }
 
 /* ========================================================================== */

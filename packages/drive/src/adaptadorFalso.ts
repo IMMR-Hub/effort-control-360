@@ -85,13 +85,21 @@ export class DriveFalso implements DriveDeArchivos {
    * en el drive antes de que corriera el código bajo prueba (a diferencia de
    * `escribir`, que es la operación real que también usaría un importador).
    */
-  sembrar(carpeta: string, nombre: string, contenido: Buffer): ArchivoDrive {
+  sembrar(
+    carpeta: string,
+    nombre: string,
+    contenido: Buffer,
+    // `itemId` y `modificadoEn` explícitos permiten simular que alguien EDITÓ
+    // un archivo que ya estaba: mismo id, contenido y fecha nuevos. Sin esto
+    // cada llamada crea un archivo distinto, que es otro escenario.
+    opciones: { itemId?: string; modificadoEn?: Date } = {},
+  ): ArchivoDrive {
     const meta: ArchivoDrive = {
-      itemId: randomUUID(),
+      itemId: opciones.itemId ?? randomUUID(),
       nombre,
       rutaCarpeta: carpeta,
       tamanoBytes: contenido.length,
-      modificadoEn: new Date(),
+      modificadoEn: opciones.modificadoEn ?? new Date(),
       tipoMime: null,
     };
     this.#archivos.set(meta.itemId, { meta, contenido });

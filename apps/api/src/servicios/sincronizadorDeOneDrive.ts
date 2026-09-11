@@ -31,14 +31,16 @@ import type { RepositorioDeDocumentos } from '../puertos-dominio.js';
 const CARPETA_DEL_SISTEMA = 'EFFORT Control 360/Entrada';
 
 /**
- * Tope de archivos por corrida.
+ * Tope de archivos DESCARGADOS por corrida.
  *
- * La sincronización corre sola cada 15 minutos: sin tope, la primera corrida
- * sobre un cliente nuevo con miles de archivos podría quedar horas y pisarse
- * con la siguiente. Lo que no entra en una corrida entra en la siguiente,
- * porque el `sha256` hace que empezar de nuevo sea barato.
+ * Cuenta descargas y no altas nuevas, que es la corrección que hizo falta al
+ * probar contra el OneDrive real: un archivo ya conocido por su contenido pero
+ * sin marca de origen igual hay que bajarlo para saberlo, y si esas descargas
+ * no contaran, la corrida no terminaría nunca. Lo que no entra en una corrida
+ * entra en la siguiente, y cada archivo bajado queda marcado para no volver a
+ * bajarse.
  */
-const MAXIMO_POR_CORRIDA = 200;
+const MAXIMO_DESCARGAS_POR_CORRIDA = 150;
 
 export interface DependenciasDelSincronizador {
   readonly clientes: RepositorioDeClientes;
@@ -47,7 +49,11 @@ export interface DependenciasDelSincronizador {
   readonly origen: DriveDeArchivos;
   /** Drive propio del sistema. Acá sí se escribe. */
   readonly destino: DriveDeArchivos;
-  readonly registrarEvidencia: (datos: AltaDeEvidencia) => Promise<{ id: string } | null>;
+  readonly registrarEvidencia: (
+    datos: AltaDeEvidencia,
+  ) => Promise<{ evidencia: { id: string }; esNueva: boolean }>;
+  /** Qué archivos del origen ya tiene ese cliente, para no volver a bajarlos. */
+  readonly huellasDeOrigen: (clienteId: string) => Promise<readonly HuellaDeOrigen[]>;
   readonly ahora: () => Date;
 }
 
@@ -60,6 +66,13 @@ export interface AltaDeEvidencia {
   readonly tamanoBytes: bigint;
   readonly sha256: string;
   readonly subidoPorUsuarioId: string;
+  readonly itemIdOrigen: string | null;
+  readonly modificadoEnOrigen: Date | null;
+}
+
+export interface HuellaDeOrigen {
+  readonly itemIdOrigen: string;
+  readonly modificadoEnOrigen: Date | null;
 }
 
 export interface FalloDeSincronizacion {
@@ -73,6 +86,8 @@ export interface ResumenPorCliente {
   readonly revisados: number;
   readonly nuevos: number;
   readonly yaEstaban: number;
+  /** Salteados sin descargar, por estar ya importados y sin cambios. */
+  readonly sinCambios: number;
 }
 
 export interface ResumenDeSincronizacion {
@@ -109,6 +124,7 @@ export async function sincronizarDesdeOneDrive(
   const porCliente: ResumenPorCliente[] = [];
   const fallos: FalloDeSincronizacion[] = [];
   let nuevosEnTotal = 0;
+  let descargas = 0;
   let quedaronPendientes = false;
 
   for (const cliente of clientes) {
@@ -126,20 +142,40 @@ export async function sincronizarDesdeOneDrive(
       continue;
     }
 
+    // Lo que ya se tiene de este cliente, en una sola consulta. Es lo que
+    // evita bajar cientos de archivos para descubrir que ya estaban.
+    const conocidos = new Map<string, number | null>();
+    for (const huella of await deps.huellasDeOrigen(cliente.id)) {
+      conocidos.set(huella.itemIdOrigen, huella.modificadoEnOrigen?.getTime() ?? null);
+    }
+
     let nuevos = 0;
     let yaEstaban = 0;
+    let sinCambios = 0;
     let revisados = 0;
 
     for (const archivo of archivos) {
-      if (nuevosEnTotal >= MAXIMO_POR_CORRIDA) {
+      if (descargas >= MAXIMO_DESCARGAS_POR_CORRIDA) {
         quedaronPendientes = true;
         break;
       }
 
       revisados += 1;
 
+      // El atajo que hace viable correr esto cada 15 minutos: mismo archivo,
+      // misma fecha de modificación, no se toca. Si la fecha cambió sí se baja,
+      // porque el contenido pudo haber cambiado.
+      if (conocidos.has(archivo.itemId)) {
+        const fechaConocida = conocidos.get(archivo.itemId);
+        if (fechaConocida === archivo.modificadoEn.getTime()) {
+          sinCambios += 1;
+          continue;
+        }
+      }
+
       try {
         const contenido = await deps.origen.leer(archivo.itemId);
+        descargas += 1;
         const sha256 = createHash('sha256').update(contenido).digest('hex');
 
         // Se copia a la carpeta propia ANTES de registrar: si el registro
@@ -157,11 +193,14 @@ export async function sincronizarDesdeOneDrive(
           tamanoBytes: BigInt(archivo.tamanoBytes),
           sha256,
           subidoPorUsuarioId: usuarioId,
+          itemIdOrigen: archivo.itemId,
+          modificadoEnOrigen: archivo.modificadoEn,
         });
 
-        // `null` significa que ese sha256 ya estaba: el archivo ya se había
-        // importado antes, con este nombre o con otro.
-        if (evidencia === null) {
+        // Ese contenido ya estaba (mismo archivo con otro nombre, o importado
+        // por el script viejo). Ya se le anotó de dónde viene, así que la
+        // próxima corrida lo saltea sin bajarlo.
+        if (!evidencia.esNueva) {
           yaEstaban += 1;
           continue;
         }
@@ -178,7 +217,7 @@ export async function sincronizarDesdeOneDrive(
           total: null,
           tasa: null,
           anulado: false,
-          evidenciaId: evidencia.id,
+          evidenciaId: evidencia.evidencia.id,
           observaciones: null,
           creadoPorUsuarioId: usuarioId,
         });
@@ -194,7 +233,7 @@ export async function sincronizarDesdeOneDrive(
       }
     }
 
-    porCliente.push({ cliente: cliente.nombre, revisados, nuevos, yaEstaban });
+    porCliente.push({ cliente: cliente.nombre, revisados, nuevos, yaEstaban, sinCambios });
   }
 
   return { clientes: porCliente, nuevosEnTotal, fallos, quedaronPendientes };

@@ -13,6 +13,8 @@ import { randomUUID } from 'node:crypto';
 import type {
   AltaDeAlerta,
   AltaDeEvidencia,
+  HuellaDeOrigen,
+  ResultadoDeRegistro,
   EvidenciaAlmacenada,
   RepositorioDeEvidencias,
   AltaDeVencimientoGenerado,
@@ -254,9 +256,16 @@ export class EvidenciasFalsas implements RepositorioDeEvidencias {
     return this.evidencias.find((e) => e.id === id) ?? null;
   }
 
+  async huellasDeOrigen(clienteId: string): Promise<HuellaDeOrigen[]> {
+    return this.evidencias
+      .filter((e) => e.clienteId === clienteId)
+      .map(() => ({ itemIdOrigen: '', modificadoEnOrigen: null }));
+  }
+
   /** Reproduce la unicidad de `sha256` de la base. */
-  async registrarSiEsNueva(datos: AltaDeEvidencia): Promise<EvidenciaAlmacenada | null> {
-    if (this.#porSha.has(datos.sha256)) return null;
+  async registrarOVincular(datos: AltaDeEvidencia): Promise<ResultadoDeRegistro> {
+    const yaEstaba = this.#porSha.get(datos.sha256);
+    if (yaEstaba) return { evidencia: yaEstaba, esNueva: false };
 
     const evidencia: EvidenciaAlmacenada = {
       id: randomUUID(),
@@ -269,7 +278,7 @@ export class EvidenciasFalsas implements RepositorioDeEvidencias {
     };
     this.#porSha.set(datos.sha256, evidencia);
     this.evidencias.push(evidencia);
-    return evidencia;
+    return { evidencia, esNueva: true };
   }
 }
 
