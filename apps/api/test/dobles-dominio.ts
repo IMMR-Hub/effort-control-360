@@ -12,6 +12,7 @@ import { randomUUID } from 'node:crypto';
 
 import type {
   AltaDeAlerta,
+  AltaDeEvidencia,
   EvidenciaAlmacenada,
   RepositorioDeEvidencias,
   AltaDeVencimientoGenerado,
@@ -247,9 +248,28 @@ export class ProcesoMensualFalso implements RepositorioDeProcesoMensual {
 
 export class EvidenciasFalsas implements RepositorioDeEvidencias {
   readonly evidencias: EvidenciaAlmacenada[] = [];
+  readonly #porSha = new Map<string, EvidenciaAlmacenada>();
 
   async buscarPorId(id: string): Promise<EvidenciaAlmacenada | null> {
     return this.evidencias.find((e) => e.id === id) ?? null;
+  }
+
+  /** Reproduce la unicidad de `sha256` de la base. */
+  async registrarSiEsNueva(datos: AltaDeEvidencia): Promise<EvidenciaAlmacenada | null> {
+    if (this.#porSha.has(datos.sha256)) return null;
+
+    const evidencia: EvidenciaAlmacenada = {
+      id: randomUUID(),
+      clienteId: datos.clienteId,
+      nombreArchivo: datos.nombreArchivo,
+      rutaOneDrive: datos.rutaOneDrive,
+      itemIdOneDrive: datos.itemIdOneDrive,
+      tipoMime: datos.tipoMime,
+      tamanoBytes: datos.tamanoBytes,
+    };
+    this.#porSha.set(datos.sha256, evidencia);
+    this.evidencias.push(evidencia);
+    return evidencia;
   }
 }
 

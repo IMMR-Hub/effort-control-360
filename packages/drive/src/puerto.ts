@@ -22,6 +22,20 @@ export interface ArchivoDrive {
 export interface DriveDeArchivos {
   /** Archivos directos de una carpeta. No baja a subcarpetas. */
   listar(carpeta: string): Promise<ArchivoDrive[]>;
+  /**
+   * Todos los archivos de una carpeta y de sus subcarpetas, identificando la
+   * carpeta por su id en vez de por su ruta.
+   *
+   * Por id y no por ruta porque las carpetas de EFFORT se renombran: "PERIODO
+   * 2026" pasa a "2026", alguien corrige un acento. El id sobrevive a eso; la
+   * ruta no, y una sincronización que se rompe cuando alguien renombra una
+   * carpeta no sirve para nada.
+   *
+   * Recursivo porque los documentos de un cliente viven varios niveles adentro
+   * (`PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/...`) y esa estructura la
+   * decide EFFORT, no el sistema.
+   */
+  listarRecursivoPorId(itemId: string): Promise<ArchivoDrive[]>;
   leer(itemId: string): Promise<Buffer>;
   /**
    * Sube un archivo. Si ya existe uno con el mismo nombre en la carpeta,

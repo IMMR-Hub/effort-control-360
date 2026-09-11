@@ -40,6 +40,8 @@ const configuracionSchema = z
     AZURE_CLIENT_ID: z.string().optional(),
     AZURE_CLIENT_SECRET: z.string().optional(),
     AZURE_DRIVE_ID: z.string().optional(),
+    /** Drive de EFFORT, del que se LEE para sincronizar. */
+    AZURE_DRIVE_ID_ORIGEN: z.string().optional(),
 
     NIVEL_LOG: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
   })
@@ -83,6 +85,7 @@ export function cargarConfiguracion(entorno: NodeJS.ProcessEnv = process.env): C
     AZURE_CLIENT_ID: entorno['AZURE_CLIENT_ID'],
     AZURE_CLIENT_SECRET: entorno['AZURE_CLIENT_SECRET'],
     AZURE_DRIVE_ID: entorno['AZURE_DRIVE_ID'],
+    AZURE_DRIVE_ID_ORIGEN: entorno['AZURE_DRIVE_ID_ORIGEN'],
     NIVEL_LOG: entorno['NIVEL_LOG'],
   };
 

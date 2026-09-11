@@ -45,6 +45,8 @@ import { registrarRutasDeReglasDeNotificacion } from './rutas/reglas-notificacio
 import { registrarRutasDeEventos } from './rutas/eventos.js';
 import { registrarRutasDeClientes } from './rutas/clientes.js';
 import { registrarRutasDeMiCuenta } from './rutas/mi-cuenta.js';
+import { registrarRutasDeOneDrive } from './rutas/onedrive.js';
+import { programarSincronizacionDeOneDrive } from './servicios/programador.js';
 
 export interface DependenciasReales extends Dependencias {
   readonly cerrar: () => Promise<void>;
@@ -58,10 +60,10 @@ export interface DependenciasReales extends Dependencias {
  * se pierde es poder abrir archivos. La ruta que lo usa devuelve un error que
  * dice exactamente eso.
  */
-function crearDrive(configuracion: Configuracion): DriveGraph | null {
-  const { AZURE_TENANT_ID, AZURE_CLIENT_ID, AZURE_CLIENT_SECRET, AZURE_DRIVE_ID } = configuracion;
+function crearDrive(configuracion: Configuracion, driveId: string | undefined): DriveGraph | null {
+  const { AZURE_TENANT_ID, AZURE_CLIENT_ID, AZURE_CLIENT_SECRET } = configuracion;
 
-  if (!AZURE_TENANT_ID || !AZURE_CLIENT_ID || !AZURE_CLIENT_SECRET || !AZURE_DRIVE_ID) {
+  if (!AZURE_TENANT_ID || !AZURE_CLIENT_ID || !AZURE_CLIENT_SECRET || !driveId) {
     return null;
   }
 
@@ -69,7 +71,7 @@ function crearDrive(configuracion: Configuracion): DriveGraph | null {
     tenantId: AZURE_TENANT_ID,
     clientId: AZURE_CLIENT_ID,
     clientSecret: AZURE_CLIENT_SECRET,
-    driveId: AZURE_DRIVE_ID,
+    driveId,
   });
 }
 
@@ -95,7 +97,10 @@ export function construirDependencias(configuracion: Configuracion): Dependencia
     vencimientos: new VencimientosPrisma(prisma),
     obligaciones: new ObligacionesPrisma(prisma),
     evidencias: new EvidenciasPrisma(prisma),
-    drive: crearDrive(configuracion),
+    drive: crearDrive(configuracion, configuracion.AZURE_DRIVE_ID),
+    // Instancia aparte, apuntando al drive de EFFORT. Que sean dos objetos
+    // distintos es lo que hace imposible escribir ahí por descuido.
+    driveDeOrigen: crearDrive(configuracion, configuracion.AZURE_DRIVE_ID_ORIGEN),
     solicitudes: new SolicitudesPrisma(prisma),
     balances: new BalancesPrisma(prisma),
     exportacionesSiga: new ExportacionesSigaPrisma(prisma),
@@ -127,6 +132,9 @@ export async function arrancar(dependencias: Dependencias): Promise<void> {
   await registrarRutasDeEventos(app, dependencias);
   await registrarRutasDeClientes(app, dependencias);
   await registrarRutasDeMiCuenta(app, dependencias);
+  await registrarRutasDeOneDrive(app, dependencias);
+
+  programarSincronizacionDeOneDrive(dependencias, app.log);
 
   // Purga periódica del almacén de intentos: sin esto crece indefinidamente
   // mientras el proceso siga vivo.

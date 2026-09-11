@@ -17,11 +17,39 @@ interface EntradaFalsa {
 
 export class DriveFalso implements DriveDeArchivos {
   readonly #archivos = new Map<string, EntradaFalsa>();
+  readonly #carpetas = new Map<string, string>();
 
   async listar(carpeta: string): Promise<ArchivoDrive[]> {
     return [...this.#archivos.values()]
       .filter((entrada) => entrada.meta.rutaCarpeta === carpeta)
       .map((entrada) => entrada.meta);
+  }
+
+  /**
+   * Equivalente en memoria del recorrido recursivo.
+   *
+   * En el drive real la carpeta se identifica por su id; acá no hay entidades
+   * "carpeta", así que el id que se pasa es el de la carpeta raíz tal como la
+   * registró `registrarCarpeta`, y se devuelven todos los archivos cuya ruta
+   * cuelga de ella.
+   */
+  async listarRecursivoPorId(itemId: string): Promise<ArchivoDrive[]> {
+    const raiz = this.#carpetas.get(itemId);
+    if (raiz === undefined) {
+      throw new Error(`Carpeta inexistente en el drive falso: ${itemId}`);
+    }
+
+    return [...this.#archivos.values()]
+      .filter(
+        (entrada) =>
+          entrada.meta.rutaCarpeta === raiz || entrada.meta.rutaCarpeta.startsWith(`${raiz}/`),
+      )
+      .map((entrada) => entrada.meta);
+  }
+
+  /** Da de alta una carpeta con su id, para poder recorrerla en los tests. */
+  registrarCarpeta(itemId: string, ruta: string): void {
+    this.#carpetas.set(itemId, ruta);
   }
 
   async leer(itemId: string): Promise<Buffer> {

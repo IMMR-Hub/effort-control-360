@@ -16,7 +16,7 @@
  */
 
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
-import { AlertOctagon, Ban, CheckCircle2, FileText, Plus, Eye } from 'lucide-react';
+import { AlertOctagon, Ban, CheckCircle2, CloudDownload, FileText, Plus, Eye } from 'lucide-react';
 
 import { formatearGs, gs, hoyEnParaguay } from '@effort/core';
 import { periodoSchema } from '@effort/schema';
@@ -34,6 +34,7 @@ import {
   Th,
 } from '../ui/Primitivos.jsx';
 import { ErrorDeApi, urlDeApi } from '../api/cliente.js';
+import { sincronizarOneDrive, type ResumenDeSincronizacion } from '../api/onedrive.js';
 import { listarClientes, type Cliente } from '../api/clientes.js';
 import {
   ETIQUETA_TIPO_DOCUMENTO,
@@ -228,6 +229,29 @@ export default function Documentos() {
   const [formularioProceso, setFormularioProceso] = useState<FormularioProceso>(PROCESO_VACIO);
   const [guardandoProceso, setGuardandoProceso] = useState(false);
   const [errorProceso, setErrorProceso] = useState<string | null>(null);
+
+  const [sincronizando, setSincronizando] = useState(false);
+  const [resumenSync, setResumenSync] = useState<ResumenDeSincronizacion | null>(null);
+
+  /**
+   * Adelanta la sincronización que igual corre sola cada 15 minutos.
+   *
+   * Existe porque esperar hasta un cuarto de hora para ver si un archivo que
+   * acabás de subir llegó al sistema vuelve imposible comprobar nada.
+   */
+  async function sincronizarAhora() {
+    setSincronizando(true);
+    setError(null);
+    try {
+      setResumenSync(await sincronizarOneDrive());
+      await cargarTablero();
+      if (clienteSeleccionado) await cargarDocumentos(clienteSeleccionado);
+    } catch (motivo) {
+      setError(motivo instanceof ErrorDeApi ? motivo.message : 'No se pudo conectar con el servidor.');
+    } finally {
+      setSincronizando(false);
+    }
+  }
 
   const [formularioDocAbierto, setFormularioDocAbierto] = useState(false);
   const [formularioDoc, setFormularioDoc] = useState<FormularioDocumento>(DOCUMENTO_VACIO);
@@ -448,15 +472,50 @@ export default function Documentos() {
             Proceso mensual por cliente: qué se retiró, qué falta, y el saldo de IVA del período.
           </p>
         </div>
-        <CampoTexto
-          id="periodo"
-          etiqueta="Período"
-          type="month"
-          value={periodo}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPeriodo(e.target.value)}
-          className="w-40"
-        />
+        <div className="flex flex-wrap items-end gap-3">
+          {puedeCrearDocumento && (
+            <Boton
+              variante="secundario"
+              icono={CloudDownload}
+              onClick={() => void sincronizarAhora()}
+              disabled={sincronizando}
+            >
+              {sincronizando ? 'Sincronizando…' : 'Sincronizar OneDrive'}
+            </Boton>
+          )}
+          <CampoTexto
+            id="periodo"
+            etiqueta="Período"
+            type="month"
+            value={periodo}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPeriodo(e.target.value)}
+            className="w-40"
+          />
+        </div>
       </div>
+
+      {resumenSync && (
+        <div
+          role="status"
+          className="rounded border border-borde-marca bg-superficie-tenue px-4 py-3 text-sm text-tinta-suave"
+        >
+          <p>
+            {resumenSync.nuevosEnTotal === 0
+              ? 'No había documentos nuevos en OneDrive.'
+              : `${resumenSync.nuevosEnTotal} documentos nuevos traídos de OneDrive.`}
+            {resumenSync.quedaronPendientes && ' Quedaron más para la próxima corrida.'}
+          </p>
+          {resumenSync.fallos.length > 0 && (
+            <ul className="mt-2 space-y-0.5">
+              {resumenSync.fallos.map((fallo) => (
+                <li key={`${fallo.cliente}-${fallo.archivo}`} className="text-critico">
+                  {fallo.cliente} · {fallo.archivo}: {fallo.motivo}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
 
       <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-label="Resumen del período">
         <Indicador etiqueta="Clientes" valor={filas.length} tono="proceso" />

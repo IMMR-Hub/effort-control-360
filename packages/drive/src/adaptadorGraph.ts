@@ -52,6 +52,9 @@ function aArchivoDrive(item: ElementoGraph, carpeta: string): ArchivoDrive {
   };
 }
 
+/** Tope de carpetas a recorrer. Ver `listarRecursivoPorId`. */
+const MAXIMO_DE_CARPETAS = 500;
+
 /** Recorta barras iniciales/finales: Graph las rechaza en las rutas `root:/...:/`. */
 function normalizarCarpeta(carpeta: string): string {
   return carpeta.replace(/^\/+/, '').replace(/\/+$/, '');
@@ -121,6 +124,60 @@ export class DriveGraph implements DriveDeArchivos {
     const datos = (await respuesta.json()) as ListadoGraph;
 
     return datos.value.filter((item) => !item.folder).map((item) => aArchivoDrive(item, carpeta));
+  }
+
+  /**
+   * Recorre una carpeta y todo lo que cuelga de ella.
+   *
+   * Para leer el drive de otra persona (el de Laura, donde EFFORT trabaja a
+   * diario) se crea OTRA instancia de este adaptador apuntando a ese drive, en
+   * vez de que una misma instancia mezcle dos. Así es imposible que una lectura
+   * del drive ajeno y una escritura en el propio se confundan entre sí — y la
+   * regla de que las carpetas reales de EFFORT son de solo lectura
+   * (`CLAUDE.md`) no depende de acordarse de pasar el parámetro correcto.
+   */
+  async listarRecursivoPorId(itemId: string): Promise<ArchivoDrive[]> {
+    const encontrados: ArchivoDrive[] = [];
+    // Iterativo y no recursivo: una jerarquía profunda no debe poder agotar la
+    // pila, y así el tope de carpetas de más abajo es fácil de hacer cumplir.
+    const pendientes: { id: string; ruta: string }[] = [{ id: itemId, ruta: '' }];
+    let carpetasRecorridas = 0;
+
+    while (pendientes.length > 0) {
+      const actual = pendientes.pop()!;
+
+      if (++carpetasRecorridas > MAXIMO_DE_CARPETAS) {
+        throw new Error(
+          `La carpeta tiene más de ${MAXIMO_DE_CARPETAS} subcarpetas. ` +
+            'Se corta para no quedar recorriendo indefinidamente: revisá si es la carpeta correcta.',
+        );
+      }
+
+      let url: string | null =
+        `/drives/${this.configuracion.driveId}/items/${actual.id}/children` +
+        '?$top=200&$select=id,name,size,lastModifiedDateTime,file,folder';
+
+      while (url) {
+        const respuesta = await this.#peticion(url);
+        const datos = (await respuesta.json()) as ListadoGraph & { '@odata.nextLink'?: string };
+
+        for (const item of datos.value) {
+          const ruta = actual.ruta === '' ? item.name : `${actual.ruta}/${item.name}`;
+          if (item.folder) {
+            pendientes.push({ id: item.id, ruta });
+          } else {
+            encontrados.push(aArchivoDrive(item, actual.ruta));
+          }
+        }
+
+        // Graph pagina de a 200: sin seguir `nextLink` se perderían archivos en
+        // silencio, que es la peor forma posible de fallar en una importación.
+        const siguiente = datos['@odata.nextLink'];
+        url = siguiente ? siguiente.replace('https://graph.microsoft.com/v1.0', '') : null;
+      }
+    }
+
+    return encontrados;
   }
 
   async leer(itemId: string): Promise<Buffer> {

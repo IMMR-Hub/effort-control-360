@@ -14,6 +14,7 @@ import type {
   AltaDeReglaDeNotificacion,
   AltaDeReglaImpositiva,
   AltaDeAlerta,
+  AltaDeEvidencia,
   EvidenciaAlmacenada,
   RepositorioDeEvidencias,
   AltaDeVencimiento,
@@ -494,6 +495,38 @@ export class EvidenciasPrisma implements RepositorioDeEvidencias {
     });
 
     return fila as EvidenciaAlmacenada | null;
+  }
+
+  async registrarSiEsNueva(datos: AltaDeEvidencia): Promise<EvidenciaAlmacenada | null> {
+    // `createMany` con skipDuplicates en vez de un `findFirst` previo: entre la
+    // consulta y la inserción podría entrar otra corrida y meter el mismo
+    // archivo. Con la única sobre `sha256`, la base decide y no hay carrera.
+    const insertadas = await this.prisma.evidencia.createManyAndReturn({
+      data: [
+        {
+          clienteId: datos.clienteId,
+          nombreArchivo: datos.nombreArchivo,
+          rutaOneDrive: datos.rutaOneDrive,
+          itemIdOneDrive: datos.itemIdOneDrive,
+          tipoMime: datos.tipoMime,
+          tamanoBytes: datos.tamanoBytes,
+          sha256: datos.sha256,
+          subidoPorUsuarioId: datos.subidoPorUsuarioId,
+        },
+      ],
+      select: {
+        id: true,
+        clienteId: true,
+        nombreArchivo: true,
+        rutaOneDrive: true,
+        itemIdOneDrive: true,
+        tipoMime: true,
+        tamanoBytes: true,
+      },
+      skipDuplicates: true,
+    });
+
+    return (insertadas[0] as EvidenciaAlmacenada | undefined) ?? null;
   }
 }
 

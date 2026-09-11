@@ -69,6 +69,16 @@ Si da 0, cerrada. Si no, no.
 - **Registrar contacto funciona**, con formulario completo. Los otros tres botones que no hacían nada se sacaron.
 - **Cerrado el hallazgo 17(d):** si el vencimiento cae sábado, domingo o feriado pasa al día hábil siguiente — confirmado por Daniel, y es lo que el sistema ya hacía.
 
+**Sincronización automática con OneDrive — construida el 2026-09-11 (cierra el hallazgo 6).** Era la pieza que faltaba para que el sistema trabaje con datos reales sin que nadie corra un script:
+
+- Cada cliente tiene ahora su carpeta de OneDrive guardada en la base (`carpeta_onedrive_id`, que existía vacío desde la migración inicial). Ese dato vivía escrito a mano dentro de un script descartable, y por eso había que reescribirlo cada vez. Ojo: Dibec tiene dos carpetas en el registro de Laura y la del piloto es la S.A. — el hallazgo 3 existe justamente por eso.
+- El servicio recorre la carpeta de cada cliente **y sus subcarpetas**, copia a la carpeta propia del sistema lo que no estaba y lo registra. Identifica la carpeta por id y no por ruta, para que renombrarla no rompa la sincronización.
+- **Dos instancias distintas del adaptador**: una apunta al drive de EFFORT (solo lectura) y otra al propio (escritura). Que sean objetos separados es lo que hace imposible escribir en la carpeta de EFFORT por descuido, en vez de depender de acordarse de pasar el parámetro correcto.
+- Corre sola **cada 15 minutos** dentro del proceso de la API, con una sola corrida por vez y tope de 200 archivos por vuelta. Botón "Sincronizar OneDrive" en Documentos para adelantarla.
+- 9 tests, y el que más importa comprueba que **nunca** escribe en el drive de origen. Otro comprueba que un archivo renombrado no vuelve a entrar: la huella del contenido manda, no el nombre.
+
+**Sin verificar todavía contra el OneDrive real:** al momento de escribir esto la máquina de desarrollo perdió conectividad con GitHub, Microsoft Graph y Supabase a la vez (el sitio en producción respondía normal, así que era la conexión local). La suite entera pasó antes de eso — 21 OK — pero la prueba contra la carpeta real de EFFORT queda pendiente, y hasta hacerla no se puede afirmar que funcione de punta a punta.
+
 **Obligaciones confirmadas por Lili:** IVA, IRE, EEFF y Planilla RG90. Las cuatro están cargadas y asignadas a los 5 clientes; solo IVA genera vencimientos. Las otras tres esperan un dato que falta: en qué mes se presenta cada una.
 
 **Azure AD (tarea 88) cerrado el 2026-09-04:** registro de app, consentimiento de administrador y acceso real a OneDrive, los tres verificados con llamadas reales de punta a punta. Ver `docs/DISCREPANCIAS.md`, punto 6.

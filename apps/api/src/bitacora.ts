@@ -164,6 +164,7 @@ export const ACCIONES = Object.freeze({
   DOCUMENTO_IMPORTADO_DESDE_ARCHIVO: 'documento.importado_desde_archivo',
   DOCUMENTO_CAMBIO_ESTADO: 'documento.cambio_estado',
   ARCHIVO_ABIERTO: 'evidencia.archivo_abierto',
+  ONEDRIVE_SINCRONIZADO: 'evidencia.onedrive_sincronizado',
   PROCESO_MENSUAL_ACTUALIZADO: 'proceso_mensual.actualizado',
 
   VENCIMIENTO_REGISTRADO: 'vencimiento.registrado',

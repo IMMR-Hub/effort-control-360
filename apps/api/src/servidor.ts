@@ -65,6 +65,11 @@ export interface Dependencias {
    * arrancar por una variable de un modulo.
    */
   readonly drive: DriveDeArchivos | null;
+  /**
+   * Drive donde EFFORT trabaja a diario. **Solo lectura**: es una instancia
+   * aparte justamente para que una escritura no pueda ir a parar ahí.
+   */
+  readonly driveDeOrigen: DriveDeArchivos | null;
   readonly solicitudes: RepositorioDeSolicitudes;
   readonly balances: RepositorioDeBalances;
   readonly exportacionesSiga: RepositorioDeExportacionesSiga;

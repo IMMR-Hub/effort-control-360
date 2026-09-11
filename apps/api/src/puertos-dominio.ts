@@ -237,8 +237,29 @@ export interface EvidenciaAlmacenada {
   readonly tamanoBytes: bigint;
 }
 
+export interface AltaDeEvidencia {
+  readonly clienteId: string;
+  readonly nombreArchivo: string;
+  readonly rutaOneDrive: string;
+  readonly itemIdOneDrive: string;
+  readonly tipoMime: string;
+  readonly tamanoBytes: bigint;
+  readonly sha256: string;
+  readonly subidoPorUsuarioId: string;
+}
+
 export interface RepositorioDeEvidencias {
   buscarPorId(id: string): Promise<EvidenciaAlmacenada | null>;
+  /**
+   * Registra un archivo, o devuelve `null` si ese contenido ya estaba.
+   *
+   * La unicidad la decide la huella `sha256` del contenido, no el nombre ni la
+   * ruta: el mismo archivo renombrado, o copiado a otra carpeta, sigue siendo
+   * el mismo archivo. Devolver `null` en vez de fallar hace que sincronizar sea
+   * una operación que se puede repetir sin pensarlo — que es justo lo que hace
+   * falta para que corra sola cada 15 minutos.
+   */
+  registrarSiEsNueva(datos: AltaDeEvidencia): Promise<EvidenciaAlmacenada | null>;
 }
 
 /* ========================================================================== */
