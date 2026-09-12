@@ -18,6 +18,7 @@ import { hoyEnParaguay } from '@effort/core';
 
 import type { Dependencias } from '../servidor.js';
 import { generarVencimientosDelPeriodo } from './generadorDeVencimientos.js';
+import { enviarAvisosDeAlertas } from './avisosPorCorreo.js';
 import { evaluarAlertas } from './motorDeAlertas.js';
 import { sincronizarDesdeOneDrive } from './sincronizadorDeOneDrive.js';
 
@@ -109,7 +110,28 @@ export function programarCalculoDeVencimientosYAlertas(
         usuario.id,
       );
 
-      if (generados > 0 || alertas.creadas > 0) {
+      // Los avisos salen DESPUÉS de evaluar, para que una alerta recién
+      // levantada se avise en la misma vuelta y no una hora más tarde.
+      let avisos = { enviados: 0, fallidos: 0, yaAvisadas: 0 };
+      if (deps.correo) {
+        const direccion = (await deps.usuarios.listar()).filter(
+          (u) => u.rol === 'direccion' && u.activo,
+        );
+        const clientes = await deps.clientes.listar(null);
+        const nombres = new Map(clientes.map((c) => [c.id, c.nombre]));
+
+        avisos = await enviarAvisosDeAlertas({
+          alertas: deps.alertas,
+          correo: deps.correo,
+          yaEnviados: () => deps.envios.enviados(),
+          registrarEnvio: (datos) => deps.envios.registrar(datos),
+          destinatarios: direccion.map((u) => u.email),
+          nombreDeCliente: (id) => (id ? nombres.get(id) ?? id : 'General'),
+          ahora: deps.ahora,
+        });
+      }
+
+      if (generados > 0 || alertas.creadas > 0 || avisos.enviados > 0) {
         await deps.bitacora.registrar({
           usuarioId: usuario.id,
           accion: 'alerta.evaluadas',
@@ -121,6 +143,9 @@ export function programarCalculoDeVencimientosYAlertas(
             periodo,
             vencimientosGenerados: generados,
             alertasCreadas: alertas.creadas,
+            alertasResueltas: alertas.resueltas,
+            avisosEnviados: avisos.enviados,
+            avisosFallidos: avisos.fallidos,
             disparo: 'automático',
           },
           ipTruncada: null,
@@ -129,8 +154,8 @@ export function programarCalculoDeVencimientosYAlertas(
         });
 
         registrador.info(
-          { periodo, generados, alertas: alertas.creadas },
-          'Cálculo automático de vencimientos y alertas terminado.',
+          { periodo, generados, alertas: alertas.creadas, avisos: avisos.enviados },
+          'Cálculo automático de vencimientos, alertas y avisos terminado.',
         );
       }
     } catch (error) {

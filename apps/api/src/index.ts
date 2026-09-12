@@ -6,7 +6,7 @@
  * y por eso se pueden probar sin levantar nada.
  */
 
-import { DriveGraph } from '@effort/drive';
+import { CorreoGraph, DriveGraph } from '@effort/drive';
 
 import { cargarConfiguracion, type Configuracion } from './configuracion.js';
 import { construirServidor, type Dependencias } from './servidor.js';
@@ -27,6 +27,7 @@ import {
   ReglasDeNotificacionPrisma,
   ReglasImpositivasPrisma,
   SolicitudesPrisma,
+  EnviosPrisma,
   EvidenciasPrisma,
   ObligacionesPrisma,
   VencimientosPrisma,
@@ -86,6 +87,25 @@ function crearDrive(
 }
 
 /**
+ * Enviador de correo, o `null` si faltan las credenciales de Azure.
+ *
+ * Sale de la casilla del sistema con el permiso `Mail.Send` que EFFORT ya tenía
+ * concedido desde agosto: no hay proveedor externo que contratar, ni costo por
+ * envío, ni una credencial más que cuidar.
+ */
+function crearCorreo(configuracion: Configuracion): CorreoGraph | null {
+  const { AZURE_TENANT_ID, AZURE_CLIENT_ID, AZURE_CLIENT_SECRET } = configuracion;
+  if (!AZURE_TENANT_ID || !AZURE_CLIENT_ID || !AZURE_CLIENT_SECRET) return null;
+
+  return new CorreoGraph({
+    tenantId: AZURE_TENANT_ID,
+    clientId: AZURE_CLIENT_ID,
+    clientSecret: AZURE_CLIENT_SECRET,
+    remitente: configuracion.ONEDRIVE_USUARIO_SISTEMA,
+  });
+}
+
+/**
  * Arma las dependencias reales.
  *
  * Un solo cliente de Prisma para todos los repositorios: comparten el pool de
@@ -107,6 +127,8 @@ export function construirDependencias(configuracion: Configuracion): Dependencia
     vencimientos: new VencimientosPrisma(prisma),
     obligaciones: new ObligacionesPrisma(prisma),
     evidencias: new EvidenciasPrisma(prisma),
+    envios: new EnviosPrisma(prisma),
+    correo: crearCorreo(configuracion),
     drive: crearDrive(
       configuracion,
       configuracion.ONEDRIVE_USUARIO_SISTEMA,

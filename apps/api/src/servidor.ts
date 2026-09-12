@@ -14,7 +14,7 @@ import csrf from '@fastify/csrf-protection';
 import { randomUUID } from 'node:crypto';
 import { ZodError } from 'zod';
 
-import type { DriveDeArchivos } from '@effort/drive';
+import type { DriveDeArchivos, EnviadorDeCorreo } from '@effort/drive';
 
 import { esProduccion, type Configuracion } from './configuracion.js';
 import { ErrorDeAutorizacion, type SujetoAutenticado } from './seguridad/rbac.js';
@@ -37,6 +37,7 @@ import type {
   RepositorioDeBalances,
   RepositorioDeDocumentos,
   RepositorioDeProcesoMensual,
+  RepositorioDeEnvios,
   RepositorioDeEvidencias,
   RepositorioDeObligaciones,
   RepositorioDeReglasDeNotificacion,
@@ -59,6 +60,9 @@ export interface Dependencias {
   readonly vencimientos: RepositorioDeVencimientos;
   readonly obligaciones: RepositorioDeObligaciones;
   readonly evidencias: RepositorioDeEvidencias;
+  readonly envios: RepositorioDeEnvios;
+  /** Envío de correo desde la casilla del sistema. `null` sin credenciales. */
+  readonly correo: EnviadorDeCorreo | null;
   /**
    * Acceso a OneDrive. Opcional: si faltan las credenciales de Azure el
    * sistema arranca igual y solo se pierde abrir archivos, en vez de no

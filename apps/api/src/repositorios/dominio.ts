@@ -14,7 +14,9 @@ import type {
   AltaDeReglaDeNotificacion,
   AltaDeReglaImpositiva,
   AltaDeAlerta,
+  AltaDeEnvioDeNotificacion,
   AltaDeEvidencia,
+  RepositorioDeEnvios,
   HuellaDeOrigen,
   ResultadoDeRegistro,
   EvidenciaAlmacenada,
@@ -467,6 +469,41 @@ export class VencimientosPrisma implements RepositorioDeVencimientos {
     });
 
     return fila as VencimientoAlmacenado;
+  }
+}
+
+/* ========================================================================== */
+/* Envíos de notificación                                                     */
+/* ========================================================================== */
+
+export class EnviosPrisma implements RepositorioDeEnvios {
+  constructor(private readonly prisma: PrismaClient) {}
+
+  async enviados(): Promise<{ alertaId: string; destinatario: string }[]> {
+    // El id de la alerta viaja en `solicitudId`: la tabla se diseñó para los
+    // recordatorios de documentación y esa columna quedó libre. Se reusa en vez
+    // de migrar, y queda anotado acá para que nadie lo lea como un error.
+    const filas = await this.prisma.envioNotificacion.findMany({
+      where: { estado: 'ENVIADO', solicitudId: { not: null } },
+      select: { solicitudId: true, destinatario: true },
+    });
+
+    return filas.map((f) => ({ alertaId: f.solicitudId!, destinatario: f.destinatario }));
+  }
+
+  async registrar(datos: AltaDeEnvioDeNotificacion): Promise<void> {
+    await this.prisma.envioNotificacion.create({
+      data: {
+        clienteId: datos.clienteId,
+        solicitudId: datos.alertaId,
+        destinatario: datos.destinatario,
+        asunto: datos.asunto,
+        estado: datos.estado,
+        idMensajeProveedor: datos.idMensajeProveedor,
+        errorProveedor: datos.errorProveedor,
+        despachadoEn: datos.despachadoEn,
+      },
+    });
   }
 }
 

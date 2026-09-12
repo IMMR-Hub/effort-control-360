@@ -224,6 +224,32 @@ export interface RepositorioDeVencimientos {
 }
 
 /* ========================================================================== */
+/* Envíos de notificación (la constancia de que se avisó)                    */
+/* ========================================================================== */
+
+export interface AltaDeEnvioDeNotificacion {
+  readonly clienteId: string | null;
+  readonly alertaId: string;
+  readonly destinatario: string;
+  readonly asunto: string;
+  readonly estado: string;
+  readonly idMensajeProveedor: string | null;
+  readonly errorProveedor: string | null;
+  readonly despachadoEn: Date | null;
+}
+
+export interface RepositorioDeEnvios {
+  /**
+   * Los avisos que YA salieron, para no repetirlos.
+   *
+   * Solo los efectivamente enviados: un intento fallido debe poder reintentarse
+   * en la corrida siguiente.
+   */
+  enviados(): Promise<{ alertaId: string; destinatario: string }[]>;
+  registrar(datos: AltaDeEnvioDeNotificacion): Promise<void>;
+}
+
+/* ========================================================================== */
 /* Evidencias (el archivo real detrás de cada documento)                     */
 /* ========================================================================== */
 
