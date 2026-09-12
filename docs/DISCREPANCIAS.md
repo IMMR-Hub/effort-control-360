@@ -305,7 +305,41 @@ tanto no ven absolutamente nada — que es justamente lo que se quiere.
 
 ---
 
-## 9. `regla_impositiva` no está conectada al cálculo de IVA — HALLAZGO 2026-07-23
+## 9. `regla_impositiva` no está conectada al cálculo de IVA — MITAD CERRADA (2026-09-12)
+
+> **Lo que se cerró.** Los divisores ya no son una constante del código: son un
+> parámetro **obligatorio** de `desglosarIvaIncluido` y `totalizar`, así que no
+> hay forma de calcular IVA sin decir con qué regla se calculó. La tabla
+> `regla_impositiva`, que estaba **vacía**, quedó cargada con las tres reglas
+> (10% divisor 11, 5% divisor 21, exenta sin divisor) por la migración
+> `20260912190000_reglas_impositivas_iva`, con su fuente y marcadas
+> `requiere_confirmacion_cliente = true` — porque siguen sin contrastarse contra
+> una liquidación real (punto 1). El comentario del archivo, que aseguraba algo
+> que no era cierto, ahora lo es.
+>
+> **Lo que NO se cerró, y es más grande de lo que este punto suponía.** Al
+> buscar dónde enchufar la regla apareció que **el motor de IVA no lo llama
+> nadie**. `desglosarIvaIncluido` y `totalizar` están completos, con 52 golden
+> tests, y no tienen un solo llamador en producción. Los números de IVA que
+> guarda el sistema (`proceso_mensual.iva_saldo_a_pagar` y `iva_saldo_a_favor`)
+> son los que alguien **escribe a mano** en la pantalla.
+>
+> Medido contra la base real el 2026-09-12: **1387 documentos, 0 con importe** y
+> 5 con tasa; **0 procesos mensuales**. O sea que aunque el motor estuviera
+> conectado, no tendría sobre qué calcular.
+>
+> La cadena que falta es: alguien tiene que poblar `documento.total` y
+> `documento.tasa`. Eso lo haría el importador de comprobantes o la extracción
+> por IA — que está **fuera del alcance de esta etapa** por decisión explícita
+> (ver `CLAUDE.md`). Hasta entonces, el motor contable del IVA existe y está
+> probado, pero no participa del sistema.
+>
+> **Qué decidir con EFFORT:** si el piloto tiene que calcular IVA de verdad —y
+> entonces hay que resolver de dónde salen los importes— o si por ahora alcanza
+> con controlar que los documentos lleguen y las fechas se cumplan, que es lo que
+> el sistema sí hace hoy.
+
+**Hallazgo original (2026-07-23), que sigue valiendo como contexto:**
 
 **Qué se encontró:** al construir el módulo de reglas impositivas (tarea 84),
 se comprobó que `packages/core/src/iva.ts` tiene el divisor del IVA

@@ -11,18 +11,48 @@
  * (Con tasa t sobre base b: total = b*(1+t)  =>  IVA = total*t/(1+t);
  *  para t=0,10 eso es total/11 y para t=0,05 es total/21.)
  *
- * Las tasas NO están hardcodeadas en la lógica de negocio: viven en la tabla
- * `regla_impositiva` y se pasan a estas funciones. Este módulo solo sabe
- * cómo aplicar una regla, no cuáles son. Así, un cambio de tasa es un cambio
- * de dato y no un despliegue de código.
+ * Las tasas NO están en la lógica de negocio: viven en la tabla
+ * `regla_impositiva` y **se le pasan a estas funciones**. Este módulo solo sabe
+ * cómo aplicar una regla, no cuáles son. Así, un cambio de tasa es un cambio de
+ * dato y no un despliegue de código.
+ *
+ * Eso fue mentira hasta el 2026-09-12. El comentario decía exactamente esto
+ * mientras `desglosarIvaIncluido` leía una constante del propio archivo: el
+ * párrafo describía la intención, no el código. Ahora los divisores son un
+ * parámetro obligatorio, así que no hay forma de calcular IVA sin decir con qué
+ * regla se calculó — que era el punto 9 de `docs/DISCREPANCIAS.md`.
  */
 
 import { dividirRedondeado, gs, restar, sumar, type Gs } from './dinero.js';
 
 export type TipoTasaIva = 'DIEZ' | 'CINCO' | 'EXENTA';
 
-/** Divisor que despeja el IVA de un total que ya lo incluye. */
-export const DIVISOR_IVA_INCLUIDO: Readonly<Record<TipoTasaIva, bigint | null>> = Object.freeze({
+/**
+ * Divisores que despejan el IVA de un total que ya lo incluye, uno por tasa.
+ *
+ * `null` significa "esta tasa no lleva IVA", no "falta el dato".
+ */
+export type DivisoresIva = Readonly<Record<TipoTasaIva, bigint | null>>;
+
+/**
+ * Los divisores que EFFORT confirmó verbalmente.
+ *
+ * **No los uses en producción.** Están acá para los tests y como semilla de la
+ * tabla `regla_impositiva`, que es de donde tiene que salir el dato cuando se
+ * calcula plata de verdad: un cambio de tasa por resolución de la DNIT tiene que
+ * ser un cambio de dato, no un despliegue de código.
+ *
+ * Hasta el 2026-09-12 esta constante ERA el cálculo: `desglosarIvaIncluido` la
+ * leía directamente, mientras el comentario de arriba del archivo aseguraba que
+ * las tasas "viven en la tabla `regla_impositiva` y se pasan a estas funciones".
+ * No era cierto. Ahora sí: las funciones exigen que se las pasen, así que no hay
+ * forma de calcular IVA sin decir con qué regla se calculó.
+ *
+ * Siguen pendientes de contraste documental — ver `docs/DISCREPANCIAS.md`,
+ * punto 1: confirmadas de palabra, nunca comparadas contra una liquidación que
+ * la DNIT ya haya recibido.
+ */
+export const DIVISORES_CONFIRMADOS_POR_EFFORT: DivisoresIva = Object.freeze({
   DIEZ: 11n,
   CINCO: 21n,
   EXENTA: null,
@@ -46,11 +76,24 @@ export interface DesgloseIva {
  * el doble redondeo que aparecería si base e impuesto se redondearan por separado
  * (dos redondeos independientes pueden diferir del total en 1 Gs).
  */
-export function desglosarIvaIncluido(total: Gs, tasa: TipoTasaIva): DesgloseIva {
-  const divisor = DIVISOR_IVA_INCLUIDO[tasa];
+export function desglosarIvaIncluido(
+  total: Gs,
+  tasa: TipoTasaIva,
+  divisores: DivisoresIva,
+): DesgloseIva {
+  const divisor = divisores[tasa];
 
   if (divisor === null) {
     return { total, iva: gs(0), gravado: total, tasa };
+  }
+
+  // Un divisor que no está no es lo mismo que una tasa exenta. Calcular con un
+  // divisor ausente sería inventar un impuesto, así que se corta acá.
+  if (divisor === undefined) {
+    throw new Error(
+      `No hay regla impositiva vigente para la tasa ${tasa}. ` +
+        'Cargala en `regla_impositiva` antes de calcular IVA con esta tasa.',
+    );
   }
 
   const iva = gs(dividirRedondeado(total, divisor));
@@ -80,8 +123,13 @@ export interface TotalesIva {
  * 1 Gs por línea de diferencia), y no coincidiría con el libro de SIGA, que
  * también calcula por comprobante.
  */
-export function totalizar(lineas: readonly LineaImponible[]): TotalesIva {
-  const desgloses = lineas.map((linea) => desglosarIvaIncluido(linea.total, linea.tasa));
+export function totalizar(
+  lineas: readonly LineaImponible[],
+  divisores: DivisoresIva,
+): TotalesIva {
+  const desgloses = lineas.map((linea) =>
+    desglosarIvaIncluido(linea.total, linea.tasa, divisores),
+  );
   const porTasa = (tasa: TipoTasaIva) => desgloses.filter((d) => d.tasa === tasa);
 
   const diez = porTasa('DIEZ');

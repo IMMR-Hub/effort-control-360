@@ -9,6 +9,7 @@ import {
   magnitudDeLasDiferencias,
   resumirLibro,
   totalizar,
+  DIVISORES_CONFIRMADOS_POR_EFFORT,
   type Comprobante,
 } from '../src/index.js';
 
@@ -98,7 +99,7 @@ describe('libro de compras y ventas', () => {
       { total: gs(1000000), tasa: 'DIEZ' },
       { total: gs(1000000), tasa: 'DIEZ' },
       { total: gs(1000000), tasa: 'DIEZ' },
-    ]);
+    ], DIVISORES_CONFIRMADOS_POR_EFFORT);
 
     expect(totales.ivaDiez).toBe(gs(272727));
     // Despejar sobre la suma daría 3.000.000/11 = 272.727 también acá, pero la
@@ -111,7 +112,7 @@ describe('libro de compras y ventas', () => {
       { total: gs(1100000), tasa: 'DIEZ' },
       { total: gs(1050000), tasa: 'CINCO' },
       { total: gs(500000), tasa: 'EXENTA' },
-    ]);
+    ], DIVISORES_CONFIRMADOS_POR_EFFORT);
 
     expect(totales.ivaDiez).toBe(gs(100000));
     expect(totales.ivaCinco).toBe(gs(50000));

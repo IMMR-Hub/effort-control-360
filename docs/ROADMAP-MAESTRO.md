@@ -641,6 +641,12 @@ El primer build falló con errores de TypeScript en `apps/api` (`Cannot find nam
 
   **Endurecido el motor de alertas.** El texto de una alerta afirma "todavía no está registrado como presentado", pero el motor no lo comprobaba: la regla vivía en el repositorio, en otro archivo. Ahora la comprueba donde la afirma, con un test que se saltea el repositorio a propósito (el doble de pruebas filtra igual que el real, así que era el único modo de probar la defensa). Verificado que el test falla si se quita la guarda.
 
+- [x] 120. **Tarea 84 (conectar `regla_impositiva` al cálculo de IVA) — mitad hecha, y la otra mitad resultó ser un hallazgo mayor. 2026-09-12.**
+
+  **Hecho:** los divisores del IVA dejaron de ser una constante del código. Son un parámetro **obligatorio** de `desglosarIvaIncluido` y `totalizar`, así que no se puede calcular IVA sin decir con qué regla. La tabla `regla_impositiva` estaba **vacía** y quedó cargada con las tres reglas por migración, con su fuente y marcadas como pendientes de contraste documental. El comentario del archivo, que desde siempre aseguraba que las tasas venían de la tabla mientras el código leía una constante, ahora dice la verdad. Los 52 golden tests del dinero pasan sin cambios: la aritmética no se tocó.
+
+  **Hallazgo:** al buscar dónde enchufar la regla apareció que **el motor de IVA no lo llama nadie**. Está completo y probado, y no tiene un solo llamador en producción — los saldos de IVA que guarda el sistema son los que alguien escribe a mano. Medido contra la base real: 1387 documentos, **0 con importe**, 0 procesos mensuales. Aunque estuviera conectado, no tendría sobre qué calcular. Poblar `documento.total` y `documento.tasa` requiere el importador de comprobantes o la extracción por IA, fuera del alcance de esta etapa por decisión explícita. Queda planteado en DISCREPANCIAS #9 qué decidir con EFFORT.
+
 - [ ] 118. Revisión mensual del calendario de feriados. Regla de Daniel (2026-09-12): cada mes, o cuando el gobierno confirme oficialmente un traslado. Actualizar `TRASLADOS_DECRETADOS` y `REVISION_DE_FERIADOS` en `packages/core/src/diasHabiles.ts`. Próxima: octubre de 2026.
 
 ---

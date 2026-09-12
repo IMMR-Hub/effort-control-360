@@ -16,6 +16,7 @@ import { describe, expect, it } from 'vitest';
 
 import {
   desglosarIvaIncluido,
+  DIVISORES_CONFIRMADOS_POR_EFFORT,
   determinarIva,
   diasRestantes,
   dividirRedondeado,
@@ -68,7 +69,7 @@ describe('golden: desglose de IVA incluido', () => {
 
   for (const caso of archivo.casos) {
     it(caso.nombre, () => {
-      const desglose = desglosarIvaIncluido(gs(caso.total), caso.tasa);
+      const desglose = desglosarIvaIncluido(gs(caso.total), caso.tasa, DIVISORES_CONFIRMADOS_POR_EFFORT);
 
       expect(desglose.iva.toString()).toBe(caso.iva);
       expect(desglose.gravado.toString()).toBe(caso.gravado);
@@ -77,7 +78,7 @@ describe('golden: desglose de IVA incluido', () => {
 
   it('el invariante gravado + iva === total se cumple en todos los casos', () => {
     for (const caso of archivo.casos) {
-      const desglose = desglosarIvaIncluido(gs(caso.total), caso.tasa);
+      const desglose = desglosarIvaIncluido(gs(caso.total), caso.tasa, DIVISORES_CONFIRMADOS_POR_EFFORT);
       expect(desglose.gravado + desglose.iva).toBe(desglose.total);
     }
   });
