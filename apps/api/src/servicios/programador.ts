@@ -39,8 +39,18 @@ const CADA_HORA = 60 * 60 * 1000;
  * Arrancar la sincronización en el mismo instante que el servidor haría que un
  * despliegue compita consigo mismo por la base justo cuando además tiene que
  * atender a la gente que está entrando.
+ *
+ * Subido de 2 a 10 minutos el 2026-09-12. Con 2 minutos, un trabajo que mata al
+ * proceso arma un ciclo de reinicio perfecto: el contenedor nunca vive lo
+ * suficiente como para que alguien entre, ni para apagar nada desde el panel.
+ * Diez minutos no arreglan la causa, pero dejan una ventana para intervenir.
  */
-const ESPERA_INICIAL = 2 * 60 * 1000;
+const ESPERA_INICIAL = 10 * 60 * 1000;
+
+/** Memoria residente del proceso, en MB. Se registra en cada corrida. */
+function memoriaMB(): number {
+  return Math.round(process.memoryUsage().rss / 1024 / 1024);
+}
 
 /**
  * Usuario al que se le atribuyen las importaciones automáticas.
@@ -68,6 +78,14 @@ export function programarCalculoDeVencimientosYAlertas(
   deps: Dependencias,
   registrador: FastifyBaseLogger,
 ): void {
+  if (deps.configuracion.TRABAJOS_AUTOMATICOS === 'no') {
+    registrador.warn(
+      'TRABAJOS_AUTOMATICOS=no: el cálculo de vencimientos y alertas no corre solo. ' +
+        'Los botones de las pantallas siguen funcionando.',
+    );
+    return;
+  }
+
   let enCurso = false;
 
   async function correr(): Promise<void> {
@@ -180,6 +198,14 @@ export function programarSincronizacionDeOneDrive(
   deps: Dependencias,
   registrador: FastifyBaseLogger,
 ): void {
+  if (deps.configuracion.TRABAJOS_AUTOMATICOS === 'no') {
+    registrador.warn(
+      'TRABAJOS_AUTOMATICOS=no: la sincronización de OneDrive no corre sola. ' +
+        'El botón "Sincronizar ahora" sigue funcionando.',
+    );
+    return;
+  }
+
   if (!deps.drive || !deps.driveDeOrigen) {
     registrador.warn(
       'Sin credenciales de OneDrive: la sincronización automática queda apagada. ' +
@@ -199,6 +225,11 @@ export function programarSincronizacionDeOneDrive(
       return;
     }
     enCurso = true;
+
+    // Este par de líneas existe por la caída del 2026-09-12: cuando el kernel
+    // mata el proceso por memoria no queda NADA en el log, así que la única
+    // forma de saber que fue memoria es haber anotado cuánta había justo antes.
+    registrador.info({ memoriaMB: memoriaMB() }, 'Sincronización de OneDrive: empieza.');
 
     try {
       const usuario = await deps.usuarios.buscarPorEmail(CORREO_DEL_SISTEMA);
@@ -244,7 +275,7 @@ export function programarSincronizacionDeOneDrive(
         });
 
         registrador.info(
-          { nuevos: resumen.nuevosEnTotal, fallos: resumen.fallos.length },
+          { nuevos: resumen.nuevosEnTotal, fallos: resumen.fallos.length, memoriaMB: memoriaMB() },
           'Sincronización de OneDrive terminada.',
         );
       }

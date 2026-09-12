@@ -1,13 +1,13 @@
 {
-  "generado_en": "2026-09-11T14:16:04.094Z",
-  "commit": "9559c16fc0ccb0c44d930d093eeb6cd84431e73d",
+  "generado_en": "2026-09-12T11:43:32.316Z",
+  "commit": "6d1cab526fb65533419be4b8a7793668225bcb32",
   "checks": [
     {
       "nombre": "typecheck",
       "comando": "npx tsc --build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 1661,
+      "duracion_ms": 1278,
       "detalle": ""
     },
     {
@@ -15,23 +15,23 @@
       "comando": "npm run typecheck --workspace @effort/web",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4637,
+      "duracion_ms": 3892,
       "detalle": ""
     },
     {
       "nombre": "test:unit",
       "comando": "npx vitest run",
-      "estado": "FALLO",
-      "exit_code": 1,
-      "duracion_ms": 145101,
-      "detalle": " is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:16840) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:16840) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:16840) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:16840) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:16840) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:16840) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:16840) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:16840) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:16840) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:16840) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n\n\u001b[31m⎯⎯⎯⎯⎯⎯\u001b[39m\u001b[1m\u001b[41m Failed Suites 1 \u001b[49m\u001b[22m\u001b[31m⎯⎯⎯⎯⎯⎯⎯\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[42m integracion \u001b[49m\u001b[39m test/integracion/dominio.test.ts\u001b[2m > \u001b[22mrepositorios de negocio contra PostgreSQL real\n\u001b[31m\u001b[1mError\u001b[22m: Falló la migración 20260722180000_rol_aplicacion_y_rls en el esquema de prueba.\nSentencia: GRANT USAGE ON SCHEMA public TO effort_app;\nCausa: \nInvalid `prisma.$executeRawUnsafe()` invocation:\n\n\nRaw query failed. Code: `XX000`. Message: `ERROR: tuple concurrently updated`\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m crearEntorno test/integracion/entorno.ts:\u001b[2m138:15\u001b[22m\u001b[39m\n    \u001b[90m136| \u001b[39m        \u001b[35mawait\u001b[39m prisma\u001b[33m.\u001b[39m\u001b[34m$executeRawUnsafe\u001b[39m(sentencia)\u001b[33m;\u001b[39m\n    \u001b[90m137| \u001b[39m      } \u001b[35mcatch\u001b[39m (error) {\n    \u001b[90m138| \u001b[39m        \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\n    \u001b[90m   | \u001b[39m              \u001b[31m^\u001b[39m\n    \u001b[90m139| \u001b[39m          `Falló la migración ${migracion} en el esquema de prueba.\\n`…\n    \u001b[90m140| \u001b[39m            \u001b[32m`Sentencia: \u001b[39m\u001b[36m${\u001b[39msentencia\u001b[33m.\u001b[39m\u001b[34mslice\u001b[39m(\u001b[34m0\u001b[39m\u001b[33m,\u001b[39m \u001b[34m200\u001b[39m)\u001b[36m}\u001b[39m\u001b[32m\\n`\u001b[39m \u001b[33m+\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m test/integracion/dominio.test.ts:\u001b[2m55:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯\u001b[22m\u001b[39m"
+      "estado": "OK",
+      "exit_code": 0,
+      "duracion_ms": 73528,
+      "detalle": ""
     },
     {
       "nombre": "verify:accounting",
       "comando": "npx vitest run packages/core/test/golden.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4264,
+      "duracion_ms": 2906,
       "detalle": ""
     },
     {
@@ -39,7 +39,7 @@
       "comando": "npx eslint .",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7294,
+      "duracion_ms": 22568,
       "detalle": ""
     },
     {
@@ -47,7 +47,7 @@
       "comando": "npx vitest run apps/api/test/rbac.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3925,
+      "duracion_ms": 3275,
       "detalle": ""
     },
     {
@@ -55,7 +55,7 @@
       "comando": "npx vitest run apps/api/test/seguridad.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4790,
+      "duracion_ms": 3684,
       "detalle": ""
     },
     {
@@ -63,7 +63,7 @@
       "comando": "npx vitest run packages/schema/test/contratos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4840,
+      "duracion_ms": 3325,
       "detalle": ""
     },
     {
@@ -71,7 +71,7 @@
       "comando": "npx vitest run apps/api/test/servidor.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7190,
+      "duracion_ms": 6084,
       "detalle": ""
     },
     {
@@ -79,7 +79,7 @@
       "comando": "npx vitest run apps/api/test/modulos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 32615,
+      "duracion_ms": 28074,
       "detalle": ""
     },
     {
@@ -87,7 +87,7 @@
       "comando": "npx vitest run apps/api/test/siga.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 8221,
+      "duracion_ms": 7251,
       "detalle": ""
     },
     {
@@ -95,23 +95,23 @@
       "comando": "npx vitest run apps/api/test/importaciones.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7583,
+      "duracion_ms": 6095,
       "detalle": ""
     },
     {
       "nombre": "test:integration",
       "comando": "npx vitest run --project integracion",
-      "estado": "FALLO",
-      "exit_code": 1,
-      "duracion_ms": 8996,
-      "detalle": "y los que no tienen dueño\n   \u001b[2m\u001b[90m↓\u001b[39m\u001b[22m repositorios contra PostgreSQL real\u001b[2m > \u001b[22mregistro de eventos\u001b[2m > \u001b[22mconsulta filtrable\u001b[2m > \u001b[22mel filtro explícito de cliente y el de cartera conviven sin pisarse\n   \u001b[2m\u001b[90m↓\u001b[39m\u001b[22m repositorios contra PostgreSQL real\u001b[2m > \u001b[22mdinero\u001b[2m > \u001b[22mguarda y recupera importes grandes sin perder precisión\n   \u001b[2m\u001b[90m↓\u001b[39m\u001b[22m repositorios contra PostgreSQL real\u001b[2m > \u001b[22mdinero\u001b[2m > \u001b[22mun cliente no puede tener dos balances del mismo período\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[31m2 failed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[33m106 skipped\u001b[39m\u001b[90m (106)\u001b[39m\n\u001b[2m   Start at \u001b[22m 11:14:48\n\u001b[2m   Duration \u001b[22m 6.38s\u001b[2m (transform 439ms, setup 0ms, collect 778ms, tests 10.15s, environment 1ms, prepare 526ms)\u001b[22m\n\n\n\u001b[31m⎯⎯⎯⎯⎯⎯\u001b[39m\u001b[1m\u001b[41m Failed Suites 2 \u001b[49m\u001b[22m\u001b[31m⎯⎯⎯⎯⎯⎯⎯\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[42m integracion \u001b[49m\u001b[39m test/integracion/dominio.test.ts\u001b[2m > \u001b[22mrepositorios de negocio contra PostgreSQL real\n\u001b[31m\u001b[1mPrismaClientInitializationError\u001b[22m: \nInvalid `prisma.$executeRawUnsafe()` invocation:\n\n\nCan't reach database server at `aws-0-sa-east-1.pooler.supabase.com:5432`\n\nPlease make sure your database server is running at `aws-0-sa-east-1.pooler.supabase.com:5432`.\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m242:13\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleAndLogRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m174:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.request node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m143:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m a node_modules/@prisma/client/src/runtime/getPrismaClient.ts:\u001b[2m833:24\u001b[22m\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m crearEntorno test/integracion/entorno.ts:\u001b[2m120:3\u001b[22m\u001b[39m\n    \u001b[90m118| \u001b[39m  // Cliente sobre `public` solo para crear y destruir el esquema de p…\n    \u001b[90m119| \u001b[39m  \u001b[35mconst\u001b[39m administrador \u001b[33m=\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mPrismaClient\u001b[39m({ datasourceUrl\u001b[33m:\u001b[39m \u001b[33mURL_BASE\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m120| \u001b[39m  await administrador.$executeRawUnsafe(`CREATE SCHEMA IF NOT EXISTS \"…\n    \u001b[90m   | \u001b[39m  \u001b[31m^\u001b[39m\n    \u001b[90m121| \u001b[39m  \u001b[35mawait\u001b[39m administrador\u001b[33m.\u001b[39m\u001b[34m$disconnect\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m122| \u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m test/integracion/dominio.test.ts:\u001b[2m55:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[42m integracion \u001b[49m\u001b[39m test/integracion/repositorios.test.ts\u001b[2m > \u001b[22mrepositorios contra PostgreSQL real\n\u001b[31m\u001b[1mPrismaClientInitializationError\u001b[22m: \nInvalid `prisma.$executeRawUnsafe()` invocation:\n\n\nCan't reach database server at `aws-0-sa-east-1.pooler.supabase.com:5432`\n\nPlease make sure your database server is running at `aws-0-sa-east-1.pooler.supabase.com:5432`.\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m242:13\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleAndLogRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m174:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.request node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m143:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m a node_modules/@prisma/client/src/runtime/getPrismaClient.ts:\u001b[2m833:24\u001b[22m\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m crearEntorno test/integracion/entorno.ts:\u001b[2m120:3\u001b[22m\u001b[39m\n    \u001b[90m118| \u001b[39m  // Cliente sobre `public` solo para crear y destruir el esquema de p…\n    \u001b[90m119| \u001b[39m  \u001b[35mconst\u001b[39m administrador \u001b[33m=\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mPrismaClient\u001b[39m({ datasourceUrl\u001b[33m:\u001b[39m \u001b[33mURL_BASE\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m120| \u001b[39m  await administrador.$executeRawUnsafe(`CREATE SCHEMA IF NOT EXISTS \"…\n    \u001b[90m   | \u001b[39m  \u001b[31m^\u001b[39m\n    \u001b[90m121| \u001b[39m  \u001b[35mawait\u001b[39m administrador\u001b[33m.\u001b[39m\u001b[34m$disconnect\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m122| \u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m test/integracion/repositorios.test.ts:\u001b[2m38:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯\u001b[22m\u001b[39m"
+      "estado": "OK",
+      "exit_code": 0,
+      "duracion_ms": 69602,
+      "detalle": ""
     },
     {
       "nombre": "verify:drive",
       "comando": "npx vitest run --project drive",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4180,
+      "duracion_ms": 2555,
       "detalle": ""
     },
     {
@@ -119,23 +119,23 @@
       "comando": "npx vitest run --project importers",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4598,
+      "duracion_ms": 3223,
       "detalle": ""
     },
     {
       "nombre": "verify:web",
       "comando": "npx vitest run --project web",
-      "estado": "OK",
-      "exit_code": 0,
-      "duracion_ms": 31385,
-      "detalle": ""
+      "estado": "FALLO",
+      "exit_code": 1,
+      "duracion_ms": 24002,
+      "detalle": "9m=\u001b[32m\"archivo\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"file\"\u001b[39m\n              \u001b[36m/>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<button\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"inline-flex min-h-9 items-center justify-center gap-2 rounded border px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 bg-superficie text-tinta border-borde-fuerte hover:bg-superficie-hundida active:bg-superficie-tenue \"\u001b[39m\n              \u001b[33mdisabled\u001b[39m=\u001b[32m\"\"\u001b[39m\n              \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<svg\u001b[39m\n                \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-cloud-upload\"\u001b[39m\n                \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                \u001b[33mheight\u001b[39m=\u001b[32m\"15\"\u001b[39m\n                \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                \u001b[33mwidth\u001b[39m=\u001b[32m\"15\"\u001b[39m\n                \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<path\u001b[39m\n                  \u001b[33md\u001b[39m=\u001b[32m\"M12 13v8\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n                \u001b[36m<path\u001b[39m\n                  \u001b[33md\u001b[39m=\u001b[32m\"M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n                \u001b[36m<path\u001b[39m\n                  \u001b[33md\u001b[39m=\u001b[32m\"m8 17 4-4 4 4\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n              \u001b[36m</svg>\u001b[39m\n              \u001b[0mSimular (no guarda nada)\u001b[0m\n            \u001b[36m</button>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n        \u001b[36m</section>\u001b[39m\n        \u001b[36m<section\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"rounded-md border border-borde bg-superficie shadow-1 \"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<header\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"flex flex-wrap items-start justify-between gap-3 border-b border-borde px-5 py-4\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div>\u001b[39m\n              \u001b[36m<h2\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-sm font-semibold text-tinta\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mConciliación\u001b[0m\n              \u001b[36m</h2>\u001b[39m\n              \u001b[36m<p\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"mt-0.5 text-xs text-tinta-tenue\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mSolo lectura: compara y señala, no ajusta nada.\u001b[0m\n              \u001b[36m</p>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n          \u001b[36m</header>\u001b[39m\n          \u001b[36m<p\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"px-5 py-8 text-center text-sm text-tinta-tenue\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mElegí un cliente para conciliar.\u001b[0m\n          \u001b[36m</p>\u001b[39m\n        \u001b[36m</section>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</main>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n\u001b[36m</body>\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:\u001b[2m37:19\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:\u001b[2m76:38\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:\u001b[2m52:17\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:\u001b[2m95:19\u001b[22m\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m test/Siga.test.tsx:\u001b[2m129:19\u001b[22m\u001b[39m\n    \u001b[90m127| \u001b[39m    \u001b[35mawait\u001b[39m \u001b[34mmontar\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m128| \u001b[39m\n    \u001b[90m129| \u001b[39m    \u001b[34mexpect\u001b[39m(screen\u001b[33m.\u001b[39m\u001b[34mgetByText\u001b[39m(\u001b[32m'IMPORTADA'\u001b[39m))\u001b[33m.\u001b[39m\u001b[34mtoBeVisible\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m   | \u001b[39m                  \u001b[31m^\u001b[39m\n    \u001b[90m130| \u001b[39m    \u001b[34mexpect\u001b[39m(screen\u001b[33m.\u001b[39m\u001b[34mgetAllByText\u001b[39m(\u001b[32m'Nada pendiente.'\u001b[39m))\u001b[33m.\u001b[39m\u001b[34mtoHaveLength\u001b[39m(\u001b[34m3\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m131| \u001b[39m  })\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯\u001b[22m\u001b[39m"
     },
     {
       "nombre": "verify:no-hardcoded-kpi",
       "comando": "node scripts/verificar-kpi.mjs",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 111,
+      "duracion_ms": 163,
       "detalle": ""
     },
     {
@@ -143,7 +143,7 @@
       "comando": "npm run typecheck:e2e",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3932,
+      "duracion_ms": 3591,
       "detalle": ""
     },
     {
@@ -151,15 +151,15 @@
       "comando": "npx playwright test",
       "estado": "FALLO",
       "exit_code": 1,
-      "duracion_ms": 7679,
-      "detalle": "PrismaClientInitializationError: \nInvalid `prisma.$executeRawUnsafe()` invocation:\n\n\nCan't reach database server at `aws-0-sa-east-1.pooler.supabase.com:5432`\n\nPlease make sure your database server is running at `aws-0-sa-east-1.pooler.supabase.com:5432`.\n\n   at ..\\..\\apps\\api\\test\\integracion\\entorno.ts:120\n\n  118 |   // Cliente sobre `public` solo para crear y destruir el esquema de prueba.\n  119 |   const administrador = new PrismaClient({ datasourceUrl: URL_BASE });\n> 120 |   await administrador.$executeRawUnsafe(`CREATE SCHEMA IF NOT EXISTS \"${esquema}\"`);\n      |   ^\n  121 |   await administrador.$disconnect();\n  122 |\n  123 |   const prisma = new PrismaClient({ datasourceUrl: urlConEsquema(esquema) });\n    at ei.handleRequestError (C:\\Users\\Daniel\\NexusFlow AI\\effort-control-360\\apps\\api\\node_modules\\@prisma\\client\\src\\runtime\\RequestHandler.ts:242:13)\n    at ei.handleAndLogRequestError (C:\\Users\\Daniel\\NexusFlow AI\\effort-control-360\\apps\\api\\node_modules\\@prisma\\client\\src\\runtime\\RequestHandler.ts:174:12)\n    at ei.request (C:\\Users\\Daniel\\NexusFlow AI\\effort-control-360\\apps\\api\\node_modules\\@prisma\\client\\src\\runtime\\RequestHandler.ts:143:12)\n    at a (C:\\Users\\Daniel\\NexusFlow AI\\effort-control-360\\apps\\api\\node_modules\\@prisma\\client\\src\\runtime\\getPrismaClient.ts:833:24)\n    at crearEntorno (C:\\Users\\Daniel\\NexusFlow AI\\effort-control-360\\apps\\api\\test\\integracion\\entorno.ts:120:3)\n    at entornoGlobal (C:\\Users\\Daniel\\NexusFlow AI\\effort-control-360\\e2e\\entorno-global.ts:113:19)"
+      "duracion_ms": 195276,
+      "detalle": "Running 3 tests using 1 worker\n\n  x  1 [chromium] › e2e\\pruebas\\flujo-principal.spec.ts:20:1 › dirección inicia sesión, navega, ve datos reales, y cierra sesión (27.3s)\n  ok 2 [chromium] › e2e\\pruebas\\primer-acceso.spec.ts:24:1 › una cuenta nueva configura su segundo factor, cambia su contraseña y recién ahí entra (16.8s)\n  ok 3 [chromium] › e2e\\pruebas\\rbac.spec.ts:16:1 › auxiliar no tiene acceso al recurso \"usuario\": ve el 403 real del servidor (2.7s)\n\n\n  1) [chromium] › e2e\\pruebas\\flujo-principal.spec.ts:20:1 › dirección inicia sesión, navega, ve datos reales, y cierra sesión \n\n    TimeoutError: locator.fill: Timeout 15000ms exceeded.\n    Call log:\n      - waiting for getByLabel('Código de verificación')\n\n\n      30 |   await page\n      31 |     .getByLabel('Código de verificación')\n    > 32 |     .fill(authenticator.generate(CREDENCIALES.direccion.secretoTotp));\n         |      ^\n      33 |   await page.getByRole('button', { name: 'Verificar' }).click();\n      34 |\n      35 |   await expect(page.getByRole('button', { name: 'Seguimiento', exact: true })).toHaveAttribute(\n        at C:\\Users\\Daniel\\NexusFlow AI\\effort-control-360\\e2e\\pruebas\\flujo-principal.spec.ts:32:6\n\n    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────\n    test-results\\flujo-principal-dirección--baba8-atos-reales-y-cierra-sesión-chromium\\test-failed-1.png\n    ────────────────────────────────────────────────────────────────────────────────────────────────\n\n    Error Context: test-results\\flujo-principal-dirección--baba8-atos-reales-y-cierra-sesión-chromium\\error-context.md\n\n    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────\n    test-results\\flujo-principal-dirección--baba8-atos-reales-y-cierra-sesión-chromium\\trace.zip\n    Usage:\n\n        npx playwright show-trace test-results\\flujo-principal-dirección--baba8-atos-reales-y-cierra-sesión-chromium\\trace.zip\n\n    ────────────────────────────────────────────────────────────────────────────────────────────────\n\n  1 failed\n    [chromium] › e2e\\pruebas\\flujo-principal.spec.ts:20:1 › dirección inicia sesión, navega, ve datos reales, y cierra sesión \n  2 passed (3.2m)"
     },
     {
       "nombre": "audit",
       "comando": "node scripts/auditar-dependencias.mjs",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 8566,
+      "duracion_ms": 7559,
       "detalle": ""
     },
     {
@@ -167,12 +167,12 @@
       "comando": "npm run build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 8017,
+      "duracion_ms": 6143,
       "detalle": ""
     }
   ],
-  "checks_ok": 18,
+  "checks_ok": 19,
   "checks_pendientes": 0,
-  "checks_fallidos": 3,
+  "checks_fallidos": 2,
   "todo_verde": false
 }

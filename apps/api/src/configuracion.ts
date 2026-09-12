@@ -54,6 +54,21 @@ const configuracionSchema = z
     AZURE_DRIVE_ID_ORIGEN: z.string().optional(),
 
     NIVEL_LOG: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
+
+    /**
+     * Interruptor de los trabajos que corren solos (sincronización de OneDrive,
+     * cálculo de vencimientos, avisos por correo).
+     *
+     * Existe por una caída real: el 2026-09-12 la sincronización automática
+     * tumbó el servicio en producción y lo dejó en ciclo de reinicio, con lo
+     * cual NADIE podía entrar al sistema. Sin un interruptor, la única forma de
+     * cortar el trabajo que mata al servicio es desplegar código nuevo — media
+     * hora larga con el sistema caído. Con esto se apaga desde el panel del
+     * hosting en dos minutos, y el resto del sistema sigue funcionando: lo que
+     * se pierde es que la importación y el cálculo haya que dispararlos a mano
+     * con los botones que ya existen.
+     */
+    TRABAJOS_AUTOMATICOS: z.enum(['si', 'no']).default('si'),
   })
   .strict()
   .superRefine((config, contexto) => {
@@ -99,6 +114,7 @@ export function cargarConfiguracion(entorno: NodeJS.ProcessEnv = process.env): C
     ONEDRIVE_USUARIO_SISTEMA: entorno['ONEDRIVE_USUARIO_SISTEMA'],
     ONEDRIVE_USUARIO_ORIGEN: entorno['ONEDRIVE_USUARIO_ORIGEN'],
     NIVEL_LOG: entorno['NIVEL_LOG'],
+    TRABAJOS_AUTOMATICOS: entorno['TRABAJOS_AUTOMATICOS'],
   };
 
   // Quita las que no vinieron, para que los valores por defecto de Zod apliquen.

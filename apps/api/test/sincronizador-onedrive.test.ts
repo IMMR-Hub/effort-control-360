@@ -258,4 +258,40 @@ describe('sincronización desde OneDrive', () => {
     expect(resumen.fallos).toHaveLength(1);
     expect(resumen.fallos[0]!.cliente).toBe('OTRO S.A.');
   });
+
+  /*
+   * Este test tiene fecha y factura: el 2026-09-12 el servicio estuvo horas
+   * caído porque la sincronización bajaba a memoria cualquier archivo, sin
+   * mirar cuánto pesaba, dentro de un contenedor de 512 MB. El kernel mataba el
+   * proceso, la corrida siguiente encontraba el mismo archivo, y el ciclo no
+   * terminaba nunca. Nadie podía entrar al sistema.
+   *
+   * Lo que fija esta prueba es que el archivo grande ni se baja: si algún día
+   * alguien "optimiza" la comprobación moviéndola después del `leer()`, el
+   * arreglo deja de existir y el test lo dice.
+   */
+  it('no baja un archivo más grande que el límite, y lo deja anotado', async () => {
+    const ctx = armar();
+    ctx.origen.sembrar('CLIENTES/002 FUMIPRO', 'chico.pdf', Buffer.from('uno'));
+    ctx.origen.sembrar(
+      'CLIENTES/002 FUMIPRO',
+      'video-institucional.mp4',
+      Buffer.allocUnsafe(26 * 1024 * 1024),
+    );
+
+    let leidos = 0;
+    const leerOriginal = ctx.origen.leer.bind(ctx.origen);
+    ctx.origen.leer = async (itemId: string) => {
+      leidos += 1;
+      return leerOriginal(itemId);
+    };
+
+    const resumen = await sincronizarDesdeOneDrive(ctx.deps, USUARIO);
+
+    expect(leidos).toBe(1);
+    expect(resumen.nuevosEnTotal).toBe(1);
+    expect(resumen.fallos).toHaveLength(1);
+    expect(resumen.fallos[0]!.archivo).toBe('video-institucional.mp4');
+    expect(resumen.fallos[0]!.motivo).toMatch(/26\.0 MB/);
+  });
 });

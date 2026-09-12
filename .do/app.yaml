@@ -85,6 +85,17 @@ services:
         value: info
       - key: ORIGEN_PERMITIDO
         value: https://effort360.disaak.com
+      # Interruptor de los trabajos de fondo. Poner "no" APAGA la
+      # sincronización automática de OneDrive y el cálculo automático de
+      # vencimientos, alertas y avisos — el resto del sistema sigue igual y los
+      # botones manuales siguen funcionando.
+      #
+      # Existe por la caída del 2026-09-12: la sincronización automática dejó al
+      # servicio en ciclo de reinicio y nadie podía entrar. Sin un interruptor,
+      # la única forma de cortarlo era desplegar código nuevo. Cambiar esto en
+      # el panel y guardar reinicia el servicio en minutos.
+      - key: TRABAJOS_AUTOMATICOS
+        value: "si"
       # Secretos — se cargan en el panel de DigitalOcean, nunca en este
       # archivo ni en git. Todos DISTINTOS a los de desarrollo (tarea 108):
       # generar SECRETO_COOKIES de nuevo, no copiar el de .env local.

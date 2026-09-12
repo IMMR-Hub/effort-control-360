@@ -4,7 +4,15 @@
  * `TipoDocumento` lo usan tanto Documentos como Vencimientos (una obligación
  * societaria es, para el servidor, el mismo enum que un comprobante). `NivelRiesgo`
  * lo usan Proceso Mensual y Vencimientos. Viven acá una sola vez para no repetir
- * la lista de dieciséis valores en cada pantalla nueva que los necesite.
+ * la lista de veintiún valores en cada pantalla nueva que los necesite.
+ *
+ * **Esta lista tiene que coincidir con `TipoDeDocumento` de `@effort/core`**
+ * (`packages/core/src/clasificacionDeDocumentos.ts`), que es donde el
+ * clasificador decide qué tipo lleva cada archivo. No están unificadas porque
+ * la interfaz no importa código del servidor, así que la única red es el
+ * chequeo de tipos: `ETIQUETA_TIPO_DOCUMENTO` es un `Record` completo y
+ * cualquier valor que falte acá lo hace fallar. Fue justamente lo que pasó el
+ * 2026-09-12 con los cinco tipos de abajo.
  */
 
 export type TipoDocumento =
@@ -23,6 +31,12 @@ export type TipoDocumento =
   | 'CERTIFICADO'
   | 'CONSTANCIA'
   | 'LIQUIDACION'
+  // Los que EFFORT nombró como los que más importan: balance, IRE, EEFF.
+  | 'BALANCE'
+  | 'ESTADO_RESULTADOS'
+  | 'DECLARACION_JURADA'
+  | 'LIBRO_COMPRAS'
+  | 'LIBRO_VENTAS'
   | 'OTRO';
 
 export type NivelRiesgo = 'BAJO' | 'MEDIO' | 'ALTO' | 'CRITICO';

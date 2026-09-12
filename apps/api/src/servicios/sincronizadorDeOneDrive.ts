@@ -43,6 +43,24 @@ const CARPETA_DEL_SISTEMA = 'EFFORT Control 360/Entrada';
  */
 const MAXIMO_DESCARGAS_POR_CORRIDA = 150;
 
+/**
+ * Tamaño máximo de un archivo que se copia automáticamente.
+ *
+ * Esto no es una preferencia: es lo que tumbó el sistema entero el 2026-09-12.
+ * `leer()` trae el archivo COMPLETO a memoria, y el servicio corre en un
+ * contenedor de 512 MB. Un solo archivo suficientemente grande en la carpeta de
+ * EFFORT hacía que el kernel matara el proceso — sin excepción, sin `SIGTERM` y
+ * sin una línea en el log, porque un `SIGKILL` no se puede interceptar. Como la
+ * corrida siguiente volvía a encontrar el MISMO archivo, el servicio quedó en
+ * ciclo de reinicio y durante horas nadie pudo entrar al sistema.
+ *
+ * 25 MiB con la referencia real a la vista: el archivo más pesado que apareció
+ * en el OneDrive de EFFORT hasta ahora es un estatuto escaneado de 5,7 MB. Lo
+ * que pase de acá no se ignora — se anota como fallo con su tamaño, para que se
+ * vea y se decida qué hacer, en vez de desaparecer en silencio.
+ */
+const LIMITE_BYTES_POR_ARCHIVO = 25 * 1024 * 1024;
+
 export interface DependenciasDelSincronizador {
   readonly clientes: RepositorioDeClientes;
   readonly documentos: RepositorioDeDocumentos;
@@ -172,6 +190,22 @@ export async function sincronizarDesdeOneDrive(
           sinCambios += 1;
           continue;
         }
+      }
+
+      // Antes de tocar la red: un archivo demasiado grande no se baja nunca.
+      // La comprobación va acá y no dentro del `try` de más abajo a propósito —
+      // no es un fallo al procesarlo, es una decisión de no procesarlo.
+      if (archivo.tamanoBytes > LIMITE_BYTES_POR_ARCHIVO) {
+        const mb = (archivo.tamanoBytes / 1024 / 1024).toFixed(1);
+        fallos.push({
+          cliente: cliente.nombre,
+          archivo: archivo.nombre,
+          motivo:
+            `Pesa ${mb} MB y el máximo automático es ` +
+            `${LIMITE_BYTES_POR_ARCHIVO / 1024 / 1024} MB. No se copió. ` +
+            'Si hace falta tenerlo en el sistema, subilo a mano.',
+        });
+        continue;
       }
 
       try {
