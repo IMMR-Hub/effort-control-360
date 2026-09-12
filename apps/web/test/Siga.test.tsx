@@ -114,6 +114,17 @@ async function montar(rol: string = 'direccion') {
   await waitFor(() => {
     expect(mock.llamadasA('GET /api/v1/yo')).toHaveLength(1);
   });
+
+  // La pantalla carga en DOS tiempos: primero las exportaciones, y recién
+  // cuando se elige cliente solo, la conciliación. Esperar únicamente a lo
+  // primero dejaba a los tests corriendo contra una pantalla a medio armar —
+  // pasaban solos y fallaban en la corrida completa, que es la peor forma de
+  // fallar: bloqueó dos `npm run verify` seguidos el 2026-09-12 haciendo creer
+  // que había una regresión donde no la había. Esta espera es la condición real
+  // de "la pantalla terminó de cargar".
+  await waitFor(() => {
+    expect(screen.queryByText('Elegí un cliente para conciliar.')).toBeNull();
+  });
 }
 
 function archivoDePrueba() {

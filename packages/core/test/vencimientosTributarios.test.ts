@@ -150,3 +150,72 @@ describe('fecha de vencimiento', () => {
     ).toThrow(/entre 1 y 28/);
   });
 });
+
+/**
+ * La DNIT publica DOS calendarios, no uno, y confundirlos corre todos los
+ * vencimientos de las informativas un día.
+ *
+ *  - **Determinativas** (IVA, IRE, IRP, ISC, anticipos): días 7 a 25.
+ *  - **Informativas** (RG 90 / libro de compras y ventas, estados financieros,
+ *    dictamen de auditoría externa impositiva): días 8 a 26.
+ *
+ * El sistema ya soportaba esto sin saberlo: `diasPorTerminacionRuc` se guarda
+ * POR OBLIGACIÓN, así que las dos tablas conviven sin ningún cambio de
+ * estructura. Lo que faltaba era tener el dato y dejarlo probado.
+ *
+ * Las dos tablas quedaron confirmadas dos veces, de forma independiente: contra
+ * el portal de la DNIT (Resolución General 38/2020, artículo 3°) y contra las
+ * fechas que Daniel pasó el 2026-09-11 para los cinco clientes del piloto. Las
+ * cinco coinciden exactamente — ECOAGRO (terminación 9) IRE el 25 y RG 90 el
+ * 26, DIBEC (6) el 19 y el 20, SIPAR y COPESA (2) el 11 y el 12, FUMIPRO (1) el
+ * 9 y el 10.
+ */
+describe('los dos calendarios de la DNIT', () => {
+  const DETERMINATIVAS: DiasPorTerminacion = [7, 9, 11, 13, 15, 17, 19, 21, 23, 25];
+  const INFORMATIVAS: DiasPorTerminacion = [8, 10, 12, 14, 16, 18, 20, 22, 24, 26];
+
+  it('las informativas vencen un día después que las determinativas', () => {
+    for (let terminacion = 0; terminacion < 10; terminacion += 1) {
+      expect(INFORMATIVAS[terminacion]).toBe(DETERMINATIVAS[terminacion]! + 1);
+    }
+  });
+
+  /*
+   * El caso que obligó a cargar los traslados por decreto.
+   *
+   * ECOAGRO (RUC 80022319-5, terminación 9) presenta el RG 90 el 26. El 26 de
+   * setiembre de 2026 cae sábado, así que corre al lunes 28 — que es el día al
+   * que el Decreto N° 6601 trasladó la Victoria de Boquerón. El vencimiento
+   * real es el martes 29.
+   *
+   * Sin el traslado cargado, el sistema daba por vencida esa obligación un día
+   * antes que la DNIT: habría marcado a ECOAGRO en falta estando todavía en
+   * plazo.
+   */
+  it('el RG 90 de ECOAGRO de agosto 2026 salta el feriado trasladado', () => {
+    const fecha = fechaDeVencimiento({
+      ruc: '80022319-5',
+      periodo: { anio: 2026, mes: 8 },
+      periodicidad: 'MENSUAL',
+      diasPorTerminacion: INFORMATIVAS,
+      calendario: calendario2026,
+    });
+
+    expect(fechaCivilAIso(fecha)).toBe('2026-09-29');
+  });
+
+  // El IRE anual de ECOAGRO: cierre 31/12, se presenta en abril, día 25.
+  // El 25 de abril de 2026 cae sábado → lunes 27.
+  it('el IRE anual de ECOAGRO cae en abril, por el calendario de determinativas', () => {
+    const fecha = fechaDeVencimiento({
+      ruc: '80022319-5',
+      periodo: { anio: 2025, mes: 12 },
+      periodicidad: 'ANUAL',
+      mesDeCierreAnual: 4,
+      diasPorTerminacion: DETERMINATIVAS,
+      calendario: calendario2026,
+    });
+
+    expect(fechaCivilAIso(fecha)).toBe('2026-04-27');
+  });
+});

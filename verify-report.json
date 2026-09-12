@@ -1,13 +1,13 @@
 {
-  "generado_en": "2026-09-12T11:43:32.316Z",
-  "commit": "6d1cab526fb65533419be4b8a7793668225bcb32",
+  "generado_en": "2026-09-12T12:10:57.965Z",
+  "commit": "d7fff3c462968a4198b41f24f8451c68f2b67f94",
   "checks": [
     {
       "nombre": "typecheck",
       "comando": "npx tsc --build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 1278,
+      "duracion_ms": 1281,
       "detalle": ""
     },
     {
@@ -15,7 +15,7 @@
       "comando": "npm run typecheck --workspace @effort/web",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3892,
+      "duracion_ms": 3746,
       "detalle": ""
     },
     {
@@ -23,7 +23,7 @@
       "comando": "npx vitest run",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 73528,
+      "duracion_ms": 51634,
       "detalle": ""
     },
     {
@@ -31,7 +31,7 @@
       "comando": "npx vitest run packages/core/test/golden.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 2906,
+      "duracion_ms": 3329,
       "detalle": ""
     },
     {
@@ -39,7 +39,7 @@
       "comando": "npx eslint .",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 22568,
+      "duracion_ms": 6613,
       "detalle": ""
     },
     {
@@ -47,7 +47,7 @@
       "comando": "npx vitest run apps/api/test/rbac.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3275,
+      "duracion_ms": 3232,
       "detalle": ""
     },
     {
@@ -55,7 +55,7 @@
       "comando": "npx vitest run apps/api/test/seguridad.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3684,
+      "duracion_ms": 3435,
       "detalle": ""
     },
     {
@@ -63,7 +63,7 @@
       "comando": "npx vitest run packages/schema/test/contratos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3325,
+      "duracion_ms": 3233,
       "detalle": ""
     },
     {
@@ -71,7 +71,7 @@
       "comando": "npx vitest run apps/api/test/servidor.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6084,
+      "duracion_ms": 5912,
       "detalle": ""
     },
     {
@@ -79,7 +79,7 @@
       "comando": "npx vitest run apps/api/test/modulos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 28074,
+      "duracion_ms": 27562,
       "detalle": ""
     },
     {
@@ -87,7 +87,7 @@
       "comando": "npx vitest run apps/api/test/siga.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7251,
+      "duracion_ms": 6876,
       "detalle": ""
     },
     {
@@ -95,7 +95,7 @@
       "comando": "npx vitest run apps/api/test/importaciones.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6095,
+      "duracion_ms": 6093,
       "detalle": ""
     },
     {
@@ -103,7 +103,7 @@
       "comando": "npx vitest run --project integracion",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 69602,
+      "duracion_ms": 43215,
       "detalle": ""
     },
     {
@@ -111,7 +111,7 @@
       "comando": "npx vitest run --project drive",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 2555,
+      "duracion_ms": 2695,
       "detalle": ""
     },
     {
@@ -119,23 +119,23 @@
       "comando": "npx vitest run --project importers",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3223,
+      "duracion_ms": 3301,
       "detalle": ""
     },
     {
       "nombre": "verify:web",
       "comando": "npx vitest run --project web",
-      "estado": "FALLO",
-      "exit_code": 1,
-      "duracion_ms": 24002,
-      "detalle": "9m=\u001b[32m\"archivo\"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"file\"\u001b[39m\n              \u001b[36m/>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<button\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"inline-flex min-h-9 items-center justify-center gap-2 rounded border px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 bg-superficie text-tinta border-borde-fuerte hover:bg-superficie-hundida active:bg-superficie-tenue \"\u001b[39m\n              \u001b[33mdisabled\u001b[39m=\u001b[32m\"\"\u001b[39m\n              \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<svg\u001b[39m\n                \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-cloud-upload\"\u001b[39m\n                \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                \u001b[33mheight\u001b[39m=\u001b[32m\"15\"\u001b[39m\n                \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                \u001b[33mwidth\u001b[39m=\u001b[32m\"15\"\u001b[39m\n                \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<path\u001b[39m\n                  \u001b[33md\u001b[39m=\u001b[32m\"M12 13v8\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n                \u001b[36m<path\u001b[39m\n                  \u001b[33md\u001b[39m=\u001b[32m\"M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n                \u001b[36m<path\u001b[39m\n                  \u001b[33md\u001b[39m=\u001b[32m\"m8 17 4-4 4 4\"\u001b[39m\n                \u001b[36m/>\u001b[39m\n              \u001b[36m</svg>\u001b[39m\n              \u001b[0mSimular (no guarda nada)\u001b[0m\n            \u001b[36m</button>\u001b[39m\n          \u001b[36m</div>\u001b[39m\n        \u001b[36m</section>\u001b[39m\n        \u001b[36m<section\u001b[39m\n          \u001b[33mclass\u001b[39m=\u001b[32m\"rounded-md border border-borde bg-superficie shadow-1 \"\u001b[39m\n        \u001b[36m>\u001b[39m\n          \u001b[36m<header\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"flex flex-wrap items-start justify-between gap-3 border-b border-borde px-5 py-4\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[36m<div>\u001b[39m\n              \u001b[36m<h2\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"text-sm font-semibold text-tinta\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mConciliación\u001b[0m\n              \u001b[36m</h2>\u001b[39m\n              \u001b[36m<p\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"mt-0.5 text-xs text-tinta-tenue\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[0mSolo lectura: compara y señala, no ajusta nada.\u001b[0m\n              \u001b[36m</p>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n          \u001b[36m</header>\u001b[39m\n          \u001b[36m<p\u001b[39m\n            \u001b[33mclass\u001b[39m=\u001b[32m\"px-5 py-8 text-center text-sm text-tinta-tenue\"\u001b[39m\n          \u001b[36m>\u001b[39m\n            \u001b[0mElegí un cliente para conciliar.\u001b[0m\n          \u001b[36m</p>\u001b[39m\n        \u001b[36m</section>\u001b[39m\n      \u001b[36m</div>\u001b[39m\n    \u001b[36m</main>\u001b[39m\n  \u001b[36m</div>\u001b[39m\n\u001b[36m</body>\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m Object.getElementError ../../node_modules/@testing-library/dom/dist/config.js:\u001b[2m37:19\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:\u001b[2m76:38\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:\u001b[2m52:17\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ../../node_modules/@testing-library/dom/dist/query-helpers.js:\u001b[2m95:19\u001b[22m\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m test/Siga.test.tsx:\u001b[2m129:19\u001b[22m\u001b[39m\n    \u001b[90m127| \u001b[39m    \u001b[35mawait\u001b[39m \u001b[34mmontar\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m128| \u001b[39m\n    \u001b[90m129| \u001b[39m    \u001b[34mexpect\u001b[39m(screen\u001b[33m.\u001b[39m\u001b[34mgetByText\u001b[39m(\u001b[32m'IMPORTADA'\u001b[39m))\u001b[33m.\u001b[39m\u001b[34mtoBeVisible\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m   | \u001b[39m                  \u001b[31m^\u001b[39m\n    \u001b[90m130| \u001b[39m    \u001b[34mexpect\u001b[39m(screen\u001b[33m.\u001b[39m\u001b[34mgetAllByText\u001b[39m(\u001b[32m'Nada pendiente.'\u001b[39m))\u001b[33m.\u001b[39m\u001b[34mtoHaveLength\u001b[39m(\u001b[34m3\u001b[39m)\u001b[33m;\u001b[39m\n    \u001b[90m131| \u001b[39m  })\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯\u001b[22m\u001b[39m"
+      "estado": "OK",
+      "exit_code": 0,
+      "duracion_ms": 23610,
+      "detalle": ""
     },
     {
       "nombre": "verify:no-hardcoded-kpi",
       "comando": "node scripts/verificar-kpi.mjs",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 163,
+      "duracion_ms": 129,
       "detalle": ""
     },
     {
@@ -143,7 +143,7 @@
       "comando": "npm run typecheck:e2e",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3591,
+      "duracion_ms": 4129,
       "detalle": ""
     },
     {
@@ -151,15 +151,15 @@
       "comando": "npx playwright test",
       "estado": "FALLO",
       "exit_code": 1,
-      "duracion_ms": 195276,
-      "detalle": "Running 3 tests using 1 worker\n\n  x  1 [chromium] › e2e\\pruebas\\flujo-principal.spec.ts:20:1 › dirección inicia sesión, navega, ve datos reales, y cierra sesión (27.3s)\n  ok 2 [chromium] › e2e\\pruebas\\primer-acceso.spec.ts:24:1 › una cuenta nueva configura su segundo factor, cambia su contraseña y recién ahí entra (16.8s)\n  ok 3 [chromium] › e2e\\pruebas\\rbac.spec.ts:16:1 › auxiliar no tiene acceso al recurso \"usuario\": ve el 403 real del servidor (2.7s)\n\n\n  1) [chromium] › e2e\\pruebas\\flujo-principal.spec.ts:20:1 › dirección inicia sesión, navega, ve datos reales, y cierra sesión \n\n    TimeoutError: locator.fill: Timeout 15000ms exceeded.\n    Call log:\n      - waiting for getByLabel('Código de verificación')\n\n\n      30 |   await page\n      31 |     .getByLabel('Código de verificación')\n    > 32 |     .fill(authenticator.generate(CREDENCIALES.direccion.secretoTotp));\n         |      ^\n      33 |   await page.getByRole('button', { name: 'Verificar' }).click();\n      34 |\n      35 |   await expect(page.getByRole('button', { name: 'Seguimiento', exact: true })).toHaveAttribute(\n        at C:\\Users\\Daniel\\NexusFlow AI\\effort-control-360\\e2e\\pruebas\\flujo-principal.spec.ts:32:6\n\n    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────\n    test-results\\flujo-principal-dirección--baba8-atos-reales-y-cierra-sesión-chromium\\test-failed-1.png\n    ────────────────────────────────────────────────────────────────────────────────────────────────\n\n    Error Context: test-results\\flujo-principal-dirección--baba8-atos-reales-y-cierra-sesión-chromium\\error-context.md\n\n    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────\n    test-results\\flujo-principal-dirección--baba8-atos-reales-y-cierra-sesión-chromium\\trace.zip\n    Usage:\n\n        npx playwright show-trace test-results\\flujo-principal-dirección--baba8-atos-reales-y-cierra-sesión-chromium\\trace.zip\n\n    ────────────────────────────────────────────────────────────────────────────────────────────────\n\n  1 failed\n    [chromium] › e2e\\pruebas\\flujo-principal.spec.ts:20:1 › dirección inicia sesión, navega, ve datos reales, y cierra sesión \n  2 passed (3.2m)"
+      "duracion_ms": 7374,
+      "detalle": "PrismaClientInitializationError: \nInvalid `prisma.$executeRawUnsafe()` invocation:\n\n\nCan't reach database server at `aws-0-sa-east-1.pooler.supabase.com:5432`\n\nPlease make sure your database server is running at `aws-0-sa-east-1.pooler.supabase.com:5432`.\n\n   at ..\\..\\apps\\api\\test\\integracion\\entorno.ts:120\n\n  118 |   // Cliente sobre `public` solo para crear y destruir el esquema de prueba.\n  119 |   const administrador = new PrismaClient({ datasourceUrl: URL_BASE });\n> 120 |   await administrador.$executeRawUnsafe(`CREATE SCHEMA IF NOT EXISTS \"${esquema}\"`);\n      |   ^\n  121 |   await administrador.$disconnect();\n  122 |\n  123 |   const prisma = new PrismaClient({ datasourceUrl: urlConEsquema(esquema) });\n    at ei.handleRequestError (C:\\Users\\Daniel\\NexusFlow AI\\effort-control-360\\apps\\api\\node_modules\\@prisma\\client\\src\\runtime\\RequestHandler.ts:242:13)\n    at ei.handleAndLogRequestError (C:\\Users\\Daniel\\NexusFlow AI\\effort-control-360\\apps\\api\\node_modules\\@prisma\\client\\src\\runtime\\RequestHandler.ts:174:12)\n    at ei.request (C:\\Users\\Daniel\\NexusFlow AI\\effort-control-360\\apps\\api\\node_modules\\@prisma\\client\\src\\runtime\\RequestHandler.ts:143:12)\n    at a (C:\\Users\\Daniel\\NexusFlow AI\\effort-control-360\\apps\\api\\node_modules\\@prisma\\client\\src\\runtime\\getPrismaClient.ts:833:24)\n    at crearEntorno (C:\\Users\\Daniel\\NexusFlow AI\\effort-control-360\\apps\\api\\test\\integracion\\entorno.ts:120:3)\n    at entornoGlobal (C:\\Users\\Daniel\\NexusFlow AI\\effort-control-360\\e2e\\entorno-global.ts:113:19)"
     },
     {
       "nombre": "audit",
       "comando": "node scripts/auditar-dependencias.mjs",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7559,
+      "duracion_ms": 3618,
       "detalle": ""
     },
     {
@@ -167,12 +167,12 @@
       "comando": "npm run build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6143,
+      "duracion_ms": 7181,
       "detalle": ""
     }
   ],
-  "checks_ok": 19,
+  "checks_ok": 20,
   "checks_pendientes": 0,
-  "checks_fallidos": 2,
+  "checks_fallidos": 1,
   "todo_verde": false
 }

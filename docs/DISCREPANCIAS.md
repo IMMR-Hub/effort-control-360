@@ -658,6 +658,24 @@ así como si fuera de código: **reintentar una vez**. Si pasa, era esto.
 
 ## 17. Calendario tributario de la DNIT — CASI CERRADO (2026-09-10)
 
+> **Actualización 2026-09-12 — confirmado contra la fuente oficial.** Los puntos
+> (a) y (b) dejaron de depender de la palabra de nadie: el portal de la DNIT
+> publica la tabla, y coincide exactamente con la que EFFORT había pasado.
+> Norma: **Resolución General N° 38/2020** (5 de febrero de 2020), artículo 3°,
+> "Calendario Perpetuo".
+> Página: `dnit.gov.py/web/portal-institucional/w/vencimiento-ley-n-6380/19`.
+> La DNIT dice textualmente "el último dígito del RUC **sin considerar el dígito
+> verificador**" — que es, palabra por palabra, el criterio que EFFORT dio con el
+> ejemplo del `80007729-6`. El dato que dio tres vueltas quedó confirmado por dos
+> caminos independientes.
+>
+> **Aparecieron dos cosas que no sabíamos, y una era un error del sistema.** Ver
+> el punto 19, abierto el mismo día.
+>
+> No pude descargar el PDF firmado de la RG 38/2020 (el buscador del portal
+> devuelve la ficha HTML, no el archivo). Lo citado sale de la ficha oficial del
+> portal de la DNIT, que es oficial pero es resumen, no la norma firmada.
+
 El motor de vencimientos está construido, probado y **ya generando** con el
 calendario que EFFORT confirmó. Queda un solo punto abierto, el (d).
 
@@ -751,3 +769,91 @@ paga ese viaje 6 veces.
 Ninguna es urgente hoy, pero la 2 conviene hacerla igual, y la 1 conviene
 decidirla antes de cargar los 144 clientes reales — mover una base con datos
 es mucho más caro que elegir bien la región al principio.
+
+---
+
+## 19. Feriados, traslados por decreto y el segundo calendario de la DNIT — ABIERTO (2026-09-12)
+
+Salió de buscar la fuente oficial del calendario tributario (ver punto 17). Lo
+que se buscaba era confirmar una tabla; aparecieron tres cosas que no estaban.
+
+### a) Hay DOS calendarios, no uno — CERRADO, ya implementado
+
+La DNIT publica dos tablas por terminación de RUC:
+
+| | Días | Qué incluye |
+|---|---|---|
+| **Determinativas** | 7, 9, 11, 13, 15, 17, 19, 21, 23, 25 | IVA, IRE (todos los regímenes), IRP, ISC, anticipos |
+| **Informativas (DJI)** | 8, 10, 12, 14, 16, 18, 20, 22, 24, 26 | **RG 90** (libro de compras y ventas), **estados financieros**, dictamen de auditoría externa impositiva |
+
+Esto explica exactamente lo que Daniel había pasado el 2026-09-11 sin saber que
+eran dos calendarios distintos: "EEFF IRE 25/04, RG 90 26 de cada mes" para
+ECOAGRO. El 25 es el calendario determinativo y el 26 el informativo, y las
+cinco empresas del piloto coinciden con las dos tablas, una por una.
+
+**No hizo falta cambiar nada de estructura**: `dias_por_terminacion_ruc` se
+guarda por obligación, así que las dos tablas conviven desde siempre. Quedó
+probado en `packages/core/test/vencimientosTributarios.test.ts`.
+
+**Ojo con los estados financieros**: van por el calendario informativo (8 a 26),
+no por el determinativo, aunque venzan el mismo mes que el IRE anual. Es el
+error fácil de cometer al cargar las obligaciones.
+
+### b) Los feriados trasladables estaban mal para 2026 — CERRADO, era un bug real
+
+`feriadosParaguay()` devolvía las fechas ORIGINALES de los feriados móviles. En
+Paraguay esos feriados no se trasladan por una regla: el Ejecutivo los mueve
+**por decreto, año a año** (Ley 7544/2025), y no hay fórmula que lo derive.
+
+Además faltaba un feriado entero: la **Jura de la Constitución (20 de junio)**,
+creada por esa misma ley y vigente desde 2026.
+
+**El caso que lo hizo visible.** El RG 90 de ECOAGRO vence el 26. El 26 de
+setiembre de 2026 cae sábado, así que corre al lunes 28 — que es el día al que
+el Decreto N° 6601 trasladó la Victoria de Boquerón. El vencimiento real es el
+martes 29. El sistema decía 28: **daba por vencida la obligación un día antes
+que la DNIT**, y habría marcado a ECOAGRO en falta estando todavía en plazo.
+
+Corregido con una tabla de traslados confirmados por año
+(`TRASLADOS_DECRETADOS` en `packages/core/src/diasHabiles.ts`), con la fuente al
+lado de cada fecha. **Hay que actualizarla cada año.** Mientras un año no esté
+cargado se usan las fechas originales, que es el comportamiento conservador: si
+algo se movió y no lo sabemos, el sistema avisa antes, nunca después.
+
+### c) Lo que NO se pudo confirmar — ABIERTO, para preguntarle a EFFORT
+
+1. **¿Un feriado extraordinario corre un vencimiento?** El Ejecutivo puede
+   decretar hasta tres por año. El del 2026-06-30 (clasificación de la
+   selección, Decreto N° 6280/26) **exceptúa expresamente a la recaudación
+   tributaria**, lo que sugiere que NO corre vencimientos. No está resuelto en
+   norma que yo haya podido leer. Por eso no está cargado: meterlo sería decidir
+   la duda de un lado sin base. Para 2026 no afecta a ningún cliente del piloto.
+2. **¿La regla de día inhábil aplica a las obligaciones de fecha fija?** Las
+   retenciones vencen el día 7 para todos, sin importar el RUC (art. 5° RG
+   38/2020). La regla de traslado está redactada para el calendario del art. 3°.
+   Es razonable suponer que también aplica, pero no lo tengo por escrito.
+3. **Números de decreto** de los traslados del 1 de marzo y del 20 de junio de
+   2026. El del 20 de junio está confirmado por la Agencia IP (agencia estatal),
+   pero la nota no cita el decreto. El del 1 de marzo viene de prensa.
+4. **Faltan los feriados extraordinarios que todavía no se decretaron.** Al
+   2026-09-12 el Ejecutivo aún podría decretar hasta dos más este año. Ninguna
+   tabla de feriados es definitiva ni siquiera dentro del año en curso.
+
+### d) Algo que conviene no olvidar
+
+El traslado por día inhábil **no se propaga en cascada**. Texto de la DNIT: el
+vencimiento se corre al primer día hábil siguiente "sin que ello implique el
+diferimiento de los demás vencimientos". Si el día 7 cae domingo y pasa al lunes
+8, el vencimiento del día 9 sigue siendo el 9. Pueden terminar venciendo dos
+terminaciones el mismo día. El sistema ya lo hace bien —cada obligación calcula
+su fecha por separado— pero es el tipo de cosa que alguien "arregla" alguna vez
+creyendo que es un bug.
+
+### e) Prórroga vigente que afecta al piloto — CONFIRMADA EN FUENTE OFICIAL
+
+**Resolución General DNIT N° 50/2026** (7 de abril de 2026): los contribuyentes
+de IRE Régimen General con cierre al 31/12/2025 pueden presentar sus **estados
+financieros hasta el 30 de junio de 2026**, por calendario DJI. Hay que tenerlo
+en cuenta antes de generar alertas de EEFF del ejercicio 2025, o el sistema va a
+reclamar algo que está prorrogado.
+Fuente: `dnit.gov.py/web/portal-institucional/w/extienden-plazo-para-presentaci%C3%B3n-de-estados-financieros`

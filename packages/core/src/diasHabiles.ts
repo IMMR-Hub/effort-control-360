@@ -159,7 +159,15 @@ export function diasHabilesEntre(
  *
  * IMPORTANTE: esta lista es un punto de partida, no la verdad. Paraguay traslada
  * feriados por decreto y agrega asuetos; los marcados como trasladables deben
- * confirmarse con EFFORT al inicio de cada año.
+ * confirmarse con EFFORT al inicio de cada año. Los traslados ya confirmados
+ * viven en `TRASLADOS_DECRETADOS`, más abajo, y se aplican solos.
+ *
+ * Lo que esta función NO incluye, a propósito: los feriados extraordinarios que
+ * el Ejecutivo decreta durante el año (hasta tres, según la Ley 7544/2025). El
+ * del 2026-06-30 por la clasificación de la selección es el caso testigo: su
+ * decreto exceptúa expresamente a la recaudación tributaria, así que no está
+ * claro que corra un vencimiento. Meterlo acá sería decidir esa duda de un lado
+ * sin base. Queda planteada en `docs/DISCREPANCIAS.md`, punto 19.
  */
 export function feriadosParaguay(anio: number): Feriado[] {
   const iso = (mes: number, dia: number): string =>
@@ -169,7 +177,7 @@ export function feriadosParaguay(anio: number): Feriado[] {
   const viernesSanto = sumarDiasCalendario(pascua, -2);
   const juevesSanto = sumarDiasCalendario(pascua, -3);
 
-  return [
+  const base: Feriado[] = [
     { fecha: iso(1, 1), nombre: 'Año Nuevo', trasladable: false },
     { fecha: iso(3, 1), nombre: 'Día de los Héroes', trasladable: true },
     { fecha: fechaCivilAIso(juevesSanto), nombre: 'Jueves Santo', trasladable: false },
@@ -183,6 +191,83 @@ export function feriadosParaguay(anio: number): Feriado[] {
     { fecha: iso(12, 8), nombre: 'Virgen de Caacupé', trasladable: false },
     { fecha: iso(12, 25), nombre: 'Navidad', trasladable: false },
   ];
+
+  // Feriado nuevo, no un olvido de antes: lo creó la Ley 7544/2025 (sancionada
+  // el 2025-08-26), así que rige recién desde 2026. Ponerlo en los años previos
+  // haría que un vencimiento viejo se recalcule distinto de como venció.
+  if (anio >= 2026) {
+    base.push({ fecha: iso(6, 20), nombre: 'Jura de la Constitución', trasladable: true });
+  }
+
+  return aplicarDecretos(anio, base);
+}
+
+/**
+ * Traslado de un feriado ya dispuesto por decreto, para un año concreto.
+ *
+ * Un feriado que ese año NO se trasladó simplemente no aparece en la lista: no
+ * hay forma de expresar "sin traslado", porque no hace falta.
+ */
+interface TrasladoDecretado {
+  readonly original: string;
+  readonly efectiva: string;
+  /** De dónde salió, para poder auditarlo sin volver a buscarlo. */
+  readonly fuente: string;
+}
+
+/**
+ * Traslados confirmados, año por año.
+ *
+ * **Por qué esto tiene que existir.** Los cuatro feriados móviles paraguayos
+ * (1 de marzo, 12 de junio, 20 de junio y 29 de setiembre) NO se trasladan
+ * solos: la Ley 7544/2025 faculta al Poder Ejecutivo a moverlos "al lunes
+ * anterior o posterior", y lo hace **por decreto, año a año**. No hay regla
+ * derivable — un año se mueve y otro no, y el sentido del movimiento cambia.
+ * Cualquier fórmula que se invente acá va a estar mal alguna vez.
+ *
+ * **Por qué importa para los vencimientos, con un caso real.** El RG 90 de
+ * ECOAGRO vence el 26 de cada mes. El 26 de setiembre de 2026 cae sábado, así
+ * que el vencimiento corre al lunes 28 — que es justamente el día al que se
+ * trasladó la Victoria de Boquerón. Sin este traslado cargado, el sistema daba
+ * por vencida esa obligación un día antes de lo que la DNIT la da por vencida.
+ *
+ * **Esta tabla hay que actualizarla cada año.** Mientras un año no esté acá,
+ * se usan las fechas originales, que es el comportamiento conservador: si algo
+ * se movió y no lo sabemos, el sistema avisa antes, nunca después.
+ */
+const TRASLADOS_DECRETADOS: Readonly<Record<number, readonly TrasladoDecretado[]>> = {
+  2026: [
+    {
+      original: '2026-03-01',
+      efectiva: '2026-03-02',
+      fuente: 'Decreto de traslado anunciado el 2026-02-16. Ver DISCREPANCIAS #19.',
+    },
+    {
+      original: '2026-06-20',
+      efectiva: '2026-06-22',
+      fuente:
+        'Agencia IP (agencia estatal), 2026-06-09: ' +
+        'ip.gov.py/ip/2026/06/09/gobierno-traslada-feriado-por-la-jura-de-la-constitucion-de-1992-al-lunes-22/',
+    },
+    {
+      original: '2026-09-29',
+      efectiva: '2026-09-28',
+      fuente: 'Decreto N° 6601 del 2026-08-20. Ver DISCREPANCIAS #19.',
+    },
+  ],
+};
+
+function aplicarDecretos(anio: number, feriados: readonly Feriado[]): Feriado[] {
+  const traslados = TRASLADOS_DECRETADOS[anio];
+  if (!traslados) return [...feriados];
+
+  const porOriginal = new Map(traslados.map((t) => [t.original, t]));
+
+  return feriados.map((feriado) => {
+    const traslado = porOriginal.get(feriado.fecha);
+    if (!traslado) return feriado;
+    return { ...feriado, fecha: traslado.efectiva };
+  });
 }
 
 /**
