@@ -6,7 +6,44 @@ resuelve por criterio propio: se confirma con Laura o Lili, o se deja marcada.
 
 ---
 
-## 1. Divisores de IVA — CONFIRMADO VERBALMENTE, FALTA CONTRASTE DOCUMENTAL
+## 1. Divisores de IVA — CONTRASTADOS CONTRA DOCUMENTOS REALES (2026-09-12)
+
+> **Se hizo exactamente lo que este punto pedía desde julio:** comparar el IVA
+> calculado contra el de liquidaciones ya presentadas, comprobante por
+> comprobante. Se contrastaron **1188 filas** de planillas RG 90 reales de
+> FUMIPRO, de períodos ya declarados ante la DNIT.
+>
+> **Resultado sobre el divisor: correcto.** 1165 filas coinciden al guaraní
+> (98,1%). Las 23 restantes difieren por ±1 Gs.
+>
+> **Resultado sobre el redondeo: la pregunta estaba mal planteada.** Las
+> diferencias no siguen ninguna regla:
+>
+> | Base | Nuestro cálculo | La planilla dice |
+> |---|---|---|
+> | 101.700 | 9.245 (9.245,45 → mitad arriba) | **9.246** |
+> | 960.000 | 87.273 (87.272,72 → mitad arriba) | **87.272** |
+> | 229.625 | 20.875 (**exacto**, sin decimales) | **20.876** |
+>
+> El tercero cierra la discusión: ningún criterio de redondeo se aleja de un
+> resultado exacto. **Esas cifras no se calculan: se copian de la factura del
+> proveedor**, y cada proveedor redondea como quiere. La DNIT acepta la cifra
+> impresa en el comprobante.
+>
+> **Consecuencia de diseño, ya aplicada.** Donde el IVA está declarado, el
+> sistema lo **lee** y no lo recalcula (`packages/importers/src/libroRg90.ts`).
+> Recalcularlo daría un número distinto del que EFFORT ya presentó, y el sistema
+> estaría contradiciendo una declaración jurada por un guaraní. El divisor
+> propio sigue existiendo y sigue siendo correcto, pero es para **deducir** un
+> IVA que nadie declaró, no para pisar uno declarado.
+>
+> **Lo que queda abierto:** el criterio de redondeo propio (mitad hacia arriba
+> en magnitud) sigue sin contrastarse, porque los datos reales no lo ejercitan —
+> en ellos el IVA nunca se deduce. Se cerrará el día que haya que calcular IVA
+> de un comprobante sin IVA declarado. Hasta entonces es una regla que el
+> sistema tiene pero casi no usa.
+
+**Planteo original (jul-2026), que sigue valiendo como contexto:**
 
 **Regla aplicada:** IVA 10% = total / 11 · IVA 5% = total / 21 · redondeo desde
 0,5 hacia arriba, resultado en guaraníes enteros.

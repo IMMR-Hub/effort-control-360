@@ -647,6 +647,20 @@ El primer build falló con errores de TypeScript en `apps/api` (`Cannot find nam
 
   **Hallazgo:** al buscar dónde enchufar la regla apareció que **el motor de IVA no lo llama nadie**. Está completo y probado, y no tiene un solo llamador en producción — los saldos de IVA que guarda el sistema son los que alguien escribe a mano. Medido contra la base real: 1387 documentos, **0 con importe**, 0 procesos mensuales. Aunque estuviera conectado, no tendría sobre qué calcular. Poblar `documento.total` y `documento.tasa` requiere el importador de comprobantes o la extracción por IA, fuera del alcance de esta etapa por decisión explícita. Queda planteado en DISCREPANCIAS #9 qué decidir con EFFORT.
 
+- [x] 121. **Importador del libro RG 90: el sistema ya calcula IVA crédito y débito con datos reales — 2026-09-12.** Daniel confirmó que el sistema tiene que calcular IVA de verdad. El bloqueo era de dónde salían los importes: 1574 documentos importados y ninguno con un número. La respuesta estaba adentro del propio OneDrive — **las planillas RG 90 que EFFORT presenta todos los meses**, 105 archivos Excel ya sincronizados, con el formato oficial de la DNIT de 28 columnas.
+
+  **Resultado medido sobre datos reales:** 39 planillas, 4206 filas, **4092 interpretadas (97,3%)**, 3 rechazadas (0,07%, filas de sección mal formadas, reportadas). Produce IVA crédito y débito por cliente y período para los 5 clientes del piloto, y el saldo a pagar o a favor sale de `determinarIva`, que ya existía y nunca se había usado.
+
+  **El layout NO se supuso** — a diferencia del importador de comprobantes (DISCREPANCIAS #10, todavía abierto): salió de abrir planillas reales. Y correrlo contra ellas enseñó cuatro cosas que ninguna lectura del formato habría anticipado, cada una un test:
+  - Las planillas de VENTAS nombran dos columnas distinto que las de COMPRAS (`Periodo` vs `Periodo de Emisión`). Sin el alias, **el 100% de las ventas se rechazaba**.
+  - Un archivo real tiene una fila de datos **arriba** del encabezado. Suponer el encabezado en la fila 1 hacía que devolviera 196 filas y cero columnas reconocidas: no fallaba, mentía. Ahora `ubicarEncabezado` lo busca — mejora que beneficia a todos los importadores.
+  - Los importes vienen **con decimales** (`5364.25000001`) aunque el guaraní no tenga centavos. Se redondean una sola vez, en el borde.
+  - **El error más caro:** exigir que las partes sumaran el total rechazaba el 8% de los comprobantes. "Monto Gravado" es una columna derivada y el total es el de la factura: no se contradicen, miden cosas distintas. Cada fila descartada era IVA que el cliente perdía. Ahora el descuadre se cuenta y la fila se conserva.
+
+  **Cerró la discrepancia #1**, abierta desde julio: se contrastaron 1188 filas reales y el divisor quedó confirmado (98,1% al guaraní, el resto ±1). Pero el contraste mostró que la pregunta estaba mal planteada — `229.625/11 = 20.875` exacto y la planilla dice `20.876`. Ningún redondeo se aleja de un resultado exacto: **el IVA no se calcula, se copia de la factura del proveedor**. Por eso el importador lee el IVA declarado en vez de recalcularlo: recalcularlo haría que el sistema contradiga una declaración jurada que la DNIT ya recibió.
+
+- [ ] 122. Guardar el resultado del libro RG 90 en la base y mostrarlo en pantalla. Hoy el importador calcula bien pero el resultado no se persiste ni se ve: falta decidir dónde viven las filas del libro (`documento` tiene un solo `total` y una sola `tasa`, y un comprobante puede tener 10% y 5% a la vez) y conectar `proceso_mensual.iva_saldo_a_pagar` / `iva_saldo_a_favor` al cálculo en vez de a lo que alguien escribe.
+
 - [ ] 118. Revisión mensual del calendario de feriados. Regla de Daniel (2026-09-12): cada mes, o cuando el gobierno confirme oficialmente un traslado. Actualizar `TRASLADOS_DECRETADOS` y `REVISION_DE_FERIADOS` en `packages/core/src/diasHabiles.ts`. Próxima: octubre de 2026.
 
 ---

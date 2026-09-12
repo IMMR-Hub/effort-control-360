@@ -77,6 +77,46 @@ export interface FilaCruda<TCampo extends string> {
   readonly original: Readonly<Record<string, unknown>>;
 }
 
+/** Hasta dónde se busca la fila de encabezado antes de darse por vencido. */
+const FILAS_A_REVISAR_BUSCANDO_ENCABEZADO = 10;
+
+/**
+ * Encuentra en qué fila están los encabezados.
+ *
+ * Suponer que están en la primera fila parece razonable y es falso: entre las
+ * planillas RG 90 reales de EFFORT hay archivos con una fila de datos ARRIBA
+ * del encabezado (por ejemplo "RG COMPRAS MARZO 2026 - FUMIPRO SA.xlsx", donde
+ * el encabezado está en la fila 2). Con la suposición vieja ese archivo se leía
+ * entero sin reconocer una sola columna, y devolvía 196 filas y cero datos —
+ * peor que un error, porque no se queja.
+ *
+ * Se elige la fila de las primeras diez que reconoce más encabezados. Si ninguna
+ * reconoce ninguno, se devuelve la primera y quien llama decide qué hacer: acá
+ * no se sabe si el archivo está mal o si es de otro tipo.
+ */
+function ubicarEncabezado<TCampo extends string>(
+  hoja: ExcelJS.Worksheet,
+  encabezados: Readonly<Record<string, TCampo>>,
+): number {
+  let mejorFila = 1;
+  let mejorPuntaje = 0;
+
+  const hasta = Math.min(FILAS_A_REVISAR_BUSCANDO_ENCABEZADO, hoja.rowCount);
+  for (let numeroFila = 1; numeroFila <= hasta; numeroFila += 1) {
+    let puntaje = 0;
+    hoja.getRow(numeroFila).eachCell({ includeEmpty: false }, (celda) => {
+      if (encabezados[normalizarEncabezado(textoDeCelda(celda.value))]) puntaje += 1;
+    });
+
+    if (puntaje > mejorPuntaje) {
+      mejorPuntaje = puntaje;
+      mejorFila = numeroFila;
+    }
+  }
+
+  return mejorFila;
+}
+
 async function filasDesdeExcel<TCampo extends string>(
   contenido: Buffer,
   encabezados: Readonly<Record<string, TCampo>>,
@@ -94,9 +134,11 @@ async function filasDesdeExcel<TCampo extends string>(
     throw new ErrorDeImportacion('El archivo Excel no tiene ninguna hoja.');
   }
 
+  const numeroEncabezado = ubicarEncabezado(hoja, encabezados);
+
   const columnaACampo = new Map<number, TCampo | null>();
   const columnaAOriginal = new Map<number, string>();
-  const filaEncabezado = hoja.getRow(1);
+  const filaEncabezado = hoja.getRow(numeroEncabezado);
   filaEncabezado.eachCell({ includeEmpty: false }, (celda, columna) => {
     const texto = normalizarEncabezado(textoDeCelda(celda.value));
     columnaAOriginal.set(columna, texto);
@@ -105,7 +147,7 @@ async function filasDesdeExcel<TCampo extends string>(
 
   const filas: FilaCruda<TCampo>[] = [];
   hoja.eachRow({ includeEmpty: false }, (fila, numeroFila) => {
-    if (numeroFila === 1) return;
+    if (numeroFila <= numeroEncabezado) return;
 
     const canonica: Partial<Record<TCampo, unknown>> = {};
     const original: Record<string, unknown> = {};
