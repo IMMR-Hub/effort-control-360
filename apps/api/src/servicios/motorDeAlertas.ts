@@ -94,6 +94,19 @@ export async function evaluarAlertas(
   const candidatas: AltaDeAlerta[] = [];
 
   for (const vencimiento of vencimientos) {
+    /*
+     * Lo ya presentado no alerta. El repositorio ya lo filtra, así que esta
+     * línea parece redundante — y sin embargo hace falta.
+     *
+     * El texto de la alerta AFIRMA "todavía no está registrado como
+     * presentado". Una afirmación así no puede depender de que un repositorio,
+     * en otro archivo, se acuerde de filtrar: el día que alguien agregue otra
+     * forma de traer vencimientos, el motor empezaría a decirle a EFFORT que no
+     * presentó algo que sí presentó. La regla vive donde se afirma, y acá tiene
+     * un test que la fija.
+     */
+    if (vencimiento.estado === 'PRESENTADO' || vencimiento.estado === 'NO_APLICA') continue;
+
     const dias = diasRestantes(fechaCivilDesdeIso(fechaAIso(vencimiento.fechaVencimiento)), ahora);
     const criticidad = CRITICIDAD_POR_NIVEL[nivelAlertaPorDias(dias)];
     if (!criticidad) continue;

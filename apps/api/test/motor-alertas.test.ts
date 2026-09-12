@@ -169,4 +169,37 @@ describe('motor de alertas', () => {
 
     expect(resumen.creadas).toBe(0);
   });
+
+  /*
+   * La regla que el texto de la alerta AFIRMA.
+   *
+   * Una alerta de vencimiento dice, con todas las letras, "todavía no está
+   * registrado como presentado". Hoy eso es cierto porque el repositorio filtra
+   * lo presentado antes de devolverlo — pero la afirmación la hace el motor, no
+   * el repositorio, y una afirmación no puede depender de que otro archivo se
+   * acuerde de filtrar. El día que alguien agregue otra forma de traer
+   * vencimientos, el sistema le diría a EFFORT que no presentó algo que sí
+   * presentó, que es exactamente el error que más caro sale acá.
+   *
+   * Por eso este test se saltea el repositorio a propósito: es el único modo de
+   * probar la defensa del motor, porque el doble de pruebas filtra igual que el
+   * repositorio real.
+   */
+  it('no alerta sobre algo presentado, aunque el repositorio se lo entregue', async () => {
+    const deps = armar();
+    await agregarVencimiento(deps, '2026-04-13');
+
+    for (const estado of ['PRESENTADO', 'NO_APLICA']) {
+      const yaPresentado = { ...deps.vencimientos.vencimientos[0]!, estado };
+      const sinFiltrar = {
+        ...deps,
+        alertas: new AlertasFalsas(),
+        vencimientos: { ...deps.vencimientos, listar: async () => [yaPresentado] },
+      } as unknown as Parameters<typeof evaluarAlertas>[0];
+
+      const resumen = await evaluarAlertas(sinFiltrar, HOY, '2026-03', 'usr-1');
+
+      expect(resumen.creadas, `no debería alertar sobre un vencimiento ${estado}`).toBe(0);
+    }
+  });
 });

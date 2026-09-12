@@ -1,13 +1,13 @@
 {
-  "generado_en": "2026-09-12T13:12:58.164Z",
-  "commit": "803bb64ebccc1cfe9de59e55ee7fc3e079b87ab1",
+  "generado_en": "2026-09-12T13:55:25.459Z",
+  "commit": "0088fbaec401e69de9d88a0fd059aa5874f4855a",
   "checks": [
     {
       "nombre": "typecheck",
       "comando": "npx tsc --build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 1368,
+      "duracion_ms": 1572,
       "detalle": ""
     },
     {
@@ -15,7 +15,7 @@
       "comando": "npm run typecheck --workspace @effort/web",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4452,
+      "duracion_ms": 4474,
       "detalle": ""
     },
     {
@@ -23,7 +23,7 @@
       "comando": "npx vitest run",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 59639,
+      "duracion_ms": 57604,
       "detalle": ""
     },
     {
@@ -31,7 +31,7 @@
       "comando": "npx vitest run packages/core/test/golden.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3570,
+      "duracion_ms": 3749,
       "detalle": ""
     },
     {
@@ -39,7 +39,7 @@
       "comando": "npx eslint .",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7362,
+      "duracion_ms": 7775,
       "detalle": ""
     },
     {
@@ -47,7 +47,7 @@
       "comando": "npx vitest run apps/api/test/rbac.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4304,
+      "duracion_ms": 4002,
       "detalle": ""
     },
     {
@@ -55,7 +55,7 @@
       "comando": "npx vitest run apps/api/test/seguridad.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4007,
+      "duracion_ms": 4071,
       "detalle": ""
     },
     {
@@ -63,7 +63,7 @@
       "comando": "npx vitest run packages/schema/test/contratos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3669,
+      "duracion_ms": 5423,
       "detalle": ""
     },
     {
@@ -71,7 +71,7 @@
       "comando": "npx vitest run apps/api/test/servidor.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6526,
+      "duracion_ms": 7946,
       "detalle": ""
     },
     {
@@ -79,7 +79,7 @@
       "comando": "npx vitest run apps/api/test/modulos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 30861,
+      "duracion_ms": 33573,
       "detalle": ""
     },
     {
@@ -87,7 +87,7 @@
       "comando": "npx vitest run apps/api/test/siga.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7398,
+      "duracion_ms": 8456,
       "detalle": ""
     },
     {
@@ -95,23 +95,23 @@
       "comando": "npx vitest run apps/api/test/importaciones.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 8811,
+      "duracion_ms": 7216,
       "detalle": ""
     },
     {
       "nombre": "test:integration",
       "comando": "npx vitest run --project integracion",
-      "estado": "OK",
-      "exit_code": 0,
-      "duracion_ms": 47507,
-      "detalle": ""
+      "estado": "FALLO",
+      "exit_code": 1,
+      "duracion_ms": 32999,
+      "detalle": "ntra PostgreSQL real\u001b[2m > \u001b[22mproceso mensual\u001b[2m > \u001b[22mguarda los saldos de IVA como bigint \u001b[33m 407\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m repositorios de negocio contra PostgreSQL real\u001b[2m > \u001b[22mproceso mensual\u001b[2m > \u001b[22mlistar un período solo trae los clientes de la cartera \u001b[33m 551\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m repositorios de negocio contra PostgreSQL real\u001b[2m > \u001b[22msolicitudes de documentación\u001b[2m > \u001b[22mabrir el mismo (cliente, período) dos veces no duplica la fila \u001b[33m 701\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m repositorios de negocio contra PostgreSQL real\u001b[2m > \u001b[22msolicitudes de documentación\u001b[2m > \u001b[22mreabrir un período ya cerrado no le pisa el progreso hecho \u001b[33m 460\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m repositorios de negocio contra PostgreSQL real\u001b[2m > \u001b[22msolicitudes de documentación\u001b[2m > \u001b[22mla vista por período no incluye solicitudes de clientes fuera de la cartera \u001b[33m 464\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m repositorios de negocio contra PostgreSQL real\u001b[2m > \u001b[22msolicitudes de documentación\u001b[2m > \u001b[22mbuscar por id respeta el alcance de cartera \u001b[33m 307\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m repositorios de negocio contra PostgreSQL real\u001b[2m > \u001b[22mexportaciones SIGA\u001b[2m > \u001b[22mregistra la exportación y sus filas juntas \u001b[33m 320\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m repositorios de negocio contra PostgreSQL real\u001b[2m > \u001b[22mexportaciones SIGA\u001b[2m > \u001b[22mreimportar el mismo archivo no duplica comprobantes \u001b[33m 324\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m repositorios de negocio contra PostgreSQL real\u001b[2m > \u001b[22mexportaciones SIGA\u001b[2m > \u001b[22msi una fila es inválida, no queda la exportación a medias \u001b[33m 316\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m repositorios de negocio contra PostgreSQL real\u001b[2m > \u001b[22malertas\u001b[2m > \u001b[22mordena por criticidad usando el orden declarado del enum en Postgres, no alfabético \u001b[33m 315\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m repositorios de negocio contra PostgreSQL real\u001b[2m > \u001b[22mreglas impositivas\u001b[2m > \u001b[22mdar de alta una segunda regla de la misma tasa cierra la anterior un día antes \u001b[33m 445\u001b[2mms\u001b[22m\u001b[39m\n   \u001b[33m\u001b[2m✓\u001b[22m\u001b[39m repositorios de negocio contra PostgreSQL real\u001b[2m > \u001b[22mreglas impositivas\u001b[2m > \u001b[22muna regla de otra tasa no se ve afectada al abrir una nueva \u001b[33m 414\u001b[2mms\u001b[22m\u001b[39m\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[31m1 failed\u001b[39m\u001b[22m\u001b[2m | \u001b[22m\u001b[1m\u001b[32m1 passed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[1m\u001b[32m57 passed\u001b[39m\u001b[22m\u001b[2m | \u001b[22m\u001b[33m49 skipped\u001b[39m\u001b[90m (106)\u001b[39m\n\u001b[2m   Start at \u001b[22m 10:53:26\n\u001b[2m   Duration \u001b[22m 30.82s\u001b[2m (transform 366ms, setup 0ms, collect 650ms, tests 41.66s, environment 0ms, prepare 492ms)\u001b[22m\n\n\n\u001b[31m⎯⎯⎯⎯⎯⎯\u001b[39m\u001b[1m\u001b[41m Failed Suites 1 \u001b[49m\u001b[22m\u001b[31m⎯⎯⎯⎯⎯⎯⎯\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[42m integracion \u001b[49m\u001b[39m test/integracion/repositorios.test.ts\u001b[2m > \u001b[22mrepositorios contra PostgreSQL real\n\u001b[31m\u001b[1mError\u001b[22m: Falló la migración 20260722180000_rol_aplicacion_y_rls en el esquema de prueba.\nSentencia: GRANT SELECT, INSERT, UPDATE ON ALL TABLES IN SCHEMA public TO effort_app;\nCausa: \nInvalid `prisma.$executeRawUnsafe()` invocation:\n\n\nRaw query failed. Code: `XX000`. Message: `ERROR: tuple concurrently updated`\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m crearEntorno test/integracion/entorno.ts:\u001b[2m138:15\u001b[22m\u001b[39m\n    \u001b[90m136| \u001b[39m        \u001b[35mawait\u001b[39m prisma\u001b[33m.\u001b[39m\u001b[34m$executeRawUnsafe\u001b[39m(sentencia)\u001b[33m;\u001b[39m\n    \u001b[90m137| \u001b[39m      } \u001b[35mcatch\u001b[39m (error) {\n    \u001b[90m138| \u001b[39m        \u001b[35mthrow\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mError\u001b[39m(\n    \u001b[90m   | \u001b[39m              \u001b[31m^\u001b[39m\n    \u001b[90m139| \u001b[39m          `Falló la migración ${migracion} en el esquema de prueba.\\n`…\n    \u001b[90m140| \u001b[39m            \u001b[32m`Sentencia: \u001b[39m\u001b[36m${\u001b[39msentencia\u001b[33m.\u001b[39m\u001b[34mslice\u001b[39m(\u001b[34m0\u001b[39m\u001b[33m,\u001b[39m \u001b[34m200\u001b[39m)\u001b[36m}\u001b[39m\u001b[32m\\n`\u001b[39m \u001b[33m+\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m test/integracion/repositorios.test.ts:\u001b[2m38:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯\u001b[22m\u001b[39m"
     },
     {
       "nombre": "verify:drive",
       "comando": "npx vitest run --project drive",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 2918,
+      "duracion_ms": 2874,
       "detalle": ""
     },
     {
@@ -119,7 +119,7 @@
       "comando": "npx vitest run --project importers",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3484,
+      "duracion_ms": 3494,
       "detalle": ""
     },
     {
@@ -127,7 +127,7 @@
       "comando": "npx vitest run --project web",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 28068,
+      "duracion_ms": 28250,
       "detalle": ""
     },
     {
@@ -143,23 +143,23 @@
       "comando": "npm run typecheck:e2e",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3316,
+      "duracion_ms": 3553,
       "detalle": ""
     },
     {
       "nombre": "test:e2e",
       "comando": "npx playwright test",
-      "estado": "FALLO",
-      "exit_code": 1,
-      "duracion_ms": 57202,
-      "detalle": "Running 3 tests using 1 worker\n\n  x  1 [chromium] › e2e\\pruebas\\flujo-principal.spec.ts:20:1 › dirección inicia sesión, navega, ve datos reales, y cierra sesión (19.6s)\n  ok 2 [chromium] › e2e\\pruebas\\primer-acceso.spec.ts:24:1 › una cuenta nueva configura su segundo factor, cambia su contraseña y recién ahí entra (5.6s)\n  ok 3 [chromium] › e2e\\pruebas\\rbac.spec.ts:16:1 › auxiliar no tiene acceso al recurso \"usuario\": ve el 403 real del servidor (4.4s)\n\n\n  1) [chromium] › e2e\\pruebas\\flujo-principal.spec.ts:20:1 › dirección inicia sesión, navega, ve datos reales, y cierra sesión \n\n    Error: expect(locator).toBeVisible() failed\n\n    Locator: getByText('GARSO S.A.')\n    Expected: visible\n    Timeout: 15000ms\n    Error: element(s) not found\n\n    Call log:\n      - Expect \"toBeVisible\" getByText('GARSO S.A.') with timeout 15000ms\n      - waiting for getByText('GARSO S.A.')\n\n\n      39 |\n      40 |   await page.getByRole('button', { name: 'Clientes', exact: true }).click();\n    > 41 |   await expect(page.getByText(CLIENTE_SEMBRADO.nombre)).toBeVisible();\n         |                                                         ^\n      42 |   await expect(page.getByText(CLIENTE_SEMBRADO.ruc)).toBeVisible();\n      43 |\n      44 |   await page.getByRole('button', { name: 'Panel general', exact: true }).click();\n        at C:\\Users\\Daniel\\NexusFlow AI\\effort-control-360\\e2e\\pruebas\\flujo-principal.spec.ts:41:57\n\n    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────\n    test-results\\flujo-principal-dirección--baba8-atos-reales-y-cierra-sesión-chromium\\test-failed-1.png\n    ────────────────────────────────────────────────────────────────────────────────────────────────\n\n    Error Context: test-results\\flujo-principal-dirección--baba8-atos-reales-y-cierra-sesión-chromium\\error-context.md\n\n    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────\n    test-results\\flujo-principal-dirección--baba8-atos-reales-y-cierra-sesión-chromium\\trace.zip\n    Usage:\n\n        npx playwright show-trace test-results\\flujo-principal-dirección--baba8-atos-reales-y-cierra-sesión-chromium\\trace.zip\n\n    ────────────────────────────────────────────────────────────────────────────────────────────────\n\n  1 failed\n    [chromium] › e2e\\pruebas\\flujo-principal.spec.ts:20:1 › dirección inicia sesión, navega, ve datos reales, y cierra sesión \n  2 passed (55.2s)"
+      "estado": "OK",
+      "exit_code": 0,
+      "duracion_ms": 33976,
+      "detalle": ""
     },
     {
       "nombre": "audit",
       "comando": "node scripts/auditar-dependencias.mjs",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7634,
+      "duracion_ms": 6833,
       "detalle": ""
     },
     {
@@ -167,7 +167,7 @@
       "comando": "npm run build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6991,
+      "duracion_ms": 8632,
       "detalle": ""
     }
   ],

@@ -623,6 +623,24 @@ El primer build falló con errores de TypeScript en `apps/api` (`Cannot find nam
 
   **Quedaron abiertas dos preguntas nuevas**, en DISCREPANCIAS #19 (g) y (h): si los estados financieros se presentan el mismo día que el IRE o el día siguiente, y si el piloto tiene que incluir el ejercicio 2025 (hoy no genera, porque las asignaciones arrancan el 2026-01-01).
 
+- [x] 119. **Ejercicio 2025 cargado y motor de alertas probado contra datos reales — 2026-09-12.** Daniel cerró las dos preguntas abiertas: los estados financieros van el mismo día que el IRE (dato de Lili), y el ejercicio contable anterior siempre se presenta en el año siguiente — o sea que lo del 2025 no era un caso especial sino la regla normal, y el sistema la tenía mal. Corregido en la migración `20260912180000_ejercicio_2025_en_el_piloto`.
+
+  **El escenario de prueba salió de los datos reales, sin inventar ninguna presentación.** Se marcó como presentado únicamente lo que tiene un archivo de verdad detrás, con reglas de match deliberadamente estrictas (se excluyen los "provisorio", "borrador" y "preliminar": un balance provisorio no es una presentación). Resultado por cliente, para el ejercicio 2025:
+
+  | Cliente | IRE | EEFF | RG 90 |
+  |---|---|---|---|
+  | COPESA | falta | **OK** | **OK** |
+  | FUMIPRO | **OK** | falta | falta |
+  | SIPAR | falta | **OK** | falta |
+  | ECOAGRO | falta | falta | falta |
+  | DIBEC | falta | falta | falta |
+
+  **Las dos ramas quedaron probadas contra la base real**: 0 alertas sobre los 4 vencimientos presentados, y alertas críticas sobre todos los que faltan. Ninguna empresa quedó 100% completa —los datos reales no dan para eso y no se fabricó ninguna presentación para forzarlo— pero eso no hacía falta: lo que verifica el comportamiento es que existan casos de los dos lados, y los hay.
+
+  **Un error propio, que terminó siendo una prueba útil.** La primera corrida generó los doce meses de 2025 en vez del ejercicio, creando 110 vencimientos de períodos presentados durante 2025 —fuera del piloto— y con ellos 110 alertas críticas de golpe. Al borrarlos, **las 110 alertas se cerraron solas** por el cierre automático, sin tocar la tabla a mano. Es la prueba en datos reales de que ese mecanismo funciona.
+
+  **Endurecido el motor de alertas.** El texto de una alerta afirma "todavía no está registrado como presentado", pero el motor no lo comprobaba: la regla vivía en el repositorio, en otro archivo. Ahora la comprueba donde la afirma, con un test que se saltea el repositorio a propósito (el doble de pruebas filtra igual que el real, así que era el único modo de probar la defensa). Verificado que el test falla si se quita la guarda.
+
 - [ ] 118. Revisión mensual del calendario de feriados. Regla de Daniel (2026-09-12): cada mes, o cuando el gobierno confirme oficialmente un traslado. Actualizar `TRASLADOS_DECRETADOS` y `REVISION_DE_FERIADOS` en `packages/core/src/diasHabiles.ts`. Próxima: octubre de 2026.
 
 ---

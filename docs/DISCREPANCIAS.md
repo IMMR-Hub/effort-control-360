@@ -883,7 +883,19 @@ en cuenta antes de generar alertas de EEFF del ejercicio 2025, o el sistema va a
 reclamar algo que está prorrogado.
 Fuente: `dnit.gov.py/web/portal-institucional/w/extienden-plazo-para-presentaci%C3%B3n-de-estados-financieros`
 
-### g) El día de los estados financieros — ABIERTO
+### g) El día de los estados financieros — CERRADO (2026-09-12)
+
+> **Respuesta de Daniel:** *"usá los datos que te pasé porque son los que me dio
+> Lili"*. Los estados financieros van el **mismo día que el IRE**, por el
+> calendario de determinativas. Queda como está cargado, y ahora con la fuente
+> nombrada: no es una preferencia nuestra, es lo que indicó Lili.
+>
+> Vale dejar dicho que sigue difiriendo un día de lo que publica la DNIT, que
+> los ubica en el calendario de informativas. Si alguna vez aparece una multa
+> por presentación tardía de estados financieros, éste es el primer lugar donde
+> mirar. Pero la diferencia juega a favor: el sistema reclama un día antes.
+
+**Lo que se había planteado, para contexto:**
 
 Al cargar las obligaciones del piloto apareció una diferencia de un día que
 conviene zanjar con EFFORT.
@@ -902,7 +914,27 @@ antes, nunca un día tarde.
 día que el IRE o el día siguiente. Es una línea de la migración
 `20260912120000_calendario_dji_y_obligaciones_del_piloto` si hay que cambiarlo.
 
-### h) El ejercicio 2025 no genera vencimientos — ABIERTO
+### h) El ejercicio 2025 no genera vencimientos — CERRADO (2026-09-12)
+
+> **Respuesta de Daniel:** *"siempre en el año se presentan los balances y los
+> IRE del periodo contable anterior"*. O sea que esto no era una particularidad
+> del 2025: **es la regla normal**, y el sistema la tenía mal. Corregido en la
+> migración `20260912180000_ejercicio_2025_en_el_piloto`, que corre el inicio de
+> las asignaciones al 2025-01-01 — el ejercicio contable cuyas declaraciones
+> vencen dentro del piloto.
+>
+> Resultado: IRE y estados financieros del ejercicio 2025 para los 5 clientes,
+> venciendo en abril de 2026, que es lo que EFFORT efectivamente presentó este
+> año.
+>
+> **Un error propio al hacerlo, que vale anotar:** la primera corrida generó los
+> DOCE meses de 2025, no solo el ejercicio. Eso creó 110 vencimientos mensuales
+> de períodos que se presentaron durante 2025 —fuera del piloto— y con ellos 110
+> alertas críticas de golpe. Se borraron, y las alertas **se cerraron solas** por
+> el cierre automático, sin tocar la tabla de alertas a mano. El episodio sirvió
+> de prueba real de que ese cierre automático funciona.
+
+**Lo que se había planteado, para contexto:**
 
 Las cinco asignaciones cliente-obligación arrancan el **2026-01-01**. Como una
 obligación anual se genera en el período `AAAA-12` del ejercicio que cierra, el
