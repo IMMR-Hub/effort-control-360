@@ -75,4 +75,46 @@ describe('clasificación por nombre de archivo', () => {
     expect(clasificarPorNombre('Basa.pdf')).toBe('OTRO');
     expect(clasificarPorNombre('')).toBe('OTRO');
   });
+
+  /*
+   * Nombres sacados textualmente de los 1024 documentos reales de EFFORT, al
+   * reclasificarlos el 2026-09-12. No son casos inventados: cada uno dejaba
+   * archivos como "Otro" que sí se sabía qué eran.
+   *
+   * El más instructivo es "BOLEETA": está mal escrito en el archivo real, y
+   * varias veces. Un clasificador que solo entiende nombres bien escritos no
+   * sirve para archivos que nombra una persona apurada.
+   */
+  describe('nombres reales del OneDrive de EFFORT', () => {
+    it('reconoce las variantes de boleta de pago que usa EFFORT', () => {
+      expect(clasificarPorNombre('BOLEETA DE PAGO CUOTA 1 FRACC IVA 06 2026 - FUMIPRO SA.pdf')).toBe(
+        'COMPROBANTE_PAGO',
+      );
+      expect(clasificarPorNombre('BOLETA FAC DE PAGO - FUMIPRO S.A')).toBe('COMPROBANTE_PAGO');
+      expect(clasificarPorNombre('BOLETA DE PG CUOTA INICIAL - FUMIPRO SA.pdf')).toBe(
+        'COMPROBANTE_PAGO',
+      );
+      expect(clasificarPorNombre('FACILIDAD DE PAGO - FUMIPRO SA.pdf')).toBe('COMPROBANTE_PAGO');
+      expect(clasificarPorNombre('06 2026 - PAGO FRACCIONAMIENTO IVA.pdf')).toBe(
+        'COMPROBANTE_PAGO',
+      );
+    });
+
+    // CCT = Certificado de Cumplimiento Tributario. 49 archivos reales.
+    it('entiende CCT como certificado', () => {
+      expect(clasificarPorNombre('CCT VIGENTE 05 2026 - FUMIPRO SA.pdf')).toBe('CERTIFICADO');
+      expect(clasificarPorNombre('CCT 02092026.pdf')).toBe('CERTIFICADO');
+    });
+
+    // Va antes que la regla de formularios: sin eso, "FOR 122" se los llevaba
+    // como declaración jurada.
+    it('entiende RET abreviado en los formularios de la DNIT', () => {
+      expect(clasificarPorNombre('FOR 122 RET IVA MAYO 2026.pdf')).toBe('RETENCION');
+      expect(clasificarPorNombre('FORM 525 RET RENTA MAYO 2026.pdf')).toBe('RETENCION');
+    });
+
+    it('una comunicación asamblearia es un acta', () => {
+      expect(clasificarPorNombre('drfs-006---comunicacion-asamblearia--8132355.pdf')).toBe('ACTA');
+    });
+  });
 });

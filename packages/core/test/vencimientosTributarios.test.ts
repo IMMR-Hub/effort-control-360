@@ -12,7 +12,12 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { crearCalendario, feriadosParaguay } from '../src/diasHabiles.js';
+import {
+  crearCalendario,
+  esDiaHabil,
+  feriadosParaguay,
+  proximoDiaHabil,
+} from '../src/diasHabiles.js';
 import { fechaCivilAIso } from '../src/fechas.js';
 import {
   ErrorDeVencimiento,
@@ -170,6 +175,45 @@ describe('fecha de vencimiento', () => {
  * 26, DIBEC (6) el 19 y el 20, SIPAR y COPESA (2) el 11 y el 12, FUMIPRO (1) el
  * 9 y el 10.
  */
+/**
+ * Regla confirmada por Daniel el 2026-09-12, y es más simple que la norma:
+ * **cualquier feriado corre la fecha**, sin distinguir si es regular,
+ * trasladado o extraordinario, y sin distinguir el tipo de obligación.
+ *
+ * La duda venía de que el decreto del feriado extraordinario del 30 de junio de
+ * 2026 exceptúa expresamente a la recaudación tributaria, de donde no se deducía
+ * si corría o no un vencimiento. La respuesta de EFFORT zanja las dos preguntas
+ * que quedaban abiertas en DISCREPANCIAS #19.
+ */
+describe('feriados extraordinarios', () => {
+  it('el feriado extraordinario del 2026-06-30 no es día hábil', () => {
+    expect(esDiaHabil({ anio: 2026, mes: 6, dia: 30 }, calendario2026)).toBe(false);
+  });
+
+  it('un vencimiento que cayera ahí corre al día siguiente', () => {
+    const fecha = proximoDiaHabil({ anio: 2026, mes: 6, dia: 30 }, calendario2026);
+    expect(fechaCivilAIso(fecha)).toBe('2026-07-01');
+  });
+
+  // La regla vale igual para las obligaciones de fecha fija (retenciones, día 7
+  // para todos): son las mismas diez posiciones con el mismo día repetido, así
+  // que pasan por el mismo corrimiento sin ningún caso especial.
+  it('también corre una obligación de fecha fija, sin caso especial', () => {
+    const TODOS_EL_7: DiasPorTerminacion = [7, 7, 7, 7, 7, 7, 7, 7, 7, 7];
+
+    // El 7 de marzo de 2026 cae sábado: corre al lunes 9.
+    const fecha = fechaDeVencimiento({
+      ruc: '80022319-5',
+      periodo: { anio: 2026, mes: 2 },
+      periodicidad: 'MENSUAL',
+      diasPorTerminacion: TODOS_EL_7,
+      calendario: calendario2026,
+    });
+
+    expect(fechaCivilAIso(fecha)).toBe('2026-03-09');
+  });
+});
+
 describe('los dos calendarios de la DNIT', () => {
   const DETERMINATIVAS: DiasPorTerminacion = [7, 9, 11, 13, 15, 17, 19, 21, 23, 25];
   const INFORMATIVAS: DiasPorTerminacion = [8, 10, 12, 14, 16, 18, 20, 22, 24, 26];

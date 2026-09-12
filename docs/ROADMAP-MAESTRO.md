@@ -607,6 +607,24 @@ El primer build falló con errores de TypeScript en `apps/api` (`Cannot find nam
 
 - [ ] 116. Confirmar que el pooler de transacción (6543) vuelve a tiempos normales una vez cortado el ciclo de reinicio. Si no baja de ~2 s por consulta con el servicio estable, revisar `connection_limit` en `DATABASE_URL` y el número de conexiones abandonadas en Supabase.
 
+- [x] 117. **Calendario oficial de la DNIT, obligaciones del piloto y reclasificación — hecho el 2026-09-12.**
+
+  **a) Fuente oficial encontrada y contrastada.** Resolución General 38/2020, art. 3° ("Calendario Perpetuo"), en el portal de la DNIT. La tabla que EFFORT había pasado coincide palabra por palabra, incluido el criterio del dígito verificador. Cierra los puntos (a) y (b) de DISCREPANCIAS #17 por dos caminos independientes.
+
+  **b) Son DOS calendarios, no uno.** Determinativas (IVA, IRE, IRP, ISC): días 7 a 25. Informativas (RG 90, estados financieros, dictamen de auditoría): días 8 a 26. Las diez fechas que dio Daniel el 2026-09-11 coinciden exactamente con las dos tablas, cliente por cliente — venían confirmando la norma sin que nadie lo supiera. No hizo falta cambiar nada de estructura: `dias_por_terminacion_ruc` ya se guardaba por obligación.
+
+  **c) Bug real en los feriados de 2026.** `feriadosParaguay()` devolvía las fechas originales de los feriados móviles, que en Paraguay se trasladan **por decreto año a año** (Ley 7544/2025), no por una regla derivable. Faltaba además un feriado entero: la Jura de la Constitución del 20 de junio, creada por esa ley y vigente desde 2026. El caso que lo hizo visible: el RG 90 de ECOAGRO vence el 26; el 26 de setiembre de 2026 cae sábado y corre al lunes 28, que es el día al que el Decreto 6601 trasladó la Victoria de Boquerón — el vencimiento real es el martes 29. El sistema decía 28, o sea **daba por vencida la obligación un día antes que la DNIT**. Corregido con `TRASLADOS_DECRETADOS`, con la fuente al lado de cada fecha, y con test.
+
+  **d) Respuestas de Daniel, aplicadas.** *Cualquier* feriado corre la fecha, incluidos los extraordinarios y también para las obligaciones de fecha fija — el feriado extraordinario del 2026-06-30 quedó cargado, y la regla de fecha fija no necesitó ningún caso especial. Los feriados móviles se revisan **cada mes o cuando el gobierno los confirme**: `REVISION_DE_FERIADOS` anota la última revisión de cada año y el cálculo automático registra un aviso cuando genera fechas de un año sin revisar.
+
+  **e) Las obligaciones del piloto no generaban nada.** De las cuatro cargadas, solo el IVA producía vencimientos. Las otras tres —IRE, estados financieros y RG 90, justamente las que EFFORT nombró como las que más importan— se omitían en silencio por tres causas acumuladas: las anuales sin `mes_de_cierre_anual` (el cálculo falla y se descarta), la RG 90 marcada ANUAL siendo mensual, y las tres con `confirmada_por_effort = false`. Corregido en la migración `20260912120000_calendario_dji_y_obligaciones_del_piloto`. Vencimientos en la base: de 45 a **130** (IVA 60, RG 90 60, IRE 5, EEFF 5).
+
+  **f) Reclasificación de los 1024 documentos reales.** De 831 "Otro" a **541**: 293 reclasificados. El clasificador se mejoró con los nombres que EFFORT usa de verdad, que aparecieron al correrlo: `CCT` (Certificado de Cumplimiento Tributario, 49 archivos), las variantes de boleta de pago —incluida "BOLEETA", mal escrita en los archivos reales— y `RET` abreviado en los formularios de la DNIT. Regla que se fijó al hacerlo: **el clasificador nunca degrada a "Otro"** — agrega información, no la borra; 10 documentos quedaron protegidos por esa regla. Lo que sigue sin clasificar es legítimamente ambiguo (capturas de WhatsApp, libros de accionistas, informes de síndico) y no se adivina.
+
+  **Quedaron abiertas dos preguntas nuevas**, en DISCREPANCIAS #19 (g) y (h): si los estados financieros se presentan el mismo día que el IRE o el día siguiente, y si el piloto tiene que incluir el ejercicio 2025 (hoy no genera, porque las asignaciones arrancan el 2026-01-01).
+
+- [ ] 118. Revisión mensual del calendario de feriados. Regla de Daniel (2026-09-12): cada mes, o cuando el gobierno confirme oficialmente un traslado. Actualizar `TRASLADOS_DECRETADOS` y `REVISION_DE_FERIADOS` en `packages/core/src/diasHabiles.ts`. Próxima: octubre de 2026.
+
 ---
 
 ## PARTE 9 — Validación final con EFFORT

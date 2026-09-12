@@ -50,11 +50,27 @@ export type TipoDeDocumento =
  * primero.
  */
 const REGLAS: readonly { readonly tipo: TipoDeDocumento; readonly patron: RegExp }[] = [
-  // Pagos primero: casi siempre el nombre menciona también el impuesto pagado.
-  { tipo: 'COMPROBANTE_PAGO', patron: /\b(boleta\s*de\s*pago|comprobante\s*de\s*pago|pago\s+(de\s+)?(iva|ire|irp|anticipo)|op\s)/i },
+  /*
+   * Pagos primero: casi siempre el nombre menciona también el impuesto pagado.
+   *
+   * Las variantes de abajo NO son hipótesis: son los nombres que EFFORT usa de
+   * verdad, sacados de los 1024 documentos reales al reclasificarlos el
+   * 2026-09-12. Incluye `bole+ta` con la "e" repetida a propósito — hay varios
+   * archivos llamados "BOLEETA DE PAGO", y un clasificador que solo entiende
+   * nombres bien escritos no sirve para archivos que escribe una persona
+   * apurada. Lo mismo con "PG" por "pago" y "FAC" por "facilidad".
+   */
+  {
+    tipo: 'COMPROBANTE_PAGO',
+    patron:
+      /\b(bole+ta\s*(fac\s*)?(de\s*)?(pago|pg)|comprobante\s*de\s*pago|facilidad(es)?\s*de\s*pago|pago\s+(de\s+)?(iva|ire|irp|anticip|fraccionamiento)|anticip\w*\s+(de\s+)?(iva|ire|irp)|op\s)/i,
+  },
 
   { tipo: 'EXTRACTO_BANCARIO', patron: /\bextracto/i },
-  { tipo: 'RETENCION', patron: /\bretenc/i },
+  // "RET" abreviado aparece en los formularios de la DNIT: "FOR 122 RET IVA",
+  // "FORM 525 RET RENTA". Va antes que la regla de formularios, que si no se
+  // los queda como declaración jurada.
+  { tipo: 'RETENCION', patron: /\bretenc|\bret\s+(iva|renta|irp|ire)\b/i },
   { tipo: 'NOTA_CREDITO', patron: /\bnota\s*de\s*cr[eé]dito/i },
   { tipo: 'NOTA_DEBITO', patron: /\bnota\s*de\s*d[eé]bito/i },
 
@@ -73,10 +89,13 @@ const REGLAS: readonly { readonly tipo: TipoDeDocumento; readonly patron: RegExp
   { tipo: 'RECIBO', patron: /\brecibo/i },
 
   { tipo: 'ESTATUTO', patron: /\bestatuto/i },
-  { tipo: 'ACTA', patron: /\bacta\b|\basamblea\b|\bdirectorio\b|\bconvocatoria\b/i },
+  { tipo: 'ACTA', patron: /\bacta\b|\basamblea\w*\b|\bdirectorio\b|\bconvocatoria\b/i },
   { tipo: 'PODER', patron: /\bpoder\b/i },
   { tipo: 'CONTRATO', patron: /\bcontrato\b/i },
-  { tipo: 'CERTIFICADO', patron: /\bcertificad/i },
+  // `CCT` es el Certificado de Cumplimiento Tributario, y es la sigla con la que
+  // EFFORT nombra 49 de sus archivos reales ("CCT VIGENTE 05 2026", "CCT
+  // 02092026"). Sin esto quedaban todos como "Otro".
+  { tipo: 'CERTIFICADO', patron: /\bcertificad|\bcct\b/i },
   { tipo: 'CONSTANCIA', patron: /\bconstancia|\bc[eé]dula\s*tributaria/i },
 ];
 

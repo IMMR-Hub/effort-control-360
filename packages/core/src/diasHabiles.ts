@@ -162,12 +162,11 @@ export function diasHabilesEntre(
  * confirmarse con EFFORT al inicio de cada año. Los traslados ya confirmados
  * viven en `TRASLADOS_DECRETADOS`, más abajo, y se aplican solos.
  *
- * Lo que esta función NO incluye, a propósito: los feriados extraordinarios que
- * el Ejecutivo decreta durante el año (hasta tres, según la Ley 7544/2025). El
- * del 2026-06-30 por la clasificación de la selección es el caso testigo: su
- * decreto exceptúa expresamente a la recaudación tributaria, así que no está
- * claro que corra un vencimiento. Meterlo acá sería decidir esa duda de un lado
- * sin base. Queda planteada en `docs/DISCREPANCIAS.md`, punto 19.
+ * Incluye también los feriados extraordinarios que el Ejecutivo decreta durante
+ * el año (hasta tres, según la Ley 7544/2025). Estuvieron afuera un rato porque
+ * el decreto del 2026-06-30 exceptúa expresamente a la recaudación tributaria, y
+ * de ahí no se deducía si corría o no un vencimiento. **Daniel lo zanjó el
+ * 2026-09-12: cualquier feriado corre la fecha, sin distinguir de qué tipo es.**
  */
 export function feriadosParaguay(anio: number): Feriado[] {
   const iso = (mes: number, dia: number): string =>
@@ -199,7 +198,52 @@ export function feriadosParaguay(anio: number): Feriado[] {
     base.push({ fecha: iso(6, 20), nombre: 'Jura de la Constitución', trasladable: true });
   }
 
-  return aplicarDecretos(anio, base);
+  return [...aplicarDecretos(anio, base), ...(FERIADOS_EXTRAORDINARIOS[anio] ?? [])];
+}
+
+/**
+ * Feriados extraordinarios decretados durante el año.
+ *
+ * No son trasladables ni predecibles: el Ejecutivo puede decretar hasta tres por
+ * año por cualquier motivo (la Ley 7544/2025 se lo permite). Van aparte de los
+ * feriados regulares porque no tienen fecha original de la cual moverse —
+ * simplemente aparecen.
+ *
+ * Cuentan como día inhábil igual que cualquier otro: confirmado por Daniel el
+ * 2026-09-12. La duda era que el decreto del 30 de junio exceptúa expresamente a
+ * la recaudación tributaria; la regla que EFFORT aplica es más simple que la
+ * letra del decreto, y es la que vale acá.
+ */
+const FERIADOS_EXTRAORDINARIOS: Readonly<Record<number, readonly Feriado[]>> = {
+  2026: [
+    {
+      fecha: '2026-06-30',
+      nombre: 'Feriado extraordinario (Decreto N° 6280/26)',
+      trasladable: false,
+    },
+  ],
+};
+
+/**
+ * Cuándo se revisó por última vez el calendario de feriados de cada año.
+ *
+ * Existe porque los feriados no son un dato que se carga una vez: los móviles se
+ * trasladan por decreto y los extraordinarios aparecen durante el año. Daniel lo
+ * definió el 2026-09-12: **hay que revisarlos cada mes, o cuando el gobierno los
+ * confirme oficialmente**.
+ *
+ * Un año sin revisar no rompe nada —se usan las fechas originales, que es el
+ * lado conservador: el sistema avisa antes, nunca después— pero el generador de
+ * vencimientos lo registra para que la falta se vea, en vez de depender de que
+ * alguien se acuerde.
+ */
+export const REVISION_DE_FERIADOS: Readonly<Record<number, string>> = {
+  2026: '2026-09-12',
+};
+
+/** Fecha de la última revisión del calendario de un año, o `null` si nunca se revisó. */
+export function revisionDeFeriados(anio: number): string | null {
+  return REVISION_DE_FERIADOS[anio] ?? null;
 }
 
 /**

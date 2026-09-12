@@ -20,6 +20,7 @@ import {
   fechaDeVencimiento,
   feriadosParaguay,
   periodoDesdeTexto,
+  revisionDeFeriados,
   type DiasPorTerminacion,
   type Periodo,
 } from '@effort/core';
@@ -51,6 +52,20 @@ export interface ResumenDeGeneracion {
   readonly creados: number;
   readonly yaExistian: number;
   readonly omitidos: readonly Omision[];
+  /**
+   * Años cuyo calendario de feriados nunca se revisó, de los que este cálculo
+   * depende.
+   *
+   * Los feriados paraguayos no son un dato que se carga una vez: los móviles se
+   * trasladan por decreto y los extraordinarios aparecen durante el año. Daniel
+   * definió el 2026-09-12 que hay que revisarlos **cada mes, o cuando el
+   * gobierno los confirme oficialmente**.
+   *
+   * Que un año esté acá no invalida el cálculo: sin traslados cargados se usan
+   * las fechas originales, y eso hace que el sistema avise ANTES, nunca después.
+   * Pero tiene que verse, en vez de depender de que alguien se acuerde.
+   */
+  readonly aniosSinRevisarFeriados: readonly number[];
 }
 
 /**
@@ -182,5 +197,8 @@ export async function generarVencimientosDelPeriodo(
     creados,
     yaExistian: altas.length - creados,
     omitidos,
+    aniosSinRevisarFeriados: [periodo.anio, periodo.anio + 1].filter(
+      (anio) => revisionDeFeriados(anio) === null,
+    ),
   };
 }

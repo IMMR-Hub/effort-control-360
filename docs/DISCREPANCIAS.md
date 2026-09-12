@@ -820,24 +820,28 @@ lado de cada fecha. **Hay que actualizarla cada año.** Mientras un año no est�
 cargado se usan las fechas originales, que es el comportamiento conservador: si
 algo se movió y no lo sabemos, el sistema avisa antes, nunca después.
 
-### c) Lo que NO se pudo confirmar — ABIERTO, para preguntarle a EFFORT
+### c) Lo que se preguntó — RESPONDIDO POR DANIEL EL 2026-09-12
 
-1. **¿Un feriado extraordinario corre un vencimiento?** El Ejecutivo puede
-   decretar hasta tres por año. El del 2026-06-30 (clasificación de la
-   selección, Decreto N° 6280/26) **exceptúa expresamente a la recaudación
-   tributaria**, lo que sugiere que NO corre vencimientos. No está resuelto en
-   norma que yo haya podido leer. Por eso no está cargado: meterlo sería decidir
-   la duda de un lado sin base. Para 2026 no afecta a ningún cliente del piloto.
-2. **¿La regla de día inhábil aplica a las obligaciones de fecha fija?** Las
-   retenciones vencen el día 7 para todos, sin importar el RUC (art. 5° RG
-   38/2020). La regla de traslado está redactada para el calendario del art. 3°.
-   Es razonable suponer que también aplica, pero no lo tengo por escrito.
-3. **Números de decreto** de los traslados del 1 de marzo y del 20 de junio de
-   2026. El del 20 de junio está confirmado por la Agencia IP (agencia estatal),
-   pero la nota no cita el decreto. El del 1 de marzo viene de prensa.
-4. **Faltan los feriados extraordinarios que todavía no se decretaron.** Al
-   2026-09-12 el Ejecutivo aún podría decretar hasta dos más este año. Ninguna
-   tabla de feriados es definitiva ni siquiera dentro del año en curso.
+1. **¿Un feriado extraordinario corre un vencimiento?** → **SÍ. Cualquier
+   feriado corre la fecha**, sin distinguir de qué tipo es. La regla que aplica
+   EFFORT es más simple que la letra del decreto: el del 2026-06-30 exceptúa
+   expresamente a la recaudación tributaria, y aun así corre. **CERRADO** —
+   quedó cargado en `FERIADOS_EXTRAORDINARIOS`, con test.
+2. **¿La regla de día inhábil aplica a las obligaciones de fecha fija?** →
+   **SÍ**, misma respuesta. **CERRADO** — no hizo falta ningún caso especial:
+   una obligación de fecha fija son las mismas diez posiciones con el mismo día
+   repetido, así que pasa por el mismo corrimiento. Quedó con test.
+3. **¿Cada cuánto se revisan los feriados móviles?** → **Cada mes, o cuando el
+   gobierno los confirme oficialmente.** **CERRADO en lo que toca al código**:
+   `REVISION_DE_FERIADOS` anota la fecha de la última revisión de cada año, y el
+   cálculo automático de vencimientos registra un aviso cuando genera fechas de
+   un año sin revisar. La revisión en sí es trabajo humano, mensual.
+4. **Números de decreto** de los traslados del 1 de marzo y del 20 de junio de
+   2026 — **sigue abierto**, pero es trazabilidad, no cálculo: las fechas están
+   confirmadas (la del 20 de junio por la Agencia IP, agencia estatal).
+5. **Los feriados extraordinarios que todavía no se decretaron** — abierto por
+   definición. Al 2026-09-12 el Ejecutivo aún podría decretar hasta dos más este
+   año. Es exactamente lo que la revisión mensual del punto 3 tiene que atrapar.
 
 ### d) Algo que conviene no olvidar
 
@@ -849,7 +853,28 @@ terminaciones el mismo día. El sistema ya lo hace bien —cada obligación calc
 su fecha por separado— pero es el tipo de cosa que alguien "arregla" alguna vez
 creyendo que es un bug.
 
-### e) Prórroga vigente que afecta al piloto — CONFIRMADA EN FUENTE OFICIAL
+### e) Prórroga de estados financieros — NO SE APLICA, PERO CONVIENE RELEER ESTO
+
+**Daniel, 2026-09-12:** *"Ninguno de los 5 clientes tiene RG50, solo el RG90"*.
+Decisión tomada: **no se carga la prórroga**. Y es el lado seguro del error — sin
+prórroga el sistema reclama en abril en vez de junio, o sea avisa antes.
+
+**Lo que hay que releer con Lili o Laura antes de darlo por cerrado**, porque
+puede haber un cruce de nombres: la **RG 90 es un formulario** (la planilla que
+se presenta todos los meses), mientras que la **RG DNIT 50/2026 no es un
+formulario sino una prórroga**: una resolución que corre la fecha de
+presentación de los estados financieros del ejercicio cerrado al 31/12/2025,
+del vencimiento de abril al 30 de junio de 2026. No es algo que un cliente
+"tenga" o "no tenga" como una obligación — es un plazo más largo que aplica
+solo por ser contribuyente de IRE Régimen General con ese cierre.
+
+Puede perfectamente ser que EFFORT ya haya presentado todo en abril y la
+prórroga sea irrelevante, que es la lectura más probable. Pero si la respuesta
+fue por el nombre parecido al de la RG 90, conviene volver a preguntarlo.
+
+Fuente de la prórroga: `dnit.gov.py/web/portal-institucional/w/extienden-plazo-para-presentaci%C3%B3n-de-estados-financieros`
+
+### f) Dato original de la prórroga — CONFIRMADA EN FUENTE OFICIAL
 
 **Resolución General DNIT N° 50/2026** (7 de abril de 2026): los contribuyentes
 de IRE Régimen General con cierre al 31/12/2025 pueden presentar sus **estados
@@ -857,3 +882,38 @@ financieros hasta el 30 de junio de 2026**, por calendario DJI. Hay que tenerlo
 en cuenta antes de generar alertas de EEFF del ejercicio 2025, o el sistema va a
 reclamar algo que está prorrogado.
 Fuente: `dnit.gov.py/web/portal-institucional/w/extienden-plazo-para-presentaci%C3%B3n-de-estados-financieros`
+
+### g) El día de los estados financieros — ABIERTO
+
+Al cargar las obligaciones del piloto apareció una diferencia de un día que
+conviene zanjar con EFFORT.
+
+Daniel dio, para cada cliente, *"EEFF IRE 25/04"* — los estados financieros y el
+IRE juntos, el mismo día. Pero la DNIT ubica a los estados financieros en el
+calendario de **informativas** (días 8 a 26), un día después del IRE, que va por
+el de **determinativas** (7 a 25). Para ECOAGRO: IRE el 25, estados financieros
+el 26.
+
+**Se cargó lo que dio EFFORT** (mismo día que el IRE), por dos razones: es quien
+conoce su propia operación, y es el lado conservador — el sistema reclama un día
+antes, nunca un día tarde.
+
+**Cómo se cierra:** preguntar si los estados financieros se presentan el mismo
+día que el IRE o el día siguiente. Es una línea de la migración
+`20260912120000_calendario_dji_y_obligaciones_del_piloto` si hay que cambiarlo.
+
+### h) El ejercicio 2025 no genera vencimientos — ABIERTO
+
+Las cinco asignaciones cliente-obligación arrancan el **2026-01-01**. Como una
+obligación anual se genera en el período `AAAA-12` del ejercicio que cierra, el
+IRE y los estados financieros del **ejercicio 2025** —que vencieron en abril de
+2026, o sea DENTRO del período del piloto— nunca se generan: el período 2025-12
+es anterior al inicio de la asignación.
+
+Hoy hay 5 vencimientos de IRE y 5 de estados financieros, todos del ejercicio
+2026 (vencen en abril de 2027). Los del ejercicio 2025 no están.
+
+**Cómo se cierra:** decidir con EFFORT si el piloto tiene que incluir lo del
+ejercicio 2025 ya presentado. Si sí, es mover el `desde` de las asignaciones al
+2025-01-01 y volver a generar. No se hizo por criterio propio porque cambia qué
+se le va a reclamar a cinco clientes reales.

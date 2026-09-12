@@ -112,6 +112,7 @@ export function programarCalculoDeVencimientosYAlertas(
           : `${hoy.anio}-${String(hoy.mes - 1).padStart(2, '0')}`;
 
       let generados = 0;
+      const sinRevisar = new Set<number>();
       for (const cual of [anterior, periodo]) {
         const resumen = await generarVencimientosDelPeriodo(
           { clientes: deps.clientes, obligaciones: deps.obligaciones, vencimientos: deps.vencimientos },
@@ -119,6 +120,19 @@ export function programarCalculoDeVencimientosYAlertas(
           usuario.id,
         );
         generados += resumen.creados;
+        for (const anio of resumen.aniosSinRevisarFeriados) sinRevisar.add(anio);
+      }
+
+      // Los feriados hay que revisarlos cada mes (regla de Daniel, 2026-09-12):
+      // los móviles se trasladan por decreto y los extraordinarios aparecen
+      // durante el año. Sin traslados cargados el cálculo no miente, pero avisa
+      // antes de tiempo — y eso tiene que verse.
+      if (sinRevisar.size > 0) {
+        registrador.warn(
+          { anios: [...sinRevisar] },
+          'Hay años sin revisar el calendario de feriados. Los vencimientos de esos años ' +
+            'se calculan con las fechas originales, sin los traslados por decreto.',
+        );
       }
 
       const alertas = await evaluarAlertas(
