@@ -23,6 +23,7 @@ import Alertas from './pantallas/Alertas.js';
 import Equipo from './pantallas/Equipo.js';
 import Reglas from './pantallas/Reglas.js';
 import Eventos from './pantallas/Eventos.js';
+import LiquidacionIva from './pantallas/LiquidacionIva.js';
 import Panel from './pantallas/Panel.js';
 
 const PANTALLAS: Record<Pantalla, () => JSX.Element> = {
@@ -33,6 +34,7 @@ const PANTALLAS: Record<Pantalla, () => JSX.Element> = {
   balances: Balances,
   siga: Siga,
   liquidaciones: Liquidaciones,
+  iva: LiquidacionIva,
   alertas: Alertas,
   equipo: Equipo,
   reglas: Reglas,

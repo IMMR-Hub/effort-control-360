@@ -17,6 +17,7 @@ import { ZodError } from 'zod';
 import type { DriveDeArchivos, EnviadorDeCorreo } from '@effort/drive';
 
 import { esProduccion, type Configuracion } from './configuracion.js';
+import type { LibroRg90Prisma } from './repositorios/libroRg90.js';
 import { ErrorDeAutorizacion, type SujetoAutenticado } from './seguridad/rbac.js';
 import {
   evaluarSesion,
@@ -78,6 +79,14 @@ export interface Dependencias {
   readonly balances: RepositorioDeBalances;
   readonly exportacionesSiga: RepositorioDeExportacionesSiga;
   readonly liquidaciones: RepositorioDeLiquidaciones;
+  /**
+   * IVA calculado desde las planillas RG 90 y sus hallazgos.
+   *
+   * Opcional como el drive y por el mismo motivo: sin OneDrive no hay planillas
+   * que leer, y que falte un módulo no puede impedir que EFFORT entre a
+   * trabajar con el resto del sistema.
+   */
+  readonly libroRg90: LibroRg90Prisma | null;
   readonly alertas: RepositorioDeAlertas;
   readonly reglasImpositivas: RepositorioDeReglasImpositivas;
   readonly reglasDeNotificacion: RepositorioDeReglasDeNotificacion;

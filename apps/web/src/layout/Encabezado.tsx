@@ -20,6 +20,7 @@ export type Pantalla =
   | 'balances'
   | 'siga'
   | 'liquidaciones'
+  | 'iva'
   | 'alertas'
   | 'equipo'
   | 'reglas'
@@ -48,6 +49,7 @@ const ENLACES: readonly EnlaceDeNav[] = [
   { id: 'balances', etiqueta: 'Balances' },
   { id: 'siga', etiqueta: 'SIGA / Conciliación' },
   { id: 'liquidaciones', etiqueta: 'Liquidaciones' },
+  { id: 'iva', etiqueta: 'IVA' },
   { id: 'alertas', etiqueta: 'Alertas' },
   { id: 'equipo', etiqueta: 'Equipo' },
   { id: 'reglas', etiqueta: 'Reglas' },

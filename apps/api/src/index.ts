@@ -47,6 +47,8 @@ import { registrarRutasDeEventos } from './rutas/eventos.js';
 import { registrarRutasDeClientes } from './rutas/clientes.js';
 import { registrarRutasDeMiCuenta } from './rutas/mi-cuenta.js';
 import { registrarRutasDeOneDrive } from './rutas/onedrive.js';
+import { registrarRutasDeLiquidacionesIva } from './rutas/liquidaciones-iva.js';
+import { LibroRg90Prisma } from './repositorios/libroRg90.js';
 import {
   programarCalculoDeVencimientosYAlertas,
   programarSincronizacionDeOneDrive,
@@ -145,6 +147,7 @@ export function construirDependencias(configuracion: Configuracion): Dependencia
     balances: new BalancesPrisma(prisma),
     exportacionesSiga: new ExportacionesSigaPrisma(prisma),
     liquidaciones: new LiquidacionesPrisma(prisma),
+    libroRg90: new LibroRg90Prisma(prisma),
     alertas: new AlertasPrisma(prisma),
     reglasImpositivas: new ReglasImpositivasPrisma(prisma),
     reglasDeNotificacion: new ReglasDeNotificacionPrisma(prisma),
@@ -173,6 +176,7 @@ export async function arrancar(dependencias: Dependencias): Promise<void> {
   await registrarRutasDeClientes(app, dependencias);
   await registrarRutasDeMiCuenta(app, dependencias);
   await registrarRutasDeOneDrive(app, dependencias);
+  await registrarRutasDeLiquidacionesIva(app, dependencias);
 
   programarSincronizacionDeOneDrive(dependencias, app.log);
   programarCalculoDeVencimientosYAlertas(dependencias, app.log);
