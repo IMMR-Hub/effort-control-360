@@ -1,13 +1,13 @@
 {
-  "generado_en": "2026-09-13T13:52:09.929Z",
-  "commit": "fb6ec6f8d49e863e077744cb7890059a551f132b",
+  "generado_en": "2026-09-13T15:16:51.556Z",
+  "commit": "ec9d014a307ea7e2244bd185cbe08c14bff22d47",
   "checks": [
     {
       "nombre": "typecheck",
       "comando": "npx tsc --build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3484,
+      "duracion_ms": 2528,
       "detalle": ""
     },
     {
@@ -15,23 +15,23 @@
       "comando": "npm run typecheck --workspace @effort/web",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 11695,
+      "duracion_ms": 7344,
       "detalle": ""
     },
     {
       "nombre": "test:unit",
       "comando": "npx vitest run",
-      "estado": "FALLO",
-      "exit_code": 1,
-      "duracion_ms": 184734,
-      "detalle": " pass a timeout value as the last argument or configure it globally with \"hookTimeout\".\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m test/importaciones.test.ts:\u001b[2m150:1\u001b[22m\u001b[39m\n    \u001b[90m148| \u001b[39m\u001b[35mlet\u001b[39m soloLectura \u001b[33m=\u001b[39m \u001b[32m''\u001b[39m\u001b[33m;\u001b[39m\n    \u001b[90m149| \u001b[39m\n    \u001b[90m150| \u001b[39m\u001b[34mbeforeEach\u001b[39m(\u001b[35masync\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m   | \u001b[39m\u001b[31m^\u001b[39m\n    \u001b[90m151| \u001b[39m  ctx \u001b[33m=\u001b[39m \u001b[35mawait\u001b[39m \u001b[34mmontar\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m152| \u001b[39m  coordinador \u001b[33m=\u001b[39m \u001b[35mawait\u001b[39m \u001b[34macceder\u001b[39m(ctx\u001b[33m,\u001b[39m \u001b[32m'karina@effort.com.py'\u001b[39m)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/6]⎯\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[46m api \u001b[49m\u001b[39m test/mi-cuenta.test.ts\u001b[2m > \u001b[22malta del segundo factor\u001b[2m > \u001b[22mentrega un secreto a quien lo tiene pendiente, y no lo escribe en la bitácora\n\u001b[31m\u001b[1mError\u001b[22m: Hook timed out in 10000ms.\nIf this is a long-running hook, pass a timeout value as the last argument or configure it globally with \"hookTimeout\".\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m test/mi-cuenta.test.ts:\u001b[2m130:1\u001b[22m\u001b[39m\n    \u001b[90m128| \u001b[39m\u001b[35mlet\u001b[39m ctx\u001b[33m:\u001b[39m \u001b[33mContexto\u001b[39m\u001b[33m;\u001b[39m\n    \u001b[90m129| \u001b[39m\n    \u001b[90m130| \u001b[39m\u001b[34mbeforeEach\u001b[39m(\u001b[35masync\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m   | \u001b[39m\u001b[31m^\u001b[39m\n    \u001b[90m131| \u001b[39m  ctx \u001b[33m=\u001b[39m \u001b[35mawait\u001b[39m \u001b[34mmontar\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m132| \u001b[39m})\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/6]⎯\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[46m api \u001b[49m\u001b[39m test/modulos.test.ts\u001b[2m > \u001b[22mdocumentos\u001b[2m > \u001b[22mabrir el archivo de un documento\u001b[2m > \u001b[22mdevuelve el archivo con su tipo y su nombre\n\u001b[31m\u001b[1mError\u001b[22m: Hook timed out in 10000ms.\nIf this is a long-running hook, pass a timeout value as the last argument or configure it globally with \"hookTimeout\".\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m test/modulos.test.ts:\u001b[2m221:1\u001b[22m\u001b[39m\n    \u001b[90m219| \u001b[39m\u001b[35mlet\u001b[39m soloLectura \u001b[33m=\u001b[39m \u001b[32m''\u001b[39m\u001b[33m;\u001b[39m\n    \u001b[90m220| \u001b[39m\n    \u001b[90m221| \u001b[39m\u001b[34mbeforeEach\u001b[39m(\u001b[35masync\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m   | \u001b[39m\u001b[31m^\u001b[39m\n    \u001b[90m222| \u001b[39m  ctx \u001b[33m=\u001b[39m \u001b[35mawait\u001b[39m \u001b[34mmontar\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m223| \u001b[39m  direccion \u001b[33m=\u001b[39m \u001b[35mawait\u001b[39m \u001b[34macceder\u001b[39m(ctx\u001b[33m,\u001b[39m \u001b[32m'laura@effort.com.py'\u001b[39m)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/6]⎯\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[46m api \u001b[49m\u001b[39m test/servidor.test.ts\u001b[2m > \u001b[22mcabeceras de seguridad\u001b[2m > \u001b[22mla política de contenido no admite scripts en línea\n\u001b[31m\u001b[1mError\u001b[22m: Hook timed out in 10000ms.\nIf this is a long-running hook, pass a timeout value as the last argument or configure it globally with \"hookTimeout\".\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m test/servidor.test.ts:\u001b[2m142:1\u001b[22m\u001b[39m\n    \u001b[90m140| \u001b[39m\u001b[35mlet\u001b[39m ctx\u001b[33m:\u001b[39m \u001b[33mContexto\u001b[39m\u001b[33m;\u001b[39m\n    \u001b[90m141| \u001b[39m\n    \u001b[90m142| \u001b[39m\u001b[34mbeforeEach\u001b[39m(\u001b[35masync\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m   | \u001b[39m\u001b[31m^\u001b[39m\n    \u001b[90m143| \u001b[39m  ctx \u001b[33m=\u001b[39m \u001b[35mawait\u001b[39m \u001b[34mmontar\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m144| \u001b[39m})\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/6]⎯\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[46m api \u001b[49m\u001b[39m test/siga.test.ts\u001b[2m > \u001b[22mimportación de exportaciones SIGA\u001b[2m > \u001b[22mregistra la exportación con la cantidad de filas leídas\n\u001b[31m\u001b[1mError\u001b[22m: Hook timed out in 10000ms.\nIf this is a long-running hook, pass a timeout value as the last argument or configure it globally with \"hookTimeout\".\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m test/siga.test.ts:\u001b[2m128:1\u001b[22m\u001b[39m\n    \u001b[90m126| \u001b[39m\u001b[35mlet\u001b[39m soloLectura \u001b[33m=\u001b[39m \u001b[32m''\u001b[39m\u001b[33m;\u001b[39m\n    \u001b[90m127| \u001b[39m\n    \u001b[90m128| \u001b[39m\u001b[34mbeforeEach\u001b[39m(\u001b[35masync\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m   | \u001b[39m\u001b[31m^\u001b[39m\n    \u001b[90m129| \u001b[39m  ctx \u001b[33m=\u001b[39m \u001b[35mawait\u001b[39m \u001b[34mmontar\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m130| \u001b[39m  coordinador \u001b[33m=\u001b[39m \u001b[35mawait\u001b[39m \u001b[34macceder\u001b[39m(ctx\u001b[33m,\u001b[39m \u001b[32m'karina@effort.com.py'\u001b[39m)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/6]⎯\u001b[22m\u001b[39m"
+      "estado": "OK",
+      "exit_code": 0,
+      "duracion_ms": 74414,
+      "detalle": ""
     },
     {
       "nombre": "verify:accounting",
       "comando": "npx vitest run packages/core/test/golden.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7509,
+      "duracion_ms": 3451,
       "detalle": ""
     },
     {
@@ -39,7 +39,7 @@
       "comando": "npx eslint .",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 117339,
+      "duracion_ms": 6860,
       "detalle": ""
     },
     {
@@ -47,7 +47,7 @@
       "comando": "npx vitest run apps/api/test/rbac.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 8274,
+      "duracion_ms": 3724,
       "detalle": ""
     },
     {
@@ -55,7 +55,7 @@
       "comando": "npx vitest run apps/api/test/seguridad.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7920,
+      "duracion_ms": 3911,
       "detalle": ""
     },
     {
@@ -63,7 +63,7 @@
       "comando": "npx vitest run packages/schema/test/contratos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7695,
+      "duracion_ms": 4086,
       "detalle": ""
     },
     {
@@ -71,7 +71,7 @@
       "comando": "npx vitest run apps/api/test/servidor.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 13721,
+      "duracion_ms": 6899,
       "detalle": ""
     },
     {
@@ -79,7 +79,7 @@
       "comando": "npx vitest run apps/api/test/modulos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 61941,
+      "duracion_ms": 31471,
       "detalle": ""
     },
     {
@@ -87,7 +87,7 @@
       "comando": "npx vitest run apps/api/test/siga.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 15586,
+      "duracion_ms": 8054,
       "detalle": ""
     },
     {
@@ -95,7 +95,7 @@
       "comando": "npx vitest run apps/api/test/importaciones.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 13067,
+      "duracion_ms": 7096,
       "detalle": ""
     },
     {
@@ -103,7 +103,7 @@
       "comando": "npx vitest run --project integracion",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 42885,
+      "duracion_ms": 41736,
       "detalle": ""
     },
     {
@@ -111,7 +111,7 @@
       "comando": "npx vitest run --project drive",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6477,
+      "duracion_ms": 2990,
       "detalle": ""
     },
     {
@@ -119,7 +119,7 @@
       "comando": "npx vitest run --project importers",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 9032,
+      "duracion_ms": 4184,
       "detalle": ""
     },
     {
@@ -127,7 +127,7 @@
       "comando": "npx vitest run --project web",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 39227,
+      "duracion_ms": 30091,
       "detalle": ""
     },
     {
@@ -135,7 +135,7 @@
       "comando": "node scripts/verificar-kpi.mjs",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 208,
+      "duracion_ms": 180,
       "detalle": ""
     },
     {
@@ -143,7 +143,7 @@
       "comando": "npm run typecheck:e2e",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7432,
+      "duracion_ms": 4363,
       "detalle": ""
     },
     {
@@ -151,7 +151,7 @@
       "comando": "npx playwright test",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 94935,
+      "duracion_ms": 42167,
       "detalle": ""
     },
     {
@@ -159,7 +159,7 @@
       "comando": "node scripts/auditar-dependencias.mjs",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 26003,
+      "duracion_ms": 7632,
       "detalle": ""
     },
     {
@@ -167,12 +167,12 @@
       "comando": "npm run build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 56328,
+      "duracion_ms": 6672,
       "detalle": ""
     }
   ],
-  "checks_ok": 20,
+  "checks_ok": 21,
   "checks_pendientes": 0,
-  "checks_fallidos": 1,
-  "todo_verde": false
+  "checks_fallidos": 0,
+  "todo_verde": true
 }
