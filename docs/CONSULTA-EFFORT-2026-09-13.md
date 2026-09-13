@@ -132,6 +132,43 @@ conocido que el sistema debería dejar de mostrar.
 
 ---
 
+## 5. Los 49 con riesgo de multa son DOS cosas distintas — ¿se tratan igual?
+
+Daniel preguntó si los 49 eran ciertos. Se reverificaron contra los archivos
+originales: sí, 49 sobre 4.092 comprobantes. Pero mirar la aritmética mostró que
+no son un solo fenómeno.
+
+**44 difieren en exactamente ±1 guaraní.** Es compatible con que el proveedor
+redondee hacia arriba en vez de a la mitad. Discutible, pero explicable.
+
+**5 difieren en más de 1**, y eso ninguna regla de redondeo lo produce — un
+redondeo se equivoca como mucho en un guaraní:
+
+| Base | ÷ 11 exacto | La regla da | La planilla declara | Diferencia |
+|---|---|---|---|---|
+| 1.548.000 | 140.727,27 | 140.727 | 140.739 | **+12** |
+| 1.459.200 | 132.654,55 | 132.655 | 132.666 | **+11** |
+| 286.500 | 26.045,45 | 26.045 | 26.047 | +2 |
+| 739.800 | 67.254,55 | 67.255 | 67.257 | +2 |
+| 39.000 | 3.545,45 | 3.545 | 3.547 | +2 |
+
+Los dos primeros son de **AGROSOL PARAGUAY S.A.** hacia ECOAGRO; los otros tres,
+de proveedores de FUMIPRO.
+
+**Las preguntas:**
+
+> ¿Una diferencia de un guaraní por redondeo del proveedor es algo que EFFORT
+> quiere ver, o es ruido conocido que el sistema debería callar?
+
+> Los cinco de más de un guaraní, ¿los revisarían? Son los únicos que no se
+> explican por redondeo.
+
+**Qué cambia según la respuesta:** hoy el sistema los trata igual y alerta por
+los 49. Si el ±1 es ruido aceptado, la alerta pasaría a nombrar solo los 5 — y
+sería una alerta que se lee, en vez de una que se archiva.
+
+---
+
 ## Lo que el sistema ya encontró, para que sirva de contexto
 
 Sobre los 5 clientes del piloto, sin que nadie revisara nada a mano:
