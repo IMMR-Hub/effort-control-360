@@ -1,6 +1,6 @@
 # Consulta a Lili y Laura — 2026-09-13
 
-**Tres preguntas** que salieron de leer **39 planillas RG 90 reales** de los
+**Cuatro preguntas** que salieron de leer **39 planillas RG 90 reales** de los
 cinco clientes del piloto (4206 comprobantes). No son dudas teóricas: cada una
 cambia un número que el sistema le va a mostrar a EFFORT, y ninguna se puede
 contestar mirando el código.
