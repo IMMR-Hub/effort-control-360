@@ -60,6 +60,42 @@ corre antes de cada comando de shell y bloquea los patrones destructivos. **No
 se desactiva para seguir adelante.** Si un borrado es legítimo, lo ejecuta
 Daniel.
 
+## Las tres preguntas — antes de cualquier acción difícil de deshacer
+
+Daniel, 2026-09-13: *"no quiero tener que autorizarte todo uno por uno (…). Hay
+que encontrar la forma de que no metas la pata teniendo todo documentado y que
+te pongas a analizar primero si es necesario hacer lo que hiciste, qué pasa si
+lo haces, y cuál es la manera CORRECTA de hacerlo."*
+
+Tiene razón, y por una razón práctica: **pedir autorización para todo no es más
+seguro, es menos.** Obliga a estar mirando la pantalla, y cuando son cincuenta
+permisos por día se aprueban sin leer. La autorización se gasta. Lo que no se
+gasta es parar a pensar antes de las pocas acciones que importan.
+
+Antes de correr algo contra producción, borrar cualquier cosa, o tocar un
+servicio externo (Supabase, DigitalOcean, GitHub, OneDrive, Azure), **hay que
+escribir estas tres respuestas primero**. No pensarlas: escribirlas, donde
+Daniel las pueda leer.
+
+1. **¿Es necesario?** ¿Qué problema resuelve, y hay una forma de conseguir lo
+   mismo sin esto? *(La migración del incidente se podía escribir a mano — como
+   las otras cuatro de ese mismo día.)*
+2. **¿Qué pasa si sale mal?** ¿Qué se pierde, y se puede deshacer? Si la
+   respuesta es "no se puede deshacer", ahí se para y se pregunta. *(Nadie se
+   preguntó qué le hace `--shadow-database-url` a la base que recibe.)*
+3. **¿Cuál es la forma correcta?** La que el proyecto ya usa. Si lo que estoy
+   por hacer no se parece a cómo se hizo las veces anteriores, eso es la señal.
+   *(Las migraciones acá se escriben a mano y se aplican con `migrate deploy`.)*
+
+**Esto aplica siempre, aunque el guardia deje pasar el comando.** El guardia
+conoce patrones conocidos; las tres preguntas cubren lo que a nadie se le
+ocurrió todavía — que es exactamente donde estaba el hueco.
+
+Y al revés: el guardia está calibrado para **casi nunca dispararse**. Si bloquea
+algo cotidiano, el problema es el guardia y hay que afinarlo, no desactivarlo.
+Un guardia que estorba todos los días termina apagado, y entonces no protege
+nada. Sus pruebas están en `.claude/guardias/probar-guardia.mjs`.
+
 ## Lecciones que costaron caro
 
 Esta sección existe por una idea de Daniel: **"en vez de prohibir, hay que
