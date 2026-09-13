@@ -1,13 +1,13 @@
 {
-  "generado_en": "2026-09-13T22:42:52.764Z",
-  "commit": "c1b9107891fd2621680e94dd569d59f0d4fec68c",
+  "generado_en": "2026-09-13T23:01:08.925Z",
+  "commit": "79124b068d4f4440b3c0cb3b0d482ddfce65a6dc",
   "checks": [
     {
       "nombre": "typecheck",
       "comando": "npx tsc --build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 1475,
+      "duracion_ms": 1337,
       "detalle": ""
     },
     {
@@ -15,7 +15,7 @@
       "comando": "npm run typecheck --workspace @effort/web",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4617,
+      "duracion_ms": 4408,
       "detalle": ""
     },
     {
@@ -23,7 +23,7 @@
       "comando": "npx vitest run",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 60175,
+      "duracion_ms": 57968,
       "detalle": ""
     },
     {
@@ -31,7 +31,7 @@
       "comando": "npx vitest run packages/core/test/golden.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4128,
+      "duracion_ms": 3801,
       "detalle": ""
     },
     {
@@ -39,7 +39,7 @@
       "comando": "npx eslint .",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 8550,
+      "duracion_ms": 8234,
       "detalle": ""
     },
     {
@@ -47,7 +47,7 @@
       "comando": "npx vitest run apps/api/test/rbac.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3396,
+      "duracion_ms": 4028,
       "detalle": ""
     },
     {
@@ -55,7 +55,7 @@
       "comando": "npx vitest run apps/api/test/seguridad.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3496,
+      "duracion_ms": 3941,
       "detalle": ""
     },
     {
@@ -63,7 +63,7 @@
       "comando": "npx vitest run packages/schema/test/contratos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3318,
+      "duracion_ms": 4077,
       "detalle": ""
     },
     {
@@ -71,7 +71,7 @@
       "comando": "npx vitest run apps/api/test/servidor.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6103,
+      "duracion_ms": 6723,
       "detalle": ""
     },
     {
@@ -79,7 +79,7 @@
       "comando": "npx vitest run apps/api/test/modulos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 32488,
+      "duracion_ms": 30108,
       "detalle": ""
     },
     {
@@ -87,7 +87,7 @@
       "comando": "npx vitest run apps/api/test/siga.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7610,
+      "duracion_ms": 8133,
       "detalle": ""
     },
     {
@@ -95,7 +95,7 @@
       "comando": "npx vitest run apps/api/test/importaciones.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6974,
+      "duracion_ms": 7672,
       "detalle": ""
     },
     {
@@ -103,7 +103,7 @@
       "comando": "npx vitest run --project integracion",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 41677,
+      "duracion_ms": 40613,
       "detalle": ""
     },
     {
@@ -111,7 +111,7 @@
       "comando": "npx vitest run --project drive",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 2794,
+      "duracion_ms": 2829,
       "detalle": ""
     },
     {
@@ -119,7 +119,7 @@
       "comando": "npx vitest run --project importers",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3854,
+      "duracion_ms": 3954,
       "detalle": ""
     },
     {
@@ -127,7 +127,7 @@
       "comando": "npx vitest run --project web",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 27301,
+      "duracion_ms": 28828,
       "detalle": ""
     },
     {
@@ -135,7 +135,7 @@
       "comando": "node scripts/verificar-kpi.mjs",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 106,
+      "duracion_ms": 141,
       "detalle": ""
     },
     {
@@ -143,7 +143,7 @@
       "comando": "npm run typecheck:e2e",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3397,
+      "duracion_ms": 4387,
       "detalle": ""
     },
     {
@@ -151,7 +151,7 @@
       "comando": "npx playwright test",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 43966,
+      "duracion_ms": 46247,
       "detalle": ""
     },
     {
@@ -159,7 +159,7 @@
       "comando": "node scripts/auditar-dependencias.mjs",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7779,
+      "duracion_ms": 8067,
       "detalle": ""
     },
     {
@@ -167,7 +167,7 @@
       "comando": "npm run build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 8197,
+      "duracion_ms": 8040,
       "detalle": ""
     }
   ],

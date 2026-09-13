@@ -14,13 +14,14 @@
 
 import type { FastifyBaseLogger } from 'fastify';
 
-import { hoyEnParaguay } from '@effort/core';
+import { DIVISORES_CONFIRMADOS_POR_EFFORT, hoyEnParaguay } from '@effort/core';
 
 import type { Dependencias } from '../servidor.js';
 import { generarVencimientosDelPeriodo } from './generadorDeVencimientos.js';
 import { enviarAvisosDeAlertas } from './avisosPorCorreo.js';
 import { evaluarAlertas } from './motorDeAlertas.js';
 import { sincronizarDesdeOneDrive } from './sincronizadorDeOneDrive.js';
+import { liquidarIvaDesdeLibros } from './liquidacionDeIva.js';
 
 /** Cada cuánto se revisa la carpeta de EFFORT. Confirmado con Daniel. */
 const CADA_15_MINUTOS = 15 * 60 * 1000;
@@ -135,8 +136,54 @@ export function programarCalculoDeVencimientosYAlertas(
         );
       }
 
+      /*
+       * El IVA se recalcula ANTES de evaluar alertas, y el orden importa: un
+       * hallazgo nuevo —un comprobante cuyo IVA declarado no coincide— tiene que
+       * avisar en esta misma vuelta y no una hora más tarde. Presentar una
+       * declaración con una diferencia es de las cosas que no se deshacen: una
+       * vez presentada, se rectifica.
+       *
+       * Un fallo acá no puede impedir que se evalúen las alertas de
+       * vencimientos, que es lo que más caro sale no tener.
+       */
+      let ivaPeriodos = 0;
+      let ivaHallazgos = 0;
+      if (deps.drive && deps.libroRg90) {
+        try {
+          const liquidacion = await liquidarIvaDesdeLibros(
+            {
+              clientes: deps.clientes,
+              librosDelCliente: (clienteId) => deps.libroRg90!.librosDelCliente(clienteId),
+              drive: deps.drive,
+              guardarLiquidacion: (datos) => deps.libroRg90!.guardarLiquidacion(datos),
+              guardarHallazgos: (datos) => deps.libroRg90!.guardarHallazgos(datos),
+              divisores: DIVISORES_CONFIRMADOS_POR_EFFORT,
+            },
+            usuario.id,
+          );
+          ivaPeriodos = liquidacion.periodosCalculados;
+          ivaHallazgos = liquidacion.hallazgosNuevos;
+
+          if (liquidacion.fallos.length > 0) {
+            registrador.warn(
+              { fallos: liquidacion.fallos.length, primero: liquidacion.fallos[0] },
+              'Hay planillas RG 90 que no se pudieron leer.',
+            );
+          }
+        } catch (error) {
+          registrador.error({ err: error }, 'Falló el cálculo automático de IVA desde los libros.');
+        }
+      }
+
       const alertas = await evaluarAlertas(
-        { alertas: deps.alertas, vencimientos: deps.vencimientos, procesoMensual: deps.procesoMensual },
+        {
+          alertas: deps.alertas,
+          vencimientos: deps.vencimientos,
+          procesoMensual: deps.procesoMensual,
+          riesgoDeLibro: {
+            porPeriodo: async () => deps.libroRg90?.riesgoPorPeriodo() ?? [],
+          },
+        },
         deps.ahora(),
         periodo,
         usuario.id,
@@ -163,7 +210,7 @@ export function programarCalculoDeVencimientosYAlertas(
         });
       }
 
-      if (generados > 0 || alertas.creadas > 0 || avisos.enviados > 0) {
+      if (generados > 0 || alertas.creadas > 0 || avisos.enviados > 0 || ivaHallazgos > 0) {
         await deps.bitacora.registrar({
           usuarioId: usuario.id,
           accion: 'alerta.evaluadas',
@@ -178,6 +225,8 @@ export function programarCalculoDeVencimientosYAlertas(
             alertasResueltas: alertas.resueltas,
             avisosEnviados: avisos.enviados,
             avisosFallidos: avisos.fallidos,
+            ivaPeriodosCalculados: ivaPeriodos,
+            ivaHallazgosNuevos: ivaHallazgos,
             disparo: 'automático',
           },
           ipTruncada: null,

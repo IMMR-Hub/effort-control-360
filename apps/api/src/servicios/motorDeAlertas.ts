@@ -32,6 +32,29 @@ export interface DependenciasDelMotorDeAlertas {
   readonly alertas: RepositorioDeAlertas;
   readonly vencimientos: RepositorioDeVencimientos;
   readonly procesoMensual: RepositorioDeProcesoMensual;
+  /**
+   * Comprobantes con riesgo de multa, agrupados por cliente y período.
+   *
+   * Se pide agrupado y no fila por fila a propósito. En los datos reales del
+   * piloto hay 49 comprobantes con riesgo: una alerta por cada uno serían 49
+   * líneas nuevas en la pantalla, y una pantalla con 49 alertas del mismo tipo
+   * es una pantalla que nadie mira — que es exactamente el problema que este
+   * motor existe para evitar.
+   */
+  readonly riesgoDeLibro: RepositorioDeRiesgoDeLibro;
+}
+
+/** Resumen de lo que hay que revisar en el libro de un cliente y período. */
+export interface RiesgoDeLibroPorPeriodo {
+  readonly clienteId: string;
+  readonly periodo: string;
+  readonly comprobantes: number;
+  /** Cuánto IVA está en juego, en valor absoluto. */
+  readonly ivaEnRiesgo: bigint;
+}
+
+export interface RepositorioDeRiesgoDeLibro {
+  porPeriodo(): Promise<readonly RiesgoDeLibroPorPeriodo[]>;
 }
 
 /**
@@ -53,6 +76,16 @@ export interface ResumenDeAlertas {
 
 export const ORIGEN_VENCIMIENTO = 'vencimiento_por_vencer';
 export const ORIGEN_DOCUMENTACION = 'documentacion_faltante';
+/**
+ * Comprobantes del libro cuyo IVA declarado no coincide con la regla.
+ *
+ * Daniel, 2026-09-13: *"estas discrepancias también tienen que alertar, ya que
+ * al final puede representar una multa administrativa"*. El monto en juego es
+ * chico —decenas de guaraníes en todo el piloto— y decirlo es parte del aviso:
+ * el problema no es la plata, es que la DNIT cruza estos datos contra los del
+ * proveedor y una diferencia dispara una revisión.
+ */
+export const ORIGEN_LIBRO_RIESGO = 'libro_con_riesgo_de_multa';
 
 /**
  * Un vencimiento solo levanta alerta cuando entra en zona de riesgo.
@@ -78,10 +111,11 @@ export async function evaluarAlertas(
   periodo: string,
   usuarioId: string,
 ): Promise<ResumenDeAlertas> {
-  const [vencimientos, procesos, abiertas] = await Promise.all([
+  const [vencimientos, procesos, abiertas, riesgos] = await Promise.all([
     deps.vencimientos.listar(null),
     deps.procesoMensual.listar(periodo, null),
     deps.alertas.listar(null),
+    deps.riesgoDeLibro.porPeriodo(),
   ]);
 
   // Clave de lo que ya está abierto, para no recontar como "creada" algo que
@@ -148,6 +182,35 @@ export async function evaluarAlertas(
     });
   }
 
+  /*
+   * Una alerta por cliente y período, no una por comprobante.
+   *
+   * Va en CRITICA porque una multa administrativa lo es, y porque la ventana
+   * para corregir se cierra cuando se presenta la declaración: después ya no se
+   * arregla, se rectifica.
+   */
+  for (const riesgo of riesgos) {
+    if (riesgo.comprobantes <= 0) continue;
+
+    const plural = riesgo.comprobantes === 1 ? 'comprobante' : 'comprobantes';
+    candidatas.push({
+      clienteId: riesgo.clienteId,
+      periodo: riesgo.periodo,
+      origen: ORIGEN_LIBRO_RIESGO,
+      criticidad: 'CRITICA',
+      titulo:
+        `${riesgo.comprobantes} ${plural} con riesgo de multa en el libro de ${riesgo.periodo}`,
+      detalle:
+        `El IVA declarado en ${riesgo.comprobantes} ${plural} no coincide con el que ` +
+        `corresponde por la regla (Gs. ${riesgo.ivaEnRiesgo} en juego). Revisalos antes de ` +
+        'presentar: la DNIT cruza estos datos contra los del proveedor, y una diferencia ' +
+        'dispara una revisión que cuesta mucho más que la diferencia.',
+      entidadRelacionada: 'libro_rg90',
+      entidadRelacionadaId: `${riesgo.clienteId}|${riesgo.periodo}`,
+      fechaLimite: null,
+    });
+  }
+
   const nuevas = candidatas.filter(
     (alta) => !yaAbiertas.has(`${alta.origen}|${alta.entidadRelacionadaId ?? ''}`),
   );
@@ -172,7 +235,13 @@ export async function evaluarAlertas(
   for (const alerta of abiertas) {
     // Solo las que levanta este motor. Una alerta de otro origen no se toca:
     // no se sabe qué la resuelve.
-    if (alerta.origen !== ORIGEN_VENCIMIENTO && alerta.origen !== ORIGEN_DOCUMENTACION) continue;
+    if (
+      alerta.origen !== ORIGEN_VENCIMIENTO &&
+      alerta.origen !== ORIGEN_DOCUMENTACION &&
+      alerta.origen !== ORIGEN_LIBRO_RIESGO
+    ) {
+      continue;
+    }
 
     const clave = `${alerta.origen}|${alerta.entidadRelacionadaId ?? ''}`;
     if (vigentes.has(clave)) continue;
@@ -184,7 +253,7 @@ export async function evaluarAlertas(
   return {
     creadas,
     yaEstabanAbiertas: candidatas.length - creadas,
-    evaluadas: vencimientos.length + procesos.length,
+    evaluadas: vencimientos.length + procesos.length + riesgos.length,
     resueltas,
   };
 }

@@ -51,6 +51,12 @@ export async function registrarRutasDeAlertas(
         alertas: deps.alertas,
         vencimientos: deps.vencimientos,
         procesoMensual: deps.procesoMensual,
+        riesgoDeLibro: {
+          // Sin módulo de IVA no hay riesgos que evaluar. Lista vacía y no un
+          // fallo: que falte un módulo no puede dejar al sistema sin alertas de
+          // vencimientos, que es lo que más caro sale no tener.
+          porPeriodo: async () => deps.libroRg90?.riesgoPorPeriodo() ?? [],
+        },
       },
       deps.ahora(),
       periodo,

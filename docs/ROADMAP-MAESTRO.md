@@ -661,6 +661,22 @@ El primer build falló con errores de TypeScript en `apps/api` (`Cannot find nam
 
 - [ ] 122. Guardar el resultado del libro RG 90 en la base y mostrarlo en pantalla. Hoy el importador calcula bien pero el resultado no se persiste ni se ve: falta decidir dónde viven las filas del libro (`documento` tiene un solo `total` y una sola `tasa`, y un comprobante puede tener 10% y 5% a la vez) y conectar `proceso_mensual.iva_saldo_a_pagar` / `iva_saldo_a_favor` al cálculo en vez de a lo que alguien escribe.
 
+- [x] 123. **El IVA se calcula, se guarda, se ve y alerta — 2026-09-13.** Cerrada la cadena completa que faltaba.
+
+  **Persistencia**: dos tablas nuevas (`liquidacion_iva_rg90` y `hallazgo_libro_rg90`), migración escrita a mano. Una liquidación por cliente y período, que se reemplaza al reimportar; hallazgos con clave única para que correrlo cada hora no repita nada.
+
+  **Servicio** (`liquidarIvaDesdeLibros`): junta las planillas de compras y ventas del mismo período —vienen en archivos separados, y si cada uno generara su liquidación el crédito y el débito nunca se encontrarían—, elige por formato y nombre (el mismo libro existe como PDF y como Excel, y solo el Excel se puede leer), y una planilla ilegible se anota sin frenar a las demás.
+
+  **Pantalla**: los hallazgos van arriba y el filtro arranca en "solo los de riesgo" — de los 166 del piloto, 49 pueden costar una multa, y debajo de una tabla de saldos quedarían enterrados. No hay forma de escribir un saldo a mano: el único camino es calcularlo desde los libros.
+
+  **Alertas**: los comprobantes con riesgo de multa levantan alerta CRITICA, **una por cliente y período, no una por comprobante** — 49 alertas del mismo tipo serían una pantalla que nadie mira. Se cierran solas cuando la planilla se corrige, igual que un vencimiento que se presenta.
+
+  **Automático**: la liquidación corre antes de evaluar alertas en la corrida horaria, para que un hallazgo nuevo avise en la misma vuelta y no una hora más tarde. Presentar una declaración con una diferencia no se deshace: se rectifica.
+
+  Una simplificación queda declarada en el código Y en la pantalla: el saldo a favor todavía no se arrastra al período siguiente. El crédito y el débito de cada mes sí son exactos.
+
+- [ ] 124. Arrastrar el saldo a favor de un período al siguiente. Hoy cada período se calcula aislado. Hace falta tener los períodos completos y en orden: arrastrar desde un período que falta daría un número peor que no arrastrarlo, porque parecería correcto.
+
 - [ ] 118. Revisión mensual del calendario de feriados. Regla de Daniel (2026-09-12): cada mes, o cuando el gobierno confirme oficialmente un traslado. Actualizar `TRASLADOS_DECRETADOS` y `REVISION_DE_FERIADOS` en `packages/core/src/diasHabiles.ts`. Próxima: octubre de 2026.
 
 ---

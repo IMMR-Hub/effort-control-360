@@ -10,18 +10,25 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { evaluarAlertas, ORIGEN_DOCUMENTACION, ORIGEN_VENCIMIENTO } from '../src/servicios/motorDeAlertas.js';
+import {
+  evaluarAlertas,
+  ORIGEN_DOCUMENTACION,
+  ORIGEN_LIBRO_RIESGO,
+  ORIGEN_VENCIMIENTO,
+  type RiesgoDeLibroPorPeriodo,
+} from '../src/servicios/motorDeAlertas.js';
 import { AlertasFalsas, ProcesoMensualFalso, VencimientosFalsos } from './dobles-dominio.js';
 
 const CLIENTE = '11111111-1111-4111-8111-111111111111';
 /** Reloj congelado: los días restantes tienen que ser deterministas. */
 const HOY = new Date('2026-04-21T13:00:00Z');
 
-function armar() {
+function armar(riesgos: readonly RiesgoDeLibroPorPeriodo[] = []) {
   return {
     alertas: new AlertasFalsas(),
     vencimientos: new VencimientosFalsos(),
     procesoMensual: new ProcesoMensualFalso(),
+    riesgoDeLibro: { porPeriodo: async () => riesgos },
   };
 }
 
@@ -168,6 +175,94 @@ describe('motor de alertas', () => {
     const resumen = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
 
     expect(resumen.creadas).toBe(0);
+  });
+
+  /*
+   * Lo que pidió Daniel el 2026-09-13: "estas discrepancias también tienen que
+   * alertar ya que al final puede representar una multa administrativa".
+   *
+   * El monto en juego es chico —decenas de guaraníes en todo el piloto— y por
+   * eso el aviso explica por qué importa igual: la DNIT cruza estos datos contra
+   * los del proveedor, y una diferencia dispara una revisión que cuesta mucho
+   * más que la diferencia.
+   */
+  it('avisa de los comprobantes con riesgo de multa', async () => {
+    const deps = armar([
+      { clienteId: CLIENTE, periodo: '2026-03', comprobantes: 7, ivaEnRiesgo: 12n },
+    ]);
+
+    const resumen = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+
+    expect(resumen.creadas).toBe(1);
+    const alerta = deps.alertas.alertas[0]!;
+    expect(alerta.origen).toBe(ORIGEN_LIBRO_RIESGO);
+    expect(alerta.criticidad).toBe('CRITICA');
+    expect(alerta.titulo).toMatch(/7 comprobantes con riesgo de multa/);
+    expect(alerta.detalle).toMatch(/cruza estos datos/);
+  });
+
+  /*
+   * UNA alerta por cliente y período, no una por comprobante.
+   *
+   * En los datos reales del piloto hay 49 comprobantes con riesgo. Una alerta
+   * por cada uno serían 49 líneas del mismo tipo en la pantalla — y una pantalla
+   * con 49 alertas iguales es una pantalla que nadie mira, que es justo el
+   * problema que este motor existe para evitar.
+   */
+  it('agrupa: una sola alerta aunque sean muchos comprobantes', async () => {
+    const deps = armar([
+      { clienteId: CLIENTE, periodo: '2026-03', comprobantes: 49, ivaEnRiesgo: 73n },
+    ]);
+
+    await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+
+    expect(deps.alertas.alertas).toHaveLength(1);
+    expect(deps.alertas.alertas[0]!.titulo).toMatch(/49 comprobantes/);
+  });
+
+  it('un solo comprobante se nombra en singular', async () => {
+    const deps = armar([
+      { clienteId: CLIENTE, periodo: '2026-03', comprobantes: 1, ivaEnRiesgo: 12n },
+    ]);
+
+    await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+
+    expect(deps.alertas.alertas[0]!.titulo).toMatch(/1 comprobante con riesgo/);
+  });
+
+  // Corregida la planilla y recalculado el IVA, el hallazgo desaparece y la
+  // alerta se cierra sola — igual que un vencimiento que se presenta.
+  it('al corregirse el libro, la alerta se cierra sola', async () => {
+    let riesgos: readonly RiesgoDeLibroPorPeriodo[] = [
+      { clienteId: CLIENTE, periodo: '2026-03', comprobantes: 3, ivaEnRiesgo: 5n },
+    ];
+    const deps = {
+      alertas: new AlertasFalsas(),
+      vencimientos: new VencimientosFalsos(),
+      procesoMensual: new ProcesoMensualFalso(),
+      riesgoDeLibro: { porPeriodo: async () => riesgos },
+    };
+
+    await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+    expect(deps.alertas.alertas[0]!.estado).toBe('ABIERTA');
+
+    riesgos = [];
+    const segunda = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+
+    expect(segunda.resueltas).toBe(1);
+    expect(deps.alertas.alertas[0]!.estado).toBe('CERRADA');
+  });
+
+  it('correrlo muchas veces no repite la alerta del libro', async () => {
+    const deps = armar([
+      { clienteId: CLIENTE, periodo: '2026-03', comprobantes: 7, ivaEnRiesgo: 12n },
+    ]);
+
+    await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+    const segunda = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+
+    expect(segunda.creadas).toBe(0);
+    expect(deps.alertas.alertas).toHaveLength(1);
   });
 
   /*

@@ -127,6 +127,39 @@ export class LibroRg90Prisma {
     return resultado.count;
   }
 
+  /**
+   * Comprobantes con riesgo de multa, agrupados por cliente y período.
+   *
+   * Lo agrupa la base y no el código: son cientos de filas y lo único que el
+   * motor de alertas necesita son cuántas y cuánto hay en juego. Traerlas todas
+   * para contarlas acá sería mover datos para tirarlos.
+   *
+   * `ABS` sobre la diferencia porque un crédito de más y un débito de menos son
+   * dos problemas distintos y no se compensan entre sí: sumarlos con signo daría
+   * cero cuando hay dos errores, que es la respuesta opuesta a la verdadera.
+   */
+  async riesgoPorPeriodo(): Promise<
+    readonly { clienteId: string; periodo: string; comprobantes: number; ivaEnRiesgo: bigint }[]
+  > {
+    const filas = await this.prisma.$queryRaw<
+      { cliente_id: string; periodo: string; comprobantes: bigint; iva_en_riesgo: bigint }[]
+    >`
+      SELECT "cliente_id", "periodo",
+             COUNT(*) AS comprobantes,
+             COALESCE(SUM(ABS("diferencia")), 0) AS iva_en_riesgo
+      FROM "hallazgo_libro_rg90"
+      WHERE "riesgo" IN ('CREDITO_DE_MAS', 'DEBITO_DE_MENOS')
+      GROUP BY "cliente_id", "periodo"
+    `;
+
+    return filas.map((f) => ({
+      clienteId: f.cliente_id,
+      periodo: f.periodo,
+      comprobantes: Number(f.comprobantes),
+      ivaEnRiesgo: BigInt(f.iva_en_riesgo),
+    }));
+  }
+
   /** Liquidaciones de un cliente, de la más reciente a la más vieja. */
   async liquidacionesDeCliente(clienteId: string) {
     const filas = await this.prisma.liquidacionIvaRg90.findMany({
