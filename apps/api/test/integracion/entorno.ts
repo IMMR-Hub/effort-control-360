@@ -102,6 +102,47 @@ export interface EntornoDePrueba {
 }
 
 /**
+ * Errores que NO son fallas: son dos suites de tests pisándose.
+ *
+ * Cada suite crea su propio esquema y aplica todas las migraciones, y varias
+ * corren en paralelo. Las migraciones hacen `GRANT … TO effort_app`, y un GRANT
+ * no toca solo el esquema propio: modifica el catálogo de roles, que es
+ * COMPARTIDO por toda la base. Dos suites otorgando permisos al mismo tiempo
+ * chocan sobre la misma fila del catálogo y Postgres aborta una con
+ * `tuple concurrently updated` o `deadlock detected`.
+ *
+ * No es aleatorio aunque lo parezca: es una carrera, y aparece más seguido
+ * cuanto más rápida está la base. Bloqueó `npm run verify` varias veces el
+ * 2026-09-12 y el 13, haciendo creer que había una regresión donde no la había
+ * — que es el peor daño de un test inestable: enseña a desconfiar del verde.
+ */
+const ERRORES_DE_CONCURRENCIA = /tuple concurrently updated|deadlock detected/i;
+
+/** Reintentos y espera entre ellos. Son colisiones de milisegundos. */
+const REINTENTOS = 5;
+const ESPERA_BASE_MS = 120;
+
+async function ejecutarTolerandoConcurrencia(
+  prisma: PrismaClient,
+  sentencia: string,
+): Promise<void> {
+  for (let intento = 1; ; intento += 1) {
+    try {
+      await prisma.$executeRawUnsafe(sentencia);
+      return;
+    } catch (error) {
+      const mensaje = error instanceof Error ? error.message : String(error);
+      if (intento >= REINTENTOS || !ERRORES_DE_CONCURRENCIA.test(mensaje)) throw error;
+
+      // Espera creciente y con algo de azar, para que dos suites que chocaron
+      // no vuelvan a reintentar exactamente en el mismo instante.
+      const espera = ESPERA_BASE_MS * intento + Math.floor(Math.random() * ESPERA_BASE_MS);
+      await new Promise((seguir) => setTimeout(seguir, espera));
+    }
+  }
+}
+
+/**
  * Crea un esquema aislado con todas las migraciones aplicadas.
  *
  * Aplica los mismos archivos de `prisma/migrations` que se aplican en
@@ -133,7 +174,7 @@ export async function crearEntorno(): Promise<EntornoDePrueba> {
 
     for (const sentencia of separarSentencias(sql)) {
       try {
-        await prisma.$executeRawUnsafe(sentencia);
+        await ejecutarTolerandoConcurrencia(prisma, sentencia);
       } catch (error) {
         throw new Error(
           `Falló la migración ${migracion} en el esquema de prueba.\n` +
