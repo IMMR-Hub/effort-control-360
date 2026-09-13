@@ -81,8 +81,21 @@ function preguntar(pregunta) {
   });
 }
 
-const { PrismaClient } = await import('@prisma/client');
-const { hash: argonHash } = await import('@node-rs/argon2');
+/*
+ * Los paquetes se resuelven desde `apps/api`, no desde esta carpeta.
+ *
+ * Node busca `node_modules` a partir de la ubicación del ARCHIVO que hace el
+ * import, no del directorio desde el que se lo invoca. Este script vive en
+ * `scripts/`, que no tiene dependencias propias, así que un `import` normal de
+ * `@prisma/client` falla con `ERR_MODULE_NOT_FOUND` por más que se lo corra
+ * parado en `apps/api`. `createRequire` apuntado al `package.json` de la API
+ * resuelve desde ahí, que es donde esos paquetes sí están.
+ */
+const { createRequire } = await import('node:module');
+const requerirDesdeLaApi = createRequire(new URL('../apps/api/package.json', import.meta.url));
+
+const { PrismaClient } = requerirDesdeLaApi('@prisma/client');
+const { hash: argonHash } = requerirDesdeLaApi('@node-rs/argon2');
 
 const url = process.env.DIRECT_URL ?? process.env.DATABASE_URL;
 if (!url) {
