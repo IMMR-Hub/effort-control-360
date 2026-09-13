@@ -45,3 +45,7 @@ dist/
 # Datos reales de clientes (muestras para definir formatos de importación).
 # Nunca al historial de git: RUCs, balances y declaraciones reales.
 docs/Muestras/
+
+# Respaldos de la base: contienen datos reales de EFFORT (nombres, RUC, importes).
+# Nunca van a git — el repositorio no es el lugar para datos de clientes.
+respaldos/

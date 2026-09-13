@@ -19,7 +19,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider  = "postgresql"
   // Conexión pooleada (PgBouncer modo transacción): la usa la aplicación en
   // marcha, donde cada consulta es corta e independiente.
   url       = env("DATABASE_URL")
@@ -28,9 +28,15 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-/* ========================================================================== */
-/* Usuarios, credenciales y sesiones                                          */
-/* ========================================================================== */
+/**
+ * ==========================================================================
+ */
+/**
+ * Usuarios, credenciales y sesiones
+ */
+/**
+ * ==========================================================================
+ */
 
 enum Rol {
   direccion
@@ -65,7 +71,7 @@ model Usuario {
   contrasenaActualizadaEn DateTime? @map("contrasena_actualizada_en") @db.Timestamptz(3)
   debeCambiarContrasena   Boolean   @default(true) @map("debe_cambiar_contrasena")
 
-  secretoTotp        String?  @map("secreto_totp") @db.VarChar(64)
+  secretoTotp         String? @map("secreto_totp") @db.VarChar(64)
   segundoFactorActivo Boolean @default(false) @map("segundo_factor_activo")
 
   ultimoAccesoEn DateTime? @map("ultimo_acceso_en") @db.Timestamptz(3)
@@ -104,13 +110,13 @@ model CodigoRecuperacion {
 /// Sesión del lado del servidor. La cookie solo lleva un identificador opaco,
 /// para poder revocarla en el acto. Ver apps/api/src/seguridad/sesiones.ts.
 model Sesion {
-  id            String    @id @default(uuid()) @db.Uuid
-  hashDelToken  String    @unique @map("hash_del_token") @db.VarChar(64)
-  usuarioId     String    @map("usuario_id") @db.Uuid
-  creadaEn      DateTime  @default(now()) @map("creada_en") @db.Timestamptz(3)
-  ultimoUsoEn   DateTime  @default(now()) @map("ultimo_uso_en") @db.Timestamptz(3)
-  revocadaEn    DateTime? @map("revocada_en") @db.Timestamptz(3)
-  motivoRevocacion String? @map("motivo_revocacion") @db.VarChar(120)
+  id               String    @id @default(uuid()) @db.Uuid
+  hashDelToken     String    @unique @map("hash_del_token") @db.VarChar(64)
+  usuarioId        String    @map("usuario_id") @db.Uuid
+  creadaEn         DateTime  @default(now()) @map("creada_en") @db.Timestamptz(3)
+  ultimoUsoEn      DateTime  @default(now()) @map("ultimo_uso_en") @db.Timestamptz(3)
+  revocadaEn       DateTime? @map("revocada_en") @db.Timestamptz(3)
+  motivoRevocacion String?   @map("motivo_revocacion") @db.VarChar(120)
 
   segundoFactorSuperado Boolean @default(false) @map("segundo_factor_superado")
 
@@ -126,9 +132,15 @@ model Sesion {
   @@map("sesion")
 }
 
-/* ========================================================================== */
-/* Clientes                                                                   */
-/* ========================================================================== */
+/**
+ * ==========================================================================
+ */
+/**
+ * Clientes
+ */
+/**
+ * ==========================================================================
+ */
 
 enum TipoPersona {
   FISICA
@@ -155,16 +167,18 @@ model Cliente {
   actualizadoPorUsuarioId String?  @map("actualizado_por_usuario_id") @db.Uuid
   origen                  Origen   @default(REAL)
 
-  asignaciones     AsignacionCliente[]
-  obligaciones     ObligacionDeCliente[]
-  documentos       Documento[]
+  asignaciones      AsignacionCliente[]
+  obligaciones      ObligacionDeCliente[]
+  documentos        Documento[]
   procesosMensuales ProcesoMensual[]
-  vencimientos     Vencimiento[]
-  contactos        RegistroContacto[]
-  solicitudes      SolicitudDocumentacion[]
-  balances         Balance[]
+  vencimientos      Vencimiento[]
+  contactos         RegistroContacto[]
+  solicitudes       SolicitudDocumentacion[]
+  balances          Balance[]
   exportacionesSiga ExportacionSiga[]
-  liquidaciones    Liquidacion[]
+  liquidaciones     Liquidacion[]
+  liquidacionesIva  LiquidacionIvaRg90[]
+  hallazgosDeLibro  HallazgoDeLibroRg90[]
 
   @@index([activo])
   @@map("cliente")
@@ -195,9 +209,15 @@ model AsignacionCliente {
   @@map("asignacion_cliente")
 }
 
-/* ========================================================================== */
-/* Reglas impositivas                                                         */
-/* ========================================================================== */
+/**
+ * ==========================================================================
+ */
+/**
+ * Reglas impositivas
+ */
+/**
+ * ==========================================================================
+ */
 
 enum TasaIva {
   DIEZ
@@ -226,19 +246,25 @@ model ReglaImpositiva {
   @@map("regla_impositiva")
 }
 
-/* ========================================================================== */
-/* Documentos y evidencias                                                    */
-/* ========================================================================== */
+/**
+ * ==========================================================================
+ */
+/**
+ * Documentos y evidencias
+ */
+/**
+ * ==========================================================================
+ */
 
 model Evidencia {
-  id            String  @id @default(uuid()) @db.Uuid
-  clienteId     String? @map("cliente_id") @db.Uuid
-  periodo       String? @db.VarChar(7)
-  nombreArchivo String  @map("nombre_archivo") @db.VarChar(400)
-  rutaOneDrive  String  @map("ruta_onedrive") @db.VarChar(1000)
+  id             String  @id @default(uuid()) @db.Uuid
+  clienteId      String? @map("cliente_id") @db.Uuid
+  periodo        String? @db.VarChar(7)
+  nombreArchivo  String  @map("nombre_archivo") @db.VarChar(400)
+  rutaOneDrive   String  @map("ruta_onedrive") @db.VarChar(1000)
   itemIdOneDrive String? @map("item_id_onedrive") @db.VarChar(200)
-  tipoMime      String  @map("tipo_mime") @db.VarChar(120)
-  tamanoBytes   BigInt  @map("tamano_bytes")
+  tipoMime       String  @map("tipo_mime") @db.VarChar(120)
+  tamanoBytes    BigInt  @map("tamano_bytes")
 
   /// Da idempotencia a la importación y permite demostrar, meses después, que
   /// el archivo que se está mirando es el que se recibió.
@@ -258,8 +284,8 @@ model Evidencia {
   modificadoEnOrigen DateTime? @map("modificado_en_origen") @db.Timestamptz(3)
 
   /// Cuándo se copió al OneDrive espejo de respaldo.
-  respaldadoEn      DateTime? @map("respaldado_en") @db.Timestamptz(3)
-  subidoPorUsuarioId String   @map("subido_por_usuario_id") @db.Uuid
+  respaldadoEn       DateTime? @map("respaldado_en") @db.Timestamptz(3)
+  subidoPorUsuarioId String    @map("subido_por_usuario_id") @db.Uuid
 
   creadoEn DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
   origen   Origen   @default(REAL)
@@ -327,9 +353,15 @@ model Documento {
   @@map("documento")
 }
 
-/* ========================================================================== */
-/* Proceso mensual y balances                                                 */
-/* ========================================================================== */
+/**
+ * ==========================================================================
+ */
+/**
+ * Proceso mensual y balances
+ */
+/**
+ * ==========================================================================
+ */
 
 enum EstadoGeneral {
   COMPLETO
@@ -358,12 +390,12 @@ model ProcesoMensual {
   documentosFaltantes  Int @default(0) @map("documentos_faltantes")
   documentosObservados Int @default(0) @map("documentos_observados")
 
-  comprasCargadasSiga         Boolean @default(false) @map("compras_cargadas_siga")
-  ventasCargadasSiga          Boolean @default(false) @map("ventas_cargadas_siga")
-  retencionesCargadas         Boolean @default(false) @map("retenciones_cargadas")
-  extractosRecibidos          Boolean @default(false) @map("extractos_recibidos")
+  comprasCargadasSiga           Boolean @default(false) @map("compras_cargadas_siga")
+  ventasCargadasSiga            Boolean @default(false) @map("ventas_cargadas_siga")
+  retencionesCargadas           Boolean @default(false) @map("retenciones_cargadas")
+  extractosRecibidos            Boolean @default(false) @map("extractos_recibidos")
   conciliacionBancariaRealizada Boolean @default(false) @map("conciliacion_bancaria_realizada")
-  ivaRevisado                 Boolean @default(false) @map("iva_revisado")
+  ivaRevisado                   Boolean @default(false) @map("iva_revisado")
 
   ivaSaldoAPagar BigInt? @map("iva_saldo_a_pagar")
   ivaSaldoAFavor BigInt? @map("iva_saldo_a_favor")
@@ -434,9 +466,15 @@ model Balance {
   @@map("balance")
 }
 
-/* ========================================================================== */
-/* Vencimientos                                                               */
-/* ========================================================================== */
+/**
+ * ==========================================================================
+ */
+/**
+ * Vencimientos
+ */
+/**
+ * ==========================================================================
+ */
 
 enum EstadoVencimiento {
   VIGENTE
@@ -453,28 +491,26 @@ enum Periodicidad {
 
 /**
  * Catálogo de obligaciones tributarias y el calendario que les corresponde.
- *
  * `diasPorTerminacionRuc` tiene diez posiciones (0 a 9): el día del mes en que
  * vence cada terminación de RUC. Es un DATO, no una constante en el código, por
  * la misma razón que los feriados: la DNIT lo cambia por resolución, y cuando
  * eso pase tiene que poder corregirse sin desplegar una versión nueva.
- *
  * `fuente` es obligatoria y sin valor por defecto a propósito: una obligación
  * cuyo origen nadie puede citar no debería estar generando vencimientos que
  * después alguien va a presentar ante la DNIT. Misma disciplina que
  * `ReglaImpositiva`.
  */
 model ObligacionTributaria {
-  id     String @id @default(uuid()) @db.Uuid
-  codigo String @unique @db.VarChar(40)
-  nombre String @db.VarChar(200)
+  id         String  @id @default(uuid()) @db.Uuid
+  codigo     String  @unique @db.VarChar(40)
+  nombre     String  @db.VarChar(200)
   /// Quién la exige: DNIT, Municipalidad, IPS…
   entidad    String  @db.VarChar(200)
   formulario String? @db.VarChar(40)
 
-  periodicidad Periodicidad
+  periodicidad     Periodicidad
   /// Solo para las anuales: mes del año siguiente en que se presenta.
-  mesDeCierreAnual Int? @map("mes_de_cierre_anual")
+  mesDeCierreAnual Int?         @map("mes_de_cierre_anual")
 
   diasPorTerminacionRuc Int[] @map("dias_por_terminacion_ruc")
 
@@ -498,7 +534,6 @@ model ObligacionTributaria {
 
 /**
  * Qué obligaciones tiene cada cliente, y desde cuándo.
- *
  * No todos los clientes deben lo mismo, y lo que deben cambia con el tiempo
  * (alta de un impuesto, cambio de régimen). `desde`/`hasta` evitan que el
  * generador invente vencimientos de un período en el que el cliente todavía no
@@ -567,9 +602,15 @@ model Vencimiento {
   @@map("vencimiento")
 }
 
-/* ========================================================================== */
-/* Seguimiento al cliente                                                     */
-/* ========================================================================== */
+/**
+ * ==========================================================================
+ */
+/**
+ * Seguimiento al cliente
+ */
+/**
+ * ==========================================================================
+ */
 
 enum EstadoSolicitud {
   ABIERTA
@@ -641,14 +682,14 @@ enum CanalContacto {
 /// No se borra nunca y solo admite corrección por un registro nuevo que la
 /// referencie, para que la versión original quede a la vista.
 model RegistroContacto {
-  id           String  @id @default(uuid()) @db.Uuid
-  clienteId    String  @map("cliente_id") @db.Uuid
-  periodo      String  @db.VarChar(7)
-  solicitudId  String? @map("solicitud_id") @db.Uuid
+  id          String  @id @default(uuid()) @db.Uuid
+  clienteId   String  @map("cliente_id") @db.Uuid
+  periodo     String  @db.VarChar(7)
+  solicitudId String? @map("solicitud_id") @db.Uuid
 
-  canal     CanalContacto
-  direccion String        @db.VarChar(10)
-  origenContacto String   @map("origen_contacto") @db.VarChar(12)
+  canal          CanalContacto
+  direccion      String        @db.VarChar(10)
+  origenContacto String        @map("origen_contacto") @db.VarChar(12)
 
   ocurridoEn             DateTime @map("ocurrido_en") @db.Timestamptz(3)
   registradoPorUsuarioId String   @map("registrado_por_usuario_id") @db.Uuid
@@ -677,20 +718,20 @@ model RegistroContacto {
 /// Log de cada correo efectivamente despachado. Es lo que hace verificable un
 /// contacto de origen AUTOMATICO: se puede cotejar contra el proveedor de correo.
 model EnvioNotificacion {
-  id         String  @id @default(uuid()) @db.Uuid
-  reglaId    String? @map("regla_id") @db.Uuid
-  clienteId  String? @map("cliente_id") @db.Uuid
+  id          String  @id @default(uuid()) @db.Uuid
+  reglaId     String? @map("regla_id") @db.Uuid
+  clienteId   String? @map("cliente_id") @db.Uuid
   solicitudId String? @map("solicitud_id") @db.Uuid
 
-  destinatario String @db.VarChar(254)
-  asunto       String @db.VarChar(400)
-  numeroDeRecordatorio Int? @map("numero_de_recordatorio")
-  esEscalamiento Boolean @default(false) @map("es_escalamiento")
+  destinatario         String  @db.VarChar(254)
+  asunto               String  @db.VarChar(400)
+  numeroDeRecordatorio Int?    @map("numero_de_recordatorio")
+  esEscalamiento       Boolean @default(false) @map("es_escalamiento")
 
-  estado           String    @db.VarChar(20)
-  idMensajeProveedor String? @map("id_mensaje_proveedor") @db.VarChar(200)
-  errorProveedor   String?   @map("error_proveedor") @db.VarChar(1000)
-  despachadoEn     DateTime? @map("despachado_en") @db.Timestamptz(3)
+  estado             String    @db.VarChar(20)
+  idMensajeProveedor String?   @map("id_mensaje_proveedor") @db.VarChar(200)
+  errorProveedor     String?   @map("error_proveedor") @db.VarChar(1000)
+  despachadoEn       DateTime? @map("despachado_en") @db.Timestamptz(3)
 
   creadoEn DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
 
@@ -698,9 +739,15 @@ model EnvioNotificacion {
   @@map("envio_notificacion")
 }
 
-/* ========================================================================== */
-/* Bitácora inmutable                                                         */
-/* ========================================================================== */
+/**
+ * ==========================================================================
+ */
+/**
+ * Bitácora inmutable
+ */
+/**
+ * ==========================================================================
+ */
 
 /// Registro de eventos. Append-only, impuesto por un disparador de PostgreSQL
 /// que rechaza UPDATE y DELETE (ver migrations/.../event_log_inmutable.sql).
@@ -733,9 +780,15 @@ model EventLog {
   @@map("event_log")
 }
 
-/* ========================================================================== */
-/* Exportaciones de SIGA                                                      */
-/* ========================================================================== */
+/**
+ * ==========================================================================
+ */
+/**
+ * Exportaciones de SIGA
+ */
+/**
+ * ==========================================================================
+ */
 
 enum TipoReporteSiga {
   LIBRO_COMPRAS
@@ -761,13 +814,13 @@ enum EstadoRevisionSiga {
 /// SIGA produce. Cada exportación queda registrada con su evidencia, para poder
 /// mostrar contra qué archivo se concilió.
 model ExportacionSiga {
-  id        String          @id @default(uuid()) @db.Uuid
-  clienteId String          @map("cliente_id") @db.Uuid
-  periodo   String          @db.VarChar(7)
+  id          String          @id @default(uuid()) @db.Uuid
+  clienteId   String          @map("cliente_id") @db.Uuid
+  periodo     String          @db.VarChar(7)
   tipoReporte TipoReporteSiga @map("tipo_reporte")
-  formato   String          @db.VarChar(10)
+  formato     String          @db.VarChar(10)
 
-  evidenciaId String? @map("evidencia_id") @db.Uuid
+  evidenciaId String?  @map("evidencia_id") @db.Uuid
   importadaEn DateTime @default(now()) @map("importada_en") @db.Timestamptz(3)
   filasLeidas Int      @default(0) @map("filas_leidas")
 
@@ -799,13 +852,13 @@ model ComprobanteSiga {
   clienteId     String @map("cliente_id") @db.Uuid
   periodo       String @db.VarChar(7)
 
-  rucEmisor         String  @map("ruc_emisor") @db.VarChar(20)
-  timbrado          String  @db.VarChar(20)
-  numeroComprobante String  @map("numero_comprobante") @db.VarChar(30)
+  rucEmisor         String   @map("ruc_emisor") @db.VarChar(20)
+  timbrado          String   @db.VarChar(20)
+  numeroComprobante String   @map("numero_comprobante") @db.VarChar(30)
   /// Guaraníes enteros. Ver ADR 0002.
   total             BigInt
   tasa              TasaIva
-  anulado           Boolean @default(false)
+  anulado           Boolean  @default(false)
   fecha             DateTime @db.Date
 
   creadoEn DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
@@ -819,9 +872,15 @@ model ComprobanteSiga {
   @@map("comprobante_siga")
 }
 
-/* ========================================================================== */
-/* Liquidaciones                                                              */
-/* ========================================================================== */
+/**
+ * ==========================================================================
+ */
+/**
+ * Liquidaciones
+ */
+/**
+ * ==========================================================================
+ */
 
 enum EstadoLiquidacion {
   PENDIENTE
@@ -845,11 +904,11 @@ model Liquidacion {
 
   archivoEvidenciaId String? @map("archivo_evidencia_id") @db.Uuid
 
-  destinatario String?   @db.VarChar(254)
-  canal        String?   @db.VarChar(30)
-  fechaEnvio   DateTime? @map("fecha_envio") @db.Timestamptz(3)
+  destinatario     String?   @db.VarChar(254)
+  canal            String?   @db.VarChar(30)
+  fechaEnvio       DateTime? @map("fecha_envio") @db.Timestamptz(3)
   /// Evidencia del envío: captura del correo, del WhatsApp, lo que corresponda.
-  evidenciaEnvioId String? @map("evidencia_envio_id") @db.Uuid
+  evidenciaEnvioId String?   @map("evidencia_envio_id") @db.Uuid
 
   responsableId String? @map("responsable_id") @db.Uuid
 
@@ -873,9 +932,15 @@ model Liquidacion {
   @@map("liquidacion")
 }
 
-/* ========================================================================== */
-/* Alertas                                                                    */
-/* ========================================================================== */
+/**
+ * ==========================================================================
+ */
+/**
+ * Alertas
+ */
+/**
+ * ==========================================================================
+ */
 
 enum Criticidad {
   CRITICA
@@ -913,10 +978,10 @@ model Alerta {
   responsableId String?   @map("responsable_id") @db.Uuid
   fechaLimite   DateTime? @map("fecha_limite") @db.Date
 
-  estado            EstadoAlerta @default(ABIERTA)
-  cerradaPorUsuarioId String?    @map("cerrada_por_usuario_id") @db.Uuid
-  cerradaEn         DateTime?    @map("cerrada_en") @db.Timestamptz(3)
-  motivoCierre      String?      @map("motivo_cierre") @db.VarChar(4000)
+  estado              EstadoAlerta @default(ABIERTA)
+  cerradaPorUsuarioId String?      @map("cerrada_por_usuario_id") @db.Uuid
+  cerradaEn           DateTime?    @map("cerrada_en") @db.Timestamptz(3)
+  motivoCierre        String?      @map("motivo_cierre") @db.VarChar(4000)
 
   creadoEn                DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
   creadoPorUsuarioId      String?  @map("creado_por_usuario_id") @db.Uuid
@@ -927,4 +992,100 @@ model Alerta {
   @@index([estado, criticidad])
   @@index([clienteId, estado])
   @@map("alerta")
+}
+
+/**
+ * ==========================================================================
+ */
+/**
+ * Libro de compras y ventas (planilla RG 90)
+ */
+/**
+ * ==========================================================================
+ */
+
+/// IVA crédito y débito de un cliente en un período, calculado a partir de las
+/// planillas RG 90 que EFFORT ya presentó ante la DNIT.
+///
+/// Reemplaza a cargar los saldos a mano en `proceso_mensual`: acá cada cifra
+/// viene de un archivo real y se puede rastrear hasta el comprobante que la
+/// originó. Una fila por cliente y período — volver a importar el mismo período
+/// la reemplaza, no la duplica.
+model LiquidacionIvaRg90 {
+  id        String @id @default(uuid()) @db.Uuid
+  clienteId String @map("cliente_id") @db.Uuid
+  periodo   String @db.VarChar(7)
+
+  /// IVA de las compras: lo que el cliente puede descontar.
+  creditoFiscal BigInt @map("credito_fiscal")
+  /// IVA de las ventas: lo que el cliente le debe al fisco.
+  debitoFiscal  BigInt @map("debito_fiscal")
+  /// Importe a ingresar. Cero si el período cierra a favor.
+  saldoAPagar   BigInt @map("saldo_a_pagar")
+  /// Crédito que se arrastra al período siguiente. Cero si hay que pagar.
+  saldoAFavor   BigInt @map("saldo_a_favor")
+
+  comprobantesCompras Int @map("comprobantes_compras")
+  comprobantesVentas  Int @map("comprobantes_ventas")
+
+  gravado10Compras BigInt @map("gravado_10_compras")
+  gravado5Compras  BigInt @map("gravado_5_compras")
+  exentoCompras    BigInt @map("exento_compras")
+  gravado10Ventas  BigInt @map("gravado_10_ventas")
+  gravado5Ventas   BigInt @map("gravado_5_ventas")
+  exentoVentas     BigInt @map("exento_ventas")
+
+  /// Cuántos archivos se leyeron para armar esta liquidación.
+  archivosLeidos  Int @map("archivos_leidos")
+  /// Filas que el importador no pudo interpretar, con su motivo en la bitácora.
+  filasRechazadas Int @map("filas_rechazadas")
+
+  calculadoEn           DateTime @default(now()) @map("calculado_en") @db.Timestamptz(3)
+  calculadoPorUsuarioId String?  @map("calculado_por_usuario_id") @db.Uuid
+
+  cliente Cliente @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+
+  @@unique([clienteId, periodo])
+  @@index([periodo])
+  @@map("liquidacion_iva_rg90")
+}
+
+/// Algo que hay que mirar en un libro antes de presentarlo.
+///
+/// Existe por una corrección de Daniel del 2026-09-12: las diferencias de IVA
+/// "también tienen que alertar, ya que al final puede representar una multa
+/// administrativa". Sobre los datos reales del piloto aparecieron 166.
+///
+/// La única por cliente + período + comprobante + tipo + tasa hace que volver a
+/// importar no duplique. `tasa` es nula en los hallazgos que no son de una tasa
+/// puntual, y en Postgres un NULL nunca colisiona — mismo criterio que ya usan
+/// `Documento` y `Vencimiento`.
+model HallazgoDeLibroRg90 {
+  id        String @id @default(uuid()) @db.Uuid
+  clienteId String @map("cliente_id") @db.Uuid
+  periodo   String @db.VarChar(7)
+
+  /// `IVA_DECLARADO_NO_COINCIDE` o `PARTES_NO_SUMAN_EL_TOTAL`.
+  tipo   String @db.VarChar(40)
+  /// `CREDITO_DE_MAS`, `DEBITO_DE_MENOS`, `EN_CONTRA_DEL_CLIENTE`, `INCONSISTENCIA`.
+  riesgo String @db.VarChar(30)
+
+  tipoRegistro      String  @map("tipo_registro") @db.VarChar(10)
+  numeroComprobante String  @map("numero_comprobante") @db.VarChar(30)
+  contraparte       String  @db.VarChar(300)
+  tasa              String? @db.VarChar(5)
+
+  declarado  BigInt
+  calculado  BigInt
+  diferencia BigInt
+  detalle    String @db.VarChar(1000)
+
+  detectadoEn DateTime @default(now()) @map("detectado_en") @db.Timestamptz(3)
+
+  cliente Cliente @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+
+  @@unique([clienteId, periodo, numeroComprobante, tipo, tasa], map: "hallazgo_libro_unico")
+  @@index([clienteId, periodo])
+  @@index([riesgo])
+  @@map("hallazgo_libro_rg90")
 }
