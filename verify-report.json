@@ -1,13 +1,13 @@
 {
-  "generado_en": "2026-09-14T12:11:59.049Z",
-  "commit": "eb74813cfbe4010a28496e4fe65a73d1a375fc24",
+  "generado_en": "2026-09-14T14:04:27.500Z",
+  "commit": "1bcbb4dde31351e7bbc89cb504d1a8d9e95a8e07",
   "checks": [
     {
       "nombre": "typecheck",
       "comando": "npx tsc --build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 1561,
+      "duracion_ms": 1340,
       "detalle": ""
     },
     {
@@ -15,7 +15,7 @@
       "comando": "npm run typecheck --workspace @effort/web",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 5057,
+      "duracion_ms": 4006,
       "detalle": ""
     },
     {
@@ -23,15 +23,15 @@
       "comando": "npx vitest run",
       "estado": "FALLO",
       "exit_code": 1,
-      "duracion_ms": 124207,
-      "detalle": " instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:2392) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:2392) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:2392) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:2392) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:2392) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:2392) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:2392) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:2392) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:2392) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n\n\u001b[31m⎯⎯⎯⎯⎯⎯\u001b[39m\u001b[1m\u001b[41m Failed Suites 2 \u001b[49m\u001b[22m\u001b[31m⎯⎯⎯⎯⎯⎯⎯\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[42m integracion \u001b[49m\u001b[39m test/integracion/dominio.test.ts\u001b[2m > \u001b[22mrepositorios de negocio contra PostgreSQL real\n\u001b[31m\u001b[1mError\u001b[22m: Hook timed out in 120000ms.\nIf this is a long-running hook, pass a timeout value as the last argument or configure it globally with \"hookTimeout\".\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m test/integracion/dominio.test.ts:\u001b[2m54:3\u001b[22m\u001b[39m\n    \u001b[90m 52| \u001b[39m  \u001b[35mconst\u001b[39m \u001b[33mPERIODO\u001b[39m \u001b[33m=\u001b[39m \u001b[32m'2026-03'\u001b[39m\u001b[33m;\u001b[39m\n    \u001b[90m 53| \u001b[39m\n    \u001b[90m 54| \u001b[39m  \u001b[34mbeforeAll\u001b[39m(\u001b[35masync\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m   | \u001b[39m  \u001b[31m^\u001b[39m\n    \u001b[90m 55| \u001b[39m    entorno \u001b[33m=\u001b[39m \u001b[35mawait\u001b[39m \u001b[34mcrearEntorno\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 56| \u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[42m integracion \u001b[49m\u001b[39m test/integracion/repositorios.test.ts\u001b[2m > \u001b[22mrepositorios contra PostgreSQL real\n\u001b[31m\u001b[1mError\u001b[22m: Hook timed out in 120000ms.\nIf this is a long-running hook, pass a timeout value as the last argument or configure it globally with \"hookTimeout\".\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m test/integracion/repositorios.test.ts:\u001b[2m37:3\u001b[22m\u001b[39m\n    \u001b[90m 35| \u001b[39m  \u001b[35mlet\u001b[39m idClienteAjeno \u001b[33m=\u001b[39m \u001b[32m''\u001b[39m\u001b[33m;\u001b[39m\n    \u001b[90m 36| \u001b[39m\n    \u001b[90m 37| \u001b[39m  \u001b[34mbeforeAll\u001b[39m(\u001b[35masync\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m   | \u001b[39m  \u001b[31m^\u001b[39m\n    \u001b[90m 38| \u001b[39m    entorno \u001b[33m=\u001b[39m \u001b[35mawait\u001b[39m \u001b[34mcrearEntorno\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 39| \u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯\u001b[22m\u001b[39m"
+      "duracion_ms": 124095,
+      "detalle": " instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:8240) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:8240) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:8240) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:8240) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:8240) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:8240) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:8240) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:8240) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:8240) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n\n\u001b[31m⎯⎯⎯⎯⎯⎯\u001b[39m\u001b[1m\u001b[41m Failed Suites 2 \u001b[49m\u001b[22m\u001b[31m⎯⎯⎯⎯⎯⎯⎯\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[42m integracion \u001b[49m\u001b[39m test/integracion/dominio.test.ts\u001b[2m > \u001b[22mrepositorios de negocio contra PostgreSQL real\n\u001b[31m\u001b[1mError\u001b[22m: Hook timed out in 120000ms.\nIf this is a long-running hook, pass a timeout value as the last argument or configure it globally with \"hookTimeout\".\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m test/integracion/dominio.test.ts:\u001b[2m54:3\u001b[22m\u001b[39m\n    \u001b[90m 52| \u001b[39m  \u001b[35mconst\u001b[39m \u001b[33mPERIODO\u001b[39m \u001b[33m=\u001b[39m \u001b[32m'2026-03'\u001b[39m\u001b[33m;\u001b[39m\n    \u001b[90m 53| \u001b[39m\n    \u001b[90m 54| \u001b[39m  \u001b[34mbeforeAll\u001b[39m(\u001b[35masync\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m   | \u001b[39m  \u001b[31m^\u001b[39m\n    \u001b[90m 55| \u001b[39m    entorno \u001b[33m=\u001b[39m \u001b[35mawait\u001b[39m \u001b[34mcrearEntorno\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 56| \u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[42m integracion \u001b[49m\u001b[39m test/integracion/repositorios.test.ts\u001b[2m > \u001b[22mrepositorios contra PostgreSQL real\n\u001b[31m\u001b[1mError\u001b[22m: Hook timed out in 120000ms.\nIf this is a long-running hook, pass a timeout value as the last argument or configure it globally with \"hookTimeout\".\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m test/integracion/repositorios.test.ts:\u001b[2m37:3\u001b[22m\u001b[39m\n    \u001b[90m 35| \u001b[39m  \u001b[35mlet\u001b[39m idClienteAjeno \u001b[33m=\u001b[39m \u001b[32m''\u001b[39m\u001b[33m;\u001b[39m\n    \u001b[90m 36| \u001b[39m\n    \u001b[90m 37| \u001b[39m  \u001b[34mbeforeAll\u001b[39m(\u001b[35masync\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m   | \u001b[39m  \u001b[31m^\u001b[39m\n    \u001b[90m 38| \u001b[39m    entorno \u001b[33m=\u001b[39m \u001b[35mawait\u001b[39m \u001b[34mcrearEntorno\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m 39| \u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯\u001b[22m\u001b[39m"
     },
     {
       "nombre": "verify:accounting",
       "comando": "npx vitest run packages/core/test/golden.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3402,
+      "duracion_ms": 3516,
       "detalle": ""
     },
     {
@@ -39,7 +39,7 @@
       "comando": "npx eslint .",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7062,
+      "duracion_ms": 7253,
       "detalle": ""
     },
     {
@@ -47,7 +47,7 @@
       "comando": "npx vitest run apps/api/test/rbac.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3914,
+      "duracion_ms": 3843,
       "detalle": ""
     },
     {
@@ -55,7 +55,7 @@
       "comando": "npx vitest run apps/api/test/seguridad.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4339,
+      "duracion_ms": 4544,
       "detalle": ""
     },
     {
@@ -63,7 +63,7 @@
       "comando": "npx vitest run packages/schema/test/contratos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4621,
+      "duracion_ms": 4952,
       "detalle": ""
     },
     {
@@ -71,7 +71,7 @@
       "comando": "npx vitest run apps/api/test/servidor.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 8301,
+      "duracion_ms": 7973,
       "detalle": ""
     },
     {
@@ -79,7 +79,7 @@
       "comando": "npx vitest run apps/api/test/modulos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 34023,
+      "duracion_ms": 34834,
       "detalle": ""
     },
     {
@@ -87,7 +87,7 @@
       "comando": "npx vitest run apps/api/test/siga.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 8631,
+      "duracion_ms": 8066,
       "detalle": ""
     },
     {
@@ -95,23 +95,23 @@
       "comando": "npx vitest run apps/api/test/importaciones.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7897,
+      "duracion_ms": 6914,
       "detalle": ""
     },
     {
       "nombre": "test:integration",
       "comando": "npx vitest run --project integracion",
-      "estado": "FALLO",
-      "exit_code": 1,
-      "duracion_ms": 9173,
-      "detalle": "y los que no tienen dueño\n   \u001b[2m\u001b[90m↓\u001b[39m\u001b[22m repositorios contra PostgreSQL real\u001b[2m > \u001b[22mregistro de eventos\u001b[2m > \u001b[22mconsulta filtrable\u001b[2m > \u001b[22mel filtro explícito de cliente y el de cartera conviven sin pisarse\n   \u001b[2m\u001b[90m↓\u001b[39m\u001b[22m repositorios contra PostgreSQL real\u001b[2m > \u001b[22mdinero\u001b[2m > \u001b[22mguarda y recupera importes grandes sin perder precisión\n   \u001b[2m\u001b[90m↓\u001b[39m\u001b[22m repositorios contra PostgreSQL real\u001b[2m > \u001b[22mdinero\u001b[2m > \u001b[22mun cliente no puede tener dos balances del mismo período\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[31m2 failed\u001b[39m\u001b[22m\u001b[90m (2)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[33m106 skipped\u001b[39m\u001b[90m (106)\u001b[39m\n\u001b[2m   Start at \u001b[22m 09:08:58\n\u001b[2m   Duration \u001b[22m 6.38s\u001b[2m (transform 454ms, setup 0ms, collect 805ms, tests 10.18s, environment 1ms, prepare 521ms)\u001b[22m\n\n\n\u001b[31m⎯⎯⎯⎯⎯⎯\u001b[39m\u001b[1m\u001b[41m Failed Suites 2 \u001b[49m\u001b[22m\u001b[31m⎯⎯⎯⎯⎯⎯⎯\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[42m integracion \u001b[49m\u001b[39m test/integracion/dominio.test.ts\u001b[2m > \u001b[22mrepositorios de negocio contra PostgreSQL real\n\u001b[31m\u001b[1mPrismaClientInitializationError\u001b[22m: \nInvalid `prisma.$executeRawUnsafe()` invocation:\n\n\nCan't reach database server at `aws-0-sa-east-1.pooler.supabase.com:5432`\n\nPlease make sure your database server is running at `aws-0-sa-east-1.pooler.supabase.com:5432`.\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m242:13\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleAndLogRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m174:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.request node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m143:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m a node_modules/@prisma/client/src/runtime/getPrismaClient.ts:\u001b[2m833:24\u001b[22m\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m crearEntorno test/integracion/entorno.ts:\u001b[2m161:3\u001b[22m\u001b[39m\n    \u001b[90m159| \u001b[39m  // Cliente sobre `public` solo para crear y destruir el esquema de p…\n    \u001b[90m160| \u001b[39m  \u001b[35mconst\u001b[39m administrador \u001b[33m=\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mPrismaClient\u001b[39m({ datasourceUrl\u001b[33m:\u001b[39m \u001b[33mURL_BASE\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m161| \u001b[39m  await administrador.$executeRawUnsafe(`CREATE SCHEMA IF NOT EXISTS \"…\n    \u001b[90m   | \u001b[39m  \u001b[31m^\u001b[39m\n    \u001b[90m162| \u001b[39m  \u001b[35mawait\u001b[39m administrador\u001b[33m.\u001b[39m\u001b[34m$disconnect\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m163| \u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m test/integracion/dominio.test.ts:\u001b[2m55:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[42m integracion \u001b[49m\u001b[39m test/integracion/repositorios.test.ts\u001b[2m > \u001b[22mrepositorios contra PostgreSQL real\n\u001b[31m\u001b[1mPrismaClientInitializationError\u001b[22m: \nInvalid `prisma.$executeRawUnsafe()` invocation:\n\n\nCan't reach database server at `aws-0-sa-east-1.pooler.supabase.com:5432`\n\nPlease make sure your database server is running at `aws-0-sa-east-1.pooler.supabase.com:5432`.\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m242:13\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleAndLogRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m174:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.request node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m143:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m a node_modules/@prisma/client/src/runtime/getPrismaClient.ts:\u001b[2m833:24\u001b[22m\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m crearEntorno test/integracion/entorno.ts:\u001b[2m161:3\u001b[22m\u001b[39m\n    \u001b[90m159| \u001b[39m  // Cliente sobre `public` solo para crear y destruir el esquema de p…\n    \u001b[90m160| \u001b[39m  \u001b[35mconst\u001b[39m administrador \u001b[33m=\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mPrismaClient\u001b[39m({ datasourceUrl\u001b[33m:\u001b[39m \u001b[33mURL_BASE\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m161| \u001b[39m  await administrador.$executeRawUnsafe(`CREATE SCHEMA IF NOT EXISTS \"…\n    \u001b[90m   | \u001b[39m  \u001b[31m^\u001b[39m\n    \u001b[90m162| \u001b[39m  \u001b[35mawait\u001b[39m administrador\u001b[33m.\u001b[39m\u001b[34m$disconnect\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m163| \u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m test/integracion/repositorios.test.ts:\u001b[2m38:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯\u001b[22m\u001b[39m"
+      "estado": "OK",
+      "exit_code": 0,
+      "duracion_ms": 145857,
+      "detalle": ""
     },
     {
       "nombre": "verify:drive",
       "comando": "npx vitest run --project drive",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3944,
+      "duracion_ms": 2711,
       "detalle": ""
     },
     {
@@ -119,7 +119,7 @@
       "comando": "npx vitest run --project importers",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 5430,
+      "duracion_ms": 3686,
       "detalle": ""
     },
     {
@@ -127,7 +127,7 @@
       "comando": "npx vitest run --project web",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 31420,
+      "duracion_ms": 26060,
       "detalle": ""
     },
     {
@@ -135,7 +135,7 @@
       "comando": "node scripts/verificar-kpi.mjs",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 117,
+      "duracion_ms": 139,
       "detalle": ""
     },
     {
@@ -143,7 +143,7 @@
       "comando": "npm run typecheck:e2e",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4124,
+      "duracion_ms": 3419,
       "detalle": ""
     },
     {
@@ -151,7 +151,7 @@
       "comando": "npx playwright test",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 109294,
+      "duracion_ms": 55008,
       "detalle": ""
     },
     {
@@ -159,7 +159,7 @@
       "comando": "node scripts/auditar-dependencias.mjs",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 11817,
+      "duracion_ms": 7800,
       "detalle": ""
     },
     {
@@ -167,12 +167,12 @@
       "comando": "npm run build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7436,
+      "duracion_ms": 6386,
       "detalle": ""
     }
   ],
-  "checks_ok": 19,
+  "checks_ok": 20,
   "checks_pendientes": 0,
-  "checks_fallidos": 2,
+  "checks_fallidos": 1,
   "todo_verde": false
 }
