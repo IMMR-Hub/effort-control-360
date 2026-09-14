@@ -49,3 +49,7 @@ docs/Muestras/
 # Respaldos de la base: contienen datos reales de EFFORT (nombres, RUC, importes).
 # Nunca van a git — el repositorio no es el lugar para datos de clientes.
 respaldos/
+
+# Scripts temporales de diagnóstico dentro de apps/api. Los de verdad viven en
+# scripts/ y pasan el lint como cualquier otro archivo del proyecto.
+apps/api/*.mjs
