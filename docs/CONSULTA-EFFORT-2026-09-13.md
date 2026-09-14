@@ -5,12 +5,43 @@ cinco clientes del piloto (4206 comprobantes). No son dudas teóricas: cada una
 cambia un número que el sistema le va a mostrar a EFFORT, y ninguna se puede
 contestar mirando el código.
 
-Están ordenadas por lo que cuesta equivocarse. La primera sección ya está
-resuelta y queda como constancia de qué regla aplica el sistema.
+Están ordenadas por lo que cuesta equivocarse. La primera sección no es una
+pregunta: ya estaba resuelta y queda como constancia de qué regla aplica el
+sistema.
+
+> **Nota de numeración.** Hasta el 2026-09-14 las secciones iban numeradas del 1
+> al 6 contando la del redondeo, y la de SIPAR se nombró "pregunta 6" cuando
+> para quien lee eran cinco preguntas. Se renumeró para que coincida.
+
+## Respuestas de Lili y Laura — 2026-09-14 (vía Daniel)
+
+| # | Respuesta | Qué hace el sistema con esto |
+|---|---|---|
+| 1 | *"Genera SIGA de acuerdo al formato establecido por la DNIT. Al presentar, si está todo OK genera un mensaje de aceptado, o procesado parcial (a fin de corregir) si hay inconsistencias."* | Las variantes de encabezado vienen de SIGA, no de ediciones a mano: son finitas y ya están cubiertas. **Pista nueva:** el acuse "aceptado / procesado parcial" de la DNIT es la evidencia de presentación que falta para marcar vencimientos como presentados. |
+| 2 | *"Se redondea, las DDJJ no permiten decimales."* | Confirma lo que ya hace el importador: redondear al leer, una vez, en el borde. Sin cambios. |
+| 3 | *"Capaz es alguna factura en dólares, o si no del súper, que generalmente redondean."* | Coincide con parte de lo encontrado (LA BOLSA SRL: +10, +20, +40 Gs). **Pero no explica todo** — ver "Lo que apareció al leer todas las planillas" más abajo. |
+| 4 | *"5 sigue siendo aceptable, diría que 10 ya se revisará."* | **Aplicado.** Diferencias de IVA de hasta 5 Gs se registran pero no cuentan como riesgo de multa (`TOLERANCIA_DE_REDONDEO_DEL_PROVEEDOR`). Entre 6 y 9 la respuesta no decide y el sistema alerta, por ser la dirección segura. Resultado sobre los datos reales: de 65 comprobantes con riesgo quedan **2**, los de AGROSOL hacia ECOAGRO (+12 y +11). |
+| 5 | Pendiente. | SIPAR sigue sin IVA hasta saber de dónde sale la tasa. |
+
+**Queda por confirmar de la 4:** ¿de 6 a 9 guaraníes se revisa o se tolera? Hoy
+alerta.
+
+### Lo que apareció al leer todas las planillas (no solo las 39 iniciales)
+
+Con la sincronización completa, las "partes que no suman el total" pasaron de
+101 a **1.905**. No son un solo fenómeno:
+
+| Grupo | Cantidad | Lectura |
+|---|---|---|
+| Diferencia hasta 5 Gs | 600 | Redondeo — compatible con la respuesta 3. |
+| Diferencia de 6 a 100 Gs | 430 | Mayormente supermercados (LA BOLSA SRL). Compatible con la respuesta 3. |
+| Diferencia de más de 100 Gs | 196 | Hay que mirarlas. Pueden ser las facturas en dólares. |
+| **Partes en cero, total con importe** | **679** | **Sospecha propia, no de EFFORT:** filas donde el sistema no leyó ningún monto gravado ni exento (ej.: ECOAGRO, H Y N AVICULTURA LTDA, total Gs. 31.961.459, partes 0). Puede ser un comprobante que no imputa IVA, o una variante de planilla que el importador no está leyendo bien. Se revisa antes de dar por buenos los importes de esos períodos. |
+
 
 ---
 
-## 1. Redondeo del IVA — RESUELTO, no hace falta preguntarlo
+## Antes de las preguntas: redondeo del IVA — RESUELTO, no hacía falta preguntarlo
 
 Se preguntaba cómo redondear el IVA. **Daniel lo confirmó el 2026-09-13 y
 coincide con lo que el sistema ya hacía**: redondeo normal — de 0,50 para
@@ -34,7 +65,7 @@ sistema ahora marca como hallazgos — ver el final de este documento.
 
 ---
 
-## 2. ¿De dónde salen estas planillas, y por qué las de ventas son distintas?
+## Pregunta 1 — ¿De dónde salen estas planillas, y por qué las de ventas son distintas?
 
 **Lo que se encontró.** Las planillas de COMPRAS y las de VENTAS tienen las
 mismas 28 columnas, en el mismo orden, pero **dos de ellas se llaman distinto**:
@@ -71,7 +102,7 @@ variantes son finitas y conviene documentarlas de una vez.
 
 ---
 
-## 3. Los importes vienen con decimales. ¿Es a propósito?
+## Pregunta 2 — Los importes vienen con decimales. ¿Es a propósito?
 
 **Lo que se encontró.** En las planillas, algunos importes tienen decimales
 aunque el guaraní no los tenga:
@@ -98,7 +129,7 @@ van a salir sin decimales y en formato SIGA**, con todas las reglas aplicadas.
 
 ---
 
-## 4. ¿Hace falta una auditoría de los Excel antes de seguir?
+## Pregunta 3 — ¿Hace falta una auditoría de los Excel antes de seguir?
 
 Esta la preguntó Daniel y la respuesta corta es **no, no como requisito previo**.
 Pero conviene entender por qué, porque la intuición dice lo contrario.
@@ -132,7 +163,7 @@ conocido que el sistema debería dejar de mostrar.
 
 ---
 
-## 5. Los 49 con riesgo de multa son DOS cosas distintas — ¿se tratan igual?
+## Pregunta 4 — Los 49 con riesgo de multa son DOS cosas distintas — ¿se tratan igual?
 
 Daniel preguntó si los 49 eran ciertos. Se reverificaron contra los archivos
 originales: sí, 49 sobre 4.092 comprobantes. Pero mirar la aritmética mostró que
@@ -169,7 +200,7 @@ sería una alerta que se lee, en vez de una que se archiva.
 
 ---
 
-## 6. SIPAR entrega sus libros en otro formato, y ese formato no trae el IVA
+## Pregunta 5 — SIPAR entrega sus libros en otro formato, y ese formato no trae el IVA
 
 **El hallazgo.** Cuatro de los cinco clientes entregan su libro como planilla
 RG 90 en Excel (`RG COMPRAS MARZO 2026 - FUMIPRO SA.xlsx`). **SIPAR no.** Los

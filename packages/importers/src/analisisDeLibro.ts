@@ -87,6 +87,38 @@ export interface HallazgoDeLibro {
   readonly detalle: string;
 }
 
+/**
+ * Diferencia de IVA que EFFORT considera redondeo del proveedor, en guaraníes.
+ *
+ * Lili y Laura, vía Daniel, 2026-09-14: *"5 sigue siendo aceptable, diría que
+ * 10 ya se revisará"*. Hasta esta respuesta el sistema alertaba por cualquier
+ * diferencia —49 comprobantes en el piloto, 44 de ellos por un solo guaraní— y
+ * una alerta que casi siempre es ruido termina sin leerse.
+ *
+ * **Entre 6 y 9 guaraníes la respuesta no decide**, y el sistema alerta. Es la
+ * dirección segura para un control: una alerta de más se descarta mirándola,
+ * una de menos no se ve nunca. Ver `docs/DISCREPANCIAS.md` punto 20.
+ *
+ * El hallazgo igual se guarda y se muestra al pedir "todos": tolerar no es
+ * ocultar. Lo único que cambia es que no cuenta como riesgo de multa.
+ */
+export const TOLERANCIA_DE_REDONDEO_DEL_PROVEEDOR = 5n;
+
+/**
+ * Si un hallazgo puede terminar en multa: la dirección es la del fisco y la
+ * diferencia supera lo que EFFORT acepta como redondeo.
+ *
+ * Es la única definición de "riesgo de multa" del sistema. La consulta que
+ * agrupa por período la repite en SQL con esta misma constante.
+ */
+export function esRiesgoDeMulta(
+  hallazgo: Pick<HallazgoDeLibro, 'riesgo' | 'diferencia'>,
+): boolean {
+  if (hallazgo.riesgo !== 'CREDITO_DE_MAS' && hallazgo.riesgo !== 'DEBITO_DE_MENOS') return false;
+  const magnitud = hallazgo.diferencia < 0n ? -hallazgo.diferencia : hallazgo.diferencia;
+  return magnitud > TOLERANCIA_DE_REDONDEO_DEL_PROVEEDOR;
+}
+
 function riesgoDeIva(
   tipoRegistro: FilaDeLibro['tipoRegistro'],
   diferencia: bigint,
@@ -191,9 +223,7 @@ export interface ResumenDeHallazgos {
 }
 
 export function resumirHallazgos(hallazgos: readonly HallazgoDeLibro[]): ResumenDeHallazgos {
-  const riesgosos = hallazgos.filter(
-    (h) => h.riesgo === 'CREDITO_DE_MAS' || h.riesgo === 'DEBITO_DE_MENOS',
-  );
+  const riesgosos = hallazgos.filter(esRiesgoDeMulta);
 
   return {
     total: hallazgos.length,

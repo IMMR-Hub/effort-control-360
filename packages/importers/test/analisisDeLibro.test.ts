@@ -14,7 +14,7 @@ import { describe, expect, it } from 'vitest';
 
 import { DIVISORES_CONFIRMADOS_POR_EFFORT, gs } from '@effort/core';
 
-import { analizarLibro, resumirHallazgos } from '../src/analisisDeLibro.js';
+import { analizarLibro, esRiesgoDeMulta, resumirHallazgos } from '../src/analisisDeLibro.js';
 import type { FilaDeLibro } from '../src/libroRg90.js';
 
 function fila(parcial: Partial<FilaDeLibro> = {}): FilaDeLibro {
@@ -136,7 +136,7 @@ describe('resumen de hallazgos', () => {
       [
         fila({ gravado10: gs(1548000), iva10: gs(140739), total: gs(1548000) }),
         fila({ gravado10: gs(110000), iva10: gs(9999), total: gs(110000) }),
-        fila({ tipoRegistro: 'VENTAS', gravado10: gs(110000), iva10: gs(9998), total: gs(110000) }),
+        fila({ tipoRegistro: 'VENTAS', gravado10: gs(110000), iva10: gs(9993), total: gs(110000) }),
       ],
       DIVISORES,
     );
@@ -145,9 +145,45 @@ describe('resumen de hallazgos', () => {
 
     expect(resumen.conRiesgoDeMulta).toBe(2);
     expect(resumen.enContraDelCliente).toBe(1);
-    // 12 del crédito de más + 2 del débito de menos. No se compensan entre sí:
+    // 12 del crédito de más + 7 del débito de menos. No se compensan entre sí:
     // son dos problemas, no uno que anula al otro.
-    expect(resumen.ivaEnRiesgo).toBe(14n);
+    expect(resumen.ivaEnRiesgo).toBe(19n);
+  });
+
+  /*
+   * EFFORT, 2026-09-14: "5 sigue siendo aceptable, diría que 10 ya se revisará".
+   * Los casos son los reales del piloto: de los 49 con diferencia en la
+   * dirección del fisco, 44 eran de un guaraní y tres de dos (FUMIPRO). Los
+   * únicos que quedan como riesgo son los dos de AGROSOL hacia ECOAGRO.
+   */
+  it('una diferencia de hasta 5 guaraníes es redondeo del proveedor, no riesgo', () => {
+    const hallazgos = analizarLibro(
+      [
+        fila({ gravado10: gs(286500), iva10: gs(26047), total: gs(286500) }), // +2
+        fila({ gravado10: gs(110000), iva10: gs(10005), total: gs(110000) }), // +5, el borde
+        fila({ gravado10: gs(1548000), iva10: gs(140739), total: gs(1548000) }), // +12
+      ],
+      DIVISORES,
+    );
+
+    // Tolerar no es ocultar: los tres siguen siendo hallazgos.
+    expect(hallazgos).toHaveLength(3);
+    expect(hallazgos.every((h) => h.riesgo === 'CREDITO_DE_MAS')).toBe(true);
+
+    const resumen = resumirHallazgos(hallazgos);
+    expect(resumen.conRiesgoDeMulta).toBe(1);
+    expect(resumen.ivaEnRiesgo).toBe(12n);
+  });
+
+  // Entre 6 y 9 la respuesta de EFFORT no decide, y el control alerta.
+  it('6 guaraníes ya cuentan como riesgo', () => {
+    expect(esRiesgoDeMulta({ riesgo: 'CREDITO_DE_MAS', diferencia: 6n })).toBe(true);
+    expect(esRiesgoDeMulta({ riesgo: 'DEBITO_DE_MENOS', diferencia: -6n })).toBe(true);
+    expect(esRiesgoDeMulta({ riesgo: 'DEBITO_DE_MENOS', diferencia: -5n })).toBe(false);
+  });
+
+  it('lo que juega en contra del cliente nunca es riesgo de multa, sea cual sea el monto', () => {
+    expect(esRiesgoDeMulta({ riesgo: 'EN_CONTRA_DEL_CLIENTE', diferencia: -500n })).toBe(false);
   });
 
   it('un libro sin hallazgos resume en cero', () => {

@@ -9,6 +9,11 @@
 import type { PrismaClient } from '@prisma/client';
 
 import { gs } from '@effort/core';
+import {
+  esRiesgoDeMulta,
+  TOLERANCIA_DE_REDONDEO_DEL_PROVEEDOR,
+  type RiesgoDeHallazgo,
+} from '@effort/importers';
 
 import type {
   AltaDeHallazgo,
@@ -167,6 +172,7 @@ export class LibroRg90Prisma {
       JOIN "liquidacion_iva_rg90" l
         ON l."cliente_id" = h."cliente_id" AND l."periodo" = h."periodo"
       WHERE h."riesgo" IN ('CREDITO_DE_MAS', 'DEBITO_DE_MENOS')
+        AND ABS(h."diferencia") > ${TOLERANCIA_DE_REDONDEO_DEL_PROVEEDOR}
       GROUP BY h."cliente_id", h."periodo", l."id"
     `;
 
@@ -202,12 +208,21 @@ export class LibroRg90Prisma {
    * mezclados entre ciento y pico de inconsistencias menores, nadie los ve.
    */
   async hallazgos(filtro: { clienteId?: string; soloRiesgo?: boolean } = {}) {
-    return this.prisma.hallazgoDeLibroRg90.findMany({
+    const filas = await this.prisma.hallazgoDeLibroRg90.findMany({
       where: {
         ...(filtro.clienteId ? { clienteId: filtro.clienteId } : {}),
         ...(filtro.soloRiesgo ? { riesgo: { in: ['CREDITO_DE_MAS', 'DEBITO_DE_MENOS'] } } : {}),
       },
       orderBy: [{ riesgo: 'asc' }, { periodo: 'desc' }],
     });
+
+    // La tolerancia se aplica acá y no en el `where`: Prisma no filtra por el
+    // valor absoluto de una columna, y la definición de riesgo tiene que ser una
+    // sola (`esRiesgoDeMulta`), no una copia en cada consulta.
+    return filtro.soloRiesgo
+      ? filas.filter((h) =>
+          esRiesgoDeMulta({ riesgo: h.riesgo as RiesgoDeHallazgo, diferencia: h.diferencia }),
+        )
+      : filas;
   }
 }

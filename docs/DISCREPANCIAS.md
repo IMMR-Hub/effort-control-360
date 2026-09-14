@@ -1020,3 +1020,26 @@ Hoy hay 5 vencimientos de IRE y 5 de estados financieros, todos del ejercicio
 ejercicio 2025 ya presentado. Si sí, es mover el `desde` de las asignaciones al
 2025-01-01 y volver a generar. No se hizo por criterio propio porque cambia qué
 se le va a reclamar a cinco clientes reales.
+
+---
+
+## 20. Tolerancia de redondeo del proveedor en el IVA — CASI CERRADO (2026-09-14)
+
+**Lo que estaba.** El análisis del libro marcaba como riesgo de multa cualquier
+diferencia entre el IVA declarado y la regla, aunque fuera de un guaraní. Con
+todas las planillas sincronizadas eran 65 comprobantes, 60 de ellos por ±1.
+
+**La respuesta de EFFORT** (Lili y Laura vía Daniel, 2026-09-14): *"5 sigue
+siendo aceptable, diría que 10 ya se revisará"*.
+
+**Lo aplicado.** `TOLERANCIA_DE_REDONDEO_DEL_PROVEEDOR = 5n` en
+`packages/importers/src/analisisDeLibro.ts`, con `esRiesgoDeMulta` como única
+definición de riesgo (la consulta SQL que agrupa para alertas usa la misma
+constante). Los hallazgos tolerados **no se borran ni se ocultan**: siguen en la
+base y en la pantalla al pedir "todos". Sobre los datos reales quedan 2 con
+riesgo (AGROSOL → ECOAGRO, +12 y +11).
+
+**Lo que falta para cerrarlo:** la respuesta no dice qué pasa entre 6 y 9 Gs.
+Hoy alerta — una alerta de más se descarta mirándola; una de menos no se ve
+nunca. Confirmar con EFFORT.
+

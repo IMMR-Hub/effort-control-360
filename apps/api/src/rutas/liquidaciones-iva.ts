@@ -19,6 +19,7 @@ import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 
 import { DIVISORES_CONFIRMADOS_POR_EFFORT } from '@effort/core';
+import { esRiesgoDeMulta, type RiesgoDeHallazgo } from '@effort/importers';
 
 import { ACCIONES, registrarEvento } from '../bitacora.js';
 import { ErrorDeAplicacion, type Dependencias } from '../servidor.js';
@@ -164,8 +165,8 @@ export async function registrarRutasDeLiquidacionesIva(
       soloRiesgo,
     });
 
-    const conRiesgo = hallazgos.filter(
-      (h) => h.riesgo === 'CREDITO_DE_MAS' || h.riesgo === 'DEBITO_DE_MENOS',
+    const conRiesgo = hallazgos.filter((h) =>
+      esRiesgoDeMulta({ riesgo: h.riesgo as RiesgoDeHallazgo, diferencia: h.diferencia }),
     );
 
     return {
