@@ -28,6 +28,7 @@ import { ErrorDeApi } from '../api/cliente.js';
 import { listarClientes, type Cliente } from '../api/clientes.js';
 import {
   calcularIva,
+  decidirHallazgo,
   listarHallazgos,
   listarLiquidacionesIva,
   type HallazgoDeLibro,
@@ -40,7 +41,28 @@ import { useSesion } from '../contexts/SesionContext.js';
 /** Mismos roles que la matriz de permisos deja calcular. */
 const ROLES_QUE_CALCULAN = new Set(['direccion', 'responsable']);
 
-const RESUMEN_VACIO: ResumenDeHallazgos = { total: 0, conRiesgoDeMulta: 0, ivaEnRiesgo: '0' };
+/** Mismos roles que la matriz deja editar una liquidación: son los que deciden sobre un hallazgo. */
+const ROLES_QUE_DECIDEN = new Set(['direccion', 'responsable', 'coordinador']);
+
+const RESUMEN_VACIO: ResumenDeHallazgos = {
+  total: 0,
+  conRiesgoDeMulta: 0,
+  enRevision: 0,
+  aceptados: 0,
+  ivaEnRiesgo: '0',
+};
+
+const ETIQUETA_ESTADO: Record<string, string> = {
+  PENDIENTE: 'Sin revisar',
+  EN_REVISION: 'En revisión',
+  ACEPTADO: 'Aceptado',
+};
+
+const TONO_ESTADO: Record<string, 'critico' | 'parcial' | 'completo'> = {
+  PENDIENTE: 'critico',
+  EN_REVISION: 'parcial',
+  ACEPTADO: 'completo',
+};
 
 /** Qué significa cada riesgo, en las palabras que usaría EFFORT. */
 const ETIQUETA_RIESGO: Record<string, string> = {
@@ -71,6 +93,7 @@ function importe(texto: string): string {
 export default function LiquidacionIva() {
   const { sesion } = useSesion();
   const puedeCalcular = ROLES_QUE_CALCULAN.has(sesion?.rol ?? '');
+  const puedeDecidir = ROLES_QUE_DECIDEN.has(sesion?.rol ?? '');
 
   const [clientes, setClientes] = useState<readonly Cliente[]>([]);
   const [clienteId, setClienteId] = useState('');
@@ -82,6 +105,10 @@ export default function LiquidacionIva() {
   const [calculando, setCalculando] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [ultimoCalculo, setUltimoCalculo] = useState<ResumenDeCalculo | null>(null);
+  // Hallazgo que se está aceptando: el motivo se pide en la misma fila, sin modal.
+  const [aceptando, setAceptando] = useState<string | null>(null);
+  const [motivo, setMotivo] = useState('');
+  const [decidiendo, setDecidiendo] = useState(false);
 
   useEffect(() => {
     let vigente = true;
@@ -150,6 +177,23 @@ export default function LiquidacionIva() {
     }
   }
 
+  async function decidir(id: string, decision: 'ACEPTADO' | 'EN_REVISION', nota?: string) {
+    setDecidiendo(true);
+    setError(null);
+    try {
+      await decidirHallazgo(id, decision, nota);
+      const datos = await listarHallazgos(clienteId, soloRiesgo);
+      setHallazgos(datos.hallazgos);
+      setResumen(datos.resumen);
+      setAceptando(null);
+      setMotivo('');
+    } catch (fallo) {
+      setError(fallo instanceof ErrorDeApi ? fallo.message : 'No se pudo registrar la decisión.');
+    } finally {
+      setDecidiendo(false);
+    }
+  }
+
   const cliente = clientes.find((c) => c.id === clienteId);
 
   return (
@@ -198,7 +242,7 @@ export default function LiquidacionIva() {
       <Tarjeta>
         <EncabezadoTarjeta
           titulo="Qué revisar antes de presentar"
-          descripcion="Diferencias entre el IVA declarado en cada comprobante y el que corresponde por la regla."
+          descripcion="Toda diferencia de IVA alerta, aunque sea de un guaraní. Cada una se acepta con motivo o se manda a revisar."
           acciones={
             <Boton variante="secundario" onClick={() => setSoloRiesgo(!soloRiesgo)}>
               {soloRiesgo ? 'Ver todos los hallazgos' : 'Ver solo los de riesgo'}
@@ -206,7 +250,7 @@ export default function LiquidacionIva() {
           }
         />
 
-        <div className="grid grid-cols-1 gap-3 px-5 py-4 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 px-5 py-4 sm:grid-cols-4">
           <Indicador
             etiqueta="Con riesgo de multa"
             valor={String(resumen.conRiesgoDeMulta)}
@@ -214,7 +258,8 @@ export default function LiquidacionIva() {
             destacado
           />
           <Indicador etiqueta="IVA en riesgo" valor={importe(resumen.ivaEnRiesgo)} tono="parcial" />
-          <Indicador etiqueta="Hallazgos en total" valor={String(resumen.total)} tono="pendiente" />
+          <Indicador etiqueta="En revisión" valor={String(resumen.enRevision)} tono="parcial" />
+          <Indicador etiqueta="Aceptados" valor={String(resumen.aceptados)} tono="completo" />
         </div>
 
         {hallazgos.length === 0 ? (
@@ -231,6 +276,7 @@ export default function LiquidacionIva() {
                 <Th>Contraparte</Th>
                 <Th numerica>Diferencia</Th>
                 <Th>Detalle</Th>
+                <Th>Decisión</Th>
               </tr>
             </thead>
             <tbody>
@@ -250,6 +296,65 @@ export default function LiquidacionIva() {
                   <Td numerica>{importe(h.diferencia)}</Td>
                   <Td>
                     <span className="text-xs text-tinta-tenue">{h.detalle}</span>
+                  </Td>
+                  <Td>
+                    <div className="flex flex-col items-start gap-1">
+                      <Badge tono={TONO_ESTADO[h.estado] ?? 'critico'}>{ETIQUETA_ESTADO[h.estado] ?? h.estado}</Badge>
+                      {h.notaDecision && <span className="text-xs text-tinta-tenue">{h.notaDecision}</span>}
+
+                      {puedeDecidir && aceptando === h.id && (
+                        <div className="flex flex-col gap-1">
+                          <label htmlFor={`motivo-${h.id}`} className="text-xs text-tinta-tenue">
+                            Motivo para aceptar
+                          </label>
+                          <input
+                            id={`motivo-${h.id}`}
+                            className="rounded border border-borde px-2 py-1 text-xs"
+                            value={motivo}
+                            maxLength={500}
+                            onChange={(evento) => setMotivo(evento.target.value)}
+                          />
+                          <div className="flex gap-1">
+                            <Boton
+                              variante="primario"
+                              disabled={decidiendo || motivo.trim().length < 5}
+                              onClick={() => decidir(h.id, 'ACEPTADO', motivo.trim())}
+                            >
+                              Confirmar
+                            </Boton>
+                            <Boton variante="secundario" onClick={() => setAceptando(null)}>
+                              Cancelar
+                            </Boton>
+                          </div>
+                        </div>
+                      )}
+
+                      {puedeDecidir && aceptando !== h.id && (
+                        <div className="flex gap-1">
+                          {h.estado !== 'ACEPTADO' && (
+                            <Boton
+                              variante="secundario"
+                              disabled={decidiendo}
+                              onClick={() => {
+                                setAceptando(h.id);
+                                setMotivo('');
+                              }}
+                            >
+                              Aceptar
+                            </Boton>
+                          )}
+                          {h.estado !== 'EN_REVISION' && (
+                            <Boton
+                              variante="secundario"
+                              disabled={decidiendo}
+                              onClick={() => decidir(h.id, 'EN_REVISION')}
+                            >
+                              Revisar
+                            </Boton>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   </Td>
                 </tr>
               ))}

@@ -88,21 +88,25 @@ export interface HallazgoDeLibro {
 }
 
 /**
- * Diferencia de IVA que EFFORT considera redondeo del proveedor, en guaraníes.
+ * Diferencia de IVA que el sistema calla, en guaraníes. Es cero a propósito.
  *
- * Lili y Laura, vía Daniel, 2026-09-14: *"5 sigue siendo aceptable, diría que
- * 10 ya se revisará"*. Hasta esta respuesta el sistema alertaba por cualquier
- * diferencia —49 comprobantes en el piloto, 44 de ellos por un solo guaraní— y
- * una alerta que casi siempre es ruido termina sin leerse.
+ * Tuvo dos valores el mismo día, y conviene que quede la historia:
  *
- * **Entre 6 y 9 guaraníes la respuesta no decide**, y el sistema alerta. Es la
- * dirección segura para un control: una alerta de más se descarta mirándola,
- * una de menos no se ve nunca. Ver `docs/DISCREPANCIAS.md` punto 20.
+ *  1. Lili y Laura, 2026-09-14: *"5 sigue siendo aceptable, diría que 10 ya se
+ *     revisará"*. Se aplicó 5, y los comprobantes con riesgo bajaron de 65 a 2.
+ *  2. Daniel, horas después: *"mejor alertar a partir de 1 guaraní a partir de
+ *     ahora, y que luego puedan aceptar o revisar"*.
  *
- * El hallazgo igual se guarda y se muestra al pedir "todos": tolerar no es
- * ocultar. Lo único que cambia es que no cuenta como riesgo de multa.
+ * La segunda es mejor por una razón de fondo: con una tolerancia, **el sistema
+ * decide** qué diferencia no importa, y nadie se entera de lo que calló. Con
+ * cero, avisa de todo y **decide una persona**, con nombre y motivo, sobre cada
+ * comprobante (`estado` del hallazgo: PENDIENTE, EN_REVISION, ACEPTADO). El
+ * ruido se resuelve aceptando, no silenciando.
+ *
+ * Se deja la constante —en vez de borrarla— porque el día que EFFORT quiera
+ * volver a tolerar algo, este es el único lugar donde se cambia.
  */
-export const TOLERANCIA_DE_REDONDEO_DEL_PROVEEDOR = 5n;
+export const TOLERANCIA_DE_REDONDEO_DEL_PROVEEDOR = 0n;
 
 /**
  * Si un hallazgo puede terminar en multa: la dirección es la del fisco y la

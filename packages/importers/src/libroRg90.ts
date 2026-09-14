@@ -75,6 +75,12 @@ type Campo =
 const ENCABEZADOS: Readonly<Record<string, Campo>> = {
   'RUC DEL INFORMANTE': 'rucInformante',
   'RUC / N DE IDENTIFICACION DEL INFORMADO': 'rucInformado',
+  // El encabezado real dice "Nº", y `normalizarEncabezado` saca tildes pero no
+  // el ordinal "º" (no es un acento combinable). Sin este alias el RUC del
+  // proveedor se leía vacío en TODAS las filas — no rompía el IVA, pero dejaba
+  // al sistema sin forma de cruzar un comprobante con su proveedor. Apareció el
+  // 2026-09-14 mirando celdas crudas de ECOAGRO.
+  'RUC / Nº DE IDENTIFICACION DEL INFORMADO': 'rucInformado',
   'NOMBRE O RAZON SOCIAL DEL INFORMADO': 'razonSocialInformado',
   'TIPO DE REGISTRO': 'tipoRegistro',
   'TIPO DE COMPROBANTE': 'tipoComprobante',

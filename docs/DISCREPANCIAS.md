@@ -1023,23 +1023,74 @@ se le va a reclamar a cinco clientes reales.
 
 ---
 
-## 20. Tolerancia de redondeo del proveedor en el IVA — CASI CERRADO (2026-09-14)
+## 20. Tolerancia de redondeo del proveedor en el IVA — CERRADO (2026-09-14)
 
 **Lo que estaba.** El análisis del libro marcaba como riesgo de multa cualquier
-diferencia entre el IVA declarado y la regla, aunque fuera de un guaraní. Con
-todas las planillas sincronizadas eran 65 comprobantes, 60 de ellos por ±1.
+diferencia entre el IVA declarado y la regla, aunque fuera de un guaraní: 65
+comprobantes con todas las planillas sincronizadas, 60 de ellos por ±1.
 
-**La respuesta de EFFORT** (Lili y Laura vía Daniel, 2026-09-14): *"5 sigue
-siendo aceptable, diría que 10 ya se revisará"*.
+**Primera respuesta** (Lili y Laura vía Daniel, 2026-09-14): *"5 sigue siendo
+aceptable, diría que 10 ya se revisará"*. Se aplicó una tolerancia de 5 Gs y
+quedaban 2 con riesgo (commit `87e414b`).
 
-**Lo aplicado.** `TOLERANCIA_DE_REDONDEO_DEL_PROVEEDOR = 5n` en
-`packages/importers/src/analisisDeLibro.ts`, con `esRiesgoDeMulta` como única
-definición de riesgo (la consulta SQL que agrupa para alertas usa la misma
-constante). Los hallazgos tolerados **no se borran ni se ocultan**: siguen en la
-base y en la pantalla al pedir "todos". Sobre los datos reales quedan 2 con
-riesgo (AGROSOL → ECOAGRO, +12 y +11).
+**Decisión final** (Daniel, horas después): *"mejor alertar a partir de 1
+guaraní a partir de ahora, y que luego puedan aceptar o revisar"*.
 
-**Lo que falta para cerrarlo:** la respuesta no dice qué pasa entre 6 y 9 Gs.
-Hoy alerta — una alerta de más se descarta mirándola; una de menos no se ve
-nunca. Confirmar con EFFORT.
+**Lo aplicado.** `TOLERANCIA_DE_REDONDEO_DEL_PROVEEDOR = 0n`, y cada hallazgo
+tiene `estado`: PENDIENTE, EN_REVISION o ACEPTADO (migración
+`20260914160000_decision_sobre_hallazgos`, que solo agrega columnas). Aceptar
+exige motivo —lo controlan la ruta y una restricción de la base— y queda en la
+bitácora con usuario y fecha. EN_REVISION sigue alertando. La alerta del período
+se cierra sola cuando todos sus comprobantes con riesgo están aceptados.
 
+Por qué es mejor que la tolerancia: con una tolerancia el sistema decide qué no
+importa y nadie se entera de lo que calló; con decisiones, avisa de todo y
+decide una persona con nombre y motivo.
+
+---
+
+## 21. Hallazgos repetidos en la base — CORREGIDO EN CÓDIGO, LIMPIEZA PENDIENTE DE AUTORIZACIÓN (2026-09-14)
+
+**Lo que pasaba.** El índice único de `hallazgo_libro_rg90` incluía `tasa`, que
+es NULL en los hallazgos "las partes no suman el total". En PostgreSQL dos NULL
+no son iguales para un índice único, así que `skipDuplicates` no saltaba nada y
+cada corrida horaria del programador volvía a insertar los mismos.
+
+**El daño.** 2.069 filas de ese tipo para 152 comprobantes distintos. El
+informe de avance del 2026-09-14 habló de "1.905 inconsistencias" y "679 filas
+con las partes en cero"; los números reales eran **152 y 60**. Las alertas de
+riesgo de multa **no** estaban afectadas: esos hallazgos tienen tasa, y el
+índice sí los deduplicaba.
+
+**Por qué no lo agarró ningún test.** El doble en memoria compara
+`null === null` y da verdadero, lo contrario de la base. Ahora hay un test de
+integración contra PostgreSQL real (`apps/api/test/integracion/libro-rg90.test.ts`).
+
+**Lo corregido.** `guardarHallazgos` compara contra lo existente con la clave
+completa (incluida la contraparte: dos proveedores pueden repetir número de
+comprobante), y todas las lecturas descartan repetidos.
+
+**Lo pendiente — necesita autorización de Daniel, porque borra filas.** Limpiar
+los repetidos y crear el índice con `NULLS NOT DISTINCT`. El SQL, con las tres
+preguntas contestadas, está en `docs/propuestas/limpiar-hallazgos-repetidos.sql`.
+No está en la carpeta de migraciones a propósito: DigitalOcean las aplica solas
+en cada despliegue.
+
+---
+
+## 22. Las 60 filas con las partes en cero son AUTOFACTURAS — ABIERTO (2026-09-14)
+
+Mirando las celdas crudas de las planillas (ECOAGRO, por ejemplo
+`RG COMPRAS 092025.xlsx`, H Y N AVICULTURA LTDA, total Gs. 29.880.506): **no es
+un error de lectura**. La planilla trae `0` escrito en Monto Gravado 10%, IVA
+10%, Monto Gravado 5%, IVA 5% y Monto No Gravado/Exento, y el total con importe.
+Las 33 revisadas en ECOAGRO 2025 son todas `TIPO DE COMPROBANTE = AUTOFACTURA`.
+
+Una autofactura no lleva IVA, pero el importe debería ir como "no gravado /
+exento" para que la planilla cierre. Pregunta para EFFORT: ¿SIGA las exporta
+así a propósito, o se están cargando mal?
+
+**Lo que sí era error de lectura, y apareció mirando esto:** el encabezado real
+dice "RUC / **Nº** de Identificación del Informado", y la normalización no saca
+el "º". El RUC del proveedor se leía vacío en todas las filas. Corregido con un
+alias y un test.

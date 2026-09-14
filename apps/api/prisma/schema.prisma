@@ -1084,11 +1084,18 @@ model HallazgoDeLibroRg90 {
 
   detectadoEn DateTime @default(now()) @map("detectado_en") @db.Timestamptz(3)
 
+  /// `PENDIENTE`, `EN_REVISION` o `ACEPTADO`. Aceptar exige motivo y usuario (lo controla la base).
+  estado               String    @default("PENDIENTE") @db.VarChar(20)
+  decididoPorUsuarioId String?   @map("decidido_por_usuario_id") @db.Uuid
+  decididoEn           DateTime? @map("decidido_en") @db.Timestamptz(3)
+  notaDecision         String?   @map("nota_decision") @db.VarChar(500)
+
   cliente Cliente @relation(fields: [clienteId], references: [id], onDelete: Cascade)
 
   @@unique([clienteId, periodo, numeroComprobante, tipo, tasa], map: "hallazgo_libro_unico")
   @@index([clienteId, periodo])
   @@index([riesgo])
+  @@index([estado])
   @@map("hallazgo_libro_rg90")
 }
 

@@ -218,7 +218,9 @@ export async function evaluarAlertas(
         `El IVA declarado en ${riesgo.comprobantes} ${plural} no coincide con el que ` +
         `corresponde por la regla (Gs. ${riesgo.ivaEnRiesgo} en juego). Revisalos antes de ` +
         'presentar: la DNIT cruza estos datos contra los del proveedor, y una diferencia ' +
-        'dispara una revisión que cuesta mucho más que la diferencia.',
+        'dispara una revisión que cuesta mucho más que la diferencia. En la pantalla de IVA ' +
+        'cada uno se acepta con motivo o se manda a revisar; la alerta se cierra sola cuando ' +
+        'todos están aceptados.',
       entidadRelacionada: 'liquidacion_iva_rg90',
       entidadRelacionadaId: riesgo.liquidacionId,
       fechaLimite: null,

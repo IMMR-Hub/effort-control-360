@@ -46,11 +46,19 @@ export interface HallazgoDeLibro {
   readonly tasa: string | null;
   readonly diferencia: string;
   readonly detalle: string;
+  /** PENDIENTE: nadie lo miró. EN_REVISION: sigue alertando. ACEPTADO: una persona lo aceptó con motivo. */
+  readonly estado: EstadoDeHallazgo;
+  readonly notaDecision: string | null;
+  readonly decididoEn: string | null;
 }
+
+export type EstadoDeHallazgo = 'PENDIENTE' | 'EN_REVISION' | 'ACEPTADO';
 
 export interface ResumenDeHallazgos {
   readonly total: number;
   readonly conRiesgoDeMulta: number;
+  readonly enRevision: number;
+  readonly aceptados: number;
   readonly ivaEnRiesgo: string;
 }
 
@@ -82,4 +90,21 @@ export function listarHallazgos(
 
 export function calcularIva(): Promise<ResumenDeCalculo> {
   return peticion('POST', '/api/v1/liquidaciones-iva/calcular');
+}
+
+/**
+ * Aceptar un hallazgo (exige motivo) o mandarlo a revisar.
+ *
+ * No hay "descartar": lo aceptado queda con nombre, fecha y motivo, y se puede
+ * volver a revisión si alguien se equivocó.
+ */
+export function decidirHallazgo(
+  id: string,
+  decision: 'ACEPTADO' | 'EN_REVISION',
+  nota?: string,
+): Promise<{ id: string; estado: EstadoDeHallazgo }> {
+  return peticion('POST', `/api/v1/liquidaciones-iva/hallazgos/${encodeURIComponent(id)}/decision`, {
+    decision,
+    ...(nota ? { nota } : {}),
+  });
 }

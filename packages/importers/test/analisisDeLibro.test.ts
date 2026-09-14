@@ -151,35 +151,17 @@ describe('resumen de hallazgos', () => {
   });
 
   /*
-   * EFFORT, 2026-09-14: "5 sigue siendo aceptable, diría que 10 ya se revisará".
-   * Los casos son los reales del piloto: de los 49 con diferencia en la
-   * dirección del fisco, 44 eran de un guaraní y tres de dos (FUMIPRO). Los
-   * únicos que quedan como riesgo son los dos de AGROSOL hacia ECOAGRO.
+   * Daniel, 2026-09-14: "mejor alertar a partir de 1 guaraní, y que luego
+   * puedan aceptar o revisar". Reemplazó la tolerancia de 5 Gs que se había
+   * aplicado ese mismo día: el sistema avisa de todo y decide una persona.
    */
-  it('una diferencia de hasta 5 guaraníes es redondeo del proveedor, no riesgo', () => {
-    const hallazgos = analizarLibro(
-      [
-        fila({ gravado10: gs(286500), iva10: gs(26047), total: gs(286500) }), // +2
-        fila({ gravado10: gs(110000), iva10: gs(10005), total: gs(110000) }), // +5, el borde
-        fila({ gravado10: gs(1548000), iva10: gs(140739), total: gs(1548000) }), // +12
-      ],
-      DIVISORES,
-    );
-
-    // Tolerar no es ocultar: los tres siguen siendo hallazgos.
-    expect(hallazgos).toHaveLength(3);
-    expect(hallazgos.every((h) => h.riesgo === 'CREDITO_DE_MAS')).toBe(true);
-
-    const resumen = resumirHallazgos(hallazgos);
-    expect(resumen.conRiesgoDeMulta).toBe(1);
-    expect(resumen.ivaEnRiesgo).toBe(12n);
+  it('un solo guaraní en la dirección del fisco ya es riesgo', () => {
+    expect(esRiesgoDeMulta({ riesgo: 'CREDITO_DE_MAS', diferencia: 1n })).toBe(true);
+    expect(esRiesgoDeMulta({ riesgo: 'DEBITO_DE_MENOS', diferencia: -1n })).toBe(true);
   });
 
-  // Entre 6 y 9 la respuesta de EFFORT no decide, y el control alerta.
-  it('6 guaraníes ya cuentan como riesgo', () => {
-    expect(esRiesgoDeMulta({ riesgo: 'CREDITO_DE_MAS', diferencia: 6n })).toBe(true);
-    expect(esRiesgoDeMulta({ riesgo: 'DEBITO_DE_MENOS', diferencia: -6n })).toBe(true);
-    expect(esRiesgoDeMulta({ riesgo: 'DEBITO_DE_MENOS', diferencia: -5n })).toBe(false);
+  it('una diferencia de cero no es riesgo', () => {
+    expect(esRiesgoDeMulta({ riesgo: 'CREDITO_DE_MAS', diferencia: 0n })).toBe(false);
   });
 
   it('lo que juega en contra del cliente nunca es riesgo de multa, sea cual sea el monto', () => {

@@ -96,6 +96,21 @@ describe('importador del libro RG 90', () => {
   });
 
   /*
+   * El encabezado real es "RUC / Nº de Identificacion del Informado". El "º" no
+   * es un acento y la normalización no lo saca: hasta el 2026-09-14 el RUC del
+   * proveedor se leía vacío en todas las filas reales, y ningún test lo miraba.
+   */
+  it('lee el RUC del proveedor aunque el encabezado diga "Nº"', async () => {
+    const contenido = await planilla([
+      { tipoRegistro: 'COMPRAS', numero: '001-001-0056770', gravado10: 98000, iva10: 8909, total: 98000 },
+    ]);
+
+    const reporte = await importarLibroRg90(contenido, 'RG COMPRAS FEBRERO 2026.xlsx');
+
+    expect(reporte.filas[0]!.rucInformado).toBe('80108594');
+  });
+
+  /*
    * El caso que definió el diseño del módulo.
    *
    * En las planillas reales el IVA declarado NO siempre coincide con dividir el

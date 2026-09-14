@@ -165,8 +165,12 @@ export async function registrarRutasDeLiquidacionesIva(
       soloRiesgo,
     });
 
-    const conRiesgo = hallazgos.filter((h) =>
-      esRiesgoDeMulta({ riesgo: h.riesgo as RiesgoDeHallazgo, diferencia: h.diferencia }),
+    // Lo aceptado por una persona ya no cuenta como riesgo: se decidió, con
+    // nombre y motivo. Lo que está en revisión sí sigue contando.
+    const conRiesgo = hallazgos.filter(
+      (h) =>
+        h.estado !== 'ACEPTADO' &&
+        esRiesgoDeMulta({ riesgo: h.riesgo as RiesgoDeHallazgo, diferencia: h.diferencia }),
     );
 
     return {
@@ -182,10 +186,15 @@ export async function registrarRutasDeLiquidacionesIva(
         tasa: h.tasa,
         diferencia: h.diferencia.toString(),
         detalle: h.detalle,
+        estado: h.estado,
+        notaDecision: h.notaDecision,
+        decididoEn: h.decididoEn?.toISOString() ?? null,
       })),
       resumen: {
         total: hallazgos.length,
         conRiesgoDeMulta: conRiesgo.length,
+        enRevision: hallazgos.filter((h) => h.estado === 'EN_REVISION').length,
+        aceptados: hallazgos.filter((h) => h.estado === 'ACEPTADO').length,
         // En valor absoluto: un crédito de más y un débito de menos son dos
         // problemas, no uno que compensa al otro.
         ivaEnRiesgo: conRiesgo
@@ -194,4 +203,72 @@ export async function registrarRutasDeLiquidacionesIva(
       },
     };
   });
+
+  /**
+   * Una persona acepta un hallazgo o lo manda a revisar.
+   *
+   * Daniel, 2026-09-14: *"mejor alertar a partir de 1 guaraní, y que luego
+   * puedan aceptar o revisar"*. El sistema avisa de todo; decide una persona.
+   *
+   * **Aceptar exige motivo**, igual que cerrar una alerta: una aceptación sin
+   * explicación no se distingue de un clic para sacarse el aviso de encima, y
+   * la diferencia importa el día que la DNIT pregunte por ese comprobante. La
+   * base también lo exige (`hallazgo_libro_rg90_aceptado_con_motivo`).
+   *
+   * Se puede volver de ACEPTADO a EN_REVISION: equivocarse al aceptar tiene
+   * que tener arreglo, y el arreglo también queda en la bitácora.
+   */
+  app.post('/api/v1/liquidaciones-iva/hallazgos/:id/decision', async (peticion) => {
+    const sujeto = autorizar(peticion, 'liquidacion', 'editar');
+    const { id } = z.object({ id: z.string().uuid() }).strict().parse(peticion.params);
+    const cuerpo = decisionSchema.parse(peticion.body);
+
+    if (!deps.libroRg90) {
+      throw new ErrorDeAplicacion(503, 'El módulo de IVA no está disponible.', 'sin_modulo');
+    }
+
+    const previo = await deps.libroRg90.hallazgoPorId(id);
+    // Mismo 404 si no existe o si es de un cliente fuera de su cartera: decir
+    // "existe pero no es tuyo" ya es filtrar información.
+    const cliente = previo
+      ? await deps.clientes.buscarPorId(previo.clienteId, filtroDeClientes(sujeto))
+      : null;
+    if (!previo || !cliente) {
+      throw new ErrorDeAplicacion(404, 'No se encontró el hallazgo.', 'no_encontrado');
+    }
+
+    await deps.libroRg90.decidirHallazgo({
+      id,
+      estado: cuerpo.decision,
+      nota: cuerpo.nota?.trim() || null,
+      usuarioId: sujeto.usuarioId,
+      ahora: deps.ahora(),
+    });
+
+    await registrarEvento(deps.bitacora, peticion.log, {
+      usuarioId: sujeto.usuarioId,
+      accion: ACCIONES.HALLAZGO_DE_LIBRO_DECIDIDO,
+      entidad: 'hallazgo_libro_rg90',
+      entidadId: id,
+      clienteId: previo.clienteId,
+      datosAntes: { estado: previo.estado, nota: previo.notaDecision },
+      datosDespues: { estado: cuerpo.decision, nota: cuerpo.nota ?? null },
+      ip: peticion.ip,
+      agenteUsuario: peticion.headers['user-agent'] ?? null,
+      peticionId: String(peticion.id),
+    });
+
+    return { id, estado: cuerpo.decision };
+  });
 }
+
+const decisionSchema = z
+  .object({
+    decision: z.enum(['ACEPTADO', 'EN_REVISION']),
+    nota: z.string().max(500).optional(),
+  })
+  .strict()
+  .refine((c) => c.decision !== 'ACEPTADO' || (c.nota?.trim().length ?? 0) >= 5, {
+    message: 'Para aceptar un hallazgo hay que dejar escrito el motivo.',
+    path: ['nota'],
+  });

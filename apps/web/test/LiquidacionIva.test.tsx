@@ -59,6 +59,9 @@ const HALLAZGO = {
   tasa: '10%',
   diferencia: '12',
   detalle: 'Se estaría tomando crédito fiscal de más.',
+  estado: 'PENDIENTE',
+  notaDecision: null,
+  decididoEn: null,
 };
 
 let mock: ReturnType<typeof crearFetchMock>;
@@ -84,7 +87,7 @@ async function montar(rol: string = 'direccion') {
   mock.mockDeRuta('GET /api/v1/liquidaciones-iva/hallazgos', () =>
     respuestaJson({
       hallazgos: [HALLAZGO],
-      resumen: { total: 1, conRiesgoDeMulta: 1, ivaEnRiesgo: '12' },
+      resumen: { total: 1, conRiesgoDeMulta: 1, enRevision: 0, aceptados: 0, ivaEnRiesgo: '12' },
     }),
   );
 
@@ -158,5 +161,40 @@ describe('pantalla de IVA', () => {
     });
     // Y vuelve a pedir los datos, para no dejar la pantalla con lo viejo.
     expect(mock.llamadasA('GET /api/v1/liquidaciones-iva').length).toBeGreaterThan(1);
+  });
+
+  /*
+   * Daniel, 2026-09-14: "alertar a partir de 1 guaraní, y que luego puedan
+   * aceptar o revisar". Aceptar sin motivo no es una decisión: el botón de
+   * confirmar no se habilita hasta que haya uno escrito.
+   */
+  it('aceptar un hallazgo exige escribir el motivo', async () => {
+    await montar();
+    mock.mockDeRuta('POST /api/v1/liquidaciones-iva/hallazgos/hal-1/decision', () =>
+      respuestaJson({ id: 'hal-1', estado: 'ACEPTADO' }),
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: 'Aceptar' }));
+    const confirmar = screen.getByRole('button', { name: 'Confirmar' });
+    expect(confirmar).toBeDisabled();
+
+    await userEvent.type(screen.getByLabelText('Motivo para aceptar'), 'Redondeo del proveedor, verificado');
+    await userEvent.click(confirmar);
+
+    await waitFor(() => {
+      expect(mock.llamadasA('POST /api/v1/liquidaciones-iva/hallazgos/hal-1/decision')).toHaveLength(1);
+    });
+    const [, opciones] = mock.llamadasA('POST /api/v1/liquidaciones-iva/hallazgos/hal-1/decision')[0]!;
+    expect(JSON.parse(String((opciones as RequestInit).body))).toEqual({
+      decision: 'ACEPTADO',
+      nota: 'Redondeo del proveedor, verificado',
+    });
+  });
+
+  it('solo lectura no puede aceptar ni mandar a revisar', async () => {
+    await montar('solo_lectura');
+
+    expect(screen.queryByRole('button', { name: 'Aceptar' })).toBeNull();
+    expect(screen.queryByRole('button', { name: 'Revisar' })).toBeNull();
   });
 });

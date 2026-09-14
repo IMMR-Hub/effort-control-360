@@ -71,6 +71,11 @@ const MODELOS = [
   'reglaImpositiva',
   'reglaNotificacion',
   'evidencia',
+  // Las tres que siguen faltaban hasta el 2026-09-14: se agregaron al esquema y
+  // al respaldo automático, pero no acá. El respaldo manual previo a una
+  // migración salía "completo" sin los hallazgos ni el IVA calculado. Tiene que
+  // coincidir con `MODELOS` de `apps/api/src/servicios/respaldoAutomatico.ts`.
+  'archivoDeOrigen',
   'documento',
   'procesoMensual',
   'vencimiento',
@@ -79,6 +84,8 @@ const MODELOS = [
   'exportacionSiga',
   'comprobanteSiga',
   'liquidacion',
+  'liquidacionIvaRg90',
+  'hallazgoDeLibroRg90',
   'alerta',
   'registroContacto',
   'envioNotificacion',

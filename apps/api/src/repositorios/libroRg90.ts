@@ -108,11 +108,53 @@ export class LibroRg90Prisma {
    * NUEVOS —y no cuántos se intentaron— es lo que permite que el motor de
    * alertas avise solo cuando aparece algo que antes no estaba.
    */
+  //
+  // **Por qué no alcanza con el índice único**, y es la historia de un bug que
+  // duplicó hallazgos cada hora durante días:
+  //
+  // El índice es `(cliente, período, comprobante, tipo, tasa)`, y `tasa` es NULL
+  // en los hallazgos de "las partes no suman el total". En PostgreSQL dos NULL
+  // NO son iguales para un índice único, así que `skipDuplicates` no saltaba
+  // nada: cada corrida del programador volvía a insertar los mismos. El
+  // 2026-09-14 había 2.069 filas de ese tipo para 152 comprobantes reales, y un
+  // informe de avance llegó a hablar de "1.905 inconsistencias" y "679 filas en
+  // cero" cuando eran 152 y 60.
+  //
+  // Por eso se compara acá contra lo que ya está, con la clave completa
+  // —incluida la contraparte, que el índice no tiene y hace falta: dos
+  // proveedores pueden usar el mismo número de comprobante—. El arreglo de fondo
+  // es el índice con `NULLS NOT DISTINCT`, que necesita antes limpiar los
+  // repetidos, y eso es un borrado: DISCREPANCIAS punto 21, pendiente de Daniel.
   async guardarHallazgos(datos: readonly AltaDeHallazgo[]): Promise<number> {
     if (datos.length === 0) return 0;
 
+    const existentes = await this.prisma.hallazgoDeLibroRg90.findMany({
+      where: {
+        clienteId: { in: [...new Set(datos.map((h) => h.clienteId))] },
+        periodo: { in: [...new Set(datos.map((h) => h.periodo))] },
+      },
+      select: {
+        clienteId: true,
+        periodo: true,
+        tipoRegistro: true,
+        numeroComprobante: true,
+        contraparte: true,
+        tipo: true,
+        tasa: true,
+      },
+    });
+
+    const vistos = new Set(existentes.map(claveDeHallazgo));
+    const nuevos = datos.filter((h) => {
+      const clave = claveDeHallazgo({ ...h, contraparte: h.contraparte.slice(0, 300) });
+      if (vistos.has(clave)) return false;
+      vistos.add(clave);
+      return true;
+    });
+    if (nuevos.length === 0) return 0;
+
     const resultado = await this.prisma.hallazgoDeLibroRg90.createMany({
-      data: datos.map((h) => ({
+      data: nuevos.map((h) => ({
         clienteId: h.clienteId,
         periodo: h.periodo,
         tipo: h.tipo,
@@ -168,11 +210,21 @@ export class LibroRg90Prisma {
       SELECT h."cliente_id", h."periodo", l."id" AS liquidacion_id,
              COUNT(*) AS comprobantes,
              COALESCE(SUM(ABS(h."diferencia")), 0) AS iva_en_riesgo
-      FROM "hallazgo_libro_rg90" h
+      FROM (
+        -- DISTINCT ON por la clave completa: mientras queden filas repetidas de
+        -- antes del arreglo, cada comprobante cuenta una sola vez.
+        SELECT DISTINCT ON ("cliente_id", "periodo", "tipo_registro", "numero_comprobante",
+                            "contraparte", "tipo", "tasa")
+               "cliente_id", "periodo", "diferencia"
+        FROM "hallazgo_libro_rg90"
+        WHERE "riesgo" IN ('CREDITO_DE_MAS', 'DEBITO_DE_MENOS')
+          AND ABS("diferencia") > ${TOLERANCIA_DE_REDONDEO_DEL_PROVEEDOR}
+          -- Aceptado por una persona, con motivo: deja de alertar. EN_REVISION
+          -- sigue alertando — mirarlo no es resolverlo.
+          AND "estado" <> 'ACEPTADO'
+      ) h
       JOIN "liquidacion_iva_rg90" l
         ON l."cliente_id" = h."cliente_id" AND l."periodo" = h."periodo"
-      WHERE h."riesgo" IN ('CREDITO_DE_MAS', 'DEBITO_DE_MENOS')
-        AND ABS(h."diferencia") > ${TOLERANCIA_DE_REDONDEO_DEL_PROVEEDOR}
       GROUP BY h."cliente_id", h."periodo", l."id"
     `;
 
@@ -202,27 +254,101 @@ export class LibroRg90Prisma {
   }
 
   /**
-   * Hallazgos abiertos, los de riesgo primero.
+   * Hallazgos, los de riesgo primero, cada comprobante una sola vez.
    *
    * El orden no es cosmético: son los que pueden derivar en multa, y si quedan
    * mezclados entre ciento y pico de inconsistencias menores, nadie los ve.
+   *
+   * `soloRiesgo` deja lo que todavía pide atención: riesgo de multa que nadie
+   * aceptó. Lo aceptado se ve al pedir todos, con el motivo.
    */
   async hallazgos(filtro: { clienteId?: string; soloRiesgo?: boolean } = {}) {
     const filas = await this.prisma.hallazgoDeLibroRg90.findMany({
       where: {
         ...(filtro.clienteId ? { clienteId: filtro.clienteId } : {}),
-        ...(filtro.soloRiesgo ? { riesgo: { in: ['CREDITO_DE_MAS', 'DEBITO_DE_MENOS'] } } : {}),
+        ...(filtro.soloRiesgo
+          ? { riesgo: { in: ['CREDITO_DE_MAS', 'DEBITO_DE_MENOS'] }, estado: { not: 'ACEPTADO' } }
+          : {}),
       },
-      orderBy: [{ riesgo: 'asc' }, { periodo: 'desc' }],
+      // El más viejo primero, para que al quitar repetidos quede el original.
+      orderBy: { detectadoEn: 'asc' },
+    });
+
+    const vistos = new Set<string>();
+    const unicos = filas.filter((h) => {
+      const clave = claveDeHallazgo(h);
+      if (vistos.has(clave)) return false;
+      vistos.add(clave);
+      return true;
     });
 
     // La tolerancia se aplica acá y no en el `where`: Prisma no filtra por el
     // valor absoluto de una columna, y la definición de riesgo tiene que ser una
     // sola (`esRiesgoDeMulta`), no una copia en cada consulta.
-    return filtro.soloRiesgo
-      ? filas.filter((h) =>
+    const resultado = filtro.soloRiesgo
+      ? unicos.filter((h) =>
           esRiesgoDeMulta({ riesgo: h.riesgo as RiesgoDeHallazgo, diferencia: h.diferencia }),
         )
-      : filas;
+      : unicos;
+
+    return resultado.sort(
+      (a, b) => a.riesgo.localeCompare(b.riesgo) || b.periodo.localeCompare(a.periodo),
+    );
   }
+
+  /** Un hallazgo por id. La ruta lo usa para comprobar de qué cliente es antes de decidir. */
+  async hallazgoPorId(id: string) {
+    return this.prisma.hallazgoDeLibroRg90.findUnique({ where: { id } });
+  }
+
+  /**
+   * Registra la decisión de una persona sobre un hallazgo.
+   *
+   * Se aplica a todas las filas con la misma clave y no solo al id: mientras
+   * existan repetidos de antes del arreglo, aceptar uno y dejar su copia
+   * pendiente haría que la alerta no se cierre nunca.
+   */
+  async decidirHallazgo(datos: {
+    readonly id: string;
+    readonly estado: 'ACEPTADO' | 'EN_REVISION';
+    readonly nota: string | null;
+    readonly usuarioId: string;
+    readonly ahora: Date;
+  }): Promise<number> {
+    const hallazgo = await this.prisma.hallazgoDeLibroRg90.findUnique({ where: { id: datos.id } });
+    if (!hallazgo) return 0;
+
+    const { count } = await this.prisma.hallazgoDeLibroRg90.updateMany({
+      where: {
+        clienteId: hallazgo.clienteId,
+        periodo: hallazgo.periodo,
+        tipoRegistro: hallazgo.tipoRegistro,
+        numeroComprobante: hallazgo.numeroComprobante,
+        contraparte: hallazgo.contraparte,
+        tipo: hallazgo.tipo,
+        tasa: hallazgo.tasa,
+      },
+      data: {
+        estado: datos.estado,
+        notaDecision: datos.nota,
+        decididoPorUsuarioId: datos.usuarioId,
+        decididoEn: datos.ahora,
+      },
+    });
+
+    return count;
+  }
+}
+
+/** Qué hace que dos hallazgos sean el mismo: el comprobante, de quién, y qué se encontró. */
+function claveDeHallazgo(h: {
+  readonly clienteId: string;
+  readonly periodo: string;
+  readonly tipoRegistro: string;
+  readonly numeroComprobante: string;
+  readonly contraparte: string;
+  readonly tipo: string;
+  readonly tasa: string | null;
+}): string {
+  return [h.clienteId, h.periodo, h.tipoRegistro, h.numeroComprobante, h.contraparte, h.tipo, h.tasa ?? ''].join('|');
 }

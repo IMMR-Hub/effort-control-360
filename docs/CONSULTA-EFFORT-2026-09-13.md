@@ -20,23 +20,29 @@ sistema.
 | 1 | *"Genera SIGA de acuerdo al formato establecido por la DNIT. Al presentar, si está todo OK genera un mensaje de aceptado, o procesado parcial (a fin de corregir) si hay inconsistencias."* | Las variantes de encabezado vienen de SIGA, no de ediciones a mano: son finitas y ya están cubiertas. **Pista nueva:** el acuse "aceptado / procesado parcial" de la DNIT es la evidencia de presentación que falta para marcar vencimientos como presentados. |
 | 2 | *"Se redondea, las DDJJ no permiten decimales."* | Confirma lo que ya hace el importador: redondear al leer, una vez, en el borde. Sin cambios. |
 | 3 | *"Capaz es alguna factura en dólares, o si no del súper, que generalmente redondean."* | Coincide con parte de lo encontrado (LA BOLSA SRL: +10, +20, +40 Gs). **Pero no explica todo** — ver "Lo que apareció al leer todas las planillas" más abajo. |
-| 4 | *"5 sigue siendo aceptable, diría que 10 ya se revisará."* | **Aplicado.** Diferencias de IVA de hasta 5 Gs se registran pero no cuentan como riesgo de multa (`TOLERANCIA_DE_REDONDEO_DEL_PROVEEDOR`). Entre 6 y 9 la respuesta no decide y el sistema alerta, por ser la dirección segura. Resultado sobre los datos reales: de 65 comprobantes con riesgo quedan **2**, los de AGROSOL hacia ECOAGRO (+12 y +11). |
-| 5 | Pendiente. | SIPAR sigue sin IVA hasta saber de dónde sale la tasa. |
+| 4 | *"5 sigue siendo aceptable, diría que 10 ya se revisará."* | Se aplicó una tolerancia de 5 Gs, y **Daniel la reemplazó el mismo día**: *"mejor alertar a partir de 1 guaraní, y que luego puedan aceptar o revisar"*. Hoy alerta toda diferencia y cada hallazgo se **acepta con motivo** o se **manda a revisar** desde la pantalla de IVA. Ver DISCREPANCIAS 20. |
+| 5 | Lili: *"En formato txt se descarga para subir la info al Marangatú. El sistema permite descargar en txt y también en Excel."* | **No hace falta código.** Alcanza con que la planilla de SIPAR también se exporte en Excel desde SIGA y se deje en su carpeta: el sistema la lee igual que las de los otros cuatro. |
 
-**Queda por confirmar de la 4:** ¿de 6 a 9 guaraníes se revisa o se tolera? Hoy
-alerta.
+### Lo que apareció al leer todas las planillas — CORREGIDO
 
-### Lo que apareció al leer todas las planillas (no solo las 39 iniciales)
+Una primera versión de esta sección decía que las "partes que no suman el total"
+eran **1.905** y que **679** tenían las partes en cero. **Esos números estaban
+inflados por un bug propio**: los hallazgos se duplicaban en cada corrida
+horaria (DISCREPANCIAS 21). Los reales son:
 
-Con la sincronización completa, las "partes que no suman el total" pasaron de
-101 a **1.905**. No son un solo fenómeno:
+| | Comprobantes distintos |
+|---|---|
+| Partes que no suman el total | **152** |
+| — de esos, con las partes en cero | **60** (58 ECOAGRO, 2 FUMIPRO) |
 
-| Grupo | Cantidad | Lectura |
-|---|---|---|
-| Diferencia hasta 5 Gs | 600 | Redondeo — compatible con la respuesta 3. |
-| Diferencia de 6 a 100 Gs | 430 | Mayormente supermercados (LA BOLSA SRL). Compatible con la respuesta 3. |
-| Diferencia de más de 100 Gs | 196 | Hay que mirarlas. Pueden ser las facturas en dólares. |
-| **Partes en cero, total con importe** | **679** | **Sospecha propia, no de EFFORT:** filas donde el sistema no leyó ningún monto gravado ni exento (ej.: ECOAGRO, H Y N AVICULTURA LTDA, total Gs. 31.961.459, partes 0). Puede ser un comprobante que no imputa IVA, o una variante de planilla que el importador no está leyendo bien. Se revisa antes de dar por buenos los importes de esos períodos. |
+Las filas en cero **no son un error de lectura**: la planilla trae los ceros
+escritos, y son AUTOFACTURAS (DISCREPANCIAS 22).
+
+**Pregunta nueva:**
+
+> Las autofacturas aparecen en la planilla RG 90 con todas las columnas en cero
+> (gravado, IVA, exento) y solo el total con importe. ¿SIGA las exporta así a
+> propósito, o el importe debería ir como "no gravado / exento"?
 
 
 ---
