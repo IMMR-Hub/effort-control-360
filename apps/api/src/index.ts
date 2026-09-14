@@ -54,6 +54,10 @@ import {
   programarCalculoDeVencimientosYAlertas,
   programarSincronizacionDeOneDrive,
 } from './servicios/programador.js';
+import {
+  programarRespaldoDiario,
+  type LectorDeTablas,
+} from './servicios/respaldoAutomatico.js';
 
 export interface DependenciasReales extends Dependencias {
   readonly cerrar: () => Promise<void>;
@@ -131,6 +135,7 @@ export function construirDependencias(configuracion: Configuracion): Dependencia
     obligaciones: new ObligacionesPrisma(prisma),
     evidencias: new EvidenciasPrisma(prisma),
     archivosDeOrigen: new ArchivosDeOrigenPrisma(prisma),
+    lectorParaRespaldo: prisma as unknown as LectorDeTablas,
     envios: new EnviosPrisma(prisma),
     correo: crearCorreo(configuracion),
     drive: crearDrive(
@@ -181,6 +186,21 @@ export async function arrancar(dependencias: Dependencias): Promise<void> {
   await registrarRutasDeLiquidacionesIva(app, dependencias);
 
   programarSincronizacionDeOneDrive(dependencias, app.log);
+
+  /*
+   * El respaldo va primero en importancia aunque vaya después en el código.
+   * Supabase en plan Free no incluye copias de seguridad, y el 2026-09-13 eso
+   * costó la bitácora de auditoría entera — lo único que no se pudo
+   * reconstruir. Ver `servicios/respaldoAutomatico.ts`.
+   */
+  programarRespaldoDiario(
+    {
+      lector: dependencias.lectorParaRespaldo,
+      drive: dependencias.drive,
+      ahora: dependencias.ahora,
+    },
+    app.log,
+  );
   programarCalculoDeVencimientosYAlertas(dependencias, app.log);
 
   // Purga periódica del almacén de intentos: sin esto crece indefinidamente

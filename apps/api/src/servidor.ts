@@ -19,6 +19,7 @@ import type { DriveDeArchivos, EnviadorDeCorreo } from '@effort/drive';
 import { esProduccion, type Configuracion } from './configuracion.js';
 import type { LibroRg90Prisma } from './repositorios/libroRg90.js';
 import type { ArchivosDeOrigenPrisma } from './repositorios/dominio.js';
+import type { LectorDeTablas } from './servicios/respaldoAutomatico.js';
 import { ErrorDeAutorizacion, type SujetoAutenticado } from './seguridad/rbac.js';
 import {
   evaluarSesion,
@@ -64,6 +65,15 @@ export interface Dependencias {
   readonly evidencias: RepositorioDeEvidencias;
   /** Qué archivos del OneDrive de EFFORT ya se miraron. Ver `ArchivosDeOrigenPrisma`. */
   readonly archivosDeOrigen: ArchivosDeOrigenPrisma;
+  /**
+   * Acceso de solo lectura a todas las tablas, para el respaldo diario.
+   *
+   * Se declara con el tipo mínimo que el respaldo necesita —`findMany` y nada
+   * más— en vez de pasar el cliente de Prisma entero. No es ceremonia: es lo
+   * que hace imposible que la herramienta que existe para proteger los datos
+   * pueda modificarlos.
+   */
+  readonly lectorParaRespaldo: LectorDeTablas;
   readonly envios: RepositorioDeEnvios;
   /** Envío de correo desde la casilla del sistema. `null` sin credenciales. */
   readonly correo: EnviadorDeCorreo | null;
