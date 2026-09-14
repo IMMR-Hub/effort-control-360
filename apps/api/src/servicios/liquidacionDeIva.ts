@@ -62,6 +62,8 @@ export interface ArchivoDeLibro {
   readonly nombreArchivo: string;
   readonly itemIdOneDrive: string;
   readonly tipoMime: string;
+  /** Fecha de modificación en OneDrive. Decide qué versión manda si hay dos. */
+  readonly modificadoEnOrigen?: Date | null;
 }
 
 export interface AltaDeLiquidacion {
@@ -111,7 +113,38 @@ export interface ResumenDeLiquidacion {
   readonly filasInterpretadas: number;
   readonly filasRechazadas: number;
   readonly hallazgosNuevos: number;
+  /** Comprobantes que aparecían en más de una planilla y se contaron una sola vez. */
+  readonly comprobantesRepetidos: number;
   readonly fallos: readonly FalloDeLiquidacion[];
+}
+
+/**
+ * Qué hace que dos filas sean el MISMO comprobante.
+ *
+ * Timbrado y número identifican una factura en Paraguay; el proveedor y el tipo
+ * se agregan porque un número se repite entre proveedores distintos.
+ */
+function claveDeComprobante(fila: FilaDeLibro): string {
+  return [
+    fila.periodo,
+    fila.tipoRegistro,
+    fila.tipoComprobante,
+    fila.timbrado,
+    fila.numeroComprobante,
+    fila.rucInformado || fila.razonSocialInformado,
+  ].join('|');
+}
+
+/**
+ * Orden en que se leen las planillas: la que manda va ÚLTIMA y pisa a las demás.
+ *
+ * Una corrección manda sobre el original (EFFORT las nombra "CORRECCION RG
+ * COMPRAS …"); entre dos que no lo son, la modificada más recientemente.
+ */
+function ordenDePrioridad(a: ArchivoDeLibro, b: ArchivoDeLibro): number {
+  const correccion = (x: ArchivoDeLibro) => (/^\s*correccion/i.test(x.nombreArchivo) ? 1 : 0);
+  const fecha = (x: ArchivoDeLibro) => x.modificadoEnOrigen?.getTime() ?? 0;
+  return correccion(a) - correccion(b) || fecha(a) - fecha(b);
 }
 
 /** Agrupa las filas de todos los libros de un cliente por período fiscal. */
@@ -130,20 +163,44 @@ async function liquidarCliente(
   cliente: ClienteListado,
   usuarioId: string,
   fallos: FalloDeLiquidacion[],
-): Promise<{ periodos: number; archivos: number; filas: number; rechazadas: number; hallazgos: number }> {
-  const archivos = (await deps.librosDelCliente(cliente.id)).filter(
-    (a) => FORMATOS_EXCEL.has(a.tipoMime) && NOMBRE_DE_PLANILLA.test(a.nombreArchivo),
-  );
+): Promise<{
+  periodos: number;
+  archivos: number;
+  filas: number;
+  rechazadas: number;
+  hallazgos: number;
+  repetidos: number;
+}> {
+  const archivos = (await deps.librosDelCliente(cliente.id))
+    .filter((a) => FORMATOS_EXCEL.has(a.tipoMime) && NOMBRE_DE_PLANILLA.test(a.nombreArchivo))
+    .sort(ordenDePrioridad);
 
-  const filas: FilaDeLibro[] = [];
+  /*
+   * Un comprobante cuenta UNA vez, aunque esté en varias planillas.
+   *
+   * Hasta el 2026-09-14 las filas de todas las planillas del cliente se
+   * juntaban sin mirar repeticiones, y en el OneDrive real hay períodos con dos:
+   * FUMIPRO julio 2026 tiene "RG COMPRAS 07 2026" y "CORRECCION RG COMPRAS 07
+   * 2026"; ECOAGRO febrero 2025 tiene dos versiones en carpetas distintas. El
+   * crédito fiscal de esos períodos salía sumado dos veces.
+   *
+   * Las planillas se leen en orden de prioridad y la última pisa: si la
+   * corrección cambió un importe, vale el de la corrección.
+   */
+  const porComprobante = new Map<string, FilaDeLibro>();
   let rechazadas = 0;
   let leidos = 0;
+  let repetidos = 0;
 
   for (const archivo of archivos) {
     try {
       const contenido = await deps.drive.leer(archivo.itemIdOneDrive);
       const reporte = await importarLibroRg90(contenido, archivo.nombreArchivo);
-      filas.push(...reporte.filas);
+      for (const fila of reporte.filas) {
+        const clave = claveDeComprobante(fila);
+        if (porComprobante.has(clave)) repetidos += 1;
+        porComprobante.set(clave, fila);
+      }
       rechazadas += reporte.rechazadas.length;
       leidos += 1;
     } catch (error) {
@@ -157,6 +214,7 @@ async function liquidarCliente(
     }
   }
 
+  const filas = [...porComprobante.values()];
   let periodos = 0;
   let hallazgos = 0;
 
@@ -209,7 +267,7 @@ async function liquidarCliente(
     periodos += 1;
   }
 
-  return { periodos, archivos: leidos, filas: filas.length, rechazadas, hallazgos };
+  return { periodos, archivos: leidos, filas: filas.length, rechazadas, hallazgos, repetidos };
 }
 
 export async function liquidarIvaDesdeLibros(
@@ -224,6 +282,7 @@ export async function liquidarIvaDesdeLibros(
   let filasInterpretadas = 0;
   let filasRechazadas = 0;
   let hallazgosNuevos = 0;
+  let comprobantesRepetidos = 0;
 
   for (const cliente of clientes) {
     if (!cliente.activo) continue;
@@ -234,6 +293,7 @@ export async function liquidarIvaDesdeLibros(
     filasInterpretadas += parcial.filas;
     filasRechazadas += parcial.rechazadas;
     hallazgosNuevos += parcial.hallazgos;
+    comprobantesRepetidos += parcial.repetidos;
   }
 
   return {
@@ -242,6 +302,7 @@ export async function liquidarIvaDesdeLibros(
     filasInterpretadas,
     filasRechazadas,
     hallazgosNuevos,
+    comprobantesRepetidos,
     fallos,
   };
 }

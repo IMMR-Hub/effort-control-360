@@ -175,6 +175,40 @@ describe('liquidación de IVA desde los libros', () => {
     expect(ctx.liquidaciones[0]!.debitoFiscal).toBe(gs(30000));
   });
 
+  /*
+   * Caso real: FUMIPRO julio 2026 tiene "RG COMPRAS 07 2026" y "CORRECCION RG
+   * COMPRAS 07 2026" en la misma carpeta. Hasta el 2026-09-14 se sumaban las
+   * dos y el crédito fiscal del período salía doble.
+   */
+  it('un comprobante que está en dos planillas cuenta una vez, y manda la corrección', async () => {
+    const contenidos = new Map<string, Buffer | Error>([
+      ['correccion', await planilla([
+        { registro: 'COMPRAS', numero: '001-001-0000001', gravado10: 110000, iva10: 10000 },
+      ])],
+      ['original', await planilla([
+        // En el original el IVA estaba mal cargado; la corrección lo arregló.
+        { registro: 'COMPRAS', numero: '001-001-0000001', gravado10: 110000, iva10: 9000 },
+        { registro: 'COMPRAS', numero: '001-001-0000002', gravado10: 220000, iva10: 20000 },
+      ])],
+    ]);
+    const ctx = armar(
+      [
+        // La corrección llega primero a propósito: el orden de lectura no puede
+        // depender del orden en que el repositorio devuelve los archivos.
+        archivo({ itemIdOneDrive: 'correccion', nombreArchivo: 'CORRECCION RG COMPRAS 07 2026 - FUMIPRO SA.xlsx' }),
+        archivo({ itemIdOneDrive: 'original', nombreArchivo: 'RG COMPRAS 07 2026 - FUMIPRO SA.xlsx' }),
+      ],
+      contenidos,
+    );
+
+    const resumen = await liquidarIvaDesdeLibros(ctx.deps, USUARIO);
+
+    expect(resumen.comprobantesRepetidos).toBe(1);
+    expect(ctx.liquidaciones[0]!.comprobantesCompras).toBe(2);
+    // 10.000 de la corrección + 20.000 del segundo comprobante. No 39.000.
+    expect(ctx.liquidaciones[0]!.creditoFiscal).toBe(gs(30000));
+  });
+
   it('cada período del cliente se guarda por separado', async () => {
     const contenidos = new Map<string, Buffer | Error>([
       ['it-1', await planilla([

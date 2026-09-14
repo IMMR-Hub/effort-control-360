@@ -49,7 +49,14 @@ export class LibroRg90Prisma {
 
     const evidencias = await this.prisma.evidencia.findMany({
       where: { id: { in: ids }, tipoMime: { in: EXCEL } },
-      select: { id: true, clienteId: true, nombreArchivo: true, itemIdOneDrive: true, tipoMime: true },
+      select: {
+        id: true,
+        clienteId: true,
+        nombreArchivo: true,
+        itemIdOneDrive: true,
+        tipoMime: true,
+        modificadoEnOrigen: true,
+      },
     });
 
     // Sin `itemIdOneDrive` no hay forma de bajar el archivo: se descarta en vez
@@ -62,6 +69,7 @@ export class LibroRg90Prisma {
         nombreArchivo: e.nombreArchivo,
         itemIdOneDrive: e.itemIdOneDrive,
         tipoMime: e.tipoMime,
+        modificadoEnOrigen: e.modificadoEnOrigen,
       }));
   }
 
@@ -103,28 +111,24 @@ export class LibroRg90Prisma {
   /**
    * Guarda los hallazgos nuevos y devuelve cuántos lo eran.
    *
-   * `skipDuplicates` con la única de la base: correr esto cada hora no puede
-   * llenar la pantalla con el mismo hallazgo repetido. Devolver cuántos son
-   * NUEVOS —y no cuántos se intentaron— es lo que permite que el motor de
-   * alertas avise solo cuando aparece algo que antes no estaba.
+   * Correr esto cada hora no puede llenar la pantalla con el mismo hallazgo
+   * repetido. Devolver cuántos son NUEVOS —y no cuántos se intentaron— es lo
+   * que permite que el motor de alertas avise solo cuando aparece algo nuevo.
+   *
+   * **Por qué no alcanza con el índice único**, y es la historia de un bug que
+   * duplicó hallazgos cada hora durante días: el índice es `(cliente, período,
+   * comprobante, tipo, tasa)`, y `tasa` es NULL en los hallazgos de "las partes
+   * no suman el total". En PostgreSQL dos NULL NO son iguales para un índice
+   * único, así que `skipDuplicates` no saltaba nada. El 2026-09-14 había 2.069
+   * filas de ese tipo para 152 comprobantes reales, y un informe de avance llegó
+   * a hablar de "1.905 inconsistencias" y "679 filas en cero" cuando eran 152 y 60.
+   *
+   * Por eso se compara acá contra lo que ya está, con la clave completa
+   * —incluida la contraparte, que el índice no tiene y hace falta: dos
+   * proveedores pueden usar el mismo número de comprobante—. El arreglo de fondo
+   * es el índice con `NULLS NOT DISTINCT`, que necesita antes limpiar los
+   * repetidos, y eso es un borrado: DISCREPANCIAS punto 21, pendiente de Daniel.
    */
-  //
-  // **Por qué no alcanza con el índice único**, y es la historia de un bug que
-  // duplicó hallazgos cada hora durante días:
-  //
-  // El índice es `(cliente, período, comprobante, tipo, tasa)`, y `tasa` es NULL
-  // en los hallazgos de "las partes no suman el total". En PostgreSQL dos NULL
-  // NO son iguales para un índice único, así que `skipDuplicates` no saltaba
-  // nada: cada corrida del programador volvía a insertar los mismos. El
-  // 2026-09-14 había 2.069 filas de ese tipo para 152 comprobantes reales, y un
-  // informe de avance llegó a hablar de "1.905 inconsistencias" y "679 filas en
-  // cero" cuando eran 152 y 60.
-  //
-  // Por eso se compara acá contra lo que ya está, con la clave completa
-  // —incluida la contraparte, que el índice no tiene y hace falta: dos
-  // proveedores pueden usar el mismo número de comprobante—. El arreglo de fondo
-  // es el índice con `NULLS NOT DISTINCT`, que necesita antes limpiar los
-  // repetidos, y eso es un borrado: DISCREPANCIAS punto 21, pendiente de Daniel.
   async guardarHallazgos(datos: readonly AltaDeHallazgo[]): Promise<number> {
     if (datos.length === 0) return 0;
 

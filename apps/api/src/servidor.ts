@@ -18,6 +18,7 @@ import type { DriveDeArchivos, EnviadorDeCorreo } from '@effort/drive';
 
 import { esProduccion, type Configuracion } from './configuracion.js';
 import type { LibroRg90Prisma } from './repositorios/libroRg90.js';
+import type { DeclaracionesPrisma } from './repositorios/declaraciones.js';
 import type { ArchivosDeOrigenPrisma } from './repositorios/dominio.js';
 import type { LectorDeTablas } from './servicios/respaldoAutomatico.js';
 import { ErrorDeAutorizacion, type SujetoAutenticado } from './seguridad/rbac.js';
@@ -100,6 +101,11 @@ export interface Dependencias {
    * trabajar con el resto del sistema.
    */
   readonly libroRg90: LibroRg90Prisma | null;
+  /**
+   * PDFs leídos buscando presentaciones ante la DNIT. Opcional por lo mismo
+   * que el libro: sin OneDrive no hay declaraciones que leer.
+   */
+  readonly declaraciones?: DeclaracionesPrisma | null;
   readonly alertas: RepositorioDeAlertas;
   readonly reglasImpositivas: RepositorioDeReglasImpositivas;
   readonly reglasDeNotificacion: RepositorioDeReglasDeNotificacion;

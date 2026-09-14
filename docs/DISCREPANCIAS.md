@@ -1094,3 +1094,85 @@ así a propósito, o se están cargando mal?
 dice "RUC / **Nº** de Identificación del Informado", y la normalización no saca
 el "º". El RUC del proveedor se leía vacío en todas las filas. Corregido con un
 alias y un test.
+
+---
+
+## 23. Presentaciones: se leen del PDF de la DNIT, no del nombre — ABIERTO (2026-09-14)
+
+**El problema.** 150 vencimientos, 0 marcados como presentados, 96 alertas
+críticas de "vencido sin presentar". Las declaraciones estaban en OneDrive;
+nada las cruzaba con los vencimientos.
+
+**Por qué no por nombre.** Casos reales: `DET DE IMPUESTO IVA …` parece la
+declaración y es la planilla de cálculo ("CALCULO AUXILIAR PARA DETERMINACION
+DE IVA"); `PROFORMA DDJJ 500` es un borrador; `DDJJ MARZO 2026 - FUMIPRO SA` no
+dice de qué impuesto es. Un falso "presentado" apaga la alerta que evita una
+multa.
+
+**Lo que se reconoce** (`packages/importers/src/declaracionDnit.ts`), con texto
+real de los cinco clientes: la "DECLARACIÓN JURADA NORMALIZADA" (formularios
+120 IVA, 500 IRE, 158 estados financieros) y el "TALÓN DE PRESENTACIÓN" de la
+RG 90 (formulario 241). Se exige número de orden, fecha, período y RUC; el RUC
+tiene que ser el del cliente.
+
+**Lo que NO se reconoce, a propósito:** el impreso "ESTADOS FINANCIEROS" de
+Marangatú (no trae número de orden ni fecha de presentación) y los formularios
+**145** y **526**, que aparecen en los archivos sin saberse todavía qué son.
+
+**Preguntas para EFFORT:**
+1. ¿Qué son los formularios 145 y 526?
+2. Los estados financieros de 2025, ¿se presentan por formulario 158 o solo se
+   cargan en Marangatú? Si es lo segundo, el sistema no tiene cómo saber la
+   fecha de presentación desde el PDF.
+
+**Hallazgo real que el sistema va a mostrar:** DIBEC presentó el IVA de abril
+de 2026 el 29/05/2026; su vencimiento (terminación de RUC 6) era el 19/05. Se
+marca presentado, y queda registrado como fuera de término.
+
+---
+
+## 24. El IVA sumaba dos veces las planillas repetidas — CORREGIDO (2026-09-14)
+
+Las filas de todas las planillas RG 90 de un cliente se juntaban por período
+sin mirar repeticiones. En el OneDrive real: FUMIPRO julio 2026 tiene
+`RG COMPRAS 07 2026` y `CORRECCION RG COMPRAS 07 2026`; ECOAGRO febrero 2025
+tiene dos versiones en carpetas distintas. El crédito fiscal de esos períodos
+salía sumado dos veces.
+
+Ahora un comprobante (período, tipo de registro, tipo, timbrado, número,
+proveedor) cuenta una vez. Si está en varias planillas manda la corrección; si
+no hay corrección, la modificada más recientemente. El resumen informa cuántos
+repetidos encontró.
+
+**Queda para validar con EFFORT:** que "la más reciente" sea siempre la buena.
+En ECOAGRO febrero 2025 no hay "CORRECCION" en el nombre; hay una subcarpeta
+"2 FEBRERO 01".
+
+### 23 (b). Simulación sobre los datos reales — 2026-09-14, sin escribir nada
+
+1.174 PDFs leídos, 0 errores, **233 presentaciones reconocidas** (165 IVA, 12
+IRE, 6 EEFF, 12 talones RG 90, y 14/12/12 de los formularios 145/525/526, que
+no se cruzan con nada). Contra los 150 vencimientos: **30 se marcarían como
+presentados**, y 65 vencidos siguen sin presentación encontrada.
+
+Lo que la simulación confirmó:
+
+- **El contenido manda sobre el nombre, y hacía falta.** `DDJJ IVA 072026 DIBEC
+  SA.pdf` contiene la declaración de **agosto** (período 08/2026, presentada el
+  03/09). La de julio no está en OneDrive: solo una PROFORMA con número de orden
+  0, que se rechaza. Por nombre, julio habría quedado "presentado" sin estarlo.
+- **COPESA 2026 no tiene sus declaraciones en OneDrive.** Lo que hay son
+  "DETERMINACION IVA", planillas de cálculo auxiliar. Sus alertas quedan, y es
+  lo correcto. La de febrero calcula ella misma una multa de Gs. 50.000 y mora
+  del 4%: EFFORT registró que se presentó tarde.
+- **Ningún vencimiento de RG 90 de 2025-12 en adelante tiene talón.** Los 12
+  talones encontrados son de 2024. ¿Dónde guarda EFFORT el talón de la RG 90
+  ahora?
+- **SIPAR no tiene ninguna declaración reconocible** en su carpeta.
+
+**15 de los 30 figuran presentados después de la fecha calculada** (entre 1 y
+64 días). No se afirma que sean multas: la fecha del PDF ("Fecha: … Presentado
+por") es la de presentación según el formulario, pero **puede haber prórrogas**
+—sobre todo en IRE y estados financieros, que EFFORT presentó en junio— y el
+calendario del sistema no las conoce (ver punto 19, nota de la RG 50). **Pregunta
+para EFFORT:** ¿hubo prórroga para el IRE y los estados financieros 2025?

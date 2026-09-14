@@ -10,7 +10,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { clasificarPorNombre } from '../src/clasificacionDeDocumentos.js';
+import { clasificarDocumento, clasificarPorNombre } from '../src/clasificacionDeDocumentos.js';
 
 describe('clasificación por nombre de archivo', () => {
   it('reconoce los balances, que estaban todos como "Otro"', () => {
@@ -174,5 +174,46 @@ describe('clasificación por nombre de archivo', () => {
       expect(clasificarPorNombre('FLUJO DE CAJA COPESA mayo 2026 .pdf')).toBe('OTRO');
       expect(clasificarPorNombre('WhatsApp Image 2026-04-17 at 09.27.41.jpeg')).toBe('OTRO');
     });
+  });
+});
+
+/*
+ * Clasificación por carpeta, cuando el nombre no dice nada.
+ *
+ * Los casos son rutas reales del OneDrive de EFFORT (2026-09-14). Lo que más
+ * importa no es que clasifique, sino que el NOMBRE siga mandando y que las
+ * carpetas ambiguas no decidan.
+ */
+describe('clasificación por carpeta', () => {
+  it('usa la carpeta cuando el nombre no alcanza', () => {
+    expect(clasificarDocumento('ENERO.pdf', 'ECOAGRO SA/PERIODO 2025/DOCUMENTOS CONTABLES/NOTAS DE CREDITO')).toBe('NOTA_CREDITO');
+    expect(clasificarDocumento('05 MAYO.xlsx', 'COPESA/PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 COMPRAS')).toBe('LIBRO_COMPRAS');
+    expect(clasificarDocumento('02FEBRERO.xlsx', 'COPESA/PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 VENTAS')).toBe('LIBRO_VENTAS');
+    expect(clasificarDocumento('526-06-2025.pdf', 'DIBEC/PERIODO 2025/PEDIDO AUDITORIA/FORM 120')).toBe('DECLARACION_JURADA');
+    expect(clasificarDocumento('MARZO.pdf', 'X/PERIODO 2024/FORM. 122')).toBe('RETENCION');
+  });
+
+  it('mira hasta tres carpetas hacia arriba', () => {
+    expect(
+      clasificarDocumento('ENERO.pdf', 'ECOAGRO SA/PERIODO 2025/EXTRACTOS BANCARIOS 2025/CUENTA GUARANIES'),
+    ).toBe('EXTRACTO_BANCARIO');
+  });
+
+  // Una boleta guardada en la carpeta de declaraciones sigue siendo una boleta.
+  it('el nombre manda sobre la carpeta', () => {
+    expect(clasificarDocumento('BOLETA DE PAGO IVA 032026.pdf', 'X/PERIODO 2026/DDJJ IVA')).toBe('COMPROBANTE_PAGO');
+  });
+
+  it('las carpetas ambiguas no deciden', () => {
+    expect(clasificarDocumento('fc 23.pdf', 'COPESA/RECTIFICATICA COPESA 09-25/FC DECLARADO')).toBe('OTRO');
+    expect(clasificarDocumento('01.pdf', 'ECOAGRO/DOCUMENTOS VARIOS/LIQUIDACION DE IMPORTACION')).toBe('OTRO');
+    expect(clasificarDocumento('WhatsApp Image 2026-02-18.jpeg', 'X/PERIODO 2026/DOCUMENTOS VARIOS')).toBe('OTRO');
+  });
+
+  it('reconoce las abreviaturas de libros que usa COPESA', () => {
+    expect(clasificarPorNombre('L.V JULIO.pdf')).toBe('LIBRO_VENTAS');
+    expect(clasificarPorNombre('LC 2025.OK.pdf')).toBe('LIBRO_COMPRAS');
+    expect(clasificarPorNombre('LIBIVACOMP_V4.csv')).toBe('LIBRO_COMPRAS');
+    expect(clasificarPorNombre('120-09-2025 REC NORMALIZADA.pdf')).toBe('DECLARACION_JURADA');
   });
 });

@@ -50,6 +50,7 @@ import { registrarRutasDeMiCuenta } from './rutas/mi-cuenta.js';
 import { registrarRutasDeOneDrive } from './rutas/onedrive.js';
 import { registrarRutasDeLiquidacionesIva } from './rutas/liquidaciones-iva.js';
 import { LibroRg90Prisma } from './repositorios/libroRg90.js';
+import { DeclaracionesPrisma } from './repositorios/declaraciones.js';
 import {
   programarCalculoDeVencimientosYAlertas,
   programarSincronizacionDeOneDrive,
@@ -155,6 +156,7 @@ export function construirDependencias(configuracion: Configuracion): Dependencia
     exportacionesSiga: new ExportacionesSigaPrisma(prisma),
     liquidaciones: new LiquidacionesPrisma(prisma),
     libroRg90: new LibroRg90Prisma(prisma),
+    declaraciones: new DeclaracionesPrisma(prisma),
     alertas: new AlertasPrisma(prisma),
     reglasImpositivas: new ReglasImpositivasPrisma(prisma),
     reglasDeNotificacion: new ReglasDeNotificacionPrisma(prisma),

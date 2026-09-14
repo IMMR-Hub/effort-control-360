@@ -10,5 +10,6 @@
 export * from './archivo.js';
 export * from './analisisDeLibro.js';
 export * from './comprobantes.js';
+export * from './declaracionDnit.js';
 export * from './libroRg90.js';
 export * from './siga.js';

@@ -180,6 +180,7 @@ model Cliente {
   liquidacionesIva  LiquidacionIvaRg90[]
   hallazgosDeLibro  HallazgoDeLibroRg90[]
   archivosDeOrigen  ArchivoDeOrigen[]
+  lecturasDeDeclaracion LecturaDeDeclaracion[]
 
   @@index([activo])
   @@map("cliente")
@@ -293,6 +294,7 @@ model Evidencia {
 
   documentos       Documento[]
   archivosDeOrigen ArchivoDeOrigen[]
+  lecturaDeDeclaracion LecturaDeDeclaracion?
 
   @@index([clienteId, periodo])
   @@index([clienteId, itemIdOrigen])
@@ -1121,4 +1123,25 @@ model ArchivoDeOrigen {
   @@unique([clienteId, itemIdOrigen], map: "archivo_de_origen_unico")
   @@index([evidenciaId])
   @@map("archivo_de_origen")
+}
+
+/// Qué PDFs ya se leyeron buscando presentaciones ante la DNIT, y qué se encontró.
+/// Un PDF se lee una sola vez: lo que dice no cambia. Todo NULL = no es una presentación.
+model LecturaDeDeclaracion {
+  evidenciaId         String    @id @map("evidencia_id") @db.Uuid
+  clienteId           String    @map("cliente_id") @db.Uuid
+  /// `120` IVA, `500` IRE, `158` estados financieros, `241` talón de la RG 90.
+  formulario          String?   @db.VarChar(5)
+  ruc                 String?   @db.VarChar(15)
+  periodo             String?   @db.VarChar(7)
+  numeroDeOrden       String?   @map("numero_de_orden") @db.VarChar(20)
+  fechaDePresentacion DateTime? @map("fecha_de_presentacion") @db.Date
+  error               String?   @db.VarChar(200)
+  leidaEn             DateTime  @default(now()) @map("leida_en") @db.Timestamptz(3)
+
+  evidencia Evidencia @relation(fields: [evidenciaId], references: [id], onDelete: Cascade)
+  cliente   Cliente   @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+
+  @@index([clienteId, formulario, periodo])
+  @@map("lectura_de_declaracion")
 }

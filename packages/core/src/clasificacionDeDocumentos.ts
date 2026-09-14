@@ -85,6 +85,13 @@ const REGLAS: readonly { readonly tipo: TipoDeDocumento; readonly patron: RegExp
    */
   { tipo: 'LIBRO_COMPRAS', patron: /\b(libro\s*de\s*)?compras(?![a-záéíóúñ])/i },
   { tipo: 'LIBRO_VENTAS', patron: /\b(libro\s*de\s*)?ventas(?![a-záéíóúñ])/i },
+  /*
+   * Abreviaturas reales de COPESA (2026-09-14): "L.V JULIO.pdf", "LC 2025.OK.pdf",
+   * "LC RECT..pdf", y el export de SIGA "LIBIVACOMP_V4.csv". Anclado al inicio
+   * del nombre: "LC" suelto en medio de otro texto no alcanza para decidir.
+   */
+  { tipo: 'LIBRO_COMPRAS', patron: /^\s*l\s?c\b|\blibiva\s*comp/i },
+  { tipo: 'LIBRO_VENTAS', patron: /^\s*l\s?v\b|\blibiva\s*vent/i },
 
   { tipo: 'ESTADO_RESULTADOS', patron: /\bestado\s*de\s*resultado/i },
   { tipo: 'BALANCE', patron: /\bbalance\b|\beeff\b|\bestados?\s*financiero/i },
@@ -116,7 +123,7 @@ const REGLAS: readonly { readonly tipo: TipoDeDocumento; readonly patron: RegExp
   {
     tipo: 'DECLARACION_JURADA',
     patron:
-      /\bplanilla|\bdeterminaci[oó]n|\bdet\s+de\s+impuesto|declaraci[oó]n\s*jurada|\bddjj\b|\bformulario\s*\d/i,
+      /\bplanilla|\bdeterminaci[oó]n|\bdet\s+de\s+impuesto|declaraci[oó]n\s*jurada|\bddjj\b|\bformulario\s*\d|\bnormalizada\b/i,
   },
 
   { tipo: 'FACTURA_VENTA', patron: /\bfactura.*\bventa|\bventa.*\bfactura/i },
@@ -135,6 +142,60 @@ const REGLAS: readonly { readonly tipo: TipoDeDocumento; readonly patron: RegExp
   { tipo: 'CERTIFICADO', patron: /\bcertificad|\bcert\b|\bcct\b/i },
   { tipo: 'CONSTANCIA', patron: /\bconstancia|\bc[eé]dula\s*tributaria/i },
 ];
+
+/**
+ * Reglas por CARPETA, para cuando el nombre del archivo no dice nada.
+ *
+ * El 2026-09-14 quedaban 2.415 de 3.963 documentos como "Otro", y mirándolos
+ * el problema no era el clasificador sino los nombres: "ENERO.pdf",
+ * "05 MAYO.xlsx", "526-06-2025.pdf". Lo que dice qué son es dónde están —
+ * "NOTAS DE CREDITO" (193 archivos), "EXTRACTOS BANCARIOS", "RG 90 COMPRAS",
+ * "FORM 120"—.
+ *
+ * Solo carpetas cuyo nombre es inequívoco. Se dejaron afuera a propósito
+ * "FACTURAS ESCANEADAS" y "FC DECLARADO" (¿compra o venta?), "LIQUIDACION DE
+ * IMPORTACION" (es un despacho aduanero, no una liquidación de impuesto) y
+ * "FORM 526" (no se confirmó qué formulario es). Sin clasificar es mejor que
+ * mal clasificado.
+ */
+const REGLAS_POR_CARPETA: readonly { readonly tipo: TipoDeDocumento; readonly patron: RegExp }[] = [
+  { tipo: 'NOTA_CREDITO', patron: /\bnotas?\s*de\s*cr[eé]dito|\bnc\s+(emitidas|recibidas)\b/i },
+  { tipo: 'EXTRACTO_BANCARIO', patron: /\bextractos?\s*bancario/i },
+  { tipo: 'LIBRO_COMPRAS', patron: /\brg\s*\d*\s*compras\b|\blibro\s*(de\s*)?compras?\b/i },
+  { tipo: 'LIBRO_VENTAS', patron: /\brg\s*\d*\s*ventas\b|\blibro\s*(de\s*)?ventas?\b/i },
+  // 122 y 525 son formularios de retención: ya estaban así en las reglas por
+  // nombre ("FOR 122 RET IVA", "FORM 525 RET RENTA").
+  { tipo: 'RETENCION', patron: /\bform(ulario)?\s*(122|525)\b/i },
+  { tipo: 'DECLARACION_JURADA', patron: /\bform(ulario)?\s*120\b|\bddjj\s+iva\b/i },
+  { tipo: 'ACTA', patron: /\basamblea/i },
+  { tipo: 'CERTIFICADO', patron: /\bcct\b/i },
+];
+
+/** Cuántas carpetas hacia arriba se mira. Más arriba ya es "DOCUMENTOS CONTABLES". */
+const NIVELES_DE_CARPETA = 3;
+
+/**
+ * Tipo de un documento por su nombre y, si el nombre no alcanza, por la carpeta.
+ *
+ * El nombre manda siempre: un "BOLETA DE PAGO IVA.pdf" guardado dentro de
+ * "DDJJ IVA 2025" es un comprobante de pago, no una declaración. La carpeta solo
+ * decide lo que el nombre dejó en "Otro", mirando de la más cercana hacia arriba.
+ */
+export function clasificarDocumento(nombreArchivo: string, rutaCarpeta: string): TipoDeDocumento {
+  const porNombre = clasificarPorNombre(nombreArchivo);
+  if (porNombre !== 'OTRO') return porNombre;
+
+  const carpetas = rutaCarpeta.split('/').filter(Boolean).reverse().slice(0, NIVELES_DE_CARPETA);
+  for (const carpeta of carpetas) {
+    // "FORM. 122" y "FORM_120" tienen que leerse como "FORM 122".
+    const normalizada = carpeta.replace(/[_.-]+/g, ' ');
+    for (const regla of REGLAS_POR_CARPETA) {
+      if (regla.patron.test(normalizada)) return regla.tipo;
+    }
+  }
+
+  return 'OTRO';
+}
 
 /**
  * Deduce el tipo de un documento a partir del nombre de su archivo.

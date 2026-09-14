@@ -22,7 +22,7 @@
 
 import { createHash } from 'node:crypto';
 
-import { clasificarPorNombre } from '@effort/core';
+import { clasificarDocumento } from '@effort/core';
 import type { ArchivoDrive, DriveDeArchivos } from '@effort/drive';
 
 import type { RepositorioDeClientes } from '../puertos.js';
@@ -316,7 +316,7 @@ export async function sincronizarDesdeOneDrive(
         await deps.documentos.registrar({
           clienteId: cliente.id,
           periodo: periodoDe(archivo),
-          tipo: clasificarPorNombre(archivo.nombre),
+          tipo: clasificarDocumento(archivo.nombre, archivo.rutaCarpeta),
           canalRecepcion: 'ONEDRIVE',
           recibidoEn: archivo.modificadoEn,
           rucEmisor: null,

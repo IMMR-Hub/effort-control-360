@@ -677,6 +677,18 @@ El primer build falló con errores de TypeScript en `apps/api` (`Cannot find nam
 
 - [ ] 124. Arrastrar el saldo a favor de un período al siguiente. Hoy cada período se calcula aislado. Hace falta tener los períodos completos y en orden: arrastrar desde un período que falta daría un número peor que no arrastrarlo, porque parecería correcto.
 
+- [x] 125. **Toda diferencia de IVA alerta, y una persona la acepta o la manda a revisar — 2026-09-14.** Daniel: *"alertar a partir de 1 guaraní, y que luego puedan aceptar o revisar"*. Reemplazó la tolerancia de 5 Gs aplicada horas antes. Estado por hallazgo (PENDIENTE / EN_REVISION / ACEPTADO), aceptar exige motivo (ruta y base), bitácora, botones en la pantalla de IVA. Migración `20260914160000_decision_sobre_hallazgos`, aplicada. DISCREPANCIAS 20.
+
+- [x] 126. **Hallazgos duplicados cada hora — corregido en código — 2026-09-14.** El índice único no deduplicaba filas con `tasa` NULL (en PostgreSQL dos NULL no son iguales). 2.069 filas para 152 comprobantes. El informe de avance había dado números inflados ("1.905" y "679"). Test de integración contra PostgreSQL real. **Pendiente de autorización de Daniel:** limpiar los repetidos (`docs/propuestas/limpiar-hallazgos-repetidos.sql`). DISCREPANCIAS 21.
+
+- [x] 127. **El IVA contaba dos veces los comprobantes de planillas repetidas — 2026-09-14.** FUMIPRO julio 2026 (original + CORRECCION) y ECOAGRO febrero 2025 (dos versiones). Ahora un comprobante cuenta una vez y manda la corrección, o la planilla más reciente. DISCREPANCIAS 24.
+
+- [ ] 128. **Presentaciones detectadas desde los PDF de la DNIT — código listo, falta desplegar y verificar en producción.** Lee el contenido (número de orden, fecha, período, RUC) de las declaraciones juradas normalizadas (120 IVA, 500 IRE, 158 EEFF) y de los talones de la RG 90 (241), y marca el vencimiento como presentado con su evidencia. Registra si fue fuera de término. Migración `20260914190000_lectura_de_declaraciones`. DISCREPANCIAS 23.
+
+- [ ] 129. **Clasificación por carpeta** cuando el nombre no alcanza: simulado sobre datos reales, los "Otro" bajan de 2.415 a 1.442. Ya se aplica a los archivos nuevos. Para los existentes: `scripts/reclasificar-documentos.mjs` (simula por defecto; `--aplicar` lo decide Daniel). Propuesta de nomenclatura para EFFORT en `docs/GUIA-NOMENCLATURA-ARCHIVOS.md`.
+
+- [ ] 130. Alerta de "presentado fuera de término": hoy se registra en la bitácora pero no levanta aviso.
+
 - [ ] 118. Revisión mensual del calendario de feriados. Regla de Daniel (2026-09-12): cada mes, o cuando el gobierno confirme oficialmente un traslado. Actualizar `TRASLADOS_DECRETADOS` y `REVISION_DE_FERIADOS` en `packages/core/src/diasHabiles.ts`. Próxima: octubre de 2026.
 
 ---

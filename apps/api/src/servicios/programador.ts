@@ -22,6 +22,8 @@ import { enviarAvisosDeAlertas } from './avisosPorCorreo.js';
 import { evaluarAlertas } from './motorDeAlertas.js';
 import { sincronizarDesdeOneDrive } from './sincronizadorDeOneDrive.js';
 import { liquidarIvaDesdeLibros } from './liquidacionDeIva.js';
+import { detectarPresentaciones } from './detectorDePresentaciones.js';
+import { extraerTextoDePdf } from './textoDePdf.js';
 
 /** Cada cuánto se revisa la carpeta de EFFORT. Confirmado con Daniel. */
 const CADA_15_MINUTOS = 15 * 60 * 1000;
@@ -175,6 +177,68 @@ export function programarCalculoDeVencimientosYAlertas(
         }
       }
 
+      /*
+       * Las presentaciones se detectan ANTES de evaluar alertas, por la misma
+       * razón que el IVA: si la declaración ya está en OneDrive, la alerta de
+       * "vencido sin presentar" no tiene que salir en esta vuelta, ni mucho
+       * menos mandarse por correo.
+       *
+       * Un fallo acá no impide evaluar las alertas: sin el detector el sistema
+       * avisa de más, que es la dirección segura.
+       */
+      let presentacionesMarcadas = 0;
+      let presentadasFueraDeTermino = 0;
+      if (deps.drive && deps.declaraciones) {
+        const repo = deps.declaraciones;
+        const drive = deps.drive;
+        try {
+          const detectadas = await detectarPresentaciones(
+            {
+              pdfsPorLeer: (limite) => repo.pdfsPorLeer(limite),
+              leerArchivo: (itemId) => drive.leer(itemId),
+              extraerTexto: extraerTextoDePdf,
+              guardarLectura: (pdf, resultado) => repo.guardarLectura(pdf, resultado),
+              presentacionesLeidas: () => repo.presentacionesLeidas(),
+              vencimientosPendientes: () => repo.vencimientosPendientes(),
+              marcarPresentado: async (id, fecha, evidenciaId, quien) => {
+                await deps.vencimientos.marcarPresentado(id, fecha, evidenciaId, quien);
+              },
+              registrarEnBitacora: (entrada) =>
+                deps.bitacora.registrar({
+                  usuarioId: usuario.id,
+                  accion: 'vencimiento.presentado',
+                  entidad: 'vencimiento',
+                  entidadId: entrada.vencimientoId,
+                  clienteId: entrada.clienteId,
+                  datosAntes: null,
+                  datosDespues: {
+                    estado: 'PRESENTADO',
+                    fechaPresentacion: entrada.fechaDePresentacion,
+                    evidenciaId: entrada.evidenciaId,
+                    numeroDeOrden: entrada.numeroDeOrden,
+                    fueraDeTermino: entrada.fueraDeTermino,
+                    diasDeAtraso: entrada.diasDeAtraso,
+                    disparo: 'automático: declaración de la DNIT encontrada en OneDrive',
+                  },
+                  ipTruncada: null,
+                  agenteUsuario: null,
+                  peticionId: null,
+                }),
+            },
+            usuario.id,
+          );
+          presentacionesMarcadas = detectadas.vencimientosMarcados;
+          presentadasFueraDeTermino = detectadas.fueraDeTermino;
+
+          registrador.info(
+            { ...detectadas, memoriaMB: memoriaMB() },
+            'Detección de presentaciones terminada.',
+          );
+        } catch (error) {
+          registrador.error({ err: error }, 'Falló la detección de presentaciones.');
+        }
+      }
+
       const alertas = await evaluarAlertas(
         {
           alertas: deps.alertas,
@@ -210,7 +274,13 @@ export function programarCalculoDeVencimientosYAlertas(
         });
       }
 
-      if (generados > 0 || alertas.creadas > 0 || avisos.enviados > 0 || ivaHallazgos > 0) {
+      if (
+        generados > 0 ||
+        alertas.creadas > 0 ||
+        avisos.enviados > 0 ||
+        ivaHallazgos > 0 ||
+        presentacionesMarcadas > 0
+      ) {
         await deps.bitacora.registrar({
           usuarioId: usuario.id,
           accion: 'alerta.evaluadas',
@@ -227,6 +297,8 @@ export function programarCalculoDeVencimientosYAlertas(
             avisosFallidos: avisos.fallidos,
             ivaPeriodosCalculados: ivaPeriodos,
             ivaHallazgosNuevos: ivaHallazgos,
+            presentacionesMarcadas,
+            presentadasFueraDeTermino,
             disparo: 'automático',
           },
           ipTruncada: null,
