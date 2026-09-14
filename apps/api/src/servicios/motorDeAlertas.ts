@@ -48,6 +48,20 @@ export interface DependenciasDelMotorDeAlertas {
 export interface RiesgoDeLibroPorPeriodo {
   readonly clienteId: string;
   readonly periodo: string;
+  /**
+   * La liquidación de ese período, que es la entidad con la que se relaciona
+   * la alerta.
+   *
+   * Hace falta porque `entidad_relacionada_id` es una columna UUID y la única
+   * que evita alertas repetidas es `(origen, entidad_relacionada_id)`. El
+   * primer intento armó una clave compuesta `clienteId|periodo` y Postgres la
+   * rechazó: no es un UUID. Los tests no lo agarraron porque el doble no valida
+   * el tipo — solo la base real lo hace.
+   *
+   * La liquidación del período ya ES esa entidad, con su propio identificador.
+   * No hacía falta inventar una clave: había que mirar mejor el modelo.
+   */
+  readonly liquidacionId: string;
   readonly comprobantes: number;
   /** Cuánto IVA está en juego, en valor absoluto. */
   readonly ivaEnRiesgo: bigint;
@@ -205,8 +219,8 @@ export async function evaluarAlertas(
         `corresponde por la regla (Gs. ${riesgo.ivaEnRiesgo} en juego). Revisalos antes de ` +
         'presentar: la DNIT cruza estos datos contra los del proveedor, y una diferencia ' +
         'dispara una revisión que cuesta mucho más que la diferencia.',
-      entidadRelacionada: 'libro_rg90',
-      entidadRelacionadaId: `${riesgo.clienteId}|${riesgo.periodo}`,
+      entidadRelacionada: 'liquidacion_iva_rg90',
+      entidadRelacionadaId: riesgo.liquidacionId,
       fechaLimite: null,
     });
   }

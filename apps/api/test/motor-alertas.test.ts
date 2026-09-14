@@ -20,6 +20,14 @@ import {
 import { AlertasFalsas, ProcesoMensualFalso, VencimientosFalsos } from './dobles-dominio.js';
 
 const CLIENTE = '11111111-1111-4111-8111-111111111111';
+/*
+ * La liquidación del período es la entidad con la que se relaciona la alerta.
+ * Es un UUID de verdad a propósito: `entidad_relacionada_id` es una columna
+ * UUID, y la primera versión armó una clave compuesta `clienteId|periodo` que
+ * Postgres rechazó. El doble no valida el tipo y no lo agarró — solo lo vio la
+ * base real. Usar un UUID acá hace que el test se parezca a la realidad.
+ */
+const LIQUIDACION = '22222222-2222-4222-8222-222222222222';
 /** Reloj congelado: los días restantes tienen que ser deterministas. */
 const HOY = new Date('2026-04-21T13:00:00Z');
 
@@ -188,7 +196,7 @@ describe('motor de alertas', () => {
    */
   it('avisa de los comprobantes con riesgo de multa', async () => {
     const deps = armar([
-      { clienteId: CLIENTE, periodo: '2026-03', comprobantes: 7, ivaEnRiesgo: 12n },
+      { clienteId: CLIENTE, periodo: '2026-03', liquidacionId: LIQUIDACION, comprobantes: 7, ivaEnRiesgo: 12n },
     ]);
 
     const resumen = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
@@ -199,6 +207,11 @@ describe('motor de alertas', () => {
     expect(alerta.criticidad).toBe('CRITICA');
     expect(alerta.titulo).toMatch(/7 comprobantes con riesgo de multa/);
     expect(alerta.detalle).toMatch(/cruza estos datos/);
+    // Se relaciona con la LIQUIDACIÓN del período, que es una entidad real con
+    // su UUID. La primera versión inventaba una clave `clienteId|periodo` y la
+    // base la rechazaba por no ser un UUID; el doble no lo notaba.
+    expect(alerta.entidadRelacionada).toBe('liquidacion_iva_rg90');
+    expect(alerta.entidadRelacionadaId).toBe(LIQUIDACION);
   });
 
   /*
@@ -211,7 +224,7 @@ describe('motor de alertas', () => {
    */
   it('agrupa: una sola alerta aunque sean muchos comprobantes', async () => {
     const deps = armar([
-      { clienteId: CLIENTE, periodo: '2026-03', comprobantes: 49, ivaEnRiesgo: 73n },
+      { clienteId: CLIENTE, periodo: '2026-03', liquidacionId: LIQUIDACION, comprobantes: 49, ivaEnRiesgo: 73n },
     ]);
 
     await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
@@ -222,7 +235,7 @@ describe('motor de alertas', () => {
 
   it('un solo comprobante se nombra en singular', async () => {
     const deps = armar([
-      { clienteId: CLIENTE, periodo: '2026-03', comprobantes: 1, ivaEnRiesgo: 12n },
+      { clienteId: CLIENTE, periodo: '2026-03', liquidacionId: LIQUIDACION, comprobantes: 1, ivaEnRiesgo: 12n },
     ]);
 
     await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
@@ -234,7 +247,7 @@ describe('motor de alertas', () => {
   // alerta se cierra sola — igual que un vencimiento que se presenta.
   it('al corregirse el libro, la alerta se cierra sola', async () => {
     let riesgos: readonly RiesgoDeLibroPorPeriodo[] = [
-      { clienteId: CLIENTE, periodo: '2026-03', comprobantes: 3, ivaEnRiesgo: 5n },
+      { clienteId: CLIENTE, periodo: '2026-03', liquidacionId: LIQUIDACION, comprobantes: 3, ivaEnRiesgo: 5n },
     ];
     const deps = {
       alertas: new AlertasFalsas(),
@@ -255,7 +268,7 @@ describe('motor de alertas', () => {
 
   it('correrlo muchas veces no repite la alerta del libro', async () => {
     const deps = armar([
-      { clienteId: CLIENTE, periodo: '2026-03', comprobantes: 7, ivaEnRiesgo: 12n },
+      { clienteId: CLIENTE, periodo: '2026-03', liquidacionId: LIQUIDACION, comprobantes: 7, ivaEnRiesgo: 12n },
     ]);
 
     await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');

@@ -140,5 +140,39 @@ describe('clasificación por nombre de archivo', () => {
     it('entiende "Cert" abreviado', () => {
       expect(clasificarPorNombre('Cert Cumplimiento.pdf')).toBe('CERTIFICADO');
     });
+
+    /*
+     * EFFORT nombra la liquidación del período de varias formas. Los tres casos
+     * de acá son nombres textuales de sus archivos, y no son una suposición
+     * sobre el negocio: "determinación de impuesto" y "cálculo de IRE" son
+     * literalmente la liquidación.
+     */
+    it('reconoce las formas en que EFFORT nombra una liquidación', () => {
+      // "DET DE IMPUESTO" es la determinación abreviada: va con la declaración
+      // jurada, que es el tipo que ya tenía esa regla desde antes.
+      expect(clasificarPorNombre('DET DE IMPUESTO IVA AGOSTO 2026 - FUMIPRO SA.pdf')).toBe(
+        'DECLARACION_JURADA',
+      );
+      expect(clasificarPorNombre('CALCULO IRE GENERAL CIERRE 2025.pdf')).toBe('LIQUIDACION');
+      expect(clasificarPorNombre('PROFORMA IVA 062026 DIBEC SA.pdf')).toBe('LIQUIDACION');
+    });
+
+    /*
+     * Lo que se dejó AFUERA a propósito, y vale tanto como lo que se incluyó.
+     *
+     * Estas siglas aparecen cientos de veces en los archivos reales y sería
+     * fácil inventarles un tipo. "REC" podría ser recibo o reconciliación; IPS
+     * es seguridad social y no está entre los tipos del sistema; "Ver Documento
+     * - MARANGATU" dice de dónde salió, no qué es. Clasificarlos sería adivinar,
+     * y sin clasificar es mejor que mal clasificado: a lo primero alguien lo
+     * corrige, de lo segundo nadie sospecha.
+     */
+    it('no le inventa un tipo a las siglas ambiguas', () => {
+      expect(clasificarPorNombre('09Setiembre ok rec.xlsx')).toBe('OTRO');
+      expect(clasificarPorNombre('IPS  JULIO - ECOAGRO.pdf')).toBe('OTRO');
+      expect(clasificarPorNombre('Ver Documento - MARANGATU 1.pdf')).toBe('OTRO');
+      expect(clasificarPorNombre('FLUJO DE CAJA COPESA mayo 2026 .pdf')).toBe('OTRO');
+      expect(clasificarPorNombre('WhatsApp Image 2026-04-17 at 09.27.41.jpeg')).toBe('OTRO');
+    });
   });
 });

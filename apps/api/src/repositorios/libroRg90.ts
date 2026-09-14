@@ -139,22 +139,41 @@ export class LibroRg90Prisma {
    * cero cuando hay dos errores, que es la respuesta opuesta a la verdadera.
    */
   async riesgoPorPeriodo(): Promise<
-    readonly { clienteId: string; periodo: string; comprobantes: number; ivaEnRiesgo: bigint }[]
+    readonly {
+      clienteId: string;
+      periodo: string;
+      liquidacionId: string;
+      comprobantes: number;
+      ivaEnRiesgo: bigint;
+    }[]
   > {
+    // Se une con la liquidación para traer su id: es la entidad con la que se
+    // relaciona la alerta, y `entidad_relacionada_id` es una columna UUID.
+    // Un período con hallazgos pero sin liquidación no puede existir —se
+    // escriben juntos—, y el JOIN interno lo deja explícito.
     const filas = await this.prisma.$queryRaw<
-      { cliente_id: string; periodo: string; comprobantes: bigint; iva_en_riesgo: bigint }[]
+      {
+        cliente_id: string;
+        periodo: string;
+        liquidacion_id: string;
+        comprobantes: bigint;
+        iva_en_riesgo: bigint;
+      }[]
     >`
-      SELECT "cliente_id", "periodo",
+      SELECT h."cliente_id", h."periodo", l."id" AS liquidacion_id,
              COUNT(*) AS comprobantes,
-             COALESCE(SUM(ABS("diferencia")), 0) AS iva_en_riesgo
-      FROM "hallazgo_libro_rg90"
-      WHERE "riesgo" IN ('CREDITO_DE_MAS', 'DEBITO_DE_MENOS')
-      GROUP BY "cliente_id", "periodo"
+             COALESCE(SUM(ABS(h."diferencia")), 0) AS iva_en_riesgo
+      FROM "hallazgo_libro_rg90" h
+      JOIN "liquidacion_iva_rg90" l
+        ON l."cliente_id" = h."cliente_id" AND l."periodo" = h."periodo"
+      WHERE h."riesgo" IN ('CREDITO_DE_MAS', 'DEBITO_DE_MENOS')
+      GROUP BY h."cliente_id", h."periodo", l."id"
     `;
 
     return filas.map((f) => ({
       clienteId: f.cliente_id,
       periodo: f.periodo,
+      liquidacionId: f.liquidacion_id,
       comprobantes: Number(f.comprobantes),
       ivaEnRiesgo: BigInt(f.iva_en_riesgo),
     }));

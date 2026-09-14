@@ -88,10 +88,36 @@ const REGLAS: readonly { readonly tipo: TipoDeDocumento; readonly patron: RegExp
 
   { tipo: 'ESTADO_RESULTADOS', patron: /\bestado\s*de\s*resultado/i },
   { tipo: 'BALANCE', patron: /\bbalance\b|\beeff\b|\bestados?\s*financiero/i },
-  { tipo: 'LIQUIDACION', patron: /\bliquidaci[oó]n/i },
+  /*
+   * Una liquidación es el cálculo del impuesto del período. EFFORT la nombra
+   * "CALCULO IRE GENERAL CIERRE 2025" y "PROFORMA IVA 062026 DIBEC SA" en sus
+   * archivos reales, y eso es literalmente lo que son.
+   *
+   * **"Determinación" NO entra acá**, y el intento de agregarla enseñó algo: ya
+   * estaba mapeada a declaración jurada desde antes, con su propio test, y la
+   * planilla de determinación ES la declaración. Meterla en esta regla —que va
+   * primero— se la robaba a una regla que estaba bien. El test viejo lo agarró
+   * en el acto.
+   *
+   * Lo que también se dejó afuera a propósito son las siglas ambiguas que
+   * aparecen cientos de veces en los mismos archivos: "REC" (¿recibo?,
+   * ¿reconciliación?), "IPS" (seguridad social, que no es un tipo del sistema)
+   * y "Ver Documento - MARANGATU" (dice de dónde salió, no qué es). Ahí sí
+   * habría que adivinar, y sin clasificar es mejor que mal clasificado.
+   */
+  {
+    tipo: 'LIQUIDACION',
+    patron: /\bliquidaci[oó]n|\bc[aá]lculo\s*(de\s*)?(iva|ire|irp)|\bproforma\s*(de\s*)?(iva|ire|irp)/i,
+  },
 
   // "Planilla de determinación", declaraciones juradas, formularios de la DNIT.
-  { tipo: 'DECLARACION_JURADA', patron: /\bplanilla|\bdeterminaci[oó]n|declaraci[oó]n\s*jurada|\bddjj\b|\bformulario\s*\d/i },
+  // `DET DE IMPUESTO` es cómo EFFORT abrevia "determinación de impuesto" en sus
+  // archivos: es el mismo documento, así que va con la declaración y no aparte.
+  {
+    tipo: 'DECLARACION_JURADA',
+    patron:
+      /\bplanilla|\bdeterminaci[oó]n|\bdet\s+de\s+impuesto|declaraci[oó]n\s*jurada|\bddjj\b|\bformulario\s*\d/i,
+  },
 
   { tipo: 'FACTURA_VENTA', patron: /\bfactura.*\bventa|\bventa.*\bfactura/i },
   { tipo: 'FACTURA_COMPRA', patron: /\bfactura/i },
