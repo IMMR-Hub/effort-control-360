@@ -25,9 +25,24 @@ const USUARIO = 'usr-sistema';
 function crearRegistro() {
   const porSha = new Map<string, { id: string }>();
   const altas: AltaDeEvidencia[] = [];
+  /*
+   * Los archivos del origen se anotan APARTE de las evidencias, igual que en la
+   * base. Es la diferencia que causó el bucle infinito del 2026-09-14: cinco
+   * copias del mismo PDF son cinco archivos y una sola evidencia, y si el doble
+   * respondiera "ya lo vi" solo por contenido, el test no podría distinguir el
+   * bug del comportamiento correcto.
+   */
+  const archivosVistos = new Map<string, { itemIdOrigen: string; modificadoEnOrigen: Date | null }>();
 
   return {
     altas,
+    archivosVistos,
+    async marcarOrigen(datos: { clienteId: string; itemIdOrigen: string; modificadoEnOrigen: Date | null }) {
+      archivosVistos.set(`${datos.clienteId}|${datos.itemIdOrigen}`, {
+        itemIdOrigen: datos.itemIdOrigen,
+        modificadoEnOrigen: datos.modificadoEnOrigen,
+      });
+    },
     async registrar(datos: AltaDeEvidencia) {
       const yaEstaba = porSha.get(datos.sha256);
       if (yaEstaba) {
@@ -41,9 +56,9 @@ function crearRegistro() {
       return { evidencia, esNueva: true };
     },
     async huellas(clienteId: string) {
-      return altas
-        .filter((a) => a.clienteId === clienteId && a.itemIdOrigen !== null)
-        .map((a) => ({ itemIdOrigen: a.itemIdOrigen!, modificadoEnOrigen: a.modificadoEnOrigen }));
+      return [...archivosVistos.entries()]
+        .filter(([clave]) => clave.startsWith(`${clienteId}|`))
+        .map(([, valor]) => valor);
     },
   };
 }
@@ -75,6 +90,12 @@ function armar() {
       destino,
       registrarEvidencia: (datos: AltaDeEvidencia) => registro.registrar(datos),
       huellasDeOrigen: (clienteId: string) => registro.huellas(clienteId),
+      marcarArchivoDeOrigen: (datos: {
+        clienteId: string;
+        itemIdOrigen: string;
+        modificadoEnOrigen: Date | null;
+        evidenciaId: string;
+      }) => registro.marcarOrigen(datos),
       ahora: () => new Date('2026-09-11T12:00:00Z'),
     },
   };
@@ -270,6 +291,46 @@ describe('sincronización desde OneDrive', () => {
    * alguien "optimiza" la comprobación moviéndola después del `leer()`, el
    * arreglo deja de existir y el test lo dice.
    */
+
+  /*
+   * El bucle infinito del 2026-09-14, en miniatura.
+   *
+   * EFFORT guarda el mismo documento en varias carpetas de período — es su
+   * forma normal de trabajar. Para la base eso es UNA evidencia (la unicidad es
+   * por contenido) y CINCO archivos de origen. Cuando la marca de "ya lo vi"
+   * vivía en la evidencia, solo uno de los cinco quedaba anotado y los otros
+   * cuatro se volvían a descargar en cada corrida, agotaban el presupuesto, y
+   * la sincronización nunca llegaba a los clientes siguientes: 73 corridas
+   * seguidas sin crear un documento, con cuatro de cinco clientes en cero.
+   *
+   * Lo que fija este test es que la segunda corrida no descargue NADA.
+   */
+  it('cinco copias del mismo archivo se marcan todas, no solo una', async () => {
+    const ctx = armar();
+    const mismoContenido = Buffer.from('el mismo balance en cinco carpetas');
+    for (const mes of ['01 ENERO', '02 FEBRERO', '03 MARZO', '04 ABRIL', '05 MAYO']) {
+      ctx.origen.sembrar(`CLIENTES/002 FUMIPRO/PERIODO 2026/${mes}`, 'balance.pdf', mismoContenido);
+    }
+
+    const primera = await sincronizarDesdeOneDrive(ctx.deps, USUARIO);
+    // Un solo documento: el contenido es el mismo. Eso está bien.
+    expect(primera.nuevosEnTotal).toBe(1);
+
+    let descargas = 0;
+    const leerOriginal = ctx.origen.leer.bind(ctx.origen);
+    ctx.origen.leer = async (itemId: string) => {
+      descargas += 1;
+      return leerOriginal(itemId);
+    };
+
+    const segunda = await sincronizarDesdeOneDrive(ctx.deps, USUARIO);
+
+    // Lo que rompía: acá se bajaban cuatro archivos otra vez, y otra, y otra.
+    expect(descargas).toBe(0);
+    expect(segunda.clientes[0]!.sinCambios).toBe(5);
+    expect(segunda.quedaronPendientes).toBe(false);
+  });
+
   it('no baja un archivo más grande que el límite, y lo deja anotado', async () => {
     const ctx = armar();
     ctx.origen.sembrar('CLIENTES/002 FUMIPRO', 'chico.pdf', Buffer.from('uno'));

@@ -179,6 +179,7 @@ model Cliente {
   liquidaciones     Liquidacion[]
   liquidacionesIva  LiquidacionIvaRg90[]
   hallazgosDeLibro  HallazgoDeLibroRg90[]
+  archivosDeOrigen  ArchivoDeOrigen[]
 
   @@index([activo])
   @@map("cliente")
@@ -290,7 +291,8 @@ model Evidencia {
   creadoEn DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
   origen   Origen   @default(REAL)
 
-  documentos Documento[]
+  documentos       Documento[]
+  archivosDeOrigen ArchivoDeOrigen[]
 
   @@index([clienteId, periodo])
   @@index([clienteId, itemIdOrigen])
@@ -1088,4 +1090,28 @@ model HallazgoDeLibroRg90 {
   @@index([clienteId, periodo])
   @@index([riesgo])
   @@map("hallazgo_libro_rg90")
+}
+
+/// Qué archivos del OneDrive de EFFORT ya se miraron.
+///
+/// Un archivo del origen y una evidencia son cosas distintas: `evidencia` es
+/// única por CONTENIDO (`sha256`), y el mismo documento copiado en cinco
+/// carpetas de período son cinco archivos con un solo contenido. Sin esta tabla
+/// solo quedaba anotado uno de los cinco y los otros cuatro se volvían a
+/// descargar en cada corrida — la sincronización entraba en un bucle infinito y
+/// nunca llegaba a los clientes siguientes. Pasó el 2026-09-14.
+model ArchivoDeOrigen {
+  id                 String    @id @default(uuid()) @db.Uuid
+  clienteId          String    @map("cliente_id") @db.Uuid
+  itemIdOrigen       String    @map("item_id_origen") @db.VarChar(200)
+  modificadoEnOrigen DateTime? @map("modificado_en_origen") @db.Timestamptz(3)
+  evidenciaId        String    @map("evidencia_id") @db.Uuid
+  vistoEn            DateTime  @default(now()) @map("visto_en") @db.Timestamptz(3)
+
+  cliente   Cliente   @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  evidencia Evidencia @relation(fields: [evidenciaId], references: [id], onDelete: Cascade)
+
+  @@unique([clienteId, itemIdOrigen], map: "archivo_de_origen_unico")
+  @@index([evidenciaId])
+  @@map("archivo_de_origen")
 }

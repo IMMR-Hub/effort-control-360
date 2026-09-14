@@ -28,6 +28,7 @@ import {
   ReglasImpositivasPrisma,
   SolicitudesPrisma,
   EnviosPrisma,
+  ArchivosDeOrigenPrisma,
   EvidenciasPrisma,
   ObligacionesPrisma,
   VencimientosPrisma,
@@ -129,6 +130,7 @@ export function construirDependencias(configuracion: Configuracion): Dependencia
     vencimientos: new VencimientosPrisma(prisma),
     obligaciones: new ObligacionesPrisma(prisma),
     evidencias: new EvidenciasPrisma(prisma),
+    archivosDeOrigen: new ArchivosDeOrigenPrisma(prisma),
     envios: new EnviosPrisma(prisma),
     correo: crearCorreo(configuracion),
     drive: crearDrive(

@@ -582,8 +582,7 @@ export class EvidenciasPrisma implements RepositorioDeEvidencias {
       return { evidencia: insertadas[0] as EvidenciaAlmacenada, esNueva: true };
     }
 
-    // Ese contenido ya estaba. Se le anota de dónde vino para no volver a
-    // descargarlo nunca más: sin esto, cada corrida lo bajaría de nuevo.
+    // Ese contenido ya estaba.
     const existente = await this.prisma.evidencia.update({
       where: { sha256: datos.sha256 },
       data: {
@@ -594,6 +593,70 @@ export class EvidenciasPrisma implements RepositorioDeEvidencias {
     });
 
     return { evidencia: existente as EvidenciaAlmacenada, esNueva: false };
+  }
+}
+
+/**
+ * Qué archivos del OneDrive de EFFORT ya se miraron.
+ *
+ * Existe por un bucle infinito real: el 2026-09-14 la sincronización corrió 73
+ * veces seguidas sin crear un solo documento, y cuatro de los cinco clientes
+ * quedaron en cero.
+ *
+ * La causa: `evidencia` es única por CONTENIDO y guarda un solo
+ * `itemIdOrigen`. El mismo PDF copiado en cinco carpetas de período —lo normal
+ * en la forma de trabajar de EFFORT— son cinco archivos y una sola evidencia,
+ * así que solo uno quedaba anotado. Los otros cuatro se volvían a bajar en cada
+ * corrida, agotaban el presupuesto de descargas, y la corrida terminaba sin
+ * llegar nunca a los clientes siguientes.
+ *
+ * Acá "ya lo miré" se responde **por archivo**, que es la pregunta que la
+ * sincronización necesita hacer.
+ */
+export class ArchivosDeOrigenPrisma {
+  constructor(private readonly prisma: PrismaClient) {}
+
+  async huellas(clienteId: string): Promise<HuellaDeOrigen[]> {
+    const filas = await this.prisma.archivoDeOrigen.findMany({
+      where: { clienteId },
+      select: { itemIdOrigen: true, modificadoEnOrigen: true },
+    });
+    return filas;
+  }
+
+  /**
+   * Anota que este archivo del origen ya se miró, y a qué evidencia
+   * corresponde su contenido.
+   *
+   * `upsert` y no `create`: si el archivo cambió de fecha se actualiza, y si ya
+   * estaba no falla. Una sincronización que se cae porque vio dos veces el
+   * mismo archivo no sirve para correr sola cada quince minutos.
+   */
+  async marcar(datos: {
+    clienteId: string;
+    itemIdOrigen: string;
+    modificadoEnOrigen: Date | null;
+    evidenciaId: string;
+  }): Promise<void> {
+    await this.prisma.archivoDeOrigen.upsert({
+      where: {
+        clienteId_itemIdOrigen: {
+          clienteId: datos.clienteId,
+          itemIdOrigen: datos.itemIdOrigen,
+        },
+      },
+      create: {
+        clienteId: datos.clienteId,
+        itemIdOrigen: datos.itemIdOrigen,
+        modificadoEnOrigen: datos.modificadoEnOrigen,
+        evidenciaId: datos.evidenciaId,
+      },
+      update: {
+        modificadoEnOrigen: datos.modificadoEnOrigen,
+        evidenciaId: datos.evidenciaId,
+        vistoEn: new Date(),
+      },
+    });
   }
 }
 

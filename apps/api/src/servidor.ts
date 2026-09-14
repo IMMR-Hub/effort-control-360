@@ -18,6 +18,7 @@ import type { DriveDeArchivos, EnviadorDeCorreo } from '@effort/drive';
 
 import { esProduccion, type Configuracion } from './configuracion.js';
 import type { LibroRg90Prisma } from './repositorios/libroRg90.js';
+import type { ArchivosDeOrigenPrisma } from './repositorios/dominio.js';
 import { ErrorDeAutorizacion, type SujetoAutenticado } from './seguridad/rbac.js';
 import {
   evaluarSesion,
@@ -61,6 +62,8 @@ export interface Dependencias {
   readonly vencimientos: RepositorioDeVencimientos;
   readonly obligaciones: RepositorioDeObligaciones;
   readonly evidencias: RepositorioDeEvidencias;
+  /** Qué archivos del OneDrive de EFFORT ya se miraron. Ver `ArchivosDeOrigenPrisma`. */
+  readonly archivosDeOrigen: ArchivosDeOrigenPrisma;
   readonly envios: RepositorioDeEnvios;
   /** Envío de correo desde la casilla del sistema. `null` sin credenciales. */
   readonly correo: EnviadorDeCorreo | null;

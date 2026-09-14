@@ -44,6 +44,20 @@ const CARPETA_DEL_SISTEMA = 'EFFORT Control 360/Entrada';
 const MAXIMO_DESCARGAS_POR_CORRIDA = 150;
 
 /**
+ * Tope de descargas **por cliente**, no solo del total.
+ *
+ * Sin esto, el primer cliente mata de hambre a los demás. El 2026-09-14 COPESA
+ * —2.128 archivos— agotaba el presupuesto entero en cada corrida y los otros
+ * cuatro clientes quedaban en cero para siempre: 73 corridas seguidas y ni un
+ * documento de ECOAGRO, FUMIPRO, DIBEC o SIPAR.
+ *
+ * Repartirlo hace que todos avancen aunque uno sea enorme. Es más lento para el
+ * cliente grande y muchísimo mejor para el conjunto: un sistema donde cuatro de
+ * cinco clientes no tienen datos no sirve, por más completo que esté el quinto.
+ */
+const MAXIMO_DESCARGAS_POR_CLIENTE = 40;
+
+/**
  * Tamaño máximo de un archivo que se copia automáticamente.
  *
  * Esto no es una preferencia: es lo que tumbó el sistema entero el 2026-09-12.
@@ -73,6 +87,20 @@ export interface DependenciasDelSincronizador {
   ) => Promise<{ evidencia: { id: string }; esNueva: boolean }>;
   /** Qué archivos del origen ya tiene ese cliente, para no volver a bajarlos. */
   readonly huellasDeOrigen: (clienteId: string) => Promise<readonly HuellaDeOrigen[]>;
+  /**
+   * Anota que este archivo del origen ya se miró.
+   *
+   * Va aparte de `registrarEvidencia` porque son preguntas distintas: la
+   * evidencia es única por CONTENIDO, y varios archivos pueden compartirlo. Sin
+   * esto, de cinco copias del mismo PDF solo quedaba marcada una y las otras
+   * cuatro se volvían a bajar en cada corrida — para siempre.
+   */
+  readonly marcarArchivoDeOrigen: (datos: {
+    clienteId: string;
+    itemIdOrigen: string;
+    modificadoEnOrigen: Date | null;
+    evidenciaId: string;
+  }) => Promise<void>;
   readonly ahora: () => Date;
 }
 
@@ -172,9 +200,17 @@ export async function sincronizarDesdeOneDrive(
     let yaEstaban = 0;
     let sinCambios = 0;
     let revisados = 0;
+    let descargasDeEsteCliente = 0;
 
     for (const archivo of archivos) {
       if (descargas >= MAXIMO_DESCARGAS_POR_CORRIDA) {
+        quedaronPendientes = true;
+        break;
+      }
+
+      // Tope propio: sin esto, un cliente con miles de archivos se lleva el
+      // presupuesto entero y los siguientes nunca arrancan.
+      if (descargasDeEsteCliente >= MAXIMO_DESCARGAS_POR_CLIENTE) {
         quedaronPendientes = true;
         break;
       }
@@ -211,6 +247,7 @@ export async function sincronizarDesdeOneDrive(
       try {
         const contenido = await deps.origen.leer(archivo.itemId);
         descargas += 1;
+        descargasDeEsteCliente += 1;
         const sha256 = createHash('sha256').update(contenido).digest('hex');
 
         // Se copia a la carpeta propia ANTES de registrar: si el registro
@@ -232,9 +269,19 @@ export async function sincronizarDesdeOneDrive(
           modificadoEnOrigen: archivo.modificadoEn,
         });
 
+        // Se anota el archivo ANTES de decidir si hay documento nuevo: lo que
+        // importa para no volver a bajarlo es haberlo mirado, no que su
+        // contenido fuera nuevo.
+        await deps.marcarArchivoDeOrigen({
+          clienteId: cliente.id,
+          itemIdOrigen: archivo.itemId,
+          modificadoEnOrigen: archivo.modificadoEn,
+          evidenciaId: evidencia.evidencia.id,
+        });
+
         // Ese contenido ya estaba (mismo archivo con otro nombre, o importado
-        // por el script viejo). Ya se le anotó de dónde viene, así que la
-        // próxima corrida lo saltea sin bajarlo.
+        // por el script viejo). Ya quedó anotado arriba, así que la próxima
+        // corrida lo saltea sin bajarlo.
         if (!evidencia.esNueva) {
           yaEstaban += 1;
           continue;
