@@ -116,5 +116,29 @@ describe('clasificación por nombre de archivo', () => {
     it('una comunicación asamblearia es un acta', () => {
       expect(clasificarPorNombre('drfs-006---comunicacion-asamblearia--8132355.pdf')).toBe('ACTA');
     });
+
+    /*
+     * Nombres de COPESA, y un bug de verdad.
+     *
+     * `\bcompras\b` falla cuando le sigue un dígito pegado: entre la "s" y el
+     * "0" no hay borde de palabra. Por eso "COMPRAS 02 2026.xlsx" clasificaba y
+     * "Compras02.pdf" no — el mismo documento, nombrado distinto. Dejaba libros
+     * de compras y de ventas tirados en "Otro", que es justo lo que Daniel notó
+     * mirando la pantalla.
+     */
+    it('reconoce el libro aunque el número venga pegado al nombre', () => {
+      expect(clasificarPorNombre('Compras02.pdf')).toBe('LIBRO_COMPRAS');
+      expect(clasificarPorNombre('Ventas02.pdf')).toBe('LIBRO_VENTAS');
+      expect(clasificarPorNombre('COMPRAS 02 2026.xlsx')).toBe('LIBRO_COMPRAS');
+    });
+
+    // Pero sigue sin adivinar: otra palabra que empiece igual no es un libro.
+    it('no confunde una palabra que apenas empieza igual', () => {
+      expect(clasificarPorNombre('comprasiones varias.pdf')).toBe('OTRO');
+    });
+
+    it('entiende "Cert" abreviado', () => {
+      expect(clasificarPorNombre('Cert Cumplimiento.pdf')).toBe('CERTIFICADO');
+    });
   });
 });

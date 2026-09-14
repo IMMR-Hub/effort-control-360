@@ -74,8 +74,17 @@ const REGLAS: readonly { readonly tipo: TipoDeDocumento; readonly patron: RegExp
   { tipo: 'NOTA_CREDITO', patron: /\bnota\s*de\s*cr[eé]dito/i },
   { tipo: 'NOTA_DEBITO', patron: /\bnota\s*de\s*d[eé]bito/i },
 
-  { tipo: 'LIBRO_COMPRAS', patron: /\b(libro\s*de\s*)?compras\b/i },
-  { tipo: 'LIBRO_VENTAS', patron: /\b(libro\s*de\s*)?ventas\b/i },
+  /*
+   * `(?![a-záéíóúñ])` al cerrar, en vez de `\b`, y la diferencia no es
+   * cosmética: `\b` exige un borde de palabra, y entre la "s" de "compras" y un
+   * dígito pegado NO hay borde. Por eso "Compras02.pdf" y "Ventas02.pdf"
+   * —nombres reales de COPESA— quedaban en "Otro" mientras
+   * "COMPRAS 02 2026.xlsx" sí clasificaba: el mismo documento, nombrado
+   * distinto. Con esto se acepta un número pegado y se sigue rechazando otra
+   * palabra ("comprasiones" no es un libro de compras).
+   */
+  { tipo: 'LIBRO_COMPRAS', patron: /\b(libro\s*de\s*)?compras(?![a-záéíóúñ])/i },
+  { tipo: 'LIBRO_VENTAS', patron: /\b(libro\s*de\s*)?ventas(?![a-záéíóúñ])/i },
 
   { tipo: 'ESTADO_RESULTADOS', patron: /\bestado\s*de\s*resultado/i },
   { tipo: 'BALANCE', patron: /\bbalance\b|\beeff\b|\bestados?\s*financiero/i },
@@ -95,7 +104,9 @@ const REGLAS: readonly { readonly tipo: TipoDeDocumento; readonly patron: RegExp
   // `CCT` es el Certificado de Cumplimiento Tributario, y es la sigla con la que
   // EFFORT nombra 49 de sus archivos reales ("CCT VIGENTE 05 2026", "CCT
   // 02092026"). Sin esto quedaban todos como "Otro".
-  { tipo: 'CERTIFICADO', patron: /\bcertificad|\bcct\b/i },
+  // `cert` abreviado además de la palabra completa: "Cert Cumplimiento.pdf" es
+  // un nombre real de COPESA.
+  { tipo: 'CERTIFICADO', patron: /\bcertificad|\bcert\b|\bcct\b/i },
   { tipo: 'CONSTANCIA', patron: /\bconstancia|\bc[eé]dula\s*tributaria/i },
 ];
 

@@ -1,13 +1,13 @@
 {
-  "generado_en": "2026-09-13T23:01:08.925Z",
-  "commit": "79124b068d4f4440b3c0cb3b0d482ddfce65a6dc",
+  "generado_en": "2026-09-14T01:06:04.864Z",
+  "commit": "aa2ec0ec38100022b1db8673aa12ca49bc7e7ffd",
   "checks": [
     {
       "nombre": "typecheck",
       "comando": "npx tsc --build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 1337,
+      "duracion_ms": 1251,
       "detalle": ""
     },
     {
@@ -15,7 +15,7 @@
       "comando": "npm run typecheck --workspace @effort/web",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4408,
+      "duracion_ms": 4148,
       "detalle": ""
     },
     {
@@ -23,7 +23,7 @@
       "comando": "npx vitest run",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 57968,
+      "duracion_ms": 58155,
       "detalle": ""
     },
     {
@@ -31,23 +31,23 @@
       "comando": "npx vitest run packages/core/test/golden.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3801,
+      "duracion_ms": 3840,
       "detalle": ""
     },
     {
       "nombre": "lint",
       "comando": "npx eslint .",
-      "estado": "OK",
-      "exit_code": 0,
-      "duracion_ms": 8234,
-      "detalle": ""
+      "estado": "FALLO",
+      "exit_code": 1,
+      "duracion_ms": 8762,
+      "detalle": "C:\\Users\\Daniel\\NexusFlow AI\\effort-control-360\\apps\\api\\sincronizar-todo.mjs\n   2:109  error  'process' is not defined  no-undef\n   9:50   error  'process' is not defined  no-undef\n  11:26   error  'process' is not defined  no-undef\n  11:65   error  'process' is not defined  no-undef\n  11:108  error  'process' is not defined  no-undef\n  17:55   error  'process' is not defined  no-undef\n  18:56   error  'process' is not defined  no-undef\n  18:132  error  'process' is not defined  no-undef\n  27:3    error  'console' is not defined  no-undef\n  28:41   error  'console' is not defined  no-undef\n  29:32   error  'console' is not defined  no-undef\n  31:1    error  'console' is not defined  no-undef\n\n✖ 12 problems (12 errors, 0 warnings)"
     },
     {
       "nombre": "verify:rbac",
       "comando": "npx vitest run apps/api/test/rbac.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4028,
+      "duracion_ms": 3687,
       "detalle": ""
     },
     {
@@ -55,7 +55,7 @@
       "comando": "npx vitest run apps/api/test/seguridad.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3941,
+      "duracion_ms": 4201,
       "detalle": ""
     },
     {
@@ -63,7 +63,7 @@
       "comando": "npx vitest run packages/schema/test/contratos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4077,
+      "duracion_ms": 3757,
       "detalle": ""
     },
     {
@@ -71,7 +71,7 @@
       "comando": "npx vitest run apps/api/test/servidor.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6723,
+      "duracion_ms": 6059,
       "detalle": ""
     },
     {
@@ -79,7 +79,7 @@
       "comando": "npx vitest run apps/api/test/modulos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 30108,
+      "duracion_ms": 28777,
       "detalle": ""
     },
     {
@@ -87,7 +87,7 @@
       "comando": "npx vitest run apps/api/test/siga.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 8133,
+      "duracion_ms": 7114,
       "detalle": ""
     },
     {
@@ -95,7 +95,7 @@
       "comando": "npx vitest run apps/api/test/importaciones.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7672,
+      "duracion_ms": 6526,
       "detalle": ""
     },
     {
@@ -103,7 +103,7 @@
       "comando": "npx vitest run --project integracion",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 40613,
+      "duracion_ms": 40914,
       "detalle": ""
     },
     {
@@ -111,7 +111,7 @@
       "comando": "npx vitest run --project drive",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 2829,
+      "duracion_ms": 2720,
       "detalle": ""
     },
     {
@@ -119,7 +119,7 @@
       "comando": "npx vitest run --project importers",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3954,
+      "duracion_ms": 3687,
       "detalle": ""
     },
     {
@@ -127,7 +127,7 @@
       "comando": "npx vitest run --project web",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 28828,
+      "duracion_ms": 25632,
       "detalle": ""
     },
     {
@@ -135,7 +135,7 @@
       "comando": "node scripts/verificar-kpi.mjs",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 141,
+      "duracion_ms": 101,
       "detalle": ""
     },
     {
@@ -143,7 +143,7 @@
       "comando": "npm run typecheck:e2e",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4387,
+      "duracion_ms": 3293,
       "detalle": ""
     },
     {
@@ -151,7 +151,7 @@
       "comando": "npx playwright test",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 46247,
+      "duracion_ms": 40275,
       "detalle": ""
     },
     {
@@ -159,7 +159,7 @@
       "comando": "node scripts/auditar-dependencias.mjs",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 8067,
+      "duracion_ms": 6248,
       "detalle": ""
     },
     {
@@ -167,12 +167,12 @@
       "comando": "npm run build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 8040,
+      "duracion_ms": 6523,
       "detalle": ""
     }
   ],
-  "checks_ok": 21,
+  "checks_ok": 20,
   "checks_pendientes": 0,
-  "checks_fallidos": 0,
-  "todo_verde": true
+  "checks_fallidos": 1,
+  "todo_verde": false
 }
