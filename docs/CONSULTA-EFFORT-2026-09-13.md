@@ -1,6 +1,6 @@
 # Consulta a Lili y Laura — 2026-09-13
 
-**Cuatro preguntas** que salieron de leer **39 planillas RG 90 reales** de los
+**Cinco preguntas** que salieron de leer **39 planillas RG 90 reales** de los
 cinco clientes del piloto (4206 comprobantes). No son dudas teóricas: cada una
 cambia un número que el sistema le va a mostrar a EFFORT, y ninguna se puede
 contestar mirando el código.
@@ -166,6 +166,50 @@ de proveedores de FUMIPRO.
 **Qué cambia según la respuesta:** hoy el sistema los trata igual y alerta por
 los 49. Si el ±1 es ruido aceptado, la alerta pasaría a nombrar solo los 5 — y
 sería una alerta que se lee, en vez de una que se archiva.
+
+---
+
+## 6. SIPAR entrega sus libros en otro formato, y ese formato no trae el IVA
+
+**El hallazgo.** Cuatro de los cinco clientes entregan su libro como planilla
+RG 90 en Excel (`RG COMPRAS MARZO 2026 - FUMIPRO SA.xlsx`). **SIPAR no.** Los
+suyos son archivos de texto con el nombre que les pone la DNIT:
+
+```
+80012742_202603_COMPRAS_304254_1.txt
+80012742_202606_VENTAS_438202_1.txt
+```
+
+Separados por tabulaciones, codificados en Latin-1, con doce columnas:
+
+```
+CDC | RUC vendedor | Razón social | Fecha | Tipo | Nº comprobante | Timbrado | TOTAL | s n n n
+```
+
+**Por qué importa:** ese formato **no trae el desglose del IVA**. Solo el total
+del comprobante. Y sin saber la tasa, el IVA no se puede deducir — un total de
+Gs. 586.710 puede ser 10% o 5%, y no hay forma de distinguirlo desde el archivo.
+
+Por eso SIPAR es el único cliente con documentos cargados (216) y **cero
+liquidaciones de IVA**. No es una falla del sistema: es que el dato no está en
+los archivos que SIPAR entrega.
+
+Se revisó si tenían la planilla en otro lado: el único Excel entre sus libros es
+un balance, no un libro de compras.
+
+**Las preguntas:**
+
+> ¿SIPAR entrega también la planilla RG 90 en Excel, o su libro siempre viene en
+> este formato de texto?
+
+> Si siempre viene así: ¿cómo se liquida hoy el IVA de SIPAR? ¿Lo calcula SIGA a
+> partir de estos archivos, o hay otro documento con el desglose?
+
+**Qué cambia según la respuesta.** Si existe la planilla y solo falta ubicarla,
+SIPAR queda igual que los otros cuatro sin tocar una línea de código. Si su
+libro siempre viene así, hay que decidir de dónde sale la tasa de cada
+comprobante antes de poder calcular su IVA — y hasta entonces el sistema no debe
+inventarlo.
 
 ---
 
