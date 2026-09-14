@@ -44,6 +44,15 @@ const CARPETA_DEL_SISTEMA = 'EFFORT Control 360/Entrada';
 const MAXIMO_DESCARGAS_POR_CORRIDA = 150;
 
 /**
+ * Tope absoluto por corrida, pase lo que pase.
+ *
+ * El tope global se calcula a partir de cuántos clientes hay, para que a todos
+ * les toque. Este es el techo que impide que con cincuenta clientes una corrida
+ * se vuelva eterna.
+ */
+const TECHO_ABSOLUTO_POR_CORRIDA = 400;
+
+/**
  * Tope de descargas **por cliente**, no solo del total.
  *
  * Sin esto, el primer cliente mata de hambre a los demás. El 2026-09-14 COPESA
@@ -168,6 +177,23 @@ export async function sincronizarDesdeOneDrive(
   usuarioId: string,
 ): Promise<ResumenDeSincronizacion> {
   const clientes = await deps.clientes.listar(null);
+
+  /*
+   * El presupuesto de la corrida se calcula a partir de cuántos clientes hay,
+   * no con un número fijo.
+   *
+   * Con un tope global fijo de 150 y uno por cliente de 40, el quinto cliente se
+   * quedaba sin nada: 40+40+40+30 y se acabó. Pasó de verdad — SIPAR quedó en
+   * cero mientras los otros cuatro avanzaban. Calcularlo así garantiza por
+   * construcción que a todos les toque su parte, en vez de depender de que los
+   * dos números casualmente encajen.
+   */
+  const activos = clientes.filter((c) => c.activo && c.carpetaOneDriveId).length;
+  const presupuesto = Math.min(
+    Math.max(MAXIMO_DESCARGAS_POR_CORRIDA, activos * MAXIMO_DESCARGAS_POR_CLIENTE),
+    TECHO_ABSOLUTO_POR_CORRIDA,
+  );
+
   const porCliente: ResumenPorCliente[] = [];
   const fallos: FalloDeSincronizacion[] = [];
   let nuevosEnTotal = 0;
@@ -203,7 +229,7 @@ export async function sincronizarDesdeOneDrive(
     let descargasDeEsteCliente = 0;
 
     for (const archivo of archivos) {
-      if (descargas >= MAXIMO_DESCARGAS_POR_CORRIDA) {
+      if (descargas >= presupuesto) {
         quedaronPendientes = true;
         break;
       }

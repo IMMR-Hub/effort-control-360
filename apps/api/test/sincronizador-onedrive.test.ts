@@ -331,6 +331,36 @@ describe('sincronización desde OneDrive', () => {
     expect(segunda.quedaronPendientes).toBe(false);
   });
 
+
+  /*
+   * El caso de SIPAR: con tope global fijo, el último cliente de la fila se
+   * quedaba sin presupuesto y nunca arrancaba. Cuatro clientes avanzando y uno
+   * en cero no es "casi listo": es un cliente sin datos.
+   */
+  it('con muchos clientes, al último también le toca', async () => {
+    const ctx = armar();
+    // Cinco clientes, cada uno con un archivo. Si el reparto fuera injusto,
+    // alguno quedaría sin tocar.
+    for (let i = 2; i <= 5; i += 1) {
+      const id = `${i}${i}${i}${i}${i}${i}${i}${i}-1111-4111-8111-111111111111`;
+      const carpeta = `carpeta-${i}`;
+      ctx.clientes.clientes.push({
+        ...clienteMinimo({ id, nombre: `CLIENTE ${i}`, ruc: `8000000${i}-1`, activo: true }),
+        carpetaOneDriveId: carpeta,
+      });
+      ctx.origen.registrarCarpeta(carpeta, `CLIENTES/00${i}`);
+      ctx.origen.sembrar(`CLIENTES/00${i}`, `doc${i}.pdf`, Buffer.from(`contenido ${i}`));
+    }
+    ctx.origen.sembrar('CLIENTES/002 FUMIPRO', 'doc1.pdf', Buffer.from('contenido 1'));
+
+    const resumen = await sincronizarDesdeOneDrive(ctx.deps, USUARIO);
+
+    // Los cinco revisados, ninguno en cero.
+    expect(resumen.clientes).toHaveLength(5);
+    for (const c of resumen.clientes) expect(c.revisados).toBeGreaterThan(0);
+    expect(resumen.nuevosEnTotal).toBe(5);
+  });
+
   it('no baja un archivo más grande que el límite, y lo deja anotado', async () => {
     const ctx = armar();
     ctx.origen.sembrar('CLIENTES/002 FUMIPRO', 'chico.pdf', Buffer.from('uno'));
