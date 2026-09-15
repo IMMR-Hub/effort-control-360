@@ -1136,6 +1136,8 @@ model LecturaDeDeclaracion {
   periodo             String?   @db.VarChar(7)
   numeroDeOrden       String?   @map("numero_de_orden") @db.VarChar(20)
   fechaDePresentacion DateTime? @map("fecha_de_presentacion") @db.Date
+  /// La fecha es la de impresión del aviso de Marangatú: los días de atraso son un máximo.
+  fechaAproximada     Boolean   @default(false) @map("fecha_aproximada")
   error               String?   @db.VarChar(200)
   leidaEn             DateTime  @default(now()) @map("leida_en") @db.Timestamptz(3)
 

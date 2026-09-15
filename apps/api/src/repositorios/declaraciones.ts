@@ -26,12 +26,15 @@ import type {
 const TAMANO_MAXIMO_BYTES = 8_000_000;
 
 /**
- * Nombres de archivo que vale la pena abrir.
+ * Nombres de archivo que se abren PRIMERO.
  *
- * Es un filtro GRUESO a propósito: decide qué se baja, no qué se cree. Lo que
- * decide si algo es una presentación es el contenido. Deja pasar de más —y se
- * descarta leyéndolo— antes que de menos, porque una declaración que no se abre
- * es un "vencido sin presentar" falso que nadie sabe de dónde sale.
+ * No es un filtro: es un orden. Hasta el 2026-09-15 era un filtro, y Daniel
+ * señaló el hueco: *"una posibilidad es que no encuentres el documento porque
+ * tiene un nombre equivocado"*. Tenía razón en el caso real — `DDJJ IVA 072026
+ * DIBEC SA.pdf` contiene la declaración de agosto — y un PDF de la DNIT
+ * guardado como `document(3).pdf` nunca se habría abierto. Ahora se leen todos
+ * los PDFs; los de nombre sugestivo van adelante para que lo probable llegue
+ * primero.
  */
 const NOMBRE_CANDIDATO =
   '(ddjj|declara|form|iva|ire|eeff|estados|financ|rg ?90|tal[oó]n|constancia|presenta|rectific|[0-9]{6})';
@@ -52,8 +55,7 @@ export class DeclaracionesPrisma {
         AND e."item_id_onedrive" IS NOT NULL
         AND e."nombre_archivo" ~* '\\.pdf$'
         AND e."tamano_bytes" < ${TAMANO_MAXIMO_BYTES}
-        AND e."nombre_archivo" ~* ${NOMBRE_CANDIDATO}
-      ORDER BY e."creado_en" DESC
+      ORDER BY (e."nombre_archivo" ~* ${NOMBRE_CANDIDATO}) DESC, e."creado_en" DESC
       LIMIT ${limite}
     `;
 
@@ -77,6 +79,7 @@ export class DeclaracionesPrisma {
       periodo: d?.periodo ?? null,
       numeroDeOrden: d?.numeroDeOrden ?? null,
       fechaDePresentacion: d ? new Date(`${d.fechaDePresentacion}T00:00:00Z`) : null,
+      fechaAproximada: d?.fechaAproximada ?? false,
       error: resultado.error,
       leidaEn: new Date(),
     };
@@ -101,7 +104,18 @@ export class DeclaracionesPrisma {
       periodo: f.periodo ?? '',
       numeroDeOrden: f.numeroDeOrden!,
       fechaDePresentacion: f.fechaDePresentacion!.toISOString().slice(0, 10),
+      fechaAproximada: f.fechaAproximada,
     }));
+  }
+
+  /** De estas evidencias, cuáles prueban una presentación con fecha aproximada. */
+  async conFechaAproximada(evidenciaIds: readonly string[]): Promise<Set<string>> {
+    if (evidenciaIds.length === 0) return new Set();
+    const filas = await this.prisma.lecturaDeDeclaracion.findMany({
+      where: { evidenciaId: { in: [...evidenciaIds] }, fechaAproximada: true },
+      select: { evidenciaId: true },
+    });
+    return new Set(filas.map((f) => f.evidenciaId));
   }
 
   /** Vencimientos generados por el calendario que todavía no figuran como presentados. */

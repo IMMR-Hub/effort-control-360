@@ -333,6 +333,12 @@ export class VencimientosFalsos implements RepositorioDeVencimientos {
       .sort((a, b) => a.fechaVencimiento.getTime() - b.fechaVencimiento.getTime());
   }
 
+  async listarPresentados(filtro: FiltroDeCartera): Promise<VencimientoAlmacenado[]> {
+    return this.vencimientos
+      .filter((venc) => venc.estado === 'PRESENTADO' && alcanza(filtro, venc.clienteId))
+      .sort((a, b) => b.fechaVencimiento.getTime() - a.fechaVencimiento.getTime());
+  }
+
   async listarPorCliente(
     clienteId: string,
     filtro: FiltroDeCartera,

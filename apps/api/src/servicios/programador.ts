@@ -218,6 +218,7 @@ export function programarCalculoDeVencimientosYAlertas(
                     numeroDeOrden: entrada.numeroDeOrden,
                     fueraDeTermino: entrada.fueraDeTermino,
                     diasDeAtraso: entrada.diasDeAtraso,
+                    fechaAproximada: entrada.fechaAproximada,
                     disparo: 'automático: declaración de la DNIT encontrada en OneDrive',
                   },
                   ipTruncada: null,

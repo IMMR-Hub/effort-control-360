@@ -683,9 +683,11 @@ El primer build falló con errores de TypeScript en `apps/api` (`Cannot find nam
 
 - [x] 127. **El IVA contaba dos veces los comprobantes de planillas repetidas — 2026-09-14.** FUMIPRO julio 2026 (original + CORRECCION) y ECOAGRO febrero 2025 (dos versiones). Ahora un comprobante cuenta una vez y manda la corrección, o la planilla más reciente. DISCREPANCIAS 24.
 
-- [ ] 128. **Presentaciones detectadas desde los PDF de la DNIT — código listo, falta desplegar y verificar en producción.** Lee el contenido (número de orden, fecha, período, RUC) de las declaraciones juradas normalizadas (120 IVA, 500 IRE, 158 EEFF) y de los talones de la RG 90 (241), y marca el vencimiento como presentado con su evidencia. Registra si fue fuera de término. Migración `20260914190000_lectura_de_declaraciones`. DISCREPANCIAS 23.
+- [x] 128. **Presentaciones detectadas desde los PDF de la DNIT — 2026-09-15: 42 de 150 marcadas en producción, con días de atraso.** Se leyeron los 2.434 PDFs, no solo los de nombre sugestivo: la hipótesis de Daniel de nombres equivocados se confirmó. Nueva vista "Presentados" en Vencimientos. Lee el contenido (número de orden, fecha, período, RUC) de las declaraciones juradas normalizadas (120 IVA, 500 IRE, 158 EEFF) y de los talones de la RG 90 (241), y marca el vencimiento como presentado con su evidencia. Registra si fue fuera de término. Migración `20260914190000_lectura_de_declaraciones`. DISCREPANCIAS 23.
 
-- [ ] 129. **Clasificación por carpeta** cuando el nombre no alcanza: simulado sobre datos reales, los "Otro" bajan de 2.415 a 1.442. Ya se aplica a los archivos nuevos. Para los existentes: `scripts/reclasificar-documentos.mjs` (simula por defecto; `--aplicar` lo decide Daniel). Propuesta de nomenclatura para EFFORT en `docs/GUIA-NOMENCLATURA-ARCHIVOS.md`.
+- [ ] 131. El paso previo al despliegue (`migrar-base`, PRE_DEPLOY en `.do/app.yaml`) no está corriendo en DigitalOcean: las migraciones del 2026-09-14 y 15 se aplicaron a mano con `migrate deploy`. Revisar la especificación viva de la app.
+
+- [x] 129. **Clasificación por carpeta** (973 documentos reclasificados en producción el 2026-09-15, con autorización de Daniel; OneDrive no se tocó) cuando el nombre no alcanza: simulado sobre datos reales, los "Otro" bajan de 2.415 a 1.442. Ya se aplica a los archivos nuevos. Para los existentes: `scripts/reclasificar-documentos.mjs` (simula por defecto; `--aplicar` lo decide Daniel). Propuesta de nomenclatura para EFFORT en `docs/GUIA-NOMENCLATURA-ARCHIVOS.md`.
 
 - [ ] 130. Alerta de "presentado fuera de término": hoy se registra en la bitácora pero no levanta aviso.
 

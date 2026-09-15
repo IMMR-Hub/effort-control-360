@@ -1176,3 +1176,45 @@ por") es la de presentación según el formulario, pero **puede haber prórrogas
 —sobre todo en IRE y estados financieros, que EFFORT presentó en junio— y el
 calendario del sistema no las conoce (ver punto 19, nota de la RG 50). **Pregunta
 para EFFORT:** ¿hubo prórroga para el IRE y los estados financieros 2025?
+
+
+### 23 (c). Respuestas de Daniel y escaneo completo — 2026-09-15
+
+**No hubo prórrogas** (Daniel: *"No hubo ninguna prórroga ni para el IRE ni
+para ninguna otra presentación"*). Por eso los días de atraso que muestra el
+sistema son reales, salvo los marcados como "hasta N días" (ver abajo). Y se
+muestran **solo como días**, sin hablar de multa, por pedido expreso.
+
+**Hipótesis de Daniel confirmada:** *"no encontrás el documento porque tiene un
+nombre equivocado"*. El primer escaneo solo abría PDFs con nombre sugestivo.
+Abriendo los 2.434 PDFs aparecieron, entre otros, el IVA de COPESA de
+diciembre 2025 a junio 2026 guardado como `120-01-2026.pdf`, `120-02-2026.pdf`…
+y los EEFF 2025 de FUMIPRO como `158-2025.pdf`. El detector de producción ahora
+lee **todos** los PDFs (los de nombre sugestivo primero).
+
+**Formularios verificados abriendo los PDFs** (no eran errores de tipeo):
+
+| Formulario | Qué es, según el propio PDF |
+|---|---|
+| 145 | "Declaración Rectificativa" |
+| 122 | (retención de IVA; ya estaba así en las reglas por nombre) |
+| 525 | "Liquidación de retenciones de los impuestos a las rentas" |
+| 526 | "Liquidación de retenciones del IDU" |
+
+Ninguno es la presentación original de IVA, IRE, EEFF o RG 90, así que no se
+cruzan con esos vencimientos.
+
+**Talón de la RG 90:** es el formulario 241, "Talón de presentación — Registro
+de comprobantes", que la DNIT genera al presentar la RG 90. COPESA lo guarda
+en dos formatos: el talón (2023-2025) y, en 2026, el **aviso del buzón de
+Marangatú impreso** ("SE GENERÓ EL FORMULARIO 241 … CON ORDEN N° …"). Ese aviso
+prueba la presentación pero su única fecha es la de impresión: los días de
+atraso salen como **"hasta N días"**.
+
+**Resultado cargado en producción:** 42 de 150 vencimientos presentados, 27 con
+días de atraso. Siguen sin prueba en OneDrive: la RG 90 de DIBEC, FUMIPRO y
+ECOAGRO (ningún talón ni aviso en sus carpetas), la RG 90 de COPESA de
+dic-2025, feb, jun y jul 2026, el IVA de COPESA de jul y ago 2026, el IVA de
+DIBEC de julio 2026, el IRE 2025 de DIBEC, los EEFF 2025 de COPESA, y todo
+SIPAR (su carpeta no tiene ninguna declaración: 226 archivos, mayormente
+legales, extractos y los TXT de la RG 90).

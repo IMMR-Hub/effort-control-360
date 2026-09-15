@@ -25,6 +25,7 @@ const IVA_MARZO: PresentacionLeida = {
   periodo: '2026-03',
   numeroDeOrden: '12087502762',
   fechaDePresentacion: '2026-04-09',
+  fechaAproximada: false,
 };
 
 const VENCE_IVA_MARZO: VencimientoPendiente = {
@@ -118,7 +119,7 @@ describe('detector de presentaciones', () => {
   /*
    * Caso real: DIBEC presentó el IVA de abril de 2026 el 29/05, y su
    * vencimiento era el 19/05. Se marca presentado —lo está— pero queda dicho
-   * que fue fuera de término, que es lo que puede haber generado multa.
+   * con cuántos días de atraso.
    */
   it('una presentación tardía se marca, y queda registrada como fuera de término', async () => {
     const { deps, bitacora } = armar({

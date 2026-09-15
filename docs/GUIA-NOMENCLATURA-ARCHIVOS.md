@@ -96,5 +96,12 @@ peor que puede pasar con un mal nombre es que el documento quede en "Otro".
 
 1. ¿Esta estructura se parece a cómo ya trabajan, o conviene otra?
 2. ¿Quién la aplicaría a los archivos nuevos: cada responsable, o una persona?
-3. ¿Qué es el **formulario 145** y el **526**? Aparecen en los archivos y el
-   sistema los deja sin clasificar hasta saberlo.
+3. ~~¿Qué es el formulario 145 y el 526?~~ Verificado abriendo los PDFs: el
+   145 es la Declaración Rectificativa, el 525 la liquidación de retenciones de
+   las rentas y el 526 la liquidación de retenciones del IDU.
+
+## Archivos duplicados
+
+La lista de archivos con contenido idéntico, con nombre y ubicación de cada
+copia, está en `docs/propuestas/ARCHIVOS-DUPLICADOS.md`. Es solo una propuesta:
+el sistema no borra nada.

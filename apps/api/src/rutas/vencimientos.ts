@@ -124,6 +124,47 @@ export async function registrarRutasDeVencimientos(
   });
 
   /**
+   * Lo ya presentado, con los días de atraso de cada presentación.
+   *
+   * Daniel, 2026-09-15: *"no hace falta que pongas que tiene multa, sino
+   * solamente los días de atraso"*. Por eso el dato es un número de días y
+   * nada más: cero es "a tiempo"; la interpretación la hace EFFORT.
+   *
+   * Los días se cuentan en fechas civiles (las dos columnas son `DATE`), así
+   * que no hay huso horario que pueda correr la cuenta un día.
+   */
+  app.get('/api/v1/vencimientos/presentados', async (peticion) => {
+    const sujeto = autorizar(peticion, 'vencimiento', 'ver');
+    const filas = await deps.vencimientos.listarPresentados(filtroDeClientes(sujeto));
+    const aproximadas =
+      (await deps.declaraciones?.conFechaAproximada(
+        filas.map((v) => v.evidenciaId).filter((id): id is string => id !== null),
+      )) ?? new Set<string>();
+
+    return {
+      presentados: filas.map((v) => {
+        const presentado = v.fechaPresentacion;
+        const atraso = presentado
+          ? Math.round((presentado.getTime() - v.fechaVencimiento.getTime()) / 86_400_000)
+          : 0;
+        return {
+          id: v.id,
+          clienteId: v.clienteId,
+          descripcion: v.descripcion,
+          entidad: v.entidad,
+          fechaVencimiento: v.fechaVencimiento.toISOString().slice(0, 10),
+          fechaPresentacion: presentado?.toISOString().slice(0, 10) ?? null,
+          evidenciaId: v.evidenciaId,
+          diasDeAtraso: Math.max(0, atraso),
+          // La prueba es un aviso de Marangatú impreso: la fecha es la de
+          // impresión, así que los días de atraso son un máximo.
+          fechaAproximada: v.evidenciaId !== null && aproximadas.has(v.evidenciaId),
+        };
+      }),
+    };
+  });
+
+  /**
    * Genera los vencimientos del período a partir del calendario tributario.
    *
    * Se puede repetir sin miedo: lo que ya existe no se duplica ni se pisa (ver

@@ -41,6 +41,7 @@ describe('reconocimiento de presentaciones ante la DNIT', () => {
       periodo: '2026-03',
       numeroDeOrden: '12087502762',
       fechaDePresentacion: '2026-04-09',
+      fechaAproximada: false,
     });
   });
 
@@ -60,6 +61,31 @@ describe('reconocimiento de presentaciones ante la DNIT', () => {
       periodo: '2024-02',
       numeroDeOrden: '24114835850',
       fechaDePresentacion: '2024-05-08',
+      fechaAproximada: false,
+    });
+  });
+
+  /*
+   * Caso real: COPESA 2026, "TALON DE PRESENTACION/01-2026.pdf". No es el
+   * talón: es el aviso del buzón de Marangatú impreso desde el navegador. El
+   * número de orden prueba la presentación; la fecha es la de impresión, así
+   * que sale marcada como aproximada.
+   */
+  it('reconoce el aviso del buzón de Marangatú, con la fecha como aproximada', () => {
+    const aviso =
+      'ESTIMADO CONTRIBUYENTE: COPESA CONSTRUCCIONES SA RUC 80003112 DV 1 LA SUBSECRETARÍA DE ESTADO ' +
+      'DE TRIBUTACIÓN LE INFORMA QUE SE GENERÓ EL FORMULARIO 241- TALÓN DE PRESENTACIÓN REGISTRO DE ' +
+      'COMPROBANTES, CORRESPONDIENTE AL PERIODO/EJERCICIO 01/2026 , CON ORDEN N° 24132314007 . ' +
+      'Subsecretaría De Estado De Tributación 17/3/26, 9:28 Ver Mensaje | MARANGATU ' +
+      'https://marangatu.set.gov.py/eset/buzonVerMensaje.do 1/1';
+
+    expect(reconocerDeclaracionDnit(aviso)).toEqual({
+      formulario: '241',
+      ruc: '80003112',
+      periodo: '2026-01',
+      numeroDeOrden: '24132314007',
+      fechaDePresentacion: '2026-03-17',
+      fechaAproximada: true,
     });
   });
 

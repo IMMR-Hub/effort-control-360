@@ -633,6 +633,39 @@ describe('radar de vencimientos', () => {
     expect(JSON.parse(radar.body).vencimientos).toHaveLength(0);
   });
 
+  /*
+   * Daniel, 2026-09-15: "no hace falta que pongas que tiene multa, sino
+   * solamente los días de atraso". Lo presentado sale del radar pero no
+   * desaparece: queda en esta lista con cuántos días después se presentó.
+   */
+  it('lo presentado se lista con los días de atraso, y cero es a tiempo', async () => {
+    for (const [fechaPresentacion, descripcion] of [
+      ['2026-04-28', 'A tiempo'],
+      ['2026-05-08', 'Diez días tarde'],
+    ] as const) {
+      const alta = await ctx.app.inject({
+        method: 'POST', url: `/api/v1/clientes/${MIO}/vencimientos`,
+        headers: { cookie: coordinador }, payload: { ...abogacia, descripcion },
+      });
+      const { vencimiento } = JSON.parse(alta.body);
+      await ctx.app.inject({
+        method: 'POST', url: `/api/v1/vencimientos/${vencimiento.id}/presentar`,
+        headers: { cookie: coordinador }, payload: { fechaPresentacion },
+      });
+    }
+
+    const respuesta = await ctx.app.inject({
+      method: 'GET', url: '/api/v1/vencimientos/presentados', headers: { cookie: coordinador },
+    });
+
+    expect(respuesta.statusCode).toBe(200);
+    const { presentados } = JSON.parse(respuesta.body);
+    const dias = Object.fromEntries(
+      presentados.map((p: { descripcion: string; diasDeAtraso: number }) => [p.descripcion, p.diasDeAtraso]),
+    );
+    expect(dias).toEqual({ 'A tiempo': 0, 'Diez días tarde': 10 });
+  });
+
   it('no se puede presentar dos veces la misma obligación', async () => {
     const alta = await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${MIO}/vencimientos`,

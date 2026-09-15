@@ -50,6 +50,12 @@ export interface DeclaracionDnit {
   readonly numeroDeOrden: string;
   /** Fecha de presentación, `AAAA-MM-DD`. */
   readonly fechaDePresentacion: string;
+  /**
+   * `true` cuando el documento no dice la fecha de presentación y la que hay es
+   * posterior o igual: la de impresión del aviso de Marangatú. Los días de
+   * atraso que salgan de ella son un MÁXIMO, no un dato exacto.
+   */
+  readonly fechaAproximada: boolean;
 }
 
 /** Qué obligación del sistema prueba cada formulario. */
@@ -95,7 +101,46 @@ function reconocerNormalizada(texto: string): DeclaracionDnit | null {
   }
   if (!periodo) return null;
 
-  return { formulario, ruc, periodo, numeroDeOrden: orden, fechaDePresentacion: fechaIso(fecha) };
+  return {
+    formulario,
+    ruc,
+    periodo,
+    numeroDeOrden: orden,
+    fechaDePresentacion: fechaIso(fecha),
+    fechaAproximada: false,
+  };
+}
+
+/**
+ * Aviso del buzón de Marangatú que confirma el talón de la RG 90.
+ *
+ * Formato real de COPESA 2026 (`TALON DE PRESENTACION/01-2026.pdf`): "SE GENERÓ
+ * EL FORMULARIO 241- TALÓN DE PRESENTACIÓN REGISTRO DE COMPROBANTES,
+ * CORRESPONDIENTE AL PERIODO/EJERCICIO 01/2026 , CON ORDEN N° 24132314007 .
+ * Subsecretaría De Estado De Tributación 17/3/26, 9:28 Ver Mensaje | MARANGATU".
+ *
+ * El número de orden prueba la presentación. La fecha, no: "17/3/26, 9:28" es
+ * cuándo se imprimió la página del buzón, que puede ser el mismo día o semanas
+ * después. Por eso sale marcada como aproximada.
+ */
+function reconocerAvisoDeBuzon241(texto: string): DeclaracionDnit | null {
+  if (!/FORMULARIO\s*241\s*-?\s*TAL[ÓO]N DE PRESENTACI[ÓO]N/i.test(texto)) return null;
+
+  const ruc = texto.match(/RUC\s+(\d{5,9})\s+DV/i)?.[1];
+  const periodo = texto.match(/PERIODO\s*\/\s*EJERCICIO\s+(\d{1,2})\/(\d{4})/i);
+  const orden = texto.match(/ORDEN\s+N[°º]?\s*(\d{8,15})/i)?.[1];
+  // Fecha de impresión del navegador: "17/3/26, 9:28".
+  const impresion = texto.match(/(\d{1,2})\/(\d{1,2})\/(\d{2}),\s*\d{1,2}:\d{2}/);
+  if (!ruc || !periodo || !orden || !impresion) return null;
+
+  return {
+    formulario: '241',
+    ruc,
+    periodo: `${periodo[2]}-${periodo[1]!.padStart(2, '0')}`,
+    numeroDeOrden: orden,
+    fechaDePresentacion: `20${impresion[3]}-${impresion[2]!.padStart(2, '0')}-${impresion[1]!.padStart(2, '0')}`,
+    fechaAproximada: true,
+  };
 }
 
 function reconocerTalonRg90(texto: string): DeclaracionDnit | null {
@@ -113,6 +158,7 @@ function reconocerTalonRg90(texto: string): DeclaracionDnit | null {
     periodo: `${periodo[2]}-${periodo[1]!.padStart(2, '0')}`,
     numeroDeOrden: numero,
     fechaDePresentacion: fechaIso(fecha),
+    fechaAproximada: false,
   };
 }
 
@@ -128,5 +174,5 @@ export function reconocerDeclaracionDnit(texto: string): DeclaracionDnit | null 
   const plano = texto.replace(/\s+/g, ' ');
   // Un borrador nunca prueba nada, aunque copie la estructura del formulario.
   if (/\bPROFORMA\b|\bBORRADOR\b|SIN VALIDEZ/i.test(plano)) return null;
-  return reconocerNormalizada(plano) ?? reconocerTalonRg90(plano);
+  return reconocerNormalizada(plano) ?? reconocerTalonRg90(plano) ?? reconocerAvisoDeBuzon241(plano);
 }

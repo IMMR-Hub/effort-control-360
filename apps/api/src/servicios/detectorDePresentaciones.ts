@@ -80,6 +80,8 @@ export interface DependenciasDelDetector {
     readonly fechaDePresentacion: string;
     readonly fueraDeTermino: boolean;
     readonly diasDeAtraso: number;
+    /** Si la fecha es la de impresión del aviso: los días son un máximo. */
+    readonly fechaAproximada: boolean;
   }): Promise<void>;
 }
 
@@ -88,7 +90,7 @@ export interface ResumenDelDetector {
   readonly presentacionesNuevas: number;
   readonly erroresDeLectura: number;
   readonly vencimientosMarcados: number;
-  /** Presentados después de la fecha de vencimiento. Pueden haber generado multa. */
+  /** Presentados después de la fecha de vencimiento: se informan los días de atraso. */
   readonly fueraDeTermino: number;
 }
 
@@ -159,8 +161,11 @@ export async function detectarPresentaciones(
 
     // Si hay original y rectificativas, cuenta la PRIMERA: es la que dice si
     // se presentó a tiempo. Las rectificativas llegan después por definición.
-    const primera = [...candidatas].sort((a, b) =>
-      a.fechaDePresentacion.localeCompare(b.fechaDePresentacion),
+    // A igual fecha gana la exacta: un aviso impreso no desplaza al formulario.
+    const primera = [...candidatas].sort(
+      (a, b) =>
+        a.fechaDePresentacion.localeCompare(b.fechaDePresentacion) ||
+        Number(a.fechaAproximada) - Number(b.fechaAproximada),
     )[0]!;
 
     const atraso = diasEntre(vencimiento.fechaVencimiento, primera.fechaDePresentacion);
@@ -180,6 +185,7 @@ export async function detectarPresentaciones(
       fechaDePresentacion: primera.fechaDePresentacion,
       fueraDeTermino: tarde,
       diasDeAtraso: tarde ? atraso : 0,
+      fechaAproximada: primera.fechaAproximada,
     });
 
     vencimientosMarcados += 1;

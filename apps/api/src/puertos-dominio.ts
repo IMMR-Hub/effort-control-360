@@ -206,6 +206,14 @@ export interface AltaDeVencimientoGenerado extends AltaDeVencimiento {
 export interface RepositorioDeVencimientos {
   /** Todos los de la cartera, ordenados por fecha: es el radar. */
   listar(filtro: FiltroDeCartera): Promise<VencimientoAlmacenado[]>;
+  /**
+   * Los ya presentados, del más reciente al más viejo.
+   *
+   * El radar los excluye —lo que importa ahí es qué falta—, y sin esta vista
+   * una presentación hecha con días de atraso desaparecía sin dejar rastro en
+   * la pantalla.
+   */
+  listarPresentados(filtro: FiltroDeCartera): Promise<VencimientoAlmacenado[]>;
   listarPorCliente(clienteId: string, filtro: FiltroDeCartera): Promise<VencimientoAlmacenado[]>;
   buscarPorId(id: string, filtro: FiltroDeCartera): Promise<VencimientoAlmacenado | null>;
   registrar(datos: AltaDeVencimiento): Promise<VencimientoAlmacenado>;

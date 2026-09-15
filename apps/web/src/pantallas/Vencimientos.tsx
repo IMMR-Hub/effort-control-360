@@ -47,6 +47,7 @@ import {
   type Vencimiento,
 } from '../api/vencimientos.js';
 import { useSesion } from '../contexts/SesionContext.js';
+import VencimientosPresentados from './VencimientosPresentados.js';
 
 const ROLES_QUE_EDITAN = new Set(['direccion', 'responsable', 'coordinador']);
 
@@ -345,6 +346,8 @@ export default function Vencimientos() {
           </tbody>
         </Tabla>
       </Tarjeta>
+
+      <VencimientosPresentados clientes={clientes} />
 
       {formularioAbierto && puedeEditar && (
         <Tarjeta className="max-w-2xl">

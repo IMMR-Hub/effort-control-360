@@ -43,6 +43,25 @@ export function obtenerRadar(): Promise<{
   return peticion('GET', '/api/v1/vencimientos');
 }
 
+/** Una obligación ya presentada, con cuántos días después del vencimiento se presentó. */
+export interface VencimientoPresentado {
+  readonly id: string;
+  readonly clienteId: string;
+  readonly descripcion: string;
+  readonly entidad: string;
+  readonly fechaVencimiento: string;
+  readonly fechaPresentacion: string | null;
+  readonly evidenciaId: string | null;
+  /** 0 = a tiempo. */
+  readonly diasDeAtraso: number;
+  /** La fecha es la de impresión del aviso de Marangatú: los días son un máximo. */
+  readonly fechaAproximada: boolean;
+}
+
+export function listarPresentados(): Promise<{ presentados: readonly VencimientoPresentado[] }> {
+  return peticion('GET', '/api/v1/vencimientos/presentados');
+}
+
 export function listarVencimientosDeCliente(
   clienteId: string,
 ): Promise<{ vencimientos: readonly Vencimiento[] }> {

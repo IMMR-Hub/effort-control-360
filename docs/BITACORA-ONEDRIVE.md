@@ -242,3 +242,25 @@ En concreto:
   OneDrive y el sistema (que un archivo nuevo se importe solo, sin correr
   un script a mano) sigue siendo trabajo pendiente — ver
   `docs/DISCREPANCIAS.md`, punto 6.
+
+---
+
+## 2026-09-14 / 2026-09-15 — Lectura de PDFs buscando presentaciones ante la DNIT
+
+- **Qué:** se leyó el texto (primeras dos páginas) de **2.434 PDFs** de los
+  cinco clientes, desde las copias del sistema en
+  `EFFORT Control 360/Entrada/`, y además se **listó** (sin abrir archivos) la
+  estructura de carpetas de los cinco clientes en el OneDrive de origen
+  (`lsosa@effort.com.py`) para ubicar los archivos con contenido idéntico.
+- **Por qué:** Daniel preguntó por qué había 0 de 150 vencimientos marcados
+  como presentados teniendo las declaraciones en OneDrive, y pidió una lista
+  de archivos duplicados con nombre y ubicación.
+- **Para qué:** marcar presentaciones con la prueba oficial (número de orden y
+  fecha de la DNIT) y proponer a EFFORT qué copias podría revisar.
+- **Qué se escribió:** NADA en OneDrive. Solo filas en la base del sistema
+  (`lectura_de_declaracion`, 2.434 lecturas; 42 vencimientos marcados como
+  presentados, cada uno en la bitácora de eventos). La lista de duplicados es
+  un documento del repositorio: `docs/propuestas/ARCHIVOS-DUPLICADOS.md`.
+- **Qué NO se hizo, y no se va a hacer:** borrar, mover o renombrar ningún
+  archivo. Daniel, 2026-09-15: *"No quiero que modifiques ni borres ni cambies
+  NADA en la carpeta de Lau y Lili. Eso quedó prohibido."*
