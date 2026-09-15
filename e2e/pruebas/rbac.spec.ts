@@ -20,7 +20,7 @@ test('auxiliar no tiene acceso al recurso "usuario": ve el 403 real del servidor
   await page.getByLabel('Contraseña').fill(CREDENCIALES.auxiliar.password);
   await page.getByRole('button', { name: 'Ingresar' }).click();
 
-  await expect(page.getByRole('button', { name: 'Seguimiento', exact: true })).toHaveAttribute(
+  await expect(page.getByRole('button', { name: 'Panel general', exact: true })).toHaveAttribute(
     'aria-current',
     'page',
   );

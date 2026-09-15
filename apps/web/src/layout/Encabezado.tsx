@@ -42,6 +42,7 @@ interface EnlaceDeNav {
 
 /** Se completa a medida que la tarea 104 va reemplazando el resto de las pantallas. */
 const ENLACES: readonly EnlaceDeNav[] = [
+  { id: 'panel', etiqueta: 'Panel general' },
   { id: 'seguimiento', etiqueta: 'Seguimiento' },
   { id: 'clientes', etiqueta: 'Clientes' },
   { id: 'documentos', etiqueta: 'Documentos / IVA' },
@@ -54,7 +55,6 @@ const ENLACES: readonly EnlaceDeNav[] = [
   { id: 'equipo', etiqueta: 'Equipo' },
   { id: 'reglas', etiqueta: 'Reglas' },
   { id: 'eventos', etiqueta: 'Eventos', soloRoles: ['direccion'] },
-  { id: 'panel', etiqueta: 'Panel general' },
 ];
 
 interface Props {
@@ -72,9 +72,9 @@ export function Encabezado({ activa, onCambiar }: Props) {
   return (
     <header className="sticky top-0 z-20 border-b border-borde bg-superficie/95 backdrop-blur">
       <div className="mx-auto flex max-w-[86rem] flex-wrap items-center justify-between gap-3 px-5 py-3">
-        <div className="flex items-center gap-6">
+        <div className="flex min-w-0 flex-wrap items-center gap-x-6 gap-y-2">
           <Logotipo />
-          <nav aria-label="Navegación principal" className="flex items-center gap-1">
+          <nav aria-label="Navegación principal" className="flex flex-wrap items-center gap-1">
             {enlacesVisibles.map((enlace) => (
               <button
                 key={enlace.id}

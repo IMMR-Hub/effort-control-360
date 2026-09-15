@@ -612,6 +612,8 @@ export interface AlertaAlmacenada {
   readonly cerradaPorUsuarioId: string | null;
   readonly cerradaEn: Date | null;
   readonly motivoCierre: string | null;
+  /** Cuándo la levantó el motor. Opcional para no romper los dobles viejos. */
+  readonly creadoEn?: Date;
 }
 
 export interface AltaDeAlerta {

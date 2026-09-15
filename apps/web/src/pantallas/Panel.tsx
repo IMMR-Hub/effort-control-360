@@ -10,15 +10,27 @@
  */
 
 import { useEffect, useMemo, useState } from 'react';
-import { hoyEnParaguay } from '@effort/core';
-import { periodoSchema } from '@effort/schema';
+import {
+  dentroDelRango,
+  describirFiltro,
+  hoyEnParaguay,
+  periodosDelRango,
+  rangoDelFiltro,
+  type FiltroDeFechas,
+} from '@effort/core';
 
-import { Badge, CampoTexto, EncabezadoTarjeta, Indicador, Tabla, Tarjeta, Td, Th } from '../ui/Primitivos.jsx';
+import { Badge, EncabezadoTarjeta, Indicador, Tabla, Tarjeta, Td, Th } from '../ui/Primitivos.jsx';
+import { FiltroDeFechasSelector } from '../ui/FiltroDeFechas.js';
 import { ETIQUETA_NIVEL_ALERTA, ETIQUETA_CRITICIDAD, TONO_NIVEL_ALERTA, TONO_CRITICIDAD } from '../ui/etiquetas.js';
 import { ErrorDeApi } from '../api/cliente.js';
 import { listarClientes, type Cliente } from '../api/clientes.js';
 import { obtenerAlertas, type Alerta } from '../api/alertas.js';
-import { obtenerRadar, type Vencimiento } from '../api/vencimientos.js';
+import {
+  listarPresentados,
+  obtenerRadar,
+  type Vencimiento,
+  type VencimientoPresentado,
+} from '../api/vencimientos.js';
 import { listarSolicitudesPorPeriodo, type SolicitudDocumentacion } from '../api/solicitudes.js';
 import { listarBalances, type Balance } from '../api/balances.js';
 import { listarLiquidaciones, type Liquidacion } from '../api/liquidaciones.js';
@@ -43,11 +55,20 @@ const ESTADOS_LIQUIDACION_SIN_ENVIAR = new Set<Liquidacion['estado']>(['PENDIENT
 const MAXIMO_EN_LISTAS = 5;
 
 export default function Panel() {
-  const periodoPorDefecto = useMemo(() => {
-    const hoy = hoyEnParaguay(new Date());
-    return `${hoy.anio}-${String(hoy.mes).padStart(2, '0')}`;
-  }, []);
-  const [periodo, setPeriodo] = useState(periodoPorDefecto);
+  const hoy = useMemo(() => hoyEnParaguay(new Date()), []);
+  const mesActual = `${hoy.anio}-${String(hoy.mes).padStart(2, '0')}`;
+
+  /*
+   * Arranca en "todas las fechas": el panel es lo primero que se ve al entrar,
+   * y lo que tiene que mostrar es el estado de la cartera, no un mes. Con un
+   * filtro elegido, lo que tiene fecha (vencimientos, alertas, presentaciones)
+   * se recorta al rango, y lo que es por período fiscal toma los períodos que
+   * el rango toca.
+   */
+  const [filtro, setFiltro] = useState<FiltroDeFechas>({ tipo: 'todo' });
+  const rango = useMemo(() => rangoDelFiltro(filtro, hoy), [filtro, hoy]);
+  const periodos = useMemo(() => (rango ? periodosDelRango(rango) : [mesActual]), [rango, mesActual]);
+  const [presentados, setPresentados] = useState<readonly VencimientoPresentado[]>([]);
 
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -59,14 +80,6 @@ export default function Panel() {
   const [liquidaciones, setLiquidaciones] = useState<readonly Liquidacion[]>([]);
 
   async function recargar() {
-    if (!periodoSchema.safeParse(periodo).success) {
-      setClientes([]);
-      setSolicitudes([]);
-      setBalances([]);
-      setLiquidaciones([]);
-      setCargando(false);
-      return;
-    }
     setCargando(true);
     setError(null);
     try {
@@ -74,23 +87,28 @@ export default function Panel() {
         { clientes: listaDeClientes },
         radar,
         { alertas: listaDeAlertas },
-        { solicitudes: listaDeSolicitudes },
-        { balances: listaDeBalances },
-        { liquidaciones: listaDeLiquidaciones },
+        porPeriodo,
+        { presentados: listaDePresentados },
       ] = await Promise.all([
         listarClientes(),
         obtenerRadar(),
         obtenerAlertas(),
-        listarSolicitudesPorPeriodo(periodo),
-        listarBalances(periodo),
-        listarLiquidaciones(periodo),
+        // La API de estos tres es por período: se pide cada período que toca el
+        // rango y se juntan. Un rango de 90 días son a lo sumo cuatro.
+        Promise.all(
+          periodos.map((p) =>
+            Promise.all([listarSolicitudesPorPeriodo(p), listarBalances(p), listarLiquidaciones(p)]),
+          ),
+        ),
+        listarPresentados(),
       ]);
       setClientes(listaDeClientes);
       setVencimientos(radar.vencimientos);
       setAlertas(listaDeAlertas);
-      setSolicitudes(listaDeSolicitudes);
-      setBalances(listaDeBalances);
-      setLiquidaciones(listaDeLiquidaciones);
+      setSolicitudes(porPeriodo.flatMap(([s]) => s.solicitudes));
+      setBalances(porPeriodo.flatMap(([, b]) => b.balances));
+      setLiquidaciones(porPeriodo.flatMap(([, , l]) => l.liquidaciones));
+      setPresentados(listaDePresentados);
     } catch (motivo) {
       setError(motivo instanceof ErrorDeApi ? motivo.message : 'No se pudo conectar con el servidor.');
     } finally {
@@ -101,7 +119,7 @@ export default function Panel() {
   useEffect(() => {
     void recargar();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [periodo]);
+  }, [periodos.join(',')]);
 
   const nombreDeCliente = useMemo(() => {
     const mapa = new Map(clientes.map((c) => [c.id, c.nombre]));
@@ -109,25 +127,34 @@ export default function Panel() {
   }, [clientes]);
 
   const clientesActivos = clientes.filter((c) => c.activo).length;
-  const vencidos = vencimientos.filter((v) => v.nivelAlerta === 'VENCIDO').length;
-  const proximos = vencimientos.filter((v) => v.nivelAlerta === 'CRITICA' || v.nivelAlerta === 'ALTA').length;
-  const alertasCriticas = alertas.filter((a) => a.criticidad === 'CRITICA').length;
+  const vencimientosEnRango = vencimientos.filter((v) => dentroDelRango(v.fechaVencimiento, rango));
+  const alertasEnRango = alertas.filter((a) => dentroDelRango(a.creadoEn ?? null, rango));
+  const presentadosEnRango = presentados.filter((p) => dentroDelRango(p.fechaPresentacion, rango));
+  const conAtraso = presentadosEnRango.filter((p) => p.diasDeAtraso > 0);
+  const diasDeAtrasoTotales = conAtraso.reduce((suma, p) => suma + p.diasDeAtraso, 0);
+
+  const vencidos = vencimientosEnRango.filter((v) => v.nivelAlerta === 'VENCIDO').length;
+  const proximos = vencimientosEnRango.filter((v) => v.nivelAlerta === 'CRITICA' || v.nivelAlerta === 'ALTA').length;
+  const alertasCriticas = alertasEnRango.filter((a) => a.criticidad === 'CRITICA').length;
+  const detallePeriodos = periodos.length === 1 ? `Período ${periodos[0]}` : `Períodos ${periodos[0]} a ${periodos[periodos.length - 1]}`;
   const documentacionPendiente = solicitudes.filter((s) => ESTADOS_SOLICITUD_ABIERTA.has(s.estado)).length;
   const balancesPendientes = balances.filter((b) => ESTADOS_BALANCE_PENDIENTE.has(b.estado)).length;
   const liquidacionesSinEnviar = liquidaciones.filter((l) => ESTADOS_LIQUIDACION_SIN_ENVIAR.has(l.estado)).length;
 
   const alertasUrgentes = useMemo(
-    () => [...alertas].filter((a) => a.criticidad === 'CRITICA' || a.criticidad === 'ALTA').slice(0, MAXIMO_EN_LISTAS),
-    [alertas],
+    () => [...alertasEnRango].filter((a) => a.criticidad === 'CRITICA' || a.criticidad === 'ALTA').slice(0, MAXIMO_EN_LISTAS),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [alertas, rango],
   );
 
   const vencimientosUrgentes = useMemo(
     () =>
-      [...vencimientos]
+      [...vencimientosEnRango]
         .filter((v) => v.nivelAlerta !== 'SIN_ALERTA')
         .sort((a, b) => a.diasRestantes - b.diasRestantes)
         .slice(0, MAXIMO_EN_LISTAS),
-    [vencimientos],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [vencimientos, rango],
   );
 
   if (cargando) {
@@ -154,15 +181,9 @@ export default function Panel() {
           <p className="mt-1 max-w-2xl text-sm text-tinta-suave">
             Resumen de la cartera. Cada número se edita en su propio módulo, acá solo se mira.
           </p>
+          <p className="mt-1 text-xs text-tinta-tenue">Mostrando: {describirFiltro(filtro)}.</p>
         </div>
-        <CampoTexto
-          id="periodoPanel"
-          etiqueta="Período"
-          type="month"
-          value={periodo}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPeriodo(e.target.value)}
-          className="w-40"
-        />
+        <FiltroDeFechasSelector id="filtroPanel" valor={filtro} onCambiar={setFiltro} permitirTodo />
       </div>
 
       <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-label="Indicadores generales">
@@ -170,16 +191,26 @@ export default function Panel() {
         <Indicador etiqueta="Vencimientos vencidos" valor={vencidos} tono="critico" destacado={vencidos > 0} />
         <Indicador etiqueta="Vencimientos próximos" valor={proximos} tono="parcial" />
         <Indicador etiqueta="Alertas críticas" valor={alertasCriticas} tono="critico" destacado={alertasCriticas > 0} />
-        <Indicador etiqueta="Documentación pendiente" valor={documentacionPendiente} detalle={`Período ${periodo}`} tono="pendiente" />
-        <Indicador etiqueta="Balances sin aprobar" valor={balancesPendientes} detalle={`Período ${periodo}`} tono="pendiente" />
-        <Indicador etiqueta="Liquidaciones sin enviar" valor={liquidacionesSinEnviar} detalle={`Período ${periodo}`} tono="pendiente" />
+        <Indicador etiqueta="Documentación pendiente" valor={documentacionPendiente} detalle={detallePeriodos} tono="pendiente" />
+        <Indicador etiqueta="Balances sin aprobar" valor={balancesPendientes} detalle={detallePeriodos} tono="pendiente" />
+        <Indicador etiqueta="Liquidaciones sin enviar" valor={liquidacionesSinEnviar} detalle={detallePeriodos} tono="pendiente" />
+        <Indicador
+          etiqueta="Presentadas con atraso"
+          valor={conAtraso.length}
+          detalle={
+            presentadosEnRango.length === 0
+              ? 'sin presentaciones registradas'
+              : `de ${presentadosEnRango.length} presentadas · ${diasDeAtrasoTotales} días en total`
+          }
+          tono="parcial"
+        />
       </section>
 
       <div className="grid gap-5 lg:grid-cols-2">
         <Tarjeta>
           <EncabezadoTarjeta
             titulo="Alertas más urgentes"
-            descripcion={alertasUrgentes.length === 0 ? 'Sin alertas críticas o altas activas' : `Las ${alertasUrgentes.length} más urgentes de ${alertas.length} activas — el resto, en la pantalla Alertas`}
+            descripcion={alertasUrgentes.length === 0 ? 'Sin alertas críticas o altas activas' : `Las ${alertasUrgentes.length} más urgentes de ${alertasEnRango.length} activas — el resto, en la pantalla Alertas`}
           />
           <Tabla etiqueta="Alertas más urgentes">
             <thead>
@@ -215,7 +246,7 @@ export default function Panel() {
         <Tarjeta>
           <EncabezadoTarjeta
             titulo="Vencimientos más urgentes"
-            descripcion={vencimientosUrgentes.length === 0 ? 'Sin vencimientos con alerta activa' : `Los ${vencimientosUrgentes.length} más urgentes de ${vencimientos.length} en el radar — el resto, en la pantalla Vencimientos`}
+            descripcion={vencimientosUrgentes.length === 0 ? 'Sin vencimientos con alerta activa' : `Los ${vencimientosUrgentes.length} más urgentes de ${vencimientosEnRango.length} en el radar — el resto, en la pantalla Vencimientos`}
           />
           <Tabla etiqueta="Vencimientos más urgentes">
             <thead>

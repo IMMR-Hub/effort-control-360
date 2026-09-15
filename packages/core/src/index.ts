@@ -9,6 +9,7 @@
 export * from './dinero.js';
 export * from './iva.js';
 export * from './fechas.js';
+export * from './filtroDeFechas.js';
 export * from './comprobantes.js';
 export * from './conciliacion.js';
 export * from './balance.js';

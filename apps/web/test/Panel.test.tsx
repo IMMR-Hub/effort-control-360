@@ -134,6 +134,17 @@ async function montar(rol: string = 'direccion') {
   mock.mockDeRuta('GET /api/v1/solicitudes-documentacion', () => respuestaJson({ solicitudes: [SOLICITUD_ABIERTA] }));
   mock.mockDeRuta('GET /api/v1/balances', () => respuestaJson({ balances: [BALANCE_PENDIENTE] }));
   mock.mockDeRuta('GET /api/v1/liquidaciones', () => respuestaJson({ liquidaciones: [LIQUIDACION_PENDIENTE] }));
+  mock.mockDeRuta('GET /api/v1/vencimientos/presentados', () =>
+    respuestaJson({
+      presentados: [
+        {
+          id: 'p1', clienteId: GARSO.id, descripcion: 'IVA General — período 2026-03', entidad: 'DNIT',
+          fechaVencimiento: '2026-04-09', fechaPresentacion: '2026-04-16', evidenciaId: null,
+          diasDeAtraso: 7, fechaAproximada: false,
+        },
+      ],
+    }),
+  );
 
   vi.resetModules();
   const { ProveedorDeSesion } = await import('../src/contexts/SesionContext.js');
@@ -184,7 +195,8 @@ describe('panel general', () => {
     mock.mockDeRuta('GET /api/v1/balances', () => respuestaJson({ balances: [] }));
     mock.mockDeRuta('GET /api/v1/liquidaciones', () => respuestaJson({ liquidaciones: [] }));
 
-    fireEvent.change(screen.getByLabelText('Período'), { target: { value: '2026-05' } });
+    fireEvent.change(screen.getByLabelText('Mostrar'), { target: { value: 'mes' } });
+    fireEvent.change(await screen.findByLabelText('Mes'), { target: { value: '2026-05' } });
 
     await waitFor(() => {
       const llamadas = mock.llamadasA('GET /api/v1/solicitudes-documentacion');
@@ -210,6 +222,7 @@ describe('panel general', () => {
     mock.mockDeRuta('GET /api/v1/solicitudes-documentacion', () => respuestaJson({ solicitudes: [] }));
     mock.mockDeRuta('GET /api/v1/balances', () => respuestaJson({ balances: [] }));
     mock.mockDeRuta('GET /api/v1/liquidaciones', () => respuestaJson({ liquidaciones: [] }));
+    mock.mockDeRuta('GET /api/v1/vencimientos/presentados', () => respuestaJson({ presentados: [] }));
 
     vi.resetModules();
     const { ProveedorDeSesion } = await import('../src/contexts/SesionContext.js');
@@ -222,5 +235,33 @@ describe('panel general', () => {
     );
 
     expect(await screen.findAllByText('Nada urgente por ahora.')).toHaveLength(2);
+  });
+
+  /*
+   * Daniel, 2026-09-15: buscar también por "últimos 15, 30, 60 o 90 días". Un
+   * vencimiento de abril no entra en los últimos 30 días de hoy; el panel lo
+   * saca de la cuenta en vez de seguir mostrando el total de la cartera.
+   */
+  it('con "últimos 30 días" solo cuenta lo que cae en ese rango', async () => {
+    await montar();
+    await waitFor(() => {
+      expect(screen.getByText('Vencimientos vencidos').closest('div')!.textContent).toContain('1');
+    });
+
+    fireEvent.change(screen.getByLabelText('Mostrar'), { target: { value: 'ultimos-30' } });
+
+    await waitFor(() => {
+      expect(screen.getByText('Vencimientos vencidos').closest('div')!.textContent).toContain('0');
+    });
+    expect(screen.getByText(/Mostrando: últimos 30 días/)).toBeVisible();
+  });
+
+  it('muestra cuántas presentaciones fueron con atraso, en días y sin hablar de multa', async () => {
+    await montar();
+
+    await waitFor(() => {
+      expect(screen.getByText('Presentadas con atraso').closest('div')!.textContent).toContain('7 días en total');
+    });
+    expect(screen.queryByText(/multa/i)).toBeNull();
   });
 });

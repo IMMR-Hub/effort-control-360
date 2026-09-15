@@ -21,6 +21,22 @@ import { ErrorDeApi } from '../api/cliente.js';
 import { listarClientes, type Cliente } from '../api/clientes.js';
 import { listarEventos, type Evento } from '../api/eventos.js';
 import { listarUsuarios, type Usuario } from '../api/usuarios.js';
+import { FiltroDeFechasSelector } from '../ui/FiltroDeFechas.js';
+import { hoyEnParaguay, rangoDelFiltro, type FiltroDeFechas } from '@effort/core';
+
+/**
+ * Días completos en hora de Paraguay (UTC-3 todo el año desde 2024).
+ *
+ * Antes el "hasta" viajaba como fecha sola, el servidor la leía como la
+ * medianoche de ese día y dejaba afuera todo lo ocurrido ESE día: filtrar "hasta
+ * hoy" no mostraba nada de hoy.
+ */
+function limitesDelDia(filtro: { desde: string; hasta: string }) {
+  return {
+    desde: filtro.desde ? `${filtro.desde}T00:00:00-03:00` : undefined,
+    hasta: filtro.hasta ? `${filtro.hasta}T23:59:59.999-03:00` : undefined,
+  };
+}
 
 const LIMITE_POR_PAGINA = 50;
 
@@ -140,6 +156,14 @@ export default function Eventos() {
   const [cargandoMas, setCargandoMas] = useState(false);
 
   const [filtro, setFiltro] = useState<Filtro>(FILTRO_VACIO);
+  // Atajos de fecha (Daniel, 2026-09-15): cualquier elección se vuelca en el
+  // desde–hasta del formulario, que es lo que viaja al servidor.
+  const [filtroDeFechas, setFiltroDeFechas] = useState<FiltroDeFechas>({ tipo: 'todo' });
+  function cambiarFechas(nuevo: FiltroDeFechas) {
+    setFiltroDeFechas(nuevo);
+    const rango = rangoDelFiltro(nuevo, hoyEnParaguay(new Date()));
+    setFiltro((actual) => ({ ...actual, desde: rango?.desde ?? '', hasta: rango?.hasta ?? '' }));
+  }
   const [filtroAplicado, setFiltroAplicado] = useState<Filtro>(FILTRO_VACIO);
 
   const nombreDeCliente = useMemo(() => {
@@ -166,8 +190,7 @@ export default function Eventos() {
         entidadId: aplicado.entidadId.trim() || undefined,
         usuarioId: aplicado.usuarioId.trim() || undefined,
         clienteId: aplicado.clienteId || undefined,
-        desde: aplicado.desde || undefined,
-        hasta: aplicado.hasta || undefined,
+        ...limitesDelDia(aplicado),
         limite: LIMITE_POR_PAGINA,
         desplazamiento: 0,
       });
@@ -203,6 +226,7 @@ export default function Eventos() {
 
   function limpiar() {
     setFiltro(FILTRO_VACIO);
+    setFiltroDeFechas({ tipo: 'todo' });
     setFiltroAplicado(FILTRO_VACIO);
     void buscar(FILTRO_VACIO);
   }
@@ -215,8 +239,7 @@ export default function Eventos() {
         entidadId: filtroAplicado.entidadId.trim() || undefined,
         usuarioId: filtroAplicado.usuarioId.trim() || undefined,
         clienteId: filtroAplicado.clienteId || undefined,
-        desde: filtroAplicado.desde || undefined,
-        hasta: filtroAplicado.hasta || undefined,
+        ...limitesDelDia(filtroAplicado),
         limite: LIMITE_POR_PAGINA,
         desplazamiento: eventos.length,
       });
@@ -285,20 +308,9 @@ export default function Eventos() {
             value={filtro.clienteId}
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFiltro({ ...filtro, clienteId: e.target.value })}
           />
-          <CampoTexto
-            id="filtroDesde"
-            etiqueta="Desde"
-            type="date"
-            value={filtro.desde}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFiltro({ ...filtro, desde: e.target.value })}
-          />
-          <CampoTexto
-            id="filtroHasta"
-            etiqueta="Hasta"
-            type="date"
-            value={filtro.hasta}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFiltro({ ...filtro, hasta: e.target.value })}
-          />
+          <div className="sm:col-span-2">
+            <FiltroDeFechasSelector id="filtroEventos" valor={filtroDeFechas} onCambiar={cambiarFechas} permitirTodo />
+          </div>
           <div className="flex items-end gap-2 sm:col-span-3">
             <Boton variante="primario" icono={Search} type="submit">
               Buscar

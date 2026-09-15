@@ -55,7 +55,17 @@ import { ErrorDeApi } from '../api/cliente.js';
 import { listarClientes, type Cliente } from '../api/clientes.js';
 import { listarContactosDelPeriodo, registrarContacto, type Contacto } from '../api/contactos.js';
 import { listarReglasDeNotificacion } from '../api/reglasNotificacion.js';
-import { listarSolicitudesPorPeriodo, type SolicitudDocumentacion } from '../api/solicitudes.js';
+import {
+  abrirSolicitud,
+  listarSolicitudesPorPeriodo,
+  type SolicitudDocumentacion,
+} from '../api/solicitudes.js';
+import { useSesion } from '../contexts/SesionContext.js';
+import { FiltroDeFechasSelector, PeriodosDelRango, filtroDelMesActual, usePeriodoDelFiltro } from '../ui/FiltroDeFechas.js';
+import type { FiltroDeFechas } from '@effort/core';
+
+/** Mismos roles que la matriz deja crear una solicitud. */
+const ROLES_QUE_ABREN = new Set(['direccion', 'responsable', 'coordinador']);
 
 const ICONO_CANAL: Record<Contacto['canal'], typeof Phone> = {
   LLAMADA: Phone,
@@ -174,10 +184,11 @@ interface FilaDeSeguimiento {
 }
 
 export default function Seguimiento() {
-  const periodoActivo = useMemo(() => {
-    const hoy = hoyEnParaguay(new Date());
-    return `${hoy.anio}-${String(hoy.mes).padStart(2, '0')}`;
-  }, []);
+  // Hasta el 2026-09-15 el período estaba fijo en el mes en curso y no se podía
+  // elegir. Ahora usa el filtro común; el seguimiento es por período, así que
+  // con un rango se elige cuál de los que toca.
+  const [filtro, setFiltro] = useState<FiltroDeFechas>(filtroDelMesActual);
+  const { periodos, periodo: periodoActivo, elegirPeriodo } = usePeriodoDelFiltro(filtro);
 
   const calendario: CalendarioHabil = useMemo(() => {
     const anio = Number(periodoActivo.slice(0, 4));
@@ -198,6 +209,10 @@ export default function Seguimiento() {
   const [guardando, setGuardando] = useState(false);
   const [errorAlta, setErrorAlta] = useState<string | null>(null);
   const [formulario, setFormulario] = useState<FormularioDeContacto>(CONTACTO_VACIO);
+  const { sesion } = useSesion();
+  const puedeAbrir = ROLES_QUE_ABREN.has(sesion?.rol ?? '');
+  const [recarga, setRecarga] = useState(0);
+  const [abriendo, setAbriendo] = useState(false);
 
   useEffect(() => {
     let cancelado = false;
@@ -268,7 +283,35 @@ export default function Seguimiento() {
     return () => {
       cancelado = true;
     };
-  }, [periodoActivo]);
+  }, [periodoActivo, recarga]);
+
+  /*
+   * Abre el seguimiento del período para todos los clientes activos.
+   *
+   * Existe porque la pantalla de inicio estaba vacía y no decía por qué: el
+   * seguimiento de un período no se abre solo, y los del piloto se perdieron
+   * con el borrado del 2026-09-13. Abrir es idempotente en el servidor — un
+   * cliente que ya tenía su período abierto no se duplica.
+   */
+  async function abrirParaTodos() {
+    setAbriendo(true);
+    setError(null);
+    try {
+      const yaAbiertos = new Set(solicitudes.map((s) => s.clienteId));
+      for (const cliente of clientes.filter((c) => c.activo && !yaAbiertos.has(c.id))) {
+        await abrirSolicitud(cliente.id, {
+          periodo: periodoActivo,
+          cuentaDesde: `${periodoActivo}-01`,
+          reglaId: regla?.id ?? null,
+        });
+      }
+      setRecarga((n) => n + 1);
+    } catch (motivo) {
+      setError(motivo instanceof ErrorDeApi ? motivo.message : 'No se pudo abrir el seguimiento.');
+    } finally {
+      setAbriendo(false);
+    }
+  }
 
   // Memoizado: si se recalculara en cada render, cambiaría de referencia
   // todo el tiempo y el `useMemo` de más abajo (que lo usa) recalcularía en
@@ -399,8 +442,9 @@ export default function Seguimiento() {
             según la regla configurada; cada intento queda registrado para poder demostrarlo después.
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          <span className="hidden text-xs text-tinta-tenue sm:inline">Período</span>
+        <div className="flex flex-col items-end gap-2">
+          <FiltroDeFechasSelector id="filtroSeguimiento" valor={filtro} onCambiar={setFiltro} />
+          <PeriodosDelRango periodos={periodos} periodo={periodoActivo} onElegir={elegirPeriodo} />
           <Badge tono="proceso" conIcono={false}>{formatearPeriodo(periodoActivo)}</Badge>
           {/*
             Acá había tres botones más —"Reglas de aviso", "Exportar" y "PDF"—
@@ -520,7 +564,20 @@ export default function Seguimiento() {
               {filas.length === 0 && (
                 <tr>
                   <td colSpan={7} className="px-4 py-8 text-center text-sm text-tinta-tenue">
-                    Todavía no se abrió el seguimiento de ningún cliente para este período.
+                    <p>Todavía no se abrió el seguimiento de ningún cliente para este período.</p>
+                    <p className="mt-1 text-xs">
+                      El seguimiento de un período no se abre solo: marca desde cuándo corre el
+                      plazo para que cada cliente entregue su documentación.
+                    </p>
+                    {puedeAbrir && clientes.some((c) => c.activo) && (
+                      <div className="mt-3 flex justify-center">
+                        <Boton variante="primario" onClick={() => void abrirParaTodos()} disabled={abriendo}>
+                          {abriendo
+                            ? 'Abriendo…'
+                            : `Abrir el seguimiento de ${clientes.filter((c) => c.activo).length} clientes`}
+                        </Boton>
+                      </div>
+                    )}
                   </td>
                 </tr>
               )}

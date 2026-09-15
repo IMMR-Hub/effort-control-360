@@ -32,7 +32,7 @@ test('dirección inicia sesión, navega, ve datos reales, y cierra sesión', asy
     .fill(authenticator.generate(CREDENCIALES.direccion.secretoTotp));
   await page.getByRole('button', { name: 'Verificar' }).click();
 
-  await expect(page.getByRole('button', { name: 'Seguimiento', exact: true })).toHaveAttribute(
+  await expect(page.getByRole('button', { name: 'Panel general', exact: true })).toHaveAttribute(
     'aria-current',
     'page',
   );

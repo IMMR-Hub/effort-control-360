@@ -18,8 +18,18 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { AlertOctagon, Ban, CheckCircle2, CloudDownload, FileText, Plus, Eye } from 'lucide-react';
 
-import { formatearGs, gs, hoyEnParaguay } from '@effort/core';
+import {
+  dentroDelRango,
+  describirFiltro,
+  formatearGs,
+  gs,
+  hoyEnParaguay,
+  rangoDelFiltro,
+  type FiltroDeFechas,
+} from '@effort/core';
 import { periodoSchema } from '@effort/schema';
+
+import { FiltroDeFechasSelector, filtroDelMesActual } from '../ui/FiltroDeFechas.js';
 
 import {
   Badge,
@@ -210,11 +220,16 @@ export default function Documentos() {
   const puedeCrearDocumento = ROLES_QUE_CREAN_DOCUMENTO.has(rol);
   const puedeCambiarEstado = ROLES_QUE_CAMBIAN_ESTADO.has(rol);
 
-  const periodoPorDefecto = useMemo(() => {
-    const hoy = hoyEnParaguay(new Date());
-    return `${hoy.anio}-${String(hoy.mes).padStart(2, '0')}`;
-  }, []);
-  const [periodo, setPeriodo] = useState(periodoPorDefecto);
+  /*
+   * "Por mes" es el período fiscal: el tablero del proceso mensual y los
+   * documentos de ese período, como siempre. Cualquier otra elección (fecha
+   * exacta, desde–hasta, últimos N días) filtra los documentos por la fecha en
+   * que se RECIBIERON, y el tablero muestra el período del último día del rango.
+   */
+  const [filtro, setFiltro] = useState<FiltroDeFechas>(filtroDelMesActual);
+  const rango = useMemo(() => rangoDelFiltro(filtro, hoyEnParaguay(new Date())), [filtro]);
+  const periodo = filtro.tipo === 'mes' ? filtro.periodo : (rango?.hasta ?? '').slice(0, 7);
+  const porFechaDeRecepcion = filtro.tipo !== 'mes';
 
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -296,8 +311,13 @@ export default function Documentos() {
     }
     setCargandoDocumentos(true);
     try {
-      const { documentos: lista } = await listarDocumentos(clienteId, periodo);
-      setDocumentos(lista);
+      if (porFechaDeRecepcion) {
+        const { documentos: todos } = await listarDocumentos(clienteId);
+        setDocumentos(todos.filter((d) => dentroDelRango(d.recibidoEn, rango)));
+      } else {
+        const { documentos: lista } = await listarDocumentos(clienteId, periodo);
+        setDocumentos(lista);
+      }
     } catch (motivo) {
       setError(motivo instanceof ErrorDeApi ? motivo.message : 'No se pudo conectar con el servidor.');
     } finally {
@@ -308,7 +328,7 @@ export default function Documentos() {
   useEffect(() => {
     if (clienteSeleccionado) void cargarDocumentos(clienteSeleccionado);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [clienteSeleccionado, periodo]);
+  }, [clienteSeleccionado, periodo, rango?.desde, rango?.hasta, porFechaDeRecepcion]);
 
   /**
    * Preselecciona el primer cliente para que la tabla de documentos se vea al
@@ -483,14 +503,7 @@ export default function Documentos() {
               {sincronizando ? 'Sincronizando…' : 'Sincronizar OneDrive'}
             </Boton>
           )}
-          <CampoTexto
-            id="periodo"
-            etiqueta="Período"
-            type="month"
-            value={periodo}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPeriodo(e.target.value)}
-            className="w-40"
-          />
+          <FiltroDeFechasSelector id="filtroDocumentos" valor={filtro} onCambiar={setFiltro} />
         </div>
       </div>
 
@@ -829,7 +842,7 @@ export default function Documentos() {
         <Tarjeta>
           <EncabezadoTarjeta
             titulo={`Documentos — ${nombreClienteSeleccionado}`}
-            descripcion={`Período ${periodo} · ${documentos.length} documento${documentos.length === 1 ? '' : 's'}`}
+            descripcion={`${porFechaDeRecepcion ? `Recibidos ${describirFiltro(filtro)}` : `Período ${periodo}`} · ${documentos.length} documento${documentos.length === 1 ? '' : 's'}`}
             acciones={
               <div className="flex flex-wrap items-end gap-3">
                 {/* Cambiar de cliente sin volver a la tabla de arriba. */}

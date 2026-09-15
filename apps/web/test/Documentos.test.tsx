@@ -260,7 +260,7 @@ describe('pantalla de documentos / IVA', () => {
   it('el período se elige con un selector de mes, no escribiendo texto', async () => {
     await montar();
 
-    expect(screen.getByLabelText('Período')).toHaveAttribute('type', 'month');
+    expect(screen.getByLabelText('Mes')).toHaveAttribute('type', 'month');
   });
 
   it('elegir otro mes recarga el tablero con ese período', async () => {
@@ -270,7 +270,7 @@ describe('pantalla de documentos / IVA', () => {
       respuestaJson({ periodo: '2026-04', procesos: [] }),
     );
 
-    fireEvent.change(screen.getByLabelText('Período'), { target: { value: '2026-04' } });
+    fireEvent.change(screen.getByLabelText('Mes'), { target: { value: '2026-04' } });
 
     await waitFor(() => {
       expect(mock.llamadasA('GET /api/v1/proceso-mensual/2026-04')).toHaveLength(1);
@@ -281,16 +281,36 @@ describe('pantalla de documentos / IVA', () => {
   // así que borrarlo mandaba un período incompleto y el servidor respondía
   // "Los datos enviados no son válidos" sin forma de corregirlo desde la
   // pantalla. Ahora un período inválido no llega a salir del navegador.
+  // Con el filtro de fechas (2026-09-15) un mes borrado se ignora: se sigue
+  // mostrando el último mes válido en vez de vaciar la pantalla.
   it('borrar el período no dispara ninguna petición al servidor', async () => {
     await montar();
     const llamadasPrevias = mock.fetchMock.mock.calls.length;
 
-    fireEvent.change(screen.getByLabelText('Período'), { target: { value: '' } });
+    fireEvent.change(screen.getByLabelText('Mes'), { target: { value: '' } });
+
+    expect(mock.fetchMock.mock.calls.length).toBe(llamadasPrevias);
+    expect(screen.getAllByText('GARSO S.A.').length).toBeGreaterThan(0);
+  });
+
+  /*
+   * Daniel, 2026-09-15: buscar también por "últimos 15, 30, 60 o 90 días". Fuera
+   * de "Por mes", los documentos se filtran por la fecha en que se recibieron,
+   * así que se piden sin período.
+   */
+  it('con "últimos 30 días" los documentos se piden sin período y se filtran por fecha de recepción', async () => {
+    await montar();
+    await usuario.click(filaDelTablero('GARSO S.A.'));
+
+    fireEvent.change(screen.getByLabelText('Mostrar'), { target: { value: 'ultimos-30' } });
 
     await waitFor(() => {
-      expect(screen.queryByText('GARSO S.A.')).not.toBeInTheDocument();
+      const llamadas = mock.fetchMock.mock.calls
+        .map(([url]) => new URL(String(url)))
+        .filter((u) => u.pathname.endsWith('/documentos'));
+      expect(llamadas.at(-1)!.searchParams.get('periodo')).toBeNull();
     });
-    expect(mock.fetchMock.mock.calls.length).toBe(llamadasPrevias);
+    expect(screen.getByText(/Recibidos últimos 30 días/)).toBeVisible();
   });
 
   it('cancelar el rechazo (sin escribir motivo) no llama al servidor', async () => {

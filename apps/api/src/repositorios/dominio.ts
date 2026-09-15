@@ -953,6 +953,7 @@ const CAMPOS_ALERTA = {
   cerradaPorUsuarioId: true,
   cerradaEn: true,
   motivoCierre: true,
+  creadoEn: true,
 } as const;
 
 export class AlertasPrisma implements RepositorioDeAlertas {

@@ -28,6 +28,8 @@ export interface Alerta {
   readonly cerradaPorUsuarioId: string | null;
   readonly cerradaEn: string | null;
   readonly motivoCierre: string | null;
+  /** Cuándo se levantó. Es la fecha con la que se filtra. */
+  readonly creadoEn?: string;
 }
 
 export type ResumenPorCriticidad = Record<Criticidad, number>;

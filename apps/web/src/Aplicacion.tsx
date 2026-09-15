@@ -43,7 +43,7 @@ const PANTALLAS: Record<Pantalla, () => JSX.Element> = {
 };
 
 function AppShell() {
-  const [pantallaActiva, setPantallaActiva] = useState<Pantalla>('seguimiento');
+  const [pantallaActiva, setPantallaActiva] = useState<Pantalla>('panel');
   const PantallaActual = PANTALLAS[pantallaActiva];
 
   return (

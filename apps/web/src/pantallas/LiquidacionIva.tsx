@@ -18,10 +18,18 @@
  * cinco empresas no responde ninguna pregunta que alguien tenga.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { AlertTriangle, Calculator, RefreshCw } from 'lucide-react';
 
-import { formatearGs, gs } from '@effort/core';
+import {
+  describirFiltro,
+  formatearGs,
+  gs,
+  hoyEnParaguay,
+  periodosDelRango,
+  rangoDelFiltro,
+  type FiltroDeFechas,
+} from '@effort/core';
 
 import { Badge, Boton, CampoSelect, EncabezadoTarjeta, Indicador, Tabla, Tarjeta, Td, Th } from '../ui/Primitivos.jsx';
 import { ErrorDeApi } from '../api/cliente.js';
@@ -37,6 +45,7 @@ import {
   type ResumenDeHallazgos,
 } from '../api/liquidacionesIva.js';
 import { useSesion } from '../contexts/SesionContext.js';
+import { FiltroDeFechasSelector } from '../ui/FiltroDeFechas.js';
 
 /** Mismos roles que la matriz de permisos deja calcular. */
 const ROLES_QUE_CALCULAN = new Set(['direccion', 'responsable']);
@@ -105,6 +114,14 @@ export default function LiquidacionIva() {
   const [calculando, setCalculando] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [ultimoCalculo, setUltimoCalculo] = useState<ResumenDeCalculo | null>(null);
+
+  // Por período fiscal: con un rango se muestran los períodos que toca.
+  const [filtro, setFiltro] = useState<FiltroDeFechas>({ tipo: 'todo' });
+  const periodosVisibles = useMemo(() => {
+    const rango = rangoDelFiltro(filtro, hoyEnParaguay(new Date()));
+    return rango ? new Set(periodosDelRango(rango)) : null;
+  }, [filtro]);
+  const enFiltro = (periodo: string) => periodosVisibles === null || periodosVisibles.has(periodo);
   // Hallazgo que se está aceptando: el motivo se pide en la misma fila, sin modal.
   const [aceptando, setAceptando] = useState<string | null>(null);
   const [motivo, setMotivo] = useState('');
@@ -219,6 +236,10 @@ export default function LiquidacionIva() {
             onChange={(evento: { target: { value: string } }) => setClienteId(evento.target.value)}
             opciones={clientes.map((c) => ({ valor: c.id, etiqueta: c.nombre }))}
           />
+          <div className="mt-3">
+            <FiltroDeFechasSelector id="filtroIva" valor={filtro} onCambiar={setFiltro} permitirTodo />
+            <p className="mt-1 text-xs text-tinta-tenue">Períodos: {describirFiltro(filtro)}.</p>
+          </div>
         </div>
 
         {ultimoCalculo && (
@@ -262,7 +283,7 @@ export default function LiquidacionIva() {
           <Indicador etiqueta="Aceptados" valor={String(resumen.aceptados)} tono="completo" />
         </div>
 
-        {hallazgos.length === 0 ? (
+        {hallazgos.filter((h) => enFiltro(h.periodo)).length === 0 ? (
           <p className="px-5 py-8 text-center text-sm text-tinta-tenue">
             {cargando ? 'Cargando…' : 'No hay nada para revisar en este cliente.'}
           </p>
@@ -280,7 +301,7 @@ export default function LiquidacionIva() {
               </tr>
             </thead>
             <tbody>
-              {hallazgos.map((h) => (
+              {hallazgos.filter((h) => enFiltro(h.periodo)).map((h) => (
                 <tr key={h.id}>
                   <Td>{h.periodo}</Td>
                   <Td>
@@ -369,7 +390,7 @@ export default function LiquidacionIva() {
           descripcion="Crédito de las compras, débito de las ventas, y el saldo que resulta."
         />
 
-        {liquidaciones.length === 0 ? (
+        {liquidaciones.filter((l) => enFiltro(l.periodo)).length === 0 ? (
           <p className="px-5 py-8 text-center text-sm text-tinta-tenue">
             {cargando
               ? 'Cargando…'
@@ -389,7 +410,7 @@ export default function LiquidacionIva() {
               </tr>
             </thead>
             <tbody>
-              {liquidaciones.map((l) => (
+              {liquidaciones.filter((l) => enFiltro(l.periodo)).map((l) => (
                 <tr key={l.periodo}>
                   <Td>{l.periodo}</Td>
                   <Td numerica>{l.comprobantesCompras}</Td>

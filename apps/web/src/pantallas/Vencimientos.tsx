@@ -10,7 +10,14 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { CalendarCheck, CalendarClock, Plus } from 'lucide-react';
 
-import { hoyEnParaguay } from '@effort/core';
+import {
+  dentroDelRango,
+  describirFiltro,
+  hoyEnParaguay,
+  rangoDelFiltro,
+  type FiltroDeFechas,
+  type RangoDeFechas,
+} from '@effort/core';
 import { periodoSchema } from '@effort/schema';
 
 import {
@@ -48,6 +55,7 @@ import {
 } from '../api/vencimientos.js';
 import { useSesion } from '../contexts/SesionContext.js';
 import VencimientosPresentados from './VencimientosPresentados.js';
+import { FiltroDeFechasSelector } from '../ui/FiltroDeFechas.js';
 
 const ROLES_QUE_EDITAN = new Set(['direccion', 'responsable', 'coordinador']);
 
@@ -149,10 +157,33 @@ export default function Vencimientos() {
     return (clienteId: string) => mapa.get(clienteId) ?? clienteId;
   }, [clientes]);
 
-  const filas = useMemo(
-    () => [...vencimientos].sort((a, b) => a.fechaVencimiento.localeCompare(b.fechaVencimiento)),
-    [vencimientos],
+  /*
+   * El radar arranca en "todas las fechas": su trabajo es mostrar todo lo que
+   * falta. Con un filtro, se recorta por fecha de vencimiento, y los
+   * presentados de más abajo por fecha de presentación.
+   */
+  const [filtro, setFiltro] = useState<FiltroDeFechas>({ tipo: 'todo' });
+  const rango: RangoDeFechas | null = useMemo(
+    () => rangoDelFiltro(filtro, hoyEnParaguay(new Date())),
+    [filtro],
   );
+
+  const filas = useMemo(
+    () =>
+      [...vencimientos]
+        .filter((v) => dentroDelRango(v.fechaVencimiento, rango))
+        .sort((a, b) => a.fechaVencimiento.localeCompare(b.fechaVencimiento)),
+    [vencimientos, rango],
+  );
+
+  // Con filtro, el resumen se cuenta sobre lo filtrado: si no, los indicadores
+  // dirían una cosa y la tabla otra.
+  const resumenVisible: ResumenPorNivel = useMemo(() => {
+    if (rango === null) return resumen;
+    const cuenta = { ...RESUMEN_VACIO };
+    for (const v of filas) cuenta[v.nivelAlerta] += 1;
+    return cuenta;
+  }, [rango, resumen, filas]);
 
   function abrirAlta() {
     setFormulario(formularioVacio(clientesActivos[0]?.id ?? ''));
@@ -225,6 +256,9 @@ export default function Vencimientos() {
             Obligaciones societarias, legales y tributarias, ordenadas por urgencia. Días restantes y
             nivel de alerta calculados en zona Paraguay.
           </p>
+          <div className="mt-3">
+            <FiltroDeFechasSelector id="filtroVencimientos" valor={filtro} onCambiar={setFiltro} permitirTodo />
+          </div>
         </div>
         {puedeEditar && (
           <div className="flex flex-wrap items-end gap-3">
@@ -279,16 +313,19 @@ export default function Vencimientos() {
       )}
 
       <section className="grid gap-3 sm:grid-cols-3 xl:grid-cols-6" aria-label="Resumen por nivel de alerta">
-        <Indicador etiqueta="Vencidos" valor={resumen.VENCIDO} tono="critico" destacado={resumen.VENCIDO > 0} />
-        <Indicador etiqueta="Críticos" valor={resumen.CRITICA} tono="critico" />
-        <Indicador etiqueta="Altos" valor={resumen.ALTA} tono="parcial" />
-        <Indicador etiqueta="Medios" valor={resumen.MEDIA} tono="pendiente" />
-        <Indicador etiqueta="Informativos" valor={resumen.INFORMATIVA} tono="proceso" />
-        <Indicador etiqueta="Sin alerta" valor={resumen.SIN_ALERTA} tono="completo" />
+        <Indicador etiqueta="Vencidos" valor={resumenVisible.VENCIDO} tono="critico" destacado={resumenVisible.VENCIDO > 0} />
+        <Indicador etiqueta="Críticos" valor={resumenVisible.CRITICA} tono="critico" />
+        <Indicador etiqueta="Altos" valor={resumenVisible.ALTA} tono="parcial" />
+        <Indicador etiqueta="Medios" valor={resumenVisible.MEDIA} tono="pendiente" />
+        <Indicador etiqueta="Informativos" valor={resumenVisible.INFORMATIVA} tono="proceso" />
+        <Indicador etiqueta="Sin alerta" valor={resumenVisible.SIN_ALERTA} tono="completo" />
       </section>
 
       <Tarjeta>
-        <EncabezadoTarjeta titulo="Radar de vencimientos" descripcion={`${filas.length} obligaciones activas`} />
+        <EncabezadoTarjeta
+          titulo="Radar de vencimientos"
+          descripcion={`${filas.length} obligaciones activas · vencen: ${describirFiltro(filtro)}`}
+        />
         <Tabla etiqueta="Radar de vencimientos">
           <thead>
             <tr>
@@ -347,7 +384,7 @@ export default function Vencimientos() {
         </Tabla>
       </Tarjeta>
 
-      <VencimientosPresentados clientes={clientes} />
+      <VencimientosPresentados clientes={clientes} rango={rango} />
 
       {formularioAbierto && puedeEditar && (
         <Tarjeta className="max-w-2xl">

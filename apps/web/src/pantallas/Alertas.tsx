@@ -27,6 +27,13 @@ import {
   type ResumenPorCriticidad,
 } from '../api/alertas.js';
 import { useSesion } from '../contexts/SesionContext.js';
+import { FiltroDeFechasSelector } from '../ui/FiltroDeFechas.js';
+import {
+  dentroDelRango,
+  describirFiltro,
+  rangoDelFiltro,
+  type FiltroDeFechas,
+} from '@effort/core';
 
 const ROLES_QUE_CIERRAN = new Set(['direccion', 'responsable', 'coordinador']);
 /** Mismos roles que la matriz de permisos deja pedir una evaluación. */
@@ -45,6 +52,21 @@ export default function Alertas() {
   const [resumen, setResumen] = useState<ResumenPorCriticidad>(RESUMEN_VACIO);
   const [evaluando, setEvaluando] = useState(false);
   const [ultimaEvaluacion, setUltimaEvaluacion] = useState<ResumenDeEvaluacion | null>(null);
+
+  // Por fecha en que se levantó la alerta. Arranca en "todas": el radar
+  // existe para mostrar todo lo abierto.
+  const [filtro, setFiltro] = useState<FiltroDeFechas>({ tipo: 'todo' });
+  const rango = useMemo(() => rangoDelFiltro(filtro, hoyEnParaguay(new Date())), [filtro]);
+  const alertasVisibles = useMemo(
+    () => alertas.filter((a) => dentroDelRango(a.creadoEn ?? null, rango)),
+    [alertas, rango],
+  );
+  const resumenVisible = useMemo(() => {
+    if (rango === null) return resumen;
+    const cuenta = { ...RESUMEN_VACIO };
+    for (const a of alertasVisibles) cuenta[a.criticidad] += 1;
+    return cuenta;
+  }, [rango, resumen, alertasVisibles]);
 
   const puedeEvaluar = ROLES_QUE_EVALUAN.has(sesion?.rol ?? '');
 
@@ -152,6 +174,9 @@ export default function Alertas() {
             Vencimientos por vencer o vencidos y documentación faltante, consolidados por
             criticidad. Las genera el sistema, no un usuario a mano.
           </p>
+          <div className="mt-3">
+            <FiltroDeFechasSelector id="filtroAlertas" valor={filtro} onCambiar={setFiltro} permitirTodo />
+          </div>
         </div>
         {puedeEvaluar && (
           <Boton
@@ -179,14 +204,17 @@ export default function Alertas() {
       )}
 
       <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-label="Resumen por criticidad">
-        <Indicador etiqueta="Críticas" valor={resumen.CRITICA} tono="critico" destacado={resumen.CRITICA > 0} />
-        <Indicador etiqueta="Altas" valor={resumen.ALTA} tono="parcial" />
-        <Indicador etiqueta="Medias" valor={resumen.MEDIA} tono="pendiente" />
-        <Indicador etiqueta="Informativas" valor={resumen.INFORMATIVA} tono="proceso" />
+        <Indicador etiqueta="Críticas" valor={resumenVisible.CRITICA} tono="critico" destacado={resumenVisible.CRITICA > 0} />
+        <Indicador etiqueta="Altas" valor={resumenVisible.ALTA} tono="parcial" />
+        <Indicador etiqueta="Medias" valor={resumenVisible.MEDIA} tono="pendiente" />
+        <Indicador etiqueta="Informativas" valor={resumenVisible.INFORMATIVA} tono="proceso" />
       </section>
 
       <Tarjeta>
-        <EncabezadoTarjeta titulo="Radar de alertas" descripcion={`${alertas.length} alertas activas`} />
+        <EncabezadoTarjeta
+          titulo="Radar de alertas"
+          descripcion={`${alertasVisibles.length} alertas activas · levantadas: ${describirFiltro(filtro)}`}
+        />
         <Tabla etiqueta="Radar de alertas">
           <thead>
             <tr>
@@ -200,7 +228,7 @@ export default function Alertas() {
             </tr>
           </thead>
           <tbody>
-            {alertas.map((a) => (
+            {alertasVisibles.map((a) => (
               <tr key={a.id}>
                 <Td className="font-medium">{nombreDeCliente(a.clienteId)}</Td>
                 <Td>
@@ -246,7 +274,7 @@ export default function Alertas() {
                 )}
               </tr>
             ))}
-            {alertas.length === 0 && (
+            {alertasVisibles.length === 0 && (
               <tr>
                 <td colSpan={puedeCerrar ? 7 : 6} className="px-4 py-8 text-center text-sm text-tinta-tenue">
                   No hay alertas activas en la cartera.

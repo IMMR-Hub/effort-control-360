@@ -29,8 +29,9 @@ import {
   type TipoReporteSiga,
 } from '../api/siga.js';
 import { useSesion } from '../contexts/SesionContext.js';
-import { hoyEnParaguay } from '@effort/core';
 import { periodoSchema } from '@effort/schema';
+import { FiltroDeFechasSelector, PeriodosDelRango, filtroDelMesActual, usePeriodoDelFiltro } from '../ui/FiltroDeFechas.js';
+import type { FiltroDeFechas } from '@effort/core';
 
 const ROLES_QUE_IMPORTAN = new Set(['direccion', 'responsable', 'coordinador', 'auxiliar']);
 
@@ -73,16 +74,16 @@ export default function Siga() {
   const { sesion } = useSesion();
   const puedeImportar = ROLES_QUE_IMPORTAN.has(sesion?.rol ?? '');
 
-  const periodoPorDefecto = useMemo(() => {
-    const hoy = hoyEnParaguay(new Date());
-    return `${hoy.anio}-${String(hoy.mes).padStart(2, '0')}`;
-  }, []);
 
   const [cargandoClientes, setCargandoClientes] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [clientes, setClientes] = useState<readonly Cliente[]>([]);
   const [clienteId, setClienteId] = useState('');
-  const [periodo, setPeriodo] = useState(periodoPorDefecto);
+  // Filtro por mes, fecha exacta, desde–hasta o últimos N días (Daniel,
+  // 2026-09-15). Esta pantalla trabaja sobre UN período fiscal: con un rango se
+  // elige cuál de los períodos que toca.
+  const [filtro, setFiltro] = useState<FiltroDeFechas>(filtroDelMesActual);
+  const { periodos, periodo, elegirPeriodo } = usePeriodoDelFiltro(filtro);
 
   const [exportaciones, setExportaciones] = useState<readonly ExportacionSiga[]>([]);
   const [cargandoExportaciones, setCargandoExportaciones] = useState(false);
@@ -249,17 +250,9 @@ export default function Siga() {
             onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setClienteId(e.target.value)}
             className="w-56"
           />
-          <div className="flex flex-col gap-1.5">
-            <label htmlFor="periodo" className="text-xs font-medium text-tinta-suave">
-              Período
-            </label>
-            <input
-              id="periodo"
-              type="month"
-              value={periodo}
-              onChange={(e) => setPeriodo(e.target.value)}
-              className="min-h-9 w-40 rounded border border-borde-fuerte bg-superficie px-3 py-1.5 text-sm text-tinta focus-visible:outline-none"
-            />
+<div className="flex flex-col gap-2">
+            <FiltroDeFechasSelector id="filtroPeriodo" valor={filtro} onCambiar={setFiltro} />
+            <PeriodosDelRango periodos={periodos} periodo={periodo} onElegir={elegirPeriodo} />
           </div>
         </div>
       </div>

@@ -23,8 +23,9 @@ import {
   type Liquidacion,
 } from '../api/liquidaciones.js';
 import { useSesion } from '../contexts/SesionContext.js';
-import { hoyEnParaguay } from '@effort/core';
 import { periodoSchema } from '@effort/schema';
+import { FiltroDeFechasSelector, PeriodosDelRango, filtroDelMesActual, usePeriodoDelFiltro } from '../ui/FiltroDeFechas.js';
+import type { FiltroDeFechas } from '@effort/core';
 
 const ROLES_QUE_EDITAN = new Set(['direccion', 'responsable', 'coordinador']);
 
@@ -65,11 +66,11 @@ export default function Liquidaciones() {
   const { sesion } = useSesion();
   const puedeEditar = ROLES_QUE_EDITAN.has(sesion?.rol ?? '');
 
-  const periodoPorDefecto = useMemo(() => {
-    const hoy = hoyEnParaguay(new Date());
-    return `${hoy.anio}-${String(hoy.mes).padStart(2, '0')}`;
-  }, []);
-  const [periodo, setPeriodo] = useState(periodoPorDefecto);
+  // Filtro por mes, fecha exacta, desde–hasta o últimos N días (Daniel,
+  // 2026-09-15). Esta pantalla trabaja sobre UN período fiscal: con un rango se
+  // elige cuál de los períodos que toca.
+  const [filtro, setFiltro] = useState<FiltroDeFechas>(filtroDelMesActual);
+  const { periodos, periodo, elegirPeriodo } = usePeriodoDelFiltro(filtro);
 
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -226,14 +227,10 @@ export default function Liquidaciones() {
           </p>
         </div>
         <div className="flex items-end gap-3">
-          <CampoTexto
-            id="periodo"
-            etiqueta="Período"
-            type="month"
-            value={periodo}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPeriodo(e.target.value)}
-            className="w-40"
-          />
+<div className="flex flex-col gap-2">
+            <FiltroDeFechasSelector id="filtroPeriodo" valor={filtro} onCambiar={setFiltro} />
+            <PeriodosDelRango periodos={periodos} periodo={periodo} onElegir={elegirPeriodo} />
+          </div>
           {puedeEditar && (
             <Boton variante="primario" icono={Plus} onClick={abrirAlta}>
               Nueva liquidación

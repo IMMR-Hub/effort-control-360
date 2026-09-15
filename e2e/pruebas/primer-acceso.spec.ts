@@ -84,7 +84,7 @@ test('una cuenta nueva configura su segundo factor, cambia su contraseña y reci
   await page.getByLabel('Código de verificación').fill(authenticator.generate(secreto));
   await page.getByRole('button', { name: 'Verificar' }).click();
 
-  await expect(page.getByRole('button', { name: 'Seguimiento', exact: true })).toHaveAttribute(
+  await expect(page.getByRole('button', { name: 'Panel general', exact: true })).toHaveAttribute(
     'aria-current',
     'page',
   );

@@ -12,13 +12,23 @@
 
 import { useEffect, useState } from 'react';
 
+import { dentroDelRango, type RangoDeFechas } from '@effort/core';
+
 import { Badge, EncabezadoTarjeta, Tabla, Tarjeta, Td, Th } from '../ui/Primitivos.jsx';
 import { ErrorDeApi } from '../api/cliente.js';
 import type { Cliente } from '../api/clientes.js';
 import { listarPresentados, type VencimientoPresentado } from '../api/vencimientos.js';
 
-export default function VencimientosPresentados({ clientes }: { readonly clientes: readonly Cliente[] }) {
-  const [presentados, setPresentados] = useState<readonly VencimientoPresentado[]>([]);
+export default function VencimientosPresentados({
+  clientes,
+  rango = null,
+}: {
+  readonly clientes: readonly Cliente[];
+  /** Filtra por fecha de presentación. `null` = todas. */
+  readonly rango?: RangoDeFechas | null;
+}) {
+  const [todos, setPresentados] = useState<readonly VencimientoPresentado[]>([]);
+  const presentados = todos.filter((p) => dentroDelRango(p.fechaPresentacion, rango));
   const [error, setError] = useState<string | null>(null);
   const [cargando, setCargando] = useState(true);
 

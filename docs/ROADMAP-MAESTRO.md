@@ -695,6 +695,56 @@ El primer build falló con errores de TypeScript en `apps/api` (`Cannot find nam
 
 ---
 
+## PARTE 10 — Listo para mostrar a Lili y Laura (plan del 2026-09-15)
+
+### Por qué el porcentaje estaba mal, dicho sin vueltas
+
+Daniel, 2026-09-15: *"hace mucho que ya supuestamente habíamos completado las
+109 tareas y la última vez seguíamos en 70% recién, o sea algo anda mal en tu
+pronóstico"*. Tiene razón, y la causa es concreta:
+
+**Las 109 tareas medían "construido y probado", no "funciona con los datos de
+EFFORT".** Casi todas se probaron contra dobles en memoria y archivos de
+ejemplo. Cuando el sistema tocó los datos reales aparecieron cosas que ningún
+test podía ver: planillas con columnas distintas, declaraciones con nombres
+equivocados, un índice que en PostgreSQL no deduplica NULL, la base borrada el
+13, un talón de RG 90 en un formato que nadie había visto. Cada una era trabajo
+nuevo que el conteo no tenía.
+
+**Desde acá el avance se mide con otra regla:** una tarea está hecha cuando se
+verificó **en producción, con datos reales, mirando la pantalla**. No cuando
+pasan los tests. Y el porcentaje es la proporción de la lista de abajo cumplida,
+no una estimación.
+
+### Qué es "100% para mostrar"
+
+Una persona de EFFORT entra, y en cada pantalla ve datos reales de sus cinco
+clientes, filtra por las fechas que necesita, entiende qué falta y por qué, y
+puede abrir la prueba de lo que el sistema afirma. Sin pantallas vacías sin
+explicación, sin números que no se puedan rastrear.
+
+### Tareas que se hacen sin intervención de Daniel, en orden
+
+- [ ] 132. **Pantalla de inicio: el Panel general.** Hoy se entra a "Seguimiento", que está vacío (sus datos se perdieron el 13 y no se reabrió el período), y parece que el sistema no tiene nada. Seguimiento, además, explica por qué está vacío y ofrece abrir el período.
+- [ ] 133. **Filtro de fechas único y reutilizable**: por mes, por fecha exacta, desde-hasta, y "últimos 15, 30, 60 o 90 días" (pedido de Daniel, 2026-09-15). Una sola función que convierte cualquier elección en un rango `desde`–`hasta`, con tests.
+- [ ] 134. **Aplicar el filtro en todas las pantallas con fechas o períodos**: Panel, Documentos, Vencimientos (radar y presentados), Alertas, Eventos, IVA, Balances, Liquidaciones, SIGA y Seguimiento. Lo que es por fecha (documentos recibidos, vencimientos, alertas, eventos) filtra por fecha; lo que es por período fiscal (balances, liquidaciones, IVA) toma los períodos que caen en el rango.
+- [ ] 135. **Menú sin desborde horizontal** a 1366 px de ancho (hoy "Panel general" queda cortado y aparece una barra de scroll).
+- [ ] 136. **"Ver declaración"**: desde un vencimiento presentado, abrir el PDF de la DNIT que lo prueba, en el OneDrive original (enlace de solo lectura, sin descargar ni copiar).
+- [ ] 137. **Presentaciones con días de atraso en el Panel general**: un indicador con cuántas y cuántos días, sin hablar de multa.
+- [ ] 138. **Arrastre del saldo a favor de IVA** entre períodos consecutivos (tarea 124), solo cuando no falta ningún período en el medio; si falta uno, se dice en pantalla.
+- [ ] 139. **Guía de demostración** (`docs/GUIA-DEMO.md`): recorrido de 15 minutos con los datos reales, qué mostrar en cada pantalla y qué preguntas va a disparar.
+- [ ] 140. **Verificación en producción de cada pantalla**, con la sesión de Daniel y solo mirando: capturas y lista de lo que se ve bien y lo que no.
+
+### Lo que necesita a Daniel (o a EFFORT)
+
+- Crear las 10 cuentas del equipo: `node scripts\crear-equipo.mjs` (pide la contraseña inicial, que no tiene que pasar por Claude).
+- SIPAR: su carpeta `043 SIPAR S.A` no tiene ninguna declaración 2025-2026 ni el Excel de la RG 90. ¿Dónde las guardan?
+- RG 90 de DIBEC, FUMIPRO y ECOAGRO: ningún talón en sus carpetas. ¿Dónde lo guardan?
+- Tarea 131: el paso previo al despliegue de DigitalOcean no aplica migraciones. Es un cambio en la configuración de la cuenta.
+- Autorizar (o no) la limpieza de hallazgos repetidos en la base (`docs/propuestas/limpiar-hallazgos-repetidos.sql`).
+
+---
+
 ## PARTE 9 — Validación final con EFFORT
 
 - [ ] 112. Contrastar el cálculo de IVA contra una liquidación real ya presentada (cierra la discrepancia #1 de `docs/DISCREPANCIAS.md`)
