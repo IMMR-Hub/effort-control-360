@@ -725,14 +725,14 @@ explicación, sin números que no se puedan rastrear.
 
 ### Tareas que se hacen sin intervención de Daniel, en orden
 
-- [ ] 132. **Pantalla de inicio: el Panel general.** Hoy se entra a "Seguimiento", que está vacío (sus datos se perdieron el 13 y no se reabrió el período), y parece que el sistema no tiene nada. Seguimiento, además, explica por qué está vacío y ofrece abrir el período.
-- [ ] 133. **Filtro de fechas único y reutilizable**: por mes, por fecha exacta, desde-hasta, y "últimos 15, 30, 60 o 90 días" (pedido de Daniel, 2026-09-15). Una sola función que convierte cualquier elección en un rango `desde`–`hasta`, con tests.
-- [ ] 134. **Aplicar el filtro en todas las pantallas con fechas o períodos**: Panel, Documentos, Vencimientos (radar y presentados), Alertas, Eventos, IVA, Balances, Liquidaciones, SIGA y Seguimiento. Lo que es por fecha (documentos recibidos, vencimientos, alertas, eventos) filtra por fecha; lo que es por período fiscal (balances, liquidaciones, IVA) toma los períodos que caen en el rango.
-- [ ] 135. **Menú sin desborde horizontal** a 1366 px de ancho (hoy "Panel general" queda cortado y aparece una barra de scroll).
-- [ ] 136. **"Ver declaración"**: desde un vencimiento presentado, abrir el PDF de la DNIT que lo prueba, en el OneDrive original (enlace de solo lectura, sin descargar ni copiar).
-- [ ] 137. **Presentaciones con días de atraso en el Panel general**: un indicador con cuántas y cuántos días, sin hablar de multa.
-- [ ] 138. **Arrastre del saldo a favor de IVA** entre períodos consecutivos (tarea 124), solo cuando no falta ningún período en el medio; si falta uno, se dice en pantalla.
-- [ ] 139. **Guía de demostración** (`docs/GUIA-DEMO.md`): recorrido de 15 minutos con los datos reales, qué mostrar en cada pantalla y qué preguntas va a disparar.
+- [x] 132. **Pantalla de inicio: el Panel general.** (código `8c4f7ab`; verificación en producción en la 140) Hoy se entra a "Seguimiento", que está vacío (sus datos se perdieron el 13 y no se reabrió el período), y parece que el sistema no tiene nada. Seguimiento, además, explica por qué está vacío y ofrece abrir el período.
+- [x] 133. **Filtro de fechas único y reutilizable**: por mes, por fecha exacta, desde-hasta, y "últimos 15, 30, 60 o 90 días" (pedido de Daniel, 2026-09-15). Una sola función que convierte cualquier elección en un rango `desde`–`hasta`, con tests.
+- [x] 134. **Aplicar el filtro en todas las pantallas con fechas o períodos**: Panel, Documentos, Vencimientos (radar y presentados), Alertas, Eventos, IVA, Balances, Liquidaciones, SIGA y Seguimiento. Lo que es por fecha (documentos recibidos, vencimientos, alertas, eventos) filtra por fecha; lo que es por período fiscal (balances, liquidaciones, IVA) toma los períodos que caen en el rango.
+- [x] 135. **Menú sin desborde horizontal** a 1366 px de ancho (hoy "Panel general" queda cortado y aparece una barra de scroll).
+- [x] 136. **"Ver declaración"** (`4abb606`): desde un vencimiento presentado, abrir el PDF de la DNIT que lo prueba, en el OneDrive original (enlace de solo lectura, sin descargar ni copiar).
+- [x] 137. **Presentaciones con días de atraso en el Panel general**: un indicador con cuántas y cuántos días, sin hablar de multa.
+- [ ] 138. **POSTERGADA A PROPÓSITO — Arrastre del saldo a favor de IVA.** Calcularlo desde las planillas puede contradecir el saldo que EFFORT declaró en el formulario 120 (la determinación de COPESA de febrero 2026 trae un saldo a favor que ninguna planilla explica). El dato correcto está en las declaraciones ya leídas; hay que extraerlo de ahí. Original: entre períodos consecutivos (tarea 124), solo cuando no falta ningún período en el medio; si falta uno, se dice en pantalla.
+- [x] 139. **Guía de demostración** (`docs/GUIA-DEMO.md`): recorrido de 15 minutos con los datos reales, qué mostrar en cada pantalla y qué preguntas va a disparar.
 - [ ] 140. **Verificación en producción de cada pantalla**, con la sesión de Daniel y solo mirando: capturas y lista de lo que se ve bien y lo que no.
 
 ### Lo que necesita a Daniel (o a EFFORT)
