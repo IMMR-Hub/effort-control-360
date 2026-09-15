@@ -52,6 +52,13 @@ export class DriveFalso implements DriveDeArchivos {
     this.#carpetas.set(itemId, ruta);
   }
 
+  async enlaceWeb(itemId: string): Promise<string> {
+    if (!this.#archivos.has(itemId)) {
+      throw new Error(`Archivo inexistente en el drive falso: ${itemId}`);
+    }
+    return `https://onedrive.falso/${encodeURIComponent(itemId)}`;
+  }
+
   async leer(itemId: string): Promise<Buffer> {
     const entrada = this.#archivos.get(itemId);
     if (!entrada) {

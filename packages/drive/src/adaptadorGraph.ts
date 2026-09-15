@@ -221,6 +221,15 @@ export class DriveGraph implements DriveDeArchivos {
     return encontrados;
   }
 
+  async enlaceWeb(itemId: string): Promise<string> {
+    const respuesta = await this.#peticion(
+      `/drives/${await this.#drive()}/items/${itemId}?$select=webUrl`,
+    );
+    const { webUrl } = (await respuesta.json()) as { webUrl?: string };
+    if (!webUrl) throw new Error(`Microsoft Graph no devolvió la dirección web de ${itemId}.`);
+    return webUrl;
+  }
+
   async leer(itemId: string): Promise<Buffer> {
     const respuesta = await this.#peticion(
       `/drives/${await this.#drive()}/items/${itemId}/content`,

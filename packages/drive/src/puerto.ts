@@ -43,4 +43,12 @@ export interface DriveDeArchivos {
    * OneDrive y este puerto no lo cambia.
    */
   escribir(carpeta: string, nombre: string, contenido: Buffer): Promise<ArchivoDrive>;
+  /**
+   * Dirección web para abrir el archivo en OneDrive.
+   *
+   * Solo lee un dato del archivo; no lo baja, no lo copia, no lo comparte. Quien
+   * abre el enlace necesita tener permiso sobre el archivo en OneDrive: el
+   * sistema no amplía el acceso de nadie.
+   */
+  enlaceWeb(itemId: string): Promise<string>;
 }

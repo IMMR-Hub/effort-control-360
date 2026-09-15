@@ -30,3 +30,13 @@ export interface ResumenDeSincronizacion {
 export function sincronizarOneDrive(): Promise<ResumenDeSincronizacion> {
   return peticion('POST', '/api/v1/onedrive/sincronizar');
 }
+
+/**
+ * Dirección web del archivo ORIGINAL de una evidencia en el OneDrive de EFFORT.
+ *
+ * Solo lectura: abre el archivo donde el equipo ya lo tiene, no lo descarga ni
+ * lo comparte.
+ */
+export function obtenerEnlaceDeEvidencia(evidenciaId: string): Promise<{ url: string }> {
+  return peticion('GET', `/api/v1/evidencias/${encodeURIComponent(evidenciaId)}/enlace`);
+}

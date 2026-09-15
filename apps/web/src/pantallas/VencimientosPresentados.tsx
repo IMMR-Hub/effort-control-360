@@ -18,6 +18,30 @@ import { Badge, EncabezadoTarjeta, Tabla, Tarjeta, Td, Th } from '../ui/Primitiv
 import { ErrorDeApi } from '../api/cliente.js';
 import type { Cliente } from '../api/clientes.js';
 import { listarPresentados, type VencimientoPresentado } from '../api/vencimientos.js';
+import { obtenerEnlaceDeEvidencia } from '../api/onedrive.js';
+
+/**
+ * Abre la declaración que prueba la presentación.
+ *
+ * La pestaña se abre ANTES de pedir el enlace y después se le cambia la
+ * dirección: si se abriera después de esperar al servidor, el navegador la
+ * trataría como una ventana emergente y la bloquearía.
+ */
+async function abrirDeclaracion(evidenciaId: string, alFallar: (mensaje: string) => void) {
+  const pestana = window.open('about:blank', '_blank');
+  try {
+    const { url } = await obtenerEnlaceDeEvidencia(evidenciaId);
+    if (pestana) {
+      pestana.opener = null;
+      pestana.location.href = url;
+    } else {
+      window.location.assign(url);
+    }
+  } catch (motivo) {
+    pestana?.close();
+    alFallar(motivo instanceof ErrorDeApi ? motivo.message : 'No se pudo abrir la declaración.');
+  }
+}
 
 export default function VencimientosPresentados({
   clientes,
@@ -83,6 +107,7 @@ export default function VencimientosPresentados({
               <Th>Vencía</Th>
               <Th>Presentado</Th>
               <Th numerica>Días de atraso</Th>
+              <Th>Prueba</Th>
             </tr>
           </thead>
           <tbody>
@@ -108,6 +133,19 @@ export default function VencimientosPresentados({
                         {p.diasDeAtraso} {p.diasDeAtraso === 1 ? 'día' : 'días'}
                       </Badge>
                     </span>
+                  )}
+                </Td>
+                <Td>
+                  {p.evidenciaId ? (
+                    <button
+                      type="button"
+                      className="text-xs font-medium text-marca-600 underline"
+                      onClick={() => void abrirDeclaracion(p.evidenciaId!, setError)}
+                    >
+                      Ver declaración
+                    </button>
+                  ) : (
+                    <span className="text-xs text-tinta-tenue">Cargada a mano</span>
                   )}
                 </Td>
               </tr>

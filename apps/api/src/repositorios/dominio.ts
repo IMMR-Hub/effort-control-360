@@ -626,6 +626,22 @@ export class EvidenciasPrisma implements RepositorioDeEvidencias {
 export class ArchivosDeOrigenPrisma {
   constructor(private readonly prisma: PrismaClient) {}
 
+  /**
+   * El archivo original de EFFORT que corresponde a una evidencia.
+   *
+   * Si el mismo contenido está en varias carpetas, se devuelve el que se vio
+   * primero: es el lugar donde EFFORT lo guardó originalmente.
+   */
+  async originalDeEvidencia(
+    evidenciaId: string,
+  ): Promise<{ clienteId: string; itemIdOrigen: string } | null> {
+    return this.prisma.archivoDeOrigen.findFirst({
+      where: { evidenciaId },
+      select: { clienteId: true, itemIdOrigen: true },
+      orderBy: { vistoEn: 'asc' },
+    });
+  }
+
   async huellas(clienteId: string): Promise<HuellaDeOrigen[]> {
     const filas = await this.prisma.archivoDeOrigen.findMany({
       where: { clienteId },
