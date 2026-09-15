@@ -28,6 +28,122 @@ La memoria persistente del proyecto son cuatro archivos:
 El criterio de ingeniería general (dinero, RBAC, auditoría, tests) vive en la
 skill global **`backend-datos-sensibles`**, reutilizable en otros proyectos.
 
+---
+
+## ▶ EMPEZAR ACÁ — estado real al 2026-09-15 (última actualización de este archivo)
+
+**Si sos una conversación nueva: leé esta sección entera antes de tocar nada, y
+después hacé la PRIMERA tarea `- [ ]` de este archivo.** A partir del
+2026-09-15 las únicas líneas `- [ ]` del documento son las de la **cola de
+abajo**, en el orden exacto en que hay que hacerlas. Todas las tareas viejas
+que seguían sin marcar en las partes 6, 8, 9 y 10 se movieron acá y quedaron
+marcadas `[→]` en su lugar original (ver "Cómo leer este documento"). No hay
+ninguna otra tarea pendiente escondida en el archivo:
+
+```bash
+grep -n "^- \[ \]" docs/ROADMAP-MAESTRO.md   # la primera línea que salga es la que sigue
+```
+
+### Reglas que no se discuten (leer también `CLAUDE.md`)
+
+1. **Las carpetas de OneDrive de EFFORT (las de Laura y Lili, drive
+   `lsosa@effort.com.py`) son de SOLO LECTURA, siempre.** No se escribe, no se
+   mueve, no se renombra y no se borra nada ahí, ni con autorización. Daniel,
+   2026-09-15: *"No quiero que modifiques ni borres ni cambies NADA en la carpeta
+   de Lau y Lili. Eso quedó prohibido."* Lo único escribible es la carpeta del
+   sistema `EFFORT Control 360/` en el drive `effort360@effort.com.py`.
+2. **Nada se borra de la base sin autorización expresa de Daniel para esa
+   operación** (REGLA 0 de `CLAUDE.md`). Se pueden **proponer** borrados con
+   nombres y ubicaciones exactas (`docs/propuestas/`), nunca ejecutarlos.
+3. **Antes de escribir en producción:** respaldo (`node scripts/respaldar-base.mjs`)
+   y las tres preguntas de `CLAUDE.md` escritas donde Daniel las lea.
+4. **Una tarea está hecha cuando se verificó en producción con datos reales,
+   mirando la pantalla**, no cuando pasan los tests (Daniel, 2026-09-15). El
+   porcentaje se calcula sobre eso.
+5. **Nunca iniciar sesión con la contraseña de Daniel** aunque el navegador la
+   tenga autocompletada. Para mirar la app en producción, Daniel entra primero.
+6. **Días de atraso, nunca "multa"** en pantallas y textos (Daniel, 2026-09-15).
+7. **Un push por vez a `main`**: DigitalOcean cancela el despliegue que está
+   compilando si llega otro push. Esperar a que el sitio sirva la versión nueva
+   antes de verificar (se comprueba bajando el `.js` de
+   `https://effort360.disaak.com/` y buscando un texto nuevo).
+
+### Foto de producción (medida contra la base real el 2026-09-15)
+
+| | |
+|---|---|
+| Último commit desplegado y verificado | `d49f700` (código de la app) — `git log` para lo posterior |
+| Clientes activos | 5: COPESA, DIBEC S.A., ECOAGRO, FUMIPRO, SIPAR |
+| Usuarios | **1**: `effort360@effort.com.py` (dirección). Las 10 cuentas del equipo NO existen todavía |
+| Documentos | 3.969 (2.526 con tipo; 1.442 en "Otro" porque el nombre y la carpeta no dicen qué son) |
+| PDFs leídos buscando presentaciones | 2.434 (tabla `lectura_de_declaracion`) → 394 presentaciones reconocidas |
+| Vencimientos | 150: **42 presentados** con su declaración de la DNIT como evidencia (27 con días de atraso según el calendario cargado), 108 pendientes, de los cuales 55 vencidos |
+| Alertas abiertas | 83 (55 de vencimientos, 25 de libros con diferencias de IVA, 3 medias) |
+| Liquidaciones de IVA | 50 períodos (COPESA solo 2 — ver tarea 141; SIPAR 0 — no hay planilla Excel) |
+| Hallazgos de libro | 4.609 filas en la base, con repetidos viejos (ver DISCREPANCIAS 21); las pantallas y alertas ya los cuentan una vez |
+| Migraciones | todas aplicadas **a mano** con `migrate deploy` (el paso automático de DigitalOcean no corre — tarea 131) |
+| Verify | `npm run verify` → 21 OK el 2026-09-15 |
+
+Pantallas verificadas en producción el 2026-09-15 con la sesión de Daniel:
+Panel general (es la pantalla de inicio), filtro de fechas en las 10 pantallas
+que tienen fecha, Vencimientos con "Presentados" y "Ver declaración" (abre el
+PDF original en el OneDrive de Laura), Documentos, IVA, Alertas, Balances,
+Liquidaciones, SIGA, Eventos y Seguimiento cargan sin error.
+
+### COLA A — hacer en este orden, sin necesitar a Daniel
+
+- [ ] 141. **Planillas RG 90 reconocidas por su CONTENIDO, no por su nombre.** Problema verificado en producción el 2026-09-15: COPESA tiene IVA calculado de solo 2 períodos (2025-04 y 2025-09) porque `NOMBRE_DE_PLANILLA` en `apps/api/src/servicios/liquidacionDeIva.ts` exige que el nombre empiece con `RG COMPRAS`/`RG VENTAS`, y COPESA guarda sus libros como `PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 COMPRAS/01 Enero total OK verificado.xlsx` o `RG 90 VENTAS/01ENERO.xlsx`. **Prueba de solo lectura hecha el 2026-09-15 sobre los Excel de COPESA clasificados como libro:** 191 se leen con `importarLibroRg90` (cubren períodos de 2022 a 2026), 33 no son planillas RG 90. Tres cosas que esa prueba mostró y que la implementación TIENE que resolver: **(a)** `PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 COMPRAS/01 ENERO.xlsx` devuelve filas con períodos 2026-01, 2027-01 … 2032-01 (la columna de período del Excel está mal, arrastrada): rechazar con motivo toda fila cuyo período sea posterior al mes en curso; **(b)** agosto 2025 está en dos planillas con contenido DISTINTO (`RG 90 COMPRAS/08 Agosto 2025 ok verificado.xlsx`, 568 filas, y `RG 90 COMPRAS/AGOSTO 2025.xlsx`, 464 filas): juntar las filas de las dos (lo que hace hoy la deduplicación por comprobante de la tarea 127) mezclaría versiones, así que la regla nueva es **UN solo archivo por cliente + período + tipo de registro**, elegido así: primero el que tiene "CORRECCION" en el nombre; si no hay, el de fecha de modificación más reciente en OneDrive; los demás se ignoran y se informan en el resumen como "planilla descartada por existir una más reciente"; **(c)** los archivos de la DNIT `80003112_AAAAMM_COMPRAS_NNNNNN_1.xlsx` se leen con 0 filas: ignorarlos sin contarlos como fallo. **Qué hacer:** (1) reemplazar el filtro por nombre por "todo Excel de libro (`LIBRO_COMPRAS`/`LIBRO_VENTAS`) cuyo contenido tenga los encabezados RG 90"; un Excel sin esos encabezados se ignora, no es fallo; (2) implementar (a), (b) y (c) con un test cada uno, usando esos nombres de archivo reales; (3) correr `npm run verify`; (4) push (uno solo) y esperar al despliegue; (5) en la pantalla de IVA de producción, elegir COPESA y comprobar que aparecen los períodos de 2025 y 2026 con compras y ventas, y ningún período posterior a septiembre de 2026. **Hecho cuando:** (5) está verificado en producción. Se reintentó leer 5 archivos que dieron `fetch failed` por la conexión local (`07 Julio ok verificado.xlsx`, `03 MARZO.xlsx`, `07 JULIO.xlsx`, `RG 90 VENTAS/02 FEBRERO.xlsx`): no son errores del archivo.
+- [ ] 142. **Tablero de proceso mensual en Documentos sin "Sin iniciar" falso.** Verificado el 2026-09-15: los 5 clientes figuran "Sin iniciar" en septiembre porque `proceso_mensual` solo tiene filas que alguien carga a mano. Mostrar al menos los documentos recibidos del período contados desde la tabla `documento` (dato real), y dejar "Sin iniciar" solo para los campos que de verdad dependen de una persona. **Hecho cuando:** el tablero muestra la cantidad real de documentos recibidos por cliente en el período elegido.
+- [ ] 96. **Recordatorios automáticos de documentación (Parte 6).** Verificado en el código el 2026-09-15: `planificarProximoRecordatorio` (`packages/core/src/seguimiento.ts`) solo se usa en rutas; ningún trabajo programado lo corre. Agregarlo a `apps/api/src/servicios/programador.ts` sobre las solicitudes abiertas, mandando el correo por Microsoft Graph (mismo `EnviadorDeCorreo` que los avisos de alertas). **Condición previa:** que exista una regla "Entrega de documentación" configurada y solicitudes abiertas (botón en Seguimiento); sin eso no hay a quién avisar. **Construirlo con el envío APAGADO por defecto** (variable nueva `RECORDATORIOS_AUTOMATICOS`, valor por defecto `no`, en `apps/api/src/configuracion.ts` y documentada en `docs/DESPLIEGUE.md`), con tests que prueben que con `no` no sale ningún correo. **Encenderlo en producción lo decide Daniel**, después de aprobar el texto del correo y los destinatarios: no se mandan correos a clientes reales sin eso. **Hecho cuando:** está desplegado con el envío apagado y los tests cubren el planificador, el registro y el apagado.
+- [ ] 97. Registro automático en `registro_contacto` con `origen=AUTOMATICO` por cada recordatorio enviado por la tarea 96.
+- [ ] 99. Manejo de fallos de envío de recordatorios: el fallo queda registrado (ya pasa en avisos de alertas) y, si un correo rebota o falla tres veces, se levanta alerta a dirección.
+- [ ] 138. **Saldo a favor de IVA tomado de lo DECLARADO**, no calculado desde planillas. Motivo: calcular el arrastre desde las planillas puede contradecir el formulario 120 presentado (la determinación de COPESA de febrero 2026 trae un saldo a favor que ninguna planilla explica). Qué hacer: extender `packages/importers/src/declaracionDnit.ts` para leer del formulario 120 el saldo a favor del período anterior y el del período, guardarlo en `lectura_de_declaracion` (migración que solo agrega columnas), y mostrarlo en la pantalla de IVA junto al calculado, marcando cuando no coinciden. Reemplaza a la tarea 124.
+- [ ] 116. Medir en producción los tiempos del pooler de transacción (6543) ahora que el servicio es estable. Si una consulta simple pasa de ~2 s, revisar `connection_limit` en `DATABASE_URL` y las conexiones abandonadas en Supabase. Solo medir y anotar en DISCREPANCIAS 18; no cambiar la configuración de producción sin Daniel.
+- [ ] 118. **Revisión mensual de feriados — hacer en la primera semana de octubre de 2026, no antes.** Si la fecha de hoy es anterior al 2026-10-01, no hay nada que hacer todavía: dejarla sin marcar y dar por terminada la cola. Regla de Daniel (2026-09-12). Actualizar `TRASLADOS_DECRETADOS` y `REVISION_DE_FERIADOS` en `packages/core/src/diasHabiles.ts` con los decretos del mes. Repetir cada mes.
+
+### COLA B — bloqueadas: no empezar sin la respuesta indicada
+
+Estas no son `- [ ]` a propósito (no son "la siguiente tarea"). Cuando llegue la
+respuesta, se convierten en tarea de la COLA A.
+
+- **B1. Prórroga de estados financieros 2025 — PRIMERA PREGUNTA A HACER.** DNIT RG 50/2026 extendió la presentación de EEFF del ejercicio 2025 hasta el **30/06/2026** (DISCREPANCIAS 19 e/f, con la fuente oficial). DIBEC, FUMIPRO y ECOAGRO presentaron sus EEFF entre el 10 y el 26 de junio: con la prórroga están **a tiempo**; sin ella, con ~60 días de atraso. Daniel respondió el 2026-09-15 "no hubo ninguna prórroga", pero DISCREPANCIAS 19(e) ya advertía un posible cruce de nombres entre la RG 90 (formulario) y la RG 50 (prórroga). **Preguntar a Lili mostrando la resolución.** Si aplica: cambiar el vencimiento de EEFF 2025 de los 5 clientes al 30/06/2026 (corriendo a hábil) y los atrasos se recalculan solos.
+- **B2. Cuentas del equipo.** Daniel corre `node scripts\crear-equipo.mjs` (pide la contraseña inicial; Claude no la maneja). Hasta entonces solo existe `effort360@`.
+- **B3. SIPAR.** Su carpeta `043 SIPAR S.A` (230 archivos, todos sincronizados) no tiene ninguna declaración de IVA, IRE ni EEFF de 2025-2026, ni talón de RG 90, ni planilla RG 90 en Excel (solo los TXT de Marangatú, sin desglose de IVA). Preguntar dónde las guardan y pedir el Excel de SIGA. Mientras tanto SIPAR sigue con todo pendiente, y eso es correcto.
+- **B4. Talones de RG 90 de DIBEC, FUMIPRO y ECOAGRO** (y de COPESA dic-2025, feb, jun, jul y ago 2026): no están en OneDrive. Preguntar dónde se guardan.
+- **B5. Tarea 131 — migraciones en DigitalOcean.** El job `migrar-base` (PRE_DEPLOY, `.do/app.yaml`) no se ejecuta en los despliegues. Es un cambio en la configuración de la cuenta de DigitalOcean: lo hace Daniel o lo autoriza expresamente. Mientras tanto, cada migración nueva se aplica a mano, con respaldo antes.
+- **B6. Limpiezas que borran filas (necesitan autorización expresa de Daniel):** (a) hallazgos repetidos — `docs/propuestas/limpiar-hallazgos-repetidos.sql`; (b) esquemas de prueba sobrantes en la base de Supabase (`pruebas_2c50f828c88c`, `pruebas_56778dd7401f`, quedaron de corridas de tests cortadas; se listan con `SELECT schema_name FROM information_schema.schemata WHERE schema_name LIKE 'pruebas_%'`).
+- **B7. Preguntas de datos para Lili y Laura:** autofacturas con todas las columnas en cero en la planilla RG 90 (DISCREPANCIAS 22); ECOAGRO febrero 2025 tiene dos versiones de planilla sin "CORRECCION" en el nombre y el sistema usa la más reciente (DISCREPANCIAS 24); si la guía de nombres `docs/GUIA-NOMENCLATURA-ARCHIVOS.md` les sirve; qué hacer con los duplicados de `docs/propuestas/ARCHIVOS-DUPLICADOS.md` (lo deciden y lo hacen ellas).
+- **B8. Parte 9 — validación con EFFORT:** 112 (contrastar el IVA contra una liquidación presentada), 113 (confirmar los 5 clientes piloto), 114 (revisión guiada de los módulos). Se hacen en la reunión con Lili y Laura; la guía está en `docs/GUIA-DEMO.md`.
+- **B9. Tarea 130 — espera la respuesta de B1.** Cuando B1 esté respondida y aplicada, pasar a la COLA A como `- [ ] 130.` con este contenido: **Presentaciones con atraso visibles como aviso.** Hoy los días de atraso se ven en Vencimientos → Presentados y en el indicador del Panel, pero no generan alerta. Agregar en `apps/api/src/servicios/motorDeAlertas.ts` un origen `presentado_con_atraso` (criticidad INFORMATIVA, texto con días, sin la palabra multa), que se levanta una vez por vencimiento y no se cierra solo (es un hecho histórico, lo cierra una persona con motivo). **Hecho cuando:** la pantalla Alertas muestra los atrasos reales, verificado en producción.
+
+### Qué es "100% para mostrar" y dónde estamos
+
+Lista de verificación (se cuenta solo lo verificado en producción):
+
+| # | Criterio | Estado 2026-09-15 |
+|---|---|---|
+| 1 | Se entra y la primera pantalla muestra datos reales | ✅ Panel general |
+| 2 | Toda pantalla con fechas se filtra por mes, fecha exacta, desde–hasta y últimos 15/30/60/90 días | ✅ 10 de 10 |
+| 3 | Lo presentado se ve con su fecha, sus días de atraso y la prueba abrible | ✅ 42 presentados |
+| 4 | Lo que falta está explicado (por qué falta y qué se necesita) | ⚠️ SIPAR, RG 90 y EEFF dependen de B1, B3, B4 |
+| 5 | El IVA de los clientes con planilla Excel está completo | ❌ COPESA incompleto (tarea 141) |
+| 6 | Las diferencias de IVA se pueden aceptar o mandar a revisar | ✅ |
+| 7 | Ninguna pantalla vacía sin explicación | ⚠️ Seguimiento explica; proceso mensual "Sin iniciar" (tarea 142) |
+| 8 | El equipo puede entrar con sus propias cuentas | ❌ B2 |
+| 9 | Los atrasos reales avisan | ❌ tarea 130, bloqueada por B1 (ver B9) |
+
+**5 de 9 cumplidos (56%)** con la regla estricta. Con la tarea 141 y la 142
+hechas y B2 resuelto, pasa a 8 de 9.
+
+---
+
+## Historial de estado — DESACTUALIZADO, solo referencia
+
+Todo lo que sigue hasta "Cómo leer este documento" es la historia de cómo se
+llegó acá. **No usarlo para decidir qué sigue:** los números (por ejemplo "91%",
+"11 personas", "671 documentos") son de antes del borrado de la base del
+2026-09-13 y de la verificación contra datos reales.
+
 **Regla de este documento:** cada tarea se marca `[x]` recién cuando el
 `npm run verify` de esa etapa corrió en verde y quedó commiteado en git. Una
 tarea marcada sin commit real detrás es peor que no marcarla — hace perder
@@ -113,6 +229,7 @@ Si da 0, cerrada. Si no, no.
 - `[x]` = terminado, verificado y commiteado.
 - `[ ]` = pendiente.
 - `[~]` = en curso ahora mismo (debería haber como máximo una de estas a la vez).
+- `[→]` = movida a la cola de «EMPEZAR ACÁ» (arriba de todo). Queda en su lugar original solo como historia; el trabajo se sigue desde la cola.
 - Cada bloque termina con su **comando de verificación**: si ese comando no
   corre en verde, el bloque no está terminado, sin importar lo que diga el chat.
 - Las tareas están en orden de dependencia real, no solo cronológico: no se
@@ -370,11 +487,11 @@ Tarea nueva, descubierta el 2026-07-24 al comparar la estructura de carpetas que
 
 ## PARTE 6 — Despachador de notificaciones
 
-- [ ] 95. Proveedor de envío de correo (a definir: Resend, SES, o el que EFFORT prefiera)
-- [ ] 96. Job programado que corre `planificarProximoRecordatorio` sobre todas las solicitudes abiertas
-- [ ] 97. Registro automático en `registro_contacto` con `origen=AUTOMATICO` por cada envío real
-- [ ] 98. Registro en `envio_notificacion` con el id del proveedor, para poder auditar contra su panel
-- [ ] 99. Manejo de fallos de envío (reintento, alerta a dirección si un correo rebota)
+- [x] 95. Proveedor de envío de correo (a definir: Resend, SES, o el que EFFORT prefiera) **Hecha (verificado en el código el 2026-09-15):** Microsoft Graph `sendMail` con la cuenta del sistema, mismo registro de Azure; en uso por los avisos de alertas críticas (`apps/api/src/servicios/avisosPorCorreo.ts`).
+- [→] 96. Job programado que corre `planificarProximoRecordatorio` sobre todas las solicitudes abiertas **→ Movida el 2026-09-15 a la COLA A (tarea 96) de «EMPEZAR ACÁ».**
+- [→] 97. Registro automático en `registro_contacto` con `origen=AUTOMATICO` por cada envío real **→ Movida el 2026-09-15 a la COLA A (tarea 97) de «EMPEZAR ACÁ».**
+- [x] 98. Registro en `envio_notificacion` con el id del proveedor, para poder auditar contra su panel **Hecha para los avisos de alertas (verificado 2026-09-15):** `envio_notificacion.id_mensaje_proveedor`. Los recordatorios de la tarea 96 tienen que usar lo mismo.
+- [→] 99. Manejo de fallos de envío (reintento, alerta a dirección si un correo rebota) **→ Movida el 2026-09-15 a la COLA A (tarea 99) de «EMPEZAR ACÁ».**
 
 **Verificación:** test de integración con proveedor de correo en modo sandbox
 
@@ -592,8 +709,8 @@ El primer build falló con errores de TypeScript en `apps/api` (`Cannot find nam
 **Verificado con el mismo escenario real antes de decirle a Daniel que reintentara:** `npm ci` desde cero + `npx tsc --build --force` → 0 errores. `npx vitest run apps/api/test/modulos.test.ts apps/api/test/servidor.test.ts` → 150/150. Commit `48a2ffa`, subido a `main` con confirmación explícita de Daniel (dispara un build nuevo solo, por el auto-deploy). Resultado del segundo intento: pendiente de confirmar.
 - [x] 108. Configurar variables de entorno de producción (secretos distintos a los de desarrollo) — **hecho el 2026-09-08, verificado el 2026-09-09.** Las 11 (10 de la tabla de `docs/DESPLIEGUE.md` + `NPM_CONFIG_INCLUDE`) cargadas en el panel de DigitalOcean, ninguna copiada de `.env` local — `SECRETO_COOKIES` generado de nuevo específicamente para producción. Confirmado contra el panel real, no de memoria.
 - [x] 109. Configurar el subdominio `effort360.disaak.com` (registro CNAME) — **hecho y verificado el 2026-09-09.** DNS de `disaak.com` administrado en Namecheap (no en DigitalOcean). Dominio agregado en DigitalOcean (Networking → Domains → `effort360.disaak.com`, opción "You manage your domain" — a propósito, no "We manage your domain": esa segunda opción mueve los nameservers de *todo* `disaak.com` a DigitalOcean, afectando el sitio principal, hoy en Netlify). CNAME cargado en Namecheap: `effort360` → `effort-control-360-xiffl.ondigitalocean.app`. Los registros existentes (`A` en `@`, `CNAME` en `www` hacia Netlify) no se tocaron. Propagación rápida (minutos, no las hasta 72hs habituales) — verificada con `Resolve-DnsName` y contra `8.8.8.8` antes de confiar en ella (el resolver local de Windows quedó con una respuesta vieja un rato, `ERR_SSL_VERSION_OR_CIPHER_MISMATCH` en el navegador mientras DigitalOcean terminaba de emitir el certificado — ninguno de los dos era un error real, solo faltaba tiempo).
-- [~] 110. Verificar HTTPS y que `ORIGEN_PERMITIDO`/cookies funcionan en producción — **parcial, 2026-09-09.** Verificado contra el dominio real (no la URL temporal de DigitalOcean): `GET https://effort360.disaak.com/api/v1/csrf` → 200 con certificado HTTPS válido, y el sitio carga bien en un navegador real. Falta lo que exige un login real para comprobarse — que la cookie de sesión salga con el prefijo `__Host-` (`nombreCookieSesion(esProduccion)`, ver `apps/api/src/seguridad/sesiones.ts`) — bloqueado por lo mismo que las tareas 56/57: no hay todavía ningún usuario de `direccion` sembrado en la base de producción, esperando confirmación de EFFORT.
-- [~] 111. Corrida de humo completa en producción con el usuario real de dirección — **avance real el 2026-09-10.** Los 5 clientes piloto ya tienen documentos reales cargados para el período del piloto (671 en total, ver `docs/BITACORA-ONEDRIVE.md`), no solo el nombre y RUC — es lo que hacía falta para que las pantallas tengan algo real que mostrar. Falta la corrida en sí: entrar con un usuario real (dirección o responsable, ya sembrados) y navegar las pantallas — Documentos, Vencimientos, Alertas — confirmando en el navegador que muestran estos 671 documentos y no una lista vacía. No puede hacerlo Claude (no maneja contraseñas); queda para Daniel o alguien del equipo.
+- [x] 110. Verificar HTTPS y que `ORIGEN_PERMITIDO`/cookies funcionan en producción — **parcial, 2026-09-09.** Verificado contra el dominio real (no la URL temporal de DigitalOcean): `GET https://effort360.disaak.com/api/v1/csrf` → 200 con certificado HTTPS válido, y el sitio carga bien en un navegador real. Falta lo que exige un login real para comprobarse — que la cookie de sesión salga con el prefijo `__Host-` (`nombreCookieSesion(esProduccion)`, ver `apps/api/src/seguridad/sesiones.ts`) — bloqueado por lo mismo que las tareas 56/57: no hay todavía ningún usuario de `direccion` sembrado en la base de producción, esperando confirmación de EFFORT. **Cerrada el 2026-09-15:** Daniel inició sesión en producción por HTTPS y la sesión se mantuvo entre pantallas, que es lo que prueba que la cookie `__Host-` funciona.
+- [x] 111. Corrida de humo completa en producción con el usuario real de dirección — **avance real el 2026-09-10.** Los 5 clientes piloto ya tienen documentos reales cargados para el período del piloto (671 en total, ver `docs/BITACORA-ONEDRIVE.md`), no solo el nombre y RUC — es lo que hacía falta para que las pantallas tengan algo real que mostrar. Falta la corrida en sí: entrar con un usuario real (dirección o responsable, ya sembrados) y navegar las pantallas — Documentos, Vencimientos, Alertas — confirmando en el navegador que muestran estos 671 documentos y no una lista vacía. No puede hacerlo Claude (no maneja contraseñas); queda para Daniel o alguien del equipo. **Cerrada el 2026-09-15:** recorrido de las pantallas en producción con la sesión de Daniel (ver tarea 140). Los números de este texto (671 documentos) son viejos; los actuales están en «EMPEZAR ACÁ».
 
 - [x] 115. **Caída total de producción del 2026-09-12 — causa encontrada y cerrada.** Daniel no podía entrar: "No se pudo establecer conexión segura con el servidor". El sitio cargaba (componente estático, sano) pero `GET /api/v1/csrf` devolvía `no_healthy_upstream (503 UH)` — DigitalOcean no tenía **ninguna** instancia viva de `api` a la que mandar la petición. El panel lo confirmaba: *"Containers repeatedly crashing"*, con CPU al 3% y RAM al 16%.
 
@@ -605,7 +722,7 @@ El primer build falló con errores de TypeScript en `apps/api` (`Cannot find nam
 
   **Hallazgo adicional del mismo día, y del mismo incidente.** Midiendo la base desde la misma máquina y en el mismo momento: `DIRECT_URL` (pooler de sesión, 5432) responde `select 1` en **35–394 ms**; `DATABASE_URL` (pooler de transacción, 6543) tarda **2.400–4.500 ms**. Setenta veces más lento contra la misma base. Eso explica los 2,5 s que tardaba cada petición en producción, la lentitud de todas las pantallas y el "error interno" al ingresar — y es consistente con la caída: cada contenedor que el kernel mata deja sus conexiones abiertas del lado del servidor, y horas de ciclo de reinicio saturan el pooler. Pendiente de confirmar que se normaliza solo una vez cortado el ciclo (tarea 116).
 
-- [ ] 116. Confirmar que el pooler de transacción (6543) vuelve a tiempos normales una vez cortado el ciclo de reinicio. Si no baja de ~2 s por consulta con el servicio estable, revisar `connection_limit` en `DATABASE_URL` y el número de conexiones abandonadas en Supabase.
+- [→] 116. Confirmar que el pooler de transacción (6543) vuelve a tiempos normales una vez cortado el ciclo de reinicio. Si no baja de ~2 s por consulta con el servicio estable, revisar `connection_limit` en `DATABASE_URL` y el número de conexiones abandonadas en Supabase. **→ Movida el 2026-09-15 a la COLA A (tarea 116) de «EMPEZAR ACÁ».**
 
 - [x] 117. **Calendario oficial de la DNIT, obligaciones del piloto y reclasificación — hecho el 2026-09-12.**
 
@@ -659,7 +776,7 @@ El primer build falló con errores de TypeScript en `apps/api` (`Cannot find nam
 
   **Cerró la discrepancia #1**, abierta desde julio: se contrastaron 1188 filas reales y el divisor quedó confirmado (98,1% al guaraní, el resto ±1). Pero el contraste mostró que la pregunta estaba mal planteada — `229.625/11 = 20.875` exacto y la planilla dice `20.876`. Ningún redondeo se aleja de un resultado exacto: **el IVA no se calcula, se copia de la factura del proveedor**. Por eso el importador lee el IVA declarado en vez de recalcularlo: recalcularlo haría que el sistema contradiga una declaración jurada que la DNIT ya recibió.
 
-- [ ] 122. Guardar el resultado del libro RG 90 en la base y mostrarlo en pantalla. Hoy el importador calcula bien pero el resultado no se persiste ni se ve: falta decidir dónde viven las filas del libro (`documento` tiene un solo `total` y una sola `tasa`, y un comprobante puede tener 10% y 5% a la vez) y conectar `proceso_mensual.iva_saldo_a_pagar` / `iva_saldo_a_favor` al cálculo en vez de a lo que alguien escribe.
+- [x] 122. Guardar el resultado del libro RG 90 en la base y mostrarlo en pantalla. Hoy el importador calcula bien pero el resultado no se persiste ni se ve: falta decidir dónde viven las filas del libro (`documento` tiene un solo `total` y una sola `tasa`, y un comprobante puede tener 10% y 5% a la vez) y conectar `proceso_mensual.iva_saldo_a_pagar` / `iva_saldo_a_favor` al cálculo en vez de a lo que alguien escribe. **Resuelta por la tarea 123** (tablas `liquidacion_iva_rg90` y `hallazgo_libro_rg90`, pantalla de IVA).
 
 - [x] 123. **El IVA se calcula, se guarda, se ve y alerta — 2026-09-13.** Cerrada la cadena completa que faltaba.
 
@@ -675,7 +792,7 @@ El primer build falló con errores de TypeScript en `apps/api` (`Cannot find nam
 
   Una simplificación queda declarada en el código Y en la pantalla: el saldo a favor todavía no se arrastra al período siguiente. El crédito y el débito de cada mes sí son exactos.
 
-- [ ] 124. Arrastrar el saldo a favor de un período al siguiente. Hoy cada período se calcula aislado. Hace falta tener los períodos completos y en orden: arrastrar desde un período que falta daría un número peor que no arrastrarlo, porque parecería correcto.
+- [→] 124. Arrastrar el saldo a favor de un período al siguiente. Hoy cada período se calcula aislado. Hace falta tener los períodos completos y en orden: arrastrar desde un período que falta daría un número peor que no arrastrarlo, porque parecería correcto. **→ Reemplazada por la tarea 138 de la COLA A** (el saldo a favor se toma de lo declarado, no se calcula desde planillas).
 
 - [x] 125. **Toda diferencia de IVA alerta, y una persona la acepta o la manda a revisar — 2026-09-14.** Daniel: *"alertar a partir de 1 guaraní, y que luego puedan aceptar o revisar"*. Reemplazó la tolerancia de 5 Gs aplicada horas antes. Estado por hallazgo (PENDIENTE / EN_REVISION / ACEPTADO), aceptar exige motivo (ruta y base), bitácora, botones en la pantalla de IVA. Migración `20260914160000_decision_sobre_hallazgos`, aplicada. DISCREPANCIAS 20.
 
@@ -685,13 +802,13 @@ El primer build falló con errores de TypeScript en `apps/api` (`Cannot find nam
 
 - [x] 128. **Presentaciones detectadas desde los PDF de la DNIT — 2026-09-15: 42 de 150 marcadas en producción, con días de atraso.** Se leyeron los 2.434 PDFs, no solo los de nombre sugestivo: la hipótesis de Daniel de nombres equivocados se confirmó. Nueva vista "Presentados" en Vencimientos. Lee el contenido (número de orden, fecha, período, RUC) de las declaraciones juradas normalizadas (120 IVA, 500 IRE, 158 EEFF) y de los talones de la RG 90 (241), y marca el vencimiento como presentado con su evidencia. Registra si fue fuera de término. Migración `20260914190000_lectura_de_declaraciones`. DISCREPANCIAS 23.
 
-- [ ] 131. El paso previo al despliegue (`migrar-base`, PRE_DEPLOY en `.do/app.yaml`) no está corriendo en DigitalOcean: las migraciones del 2026-09-14 y 15 se aplicaron a mano con `migrate deploy`. Revisar la especificación viva de la app.
+- [→] 131. El paso previo al despliegue (`migrar-base`, PRE_DEPLOY en `.do/app.yaml`) no está corriendo en DigitalOcean: las migraciones del 2026-09-14 y 15 se aplicaron a mano con `migrate deploy`. Revisar la especificación viva de la app. **→ Movida a la COLA B (B5): necesita a Daniel.**
 
 - [x] 129. **Clasificación por carpeta** (973 documentos reclasificados en producción el 2026-09-15, con autorización de Daniel; OneDrive no se tocó) cuando el nombre no alcanza: simulado sobre datos reales, los "Otro" bajan de 2.415 a 1.442. Ya se aplica a los archivos nuevos. Para los existentes: `scripts/reclasificar-documentos.mjs` (simula por defecto; `--aplicar` lo decide Daniel). Propuesta de nomenclatura para EFFORT en `docs/GUIA-NOMENCLATURA-ARCHIVOS.md`.
 
-- [ ] 130. Alerta de "presentado fuera de término": hoy se registra en la bitácora pero no levanta aviso.
+- [→] 130. Alerta de "presentado fuera de término": hoy se registra en la bitácora pero no levanta aviso. **→ Movida el 2026-09-15 a la COLA B (B9) de «EMPEZAR ACÁ»: espera la respuesta B1.**
 
-- [ ] 118. Revisión mensual del calendario de feriados. Regla de Daniel (2026-09-12): cada mes, o cuando el gobierno confirme oficialmente un traslado. Actualizar `TRASLADOS_DECRETADOS` y `REVISION_DE_FERIADOS` en `packages/core/src/diasHabiles.ts`. Próxima: octubre de 2026.
+- [→] 118. Revisión mensual del calendario de feriados. Regla de Daniel (2026-09-12): cada mes, o cuando el gobierno confirme oficialmente un traslado. Actualizar `TRASLADOS_DECRETADOS` y `REVISION_DE_FERIADOS` en `packages/core/src/diasHabiles.ts`. Próxima: octubre de 2026. **→ Movida el 2026-09-15 a la COLA A (tarea 118) de «EMPEZAR ACÁ».**
 
 ---
 
@@ -731,9 +848,9 @@ explicación, sin números que no se puedan rastrear.
 - [x] 135. **Menú sin desborde horizontal** a 1366 px de ancho (hoy "Panel general" queda cortado y aparece una barra de scroll).
 - [x] 136. **"Ver declaración"** (`4abb606`): desde un vencimiento presentado, abrir el PDF de la DNIT que lo prueba, en el OneDrive original (enlace de solo lectura, sin descargar ni copiar).
 - [x] 137. **Presentaciones con días de atraso en el Panel general**: un indicador con cuántas y cuántos días, sin hablar de multa.
-- [ ] 138. **POSTERGADA A PROPÓSITO — Arrastre del saldo a favor de IVA.** Calcularlo desde las planillas puede contradecir el saldo que EFFORT declaró en el formulario 120 (la determinación de COPESA de febrero 2026 trae un saldo a favor que ninguna planilla explica). El dato correcto está en las declaraciones ya leídas; hay que extraerlo de ahí. Original: entre períodos consecutivos (tarea 124), solo cuando no falta ningún período en el medio; si falta uno, se dice en pantalla.
+- [→] 138. **POSTERGADA A PROPÓSITO — Arrastre del saldo a favor de IVA.** Calcularlo desde las planillas puede contradecir el saldo que EFFORT declaró en el formulario 120 (la determinación de COPESA de febrero 2026 trae un saldo a favor que ninguna planilla explica). El dato correcto está en las declaraciones ya leídas; hay que extraerlo de ahí. Original: entre períodos consecutivos (tarea 124), solo cuando no falta ningún período en el medio; si falta uno, se dice en pantalla. **→ Movida a la COLA A (tarea 138).**
 - [x] 139. **Guía de demostración** (`docs/GUIA-DEMO.md`): recorrido de 15 minutos con los datos reales, qué mostrar en cada pantalla y qué preguntas va a disparar.
-- [ ] 140. **Verificación en producción de cada pantalla**, con la sesión de Daniel y solo mirando: capturas y lista de lo que se ve bien y lo que no.
+- [x] 140. **Verificación en producción de cada pantalla**, con la sesión de Daniel y solo mirando: capturas y lista de lo que se ve bien y lo que no. **Hecha el 2026-09-15** (commit `d49f700` desplegado): las 10 pantallas cargan sin error con el filtro, Panel general como inicio, "Ver declaración" abre el PDF original. Hallazgo: IVA de COPESA incompleto → tarea 141.
 
 ### Lo que necesita a Daniel (o a EFFORT)
 
@@ -747,9 +864,9 @@ explicación, sin números que no se puedan rastrear.
 
 ## PARTE 9 — Validación final con EFFORT
 
-- [ ] 112. Contrastar el cálculo de IVA contra una liquidación real ya presentada (cierra la discrepancia #1 de `docs/DISCREPANCIAS.md`)
-- [ ] 113. Confirmar los 5 clientes piloto definitivos con Laura/Lili
-- [ ] 114. Primera revisión guiada con EFFORT: los 12 módulos, en vivo, con sus propios datos
+- [→] 112. Contrastar el cálculo de IVA contra una liquidación real ya presentada (cierra la discrepancia #1 de `docs/DISCREPANCIAS.md`) **→ Movida a la COLA B (B8).**
+- [→] 113. Confirmar los 5 clientes piloto definitivos con Laura/Lili **→ Movida a la COLA B (B8).**
+- [→] 114. Primera revisión guiada con EFFORT: los 12 módulos, en vivo, con sus propios datos **→ Movida a la COLA B (B8).**
 
 ---
 

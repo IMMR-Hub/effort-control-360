@@ -4,6 +4,47 @@ Toda regla que el sistema aplica sobre dinero, plazos o estados y que todavía n
 fue contrastada contra un documento real de EFFORT se anota acá. Ninguna se
 resuelve por criterio propio: se confirma con Laura o Lili, o se deja marcada.
 
+## ▶ Índice de estado — actualizado el 2026-09-15
+
+**Esta tabla manda sobre los títulos de cada punto.** Si un título de más abajo
+dice otra cosa, vale lo que dice esta tabla (algunos títulos son históricos).
+"Quién" indica quién tiene que hacer algo para cerrarlo: **EFFORT** (respuesta
+de Lili o Laura), **Daniel** (decisión o acción en una cuenta), **Claude**
+(trabajo de código, está en la cola del roadmap), o **nadie** (cerrado).
+
+| # | Tema | Estado | Quién | Qué falta, exactamente |
+|---|---|---|---|---|
+| 1 | Divisores de IVA | Cerrado | nadie | — (contrastado con 1.188 filas reales) |
+| 2 | Redondeo de negativos | Abierto, no urgente | EFFORT | Confirmar con una nota de crédito real que -2,5 redondea a -3 |
+| 3 | Clientes piloto | Cerrado | nadie | — |
+| 4 | Período del piloto | Abierto, no urgente | EFFORT | Confirmar que enero–junio 2026 es el período del piloto |
+| 5 | Umbrales de alerta 30/15/7/2 | Abierto, no urgente | EFFORT | Revisar por obligación (Abogacía necesita más aviso) |
+| 6 | Acceso a OneDrive | Cerrado | nadie | — |
+| 7 | Rol `effort_app` sin contraseña | Abierto | Daniel | La `.env` local conecta como `postgres` (dueño del esquema). El valor de `DATABASE_URL` en producción es un secreto de DigitalOcean y no se verificó. Para cerrarlo: asignar contraseña a `effort_app` y usarlo en `DATABASE_URL` de producción |
+| 8 | RLS de Supabase | Cerrado (mina desactivada) | nadie | Regla vigente: toda tabla nueva lleva su política `app_acceso` |
+| 9 | `regla_impositiva` no conectada | Mitad cerrado | Claude, sin cola | El divisor sale de `DIVISORES_CONFIRMADOS_POR_EFFORT`; conectar a la tabla cuando haya determinación desde documentos |
+| 10 | Layout del importador de comprobantes | Abierto | EFFORT | Una planilla real de comprobantes |
+| 11 | Layout del importador SIGA | Abierto | EFFORT | Una exportación real de SIGA |
+| 12 | `npm audit` brace-expansion | Excepción documentada | nadie | — |
+| 13 | Proveedor de correo | **Cerrado 2026-09-15** | nadie | Se usa Microsoft Graph `sendMail` (ver el punto) |
+| 14 | `npm audit` deepmerge-ts | Excepción documentada | nadie | — |
+| 15 | Supabase inalcanzable (pausa) | Cerrado | nadie | Si se pausa: "Resume project" en Supabase |
+| 16 | Credenciales propias de cada usuario | Cerrado | nadie | — |
+| 17 | Calendario DNIT | Cerrado | nadie | — |
+| 18 | Latencia base ↔ API | Medido, decisión pendiente | Daniel | Decidir si la base se muda a EE.UU.; tarea 116 de la cola mide de nuevo |
+| 19 | Feriados y dos calendarios | Cerrado, **salvo 19(e)** | EFFORT | 19(e): ver punto 26 (prórroga de EEFF) |
+| 20 | Tolerancia de redondeo del proveedor | Cerrado | nadie | Toda diferencia alerta; se acepta o se revisa |
+| 21 | Hallazgos repetidos en la base | Corregido en código, limpieza pendiente | Daniel | Autorizar `docs/propuestas/limpiar-hallazgos-repetidos.sql` (borra filas) |
+| 22 | Autofacturas con columnas en cero | Abierto | EFFORT | ¿SIGA las exporta así a propósito? |
+| 23 | Presentaciones desde el PDF de la DNIT | **Cerrado en código y producción 2026-09-15** | nadie | 42 de 150 presentados; lo que falta está en 27 y 28 |
+| 24 | IVA sumaba planillas repetidas | Cerrado | EFFORT (validar) | Confirmar que "la más reciente" es la buena cuando no hay "CORRECCION" (ECOAGRO feb-2025) |
+| 25 | Planillas RG 90 reconocidas por nombre | **Abierto** | Claude | Tarea 141 de la cola del roadmap |
+| 26 | Prórroga de EEFF 2025 (RG DNIT 50/2026) | **Abierto — primera pregunta** | EFFORT | Confirmar si aplica; cambia 3 "atrasos" de ~60 días a "a tiempo" |
+| 27 | SIPAR sin declaraciones en OneDrive | Abierto | EFFORT | Dónde guardan sus DDJJ 2025-2026 y el Excel de la RG 90 |
+| 28 | Talones de RG 90 que no están | Abierto | EFFORT | Dónde guardan los talones de DIBEC, FUMIPRO, ECOAGRO y parte de COPESA |
+| 29 | Migraciones no automáticas en DigitalOcean | Abierto | Daniel | El job `migrar-base` no corre; se aplican a mano |
+| 30 | Esquemas de prueba sobrantes en Supabase | Abierto | Daniel | Autorizar el borrado de `pruebas_*` sobrantes |
+
 ---
 
 ## 1. Divisores de IVA — CONTRASTADOS CONTRA DOCUMENTOS REALES (2026-09-12)
@@ -515,7 +556,12 @@ que el check vuelva a OK sin tocar `exceljs`.
 
 ---
 
-## 13. Proveedor de envío de correo (tarea 95, Parte 6) — SIN CONFIRMAR
+## 13. Proveedor de envío de correo (tarea 95, Parte 6) — CERRADO (2026-09-15)
+
+> **Cierre:** se implementó con la recomendación de abajo — Microsoft Graph
+> `sendMail` con la cuenta del sistema y el mismo registro de Azure. Está en uso
+> para los avisos de alertas críticas (`apps/api/src/servicios/avisosPorCorreo.ts`)
+> y deja cada envío en `envio_notificacion`. Lo que sigue es historia.
 
 **Qué falta:** la tarea 95 (despachador de notificaciones) necesita saber con
 qué servicio EFFORT envía correo hoy. Sabemos que usan **Microsoft 365** (ya
@@ -924,7 +970,7 @@ terminaciones el mismo día. El sistema ya lo hace bien —cada obligación calc
 su fecha por separado— pero es el tipo de cosa que alguien "arregla" alguna vez
 creyendo que es un bug.
 
-### e) Prórroga de estados financieros — NO SE APLICA, PERO CONVIENE RELEER ESTO
+### e) Prórroga de estados financieros — REABIERTO, VER PUNTO 26 (2026-09-15)
 
 **Daniel, 2026-09-12:** *"Ninguno de los 5 clientes tiene RG50, solo el RG90"*.
 Decisión tomada: **no se carga la prórroga**. Y es el lado seguro del error — sin
@@ -1097,7 +1143,7 @@ alias y un test.
 
 ---
 
-## 23. Presentaciones: se leen del PDF de la DNIT, no del nombre — ABIERTO (2026-09-14)
+## 23. Presentaciones: se leen del PDF de la DNIT, no del nombre — CERRADO EN CÓDIGO Y PRODUCCIÓN (2026-09-15)
 
 **El problema.** 150 vencimientos, 0 marcados como presentados, 96 alertas
 críticas de "vencido sin presentar". Las declaraciones estaban en OneDrive;
@@ -1218,3 +1264,139 @@ dic-2025, feb, jun y jul 2026, el IVA de COPESA de jul y ago 2026, el IVA de
 DIBEC de julio 2026, el IRE 2025 de DIBEC, los EEFF 2025 de COPESA, y todo
 SIPAR (su carpeta no tiene ninguna declaración: 226 archivos, mayormente
 legales, extractos y los TXT de la RG 90).
+
+---
+
+## 25. Las planillas RG 90 se reconocían por su nombre — ABIERTO (2026-09-15)
+
+**Qué pasa.** `NOMBRE_DE_PLANILLA` en `apps/api/src/servicios/liquidacionDeIva.ts`
+solo acepta archivos cuyo nombre empieza con `RG COMPRAS` o `RG VENTAS`
+(opcionalmente `CORRECCION`). COPESA guarda sus libros como
+`PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 COMPRAS/01 ENERO.xlsx` y
+`80003112_202501_COMPRAS_150121_1.xlsx`, así que el sistema tiene IVA de COPESA
+para solo 2 períodos (2025-04 y 2025-09). Verificado en la pantalla de IVA en
+producción el 2026-09-15.
+
+**Por qué importa.** Es el mismo error que se corrigió para las declaraciones
+(punto 23): decidir por el nombre del archivo en vez de por su contenido.
+
+**Prueba de solo lectura del 2026-09-15** sobre los Excel de COPESA clasificados
+como libro: 191 se leen como planilla RG 90 (períodos de 2022 a 2026) y 33 no.
+Mostró tres problemas reales que la solución tiene que cubrir:
+
+1. `PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 COMPRAS/01 ENERO.xlsx` trae filas con
+   períodos 2026-01, 2027-01 … 2032-01: la columna de período del Excel está mal.
+   Regla: una fila con período posterior al mes en curso se rechaza con motivo.
+2. Agosto 2025 está en dos planillas **con contenido distinto**
+   (`08 Agosto 2025 ok verificado.xlsx`, 568 filas; `AGOSTO 2025.xlsx`, 464).
+   Juntar las filas de ambas mezclaría dos versiones del libro. Regla: **un solo
+   archivo por cliente + período + tipo de registro** — el que dice
+   "CORRECCION"; si ninguno, el modificado más recientemente en OneDrive — y los
+   demás se informan como descartados. Esto reemplaza, para ese caso, la unión
+   deduplicada del punto 24.
+3. Los archivos de la DNIT `80003112_AAAAMM_COMPRAS_NNNNNN_1.xlsx` dan 0 filas:
+   se ignoran sin contarlos como fallo.
+
+**Cómo se cierra.** Tarea 141 del roadmap, que tiene los pasos exactos y el
+criterio de terminado (verificado en la pantalla de IVA de producción).
+
+---
+
+## 26. Prórroga de los estados financieros 2025 — ABIERTO, PRIMERA PREGUNTA (2026-09-15)
+
+**Los hechos.**
+
+- La **Resolución General DNIT N° 50/2026** (7 de abril de 2026) extendió la
+  presentación de los estados financieros del ejercicio cerrado al 31/12/2025
+  hasta el **30 de junio de 2026**, para contribuyentes de IRE Régimen General
+  (punto 19 f, con la fuente oficial:
+  `dnit.gov.py/web/portal-institucional/w/extienden-plazo-para-presentaci%C3%B3n-de-estados-financieros`).
+- Las declaraciones leídas de OneDrive (formulario 158) muestran que **DIBEC
+  presentó el 23/06/2026, FUMIPRO el 10/06/2026 y ECOAGRO el 26/06/2026**.
+- El sistema tiene los EEFF con vencimiento en abril (el mismo día que el IRE,
+  punto 19 g), así que hoy muestra **64, 62 y 60 días de atraso**.
+- Daniel respondió el 2026-09-15: *"No hubo ninguna prórroga ni para el IRE ni
+  para ninguna otra presentación"*. El punto 19(e) ya advertía, desde el
+  2026-09-12, un posible cruce de nombres: la **RG 90** es el formulario de
+  compras y ventas; la **RG 50/2026** es una prórroga, no un formulario que un
+  cliente "tenga".
+
+**Por qué no se aplicó por criterio propio.** Hay una respuesta explícita de
+Daniel en contra. Pero el patrón es demasiado consistente para ignorarlo: tres
+clientes distintos presentando los EEFF en la segunda quincena de junio, todos
+antes del 30/06, es exactamente lo que produce esa prórroga.
+
+**Cómo se cierra.** Preguntarle a Lili mostrándole la resolución. Si la prórroga
+aplica: cambiar el vencimiento de EEFF del período 2025-12 de los 5 clientes al
+30/06/2026 (corrido a día hábil según el calendario de informativas si
+corresponde) y los atrasos se recalculan solos en la vista Presentados. Si no
+aplica: queda como está y los 60 días de atraso son reales.
+
+**No afecta al IRE.** La prórroga es solo de estados financieros. Los atrasos de
+IRE (ECOAGRO 35 días, COPESA 8, FUMIPRO 3) siguen igual en cualquier caso.
+
+---
+
+## 27. SIPAR no tiene declaraciones en OneDrive — ABIERTO (2026-09-15)
+
+Verificado en modo solo lectura contra el OneDrive de origen (`lsosa@`): SIPAR
+tiene **una sola carpeta, `043 SIPAR S.A`, con 230 archivos**, todos
+sincronizados por el sistema. Ninguno es una declaración de IVA, IRE ni EEFF de
+2025-2026 ni un talón de RG 90, con ningún nombre (se leyó el contenido de todos
+los PDFs). Lo que hay: actas y documentos legales, extractos de BASA,
+`CALCULO IRE SIPAR S.A. 2025`, `BOLETA DE PAGO IRE GENERAL 2024`, y los libros de
+compras y ventas como TXT de Marangatú (sin desglose de IVA, punto de la
+consulta del 2026-09-13).
+
+**Cómo se cierra.** EFFORT dice dónde guarda las presentaciones de SIPAR y pasa
+el Excel de la RG 90 que exporta SIGA. Mientras tanto, los 30 vencimientos de
+SIPAR siguen pendientes, y es lo correcto: el sistema no tiene prueba.
+
+---
+
+## 28. Talones de RG 90 que no están en OneDrive — ABIERTO (2026-09-15)
+
+El talón de la RG 90 es el **formulario 241, "Talón de presentación — Registro
+de comprobantes"**, que la DNIT genera al presentar la planilla. COPESA lo
+guardaba como PDF del talón (2023-2025) y en 2026 como el aviso del buzón de
+Marangatú impreso; los dos formatos se reconocen.
+
+Sin prueba en OneDrive: **RG 90 de DIBEC, FUMIPRO y ECOAGRO de diciembre 2025 a
+agosto 2026**, y de **COPESA de diciembre 2025, febrero, junio, julio y agosto
+2026**.
+
+**Cómo se cierra.** EFFORT dice dónde guarda esos talones (o si no los guarda).
+Si los guarda en otro lugar, hay que sumar esa carpeta a la sincronización.
+
+---
+
+## 29. Las migraciones no se aplican solas en DigitalOcean — ABIERTO (2026-09-15)
+
+`.do/app.yaml` declara un job `migrar-base` (`PRE_DEPLOY`, corre
+`prisma migrate deploy`), pero en los despliegues del 2026-09-14 y 15 las
+migraciones nuevas no se aplicaron: la tabla `lectura_de_declaracion` no existía
+con el código ya en producción. Se aplicaron a mano con `migrate deploy`, con
+respaldo previo.
+
+**Consecuencia mientras siga así.** Toda migración nueva hay que aplicarla a mano
+**antes** del push, o el código nuevo va a fallar contra una base vieja.
+
+**Cómo se cierra.** Revisar en DigitalOcean (App → Settings → App Spec) si el job
+está en la especificación viva. Es un cambio en la cuenta: lo hace Daniel o lo
+autoriza expresamente.
+
+---
+
+## 30. Esquemas de prueba sobrantes en Supabase — ABIERTO (2026-09-15)
+
+Los tests de integración y e2e crean esquemas `pruebas_<id>` y los borran al
+terminar; cuando una corrida se corta, quedan. El 2026-09-14 aparecieron
+`pruebas_2c50f828c88c` y `pruebas_56778dd7401f` en la base de producción de
+Supabase. No afectan a los datos de `public`, pero ocupan espacio en un plan
+gratuito.
+
+**Cómo se cierra.** Listar con
+`SELECT schema_name FROM information_schema.schemata WHERE schema_name LIKE 'pruebas_%';`
+y borrarlos **solo con autorización expresa de Daniel** (es un `DROP SCHEMA`,
+bloqueado además por el guardia de comandos).
+

@@ -46,8 +46,11 @@ reales para contar:
 
 **Qué mostrar:**
 
-- Elegir un cliente (ECOAGRO es el más completo). Crédito, débito y saldo por
-  período, calculados desde las planillas RG 90.
+- Elegir **ECOAGRO**, el más completo. Crédito, débito y saldo por período,
+  calculados desde las planillas RG 90.
+- **No mostrar COPESA en esta pantalla todavía:** tiene IVA de solo 2 períodos
+  hasta que se haga la tarea 141 del roadmap (sus planillas tienen otros
+  nombres y el sistema todavía las busca por nombre).
 - **Qué revisar antes de presentar:** toda diferencia de IVA entre la factura y
   la regla, desde 1 guaraní. El caso más grande: AGROSOL → ECOAGRO, 12 Gs. de
   crédito de más en 2026-03.
@@ -74,11 +77,15 @@ Estas preguntas van a salir solas en la demo. Conviene llevarlas escritas:
    2025-2026 ni el Excel de la RG 90. ¿Dónde las guardan?
 2. **RG 90 de DIBEC, FUMIPRO y ECOAGRO**: ningún talón de presentación en sus
    carpetas. ¿Dónde está?
-3. **Estados financieros 2025**: DIBEC, FUMIPRO y ECOAGRO los presentaron entre
-   el 10 y el 26 de junio; el sistema los tiene con vencimiento en abril, el
-   mismo día que el IRE (dato de Lili). Que las tres den ~60 días de atraso con
-   el mismo patrón hace pensar que el vencimiento de los EEFF es otro. **¿Cuál
-   es la fecha correcta?**
+3. **Estados financieros 2025 — la más importante.** DIBEC, FUMIPRO y ECOAGRO
+   los presentaron entre el 10 y el 26 de junio; el sistema los tiene con
+   vencimiento en abril (mismo día que el IRE, dato de Lili) y por eso muestra
+   ~60 días de atraso. Pero la **Resolución General DNIT N° 50/2026** extendió la
+   presentación de los EEFF del ejercicio 2025 hasta el **30 de junio de 2026**
+   (fuente: dnit.gov.py, "Extienden plazo para presentación de estados
+   financieros"). Con esa prórroga las tres presentaron **a tiempo**. **¿La
+   aplicamos?** (Ojo con el nombre: la RG 90 es el formulario de compras y
+   ventas; la RG 50 es esta prórroga, son cosas distintas.)
 4. **Nombres de archivo**: ¿les sirve la propuesta de
    `docs/GUIA-NOMENCLATURA-ARCHIVOS.md`?
 5. **Archivos duplicados**: `docs/propuestas/ARCHIVOS-DUPLICADOS.md` lista 404
