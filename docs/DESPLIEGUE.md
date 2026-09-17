@@ -150,3 +150,35 @@ esperando confirmación de EFFORT — sin eso, tampoco hay con qué hacer esta
 corrida): login real, navegar 3-4 pantallas, confirmar que muestran datos
 reales, cerrar sesión. Documentar el resultado en
 `docs/ROADMAP-MAESTRO.md` antes de marcar la Parte 8 cerrada.
+
+---
+
+## Verificar que un despliegue terminó (2026-09-17)
+
+Antes: bajar el `.js` a mano y buscar un texto nuevo (regla 7 de `CLAUDE.md`).
+Ahora hay un script que hace las dos comprobaciones que importan — que la WEB
+cambió y que la API nueva responde — sin credenciales:
+
+```bash
+node scripts/esperar-despliegue.mjs --marcador "texto que solo está en el código que se acaba de pushear"
+```
+
+Sondea cada 60 segundos, se rinde a los 30 minutos (`--tope-ms` para ajustar) y
+sale con código 0 solo si las dos señales aparecen juntas. Si se agota el
+tiempo, hay que mirar el panel de DigitalOcean a mano antes de seguir — no es
+necesariamente una falla, puede ser una compilación lenta.
+
+## Consultas de solo lectura contra producción (2026-09-17)
+
+Para las "fotos" de antes y después de un push (contar alertas, hallazgos,
+liquidaciones):
+
+```bash
+node scripts/consultar-produccion.mjs "SELECT count(*) FROM alerta WHERE estado = 'ABIERTA'"
+```
+
+Corre la consulta en una transacción `SET TRANSACTION READ ONLY`: un INSERT,
+UPDATE o DELETE por accidente falla porque lo rechaza PostgreSQL, no por una
+convención del script. Probado contra PostgreSQL real (no un doble) en
+`apps/api/test/integracion/consultar-produccion.test.ts`. Nunca imprime la
+cadena de conexión.
