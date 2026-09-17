@@ -25,6 +25,7 @@ import { ACCIONES, registrarEvento } from '../bitacora.js';
 import { ErrorDeAplicacion, type Dependencias } from '../servidor.js';
 import { filtroDeClientes } from '../seguridad/rbac.js';
 import { autorizar } from './comun.js';
+import { intentarConCandado } from '../servicios/candadoDeIva.js';
 import { liquidarIvaDesdeLibros } from '../servicios/liquidacionDeIva.js';
 
 const filtroSchema = z
@@ -59,17 +60,33 @@ export async function registrarRutasDeLiquidacionesIva(
       );
     }
 
-    const resumen = await liquidarIvaDesdeLibros(
-      {
-        clientes: deps.clientes,
-        librosDelCliente: (clienteId) => deps.libroRg90!.librosDelCliente(clienteId),
-        drive: deps.drive,
-        guardarLiquidacion: (datos) => deps.libroRg90!.guardarLiquidacion(datos),
-        guardarHallazgos: (datos) => deps.libroRg90!.guardarHallazgos(datos),
-        divisores: DIVISORES_CONFIRMADOS_POR_EFFORT,
-      },
-      sujeto.usuarioId,
+    const drive = deps.drive;
+    const libroRg90 = deps.libroRg90;
+    const intento = await intentarConCandado(() =>
+      liquidarIvaDesdeLibros(
+        {
+          clientes: deps.clientes,
+          librosDelCliente: (clienteId) => libroRg90.librosDelCliente(clienteId),
+          drive,
+          guardarLiquidacion: (datos) => libroRg90.guardarLiquidacion(datos),
+          guardarHallazgos: (datos) => libroRg90.guardarHallazgos(datos),
+          divisores: DIVISORES_CONFIRMADOS_POR_EFFORT,
+          ahora: deps.ahora,
+        },
+        sujeto.usuarioId,
+      ),
     );
+
+    // Otro cálculo en curso (el automático de cada hora, o alguien que apretó
+    // el botón antes): dos a la vez duplican memoria y pueden repetir hallazgos.
+    if (intento.ocupado) {
+      throw new ErrorDeAplicacion(
+        409,
+        'Ya hay un cálculo de IVA en curso. Esperá unos minutos y volvé a intentar.',
+        'calculo_en_curso',
+      );
+    }
+    const resumen = intento.valor;
 
     await registrarEvento(deps.bitacora, peticion.log, {
       usuarioId: sujeto.usuarioId,
