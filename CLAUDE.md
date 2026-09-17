@@ -14,16 +14,21 @@ de 2026.
    **`backend-datos-sensibles`** (global). Este archivo solo agrega lo
    específico de EFFORT.
 
-> **Estado al 2026-09-13 — leer antes de trabajar con datos.** La base de
-> producción fue borrada por accidente (ver REGLA 0). El esquema está intacto;
-> los datos no. Pendiente de reconstrucción: usuarios, clientes, documentos,
-> vencimientos, alertas y obligaciones. **Los archivos de OneDrive no fueron
-> afectados** — los 1574 documentos están enteros y la sincronización los vuelve
-> a indexar. La bitácora de auditoría (`event_log`) se perdió sin fuente de
-> recuperación.
+> **Estado al 2026-09-13 — histórico, ya NO vigente, se deja como parte de la
+> lección de REGLA 0.** La base de producción fue borrada por accidente ese
+> día. Lo que decía este cuadro ("pendiente de reconstrucción: usuarios,
+> clientes, documentos, vencimientos, alertas y obligaciones") **ya se hizo**:
+> según `docs/ROADMAP-MAESTRO.md` ("Foto de producción", 2026-09-15) hay 5
+> clientes, 3.969 documentos, 150 vencimientos y 83 alertas abiertas. La
+> bitácora de auditoría (`event_log`) previa al incidente se perdió sin
+> fuente de recuperación — eso sí sigue siendo cierto: la bitácora de antes
+> del 13/09 no existe.
+>
+> **Para el estado real y lo que sigue, la fuente es siempre
+> `docs/ROADMAP-MAESTRO.md`** (sección "▶ EMPEZAR ACÁ"), nunca este cuadro.
 
 **Este archivo se revisa cada 6 meses**, o cuando una conversación descubra algo
-que la siguiente necesitaría redescubrir. Última revisión: **2026-09-13**. No es
+que la siguiente necesitaría redescubrir. Última revisión: **2026-09-17**. No es
 un documento de arranque: es la memoria del proyecto, y su valor está en lo que
 evita repetir. Se agrega; no se borra.
 
@@ -59,6 +64,26 @@ Esto lo hace cumplir `.claude/guardias/bloquear-destructivos.mjs`, un hook que
 corre antes de cada comando de shell y bloquea los patrones destructivos. **No
 se desactiva para seguir adelante.** Si un borrado es legítimo, lo ejecuta
 Daniel.
+
+## REGLA 0-bis — NINGÚN CORREO A NADIE HASTA QUE DANIEL LO DIGA
+
+Daniel, 2026-09-16: *"hasta que no te lo diga, NO QUIERO QUE MANDES NINGUN
+CORREO a nadie."* Vale para Claude y para todo lo que Claude construya o
+despliegue:
+
+1. Claude no envía correos ni mensajes por ningún medio (Microsoft Graph,
+   SMTP, conectores de correo, formularios).
+2. Ningún cambio que se despliegue puede dejar al sistema enviando correos:
+   los avisos por correo y los recordatorios quedan **apagados por defecto**,
+   y un push que los encienda no se hace sin autorización expresa.
+3. No se corre nada que pueda disparar un envío real: servidores locales con
+   credenciales de Azure y trabajos automáticos encendidos (`npm run dev`, un
+   e2e colgado), scripts o pruebas contra Graph.
+4. Los correos se habilitan recién en las pruebas finales con Laura y Lili,
+   **cuando Daniel lo autorice** (decisión A6 del plan maestro).
+
+Una autorización anterior no cuenta: esta regla la levanta solo Daniel, por
+escrito, en la conversación.
 
 ## Las tres preguntas — antes de cualquier acción difícil de deshacer
 
@@ -180,9 +205,14 @@ agregá la entrada — el valor está en que siga creciendo.
      en la carpeta nueva, se registra en `docs/BITACORA-ONEDRIVE.md`**
      (cuándo, qué, por qué, para qué) — sirve de auditoría y de material de
      entrenamiento a futuro.
-   - Si algún día hiciera falta escribir o borrar algo en una carpeta real,
-     es una decisión nueva que se toma con EFFORT presente y por escrito —
-     no algo que se agrega calladamente en una tarea de otra cosa.
+   - **Superado el 2026-09-15/17.** Esta viñeta decía que escribir o borrar en
+     una carpeta real algún día podía decidirse "con EFFORT presente". Daniel
+     lo cerró sin dejar esa puerta: *"No quiero que modifiques ni borres ni
+     cambies NADA en la carpeta de Lau y Lili. Eso quedó prohibido"*
+     (2026-09-15), y lo repitió en estos términos el 2026-09-17: *"mantené
+     siempre la regla vital de NO BORRAR NI MODIFICAR NADA de la carpeta
+     original OneDrive de Effort"*. No hay decisión que lo habilite, ni con
+     EFFORT presente: es absoluto, sin excepción.
    - Hasta el 2026-09-09 esto era en gran parte teórico: el adaptador real
      (`DriveGraph`) nunca había tocado ningún archivo de producción, solo se
      probaba contra el doble en memoria (`DriveFalso`). La primera lectura
