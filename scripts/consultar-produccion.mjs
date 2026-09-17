@@ -8,7 +8,14 @@
  * script: `SET TRANSACTION READ ONLY` la hace cumplir PostgreSQL mismo. Un
  * INSERT, UPDATE o DELETE dentro de esta transacción falla con
  * "cannot execute ... in a read-only transaction", los reciba quien los
- * mande. Probado en `apps/api/test/integracion/consultar-produccion.test.ts`.
+ * mande.
+ *
+ * La consulta misma vive en `apps/api/src/servicios/consultaSoloLectura.ts`
+ * (compilada a `dist`) y no acá: un archivo con un `await` a nivel de módulo
+ * (el de más abajo, para el modo CLI) resultó frágil de importar desde un
+ * test — Vite tropieza al transformarlo. Requiere `npm run build --workspace
+ * @effort/api` si se editó esa lógica. Probado en
+ * `apps/api/test/integracion/consultar-produccion.test.ts`.
  *
  * **Nunca imprime la cadena de conexión.** Si algo falla, el mensaje de Postgres
  * puede mencionar la base o el usuario, nunca la URL completa con la
@@ -21,6 +28,8 @@
 
 import { readFileSync, realpathSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+
+import { consultaDeSoloLectura } from '@effort/api/dist/servicios/consultaSoloLectura.js';
 
 /** Carga `.env` sin depender de dotenv, igual que el resto de los scripts. */
 function cargarEntorno(ruta) {
@@ -40,23 +49,6 @@ function cargarEntorno(ruta) {
 function serializar(_clave, valor) {
   if (typeof valor === 'bigint') return `${valor}n`;
   return valor;
-}
-
-/**
- * Corre una consulta dentro de una transacción READ ONLY.
- *
- * Recibe el cliente de Prisma ya conectado (no abre ni cierra la conexión:
- * eso es responsabilidad de quien llama) para que se pueda probar contra un
- * esquema de prueba sin duplicar la lógica de conexión.
- *
- * `SET TRANSACTION READ ONLY` tiene que ser la PRIMERA sentencia de la
- * transacción: PostgreSQL la rechaza si ya se ejecutó algo antes.
- */
-export async function consultaDeSoloLectura(prisma, sql) {
-  return prisma.$transaction(async (tx) => {
-    await tx.$executeRawUnsafe('SET TRANSACTION READ ONLY');
-    return tx.$queryRawUnsafe(sql);
-  });
 }
 
 async function principal() {

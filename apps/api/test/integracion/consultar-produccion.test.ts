@@ -9,30 +9,18 @@
  * los prohíba por convención.
  */
 
-import { dirname, join } from 'node:path';
-import { fileURLToPath, pathToFileURL } from 'node:url';
-
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 import { HAY_BASE_DE_DATOS, crearEntorno, type EntornoDePrueba } from './entorno.js';
+// La misma función que usa `scripts/consultar-produccion.mjs`. No se importa
+// el .mjs directamente: tiene un `await` a nivel de módulo para su modo CLI, y
+// Vite tropieza al transformarlo desde un test ("SyntaxError: Invalid or
+// unexpected token", tanto con `import()` dinámico como con un `import`
+// estático). `consultaSoloLectura.ts` es el módulo sin ese problema que los
+// dos comparten.
+import { consultaDeSoloLectura } from '../../src/servicios/consultaSoloLectura.js';
 
 const describeSiHayBase = HAY_BASE_DE_DATOS ? describe : describe.skip;
-
-// Se importa desde el .mjs del repositorio, no una copia: si el script
-// cambia, este test prueba el script real.
-const rutaDelScript = join(
-  dirname(fileURLToPath(import.meta.url)),
-  '..',
-  '..',
-  '..',
-  '..',
-  'scripts',
-  'consultar-produccion.mjs',
-);
-// `pathToFileURL` y no una URL armada a mano: en Windows la ruta real tiene
-// espacios ("NexusFlow AI") y separadores `\`, que una `file://` a mano no
-// escapa bien.
-const { consultaDeSoloLectura } = await import(pathToFileURL(rutaDelScript).href);
 
 describeSiHayBase('consultar-produccion: transacción READ ONLY contra PostgreSQL real', () => {
   let entorno: EntornoDePrueba;
@@ -44,7 +32,11 @@ describeSiHayBase('consultar-produccion: transacción READ ONLY contra PostgreSQ
       data: { nombre: 'CLIENTE DE PRUEBA S.A.', ruc: '80000000-1', activo: true, tipoPersona: 'JURIDICA' },
     });
     clienteId = cliente.id;
-  }, 60_000);
+    // Sin tope propio: el proyecto ya fija `hookTimeout: 120_000` para este
+    // grupo de tests (`vitest.config.ts`), porque `crearEntorno()` aplica
+    // todas las migraciones contra Supabase en São Paulo y puede tardar más
+    // de 30s. Un tope de 60_000 acá lo pisaba y lo hacía fallar por timeout.
+  });
 
   afterAll(async () => {
     await entorno.destruir();

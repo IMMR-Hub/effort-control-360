@@ -72,9 +72,10 @@ export default tseslint.config(
     },
   },
   {
-    // Scripts de Node en la raíz (`scripts/*.mjs`): `console`/`process` son
-    // globals reales acá, no errores de `no-undef`.
-    files: ['scripts/**/*.mjs'],
+    // Scripts de Node en la raíz (`scripts/*.mjs`) y la guardia de comandos
+    // (`.claude/guardias/*.mjs`, versionada desde la tarea N2): `console`,
+    // `process` y `URL` son globals reales acá, no errores de `no-undef`.
+    files: ['scripts/**/*.mjs', '.claude/guardias/**/*.mjs'],
     languageOptions: {
       globals: globals.node,
     },
