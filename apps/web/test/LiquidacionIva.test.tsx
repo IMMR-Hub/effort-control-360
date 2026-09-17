@@ -164,6 +164,38 @@ describe('pantalla de IVA', () => {
   });
 
   /*
+   * Tarea 141: una planilla descartada por existir una más reciente tiene que
+   * poder verse; si no, nadie se entera de que había dos versiones del libro.
+   */
+  it('muestra las planillas descartadas y los Excel ignorados del último cálculo', async () => {
+    await montar();
+    mock.mockDeRuta('POST /api/v1/liquidaciones-iva/calcular', () =>
+      respuestaJson({
+        periodosCalculados: 48,
+        archivosLeidos: 191,
+        filasInterpretadas: 20000,
+        filasRechazadas: 12,
+        hallazgosNuevos: 0,
+        archivosIgnorados: 33,
+        avisos: [
+          {
+            cliente: 'COPESA',
+            archivo: 'AGOSTO 2025.xlsx',
+            motivo: 'Planilla descartada por existir una más reciente (COMPRAS 2025-08): se usó "08 Agosto 2025 ok verificado.xlsx".',
+          },
+        ],
+        fallos: [],
+      }),
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: /recalcular/i }));
+
+    expect(await screen.findByText(/33 Excel ignorados/)).toBeTruthy();
+    expect(screen.getByText(/1 avisos/)).toBeTruthy();
+    expect(screen.getByText(/COPESA — AGOSTO 2025\.xlsx/)).toBeTruthy();
+  });
+
+  /*
    * Daniel, 2026-09-14: "alertar a partir de 1 guaraní, y que luego puedan
    * aceptar o revisar". Aceptar sin motivo no es una decisión: el botón de
    * confirmar no se habilita hasta que haya uno escrito.

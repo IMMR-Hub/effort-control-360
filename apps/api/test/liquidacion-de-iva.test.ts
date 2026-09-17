@@ -24,6 +24,8 @@ import { ClientesFalsos, clienteMinimo } from './dobles.js';
 const CLIENTE = '11111111-1111-4111-8111-111111111111';
 const USUARIO = 'usr-sistema';
 const EXCEL = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+/** Mediodía del 16 de septiembre de 2026 en Asunción: el mes en curso es 2026-09. */
+const HOY = new Date('2026-09-16T15:00:00Z');
 
 const ENCABEZADOS = [
   'RUC del Informante', 'Nombre o Razon Social del Informante',
@@ -58,6 +60,15 @@ async function planilla(comprobantes: readonly Comprobante[]): Promise<Buffer> {
       '', '', '16/03/2026', 'IMPORTACION',
     ]);
   }
+  return Buffer.from(await libro.xlsx.writeBuffer());
+}
+
+/** Un Excel con datos que no es planilla RG 90 (un resumen, un cálculo auxiliar). */
+async function otroExcel(): Promise<Buffer> {
+  const libro = new ExcelJS.Workbook();
+  const hoja = libro.addWorksheet('Resumen');
+  hoja.addRow(['Mes', 'Total compras', 'Total ventas']);
+  hoja.addRow(['Enero', 1500000, 3200000]);
   return Buffer.from(await libro.xlsx.writeBuffer());
 }
 
@@ -113,6 +124,7 @@ function armar(archivos: readonly ArchivoDeLibro[], contenidos: Map<string, Buff
         return nuevos;
       },
       divisores: DIVISORES_CONFIRMADOS_POR_EFFORT,
+      ahora: () => HOY,
     },
   };
 }
@@ -178,35 +190,153 @@ describe('liquidación de IVA desde los libros', () => {
   /*
    * Caso real: FUMIPRO julio 2026 tiene "RG COMPRAS 07 2026" y "CORRECCION RG
    * COMPRAS 07 2026" en la misma carpeta. Hasta el 2026-09-14 se sumaban las
-   * dos y el crédito fiscal del período salía doble.
+   * dos y el crédito fiscal del período salía doble. Desde el 2026-09-16 (tarea
+   * 141) no se mezclan: vale la corrección entera, y el original se informa.
    */
-  it('un comprobante que está en dos planillas cuenta una vez, y manda la corrección', async () => {
+  it('con dos planillas del mismo período vale solo la corrección, entera', async () => {
     const contenidos = new Map<string, Buffer | Error>([
       ['correccion', await planilla([
         { registro: 'COMPRAS', numero: '001-001-0000001', gravado10: 110000, iva10: 10000 },
       ])],
       ['original', await planilla([
-        // En el original el IVA estaba mal cargado; la corrección lo arregló.
+        // En el original el IVA estaba mal cargado y había un comprobante de más.
         { registro: 'COMPRAS', numero: '001-001-0000001', gravado10: 110000, iva10: 9000 },
         { registro: 'COMPRAS', numero: '001-001-0000002', gravado10: 220000, iva10: 20000 },
       ])],
     ]);
     const ctx = armar(
       [
-        // La corrección llega primero a propósito: el orden de lectura no puede
-        // depender del orden en que el repositorio devuelve los archivos.
-        archivo({ itemIdOneDrive: 'correccion', nombreArchivo: 'CORRECCION RG COMPRAS 07 2026 - FUMIPRO SA.xlsx' }),
-        archivo({ itemIdOneDrive: 'original', nombreArchivo: 'RG COMPRAS 07 2026 - FUMIPRO SA.xlsx' }),
+        // La corrección llega primero y es la MÁS VIEJA a propósito: "CORRECCION"
+        // manda antes que la fecha, y el orden del repositorio no importa.
+        archivo({
+          itemIdOneDrive: 'correccion',
+          nombreArchivo: 'CORRECCION RG COMPRAS 07 2026 - FUMIPRO SA.xlsx',
+          modificadoEnOrigen: new Date('2026-08-01'),
+        }),
+        archivo({
+          itemIdOneDrive: 'original',
+          nombreArchivo: 'RG COMPRAS 07 2026 - FUMIPRO SA.xlsx',
+          modificadoEnOrigen: new Date('2026-08-20'),
+        }),
       ],
       contenidos,
     );
 
     const resumen = await liquidarIvaDesdeLibros(ctx.deps, USUARIO);
 
-    expect(resumen.comprobantesRepetidos).toBe(1);
-    expect(ctx.liquidaciones[0]!.comprobantesCompras).toBe(2);
-    // 10.000 de la corrección + 20.000 del segundo comprobante. No 39.000.
-    expect(ctx.liquidaciones[0]!.creditoFiscal).toBe(gs(30000));
+    expect(ctx.liquidaciones[0]!.comprobantesCompras).toBe(1);
+    expect(ctx.liquidaciones[0]!.creditoFiscal).toBe(gs(10000));
+    expect(resumen.avisos).toHaveLength(1);
+    expect(resumen.avisos[0]!.archivo).toBe('RG COMPRAS 07 2026 - FUMIPRO SA.xlsx');
+    expect(resumen.avisos[0]!.motivo).toMatch(/descartada por existir una más reciente/);
+  });
+
+  /*
+   * Caso real (b) de la tarea 141: COPESA tiene agosto 2025 en
+   * "RG 90 COMPRAS/08 Agosto 2025 ok verificado.xlsx" (568 filas) y en
+   * "RG 90 COMPRAS/AGOSTO 2025.xlsx" (464), con contenido distinto. Juntarlas
+   * mezclaría dos versiones del libro.
+   */
+  it('sin corrección, vale la planilla modificada más recientemente y no se mezclan', async () => {
+    const agosto = { periodo: '08/2025' } as const;
+    const contenidos = new Map<string, Buffer | Error>([
+      ['verificado', await planilla([
+        { registro: 'COMPRAS', numero: '001-001-0000001', gravado10: 110000, iva10: 10000, ...agosto },
+        { registro: 'COMPRAS', numero: '001-001-0000002', gravado10: 220000, iva10: 20000, ...agosto },
+      ])],
+      ['viejo', await planilla([
+        { registro: 'COMPRAS', numero: '001-001-0000001', gravado10: 110000, iva10: 10000, ...agosto },
+        { registro: 'COMPRAS', numero: '001-001-0000003', gravado10: 550000, iva10: 50000, ...agosto },
+      ])],
+      ['ventas', await planilla([
+        { registro: 'VENTAS', numero: '002-001-0000001', gravado10: 330000, iva10: 30000, ...agosto },
+      ])],
+    ]);
+    const ctx = armar(
+      [
+        archivo({
+          itemIdOneDrive: 'verificado',
+          nombreArchivo: '08 Agosto 2025 ok verificado.xlsx',
+          modificadoEnOrigen: new Date('2025-09-20'),
+        }),
+        archivo({
+          itemIdOneDrive: 'viejo',
+          nombreArchivo: 'AGOSTO 2025.xlsx',
+          modificadoEnOrigen: new Date('2025-09-05'),
+        }),
+        // Las ventas del mismo período vienen en otro archivo y NO compiten con
+        // las compras: la regla es por período Y tipo de registro.
+        archivo({ itemIdOneDrive: 'ventas', nombreArchivo: '08AGOSTO.xlsx', modificadoEnOrigen: new Date('2025-09-01') }),
+      ],
+      contenidos,
+    );
+
+    const resumen = await liquidarIvaDesdeLibros(ctx.deps, USUARIO);
+
+    expect(ctx.liquidaciones).toHaveLength(1);
+    const liquidacion = ctx.liquidaciones[0]!;
+    expect(liquidacion.periodo).toBe('2025-08');
+    expect(liquidacion.comprobantesCompras).toBe(2);
+    // 10.000 + 20.000 de la verificada. No 80.000 (unión) ni 60.000 (la vieja).
+    expect(liquidacion.creditoFiscal).toBe(gs(30000));
+    expect(liquidacion.debitoFiscal).toBe(gs(30000));
+    expect(liquidacion.archivosLeidos).toBe(2);
+    expect(resumen.avisos.map((a) => a.archivo)).toEqual(['AGOSTO 2025.xlsx']);
+  });
+
+  /*
+   * Caso real (a) de la tarea 141: "PERIODO 2026/DOCUMENTOS CONTABLES/RG 90
+   * COMPRAS/01 ENERO.xlsx" de COPESA trae filas con períodos 2027-01 …
+   * 2032-01 porque la columna de período se arrastró en el Excel.
+   */
+  it('rechaza con motivo las filas con un período posterior al mes en curso', async () => {
+    const contenidos = new Map<string, Buffer | Error>([
+      ['enero', await planilla([
+        { registro: 'COMPRAS', numero: '001-001-0000001', gravado10: 110000, iva10: 10000, periodo: '01/2026' },
+        { registro: 'COMPRAS', numero: '001-001-0000002', gravado10: 110000, iva10: 10000, periodo: '01/2027' },
+        { registro: 'COMPRAS', numero: '001-001-0000003', gravado10: 110000, iva10: 10000, periodo: '01/2032' },
+        // El mes en curso sí vale: se puede estar cargando.
+        { registro: 'COMPRAS', numero: '001-001-0000004', gravado10: 110000, iva10: 10000, periodo: '09/2026' },
+        { registro: 'COMPRAS', numero: '001-001-0000005', gravado10: 110000, iva10: 10000, periodo: '10/2026' },
+      ])],
+    ]);
+    const ctx = armar(
+      [archivo({ itemIdOneDrive: 'enero', nombreArchivo: '01 ENERO.xlsx' })],
+      contenidos,
+    );
+
+    const resumen = await liquidarIvaDesdeLibros(ctx.deps, USUARIO);
+
+    expect(ctx.liquidaciones.map((l) => l.periodo).sort()).toEqual(['2026-01', '2026-09']);
+    expect(resumen.filasRechazadas).toBe(3);
+    expect(resumen.avisos).toHaveLength(1);
+    expect(resumen.avisos[0]!.motivo).toMatch(/3 filas rechazadas.*posterior al mes en curso \(2026-09\)/);
+    expect(resumen.fallos).toEqual([]);
+  });
+
+  /*
+   * Caso real (c) de la tarea 141: los libros que descarga la DNIT,
+   * "80003112_202501_COMPRAS_150121_1.xlsx", se leen con 0 filas.
+   */
+  it('ignora sin contarlo como fallo un libro de la DNIT sin filas', async () => {
+    const contenidos = new Map<string, Buffer | Error>([
+      ['dnit', await planilla([])],
+      ['buena', await planilla([{ registro: 'COMPRAS', numero: '001-001-0000001', gravado10: 110000, iva10: 10000 }])],
+    ]);
+    const ctx = armar(
+      [
+        archivo({ itemIdOneDrive: 'dnit', nombreArchivo: '80003112_202501_COMPRAS_150121_1.xlsx' }),
+        archivo({ itemIdOneDrive: 'buena', nombreArchivo: '02 FEBRERO.xlsx' }),
+      ],
+      contenidos,
+    );
+
+    const resumen = await liquidarIvaDesdeLibros(ctx.deps, USUARIO);
+
+    expect(resumen.fallos).toEqual([]);
+    expect(resumen.archivosIgnorados).toBe(1);
+    expect(resumen.archivosLeidos).toBe(1);
+    expect(resumen.avisos).toEqual([]);
   });
 
   it('cada período del cliente se guarda por separado', async () => {
@@ -282,12 +412,14 @@ describe('liquidación de IVA desde los libros', () => {
   it('ignora lo que no es una planilla RG 90 en Excel', async () => {
     const contenidos = new Map<string, Buffer | Error>([
       ['excel', await planilla([{ registro: 'COMPRAS', numero: '001-001-0000001', gravado10: 110000, iva10: 10000 }])],
+      ['otro', await otroExcel()],
     ]);
     const ctx = armar(
       [
         archivo({ itemIdOneDrive: 'excel' }),
         archivo({ itemIdOneDrive: 'pdf', nombreArchivo: 'RG COMPRAS FEBRERO 2026.pdf', tipoMime: 'application/pdf' }),
-        archivo({ itemIdOneDrive: 'otro', nombreArchivo: 'BALANCE 2025.xlsx' }),
+        // Clasificado como libro, con nombre sugestivo, pero es un resumen.
+        archivo({ itemIdOneDrive: 'otro', nombreArchivo: 'RG COMPRAS RESUMEN 2026.xlsx' }),
       ],
       contenidos,
     );
@@ -295,7 +427,34 @@ describe('liquidación de IVA desde los libros', () => {
     const resumen = await liquidarIvaDesdeLibros(ctx.deps, USUARIO);
 
     expect(resumen.archivosLeidos).toBe(1);
+    expect(resumen.archivosIgnorados).toBe(1);
     expect(resumen.fallos).toEqual([]);
+  });
+
+  /*
+   * Tarea 141: COPESA guarda sus libros como "RG 90 COMPRAS/01 Enero total OK
+   * verificado.xlsx" y "RG 90 VENTAS/01ENERO.xlsx". Con el filtro por nombre
+   * no se leía ninguno.
+   */
+  it('reconoce la planilla por sus encabezados, se llame como se llame', async () => {
+    const contenidos = new Map<string, Buffer | Error>([
+      ['compras', await planilla([{ registro: 'COMPRAS', numero: '001-001-0000001', gravado10: 110000, iva10: 10000 }])],
+      ['ventas', await planilla([{ registro: 'VENTAS', numero: '001-001-0000002', gravado10: 330000, iva10: 30000 }])],
+    ]);
+    const ctx = armar(
+      [
+        archivo({ itemIdOneDrive: 'compras', nombreArchivo: '01 Enero total OK verificado.xlsx' }),
+        archivo({ itemIdOneDrive: 'ventas', nombreArchivo: '01ENERO.xlsx' }),
+      ],
+      contenidos,
+    );
+
+    const resumen = await liquidarIvaDesdeLibros(ctx.deps, USUARIO);
+
+    expect(resumen.archivosLeidos).toBe(2);
+    expect(ctx.liquidaciones).toHaveLength(1);
+    expect(ctx.liquidaciones[0]!.creditoFiscal).toBe(gs(10000));
+    expect(ctx.liquidaciones[0]!.debitoFiscal).toBe(gs(30000));
   });
 
   it('un cliente inactivo no se liquida', async () => {

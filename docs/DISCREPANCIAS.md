@@ -38,7 +38,7 @@ de Lili o Laura), **Daniel** (decisión o acción en una cuenta), **Claude**
 | 22 | Autofacturas con columnas en cero | Abierto | EFFORT | ¿SIGA las exporta así a propósito? |
 | 23 | Presentaciones desde el PDF de la DNIT | **Cerrado en código y producción 2026-09-15** | nadie | 42 de 150 presentados; lo que falta está en 27 y 28 |
 | 24 | IVA sumaba planillas repetidas | Cerrado | EFFORT (validar) | Confirmar que "la más reciente" es la buena cuando no hay "CORRECCION" (ECOAGRO feb-2025) |
-| 25 | Planillas RG 90 reconocidas por nombre | **Abierto** | Claude | Tarea 141 de la cola del roadmap |
+| 25 | Planillas RG 90 reconocidas por nombre | **Corregido en código 2026-09-16, falta producción** | Claude / EFFORT | Tarea 141: desplegar y verificar COPESA en IVA; preguntar si una "CORRECCION" es siempre el libro completo |
 | 26 | Prórroga de EEFF 2025 (RG DNIT 50/2026) | **Abierto — primera pregunta** | EFFORT | Confirmar si aplica; cambia 3 "atrasos" de ~60 días a "a tiempo" |
 | 27 | SIPAR sin declaraciones en OneDrive | Abierto | EFFORT | Dónde guardan sus DDJJ 2025-2026 y el Excel de la RG 90 |
 | 28 | Talones de RG 90 que no están | Abierto | EFFORT | Dónde guardan los talones de DIBEC, FUMIPRO, ECOAGRO y parte de COPESA |
@@ -1194,6 +1194,10 @@ repetidos encontró.
 En ECOAGRO febrero 2025 no hay "CORRECCION" en el nombre; hay una subcarpeta
 "2 FEBRERO 01".
 
+**2026-09-16:** la unión deduplicada se reemplazó por "una sola planilla por
+período y tipo de registro" (punto 25). Ya no se mezclan filas de dos
+versiones.
+
 ### 23 (b). Simulación sobre los datos reales — 2026-09-14, sin escribir nada
 
 1.174 PDFs leídos, 0 errores, **233 presentaciones reconocidas** (165 IVA, 12
@@ -1299,6 +1303,28 @@ Mostró tres problemas reales que la solución tiene que cubrir:
 
 **Cómo se cierra.** Tarea 141 del roadmap, que tiene los pasos exactos y el
 criterio de terminado (verificado en la pantalla de IVA de producción).
+
+**2026-09-16 — corregido en código, falta verificarlo en producción.**
+`liquidacionDeIva.ts` abre todos los Excel clasificados como libro y el
+importador decide por los encabezados (`NoEsPlanillaRg90` → se ignora y se
+cuenta en `archivosIgnorados`, no es fallo). Las tres reglas quedaron con un
+test cada una, con los nombres reales de COPESA
+(`apps/api/test/liquidacion-de-iva.test.ts`):
+
+1. Filas con período posterior al mes en curso (en Paraguay): se rechazan y el
+   resumen trae un aviso con la cantidad y el motivo.
+2. Una planilla por cliente + período + tipo de registro: "CORRECCION" en
+   cualquier parte del nombre (con o sin tilde) manda; si no, la de
+   `modificadoEnOrigen` más reciente. Las demás salen en `avisos` como
+   "planilla descartada por existir una más reciente", y la pantalla de IVA
+   las lista después de "Recalcular".
+3. Excel con encabezados y sin filas (libros de la DNIT): se ignoran.
+
+**Consecuencia sobre el punto 24:** FUMIPRO julio 2026 ya no une "RG COMPRAS
+07 2026" con su corrección: vale la corrección entera. Si la corrección de
+EFFORT fuera solo las filas cambiadas (y no el libro completo), el IVA de ese
+período quedaría corto — **preguntar a Lili** si una "CORRECCION" es siempre
+el libro completo.
 
 ---
 

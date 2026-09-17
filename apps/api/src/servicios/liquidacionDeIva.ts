@@ -14,9 +14,10 @@
  *
  * ---
  *
- * **Qué hace, en orden:** por cada cliente busca sus planillas RG 90 en Excel
- * entre las evidencias ya sincronizadas, las lee, junta las filas por período,
- * y por cada período guarda el IVA calculado y los hallazgos encontrados.
+ * **Qué hace, en orden:** por cada cliente abre los Excel clasificados como
+ * libro entre las evidencias ya sincronizadas, se queda con los que por su
+ * contenido son planillas RG 90, elige UNA planilla por período y tipo de
+ * registro, y por cada período guarda el IVA calculado y los hallazgos.
  *
  * **Qué NO hace:** no descarga de OneDrive lo que no esté ya sincronizado, no
  * escribe nada en el drive, y no decide a quién avisar — eso es del motor de
@@ -31,11 +32,12 @@
 import {
   analizarLibro,
   importarLibroRg90,
+  NoEsPlanillaRg90,
   resumirIva,
   type HallazgoDeLibro,
   type FilaDeLibro,
 } from '@effort/importers';
-import { determinarIva, gs, type DivisoresIva, type Gs } from '@effort/core';
+import { determinarIva, gs, hoyEnParaguay, type DivisoresIva, type Gs } from '@effort/core';
 import type { DriveDeArchivos } from '@effort/drive';
 
 import type { ClienteListado, RepositorioDeClientes } from '../puertos.js';
@@ -45,16 +47,6 @@ const FORMATOS_EXCEL = new Set([
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   'application/vnd.ms-excel',
 ]);
-
-/**
- * Cómo se reconoce una planilla RG 90 entre todos los archivos del cliente.
- *
- * Por el nombre, que es lo que EFFORT controla: sus archivos se llaman
- * `RG COMPRAS MARZO 2026 - FUMIPRO SA.xlsx` y `RG VENTAS …`. No alcanza con el
- * tipo de documento porque un PDF del mismo libro también se clasifica como
- * libro de compras y no se puede leer.
- */
-const NOMBRE_DE_PLANILLA = /^\s*(correccion\s+)?rg\s*(compras|ventas)/i;
 
 export interface ArchivoDeLibro {
   readonly evidenciaId: string;
@@ -99,9 +91,22 @@ export interface DependenciasDeLiquidacion {
   readonly guardarLiquidacion: (datos: AltaDeLiquidacion) => Promise<void>;
   readonly guardarHallazgos: (datos: readonly AltaDeHallazgo[]) => Promise<number>;
   readonly divisores: DivisoresIva;
+  /** Reloj inyectable para los tests. Decide qué período es "futuro". */
+  readonly ahora?: () => Date;
 }
 
 export interface FalloDeLiquidacion {
+  readonly cliente: string;
+  readonly archivo: string;
+  readonly motivo: string;
+}
+
+/**
+ * Algo que se dejó afuera a propósito y que una persona tiene que poder ver:
+ * una planilla reemplazada por otra más nueva, o filas con un período que
+ * todavía no ocurrió.
+ */
+export interface AvisoDeLiquidacion {
   readonly cliente: string;
   readonly archivo: string;
   readonly motivo: string;
@@ -115,6 +120,9 @@ export interface ResumenDeLiquidacion {
   readonly hallazgosNuevos: number;
   /** Comprobantes que aparecían en más de una planilla y se contaron una sola vez. */
   readonly comprobantesRepetidos: number;
+  /** Excel clasificados como libro que no son planillas RG 90. No son fallos. */
+  readonly archivosIgnorados: number;
+  readonly avisos: readonly AvisoDeLiquidacion[];
   readonly fallos: readonly FalloDeLiquidacion[];
 }
 
@@ -135,27 +143,33 @@ function claveDeComprobante(fila: FilaDeLibro): string {
   ].join('|');
 }
 
-/**
- * Orden en que se leen las planillas: la que manda va ÚLTIMA y pisa a las demás.
- *
- * Una corrección manda sobre el original (EFFORT las nombra "CORRECCION RG
- * COMPRAS …"); entre dos que no lo son, la modificada más recientemente.
- */
-function ordenDePrioridad(a: ArchivoDeLibro, b: ArchivoDeLibro): number {
-  const correccion = (x: ArchivoDeLibro) => (/^\s*correccion/i.test(x.nombreArchivo) ? 1 : 0);
-  const fecha = (x: ArchivoDeLibro) => x.modificadoEnOrigen?.getTime() ?? 0;
-  return correccion(a) - correccion(b) || fecha(a) - fecha(b);
+/** "CORRECCION" en cualquier parte del nombre, con o sin tilde. */
+function esCorreccion(archivo: ArchivoDeLibro): boolean {
+  const sinTildes = archivo.nombreArchivo.normalize('NFD').replace(/[̀-ͯ]/g, '');
+  return /correccion/i.test(sinTildes);
 }
 
-/** Agrupa las filas de todos los libros de un cliente por período fiscal. */
-function porPeriodo(filas: readonly FilaDeLibro[]): Map<string, FilaDeLibro[]> {
-  const mapa = new Map<string, FilaDeLibro[]>();
-  for (const fila of filas) {
-    const yaEstaban = mapa.get(fila.periodo);
-    if (yaEstaban) yaEstaban.push(fila);
-    else mapa.set(fila.periodo, [fila]);
-  }
-  return mapa;
+/**
+ * Cuál de dos planillas del mismo período manda: positivo si manda `a`.
+ *
+ * Una corrección manda sobre el original; entre dos que no lo son (o dos que
+ * lo son), la modificada más recientemente en OneDrive.
+ */
+function prioridad(a: ArchivoDeLibro, b: ArchivoDeLibro): number {
+  const fecha = (x: ArchivoDeLibro) => x.modificadoEnOrigen?.getTime() ?? 0;
+  return Number(esCorreccion(a)) - Number(esCorreccion(b)) || fecha(a) - fecha(b);
+}
+
+/** `AAAA-MM` del mes en curso en Paraguay. */
+function mesEnCurso(instante: Date): string {
+  const hoy = hoyEnParaguay(instante);
+  return `${hoy.anio}-${String(hoy.mes).padStart(2, '0')}`;
+}
+
+interface PlanillaLeida {
+  readonly archivo: ArchivoDeLibro;
+  /** Filas agrupadas por `periodo|tipoRegistro`. */
+  readonly grupos: Map<string, FilaDeLibro[]>;
 }
 
 async function liquidarCliente(
@@ -163,47 +177,84 @@ async function liquidarCliente(
   cliente: ClienteListado,
   usuarioId: string,
   fallos: FalloDeLiquidacion[],
+  avisos: AvisoDeLiquidacion[],
 ): Promise<{
   periodos: number;
   archivos: number;
+  ignorados: number;
   filas: number;
   rechazadas: number;
   hallazgos: number;
   repetidos: number;
 }> {
-  const archivos = (await deps.librosDelCliente(cliente.id))
-    .filter((a) => FORMATOS_EXCEL.has(a.tipoMime) && NOMBRE_DE_PLANILLA.test(a.nombreArchivo))
-    .sort(ordenDePrioridad);
-
   /*
-   * Un comprobante cuenta UNA vez, aunque esté en varias planillas.
+   * Se abren TODOS los Excel clasificados como libro, y el contenido decide.
    *
-   * Hasta el 2026-09-14 las filas de todas las planillas del cliente se
-   * juntaban sin mirar repeticiones, y en el OneDrive real hay períodos con dos:
-   * FUMIPRO julio 2026 tiene "RG COMPRAS 07 2026" y "CORRECCION RG COMPRAS 07
-   * 2026"; ECOAGRO febrero 2025 tiene dos versiones en carpetas distintas. El
-   * crédito fiscal de esos períodos salía sumado dos veces.
-   *
-   * Las planillas se leen en orden de prioridad y la última pisa: si la
-   * corrección cambió un importe, vale el de la corrección.
+   * Hasta el 2026-09-15 solo se leían los que se llamaban "RG COMPRAS …" o
+   * "RG VENTAS …", y COPESA —que guarda sus libros como
+   * "RG 90 COMPRAS/01 ENERO.xlsx"— tenía IVA de 2 períodos. Es el mismo error
+   * que ya se había corregido para las declaraciones (DISCREPANCIAS 23 y 25):
+   * el nombre lo escribe una persona, los encabezados no.
    */
-  const porComprobante = new Map<string, FilaDeLibro>();
+  const archivos = (await deps.librosDelCliente(cliente.id)).filter((a) =>
+    FORMATOS_EXCEL.has(a.tipoMime),
+  );
+  const tope = mesEnCurso((deps.ahora ?? (() => new Date()))());
+
+  const leidas: PlanillaLeida[] = [];
   let rechazadas = 0;
-  let leidos = 0;
-  let repetidos = 0;
+  let ignorados = 0;
 
   for (const archivo of archivos) {
     try {
       const contenido = await deps.drive.leer(archivo.itemIdOneDrive);
       const reporte = await importarLibroRg90(contenido, archivo.nombreArchivo);
-      for (const fila of reporte.filas) {
-        const clave = claveDeComprobante(fila);
-        if (porComprobante.has(clave)) repetidos += 1;
-        porComprobante.set(clave, fila);
+
+      /*
+       * Los libros que descarga la DNIT ("80003112_202501_COMPRAS_150121_1.xlsx")
+       * se leen sin ninguna fila. No hay nada que calcular y tampoco nada roto.
+       */
+      if (reporte.filas.length === 0 && reporte.rechazadas.length === 0) {
+        ignorados += 1;
+        continue;
       }
       rechazadas += reporte.rechazadas.length;
-      leidos += 1;
+
+      const grupos = new Map<string, FilaDeLibro[]>();
+      let futuras = 0;
+      for (const fila of reporte.filas) {
+        /*
+         * Un período que todavía no llegó no puede tener comprobantes. Caso
+         * real: "PERIODO 2026/…/RG 90 COMPRAS/01 ENERO.xlsx" de COPESA trae
+         * filas con 2027-01 … 2032-01 porque la columna de período se arrastró
+         * en el Excel. Tomarlas crearía liquidaciones de años que no pasaron.
+         */
+        if (fila.periodo > tope) {
+          futuras += 1;
+          continue;
+        }
+        const clave = `${fila.periodo}|${fila.tipoRegistro}`;
+        const grupo = grupos.get(clave);
+        if (grupo) grupo.push(fila);
+        else grupos.set(clave, [fila]);
+      }
+
+      if (futuras > 0) {
+        rechazadas += futuras;
+        avisos.push({
+          cliente: cliente.nombre,
+          archivo: archivo.nombreArchivo,
+          motivo: `${futuras} filas rechazadas: su período es posterior al mes en curso (${tope}).`,
+        });
+      }
+      leidas.push({ archivo, grupos });
     } catch (error) {
+      // Un Excel que no es planilla RG 90 no es una falla: se abre porque el
+      // contenido es lo que decide, y a veces decide que no.
+      if (error instanceof NoEsPlanillaRg90) {
+        ignorados += 1;
+        continue;
+      }
       // Una planilla ilegible no puede dejar sin IVA a los otros períodos del
       // mismo cliente: se anota y se sigue.
       fallos.push({
@@ -214,11 +265,63 @@ async function liquidarCliente(
     }
   }
 
-  const filas = [...porComprobante.values()];
+  /*
+   * UNA sola planilla por período y tipo de registro.
+   *
+   * Hasta el 2026-09-15 se juntaban las filas de todas las planillas de un
+   * período, contando cada comprobante una vez (DISCREPANCIAS 24). Con los
+   * libros de COPESA eso no alcanza: agosto 2025 está en
+   * "08 Agosto 2025 ok verificado.xlsx" (568 filas) y en "AGOSTO 2025.xlsx"
+   * (464), con contenido distinto. Unirlas mezcla dos versiones del libro y da
+   * un IVA que no corresponde a ninguna. Se toma la que manda y las demás se
+   * informan.
+   */
+  const elegidas = new Map<string, PlanillaLeida>();
+  for (const leida of leidas) {
+    for (const clave of leida.grupos.keys()) {
+      const actual = elegidas.get(clave);
+      if (!actual || prioridad(leida.archivo, actual.archivo) > 0) elegidas.set(clave, leida);
+    }
+  }
+
+  for (const leida of leidas) {
+    for (const clave of leida.grupos.keys()) {
+      const elegida = elegidas.get(clave)!;
+      if (elegida === leida) continue;
+      const [periodo, registro] = clave.split('|');
+      avisos.push({
+        cliente: cliente.nombre,
+        archivo: leida.archivo.nombreArchivo,
+        motivo: `Planilla descartada por existir una más reciente (${registro} ${periodo}): se usó "${elegida.archivo.nombreArchivo}".`,
+      });
+    }
+  }
+
+  // Por período: las filas elegidas de compras y de ventas, y qué archivos las aportaron.
+  const porPeriodo = new Map<string, { filas: FilaDeLibro[]; archivos: Set<string> }>();
+  let repetidos = 0;
+  let totalFilas = 0;
+  for (const [clave, leida] of elegidas) {
+    const periodo = clave.split('|')[0]!;
+    const destino = porPeriodo.get(periodo) ?? { filas: [], archivos: new Set<string>() };
+    porPeriodo.set(periodo, destino);
+    destino.archivos.add(leida.archivo.evidenciaId);
+
+    // Dentro de una misma planilla, una fila repetida sigue contando una vez.
+    const unicas = new Map<string, FilaDeLibro>();
+    for (const fila of leida.grupos.get(clave)!) {
+      const id = claveDeComprobante(fila);
+      if (unicas.has(id)) repetidos += 1;
+      unicas.set(id, fila);
+    }
+    destino.filas.push(...unicas.values());
+    totalFilas += unicas.size;
+  }
+
   let periodos = 0;
   let hallazgos = 0;
 
-  for (const [periodo, delPeriodo] of porPeriodo(filas)) {
+  for (const [periodo, { filas: delPeriodo, archivos: usados }] of porPeriodo) {
     const resumen = resumirIva(delPeriodo, periodo);
 
     /*
@@ -254,7 +357,7 @@ async function liquidarCliente(
       gravado10Ventas: resumen.gravado10Ventas,
       gravado5Ventas: resumen.gravado5Ventas,
       exentoVentas: resumen.exentoVentas,
-      archivosLeidos: leidos,
+      archivosLeidos: usados.size,
       filasRechazadas: rechazadas,
       calculadoPorUsuarioId: usuarioId,
     });
@@ -267,7 +370,15 @@ async function liquidarCliente(
     periodos += 1;
   }
 
-  return { periodos, archivos: leidos, filas: filas.length, rechazadas, hallazgos, repetidos };
+  return {
+    periodos,
+    archivos: leidas.length,
+    ignorados,
+    filas: totalFilas,
+    rechazadas,
+    hallazgos,
+    repetidos,
+  };
 }
 
 export async function liquidarIvaDesdeLibros(
@@ -276,6 +387,7 @@ export async function liquidarIvaDesdeLibros(
 ): Promise<ResumenDeLiquidacion> {
   const clientes = await deps.clientes.listar(null);
   const fallos: FalloDeLiquidacion[] = [];
+  const avisos: AvisoDeLiquidacion[] = [];
 
   let periodosCalculados = 0;
   let archivosLeidos = 0;
@@ -283,17 +395,19 @@ export async function liquidarIvaDesdeLibros(
   let filasRechazadas = 0;
   let hallazgosNuevos = 0;
   let comprobantesRepetidos = 0;
+  let archivosIgnorados = 0;
 
   for (const cliente of clientes) {
     if (!cliente.activo) continue;
 
-    const parcial = await liquidarCliente(deps, cliente, usuarioId, fallos);
+    const parcial = await liquidarCliente(deps, cliente, usuarioId, fallos, avisos);
     periodosCalculados += parcial.periodos;
     archivosLeidos += parcial.archivos;
     filasInterpretadas += parcial.filas;
     filasRechazadas += parcial.rechazadas;
     hallazgosNuevos += parcial.hallazgos;
     comprobantesRepetidos += parcial.repetidos;
+    archivosIgnorados += parcial.ignorados;
   }
 
   return {
@@ -303,6 +417,8 @@ export async function liquidarIvaDesdeLibros(
     filasRechazadas,
     hallazgosNuevos,
     comprobantesRepetidos,
+    archivosIgnorados,
+    avisos,
     fallos,
   };
 }

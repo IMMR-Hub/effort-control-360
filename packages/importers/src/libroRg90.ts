@@ -270,6 +270,28 @@ function interpretar(cruda: FilaCruda<Campo>): { fila: FilaDeLibro; descuadre: b
 }
 
 /**
+ * El archivo no es una planilla RG 90: sus encabezados no son los del formato.
+ *
+ * Es un error distinto a propósito. Desde el 2026-09-15 las planillas se
+ * reconocen por su contenido y no por su nombre (tarea 141), así que se abren
+ * todos los Excel clasificados como libro, y entre ellos hay resúmenes y
+ * cálculos auxiliares que no son planillas. Eso no es una falla: quien llama lo
+ * ignora. Un archivo que SÍ es planilla y no se puede leer sigue siendo
+ * `ErrorDeImportacion` y sí se informa.
+ */
+export class NoEsPlanillaRg90 extends ErrorDeImportacion {}
+
+/**
+ * Columnas sin las cuales una fila no puede ser un comprobante RG 90. Si el
+ * encabezado no las trae, el archivo es otra cosa.
+ */
+const CAMPOS_QUE_IDENTIFICAN_LA_PLANILLA: readonly Campo[] = [
+  'tipoRegistro',
+  'periodoEmision',
+  'numeroComprobante',
+];
+
+/**
  * Lee una planilla RG 90 y devuelve qué filas se entendieron y cuáles no.
  *
  * Una fila que no se entiende NO frena a las demás: con planillas de ciento
@@ -283,8 +305,17 @@ export async function importarLibroRg90(
   const crudas = await leerFilas<Campo>(contenido, nombreArchivo, ENCABEZADOS);
 
   if (crudas.length === 0) {
-    throw new ErrorDeImportacion(
+    throw new NoEsPlanillaRg90(
       `"${nombreArchivo}" no tiene filas de datos, o sus encabezados no son los de una planilla RG 90.`,
+    );
+  }
+
+  const tieneEncabezados = crudas.some((cruda) =>
+    CAMPOS_QUE_IDENTIFICAN_LA_PLANILLA.every((campo) => campo in cruda.canonica),
+  );
+  if (!tieneEncabezados) {
+    throw new NoEsPlanillaRg90(
+      `"${nombreArchivo}" no tiene los encabezados de una planilla RG 90.`,
     );
   }
 

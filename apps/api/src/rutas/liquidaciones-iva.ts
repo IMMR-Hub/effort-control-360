@@ -83,6 +83,8 @@ export async function registrarRutasDeLiquidacionesIva(
         filas: resumen.filasInterpretadas,
         hallazgosNuevos: resumen.hallazgosNuevos,
         fallos: resumen.fallos.length,
+        ignorados: resumen.archivosIgnorados,
+        avisos: resumen.avisos.length,
       },
       ip: peticion.ip,
       agenteUsuario: peticion.headers['user-agent'] ?? null,

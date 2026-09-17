@@ -68,6 +68,15 @@ export interface ResumenDeCalculo {
   readonly filasInterpretadas: number;
   readonly filasRechazadas: number;
   readonly hallazgosNuevos: number;
+  /*
+   * Opcionales a propósito: la web y la API se despliegan por separado, y
+   * durante unos minutos una web nueva puede recibir la respuesta de una API
+   * que todavía no los manda (tarea 141).
+   */
+  /** Excel clasificados como libro que no son planillas RG 90. */
+  readonly archivosIgnorados?: number;
+  /** Planillas descartadas por existir una más reciente, y filas con período futuro. */
+  readonly avisos?: readonly { readonly cliente: string; readonly archivo: string; readonly motivo: string }[];
   readonly fallos: readonly { readonly cliente: string; readonly archivo: string; readonly motivo: string }[];
 }
 

@@ -248,8 +248,25 @@ export default function LiquidacionIva() {
             {ultimoCalculo.periodosCalculados} períodos
             {ultimoCalculo.hallazgosNuevos > 0 && `, ${ultimoCalculo.hallazgosNuevos} hallazgos nuevos`}
             {ultimoCalculo.fallos.length > 0 && ` · ${ultimoCalculo.fallos.length} planillas no se pudieron leer`}
+            {(ultimoCalculo.archivosIgnorados ?? 0) > 0 &&
+              ` · ${ultimoCalculo.archivosIgnorados} Excel ignorados por no ser planillas RG 90`}
             .
           </p>
+        )}
+
+        {ultimoCalculo?.avisos && ultimoCalculo.avisos.length > 0 && (
+          <details className="px-5 pb-4 text-xs text-tinta-tenue">
+            <summary className="cursor-pointer">
+              {ultimoCalculo.avisos.length} avisos: planillas descartadas o filas con período futuro
+            </summary>
+            <ul className="mt-2 list-disc space-y-1 pl-5">
+              {ultimoCalculo.avisos.map((aviso, i) => (
+                <li key={i}>
+                  {aviso.cliente} — {aviso.archivo}: {aviso.motivo}
+                </li>
+              ))}
+            </ul>
+          </details>
         )}
 
         {error && (

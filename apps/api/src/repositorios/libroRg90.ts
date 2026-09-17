@@ -35,8 +35,8 @@ export class LibroRg90Prisma {
    *
    * Se filtra por tipo de documento Y por formato: el mismo libro suele existir
    * como PDF y como Excel, los dos se clasifican igual, y solo el Excel se
-   * puede leer. El filtro final por nombre lo hace el servicio, que es donde
-   * está escrita la regla de qué se llama planilla RG 90.
+   * puede leer. Cuáles son planillas RG 90 lo decide el servicio abriendo cada
+   * archivo y mirando sus encabezados, no su nombre (tarea 141).
    */
   async librosDelCliente(clienteId: string): Promise<ArchivoDeLibro[]> {
     const documentos = await this.prisma.documento.findMany({

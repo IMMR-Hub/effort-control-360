@@ -16,7 +16,7 @@ import ExcelJS from 'exceljs';
 
 import { gs } from '@effort/core';
 
-import { importarLibroRg90, resumirIva } from '../src/libroRg90.js';
+import { importarLibroRg90, NoEsPlanillaRg90, resumirIva } from '../src/libroRg90.js';
 
 /** Los 28 encabezados, textuales de las planillas de COMPRAS. */
 const ENCABEZADOS_COMPRAS = [
@@ -226,6 +226,23 @@ describe('importador del libro RG 90', () => {
     const contenido = Buffer.from(await libro.xlsx.writeBuffer());
 
     await expect(importarLibroRg90(contenido, 'otra cosa.xlsx')).rejects.toThrow(/RG 90/);
+  });
+
+  /*
+   * Tarea 141: se abren todos los Excel clasificados como libro, así que un
+   * resumen CON datos (antes pasaba como planilla con cero filas) tiene que
+   * distinguirse de una planilla rota. Quien llama ignora `NoEsPlanillaRg90`.
+   */
+  it('un Excel con datos pero sin los encabezados RG 90 no es una planilla', async () => {
+    const libro = new ExcelJS.Workbook();
+    const hoja = libro.addWorksheet('Resumen');
+    hoja.addRow(['Mes', 'Total compras', 'Total ventas']);
+    hoja.addRow(['Enero', 1500000, 3200000]);
+    const contenido = Buffer.from(await libro.xlsx.writeBuffer());
+
+    await expect(importarLibroRg90(contenido, 'RESUMEN 2026.xlsx')).rejects.toBeInstanceOf(
+      NoEsPlanillaRg90,
+    );
   });
 });
 
