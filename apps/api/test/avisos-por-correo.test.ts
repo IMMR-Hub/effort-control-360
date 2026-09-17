@@ -34,6 +34,7 @@ function alerta(parcial: Partial<AlertaAlmacenada> = {}): AlertaAlmacenada {
     cerradaPorUsuarioId: null,
     cerradaEn: null,
     motivoCierre: null,
+    creadoEn: new Date('2026-09-12T09:00:00Z'),
     ...parcial,
   };
 }
@@ -56,6 +57,8 @@ function armar(alertas: AlertaAlmacenada[]) {
         registro.push(datos);
       },
       destinatarios: DIRECCION,
+      tope: 100,
+      creadasDesde: new Date('2026-09-11T10:00:00Z'),
       nombreDeCliente: () => 'FUMIPRO S.A.',
       ahora: () => new Date('2026-09-12T10:00:00Z'),
     },
@@ -133,5 +136,52 @@ describe('avisos por correo', () => {
     const segunda = await enviarAvisosDeAlertas(ctx.deps);
 
     expect(segunda.enviados).toBe(2);
+  });
+  /*
+   * 2026-09-16: calcular el IVA histórico de COPESA iba a abrir decenas de
+   * alertas críticas de golpe, con un correo por cada una.
+   */
+  it('no manda más correos que el tope de la corrida, y cuenta los que quedaron', async () => {
+    const alertas = Array.from({ length: 4 }, (_, i) => alerta({ id: `alerta-${i}` }));
+    const ctx = armar(alertas);
+
+    const resumen = await enviarAvisosDeAlertas({ ...ctx.deps, tope: 3 });
+
+    expect(resumen.enviados).toBe(3);
+    expect(ctx.correo.enviados).toHaveLength(3);
+    // 4 alertas × 2 destinatarios = 8 avisos; salieron 3.
+    expect(resumen.pendientesPorTope).toBe(5);
+  });
+
+  it('con tope cero no sale ningún correo', async () => {
+    const ctx = armar([alerta()]);
+
+    const resumen = await enviarAvisosDeAlertas({ ...ctx.deps, tope: 0 });
+
+    expect(ctx.correo.enviados).toEqual([]);
+    expect(resumen.pendientesPorTope).toBe(2);
+  });
+
+  // Una cuenta nueva de dirección no puede recibir de golpe todo lo acumulado.
+  it('no avisa de alertas viejas ni de alertas sin fecha de creación', async () => {
+    const ctx = armar([
+      alerta({ id: 'vieja', creadoEn: new Date('2026-08-01T10:00:00Z') }),
+      alerta({ id: 'sin-fecha', creadoEn: undefined }),
+      alerta({ id: 'nueva' }),
+    ]);
+
+    const resumen = await enviarAvisosDeAlertas(ctx.deps);
+
+    expect(resumen.enviados).toBe(2);
+    expect(ctx.registro.every((r) => r.alertaId === 'nueva')).toBe(true);
+  });
+
+  it('sin destinatarios no sale nada', async () => {
+    const ctx = armar([alerta()]);
+
+    const resumen = await enviarAvisosDeAlertas({ ...ctx.deps, destinatarios: [] });
+
+    expect(resumen.enviados).toBe(0);
+    expect(ctx.correo.enviados).toEqual([]);
   });
 });

@@ -18,7 +18,8 @@ import { DIVISORES_CONFIRMADOS_POR_EFFORT, hoyEnParaguay } from '@effort/core';
 
 import type { Dependencias } from '../servidor.js';
 import { generarVencimientosDelPeriodo } from './generadorDeVencimientos.js';
-import { enviarAvisosDeAlertas } from './avisosPorCorreo.js';
+import { enviarAvisosDeAlertas, VENTANA_DE_AVISOS_MS } from './avisosPorCorreo.js';
+import { intentarConCandado } from './candadoDeIva.js';
 import { evaluarAlertas } from './motorDeAlertas.js';
 import { sincronizarDesdeOneDrive } from './sincronizadorDeOneDrive.js';
 import { liquidarIvaDesdeLibros } from './liquidacionDeIva.js';
@@ -89,6 +90,14 @@ export function programarCalculoDeVencimientosYAlertas(
     return;
   }
 
+  const avisosEncendidos = deps.configuracion.AVISOS_POR_CORREO === 'si';
+  const destinatariosDeAvisos = deps.configuracion.AVISOS_DESTINATARIOS ?? [];
+  if (!avisosEncendidos) {
+    registrador.info('AVISOS_POR_CORREO apagado: las alertas no se avisan por correo.');
+  } else if (destinatariosDeAvisos.length === 0) {
+    registrador.warn('AVISOS_POR_CORREO=si pero AVISOS_DESTINATARIOS está vacío: no sale ningún correo.');
+  }
+
   let enCurso = false;
 
   async function correr(): Promise<void> {
@@ -151,26 +160,65 @@ export function programarCalculoDeVencimientosYAlertas(
       let ivaPeriodos = 0;
       let ivaHallazgos = 0;
       if (deps.drive && deps.libroRg90) {
+        const drive = deps.drive;
+        const libroRg90 = deps.libroRg90;
+        const inicio = Date.now();
+        const memoriaAntes = memoriaMB();
         try {
-          const liquidacion = await liquidarIvaDesdeLibros(
-            {
-              clientes: deps.clientes,
-              librosDelCliente: (clienteId) => deps.libroRg90!.librosDelCliente(clienteId),
-              drive: deps.drive,
-              guardarLiquidacion: (datos) => deps.libroRg90!.guardarLiquidacion(datos),
-              guardarHallazgos: (datos) => deps.libroRg90!.guardarHallazgos(datos),
-              divisores: DIVISORES_CONFIRMADOS_POR_EFFORT,
-            },
-            usuario.id,
+          // Comparte el candado con el botón "Recalcular": si alguien lo está
+          // corriendo a mano, esta vuelta saltea el IVA y sigue con las alertas.
+          const intento = await intentarConCandado(() =>
+            liquidarIvaDesdeLibros(
+              {
+                clientes: deps.clientes,
+                librosDelCliente: (clienteId) => libroRg90.librosDelCliente(clienteId),
+                drive,
+                guardarLiquidacion: (datos) => libroRg90.guardarLiquidacion(datos),
+                guardarHallazgos: (datos) => libroRg90.guardarHallazgos(datos),
+                divisores: DIVISORES_CONFIRMADOS_POR_EFFORT,
+                ahora: deps.ahora,
+              },
+              usuario.id,
+            ),
           );
-          ivaPeriodos = liquidacion.periodosCalculados;
-          ivaHallazgos = liquidacion.hallazgosNuevos;
 
-          if (liquidacion.fallos.length > 0) {
-            registrador.warn(
-              { fallos: liquidacion.fallos.length, primero: liquidacion.fallos[0] },
-              'Hay planillas RG 90 que no se pudieron leer.',
+          if (intento.ocupado) {
+            registrador.info('Hay un cálculo de IVA en curso: esta vuelta no lo repite.');
+          } else {
+            const liquidacion = intento.valor;
+            ivaPeriodos = liquidacion.periodosCalculados;
+            ivaHallazgos = liquidacion.hallazgosNuevos;
+
+            /*
+             * Todo lo que el cálculo dejó afuera tiene que quedar escrito: si
+             * nadie aprieta "Recalcular", el log es el único lugar donde se ve
+             * que una planilla se descartó o un cliente no se calculó. La
+             * memoria y la duración, porque este paso abre todas las planillas
+             * de cada cliente en un contenedor de 512 MB (CLAUDE.md, lección 4).
+             */
+            registrador.info(
+              {
+                periodos: liquidacion.periodosCalculados,
+                planillas: liquidacion.archivosLeidos,
+                ignorados: liquidacion.archivosIgnorados,
+                avisos: liquidacion.avisos.length + liquidacion.avisosOmitidos,
+                primerAviso: liquidacion.avisos[0],
+                clientesOmitidos: liquidacion.clientesOmitidos,
+                fallos: liquidacion.fallos.length,
+                hallazgosNuevos: liquidacion.hallazgosNuevos,
+                memoriaMBAntes: memoriaAntes,
+                memoriaMBDespues: memoriaMB(),
+                segundos: Math.round((Date.now() - inicio) / 1000),
+              },
+              'Cálculo automático de IVA terminado.',
             );
+
+            if (liquidacion.fallos.length > 0) {
+              registrador.warn(
+                { fallos: liquidacion.fallos.length, primero: liquidacion.fallos[0] },
+                'Hay planillas RG 90 que no se pudieron leer.',
+              );
+            }
           }
         } catch (error) {
           registrador.error({ err: error }, 'Falló el cálculo automático de IVA desde los libros.');
@@ -254,25 +302,39 @@ export function programarCalculoDeVencimientosYAlertas(
         usuario.id,
       );
 
-      // Los avisos salen DESPUÉS de evaluar, para que una alerta recién
-      // levantada se avise en la misma vuelta y no una hora más tarde.
-      let avisos = { enviados: 0, fallidos: 0, yaAvisadas: 0 };
-      if (deps.correo) {
-        const direccion = (await deps.usuarios.listar()).filter(
-          (u) => u.rol === 'direccion' && u.activo,
-        );
+      /*
+       * Los avisos salen DESPUÉS de evaluar, para que una alerta recién
+       * levantada se avise en la misma vuelta y no una hora más tarde.
+       *
+       * Solo con AVISOS_POR_CORREO=si (apagado por defecto desde el
+       * 2026-09-16, por orden de Daniel), a la lista explícita de
+       * destinatarios, con tope por corrida y solo de lo levantado en el último
+       * día.
+       */
+      let avisos = { enviados: 0, fallidos: 0, yaAvisadas: 0, pendientesPorTope: 0 };
+      if (deps.correo && avisosEncendidos && destinatariosDeAvisos.length > 0) {
         const clientes = await deps.clientes.listar(null);
         const nombres = new Map(clientes.map((c) => [c.id, c.nombre]));
+        const ahora = deps.ahora();
 
         avisos = await enviarAvisosDeAlertas({
           alertas: deps.alertas,
           correo: deps.correo,
           yaEnviados: () => deps.envios.enviados(),
           registrarEnvio: (datos) => deps.envios.registrar(datos),
-          destinatarios: direccion.map((u) => u.email),
+          destinatarios: destinatariosDeAvisos,
+          tope: deps.configuracion.AVISOS_TOPE_POR_CORRIDA ?? 0,
+          creadasDesde: new Date(ahora.getTime() - VENTANA_DE_AVISOS_MS),
           nombreDeCliente: (id) => (id ? nombres.get(id) ?? id : 'General'),
           ahora: deps.ahora,
         });
+
+        if (avisos.pendientesPorTope > 0) {
+          registrador.warn(
+            { pendientes: avisos.pendientesPorTope },
+            'Quedaron avisos sin mandar por el tope de la corrida: están en la pantalla de Alertas.',
+          );
+        }
       }
 
       if (
@@ -320,12 +382,14 @@ export function programarCalculoDeVencimientosYAlertas(
   }
 
   // Más tarde que la sincronización: conviene que primero entren los
-  // documentos del día y recién después se evalúe qué falta.
+  // documentos del día y recién después se evalúe qué falta. Hasta el
+  // 2026-09-16 este comentario decía eso pero la espera era de 5 minutos,
+  // ANTES de la sincronización (10 minutos).
   const primera = setTimeout(() => {
     void correr();
     const periodico = setInterval(() => void correr(), CADA_HORA);
     periodico.unref();
-  }, 5 * 60 * 1000);
+  }, ESPERA_INICIAL + 5 * 60 * 1000);
 
   primera.unref();
 }

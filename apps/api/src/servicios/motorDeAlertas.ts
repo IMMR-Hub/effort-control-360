@@ -102,6 +102,27 @@ export const ORIGEN_DOCUMENTACION = 'documentacion_faltante';
 export const ORIGEN_LIBRO_RIESGO = 'libro_con_riesgo_de_multa';
 
 /**
+ * Desde qué período se alerta sobre los libros.
+ *
+ * Desde la tarea 141 el sistema lee planillas de 2022 en adelante (COPESA), y
+ * sin un límite cada diferencia de un libro de hace cuatro años abría una alerta
+ * CRITICA. El sistema opera desde 2025 (las carteras de clientes empiezan el
+ * 2025-01-01). El valor está pendiente de confirmar con EFFORT (plan maestro,
+ * pregunta P5); los libros anteriores se siguen calculando y mostrando en la
+ * pantalla de IVA, solo no alertan.
+ */
+export const PRIMER_PERIODO_CON_ALERTAS_DE_LIBRO = '2025-01';
+
+/**
+ * Motivo de cierre de una alerta de libro que quedó fuera del período vigilado.
+ * No es "el problema ya no existe": el problema puede seguir ahí, y decir lo
+ * contrario sería falso en la bitácora.
+ */
+const CERRADA_FUERA_DE_PERIODO =
+  `El período es anterior a ${PRIMER_PERIODO_CON_ALERTAS_DE_LIBRO}: sobre esos libros ya no se alerta. ` +
+  'Las diferencias siguen visibles en la pantalla de IVA.';
+
+/**
  * Un vencimiento solo levanta alerta cuando entra en zona de riesgo.
  *
  * `INFORMATIVA` y `SIN_ALERTA` no generan nada: avisar de algo que vence en 25
@@ -205,6 +226,7 @@ export async function evaluarAlertas(
    */
   for (const riesgo of riesgos) {
     if (riesgo.comprobantes <= 0) continue;
+    if (riesgo.periodo < PRIMER_PERIODO_CON_ALERTAS_DE_LIBRO) continue;
 
     const plural = riesgo.comprobantes === 1 ? 'comprobante' : 'comprobantes';
     candidatas.push({
@@ -216,8 +238,9 @@ export async function evaluarAlertas(
         `${riesgo.comprobantes} ${plural} con riesgo de multa en el libro de ${riesgo.periodo}`,
       detalle:
         `El IVA declarado en ${riesgo.comprobantes} ${plural} no coincide con el que ` +
-        `corresponde por la regla (Gs. ${riesgo.ivaEnRiesgo} en juego). Revisalos antes de ` +
-        'presentar: la DNIT cruza estos datos contra los del proveedor, y una diferencia ' +
+        `corresponde por la regla (Gs. ${riesgo.ivaEnRiesgo} en juego). Revisalos: si el ` +
+        'período todavía no se presentó, antes de presentarlo; si ya se presentó, puede hacer ' +
+        'falta una rectificativa. La DNIT cruza estos datos contra los del proveedor, y una diferencia ' +
         'dispara una revisión que cuesta mucho más que la diferencia. En la pantalla de IVA ' +
         'cada uno se acepta con motivo o se manda a revisar; la alerta se cierra sola cuando ' +
         'todos están aceptados.',
@@ -262,7 +285,16 @@ export async function evaluarAlertas(
     const clave = `${alerta.origen}|${alerta.entidadRelacionadaId ?? ''}`;
     if (vigentes.has(clave)) continue;
 
-    await deps.alertas.cerrar(alerta.id, CERRADA_POR_EL_SISTEMA, usuarioId, ahora);
+    const fueraDePeriodo =
+      alerta.origen === ORIGEN_LIBRO_RIESGO &&
+      alerta.periodo !== null &&
+      alerta.periodo < PRIMER_PERIODO_CON_ALERTAS_DE_LIBRO;
+    await deps.alertas.cerrar(
+      alerta.id,
+      fueraDePeriodo ? CERRADA_FUERA_DE_PERIODO : CERRADA_POR_EL_SISTEMA,
+      usuarioId,
+      ahora,
+    );
     resueltas += 1;
   }
 

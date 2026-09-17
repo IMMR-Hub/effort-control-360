@@ -150,3 +150,28 @@ esperando confirmación de EFFORT — sin eso, tampoco hay con qué hacer esta
 corrida): login real, navegar 3-4 pantallas, confirmar que muestran datos
 reales, cerrar sesión. Documentar el resultado en
 `docs/ROADMAP-MAESTRO.md` antes de marcar la Parte 8 cerrada.
+
+---
+
+## Interruptores de los trabajos automáticos (2026-09-17)
+
+Se cambian en el panel de DigitalOcean (Settings → el componente de la API →
+Environment Variables). Guardar un cambio **reinicia el servicio**: tratarlo
+como un despliegue (no hacerlo mientras hay otro en curso). `.do/app.yaml` no se
+sincroniza solo con el panel.
+
+Los valores aceptan `si`/`no` escritos de cualquier forma (`Si`, `sí`, `NO`,
+`true`, `0`). Cualquier otro valor frena el arranque, con un mensaje que nombra
+la variable.
+
+| Variable | Por defecto | Qué hace |
+|---|---|---|
+| `TRABAJOS_AUTOMATICOS` | `si` | Sincronización de OneDrive, cálculo de IVA, vencimientos y alertas cada hora. `no` apaga todo eso; los botones manuales siguen funcionando. |
+| `AVISOS_POR_CORREO` | `no` | Correos de las alertas críticas. **Apagado por orden de Daniel (2026-09-16)**: se enciende recién en las pruebas finales con EFFORT, con su autorización. |
+| `AVISOS_DESTINATARIOS` | vacío | A quiénes se avisa, separados por coma. Vacío = no sale ningún correo aunque el interruptor esté en `si`. Ya no se deducen de los usuarios de dirección. |
+| `AVISOS_TOPE_POR_CORRIDA` | `5` | Máximo de correos por corrida (0 a 100). El resto queda en la pantalla de Alertas. Solo se avisa de alertas levantadas en las últimas 24 horas. |
+
+Las alertas de libro (diferencias de IVA) solo se levantan desde el período
+`2025-01` (`PRIMER_PERIODO_CON_ALERTAS_DE_LIBRO` en
+`apps/api/src/servicios/motorDeAlertas.ts`, pendiente de confirmar con EFFORT).
+

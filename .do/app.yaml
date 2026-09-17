@@ -96,6 +96,13 @@ services:
       # el panel y guardar reinicia el servicio en minutos.
       - key: TRABAJOS_AUTOMATICOS
         value: "si"
+      # Avisos por correo: APAGADOS hasta que Daniel lo autorice (2026-09-16).
+      # Ojo: este archivo NO se sincroniza solo con el panel. Si la variable no
+      # está cargada en el panel, el valor por defecto del código es "no".
+      - key: AVISOS_POR_CORREO
+        value: "no"
+      - key: AVISOS_TOPE_POR_CORRIDA
+        value: "5"
       # Secretos — se cargan en el panel de DigitalOcean, nunca en este
       # archivo ni en git. Todos DISTINTOS a los de desarrollo (tarea 108):
       # generar SECRETO_COOKIES de nuevo, no copiar el de .env local.

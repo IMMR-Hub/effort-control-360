@@ -16,6 +16,12 @@
  *     entrena a la gente a ignorar los correos del sistema.
  *  3. **Si falla el envío, queda registrado el fallo.** Un aviso que no salió y
  *     nadie sabe que no salió es peor que no tener avisos.
+ *  4. **Con tope y solo de lo reciente** (2026-09-16). Sin eso, calcular el IVA
+ *     histórico de un cliente abría decenas de alertas críticas de golpe y
+ *     salía un correo por cada una, y una cuenta de dirección recién creada
+ *     recibía todo lo acumulado. Lo que no se avisa por correo sigue en la
+ *     pantalla de Alertas. Y todo esto corre solo si `AVISOS_POR_CORREO=si`
+ *     (apagado por defecto: ver `configuracion.ts`).
  */
 
 import type { EnviadorDeCorreo } from '@effort/drive';
@@ -44,8 +50,15 @@ export interface DependenciasDeAvisos {
   readonly correo: EnviadorDeCorreo;
   readonly yaEnviados: () => Promise<readonly EnvioRegistrado[]>;
   readonly registrarEnvio: (datos: AltaDeEnvio) => Promise<void>;
-  /** A quiénes se avisa. Hoy, dirección. */
+  /** A quiénes se avisa: la lista explícita de `AVISOS_DESTINATARIOS`. */
   readonly destinatarios: readonly string[];
+  /** Máximo de correos (enviados o fallidos) por corrida. */
+  readonly tope: number;
+  /**
+   * Solo se avisa de alertas levantadas desde este momento. Una alerta sin
+   * fecha de creación no se avisa: no se puede saber si es acumulada.
+   */
+  readonly creadasDesde: Date;
   readonly nombreDeCliente: (clienteId: string | null) => string;
   readonly ahora: () => Date;
 }
@@ -54,7 +67,12 @@ export interface ResumenDeAvisos {
   readonly enviados: number;
   readonly fallidos: number;
   readonly yaAvisadas: number;
+  /** Avisos que correspondían pero no salieron por el tope de la corrida. */
+  readonly pendientesPorTope: number;
 }
+
+/** Cuánto hacia atrás se mira para avisar: lo que se levantó en el último día. */
+export const VENTANA_DE_AVISOS_MS = 24 * 60 * 60 * 1000;
 
 function cuerpoDelAviso(alerta: AlertaAlmacenada, cliente: string): string {
   return [
@@ -84,15 +102,21 @@ export async function enviarAvisosDeAlertas(
   let contadorEnviados = 0;
   let contadorFallidos = 0;
   let contadorYaAvisadas = 0;
+  let pendientesPorTope = 0;
 
   for (const alerta of alertas) {
     if (alerta.criticidad !== 'CRITICA') continue;
+    if (!alerta.creadoEn || alerta.creadoEn < deps.creadasDesde) continue;
 
     const cliente = deps.nombreDeCliente(alerta.clienteId);
 
     for (const destinatario of deps.destinatarios) {
       if (yaAvisado.has(`${alerta.id}|${destinatario}`)) {
         contadorYaAvisadas += 1;
+        continue;
+      }
+      if (contadorEnviados + contadorFallidos >= deps.tope) {
+        pendientesPorTope += 1;
         continue;
       }
 
@@ -138,5 +162,6 @@ export async function enviarAvisosDeAlertas(
     enviados: contadorEnviados,
     fallidos: contadorFallidos,
     yaAvisadas: contadorYaAvisadas,
+    pendientesPorTope,
   };
 }

@@ -194,6 +194,54 @@ describe('motor de alertas', () => {
    * los del proveedor, y una diferencia dispara una revisión que cuesta mucho
    * más que la diferencia.
    */
+  /*
+   * Desde la tarea 141 se calculan libros de 2022 en adelante: sin un límite,
+   * cada diferencia vieja abría una alerta CRITICA (y un correo).
+   */
+  it('no alerta sobre libros anteriores al período vigilado', async () => {
+    const deps = armar([
+      { clienteId: CLIENTE, periodo: '2023-06', liquidacionId: LIQUIDACION, comprobantes: 4, ivaEnRiesgo: 9n },
+    ]);
+
+    const resumen = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+
+    expect(resumen.creadas).toBe(0);
+    expect(deps.alertas.alertas).toEqual([]);
+  });
+
+  it('una alerta de libro vieja que ya estaba abierta se cierra diciendo por qué, sin afirmar que se resolvió', async () => {
+    const deps = armar([]);
+    await deps.alertas.crear([
+      {
+        clienteId: CLIENTE,
+        periodo: '2023-06',
+        origen: ORIGEN_LIBRO_RIESGO,
+        criticidad: 'CRITICA',
+        titulo: 'viejo',
+        detalle: 'viejo',
+        entidadRelacionada: 'liquidacion_iva_rg90',
+        entidadRelacionadaId: LIQUIDACION,
+        fechaLimite: null,
+      },
+    ]);
+
+    const resumen = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+
+    expect(resumen.resueltas).toBe(1);
+    expect(deps.alertas.alertas[0]!.motivoCierre).toMatch(/anterior a 2025-01/);
+    expect(deps.alertas.alertas[0]!.motivoCierre).not.toMatch(/ya no existe/);
+  });
+
+  it('el texto de la alerta de libro no da por hecho que el período no se presentó', async () => {
+    const deps = armar([
+      { clienteId: CLIENTE, periodo: '2026-03', liquidacionId: LIQUIDACION, comprobantes: 2, ivaEnRiesgo: 3n },
+    ]);
+
+    await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+
+    expect(deps.alertas.alertas[0]!.detalle).toMatch(/si ya se presentó, puede hacer falta una rectificativa/);
+  });
+
   it('avisa de los comprobantes con riesgo de multa', async () => {
     const deps = armar([
       { clienteId: CLIENTE, periodo: '2026-03', liquidacionId: LIQUIDACION, comprobantes: 7, ivaEnRiesgo: 12n },
