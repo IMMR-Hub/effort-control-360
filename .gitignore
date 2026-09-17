@@ -53,3 +53,8 @@ respaldos/
 # Scripts temporales de diagnóstico dentro de apps/api. Los de verdad viven en
 # scripts/ y pasan el lint como cualquier otro archivo del proyecto.
 apps/api/*.mjs
+
+# Registro local de la guardia de comandos (intentos reales, no se versiona)
+.claude/guardias/intentos-bloqueados.log
+# Configuración personal de Claude Code (permisos de cada máquina)
+.claude/settings.local.json
