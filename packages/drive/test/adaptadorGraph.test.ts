@@ -9,6 +9,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
 import { DriveGraph } from '../src/adaptadorGraph.js';
+import { ErrorTransitorioDeDrive } from '../src/puerto.js';
 
 const CONFIGURACION = {
   tenantId: 'tenant-123',
@@ -115,6 +116,67 @@ describe('DriveGraph', () => {
     const contenido = await drive.leer('item-1');
 
     expect(contenido.toString('utf8')).toBe('contenido del archivo');
+  });
+
+  /*
+   * Auditoría 2026-09-16: un solo 429 hacía que la planilla más nueva no se
+   * leyera y ganara en silencio la vieja.
+   */
+  it('leer reintenta un 429 respetando Retry-After y un corte de red, y termina leyendo', async () => {
+    let intentos = 0;
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) => {
+        if (url.toString().includes('login.microsoftonline.com')) return respuestaToken();
+        intentos += 1;
+        if (intentos === 1) return new Response('frená', { status: 429, headers: { 'retry-after': '7' } });
+        if (intentos === 2) throw new TypeError('fetch failed');
+        return new Response(Buffer.from('ok'), { status: 200 });
+      }),
+    );
+    const esperas: number[] = [];
+    const drive = new DriveGraph({ ...CONFIGURACION, esperar: async (ms) => void esperas.push(ms) });
+
+    const contenido = await drive.leer('item-1');
+
+    expect(contenido.toString('utf8')).toBe('ok');
+    expect(intentos).toBe(3);
+    expect(esperas).toEqual([7000, 4000]);
+  });
+
+  it('si la falla pasajera sigue, leer lanza ErrorTransitorioDeDrive', async () => {
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) => {
+        if (url.toString().includes('login.microsoftonline.com')) return respuestaToken();
+        return new Response('caído', { status: 503, headers: { 'retry-after': '3600' } });
+      }),
+    );
+    const esperas: number[] = [];
+    const drive = new DriveGraph({ ...CONFIGURACION, esperar: async (ms) => void esperas.push(ms) });
+
+    await expect(drive.leer('item-1')).rejects.toBeInstanceOf(ErrorTransitorioDeDrive);
+    // Aunque Graph pida una hora, no se espera más de 30 segundos por intento.
+    expect(esperas).toEqual([30_000, 30_000]);
+  });
+
+  it('un 404 al leer no se reintenta y no es una falla pasajera', async () => {
+    let intentos = 0;
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) => {
+        if (url.toString().includes('login.microsoftonline.com')) return respuestaToken();
+        intentos += 1;
+        return new Response('no existe', { status: 404 });
+      }),
+    );
+    const drive = new DriveGraph({ ...CONFIGURACION, esperar: async () => undefined });
+
+    const error = await drive.leer('item-1').catch((e: unknown) => e);
+
+    expect(intentos).toBe(1);
+    expect(error).not.toBeInstanceOf(ErrorTransitorioDeDrive);
+    expect(String(error)).toMatch(/404/);
   });
 
   it('escribir hace un PUT al endpoint de contenido con el cuerpo crudo', async () => {

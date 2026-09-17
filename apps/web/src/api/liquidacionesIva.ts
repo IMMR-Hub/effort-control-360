@@ -77,6 +77,10 @@ export interface ResumenDeCalculo {
   readonly archivosIgnorados?: number;
   /** Planillas descartadas por existir una más reciente, y filas con período futuro. */
   readonly avisos?: readonly { readonly cliente: string; readonly archivo: string; readonly motivo: string }[];
+  /** Avisos que no entraron en la respuesta por el tope. */
+  readonly avisosOmitidos?: number;
+  /** Clientes que no se calcularon en esta corrida (una planilla no se pudo bajar). */
+  readonly clientesOmitidos?: readonly { readonly cliente: string; readonly motivo: string }[];
   readonly fallos: readonly { readonly cliente: string; readonly archivo: string; readonly motivo: string }[];
 }
 

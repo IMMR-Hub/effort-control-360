@@ -184,16 +184,58 @@ function importeDeCelda(valor: unknown): Gs {
   return gs(Math.round(Number(numero[0])));
 }
 
-/** `02/2026` → `2026-02`. Es el formato que usa la columna de período. */
+/**
+ * Años que puede tener un período. Fuera de este rango la celda está mal, no
+ * es un período raro: la RG 90 existe desde 2021 y el sistema no va a durar
+ * hasta el 2100.
+ */
+export const PRIMER_ANIO_DE_PERIODO = 2000;
+export const ULTIMO_ANIO_DE_PERIODO = 2100;
+
+function periodoValidado(anio: number, mes: number, original: string): string {
+  // Hasta el 2026-09-16 se aceptaban "13/2025" y "00/2026": pasaban el filtro
+  // de período futuro (el texto "2025-13" es menor que "2026-09") y creaban una
+  // liquidación de un mes que no existe.
+  if (mes < 1 || mes > 12 || anio < PRIMER_ANIO_DE_PERIODO || anio > ULTIMO_ANIO_DE_PERIODO) {
+    throw new ErrorDeImportacion(`El período "${original}" no es un mes válido.`);
+  }
+  return `${anio}-${String(mes).padStart(2, '0')}`;
+}
+
+/**
+ * `02/2026` → `2026-02`. Es el formato que usa la columna de período.
+ *
+ * También acepta la celda como fecha de Excel (alguien la formateó como fecha):
+ * antes eso rechazaba la planilla entera.
+ */
 function periodoDesdeCelda(valor: unknown): string {
+  if (valor instanceof Date) {
+    return periodoValidado(valor.getUTCFullYear(), valor.getUTCMonth() + 1, valor.toISOString().slice(0, 7));
+  }
+
   const texto = textoDeCelda(valor).trim();
   const conBarra = texto.match(/^(\d{1,2})\/(\d{4})$/);
-  if (conBarra) return `${conBarra[2]}-${conBarra[1]!.padStart(2, '0')}`;
+  if (conBarra) return periodoValidado(Number(conBarra[2]), Number(conBarra[1]), texto);
 
   const yaIso = texto.match(/^(\d{4})-(\d{2})$/);
-  if (yaIso) return texto;
+  if (yaIso) return periodoValidado(Number(yaIso[1]), Number(yaIso[2]), texto);
 
   throw new ErrorDeImportacion(`No se pudo leer el período "${texto}": se esperaba MM/AAAA.`);
+}
+
+/**
+ * Mes de emisión del comprobante, `AAAA-MM`, o `null` si la fecha no se puede
+ * leer. Sirve para detectar filas con el período corrido (ver el servicio de
+ * liquidación): no se usa para rechazar filas acá, porque una fecha ilegible
+ * no invalida el IVA declarado.
+ */
+export function mesDeEmision(fila: Pick<FilaDeLibro, 'fechaEmision'>): string | null {
+  const texto = fila.fechaEmision.trim();
+  const conBarras = texto.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (conBarras) return `${conBarras[3]}-${conBarras[2]!.padStart(2, '0')}`;
+  const iso = texto.match(/^(\d{4})-(\d{2})-\d{2}/);
+  if (iso) return `${iso[1]}-${iso[2]}`;
+  return null;
 }
 
 /**

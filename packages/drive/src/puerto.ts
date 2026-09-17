@@ -8,6 +8,20 @@
  * registro en Azure AD (ver `docs/DISCREPANCIAS.md`, punto 6).
  */
 
+/**
+ * Falla pasajera al leer: Graph limitó las peticiones (429), tuvo un error
+ * propio (5xx) o se cortó la conexión, y siguió así después de reintentar.
+ *
+ * Es un tipo aparte porque quien llama tiene que tratarla distinto de un
+ * archivo roto o inexistente: si la planilla que manda en un período no se
+ * pudo bajar por un corte, calcular igual con las otras haría ganar en
+ * silencio a una versión vieja. Ante esto, lo correcto es no calcular ese
+ * cliente en esta vuelta y avisar.
+ */
+export class ErrorTransitorioDeDrive extends Error {
+  override readonly name = 'ErrorTransitorioDeDrive';
+}
+
 export interface ArchivoDrive {
   readonly itemId: string;
   readonly nombre: string;

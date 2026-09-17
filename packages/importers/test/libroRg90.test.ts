@@ -16,7 +16,7 @@ import ExcelJS from 'exceljs';
 
 import { gs } from '@effort/core';
 
-import { importarLibroRg90, NoEsPlanillaRg90, resumirIva } from '../src/libroRg90.js';
+import { importarLibroRg90, mesDeEmision, NoEsPlanillaRg90, resumirIva } from '../src/libroRg90.js';
 
 /** Los 28 encabezados, textuales de las planillas de COMPRAS. */
 const ENCABEZADOS_COMPRAS = [
@@ -53,13 +53,14 @@ interface Comprobante {
   readonly exento?: number;
   readonly total?: number;
   readonly imputaIva?: string;
-  readonly periodo?: string;
+  readonly periodo?: string | Date;
+  readonly fechaEmision?: string;
 }
 
 function fila(c: Comprobante): unknown[] {
   return [
     '80119631', 'FUMIPRO S.A.', '80108594', 'RUC', 'PASANA SA',
-    c.tipoRegistro, 'FACTURA', '19/02/2026', c.periodo ?? '02/2026', 'CONTADO', 'NO',
+    c.tipoRegistro, 'FACTURA', c.fechaEmision ?? '19/02/2026', c.periodo ?? '02/2026', 'CONTADO', 'NO',
     '18535669', c.numero, '',
     c.gravado10 ?? 0, c.iva10 ?? 0, c.gravado5 ?? 0, c.iva5 ?? 0,
     c.exento ?? 0, c.total ?? 0, c.imputaIva ?? 'SI', 'NO', 'NO', 'NO',
@@ -218,6 +219,49 @@ describe('importador del libro RG 90', () => {
     expect(reporte.filas).toHaveLength(2);
     expect(reporte.rechazadas).toHaveLength(1);
     expect(reporte.rechazadas[0]!.motivo).toMatch(/COMPRAS o VENTAS/);
+  });
+
+  /*
+   * Auditoría 2026-09-16: "13/2025" y "00/2026" se aceptaban, y el texto
+   * "2025-13" pasaba el filtro de período futuro del servicio. Se rechaza la
+   * fila, con motivo: el resto de la planilla sigue.
+   */
+  it('rechaza con motivo un período con un mes que no existe', async () => {
+    const contenido = await planilla([
+      { tipoRegistro: 'COMPRAS', numero: '001-001-0000011', gravado10: 11000, iva10: 1000, total: 11000, periodo: '13/2025' },
+      { tipoRegistro: 'COMPRAS', numero: '001-001-0000012', gravado10: 11000, iva10: 1000, total: 11000, periodo: '00/2026' },
+      { tipoRegistro: 'COMPRAS', numero: '001-001-0000013', gravado10: 11000, iva10: 1000, total: 11000, periodo: '02/1899' },
+      { tipoRegistro: 'COMPRAS', numero: '001-001-0000014', gravado10: 11000, iva10: 1000, total: 11000, periodo: '12/2025' },
+    ]);
+
+    const reporte = await importarLibroRg90(contenido, '01 ENERO.xlsx');
+
+    expect(reporte.filas.map((f) => f.periodo)).toEqual(['2025-12']);
+    expect(reporte.rechazadas).toHaveLength(3);
+    expect(reporte.rechazadas[0]!.motivo).toMatch(/no es un mes válido/);
+  });
+
+  // Una columna de período formateada como fecha rechazaba la planilla entera.
+  it('acepta el período cuando la celda es una fecha de Excel', async () => {
+    const contenido = await planilla([
+      {
+        tipoRegistro: 'COMPRAS', numero: '001-001-0000015', gravado10: 11000, iva10: 1000, total: 11000,
+        periodo: new Date(Date.UTC(2026, 0, 1)),
+      },
+    ]);
+
+    const reporte = await importarLibroRg90(contenido, '01 ENERO.xlsx');
+
+    expect(reporte.rechazadas).toEqual([]);
+    expect(reporte.filas[0]!.periodo).toBe('2026-01');
+  });
+
+  it('mesDeEmision lee dd/mm/aaaa y fechas ISO, y no inventa si no puede', () => {
+    expect(mesDeEmision({ fechaEmision: '19/02/2026' })).toBe('2026-02');
+    expect(mesDeEmision({ fechaEmision: '5/1/2026' })).toBe('2026-01');
+    expect(mesDeEmision({ fechaEmision: '2026-01-15T00:00:00.000Z' })).toBe('2026-01');
+    expect(mesDeEmision({ fechaEmision: '' })).toBeNull();
+    expect(mesDeEmision({ fechaEmision: 'ayer' })).toBeNull();
   });
 
   it('falla claro si el archivo no es una planilla RG 90', async () => {

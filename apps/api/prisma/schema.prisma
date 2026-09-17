@@ -1039,9 +1039,10 @@ model LiquidacionIvaRg90 {
   gravado5Ventas   BigInt @map("gravado_5_ventas")
   exentoVentas     BigInt @map("exento_ventas")
 
-  /// Cuántos archivos se leyeron para armar esta liquidación.
+  /// Planillas que aportaron filas a este período (compras y ventas).
   archivosLeidos  Int @map("archivos_leidos")
-  /// Filas que el importador no pudo interpretar, con su motivo en la bitácora.
+  /// Filas descartadas de las planillas cuyo mes principal es este período:
+  /// ilegibles, con período futuro o corrido. El detalle viaja en los avisos del cálculo.
   filasRechazadas Int @map("filas_rechazadas")
 
   calculadoEn           DateTime @default(now()) @map("calculado_en") @db.Timestamptz(3)

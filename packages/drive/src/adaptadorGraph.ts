@@ -13,7 +13,7 @@
  * `scripts/verify.mjs`).
  */
 
-import type { ArchivoDrive, DriveDeArchivos } from './puerto.js';
+import { ErrorTransitorioDeDrive, type ArchivoDrive, type DriveDeArchivos } from './puerto.js';
 
 export interface ConfiguracionGraph {
   readonly tenantId: string;
@@ -34,6 +34,29 @@ export interface ConfiguracionGraph {
    * copiada — que es exactamente lo que pasó al desplegar el 2026-09-11.
    */
   readonly usuarioPrincipal?: string | undefined;
+  /** Espera entre reintentos. Solo se reemplaza en los tests, para no esperar de verdad. */
+  readonly esperar?: ((milisegundos: number) => Promise<void>) | undefined;
+}
+
+/** Intentos de lectura ante una falla pasajera (el primero más dos reintentos). */
+const INTENTOS_DE_LECTURA = 3;
+/** Tope de espera entre intentos, aunque Graph pida más en `Retry-After`. */
+const ESPERA_MAXIMA_MS = 30_000;
+
+function esperarDeVerdad(milisegundos: number): Promise<void> {
+  return new Promise((resolver) => setTimeout(resolver, milisegundos));
+}
+
+/** 429 y 5xx son de Graph, no del archivo: vale la pena reintentar. */
+function esEstadoPasajero(estado: number): boolean {
+  return estado === 429 || estado >= 500;
+}
+
+/** Milisegundos a esperar según `Retry-After` (segundos), o la espera exponencial. */
+function esperaAntesDe(intento: number, reintentarDespues: string | null): number {
+  const segundos = reintentarDespues === null ? Number.NaN : Number(reintentarDespues);
+  const pedida = Number.isFinite(segundos) && segundos >= 0 ? segundos * 1000 : 1000 * 2 ** intento;
+  return Math.min(pedida, ESPERA_MAXIMA_MS);
 }
 
 interface RespuestaToken {
@@ -230,11 +253,50 @@ export class DriveGraph implements DriveDeArchivos {
     return webUrl;
   }
 
+  /**
+   * Baja el contenido de un archivo, reintentando las fallas pasajeras.
+   *
+   * Hasta el 2026-09-16 un solo 429 o un "fetch failed" hacía que la planilla
+   * más nueva de un período no se leyera, y ganaba en silencio la versión
+   * vieja. Reintentar es seguro acá porque leer no cambia nada. Si la falla
+   * sigue, se lanza `ErrorTransitorioDeDrive` para que quien llama no la
+   * confunda con un archivo roto. Un 404 o un 403 no se reintentan: no se
+   * arreglan esperando.
+   */
   async leer(itemId: string): Promise<Buffer> {
-    const respuesta = await this.#peticion(
-      `/drives/${await this.#drive()}/items/${itemId}/content`,
+    const esperar = this.configuracion.esperar ?? esperarDeVerdad;
+    const ruta = `/drives/${await this.#drive()}/items/${itemId}/content`;
+    let ultimoMotivo = '';
+
+    for (let intento = 1; intento <= INTENTOS_DE_LECTURA; intento += 1) {
+      let respuesta: Response;
+      try {
+        const token = await this.#token();
+        respuesta = await fetch(`https://graph.microsoft.com/v1.0${ruta}`, {
+          headers: { authorization: `Bearer ${token}` },
+        });
+      } catch (error) {
+        // Corte de red: el pedido ni siquiera llegó a tener respuesta.
+        ultimoMotivo = error instanceof Error ? error.message : String(error);
+        if (intento < INTENTOS_DE_LECTURA) await esperar(esperaAntesDe(intento, null));
+        continue;
+      }
+
+      if (respuesta.ok) return Buffer.from(await respuesta.arrayBuffer());
+
+      const cuerpo = await respuesta.text();
+      if (!esEstadoPasajero(respuesta.status)) {
+        throw new Error(`Microsoft Graph devolvió ${respuesta.status} en ${ruta}: ${cuerpo}`);
+      }
+      ultimoMotivo = `Microsoft Graph devolvió ${respuesta.status}`;
+      if (intento < INTENTOS_DE_LECTURA) {
+        await esperar(esperaAntesDe(intento, respuesta.headers.get('retry-after')));
+      }
+    }
+
+    throw new ErrorTransitorioDeDrive(
+      `No se pudo leer ${itemId} después de ${INTENTOS_DE_LECTURA} intentos (${ultimoMotivo}).`,
     );
-    return Buffer.from(await respuesta.arrayBuffer());
   }
 
   /**

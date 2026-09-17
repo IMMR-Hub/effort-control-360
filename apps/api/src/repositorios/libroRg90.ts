@@ -56,6 +56,8 @@ export class LibroRg90Prisma {
         itemIdOneDrive: true,
         tipoMime: true,
         modificadoEnOrigen: true,
+        rutaOneDrive: true,
+        tamanoBytes: true,
       },
     });
 
@@ -70,6 +72,8 @@ export class LibroRg90Prisma {
         itemIdOneDrive: e.itemIdOneDrive,
         tipoMime: e.tipoMime,
         modificadoEnOrigen: e.modificadoEnOrigen,
+        rutaOneDrive: e.rutaOneDrive,
+        tamanoBytes: Number(e.tamanoBytes),
       }));
   }
 

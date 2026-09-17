@@ -1326,6 +1326,33 @@ EFFORT fuera solo las filas cambiadas (y no el libro completo), el IVA de ese
 período quedaría corto — **preguntar a Lili** si una "CORRECCION" es siempre
 el libro completo.
 
+**2026-09-17 — ajustes por la auditoría del plan maestro (tarea N7), sin
+desplegar todavía.** La regla 2 de arriba cambió así:
+
+- "CORRECCION" cuenta solo si el nombre **empieza** con esa palabra (con o sin
+  tilde, también "CORRECION"). "SIN CORRECCION …" ya no pasa por corrección.
+  Otras formas de nombrarlas: pregunta P3 del plan.
+- Si todo empata (sin corrección y con la misma fecha), decide el nombre y
+  después el id: antes decidía el orden en que la base devolvía las filas, y el
+  IVA podía cambiar entre corridas. El aviso dice "empate" y pide revisar.
+- El aviso dice el motivo real: "manda la corrección", "modificada más
+  recientemente" o "empate" (antes decía siempre "más reciente").
+- Cada planilla tiene un **mes principal** (el de más filas). Unas filas
+  sueltas de otro mes no le ganan a la planilla que tiene ese mes como
+  principal; se usan solo si no hay otra, y se avisa.
+- Además de las filas futuras, se dejan afuera las filas cuyo período está 12
+  meses o más después de su fecha de emisión (las 2027-01 … 2032-01 del
+  "01 ENERO.xlsx" de COPESA 2026, que en enero de 2027 dejan de ser futuras).
+  El umbral espera la respuesta a la pregunta P4.
+- Un mes inválido (13, 00) se rechaza al leer.
+- Si una planilla no se puede bajar por una falla pasajera de Microsoft (después
+  de reintentar), ese cliente **no se calcula en esa corrida** y se informa en
+  `clientesOmitidos`: calcular sin ella podía hacer ganar a una versión vieja.
+- Una planilla RG 90 sin ninguna fila legible es un fallo; los `.xls` viejos se
+  avisan; una planilla de más de 15 MB no se baja.
+- `filasRechazadas` y `archivosLeidos` de cada liquidación son ahora de ese
+  período, no del cliente entero.
+
 ---
 
 ## 26. Prórroga de los estados financieros 2025 — ABIERTO, PRIMERA PREGUNTA (2026-09-15)

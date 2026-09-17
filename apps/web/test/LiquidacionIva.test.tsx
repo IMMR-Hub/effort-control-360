@@ -191,8 +191,37 @@ describe('pantalla de IVA', () => {
     await userEvent.click(screen.getByRole('button', { name: /recalcular/i }));
 
     expect(await screen.findByText(/33 Excel ignorados/)).toBeTruthy();
-    expect(screen.getByText(/1 avisos/)).toBeTruthy();
+    expect(screen.getByText(/1\s+avisos/)).toBeTruthy();
     expect(screen.getByText(/COPESA — AGOSTO 2025\.xlsx/)).toBeTruthy();
+  });
+
+  /*
+   * Auditoría 2026-09-16: si una planilla no se pudo bajar, el cliente no se
+   * calcula. Eso no puede pasar desapercibido: los números de ese cliente
+   * quedan como estaban.
+   */
+  it('avisa qué clientes no se calcularon y cuántos avisos quedaron afuera', async () => {
+    await montar();
+    mock.mockDeRuta('POST /api/v1/liquidaciones-iva/calcular', () =>
+      respuestaJson({
+        periodosCalculados: 40,
+        archivosLeidos: 150,
+        filasInterpretadas: 18000,
+        filasRechazadas: 0,
+        hallazgosNuevos: 0,
+        archivosIgnorados: 0,
+        avisos: [{ cliente: 'COPESA', archivo: 'AGOSTO 2025.xlsx', motivo: 'Planilla descartada.' }],
+        avisosOmitidos: 250,
+        clientesOmitidos: [{ cliente: 'FUMIPRO S.A.', motivo: 'No se calculó en esta corrida (503).' }],
+        fallos: [],
+      }),
+    );
+
+    await userEvent.click(screen.getByRole('button', { name: /recalcular/i }));
+
+    expect(await screen.findByText(/FUMIPRO S\.A\.: No se calculó en esta corrida/)).toBeTruthy();
+    expect(screen.getByText(/251\s+avisos/)).toBeTruthy();
+    expect(screen.getByText(/se muestran los primeros 1/)).toBeTruthy();
   });
 
   /*

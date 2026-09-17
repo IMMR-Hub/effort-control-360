@@ -254,10 +254,23 @@ export default function LiquidacionIva() {
           </p>
         )}
 
+        {ultimoCalculo?.clientesOmitidos && ultimoCalculo.clientesOmitidos.length > 0 && (
+          <div className="px-5 pb-4 text-sm text-critico" role="alert">
+            {ultimoCalculo.clientesOmitidos.map((omitido) => (
+              <p key={omitido.cliente}>
+                {omitido.cliente}: {omitido.motivo} Sus números no cambiaron; se reintenta en la próxima corrida.
+              </p>
+            ))}
+          </div>
+        )}
+
         {ultimoCalculo?.avisos && ultimoCalculo.avisos.length > 0 && (
           <details className="px-5 pb-4 text-xs text-tinta-tenue">
             <summary className="cursor-pointer">
-              {ultimoCalculo.avisos.length} avisos: planillas descartadas o filas con período futuro
+              {ultimoCalculo.avisos.length + (ultimoCalculo.avisosOmitidos ?? 0)} avisos: planillas
+              descartadas, filas que no se usaron o formatos que no se pueden leer
+              {(ultimoCalculo.avisosOmitidos ?? 0) > 0 &&
+                ` (se muestran los primeros ${ultimoCalculo.avisos.length})`}
             </summary>
             <ul className="mt-2 list-disc space-y-1 pl-5">
               {ultimoCalculo.avisos.map((aviso, i) => (

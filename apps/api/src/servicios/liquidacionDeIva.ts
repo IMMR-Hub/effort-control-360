@@ -26,27 +26,55 @@
  * **Es seguro repetirlo.** Volver a correrlo sobre el mismo período reemplaza la
  * liquidación y no duplica hallazgos (la base lo garantiza con sus claves
  * únicas). Hace falta que sea así: corre solo, y una planilla corregida tiene
- * que poder reimportarse sin ensuciar nada.
+ * que poder reimportarse sin ensuciar nada. Dos cálculos a la vez los impide
+ * `candadoDeIva.ts`, que envuelve a este servicio desde afuera.
  */
 
 import {
   analizarLibro,
   importarLibroRg90,
+  mesDeEmision,
   NoEsPlanillaRg90,
   resumirIva,
   type HallazgoDeLibro,
   type FilaDeLibro,
 } from '@effort/importers';
 import { determinarIva, gs, hoyEnParaguay, type DivisoresIva, type Gs } from '@effort/core';
-import type { DriveDeArchivos } from '@effort/drive';
+import { ErrorTransitorioDeDrive, type DriveDeArchivos } from '@effort/drive';
 
 import type { ClienteListado, RepositorioDeClientes } from '../puertos.js';
 
-/** Formatos de Excel que puede traer una planilla. */
-const FORMATOS_EXCEL = new Set([
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  'application/vnd.ms-excel',
-]);
+const XLSX = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+/**
+ * El formato binario viejo de Excel (.xls). La librería que lee las planillas
+ * no lo entiende: se informa una vez como aviso en vez de fallar en cada
+ * corrida (auditoría 2026-09-16).
+ */
+const XLS = 'application/vnd.ms-excel';
+
+/**
+ * Tope de tamaño de una planilla. Las planillas RG 90 reales pesan menos de
+ * 1 MB; algo mucho más grande no es un libro, y leerlo entero en memoria en un
+ * contenedor de 512 MB es la forma en que el sistema ya se cayó una vez
+ * (CLAUDE.md, lección 4).
+ */
+export const TAMANO_MAXIMO_DE_PLANILLA_BYTES = 15 * 1024 * 1024;
+
+/**
+ * Meses de diferencia entre la fecha de emisión y el período declarado a partir
+ * de los cuales la fila se considera "corrida".
+ *
+ * Caso real: el "01 ENERO.xlsx" de COPESA 2026 trae comprobantes emitidos en
+ * enero 2026 con períodos 2027-01 … 2032-01: la columna de período se arrastró
+ * en el Excel. Sin esto, esas filas se aceptarían en enero de cada año siguiente,
+ * cuando dejan de ser "futuras". El valor está pendiente de confirmar con EFFORT
+ * (plan maestro, pregunta P4): las filas se dejan afuera y se avisan, no se
+ * reasignan a otro período.
+ */
+export const MESES_DE_ARRASTRE_SOSPECHOSO = 12;
+
+/** Tope de avisos por cálculo. El resto se cuenta, pero no viaja entero en la respuesta. */
+export const MAXIMO_DE_AVISOS = 200;
 
 export interface ArchivoDeLibro {
   readonly evidenciaId: string;
@@ -56,6 +84,12 @@ export interface ArchivoDeLibro {
   readonly tipoMime: string;
   /** Fecha de modificación en OneDrive. Decide qué versión manda si hay dos. */
   readonly modificadoEnOrigen?: Date | null;
+  /**
+   * Ruta completa en OneDrive. En COPESA "01 ENERO.xlsx" se repite entre años y
+   * entre compras y ventas: sin la ruta, un aviso no dice de qué archivo habla.
+   */
+  readonly rutaOneDrive?: string | null;
+  readonly tamanoBytes?: number | null;
 }
 
 export interface AltaDeLiquidacion {
@@ -73,7 +107,9 @@ export interface AltaDeLiquidacion {
   readonly gravado10Ventas: Gs;
   readonly gravado5Ventas: Gs;
   readonly exentoVentas: Gs;
+  /** Planillas que aportaron filas a ESTE período (compras y ventas). */
   readonly archivosLeidos: number;
+  /** Filas descartadas de las planillas que aportaron a ESTE período. */
   readonly filasRechazadas: number;
   readonly calculadoPorUsuarioId: string;
 }
@@ -91,7 +127,7 @@ export interface DependenciasDeLiquidacion {
   readonly guardarLiquidacion: (datos: AltaDeLiquidacion) => Promise<void>;
   readonly guardarHallazgos: (datos: readonly AltaDeHallazgo[]) => Promise<number>;
   readonly divisores: DivisoresIva;
-  /** Reloj inyectable para los tests. Decide qué período es "futuro". */
+  /** Reloj de la aplicación. Decide qué período es "futuro". */
   readonly ahora?: () => Date;
 }
 
@@ -103,8 +139,8 @@ export interface FalloDeLiquidacion {
 
 /**
  * Algo que se dejó afuera a propósito y que una persona tiene que poder ver:
- * una planilla reemplazada por otra más nueva, o filas con un período que
- * todavía no ocurrió.
+ * una planilla reemplazada por otra, filas con un período que no corresponde,
+ * un formato que no se puede leer.
  */
 export interface AvisoDeLiquidacion {
   readonly cliente: string;
@@ -112,17 +148,34 @@ export interface AvisoDeLiquidacion {
   readonly motivo: string;
 }
 
+/** Cliente que no se calculó en esta corrida, y por qué. */
+export interface ClienteOmitido {
+  readonly cliente: string;
+  readonly motivo: string;
+}
+
 export interface ResumenDeLiquidacion {
   readonly periodosCalculados: number;
+  /** Planillas RG 90 leídas (ganaran o no algún período). */
   readonly archivosLeidos: number;
+  /** Comprobantes usados en el cálculo (solo de las planillas elegidas). */
   readonly filasInterpretadas: number;
   readonly filasRechazadas: number;
   readonly hallazgosNuevos: number;
-  /** Comprobantes que aparecían en más de una planilla y se contaron una sola vez. */
+  /** Filas repetidas DENTRO de una planilla elegida que se contaron una sola vez. */
   readonly comprobantesRepetidos: number;
   /** Excel clasificados como libro que no son planillas RG 90. No son fallos. */
   readonly archivosIgnorados: number;
+  /** Los primeros ignorados, con su ruta, para poder revisarlos. */
+  readonly archivosIgnoradosLista: readonly string[];
   readonly avisos: readonly AvisoDeLiquidacion[];
+  /** Avisos que existieron pero no entraron en la respuesta por el tope. */
+  readonly avisosOmitidos: number;
+  /**
+   * Clientes que no se calcularon: una planilla no se pudo bajar por una falla
+   * pasajera, y calcular sin ella podría hacer ganar a una versión vieja.
+   */
+  readonly clientesOmitidos: readonly ClienteOmitido[];
   readonly fallos: readonly FalloDeLiquidacion[];
 }
 
@@ -143,21 +196,63 @@ function claveDeComprobante(fila: FilaDeLibro): string {
   ].join('|');
 }
 
-/** "CORRECCION" en cualquier parte del nombre, con o sin tilde. */
-function esCorreccion(archivo: ArchivoDeLibro): boolean {
-  const sinTildes = archivo.nombreArchivo.normalize('NFD').replace(/[̀-ͯ]/g, '');
-  return /correccion/i.test(sinTildes);
+/**
+ * El nombre EMPIEZA con "CORRECCION" (con o sin tilde, con una o dos C).
+ *
+ * Anclado al principio a propósito: la versión del 2026-09-16 buscaba la
+ * palabra en cualquier parte, y "SIN CORRECCION" o "CORRECCIONES PENDIENTES"
+ * pasaban por correcciones. EFFORT las nombra "CORRECCION RG COMPRAS …"
+ * (plan maestro, pregunta P3, para confirmar otras formas).
+ */
+export function esCorreccion(nombreArchivo: string): boolean {
+  const sinTildes = nombreArchivo.normalize('NFD').replace(/[̀-ͯ]/g, '');
+  return /^\s*correcc?ion[\s_-]/i.test(sinTildes);
+}
+
+function marcaDeTiempo(archivo: ArchivoDeLibro): number {
+  return archivo.modificadoEnOrigen?.getTime() ?? 0;
 }
 
 /**
- * Cuál de dos planillas del mismo período manda: positivo si manda `a`.
+ * Orden TOTAL de prioridad: positivo si manda `a`.
  *
- * Una corrección manda sobre el original; entre dos que no lo son (o dos que
- * lo son), la modificada más recientemente en OneDrive.
+ * Una corrección manda sobre el original; entre dos que no lo son (o dos que lo
+ * son), la modificada más recientemente en OneDrive. Si todo empata, decide el
+ * nombre y después el id: la versión anterior dejaba el empate al orden en que
+ * la base devolvía las filas, y el IVA de un período podía cambiar entre dos
+ * corridas sin que cambiara ningún archivo.
  */
 function prioridad(a: ArchivoDeLibro, b: ArchivoDeLibro): number {
-  const fecha = (x: ArchivoDeLibro) => x.modificadoEnOrigen?.getTime() ?? 0;
-  return Number(esCorreccion(a)) - Number(esCorreccion(b)) || fecha(a) - fecha(b);
+  return (
+    Number(esCorreccion(a.nombreArchivo)) - Number(esCorreccion(b.nombreArchivo)) ||
+    marcaDeTiempo(a) - marcaDeTiempo(b) ||
+    b.nombreArchivo.localeCompare(a.nombreArchivo) ||
+    b.evidenciaId.localeCompare(a.evidenciaId)
+  );
+}
+
+/** Por qué `ganadora` le ganó a `perdedora`, en palabras. */
+function motivoDeDescarte(ganadora: ArchivoDeLibro, perdedora: ArchivoDeLibro, grupo: string): string {
+  const nombre = identificar(ganadora);
+  if (esCorreccion(ganadora.nombreArchivo) && !esCorreccion(perdedora.nombreArchivo)) {
+    return `Planilla descartada: para ${grupo} manda la corrección "${nombre}".`;
+  }
+  if (marcaDeTiempo(ganadora) !== marcaDeTiempo(perdedora)) {
+    return `Planilla descartada: para ${grupo} se usó "${nombre}", modificada más recientemente.`;
+  }
+  return (
+    `Planilla descartada por empate: para ${grupo} hay otra planilla con la misma fecha de ` +
+    `modificación y se usó "${nombre}" por orden alfabético. Revisar cuál es la buena.`
+  );
+}
+
+function identificar(archivo: ArchivoDeLibro): string {
+  return archivo.rutaOneDrive || archivo.nombreArchivo;
+}
+
+function describirGrupo(clave: string): string {
+  const [periodo, registro] = clave.split('|');
+  return `${registro} ${periodo}`;
 }
 
 /** `AAAA-MM` del mes en curso en Paraguay. */
@@ -166,27 +261,69 @@ function mesEnCurso(instante: Date): string {
   return `${hoy.anio}-${String(hoy.mes).padStart(2, '0')}`;
 }
 
-interface PlanillaLeida {
-  readonly archivo: ArchivoDeLibro;
-  /** Filas agrupadas por `periodo|tipoRegistro`. */
-  readonly grupos: Map<string, FilaDeLibro[]>;
+/** Meses entre dos `AAAA-MM` (positivo si `hasta` es posterior). */
+function mesesEntre(desde: string, hasta: string): number {
+  const [anioDesde, mesDesde] = desde.split('-').map(Number);
+  const [anioHasta, mesHasta] = hasta.split('-').map(Number);
+  return (anioHasta! - anioDesde!) * 12 + (mesHasta! - mesDesde!);
 }
+
+/** Avisos con tope: el resto se cuenta pero no se guarda. */
+class Avisos {
+  readonly lista: AvisoDeLiquidacion[] = [];
+  omitidos = 0;
+
+  agregar(aviso: AvisoDeLiquidacion): void {
+    if (this.lista.length < MAXIMO_DE_AVISOS) this.lista.push(aviso);
+    else this.omitidos += 1;
+  }
+}
+
+interface Ignorados {
+  cantidad: number;
+  readonly lista: string[];
+}
+
+/** Lo que se recuerda de cada planilla leída, sin sus filas. */
+interface DatosDePlanilla {
+  readonly archivo: ArchivoDeLibro;
+  /** Mes con más filas de la planilla: el libro que la planilla dice ser. */
+  readonly periodoPrincipal: string;
+  /** Filas que no entran al cálculo: rechazadas al leer, futuras o corridas. */
+  readonly filasDescartadas: number;
+}
+
+interface Ganadora {
+  readonly planilla: DatosDePlanilla;
+  readonly filas: FilaDeLibro[];
+  /** Si el período del grupo es el principal de la planilla. */
+  readonly esPrincipal: boolean;
+}
+
+class ClienteOmitidoError extends Error {}
 
 async function liquidarCliente(
   deps: DependenciasDeLiquidacion,
   cliente: ClienteListado,
   usuarioId: string,
   fallos: FalloDeLiquidacion[],
-  avisos: AvisoDeLiquidacion[],
+  avisos: Avisos,
+  ignorados: Ignorados,
 ): Promise<{
   periodos: number;
   archivos: number;
-  ignorados: number;
   filas: number;
   rechazadas: number;
   hallazgos: number;
   repetidos: number;
 }> {
+  const avisar = (archivo: ArchivoDeLibro, motivo: string) =>
+    avisos.agregar({ cliente: cliente.nombre, archivo: identificar(archivo), motivo });
+  const ignorar = (archivo: ArchivoDeLibro) => {
+    ignorados.cantidad += 1;
+    if (ignorados.lista.length < MAXIMO_DE_AVISOS) ignorados.lista.push(`${cliente.nombre}: ${identificar(archivo)}`);
+  };
+
   /*
    * Se abren TODOS los Excel clasificados como libro, y el contenido decide.
    *
@@ -195,124 +332,209 @@ async function liquidarCliente(
    * "RG 90 COMPRAS/01 ENERO.xlsx"— tenía IVA de 2 períodos. Es el mismo error
    * que ya se había corregido para las declaraciones (DISCREPANCIAS 23 y 25):
    * el nombre lo escribe una persona, los encabezados no.
+   *
+   * Se leen de la que MÁS manda a la que menos: así la primera que reclama un
+   * período es la ganadora, y las filas de las que pierden se sueltan apenas
+   * se leen, en vez de guardar todas las planillas del cliente en memoria.
    */
-  const archivos = (await deps.librosDelCliente(cliente.id)).filter((a) =>
-    FORMATOS_EXCEL.has(a.tipoMime),
-  );
+  const todos = await deps.librosDelCliente(cliente.id);
+  for (const viejo of todos.filter((a) => a.tipoMime === XLS)) {
+    avisar(viejo, 'Formato .xls (Excel viejo): no se puede leer. Si es una planilla RG 90, guardarla como .xlsx.');
+  }
+  const archivos = todos.filter((a) => a.tipoMime === XLSX).sort((a, b) => prioridad(b, a));
   const tope = mesEnCurso((deps.ahora ?? (() => new Date()))());
 
-  const leidas: PlanillaLeida[] = [];
-  let rechazadas = 0;
-  let ignorados = 0;
+  const ganadoras = new Map<string, Ganadora>();
+  const planillas: DatosDePlanilla[] = [];
 
   for (const archivo of archivos) {
+    if ((archivo.tamanoBytes ?? 0) > TAMANO_MAXIMO_DE_PLANILLA_BYTES) {
+      fallos.push({
+        cliente: cliente.nombre,
+        archivo: identificar(archivo),
+        motivo: `Pesa ${((archivo.tamanoBytes ?? 0) / 1024 / 1024).toFixed(1)} MB: demasiado para ser una planilla RG 90. No se leyó.`,
+      });
+      continue;
+    }
+
+    let reporte;
     try {
       const contenido = await deps.drive.leer(archivo.itemIdOneDrive);
-      const reporte = await importarLibroRg90(contenido, archivo.nombreArchivo);
-
-      /*
-       * Los libros que descarga la DNIT ("80003112_202501_COMPRAS_150121_1.xlsx")
-       * se leen sin ninguna fila. No hay nada que calcular y tampoco nada roto.
-       */
-      if (reporte.filas.length === 0 && reporte.rechazadas.length === 0) {
-        ignorados += 1;
-        continue;
-      }
-      rechazadas += reporte.rechazadas.length;
-
-      const grupos = new Map<string, FilaDeLibro[]>();
-      let futuras = 0;
-      for (const fila of reporte.filas) {
-        /*
-         * Un período que todavía no llegó no puede tener comprobantes. Caso
-         * real: "PERIODO 2026/…/RG 90 COMPRAS/01 ENERO.xlsx" de COPESA trae
-         * filas con 2027-01 … 2032-01 porque la columna de período se arrastró
-         * en el Excel. Tomarlas crearía liquidaciones de años que no pasaron.
-         */
-        if (fila.periodo > tope) {
-          futuras += 1;
-          continue;
-        }
-        const clave = `${fila.periodo}|${fila.tipoRegistro}`;
-        const grupo = grupos.get(clave);
-        if (grupo) grupo.push(fila);
-        else grupos.set(clave, [fila]);
-      }
-
-      if (futuras > 0) {
-        rechazadas += futuras;
-        avisos.push({
-          cliente: cliente.nombre,
-          archivo: archivo.nombreArchivo,
-          motivo: `${futuras} filas rechazadas: su período es posterior al mes en curso (${tope}).`,
-        });
-      }
-      leidas.push({ archivo, grupos });
+      reporte = await importarLibroRg90(contenido, archivo.nombreArchivo);
     } catch (error) {
       // Un Excel que no es planilla RG 90 no es una falla: se abre porque el
       // contenido es lo que decide, y a veces decide que no.
       if (error instanceof NoEsPlanillaRg90) {
-        ignorados += 1;
+        ignorar(archivo);
         continue;
+      }
+      // Una falla pasajera deja al cliente entero sin calcular en esta vuelta:
+      // si justo era la planilla que manda, calcular sin ella haría ganar a
+      // una versión vieja, y sus hallazgos quedarían guardados.
+      if (error instanceof ErrorTransitorioDeDrive) {
+        throw new ClienteOmitidoError(`${identificar(archivo)}: ${error.message}`);
       }
       // Una planilla ilegible no puede dejar sin IVA a los otros períodos del
       // mismo cliente: se anota y se sigue.
       fallos.push({
         cliente: cliente.nombre,
-        archivo: archivo.nombreArchivo,
+        archivo: identificar(archivo),
         motivo: error instanceof Error ? error.message : 'No se pudo leer la planilla.',
       });
+      continue;
     }
-  }
 
-  /*
-   * UNA sola planilla por período y tipo de registro.
-   *
-   * Hasta el 2026-09-15 se juntaban las filas de todas las planillas de un
-   * período, contando cada comprobante una vez (DISCREPANCIAS 24). Con los
-   * libros de COPESA eso no alcanza: agosto 2025 está en
-   * "08 Agosto 2025 ok verificado.xlsx" (568 filas) y en "AGOSTO 2025.xlsx"
-   * (464), con contenido distinto. Unirlas mezcla dos versiones del libro y da
-   * un IVA que no corresponde a ninguna. Se toma la que manda y las demás se
-   * informan.
-   */
-  const elegidas = new Map<string, PlanillaLeida>();
-  for (const leida of leidas) {
-    for (const clave of leida.grupos.keys()) {
-      const actual = elegidas.get(clave);
-      if (!actual || prioridad(leida.archivo, actual.archivo) > 0) elegidas.set(clave, leida);
+    /*
+     * Los libros que descarga la DNIT ("80003112_202501_COMPRAS_150121_1.xlsx")
+     * se leen sin ninguna fila. No hay nada que calcular y tampoco nada roto.
+     */
+    if (reporte.filas.length === 0 && reporte.rechazadas.length === 0) {
+      ignorar(archivo);
+      continue;
     }
-  }
 
-  for (const leida of leidas) {
-    for (const clave of leida.grupos.keys()) {
-      const elegida = elegidas.get(clave)!;
-      if (elegida === leida) continue;
-      const [periodo, registro] = clave.split('|');
-      avisos.push({
+    // Una planilla RG 90 de la que no se pudo usar NINGUNA fila no es un
+    // detalle: es IVA que falta. Va a fallos, no a avisos.
+    if (reporte.filas.length === 0) {
+      fallos.push({
         cliente: cliente.nombre,
-        archivo: leida.archivo.nombreArchivo,
-        motivo: `Planilla descartada por existir una más reciente (${registro} ${periodo}): se usó "${elegida.archivo.nombreArchivo}".`,
+        archivo: identificar(archivo),
+        motivo: `Ninguna de sus ${reporte.rechazadas.length} filas se pudo leer. Primera: fila ${reporte.rechazadas[0]!.numeroFila}, ${reporte.rechazadas[0]!.motivo}`,
       });
+      continue;
+    }
+    if (reporte.rechazadas.length > 0) {
+      avisar(
+        archivo,
+        `${reporte.rechazadas.length} filas rechazadas al leer. Primera: fila ${reporte.rechazadas[0]!.numeroFila}, ${reporte.rechazadas[0]!.motivo}`,
+      );
+    }
+
+    const grupos = new Map<string, FilaDeLibro[]>();
+    const filasPorPeriodo = new Map<string, number>();
+    let futuras = 0;
+    let corridas = 0;
+    for (const fila of reporte.filas) {
+      /*
+       * Un período que todavía no llegó no puede tener comprobantes. Caso
+       * real: "PERIODO 2026/…/RG 90 COMPRAS/01 ENERO.xlsx" de COPESA trae
+       * filas con 2027-01 … 2032-01 porque la columna de período se arrastró
+       * en el Excel. Tomarlas crearía liquidaciones de años que no pasaron.
+       */
+      if (fila.periodo > tope) {
+        futuras += 1;
+        continue;
+      }
+      // Y cuando esos años lleguen, la fecha de emisión las sigue delatando.
+      const emision = mesDeEmision(fila);
+      if (emision !== null && mesesEntre(emision, fila.periodo) >= MESES_DE_ARRASTRE_SOSPECHOSO) {
+        corridas += 1;
+        continue;
+      }
+      const clave = `${fila.periodo}|${fila.tipoRegistro}`;
+      const grupo = grupos.get(clave);
+      if (grupo) grupo.push(fila);
+      else grupos.set(clave, [fila]);
+      filasPorPeriodo.set(fila.periodo, (filasPorPeriodo.get(fila.periodo) ?? 0) + 1);
+    }
+
+    if (futuras > 0) {
+      avisar(archivo, `${futuras} filas rechazadas: su período es posterior al mes en curso (${tope}).`);
+    }
+    if (corridas > 0) {
+      avisar(
+        archivo,
+        `${corridas} filas dejadas afuera: su período está ${MESES_DE_ARRASTRE_SOSPECHOSO} meses o más ` +
+          'después de la fecha de emisión (probable columna de período arrastrada en el Excel).',
+      );
+    }
+    if (filasPorPeriodo.size === 0) {
+      // Todas sus filas eran futuras o corridas: se leyó, pero no aporta nada.
+      planillas.push({ archivo, periodoPrincipal: '', filasDescartadas: reporte.rechazadas.length + futuras + corridas });
+      continue;
+    }
+
+    // Mes principal: el de más filas; si empatan, el más antiguo.
+    const periodoPrincipal = [...filasPorPeriodo.entries()].sort(
+      ([pa, na], [pb, nb]) => nb - na || pa.localeCompare(pb),
+    )[0]![0];
+    const planilla: DatosDePlanilla = {
+      archivo,
+      periodoPrincipal,
+      filasDescartadas: reporte.rechazadas.length + futuras + corridas,
+    };
+    planillas.push(planilla);
+
+    /*
+     * UNA sola planilla por período y tipo de registro.
+     *
+     * Hasta el 2026-09-15 se juntaban las filas de todas las planillas de un
+     * período (DISCREPANCIAS 24). Con los libros de COPESA eso no alcanza:
+     * agosto 2025 está en "08 Agosto 2025 ok verificado.xlsx" (568 filas) y en
+     * "AGOSTO 2025.xlsx" (464), con contenido distinto. Unirlas mezcla dos
+     * versiones del libro.
+     *
+     * Y el período lo gana la planilla que lo tiene como PRINCIPAL: unas pocas
+     * filas sueltas de otro mes en una planilla más nueva no pueden desplazar
+     * al libro de ese mes. Esas filas sueltas solo se usan si ninguna planilla
+     * tiene ese mes como principal, y se avisa.
+     */
+    for (const [clave, filas] of grupos) {
+      const esPrincipal = clave.startsWith(`${periodoPrincipal}|`);
+      const actual = ganadoras.get(clave);
+
+      if (!actual) {
+        ganadoras.set(clave, { planilla, filas, esPrincipal });
+        continue;
+      }
+      if (esPrincipal && !actual.esPrincipal) {
+        // Llega el libro de verdad de ese mes: las filas sueltas se sueltan.
+        avisar(
+          actual.planilla.archivo,
+          `Filas sueltas de ${describirGrupo(clave)} descartadas: "${identificar(archivo)}" es el libro de ese mes.`,
+        );
+        ganadoras.set(clave, { planilla, filas, esPrincipal });
+        continue;
+      }
+      // La actual se leyó antes, así que manda (o también es principal y
+      // esta es suelta): esta pierde, y sus filas no se guardan.
+      avisar(
+        archivo,
+        esPrincipal || !actual.esPrincipal
+          ? motivoDeDescarte(actual.planilla.archivo, archivo, describirGrupo(clave))
+          : `Filas sueltas de ${describirGrupo(clave)} ignoradas: "${identificar(actual.planilla.archivo)}" es el libro de ese mes.`,
+      );
     }
   }
 
-  // Por período: las filas elegidas de compras y de ventas, y qué archivos las aportaron.
-  const porPeriodo = new Map<string, { filas: FilaDeLibro[]; archivos: Set<string> }>();
+  // Por período: las filas elegidas de compras y de ventas, y qué planillas las aportaron.
+  const porPeriodo = new Map<string, { filas: FilaDeLibro[]; planillas: Set<DatosDePlanilla> }>();
   let repetidos = 0;
   let totalFilas = 0;
-  for (const [clave, leida] of elegidas) {
+  for (const [clave, { planilla, filas, esPrincipal }] of ganadoras) {
     const periodo = clave.split('|')[0]!;
-    const destino = porPeriodo.get(periodo) ?? { filas: [], archivos: new Set<string>() };
+    const destino = porPeriodo.get(periodo) ?? { filas: [], planillas: new Set<DatosDePlanilla>() };
     porPeriodo.set(periodo, destino);
-    destino.archivos.add(leida.archivo.evidenciaId);
+    destino.planillas.add(planilla);
 
-    // Dentro de una misma planilla, una fila repetida sigue contando una vez.
+    if (!esPrincipal) {
+      avisar(
+        planilla.archivo,
+        `${describirGrupo(clave)} se calculó con ${filas.length} filas de esta planilla, cuyo mes principal es ` +
+          `${planilla.periodoPrincipal}: no hay otra planilla de ese mes. Revisar.`,
+      );
+    }
+
+    // Dentro de una misma planilla, una fila repetida cuenta una vez (vale la última).
     const unicas = new Map<string, FilaDeLibro>();
-    for (const fila of leida.grupos.get(clave)!) {
-      const id = claveDeComprobante(fila);
-      if (unicas.has(id)) repetidos += 1;
-      unicas.set(id, fila);
+    for (const fila of filas) unicas.set(claveDeComprobante(fila), fila);
+    const repetidasAca = filas.length - unicas.size;
+    if (repetidasAca > 0) {
+      repetidos += repetidasAca;
+      avisar(
+        planilla.archivo,
+        `${repetidasAca} filas repetidas de ${describirGrupo(clave)} dentro de la planilla se contaron una sola vez (vale la última).`,
+      );
     }
     destino.filas.push(...unicas.values());
     totalFilas += unicas.size;
@@ -321,7 +543,7 @@ async function liquidarCliente(
   let periodos = 0;
   let hallazgos = 0;
 
-  for (const [periodo, { filas: delPeriodo, archivos: usados }] of porPeriodo) {
+  for (const [periodo, { filas: delPeriodo, planillas: usadas }] of porPeriodo) {
     const resumen = resumirIva(delPeriodo, periodo);
 
     /*
@@ -334,13 +556,19 @@ async function liquidarCliente(
      *
      * Se deja así a propósito hasta tener los períodos completos y en orden —
      * arrastrar un saldo desde un período que falta daría un número peor que no
-     * arrastrarlo, porque parecería correcto. Queda anotado en el roadmap.
+     * arrastrarlo, porque parecería correcto. La tarea 138 del roadmap lo
+     * resuelve tomando el saldo declarado.
      */
     const determinacion = determinarIva({
       debitoFiscal: resumen.debitoFiscal,
       creditoFiscal: resumen.creditoFiscal,
       saldoAFavorAnterior: gs(0),
     });
+
+    // Las filas descartadas de una planilla se atribuyen a su mes principal.
+    const rechazadasDelPeriodo = [...usadas]
+      .filter((p) => p.periodoPrincipal === periodo)
+      .reduce((suma, p) => suma + p.filasDescartadas, 0);
 
     await deps.guardarLiquidacion({
       clienteId: cliente.id,
@@ -357,8 +585,8 @@ async function liquidarCliente(
       gravado10Ventas: resumen.gravado10Ventas,
       gravado5Ventas: resumen.gravado5Ventas,
       exentoVentas: resumen.exentoVentas,
-      archivosLeidos: usados.size,
-      filasRechazadas: rechazadas,
+      archivosLeidos: usadas.size,
+      filasRechazadas: rechazadasDelPeriodo,
       calculadoPorUsuarioId: usuarioId,
     });
 
@@ -372,10 +600,9 @@ async function liquidarCliente(
 
   return {
     periodos,
-    archivos: leidas.length,
-    ignorados,
+    archivos: planillas.length,
     filas: totalFilas,
-    rechazadas,
+    rechazadas: planillas.reduce((suma, p) => suma + p.filasDescartadas, 0),
     hallazgos,
     repetidos,
   };
@@ -387,7 +614,9 @@ export async function liquidarIvaDesdeLibros(
 ): Promise<ResumenDeLiquidacion> {
   const clientes = await deps.clientes.listar(null);
   const fallos: FalloDeLiquidacion[] = [];
-  const avisos: AvisoDeLiquidacion[] = [];
+  const avisos = new Avisos();
+  const ignorados: Ignorados = { cantidad: 0, lista: [] };
+  const clientesOmitidos: ClienteOmitido[] = [];
 
   let periodosCalculados = 0;
   let archivosLeidos = 0;
@@ -395,19 +624,29 @@ export async function liquidarIvaDesdeLibros(
   let filasRechazadas = 0;
   let hallazgosNuevos = 0;
   let comprobantesRepetidos = 0;
-  let archivosIgnorados = 0;
 
   for (const cliente of clientes) {
     if (!cliente.activo) continue;
 
-    const parcial = await liquidarCliente(deps, cliente, usuarioId, fallos, avisos);
+    let parcial;
+    try {
+      parcial = await liquidarCliente(deps, cliente, usuarioId, fallos, avisos, ignorados);
+    } catch (error) {
+      if (!(error instanceof ClienteOmitidoError)) throw error;
+      // No se escribió nada de este cliente: la liquidación anterior queda como
+      // estaba hasta la próxima corrida.
+      clientesOmitidos.push({
+        cliente: cliente.nombre,
+        motivo: `No se calculó en esta corrida porque una planilla no se pudo bajar (${error.message}).`,
+      });
+      continue;
+    }
     periodosCalculados += parcial.periodos;
     archivosLeidos += parcial.archivos;
     filasInterpretadas += parcial.filas;
     filasRechazadas += parcial.rechazadas;
     hallazgosNuevos += parcial.hallazgos;
     comprobantesRepetidos += parcial.repetidos;
-    archivosIgnorados += parcial.ignorados;
   }
 
   return {
@@ -417,8 +656,11 @@ export async function liquidarIvaDesdeLibros(
     filasRechazadas,
     hallazgosNuevos,
     comprobantesRepetidos,
-    archivosIgnorados,
-    avisos,
+    archivosIgnorados: ignorados.cantidad,
+    archivosIgnoradosLista: ignorados.lista,
+    avisos: avisos.lista,
+    avisosOmitidos: avisos.omitidos,
+    clientesOmitidos,
     fallos,
   };
 }
