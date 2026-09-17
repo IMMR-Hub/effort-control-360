@@ -29,6 +29,7 @@
 
 import type { FastifyBaseLogger } from 'fastify';
 
+import { MODELOS_DEL_RESPALDO } from '@effort/core';
 import type { DriveDeArchivos } from '@effort/drive';
 
 /** Carpeta propia del sistema. Ver `CLAUDE.md`, regla 5. */
@@ -44,36 +45,6 @@ const CARPETA_DE_RESPALDOS = 'EFFORT Control 360/Respaldo';
  * caber en memoria.
  */
 const TAMANO_QUE_LLAMA_LA_ATENCION_MB = 50;
-
-/**
- * Modelos a respaldar, en orden de dependencia.
- *
- * El orden importa al restaurar: un documento referencia un cliente, así que el
- * cliente entra primero. Restaurar en orden inverso falla por claves foráneas.
- */
-const MODELOS = [
-  'usuario',
-  'cliente',
-  'obligacionTributaria',
-  'obligacionDeCliente',
-  'reglaImpositiva',
-  'reglaNotificacion',
-  'evidencia',
-  'archivoDeOrigen',
-  'documento',
-  'procesoMensual',
-  'vencimiento',
-  'balance',
-  'exportacionSiga',
-  'comprobanteSiga',
-  'liquidacion',
-  'liquidacionIvaRg90',
-  'hallazgoDeLibroRg90',
-  'alerta',
-  'registroContacto',
-  'envioNotificacion',
-  'eventLog',
-] as const;
 
 /** Lo mínimo que este servicio necesita saber leer. Un cliente de Prisma sirve. */
 export interface LectorDeTablas {
@@ -108,7 +79,7 @@ export async function generarRespaldo(
   const salteados: string[] = [];
   let filas = 0;
 
-  for (const modelo of MODELOS) {
+  for (const modelo of MODELOS_DEL_RESPALDO) {
     const tabla = lector[modelo] as { findMany?: () => Promise<unknown[]> } | undefined;
     if (typeof tabla?.findMany !== 'function') {
       // Un modelo que no existe en este esquema no es un error: el respaldo

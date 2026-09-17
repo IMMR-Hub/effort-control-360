@@ -58,39 +58,17 @@ const { PrismaClient } = await import('@effort/api/node_modules/@prisma/client/d
 /**
  * Modelos a respaldar, en orden de dependencia.
  *
- * El orden importa para restaurar: un `documento` referencia un `cliente`, así
- * que el cliente tiene que entrar primero. Restaurar en el orden inverso al de
- * esta lista falla por claves foráneas.
+ * Hasta el 2026-09-16 esta lista vivía acá, copiada a mano y desalineada del
+ * esquema real: le faltaban `asignacionCliente`, `solicitudDocumentacion` y
+ * `lecturaDeDeclaracion`, y tenía dos nombres que ya no existen (`contacto`,
+ * `solicitud`) que se salteaban en silencio. Ahora es una sola lista
+ * compartida con el respaldo automático (`apps/api/src/servicios/respaldoAutomatico.ts`),
+ * con un test que la compara contra `schema.prisma`
+ * (`packages/core/test/modelosDelRespaldo.test.ts`).
+ *
+ * Requiere `npm run build --workspace @effort/core` si se editó la lista.
  */
-const MODELOS = [
-  'usuario',
-  'cliente',
-  'contacto',
-  'obligacionTributaria',
-  'obligacionDeCliente',
-  'reglaImpositiva',
-  'reglaNotificacion',
-  'evidencia',
-  // Las tres que siguen faltaban hasta el 2026-09-14: se agregaron al esquema y
-  // al respaldo automático, pero no acá. El respaldo manual previo a una
-  // migración salía "completo" sin los hallazgos ni el IVA calculado. Tiene que
-  // coincidir con `MODELOS` de `apps/api/src/servicios/respaldoAutomatico.ts`.
-  'archivoDeOrigen',
-  'documento',
-  'procesoMensual',
-  'vencimiento',
-  'balance',
-  'solicitud',
-  'exportacionSiga',
-  'comprobanteSiga',
-  'liquidacion',
-  'liquidacionIvaRg90',
-  'hallazgoDeLibroRg90',
-  'alerta',
-  'registroContacto',
-  'envioNotificacion',
-  'eventLog',
-];
+const { MODELOS_DEL_RESPALDO: MODELOS } = await import('@effort/core');
 
 /** `BigInt` no es serializable a JSON: se guarda como texto y se relee igual. */
 function serializar(clave, valor) {

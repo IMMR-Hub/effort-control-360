@@ -17,3 +17,4 @@ export * from './diasHabiles.js';
 export * from './seguimiento.js';
 export * from './vencimientosTributarios.js';
 export * from './clasificacionDeDocumentos.js';
+export * from './modelosDelRespaldo.js';
