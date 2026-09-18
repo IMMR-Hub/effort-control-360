@@ -887,6 +887,24 @@ Ninguna es urgente hoy, pero la 2 conviene hacerla igual, y la 1 conviene
 decidirla antes de cargar los 144 clientes reales — mover una base con datos
 es mucho más caro que elegir bien la región al principio.
 
+**Remedido el 2026-09-18 (tarea 116), contra el pooler de TRANSACCIÓN (6543,
+el que usa la app en producción, no el de sesión que usan los tests):** 10
+`SELECT 1` seguidos dieron `[2684, 457, 204, 781, 2095, 327, 392, 377, 1533,
+767]` ms — **promedio 962 ms, mínimo 204 ms, máximo 2.684 ms.** Una consulta
+real (contar alertas abiertas) tardó 306 ms, en línea con la tabla del
+2026-09-11. Dos cosas para leer esto bien: **(a)** el máximo de 2.684 ms
+supera el umbral de ~2 s que marca la tarea 116, pero **(b)** la variación
+entre corridas (204 ms a 2.684 ms, sobre la misma consulta) es demasiado
+grande para explicarse solo por distancia geográfica — esa parte es
+constante. Es más compatible con el pooler de transacción abriendo y
+cerrando conexiones bajo carga variable, o con inestabilidad de red del lado
+de quien mide, que se dio varias veces en esta misma sesión al conectar con
+Microsoft Graph (no relacionado a Supabase, pero sí un dato de que la red de
+este entorno tuvo cortes intermitentes ese día). **No se cambió
+`connection_limit` ni ninguna configuración de producción** — la tarea pide
+solo medir y anotar, y la decisión (mover de región, o no) sigue siendo de
+Daniel, como ya decía este punto.
+
 ---
 
 ## 19. Feriados, traslados por decreto y el segundo calendario de la DNIT — ABIERTO (2026-09-12)
