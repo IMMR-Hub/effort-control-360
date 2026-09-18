@@ -175,6 +175,20 @@ obedece mal, porque no se sabe qué caso de borde cubre.
    escrito ("BOLEETA"). *Lección: correr el código contra los archivos de verdad
    lo antes posible, y convertir cada rareza en un test con el dato textual.*
 
+9. **Un secreto pasado como argumento de un subproceso queda expuesto en
+   cualquier error.** Un script de prueba (no versionado, en el scratchpad de
+   una sesión de Claude) armó una llamada a `curl` con `AZURE_CLIENT_SECRET`
+   como argumento de línea de comandos (`-d client_secret=...`). Cuando el
+   comando falló por un corte de red, Node imprimió el comando completo —
+   secreto incluido — en el mensaje de error, y quedó en el chat y en un
+   archivo de log en disco (2026-09-18). Se roto el secreto en Azure AD el
+   mismo día. *Lección: un secreto nunca va como argumento de un subproceso
+   (`curl`, `node -e`, cualquier CLI) — va por la variable de entorno del
+   proceso hijo (`env` de `child_process`, nunca `args`), o por stdin. Un
+   argumento de proceso es visible en los logs de error, en la lista de
+   procesos del sistema, y en cualquier lugar que imprima el comando que
+   falló — no hace falta que nadie lo imprima a propósito.*
+
 **Cómo se usa esta sección:** antes de escribir algo que lea archivos externos,
 borre datos, o corra solo, buscá acá si ya nos pasó. Y cuando algo salga mal,
 agregá la entrada — el valor está en que siga creciendo.
@@ -225,6 +239,11 @@ agregá la entrada — el valor está en que siga creciendo.
 7. **Todo el código, comentarios, nombres y textos de interfaz en español.**
    Los términos técnicos del dominio son los que usa EFFORT (liquidación,
    timbrado, comprobante, retención).
+8. **Ningún secreto (Azure, Supabase, cookies, lo que sea) va como argumento
+   de línea de comandos de un subproceso** (`curl -d`, `node -e`, o
+   cualquier CLI), ni siquiera en un script de prueba fuera del repo. Va
+   por la variable de entorno del proceso hijo. Ver lección 9 más arriba —
+   costó un secreto de Azure AD expuesto en un chat, el 2026-09-18.
 
 ## Lo que sabemos del dominio, y costó descubrir
 
