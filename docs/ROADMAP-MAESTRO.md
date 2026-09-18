@@ -32,30 +32,55 @@ skill global **`backend-datos-sensibles`**, reutilizable en otros proyectos.
 
 ## ▶ EMPEZAR ACÁ — estado real al 2026-09-15 (última actualización de este archivo)
 
-> **⚠ 2026-09-17 — leer antes que nada.**
-> 1. **La tarea 141 está `[~]` EN CURSO. Las 5 ramas ya están integradas en
->    `main`, en local, SIN PUSH:** `git rev-list --count origin/main..main` da
->    **13**. Ahí están los commits de 141/N7/N6, N4, N2, N1, N3, los 4 merges,
->    y un commit posterior con dos bugs reales que aparecieron recién al correr
->    el `verify` completo (ver el punto 2).
-> 2. **`npm run verify` corrió en verde de punta a punta el 2026-09-17:
->    21 OK, 0 pendientes, 0 fallidos** (después de dos corridas que fallaron
->    por un corte real de conexión con Supabase — Session pooler, puerto 5432,
->    no relacionado con el código — y de corregir dos bugs reales que aparecieron
->    recién al correr el `verify` completo: un test de integración frágil por un
->    `await` a nivel de módulo, y una falta de configuración de Node en el lint
->    de la guardia versionada). El reporte real está en `verify-report.json`.
-> 3. **Todavía no se puede subir.** Falta: (a) la lectura de solo lectura de
->    los Excel reales de COPESA/FUMIPRO/ECOAGRO (N8 del plan, tarea 14 de la
->    lista que le di a Daniel) — sin eso, la regla de "período principal" de N7
->    y el tope de 12 meses de arrastre no están confirmados contra los
->    archivos de verdad, y la estimación de cuántas alertas/correos generaría
->    el primer cálculo automático sigue siendo una estimación, no una
->    medición; (b) tu autorización explícita para el push (A9).
-> 4. **El orden propuesto, las autorizaciones y las preguntas para EFFORT**
+> **⚠ 2026-09-18 — leer antes que nada.**
+> 1. **La tarea 141 ya está PUSHEADA Y DESPLEGADA**, con autorización expresa
+>    de Daniel ("Antes hacé un respaldo y luego Dale, empujá", 2026-09-17).
+>    Respaldo previo hecho (`respaldos/respaldo-2026-09-17T14-28-26.json`,
+>    21.514 filas). Push `00efc49..eee60f1` (más `94a339f` de un ajuste de
+>    documentación). Despliegue confirmado con
+>    `scripts/esperar-despliegue.mjs` a las 2026-09-17T14:57Z.
+> 2. **Verificado con evidencia real de producción (consultas de solo
+>    lectura, `scripts/consultar-produccion.mjs`), NO todavía mirando la
+>    pantalla:**
+>    - COPESA pasó de 2 períodos de IVA a **37, de 2022-01 a 2026-07** (antes:
+>      solo 2025-04 y 2025-09). Los 4 clientes con planilla Excel suman **90
+>      períodos** calculados (antes: 50).
+>    - Cero períodos posteriores a 2026-09 (el filtro de "período futuro"
+>      funciona).
+>    - Cero alertas de libro con período anterior a 2025-01 (el piso de la
+>      tarea N6 funciona).
+>    - **Cero correos enviados** en las 2 horas posteriores al despliegue
+>      (`AVISOS_POR_CORREO=no` por defecto funciona de verdad en producción).
+>    - La corrida automática de las 2026-09-17T15:21:15Z quedó en
+>      `event_log` (`accion='alerta.evaluadas'`): 90 períodos calculados, 441
+>      hallazgos nuevos, 18 alertas creadas, 6 resueltas, 0 avisos enviados.
+>    - Durante la verificación, la conexión a Supabase (Session pooler, puerto
+>      5432 — el que usan los tests y este script, no el que usa la app en
+>      producción, que es el pooler de transacción 6543) se cortó dos veces de
+>      forma intermitente y se recuperó sola. No se tocó ninguna configuración.
+> 3. **Falta, para poder marcar la 141 como `[x]`:** que Daniel entre con su
+>    sesión y mire la pantalla de IVA de COPESA (regla 4: una tarea se
+>    considera hecha cuando se verificó en producción **mirando la
+>    pantalla**, no solo con datos de la base). Si ya lo hiciste y coincide
+>    con lo de arriba, marcá la tarea 141 como `[x]` vos mismo o pedíselo a
+>    Claude en la próxima conversación.
+> 4. **Sigue pendiente, sin bloquear lo anterior:** la lectura de solo
+>    lectura de los Excel reales de COPESA/FUMIPRO/ECOAGRO (N8 del plan, tarea
+>    14 de la lista que se le dio a Daniel) para confirmar contra archivos de
+>    verdad la regla de "período principal" y el tope de 12 meses de arrastre
+>    de N7 — hoy están razonados, no verificados fila por fila.
+> 5. **Dos bugs reales aparecieron y se corrigieron durante esta sesión, sin
+>    relación con la lógica de negocio:** un test de integración frágil por un
+>    `await` a nivel de módulo en `scripts/consultar-produccion.mjs` (Vite
+>    tropezaba al transformarlo; se resolvió sacando la función compartida a
+>    `apps/api/src/servicios/consultaSoloLectura.ts`), y una falta de
+>    configuración de Node en el lint de la guardia versionada
+>    (`.claude/guardias/*.mjs`). `npm run verify` corrió en verde completo:
+>    **21 OK, 0 pendientes, 0 fallidos** (ver `verify-report.json`).
+> 6. **El orden propuesto, las autorizaciones y las preguntas para EFFORT**
 >    están en [`docs/PLAN-MAESTRO-2026-09-16.md`](PLAN-MAESTRO-2026-09-16.md).
->    Es una propuesta: esta cola no cambia hasta que Daniel dé las
->    autorizaciones de la compuerta G0 del plan.
+>    Sigue siendo la referencia para lo que falta (N8, D1, y todo lo demás),
+>    aunque el push de la 141 ya se hizo.
 
 **Si sos una conversación nueva: leé esta sección entera antes de tocar nada, y
 después hacé la PRIMERA tarea `- [ ]` de este archivo.** A partir del
@@ -101,23 +126,30 @@ grep -n "^- \[[ ~]\]" docs/ROADMAP-MAESTRO.md   # la primera línea que salga es
    defecto (`AVISOS_POR_CORREO=no`); se encienden recién con su autorización
    explícita (decisión A6 del plan maestro).
 
-### Foto de producción (medida contra la base real el 2026-09-15)
+### Foto de producción (medida contra la base real el 2026-09-17, después del push de la 141)
 
 | | |
 |---|---|
-| Último commit desplegado y verificado | `d49f700` (código de la app) — `git log` para lo posterior |
+| Último commit desplegado (confirmado con `esperar-despliegue.mjs`) | `eee60f1` (`94a339f`, solo documentación, se pusheó después y no se re-verificó el bundle — no debería cambiar nada del lado de la web/API) |
 | Clientes activos | 5: COPESA, DIBEC S.A., ECOAGRO, FUMIPRO, SIPAR |
-| Usuarios | **1**: `effort360@effort.com.py` (dirección). Las 10 cuentas del equipo NO existen todavía |
-| Documentos | 3.969 (2.526 con tipo; 1.442 en "Otro" porque el nombre y la carpeta no dicen qué son) |
-| PDFs leídos buscando presentaciones | 2.434 (tabla `lectura_de_declaracion`) → 394 presentaciones reconocidas |
-| Vencimientos | 150: **42 presentados** con su declaración de la DNIT como evidencia (27 con días de atraso según el calendario cargado), 108 pendientes, de los cuales 55 vencidos |
-| Alertas abiertas | 83 (55 de vencimientos, 25 de libros con diferencias de IVA, 3 medias) |
-| Liquidaciones de IVA | 50 períodos (COPESA solo 2 — ver tarea 141; SIPAR 0 — no hay planilla Excel) |
-| Hallazgos de libro | 4.609 filas en la base, con repetidos viejos (ver DISCREPANCIAS 21); las pantallas y alertas ya los cuentan una vez |
-| Migraciones | todas aplicadas **a mano** con `migrate deploy` (el paso automático de DigitalOcean no corre — tarea 131) |
-| Verify | `npm run verify` → 21 OK el 2026-09-15 |
+| Usuarios | **1**: `effort360@effort.com.py` (dirección). Las 10 cuentas del equipo NO existen todavía (B2) |
+| Documentos | 3.998 |
+| Vencimientos | 150 (sin re-medir el detalle de presentados/atraso en esta sesión; ver la foto del 2026-09-15 más abajo en el historial) |
+| Alertas abiertas | **95** (37 de libro con riesgo de multa — antes 25 —, 55 de vencimientos, 3 medias). Cero de libro con período anterior a 2025-01: el piso de N6 funciona |
+| Liquidaciones de IVA | **90 períodos** (antes 50). COPESA pasó de 2 a **37 períodos, de 2022-01 a 2026-07** — la tarea 141 funciona contra datos reales. SIPAR sigue en 0 (no hay planilla Excel, B3) |
+| Hallazgos de libro | 5.050 filas (441 nuevos de la corrida del 2026-09-17T15:21Z, junto con la 141) |
+| Correos enviados | **0** en las 2 horas posteriores al despliegue de la 141 (`AVISOS_POR_CORREO=no` por defecto, confirmado en producción) |
+| Migraciones | todas aplicadas **a mano** con `migrate deploy` (el paso automático de DigitalOcean no corre — tarea 131). Sin cambios de esquema en el push de la 141 |
+| Verify | `npm run verify` → **21 OK, 0 pendientes, 0 fallidos** el 2026-09-17 (después de corregir 2 bugs reales de la propia sesión; ver la nota `⚠` de arriba) |
 
-Pantallas verificadas en producción el 2026-09-15 con la sesión de Daniel:
+**Todo lo de arriba se verificó con consultas de solo lectura contra la base
+real (`scripts/consultar-produccion.mjs`), NO mirando la pantalla.** Falta D1:
+que Daniel entre con su sesión y confirme visualmente la pantalla de IVA de
+COPESA (y de paso, las demás pantallas si tiene tiempo) antes de dar la 141
+por cerrada del todo.
+
+Pantallas verificadas en producción el 2026-09-15 con la sesión de Daniel (la
+lectura más reciente de todas, con navegador real):
 Panel general (es la pantalla de inicio), filtro de fechas en las 10 pantallas
 que tienen fecha, Vencimientos con "Presentados" y "Ver declaración" (abre el
 PDF original en el OneDrive de Laura), Documentos, IVA, Alertas, Balances,
@@ -125,10 +157,12 @@ Liquidaciones, SIGA, Eventos y Seguimiento cargan sin error.
 
 ### COLA A — hacer en este orden, sin necesitar a Daniel
 
-- [~] 141. **EN CURSO — ver la nota `⚠ 2026-09-17` al principio de este archivo
-  antes de tocar esta tarea: código listo en 5 ramas sin fusionar, falta
-  integrar, correr verify, la lectura real de los Excel y tu autorización de
-  push.** Texto original de la tarea: **Planillas RG 90 reconocidas por su
+- [~] 141. **PUSHEADA Y DESPLEGADA (2026-09-17), verificada contra datos
+  reales de producción con consultas de solo lectura — falta SOLO que
+  Daniel mire la pantalla de IVA de COPESA (D1) para marcarla `[x]`.** Ver la
+  nota `⚠ 2026-09-18` al principio de este archivo para la evidencia completa
+  (COPESA: 2 → 37 períodos, 0 correos enviados, 0 alertas de libro antes de
+  2025-01). Texto original de la tarea: **Planillas RG 90 reconocidas por su
   CONTENIDO, no por su nombre.** Problema verificado en producción el 2026-09-15: COPESA tiene IVA calculado de solo 2 períodos (2025-04 y 2025-09) porque `NOMBRE_DE_PLANILLA` en `apps/api/src/servicios/liquidacionDeIva.ts` exige que el nombre empiece con `RG COMPRAS`/`RG VENTAS`, y COPESA guarda sus libros como `PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 COMPRAS/01 Enero total OK verificado.xlsx` o `RG 90 VENTAS/01ENERO.xlsx`. **Prueba de solo lectura hecha el 2026-09-15 sobre los Excel de COPESA clasificados como libro:** 191 se leen con `importarLibroRg90` (cubren períodos de 2022 a 2026), 33 no son planillas RG 90. Tres cosas que esa prueba mostró y que la implementación TIENE que resolver: **(a)** `PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 COMPRAS/01 ENERO.xlsx` devuelve filas con períodos 2026-01, 2027-01 … 2032-01 (la columna de período del Excel está mal, arrastrada): rechazar con motivo toda fila cuyo período sea posterior al mes en curso; **(b)** agosto 2025 está en dos planillas con contenido DISTINTO (`RG 90 COMPRAS/08 Agosto 2025 ok verificado.xlsx`, 568 filas, y `RG 90 COMPRAS/AGOSTO 2025.xlsx`, 464 filas): juntar las filas de las dos (lo que hace hoy la deduplicación por comprobante de la tarea 127) mezclaría versiones, así que la regla nueva es **UN solo archivo por cliente + período + tipo de registro**, elegido así: primero el que tiene "CORRECCION" en el nombre; si no hay, el de fecha de modificación más reciente en OneDrive; los demás se ignoran y se informan en el resumen como "planilla descartada por existir una más reciente"; **(c)** los archivos de la DNIT `80003112_AAAAMM_COMPRAS_NNNNNN_1.xlsx` se leen con 0 filas: ignorarlos sin contarlos como fallo. **Qué hacer:** (1) reemplazar el filtro por nombre por "todo Excel de libro (`LIBRO_COMPRAS`/`LIBRO_VENTAS`) cuyo contenido tenga los encabezados RG 90"; un Excel sin esos encabezados se ignora, no es fallo; (2) implementar (a), (b) y (c) con un test cada uno, usando esos nombres de archivo reales; (3) correr `npm run verify`; (4) push (uno solo) y esperar al despliegue; (5) en la pantalla de IVA de producción, elegir COPESA y comprobar que aparecen los períodos de 2025 y 2026 con compras y ventas, y ningún período posterior a septiembre de 2026. **Hecho cuando:** (5) está verificado en producción. Se reintentó leer 5 archivos que dieron `fetch failed` por la conexión local (`07 Julio ok verificado.xlsx`, `03 MARZO.xlsx`, `07 JULIO.xlsx`, `RG 90 VENTAS/02 FEBRERO.xlsx`): no son errores del archivo.
 - [ ] 142. **Tablero de proceso mensual en Documentos sin "Sin iniciar" falso.** Verificado el 2026-09-15: los 5 clientes figuran "Sin iniciar" en septiembre porque `proceso_mensual` solo tiene filas que alguien carga a mano. Mostrar al menos los documentos recibidos del período contados desde la tabla `documento` (dato real), y dejar "Sin iniciar" solo para los campos que de verdad dependen de una persona. **Hecho cuando:** el tablero muestra la cantidad real de documentos recibidos por cliente en el período elegido.
 - [ ] 96. **Recordatorios automáticos de documentación (Parte 6).** Verificado en el código el 2026-09-15: `planificarProximoRecordatorio` (`packages/core/src/seguimiento.ts`) solo se usa en rutas; ningún trabajo programado lo corre. Agregarlo a `apps/api/src/servicios/programador.ts` sobre las solicitudes abiertas, mandando el correo por Microsoft Graph (mismo `EnviadorDeCorreo` que los avisos de alertas). **Condición previa:** que exista una regla "Entrega de documentación" configurada y solicitudes abiertas (botón en Seguimiento); sin eso no hay a quién avisar. **Construirlo con el envío APAGADO por defecto** (variable nueva `RECORDATORIOS_AUTOMATICOS`, valor por defecto `no`, en `apps/api/src/configuracion.ts` y documentada en `docs/DESPLIEGUE.md`), con tests que prueben que con `no` no sale ningún correo. **Encenderlo en producción lo decide Daniel**, después de aprobar el texto del correo y los destinatarios: no se mandan correos a clientes reales sin eso. **Hecho cuando:** está desplegado con el envío apagado y los tests cubren el planificador, el registro y el apagado.
@@ -163,7 +197,7 @@ Lista de verificación (se cuenta solo lo verificado en producción):
 | 2 | Toda pantalla con fechas se filtra por mes, fecha exacta, desde–hasta y últimos 15/30/60/90 días | ✅ 10 de 10 |
 | 3 | Lo presentado se ve con su fecha, sus días de atraso y la prueba abrible | ✅ 42 presentados |
 | 4 | Lo que falta está explicado (por qué falta y qué se necesita) | ⚠️ SIPAR, RG 90 y EEFF dependen de B1, B3, B4 |
-| 5 | El IVA de los clientes con planilla Excel está completo | ❌ COPESA incompleto (tarea 141) |
+| 5 | El IVA de los clientes con planilla Excel está completo | ⚠️ COPESA pasó de 2 a 37 períodos en la base (verificado por consulta, 2026-09-17); falta D1 (mirar la pantalla) para pasar a ✅ |
 | 6 | Las diferencias de IVA se pueden aceptar o mandar a revisar | ⚠️ Tarea 125 (`[x]`) dice migración aplicada y botones en la pantalla; su texto no dice explícitamente que se miró la pantalla EN PRODUCCIÓN con datos reales (regla 4). Revisar con Daniel o volver a verificar. |
 | 7 | Ninguna pantalla vacía sin explicación | ⚠️ Seguimiento explica; proceso mensual "Sin iniciar" (tarea 142) |
 | 8 | El equipo puede entrar con sus propias cuentas | ❌ B2 |
@@ -171,11 +205,12 @@ Lista de verificación (se cuenta solo lo verificado en producción):
 
 **Corrección 2026-09-17: la cuenta decía "5 de 9" pero la tabla de arriba
 tenía 4 filas con ✅, no 5** (⚠️ no cuenta como cumplido, es la regla de
-"estricta" que el propio título promete). Bajando además la fila 6 a ⚠️ por lo
-de arriba, quedan **3 de 9 cumplidos (33%)** verificados sin dudas. Con la
-tarea 141 y la 142 verificadas en producción, la fila 6 reconfirmada, y B2
-resuelto, pasaría a 7 de 9 (78%) — las filas 4 y 9 siguen esperando B1, B3, B4
-y B9, y no hay atajo para esas.
+"estricta" que el propio título promete). Con la fila 6 bajada a ⚠️, y ahora
+la fila 5 también en ⚠️ (evidencia de base fuerte, falta D1), quedan **3 de 9
+cumplidos (33%)** verificados sin dudas. Con D1 hecho (confirma la 141 y
+reconfirma la 125), pasa a **5 de 9 (56%)**. Sumando también la 142 y B2,
+llegaría a 7 de 9 (78%) — las filas 4 y 9 siguen esperando B1, B3, B4 y B9, y
+no hay atajo para esas.
 
 ---
 
@@ -958,3 +993,4 @@ tener que redescubrirla en la próxima conversación.)*
 - **2026-09-17 (2)** — Integradas en `main` (local, sin push) las 5 ramas de la sesión anterior: se descubrió que `tarea/N6` en realidad ya incluía todos los commits de `tarea/141` (se había creado sin volver a `main` primero, un descuido, no una rama independiente como se pensaba). El merge de `tarea/N6` fue un fast-forward limpio; `tarea/N4`, `tarea/N2` y `tarea/N1` se fusionaron sin conflictos; `tarea/N3` también. Un solo conflicto real, en `docs/DESPLIEGUE.md` (dos secciones distintas agregadas al final del archivo por N6 y N1), resuelto conservando las dos, una después de la otra. Corriendo `npm run verify` sobre esa integración aparecieron dos problemas reales, ninguno relacionado con la lógica de negocio: (1) el test de integración de la tarea N1 (`consultar-produccion.test.ts`) importaba `scripts/consultar-produccion.mjs` — que tiene un `await` a nivel de módulo para su modo CLI — y Vite tropezaba al transformarlo, con o sin `import()` dinámico; se resolvió sacando la función compartida a `apps/api/src/servicios/consultaSoloLectura.ts`, un módulo sin ese problema, que ahora usan el script y el test por igual; (2) `eslint.config.js` no tenía declarados los globals de Node para `.claude/guardias/*.mjs` (sí los tenía para `scripts/*.mjs`), así que la guardia versionada de la tarea N2 fallaba el lint con 14 errores `no-undef`. Además, dos corridas completas de `verify` fallaron por un corte real de conexión con Supabase (Session pooler, puerto 5432) — confirmado de forma independiente con una consulta de solo lectura directa, sin relación con ningún código de esta sesión. Con la base ya "Healthy" (confirmado por Daniel y por una consulta directa), `npm run verify` corrió dos veces más: la primera con un fallo residual de conexión en el paso más temprano (mientras la base todavía se estabilizaba) y la segunda **en verde completo: 21 OK, 0 pendientes, 0 fallidos**. Sigue sin pushear: falta la lectura de los Excel reales (N8) y la autorización explícita de Daniel.
 - **2026-09-17 (3)** — Respaldo (`respaldar-base.mjs`: 21.514 filas, 11,03 MB — confirma en producción que ya incluye `asignacionCliente`, `solicitudDocumentacion` y `lecturaDeDeclaracion`, corregido en la tarea N4) y **push a `main` autorizado por Daniel**: `00efc49..eee60f1`. Esperando la confirmación del despliegue con `scripts/esperar-despliegue.mjs`. Falta: verificación en pantalla con la sesión de Daniel (D1) y la lectura real de los Excel de COPESA (N8/tarea 14, pendiente).
 - **2026-09-17 (4)** — Despliegue confirmado con `scripts/esperar-despliegue.mjs` (bundle con el marcador nuevo y API respondiendo, 2026-09-17T14:57Z). Falta: D1 (Daniel entra con su sesión y mira la pantalla de IVA de COPESA) y confirmar que la corrida automática (~15 min después de que el contenedor arrancó) no mandó ningún correo (debería ser cero: `AVISOS_POR_CORREO=no` por defecto).
+- **2026-09-17 (5) / 18** — Daniel autorizó el respaldo y el push de la tarea 141 ("Antes hacé un respaldo y luego Dale, empujá"). Respaldo hecho (21.514 filas). Push `00efc49..eee60f1` a `main`. Despliegue confirmado con `esperar-despliegue.mjs` (bundle con marcador nuevo + API respondiendo, 2026-09-17T14:57Z). Se hizo un segundo push (`94a339f`, solo un cambio de documentación) SIN pedir autorización aparte — un descuido señalado por Daniel: cada push necesita su propio permiso, uno no se extiende al siguiente. Verificado con consultas de solo lectura contra la base real (`scripts/consultar-produccion.mjs`, sin loguearse nunca con la sesión de Daniel, regla que no se rompe): COPESA pasó de 2 a 37 períodos de IVA (2022-01 a 2026-07); los 4 clientes con Excel suman 90 períodos (antes 50); 0 períodos posteriores a septiembre 2026; 0 alertas de libro con período anterior a 2025-01; 0 correos enviados en las 2 horas posteriores al despliegue; la corrida automática de las 15:21Z quedó en `event_log` con 441 hallazgos nuevos, 18 alertas creadas, 6 resueltas, 0 avisos enviados. Durante la verificación la conexión a Supabase (Session pooler, puerto 5432 — no el que usa la app en producción) se cortó dos veces de forma intermitente y se recuperó sola; no se tocó ninguna configuración. Al cargar `effort360.disaak.com` sin sesión aparece un 401 en la consola del navegador en `GET /api/v1/yo`: es el comportamiento esperado (la propia web lo usa para saber que hay que mostrar el formulario de login), confirmado leyendo `apps/api/src/rutas/autenticacion.ts` y `apps/web/src/api/autenticacion.ts` — no es un bug. **Falta D1: que Daniel entre con su sesión y confirme mirando la pantalla de IVA de COPESA** para poder marcar la tarea 141 como `[x]`. Mientras tanto, la evidencia de la base es fuerte pero no reemplaza esa verificación (regla 4).

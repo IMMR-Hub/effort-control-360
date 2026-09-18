@@ -38,7 +38,7 @@ de Lili o Laura), **Daniel** (decisión o acción en una cuenta), **Claude**
 | 22 | Autofacturas con columnas en cero | Abierto | EFFORT | ¿SIGA las exporta así a propósito? |
 | 23 | Presentaciones desde el PDF de la DNIT | **Cerrado en código y producción 2026-09-15** | nadie | 42 de 150 presentados; lo que falta está en 27 y 28 |
 | 24 | IVA sumaba planillas repetidas | Cerrado | EFFORT (validar) | Confirmar que "la más reciente" es la buena cuando no hay "CORRECCION" (ECOAGRO feb-2025) |
-| 25 | Planillas RG 90 reconocidas por nombre | **Corregido en código 2026-09-16, falta producción** | Claude / EFFORT | Tarea 141: desplegar y verificar COPESA en IVA; preguntar si una "CORRECCION" es siempre el libro completo |
+| 25 | Planillas RG 90 reconocidas por nombre | **Desplegado y verificado por base 2026-09-17, falta D1 (mirar la pantalla)** | Claude / EFFORT | Tarea 141: falta que Daniel mire la pantalla de IVA de COPESA; preguntar si una "CORRECCION" es siempre el libro completo (B7/P1) |
 | 26 | Prórroga de EEFF 2025 (RG DNIT 50/2026) | **Abierto — primera pregunta** | EFFORT | Confirmar si aplica; cambia 3 "atrasos" de ~60 días a "a tiempo" |
 | 27 | SIPAR sin declaraciones en OneDrive | Abierto | EFFORT | Dónde guardan sus DDJJ 2025-2026 y el Excel de la RG 90 |
 | 28 | Talones de RG 90 que no están | Abierto | EFFORT | Dónde guardan los talones de DIBEC, FUMIPRO, ECOAGRO y parte de COPESA |
@@ -1271,7 +1271,7 @@ legales, extractos y los TXT de la RG 90).
 
 ---
 
-## 25. Las planillas RG 90 se reconocían por su nombre — ABIERTO (2026-09-15)
+## 25. Las planillas RG 90 se reconocían por su nombre — DESPLEGADO, FALTA D1 (2026-09-17)
 
 **Qué pasa.** `NOMBRE_DE_PLANILLA` en `apps/api/src/servicios/liquidacionDeIva.ts`
 solo acepta archivos cuyo nombre empieza con `RG COMPRAS` o `RG VENTAS`
@@ -1352,6 +1352,47 @@ desplegar todavía.** La regla 2 de arriba cambió así:
   avisan; una planilla de más de 15 MB no se baja.
 - `filasRechazadas` y `archivosLeidos` de cada liquidación son ahora de ese
   período, no del cliente entero.
+
+**2026-09-17 — pusheado, desplegado y verificado por base real, falta D1.**
+Con autorización expresa de Daniel ("Antes hacé un respaldo y luego Dale,
+empujá"): respaldo (`respaldos/respaldo-2026-09-17T14-28-26.json`, 21.514
+filas), push `00efc49..eee60f1`, despliegue confirmado con
+`esperar-despliegue.mjs` (2026-09-17T14:57Z).
+
+Verificado con consultas de solo lectura contra producción
+(`scripts/consultar-produccion.mjs`, nunca con la sesión de Daniel):
+
+- **COPESA: 2 → 37 períodos de IVA, de 2022-01 a 2026-07.** Antes solo
+  2025-04 y 2025-09.
+- Los 4 clientes con planilla Excel suman **90 períodos** (antes 50).
+- **Cero** filas con período posterior a 2026-09: el filtro de "período
+  futuro" funciona con datos reales.
+- **Cero** alertas de libro con período anterior a 2025-01: el piso de la
+  tarea N6 (`PRIMER_PERIODO_CON_ALERTAS_DE_LIBRO`) funciona.
+- **Cero** correos enviados en las 2 horas posteriores al despliegue:
+  `AVISOS_POR_CORREO=no` por defecto funciona de verdad, no solo en los
+  tests.
+- La corrida automática de las 2026-09-17T15:21:15Z quedó registrada en
+  `event_log` (`accion='alerta.evaluadas'`): 90 períodos calculados, 441
+  hallazgos nuevos, 18 alertas creadas, 6 resueltas, 0 avisos enviados.
+
+**Lo que esto NO prueba todavía:** que la regla de "período principal" y el
+tope de 12 meses de arrastre (N7) eligieron la planilla CORRECTA en cada
+caso — eso necesita leer los Excel reales de COPESA (tarea 14/N8, sigue
+pendiente) y que Daniel confirme mirando la pantalla de IVA (D1, regla 4 de
+`docs/ROADMAP-MAESTRO.md`). Sin esos dos pasos, el número "37 períodos" está
+verificado en cantidad, pero no en que cada período haya elegido la planilla
+que corresponde.
+
+**Efecto colateral notado durante la verificación, no relacionado con el
+código de esta sesión:** la conexión a Supabase por el Session pooler
+(puerto 5432 — el que usan los tests y `consultar-produccion.mjs`, NO el que
+usa la app en producción, que es el pooler de transacción 6543) se cortó dos
+veces de forma intermitente durante media hora aproximadamente, y se
+recuperó sola sin que se tocara ninguna configuración. Anotado por si se
+repite: no parece relacionado con el volumen de conexiones de esta sesión en
+particular (se repitió incluso después de esperar y con pocas conexiones
+simultáneas), pero tampoco se descartó como causa.
 
 ---
 
