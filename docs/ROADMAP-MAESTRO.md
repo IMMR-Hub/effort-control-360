@@ -157,10 +157,12 @@ Liquidaciones, SIGA, Eventos y Seguimiento cargan sin error.
 
 ### COLA A — hacer en este orden, sin necesitar a Daniel
 
-- [~] 141. **PUSHEADA Y DESPLEGADA (2026-09-17), verificada contra datos
-  reales de producción con consultas de solo lectura — falta SOLO que
-  Daniel mire la pantalla de IVA de COPESA (D1) para marcarla `[x]`.** Ver la
-  nota `⚠ 2026-09-18` al principio de este archivo para la evidencia completa
+- [x] 141. **PUSHEADA, DESPLEGADA Y VERIFICADA EN PANTALLA (D1, 2026-09-18).**
+  Daniel entró con su sesión real en producción; con su autorización, Claude
+  navegó y leyó la pantalla de IVA de COPESA: último período 2026-07 (306
+  comprobantes), 2025 y 2026 completos con compras y ventas, ningún período
+  posterior. De paso confirmó también el criterio 6 (aceptar/revisar
+  hallazgos). Ver la nota `⚠ 2026-09-18` al principio de este archivo para la evidencia completa
   (COPESA: 2 → 37 períodos, 0 correos enviados, 0 alertas de libro antes de
   2025-01). Texto original de la tarea: **Planillas RG 90 reconocidas por su
   CONTENIDO, no por su nombre.** Problema verificado en producción el 2026-09-15: COPESA tiene IVA calculado de solo 2 períodos (2025-04 y 2025-09) porque `NOMBRE_DE_PLANILLA` en `apps/api/src/servicios/liquidacionDeIva.ts` exige que el nombre empiece con `RG COMPRAS`/`RG VENTAS`, y COPESA guarda sus libros como `PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 COMPRAS/01 Enero total OK verificado.xlsx` o `RG 90 VENTAS/01ENERO.xlsx`. **Prueba de solo lectura hecha el 2026-09-15 sobre los Excel de COPESA clasificados como libro:** 191 se leen con `importarLibroRg90` (cubren períodos de 2022 a 2026), 33 no son planillas RG 90. Tres cosas que esa prueba mostró y que la implementación TIENE que resolver: **(a)** `PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 COMPRAS/01 ENERO.xlsx` devuelve filas con períodos 2026-01, 2027-01 … 2032-01 (la columna de período del Excel está mal, arrastrada): rechazar con motivo toda fila cuyo período sea posterior al mes en curso; **(b)** agosto 2025 está en dos planillas con contenido DISTINTO (`RG 90 COMPRAS/08 Agosto 2025 ok verificado.xlsx`, 568 filas, y `RG 90 COMPRAS/AGOSTO 2025.xlsx`, 464 filas): juntar las filas de las dos (lo que hace hoy la deduplicación por comprobante de la tarea 127) mezclaría versiones, así que la regla nueva es **UN solo archivo por cliente + período + tipo de registro**, elegido así: primero el que tiene "CORRECCION" en el nombre; si no hay, el de fecha de modificación más reciente en OneDrive; los demás se ignoran y se informan en el resumen como "planilla descartada por existir una más reciente"; **(c)** los archivos de la DNIT `80003112_AAAAMM_COMPRAS_NNNNNN_1.xlsx` se leen con 0 filas: ignorarlos sin contarlos como fallo. **Qué hacer:** (1) reemplazar el filtro por nombre por "todo Excel de libro (`LIBRO_COMPRAS`/`LIBRO_VENTAS`) cuyo contenido tenga los encabezados RG 90"; un Excel sin esos encabezados se ignora, no es fallo; (2) implementar (a), (b) y (c) con un test cada uno, usando esos nombres de archivo reales; (3) correr `npm run verify`; (4) push (uno solo) y esperar al despliegue; (5) en la pantalla de IVA de producción, elegir COPESA y comprobar que aparecen los períodos de 2025 y 2026 con compras y ventas, y ningún período posterior a septiembre de 2026. **Hecho cuando:** (5) está verificado en producción. Se reintentó leer 5 archivos que dieron `fetch failed` por la conexión local (`07 Julio ok verificado.xlsx`, `03 MARZO.xlsx`, `07 JULIO.xlsx`, `RG 90 VENTAS/02 FEBRERO.xlsx`): no son errores del archivo.
@@ -191,26 +193,23 @@ respuesta, se convierten en tarea de la COLA A.
 
 Lista de verificación (se cuenta solo lo verificado en producción):
 
-| # | Criterio | Estado 2026-09-15 |
+| # | Criterio | Estado 2026-09-18 |
 |---|---|---|
 | 1 | Se entra y la primera pantalla muestra datos reales | ✅ Panel general |
 | 2 | Toda pantalla con fechas se filtra por mes, fecha exacta, desde–hasta y últimos 15/30/60/90 días | ✅ 10 de 10 |
 | 3 | Lo presentado se ve con su fecha, sus días de atraso y la prueba abrible | ✅ 42 presentados |
 | 4 | Lo que falta está explicado (por qué falta y qué se necesita) | ⚠️ SIPAR, RG 90 y EEFF dependen de B1, B3, B4 |
-| 5 | El IVA de los clientes con planilla Excel está completo | ⚠️ COPESA pasó de 2 a 37 períodos en la base (verificado por consulta, 2026-09-17); falta D1 (mirar la pantalla) para pasar a ✅ |
-| 6 | Las diferencias de IVA se pueden aceptar o mandar a revisar | ⚠️ Tarea 125 (`[x]`) dice migración aplicada y botones en la pantalla; su texto no dice explícitamente que se miró la pantalla EN PRODUCCIÓN con datos reales (regla 4). Revisar con Daniel o volver a verificar. |
-| 7 | Ninguna pantalla vacía sin explicación | ⚠️ Seguimiento explica; proceso mensual "Sin iniciar" (tarea 142) |
-| 8 | El equipo puede entrar con sus propias cuentas | ❌ B2 |
+| 5 | El IVA de los clientes con planilla Excel está completo | **✅ D1 hecho el 2026-09-18** — Daniel entró con su sesión, Claude navegó con su autorización: la tabla "IVA por período" de COPESA en producción muestra 2026-07 como último período (306 comprobantes), 2025 y 2026 completos con compras y ventas reales, ningún período posterior. |
+| 6 | Las diferencias de IVA se pueden aceptar o mandar a revisar | **✅ Confirmado el mismo D1**: la pantalla IVA muestra "Qué revisar antes de presentar" con contadores reales (115 con riesgo de multa, Gs. 26.553 en riesgo) y los botones "Aceptar"/"Revisar" presentes por hallazgo. |
+| 7 | Ninguna pantalla vacía sin explicación | ⚠️ Seguimiento explica; tarea 142 desplegada el 2026-09-18 (bundle confirmado) pero falta reconfirmar en pantalla que la columna "Recibidos" muestra el conteo real — el intento de hoy se cortó por un cuelgue del navegador, no por un error del sistema |
+| 8 | El equipo puede entrar con sus propias cuentas | ❌ B2 — el script ya está listo, falta que Daniel lo corra (`node scripts/crear-equipo.mjs`) |
 | 9 | Los atrasos reales avisan | ❌ tarea 130, bloqueada por B1 (ver B9) |
 
-**Corrección 2026-09-17: la cuenta decía "5 de 9" pero la tabla de arriba
-tenía 4 filas con ✅, no 5** (⚠️ no cuenta como cumplido, es la regla de
-"estricta" que el propio título promete). Con la fila 6 bajada a ⚠️, y ahora
-la fila 5 también en ⚠️ (evidencia de base fuerte, falta D1), quedan **3 de 9
-cumplidos (33%)** verificados sin dudas. Con D1 hecho (confirma la 141 y
-reconfirma la 125), pasa a **5 de 9 (56%)**. Sumando también la 142 y B2,
-llegaría a 7 de 9 (78%) — las filas 4 y 9 siguen esperando B1, B3, B4 y B9, y
-no hay atajo para esas.
+**Actualizado 2026-09-18: con D1 hecho, quedan 5 de 9 cumplidos sin dudas
+(56%).** Faltan: la 142 reconfirmada en pantalla (7), B2 (8, ya listo del
+lado del código, solo falta que Daniel corra el script), y las filas 4 y 9,
+que siguen esperando B1, B3, B4 y B9 — preguntas ya mandadas a Laura y Lili
+el 2026-09-18 (`docs/propuestas/PREGUNTAS-LAURA-LILI-2026-09-18.md`).
 
 ---
 
