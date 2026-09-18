@@ -513,6 +513,42 @@ describe('proceso mensual', () => {
     expect(procesos[0].clienteId).toBe(MIO);
   });
 
+  it('documentosReales cuenta desde la tabla documento, incluso sin fila de proceso mensual (tarea 142)', async () => {
+    await ctx.documentos.registrar({
+      clienteId: MIO,
+      periodo: '2026-03',
+      tipo: 'FACTURA_COMPRA',
+      canalRecepcion: 'ONEDRIVE',
+      recibidoEn: new Date('2026-03-10T12:00:00Z'),
+      rucEmisor: null, timbrado: null, numeroComprobante: null,
+      total: null, tasa: null, anulado: false,
+      evidenciaId: null, observaciones: null,
+      creadoPorUsuarioId: 'usr-direccion',
+    });
+    const rechazado = await ctx.documentos.registrar({
+      clienteId: MIO,
+      periodo: '2026-03',
+      tipo: 'FACTURA_COMPRA',
+      canalRecepcion: 'ONEDRIVE',
+      recibidoEn: new Date('2026-03-11T12:00:00Z'),
+      rucEmisor: null, timbrado: null, numeroComprobante: null,
+      total: null, tasa: null, anulado: false,
+      evidenciaId: null, observaciones: null,
+      creadoPorUsuarioId: 'usr-direccion',
+    });
+    await ctx.documentos.cambiarEstado(rechazado.id, 'RECHAZADO', 'Motivo de prueba', 'usr-direccion');
+
+    // Sin ninguna fila en proceso_mensual: el cliente está "Sin iniciar" y
+    // aun así el conteo real tiene que aparecer.
+    const respuesta = await ctx.app.inject({
+      method: 'GET', url: '/api/v1/proceso-mensual/2026-03', headers: { cookie: coordinador },
+    });
+
+    const { procesos, documentosReales } = JSON.parse(respuesta.body);
+    expect(procesos).toHaveLength(0);
+    expect(documentosReales[MIO]).toBe(1);
+  });
+
   it('un auxiliar puede editar el proceso, un solo_lectura no', async () => {
     const conAuxiliar = await ctx.app.inject({
       method: 'PUT', url: `/api/v1/clientes/${MIO}/proceso-mensual/2026-03`,

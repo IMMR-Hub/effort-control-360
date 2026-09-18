@@ -421,9 +421,16 @@ export async function registrarRutasDeDocumentos(
     const { periodo } = z.object({ periodo: periodoSchema }).strict().parse(peticion.params);
     const sujeto = autorizar(peticion, 'proceso_mensual', 'ver');
 
-    const filas = await deps.procesoMensual.listar(periodo, filtroDeClientes(sujeto));
+    const [filas, documentosReales] = await Promise.all([
+      deps.procesoMensual.listar(periodo, filtroDeClientes(sujeto)),
+      deps.documentos.contarPorCliente(periodo, filtroDeClientes(sujeto)),
+    ]);
 
-    return { periodo, procesos: filas.map((fila) => importesASalida(fila, IMPORTES_PROCESO)) };
+    return {
+      periodo,
+      procesos: filas.map((fila) => importesASalida(fila, IMPORTES_PROCESO)),
+      documentosReales,
+    };
   });
 
   app.get('/api/v1/clientes/:clienteId/proceso-mensual/:periodo', async (peticion) => {

@@ -107,9 +107,12 @@ export interface ProcesoMensual {
   readonly observaciones: string | null;
 }
 
-export function listarProcesoMensualPorPeriodo(
-  periodo: string,
-): Promise<{ periodo: string; procesos: readonly ProcesoMensual[] }> {
+export function listarProcesoMensualPorPeriodo(periodo: string): Promise<{
+  periodo: string;
+  procesos: readonly ProcesoMensual[];
+  /** Cantidad real de documentos recibidos por cliente, contada desde `documento` (tarea 142). */
+  documentosReales: Readonly<Record<string, number>>;
+}> {
   return peticion('GET', `/api/v1/proceso-mensual/${periodo}`);
 }
 

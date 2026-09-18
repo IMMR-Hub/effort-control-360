@@ -7,7 +7,11 @@
  *     elegido — "¿qué cliente está trabado y por qué?". Un cliente sin fila
  *     todavía (nadie abrió su seguimiento este mes) se muestra igual, marcado
  *     "Sin iniciar": guardar el panel de edición lo crea al vuelo (`asegurar`
- *     del lado del servidor), no hace falta un alta separada.
+ *     del lado del servidor), no hace falta un alta separada. La columna
+ *     "Recibidos" es la excepción: no depende de esa fila ni de que alguien la
+ *     cargue a mano — sale de `documentosReales`, contado por el servidor
+ *     directamente desde la tabla `documento` (tarea 142), así que un cliente
+ *     "Sin iniciar" puede mostrar documentos recibidos igual.
  *  2. **Documentos** del cliente seleccionado en el tablero de arriba, con
  *     alta y cambio de estado.
  *
@@ -235,6 +239,7 @@ export default function Documentos() {
   const [error, setError] = useState<string | null>(null);
   const [clientes, setClientes] = useState<readonly Cliente[]>([]);
   const [procesos, setProcesos] = useState<readonly ProcesoMensual[]>([]);
+  const [documentosReales, setDocumentosReales] = useState<Readonly<Record<string, number>>>({});
 
   const [clienteSeleccionado, setClienteSeleccionado] = useState<string | null>(null);
   const [documentos, setDocumentos] = useState<readonly Documento[]>([]);
@@ -280,18 +285,18 @@ export default function Documentos() {
     if (!periodoSchema.safeParse(periodo).success) {
       setClientes([]);
       setProcesos([]);
+      setDocumentosReales({});
       setCargando(false);
       return;
     }
     setCargando(true);
     setError(null);
     try {
-      const [{ clientes: listaDeClientes }, { procesos: listaDeProcesos }] = await Promise.all([
-        listarClientes(),
-        listarProcesoMensualPorPeriodo(periodo),
-      ]);
+      const [{ clientes: listaDeClientes }, { procesos: listaDeProcesos, documentosReales: reales }] =
+        await Promise.all([listarClientes(), listarProcesoMensualPorPeriodo(periodo)]);
       setClientes(listaDeClientes);
       setProcesos(listaDeProcesos);
+      setDocumentosReales(reales ?? {});
     } catch (motivo) {
       setError(motivo instanceof ErrorDeApi ? motivo.message : 'No se pudo conectar con el servidor.');
     } finally {
@@ -579,7 +584,7 @@ export default function Documentos() {
                     <Badge tono={TONO_RIESGO[proceso.riesgo]} conIcono={false}>{proceso.riesgo}</Badge>
                   )}
                 </Td>
-                <Td numerica>{proceso?.documentosRecibidos ?? '—'}</Td>
+                <Td numerica>{documentosReales[cliente.id] ?? 0}</Td>
                 <Td
                   numerica
                   className={proceso && proceso.documentosFaltantes > 0 ? 'font-semibold text-critico' : ''}

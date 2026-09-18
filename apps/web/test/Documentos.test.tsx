@@ -109,7 +109,11 @@ async function montar(rol: string = 'direccion') {
   mock.mockDeRuta('GET /api/v1/csrf', () => respuestaJson({ csrfToken: 'token-de-prueba' }));
   mock.mockDeRuta('GET /api/v1/clientes', () => respuestaJson({ clientes: [GARSO, SIN_PROCESO] }));
   mock.mockDeRuta(`GET /api/v1/proceso-mensual/${PERIODO}`, () =>
-    respuestaJson({ periodo: PERIODO, procesos: [PROCESO_GARSO] }),
+    respuestaJson({
+      periodo: PERIODO,
+      procesos: [PROCESO_GARSO],
+      documentosReales: { 'cli-garso': 12, 'cli-sinproceso': 3 },
+    }),
   );
   mock.mockDeRuta('GET /api/v1/clientes/cli-garso/documentos', () =>
     respuestaJson({ documentos: [DOCUMENTO_GARSO] }),
@@ -144,6 +148,13 @@ describe('pantalla de documentos / IVA', () => {
 
     const filaSinProceso = filaDelTablero('CLIENTE SIN PROCESO S.A.').closest('tr')!;
     expect(within(filaSinProceso).getByText('Sin iniciar')).toBeVisible();
+  });
+
+  it('un cliente "Sin iniciar" igual muestra sus documentos recibidos reales, contados desde el servidor', async () => {
+    await montar();
+
+    const filaSinProceso = filaDelTablero('CLIENTE SIN PROCESO S.A.').closest('tr')!;
+    expect(within(filaSinProceso).getByText('3')).toBeVisible();
   });
 
   it('el saldo de IVA se muestra formateado, no como el número crudo del servidor', async () => {

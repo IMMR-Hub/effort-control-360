@@ -83,6 +83,14 @@ export interface RepositorioDeDocumentos {
    * un conjunto incompleto sin decir que dejó documentos afuera.
    */
   documentosDelPeriodo(clienteId: string, periodo: string): Promise<DocumentoAlmacenado[]>;
+  /**
+   * Cantidad real de documentos recibidos por cliente en un período, contada
+   * desde la tabla `documento` (tarea 142) — no depende de que alguien la
+   * cargue a mano en `proceso_mensual.documentosRecibidos`. Mismo criterio de
+   * "vigente" que `documentosDelPeriodo`: excluye rechazados y duplicados,
+   * incluye anulados y los que no tienen número de comprobante.
+   */
+  contarPorCliente(periodo: string, filtro: FiltroDeCartera): Promise<Record<string, number>>;
 }
 
 /* ========================================================================== */

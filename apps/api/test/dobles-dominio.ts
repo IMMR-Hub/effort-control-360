@@ -170,6 +170,17 @@ export class DocumentosFalsos implements RepositorioDeDocumentos {
         !['RECHAZADO', 'DUPLICADO'].includes(doc.estado),
     );
   }
+
+  async contarPorCliente(periodo: string, filtro: FiltroDeCartera): Promise<Record<string, number>> {
+    const conteo: Record<string, number> = {};
+    for (const doc of this.documentos) {
+      if (doc.periodo !== periodo) continue;
+      if (['RECHAZADO', 'DUPLICADO'].includes(doc.estado)) continue;
+      if (!alcanza(filtro, doc.clienteId)) continue;
+      conteo[doc.clienteId] = (conteo[doc.clienteId] ?? 0) + 1;
+    }
+    return conteo;
+  }
 }
 
 function procesoVacio(clienteId: string, periodo: string): ProcesoMensualAlmacenado {

@@ -215,6 +215,18 @@ export class DocumentosPrisma implements RepositorioDeDocumentos {
 
     return filas as DocumentoAlmacenado[];
   }
+
+  async contarPorCliente(periodo: string, filtro: FiltroDeCartera): Promise<Record<string, number>> {
+    const filas = await this.prisma.documento.groupBy({
+      by: ['clienteId'],
+      where: {
+        AND: [{ periodo }, { estado: { notIn: ['RECHAZADO', 'DUPLICADO'] } }, porCartera(filtro)],
+      },
+      _count: { _all: true },
+    });
+
+    return Object.fromEntries(filas.map((fila) => [fila.clienteId, fila._count._all]));
+  }
 }
 
 /* ========================================================================== */
