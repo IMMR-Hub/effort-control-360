@@ -25,6 +25,9 @@ import type {
   AltaDeDocumento,
   AltaDeReglaDeNotificacion,
   AltaDeReglaImpositiva,
+  AltaDeRecordatorioEnviado,
+  RecordatorioEnviadoAlmacenado,
+  RepositorioDeRecordatorios,
   AltaDeVencimiento,
   BalanceAlmacenado,
   CamposEditablesDelProceso,
@@ -480,6 +483,49 @@ export class SolicitudesFalsas implements RepositorioDeSolicitudes {
     const actualizada: SolicitudAlmacenada = { ...this.solicitudes[indice]!, estado };
     this.solicitudes[indice] = actualizada;
     return actualizada;
+  }
+
+  async listarAbiertas(): Promise<SolicitudAlmacenada[]> {
+    const cerrados = new Set(['ENTREGADA', 'CERRADA_MANUALMENTE', 'AGOTADA']);
+    return this.solicitudes.filter((sol) => !cerrados.has(sol.estado));
+  }
+
+  async registrarRecordatorioEnviado(
+    id: string,
+    fecha: Date,
+    numeroDeRecordatorio: number,
+    esEscalamiento: boolean,
+  ): Promise<SolicitudAlmacenada> {
+    const indice = this.solicitudes.findIndex((sol) => sol.id === id);
+    const actualizada: SolicitudAlmacenada = {
+      ...this.solicitudes[indice]!,
+      recordatoriosEnviados: numeroDeRecordatorio,
+      ultimoRecordatorioEn: fecha,
+      ...(esEscalamiento ? { estado: 'ESCALADA' } : {}),
+    };
+    this.solicitudes[indice] = actualizada;
+    return actualizada;
+  }
+}
+
+export class RecordatoriosFalsos implements RepositorioDeRecordatorios {
+  readonly enviosRegistrados: RecordatorioEnviadoAlmacenado[] = [];
+
+  async enviados(): Promise<{ solicitudId: string; numeroDeRecordatorio: number }[]> {
+    return this.enviosRegistrados
+      .filter((e) => e.estado === 'ENVIADO')
+      .map((e) => ({ solicitudId: e.solicitudId, numeroDeRecordatorio: e.numeroDeRecordatorio }));
+  }
+
+  async listarPorSolicitud(solicitudId: string): Promise<RecordatorioEnviadoAlmacenado[]> {
+    return this.enviosRegistrados
+      .filter((e) => e.solicitudId === solicitudId)
+      .slice()
+      .sort((a, b) => b.creadoEn.getTime() - a.creadoEn.getTime());
+  }
+
+  async registrar(datos: AltaDeRecordatorioEnviado): Promise<void> {
+    this.enviosRegistrados.push({ id: randomUUID(), creadoEn: new Date(), ...datos });
   }
 }
 

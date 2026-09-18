@@ -14,6 +14,7 @@ const CAMPOS = {
   id: true,
   clienteId: true,
   periodo: true,
+  solicitudId: true,
   canal: true,
   direccion: true,
   origenContacto: true,
@@ -54,6 +55,7 @@ export class ContactosPrisma implements RepositorioDeContactos {
       data: {
         clienteId: datos.clienteId,
         periodo: datos.periodo,
+        solicitudId: datos.solicitudId,
         canal: datos.canal as never,
         direccion: datos.direccion,
         origenContacto: datos.origenContacto,

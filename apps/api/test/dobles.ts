@@ -30,6 +30,7 @@ import type {
   RepositorioDeContactos,
   RepositorioDeSesiones,
   RepositorioDeUsuarios,
+  RolEnCliente,
   UsuarioConCredenciales,
   UsuarioListado,
 } from '../src/puertos.js';
@@ -68,6 +69,8 @@ export class UsuariosFalsos implements RepositorioDeUsuarios {
   readonly usuarios: UsuarioFalso[] = [];
   readonly asignaciones = new Map<string, string[]>();
   readonly accesos: { usuarioId: string; momento: Date }[] = [];
+  /** `(clienteId, rol) -> usuarioId[]`, para `listarAsignadosAlCliente`. */
+  readonly asignacionesConRol: { clienteId: string; usuarioId: string; rol: RolEnCliente }[] = [];
 
   async buscarPorEmail(email: string): Promise<UsuarioConCredenciales | null> {
     return this.usuarios.find((usuario) => usuario.email === email) ?? null;
@@ -92,6 +95,13 @@ export class UsuariosFalsos implements RepositorioDeUsuarios {
   async buscarListadoPorId(id: string): Promise<UsuarioListado | null> {
     const usuario = this.usuarios.find((candidato) => candidato.id === id);
     return usuario ? aListado(usuario) : null;
+  }
+
+  async listarAsignadosAlCliente(clienteId: string, rol: RolEnCliente): Promise<UsuarioListado[]> {
+    const usuarioIds = this.asignacionesConRol
+      .filter((a) => a.clienteId === clienteId && a.rol === rol)
+      .map((a) => a.usuarioId);
+    return this.usuarios.filter((u) => usuarioIds.includes(u.id)).map(aListado);
   }
 
   async crear(datos: AltaDeUsuario): Promise<UsuarioListado> {

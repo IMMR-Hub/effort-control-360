@@ -27,6 +27,7 @@ import {
   ReglasDeNotificacionPrisma,
   ReglasImpositivasPrisma,
   SolicitudesPrisma,
+  RecordatoriosPrisma,
   EnviosPrisma,
   ArchivosDeOrigenPrisma,
   EvidenciasPrisma,
@@ -53,6 +54,7 @@ import { LibroRg90Prisma } from './repositorios/libroRg90.js';
 import { DeclaracionesPrisma } from './repositorios/declaraciones.js';
 import {
   programarCalculoDeVencimientosYAlertas,
+  programarRecordatoriosDeSeguimiento,
   programarSincronizacionDeOneDrive,
 } from './servicios/programador.js';
 import {
@@ -152,6 +154,7 @@ export function construirDependencias(configuracion: Configuracion): Dependencia
       configuracion.AZURE_DRIVE_ID_ORIGEN,
     ),
     solicitudes: new SolicitudesPrisma(prisma),
+    recordatorios: new RecordatoriosPrisma(prisma),
     balances: new BalancesPrisma(prisma),
     exportacionesSiga: new ExportacionesSigaPrisma(prisma),
     liquidaciones: new LiquidacionesPrisma(prisma),
@@ -204,6 +207,7 @@ export async function arrancar(dependencias: Dependencias): Promise<void> {
     app.log,
   );
   programarCalculoDeVencimientosYAlertas(dependencias, app.log);
+  programarRecordatoriosDeSeguimiento(dependencias, app.log);
 
   // Purga periódica del almacén de intentos: sin esto crece indefinidamente
   // mientras el proceso siga vivo.

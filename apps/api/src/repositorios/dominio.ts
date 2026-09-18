@@ -16,6 +16,9 @@ import type {
   AltaDeAlerta,
   AltaDeEnvioDeNotificacion,
   AltaDeEvidencia,
+  AltaDeRecordatorioEnviado,
+  RecordatorioEnviadoAlmacenado,
+  RepositorioDeRecordatorios,
   RepositorioDeEnvios,
   HuellaDeOrigen,
   ResultadoDeRegistro,
@@ -530,6 +533,72 @@ export class EnviosPrisma implements RepositorioDeEnvios {
 }
 
 /* ========================================================================== */
+/* Recordatorios de seguimiento enviados (tarea 96)                          */
+/* ========================================================================== */
+
+/**
+ * Comparte la tabla `envio_notificacion` con `EnviosPrisma` (avisos de
+ * alertas), que ya usa `solicitudId` para guardar el id de la alerta — ver el
+ * comentario en `EnviosPrisma.enviados()`. Acá `solicitudId` es el real, y
+ * `reglaId` es el discriminador: los avisos de alertas nunca lo cargan, así
+ * que filtrar por `reglaId IS NOT NULL` separa una cosa de la otra sin
+ * ambigüedad, sin necesitar una columna nueva ni una migración.
+ */
+export class RecordatoriosPrisma implements RepositorioDeRecordatorios {
+  constructor(private readonly prisma: PrismaClient) {}
+
+  async enviados(): Promise<{ solicitudId: string; numeroDeRecordatorio: number }[]> {
+    const filas = await this.prisma.envioNotificacion.findMany({
+      where: { estado: 'ENVIADO', reglaId: { not: null }, numeroDeRecordatorio: { not: null } },
+      select: { solicitudId: true, numeroDeRecordatorio: true },
+    });
+
+    return filas.map((f) => ({ solicitudId: f.solicitudId!, numeroDeRecordatorio: f.numeroDeRecordatorio! }));
+  }
+
+  async listarPorSolicitud(solicitudId: string): Promise<RecordatorioEnviadoAlmacenado[]> {
+    const filas = await this.prisma.envioNotificacion.findMany({
+      where: { solicitudId, reglaId: { not: null } },
+      orderBy: { creadoEn: 'desc' },
+    });
+
+    return filas.map((f) => ({
+      id: f.id,
+      reglaId: f.reglaId!,
+      clienteId: f.clienteId!,
+      solicitudId: f.solicitudId!,
+      destinatario: f.destinatario,
+      asunto: f.asunto,
+      numeroDeRecordatorio: f.numeroDeRecordatorio!,
+      esEscalamiento: f.esEscalamiento,
+      estado: f.estado as 'ENVIADO' | 'FALLIDO',
+      idMensajeProveedor: f.idMensajeProveedor,
+      errorProveedor: f.errorProveedor,
+      despachadoEn: f.despachadoEn,
+      creadoEn: f.creadoEn,
+    }));
+  }
+
+  async registrar(datos: AltaDeRecordatorioEnviado): Promise<void> {
+    await this.prisma.envioNotificacion.create({
+      data: {
+        reglaId: datos.reglaId,
+        clienteId: datos.clienteId,
+        solicitudId: datos.solicitudId,
+        destinatario: datos.destinatario,
+        asunto: datos.asunto,
+        numeroDeRecordatorio: datos.numeroDeRecordatorio,
+        esEscalamiento: datos.esEscalamiento,
+        estado: datos.estado,
+        idMensajeProveedor: datos.idMensajeProveedor,
+        errorProveedor: datos.errorProveedor,
+        despachadoEn: datos.despachadoEn,
+      },
+    });
+  }
+}
+
+/* ========================================================================== */
 /* Evidencias                                                                 */
 /* ========================================================================== */
 
@@ -809,6 +878,16 @@ export class SolicitudesPrisma implements RepositorioDeSolicitudes {
     return fila as SolicitudAlmacenada | null;
   }
 
+  async listarAbiertas(): Promise<SolicitudAlmacenada[]> {
+    const filas = await this.prisma.solicitudDocumentacion.findMany({
+      where: { estado: { notIn: ['ENTREGADA', 'CERRADA_MANUALMENTE', 'AGOTADA'] } },
+      select: CAMPOS_SOLICITUD,
+      orderBy: { cuentaDesde: 'asc' },
+    });
+
+    return filas as SolicitudAlmacenada[];
+  }
+
   /**
    * Idempotente por `(clienteId, periodo)` vía `upsert`: abrir el seguimiento
    * de un período que ya estaba abierto no crea una fila duplicada ni pisa el
@@ -838,6 +917,25 @@ export class SolicitudesPrisma implements RepositorioDeSolicitudes {
     const fila = await this.prisma.solicitudDocumentacion.update({
       where: { id },
       data: { estado, actualizadoPorUsuarioId: usuarioId },
+      select: CAMPOS_SOLICITUD,
+    });
+
+    return fila as SolicitudAlmacenada;
+  }
+
+  async registrarRecordatorioEnviado(
+    id: string,
+    fecha: Date,
+    numeroDeRecordatorio: number,
+    esEscalamiento: boolean,
+  ): Promise<SolicitudAlmacenada> {
+    const fila = await this.prisma.solicitudDocumentacion.update({
+      where: { id },
+      data: {
+        recordatoriosEnviados: numeroDeRecordatorio,
+        ultimoRecordatorioEn: fecha,
+        ...(esEscalamiento ? { estado: 'ESCALADA' as never } : {}),
+      },
       select: CAMPOS_SOLICITUD,
     });
 

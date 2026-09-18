@@ -121,6 +121,14 @@ const camposDeConfiguracion = z
     AVISOS_DESTINATARIOS: listaDeCorreos,
     /** Máximo de correos por corrida. El resto queda en la pantalla de Alertas. */
     AVISOS_TOPE_POR_CORRIDA: z.coerce.number().int().min(0).max(100).default(5),
+
+    /**
+     * Recordatorios automáticos de entrega de documentación. APAGADOS por
+     * defecto, mismo motivo que `AVISOS_POR_CORREO`: REGLA 0-bis de
+     * `CLAUDE.md` — ningún correo real sale hasta que Daniel lo autorice
+     * explícitamente, después de aprobar el texto y los destinatarios.
+     */
+    RECORDATORIOS_AUTOMATICOS: interruptor('no'),
   })
   .strict();
 

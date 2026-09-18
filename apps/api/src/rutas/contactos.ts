@@ -79,6 +79,10 @@ export async function registrarRutasDeContactos(
     const contacto = await deps.contactos.registrar({
       clienteId,
       periodo: cuerpo.periodo,
+      // Un contacto cargado a mano por esta ruta no queda atado a una
+      // solicitud puntual: eso solo lo hace el despachador automático
+      // (tarea 97), que sabe de qué solicitud es cada recordatorio.
+      solicitudId: null,
       canal: cuerpo.canal,
       direccion: cuerpo.direccion,
       // Lo carga una persona a través de la API: por definición es manual.

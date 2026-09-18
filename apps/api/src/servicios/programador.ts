@@ -14,11 +14,12 @@
 
 import type { FastifyBaseLogger } from 'fastify';
 
-import { DIVISORES_CONFIRMADOS_POR_EFFORT, hoyEnParaguay } from '@effort/core';
+import { crearCalendario, DIVISORES_CONFIRMADOS_POR_EFFORT, feriadosParaguay, hoyEnParaguay } from '@effort/core';
 
 import type { Dependencias } from '../servidor.js';
 import { generarVencimientosDelPeriodo } from './generadorDeVencimientos.js';
 import { enviarAvisosDeAlertas, VENTANA_DE_AVISOS_MS } from './avisosPorCorreo.js';
+import { enviarRecordatorios } from './recordatorios.js';
 import { intentarConCandado } from './candadoDeIva.js';
 import { evaluarAlertas } from './motorDeAlertas.js';
 import { sincronizarDesdeOneDrive } from './sincronizadorDeOneDrive.js';
@@ -497,5 +498,116 @@ export function programarSincronizacionDeOneDrive(
 
   // `unref` para que estos temporizadores no mantengan vivo el proceso durante
   // un cierre ordenado.
+  primera.unref();
+}
+
+/**
+ * Manda los recordatorios de documentación pendientes (tareas 96, 97 y 99).
+ *
+ * Apagado por defecto: hace falta `TRABAJOS_AUTOMATICOS=si` (el interruptor
+ * general) Y `RECORDATORIOS_AUTOMATICOS=si` (el específico de esto). Sin el
+ * segundo, no sale un solo correo aunque el resto de los trabajos automáticos
+ * esté encendido — REGLA 0-bis de `CLAUDE.md`: ningún correo real hasta que
+ * Daniel lo autorice, después de aprobar el texto y los destinatarios.
+ *
+ * Misma cadencia que el cálculo de vencimientos y alertas (una hora): un
+ * recordatorio se calcula en días hábiles, no hace falta revisarlo cada
+ * quince minutos.
+ */
+export function programarRecordatoriosDeSeguimiento(
+  deps: Dependencias,
+  registrador: FastifyBaseLogger,
+): void {
+  if (deps.configuracion.TRABAJOS_AUTOMATICOS === 'no') {
+    registrador.warn(
+      'TRABAJOS_AUTOMATICOS=no: los recordatorios de seguimiento no corren solos.',
+    );
+    return;
+  }
+
+  // `!== 'si'` y no `=== 'no'` a propósito: cualquier valor que no sea
+  // explícitamente 'si' —incluido no venir seteado— tiene que frenar el
+  // envío. Es la misma regla de fail-safe que ya usa AVISOS_POR_CORREO más
+  // arriba, y acá importa todavía más: es la única barrera entre esto y un
+  // correo real a un cliente.
+  if (deps.configuracion.RECORDATORIOS_AUTOMATICOS !== 'si') {
+    registrador.warn(
+      'RECORDATORIOS_AUTOMATICOS no está en "si": no sale ningún recordatorio automático. ' +
+        'La pantalla de Seguimiento sigue funcionando para cargarlos a mano.',
+    );
+    return;
+  }
+
+  if (!deps.correo) {
+    registrador.warn(
+      'Sin credenciales de correo: los recordatorios automáticos quedan apagados.',
+    );
+    return;
+  }
+  const correo = deps.correo;
+
+  let enCurso = false;
+
+  async function correr(): Promise<void> {
+    if (enCurso) return;
+    enCurso = true;
+
+    try {
+      const usuario = await deps.usuarios.buscarPorEmail(CORREO_DEL_SISTEMA);
+      if (!usuario) {
+        registrador.error(
+          `No existe el usuario ${CORREO_DEL_SISTEMA}: no se puede atribuir el contacto automático a nadie.`,
+        );
+        return;
+      }
+
+      const ahora = deps.ahora();
+      const hoy = hoyEnParaguay(ahora);
+      const calendario = crearCalendario([...feriadosParaguay(hoy.anio), ...feriadosParaguay(hoy.anio + 1)]);
+
+      const resumen = await enviarRecordatorios({
+        reglasDeNotificacion: deps.reglasDeNotificacion,
+        solicitudes: deps.solicitudes,
+        recordatorios: deps.recordatorios,
+        contactos: deps.contactos,
+        usuarios: deps.usuarios,
+        clientes: deps.clientes,
+        alertas: deps.alertas,
+        correo,
+        calendario,
+        hoy,
+        ahora: deps.ahora,
+        usuarioSistemaId: usuario.id,
+      });
+
+      if (resumen.evaluadas > 0) {
+        await deps.bitacora.registrar({
+          usuarioId: usuario.id,
+          accion: 'recordatorio.enviados',
+          entidad: 'solicitud_documentacion',
+          entidadId: null,
+          clienteId: null,
+          datosAntes: null,
+          datosDespues: { ...resumen, disparo: 'automático' },
+          ipTruncada: null,
+          agenteUsuario: 'recordatorios automáticos',
+          peticionId: null,
+        });
+
+        registrador.info(resumen, 'Recordatorios de seguimiento: corrida terminada.');
+      }
+    } catch (error) {
+      registrador.error({ err: error }, 'Falló el envío automático de recordatorios de seguimiento.');
+    } finally {
+      enCurso = false;
+    }
+  }
+
+  const primera = setTimeout(() => {
+    void correr();
+    const periodico = setInterval(() => void correr(), CADA_HORA);
+    periodico.unref();
+  }, ESPERA_INICIAL + 10 * 60 * 1000);
+
   primera.unref();
 }

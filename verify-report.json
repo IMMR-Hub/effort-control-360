@@ -1,13 +1,13 @@
 {
-  "generado_en": "2026-09-18T11:23:57.289Z",
-  "commit": "fb6f5245947143e4a4356258b96b106fa98cfee9",
+  "generado_en": "2026-09-18T19:49:25.176Z",
+  "commit": "f44dbc20f9640fcd724979d88a0971d14f555f91",
   "checks": [
     {
       "nombre": "typecheck",
       "comando": "npx tsc --build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 2374,
+      "duracion_ms": 1563,
       "detalle": ""
     },
     {
@@ -15,7 +15,7 @@
       "comando": "npm run typecheck --workspace @effort/web",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6605,
+      "duracion_ms": 5793,
       "detalle": ""
     },
     {
@@ -23,7 +23,7 @@
       "comando": "npx vitest run",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 70923,
+      "duracion_ms": 92631,
       "detalle": ""
     },
     {
@@ -31,7 +31,7 @@
       "comando": "npx vitest run packages/core/test/golden.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 5658,
+      "duracion_ms": 5534,
       "detalle": ""
     },
     {
@@ -39,7 +39,7 @@
       "comando": "npx eslint .",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 8126,
+      "duracion_ms": 9546,
       "detalle": ""
     },
     {
@@ -47,7 +47,7 @@
       "comando": "npx vitest run apps/api/test/rbac.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3736,
+      "duracion_ms": 4268,
       "detalle": ""
     },
     {
@@ -55,7 +55,7 @@
       "comando": "npx vitest run apps/api/test/seguridad.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3908,
+      "duracion_ms": 4983,
       "detalle": ""
     },
     {
@@ -63,7 +63,7 @@
       "comando": "npx vitest run packages/schema/test/contratos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3798,
+      "duracion_ms": 4331,
       "detalle": ""
     },
     {
@@ -71,7 +71,7 @@
       "comando": "npx vitest run apps/api/test/servidor.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6760,
+      "duracion_ms": 7393,
       "detalle": ""
     },
     {
@@ -79,7 +79,7 @@
       "comando": "npx vitest run apps/api/test/modulos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 30705,
+      "duracion_ms": 37584,
       "detalle": ""
     },
     {
@@ -87,7 +87,7 @@
       "comando": "npx vitest run apps/api/test/siga.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 8360,
+      "duracion_ms": 8409,
       "detalle": ""
     },
     {
@@ -95,23 +95,23 @@
       "comando": "npx vitest run apps/api/test/importaciones.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7553,
+      "duracion_ms": 7933,
       "detalle": ""
     },
     {
       "nombre": "test:integration",
       "comando": "npx vitest run --project integracion",
-      "estado": "FALLO",
-      "exit_code": 1,
-      "duracion_ms": 191535,
-      "detalle": "\u001b[90m \u001b[2m❯\u001b[22m test/integracion/dominio.test.ts:\u001b[2m88:5\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯\u001b[22m\u001b[39m\n\n\n\u001b[31m⎯⎯⎯⎯⎯⎯⎯\u001b[39m\u001b[1m\u001b[41m Failed Tests 2 \u001b[49m\u001b[22m\u001b[31m⎯⎯⎯⎯⎯⎯⎯\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[42m integracion \u001b[49m\u001b[39m test/integracion/dominio.test.ts\u001b[2m > \u001b[22mrepositorios de negocio contra PostgreSQL real\u001b[2m > \u001b[22mreglas impositivas\u001b[2m > \u001b[22muna regla de otra tasa no se ve afectada al abrir una nueva\n\u001b[31m\u001b[1mPrismaClientKnownRequestError\u001b[22m: \nInvalid `tx.reglaImpositiva.create()` invocation in\nC:\\Users\\Daniel\\NexusFlow AI\\effort-control-360\\apps\\api\\src\\repositorios\\dominio.ts:1136:45\n\n  1133   });\n  1134 }\n  1135 \n→ 1136 const fila = await tx.reglaImpositiva.create(\nTransaction API error: Transaction not found. Transaction ID is invalid, refers to an old closed transaction Prisma doesn't have information about anymore, or was obtained before disconnecting.\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m228:13\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleAndLogRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m174:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.request node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m143:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m a node_modules/@prisma/client/src/runtime/getPrismaClient.ts:\u001b[2m833:24\u001b[22m\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m src/repositorios/dominio.ts:\u001b[2m1136:20\u001b[22m\u001b[39m\n    \u001b[90m1134| \u001b[39m      }\n    \u001b[90m1135| \u001b[39m\n    \u001b[90m1136| \u001b[39m      \u001b[35mconst\u001b[39m fila \u001b[33m=\u001b[39m \u001b[35mawait\u001b[39m tx\u001b[33m.\u001b[39mreglaImpositiva\u001b[33m.\u001b[39m\u001b[34mcreate\u001b[39m({\n    \u001b[90m   | \u001b[39m                   \u001b[31m^\u001b[39m\n    \u001b[90m1137| \u001b[39m        data\u001b[33m:\u001b[39m {\n    \u001b[90m1138| \u001b[39m          nombre\u001b[33m:\u001b[39m datos\u001b[33m.\u001b[39mnombre\u001b[33m,\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m Proxy._transactionWithCallback node_modules/@prisma/client/src/runtime/getPrismaClient.ts:\u001b[2m722:18\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m test/integracion/dominio.test.ts:\u001b[2m841:7\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[42m integracion \u001b[49m\u001b[39m test/integracion/dominio.test.ts\u001b[2m > \u001b[22mrepositorios de negocio contra PostgreSQL real\u001b[2m > \u001b[22mreglas impositivas\u001b[2m > \u001b[22mactualizar cambia metadata sin tocar tasa ni vigenteDesde\n\u001b[31m\u001b[1mPrismaClientKnownRequestError\u001b[22m: \nInvalid `tx.reglaImpositiva.update()` invocation in\nC:\\Users\\Daniel\\NexusFlow AI\\effort-control-360\\apps\\api\\src\\repositorios\\dominio.ts:1127:34\n\n  1124 });\n  1125 \n  1126 if (vigente) {\n→ 1127   await tx.reglaImpositiva.update(\nTransaction API error: Transaction already closed: A query cannot be executed on an expired transaction. The timeout for this transaction was 5000 ms, however 7737 ms passed since the start of the transaction. Consider increasing the interactive transaction timeout or doing less work in the transaction.\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m228:13\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleAndLogRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m174:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.request node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m143:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m a node_modules/@prisma/client/src/runtime/getPrismaClient.ts:\u001b[2m833:24\u001b[22m\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m src/repositorios/dominio.ts:\u001b[2m1127:9\u001b[22m\u001b[39m\n    \u001b[90m1125| \u001b[39m\n    \u001b[90m1126| \u001b[39m      \u001b[35mif\u001b[39m (vigente) {\n    \u001b[90m1127| \u001b[39m        \u001b[35mawait\u001b[39m tx\u001b[33m.\u001b[39mreglaImpositiva\u001b[33m.\u001b[39m\u001b[34mupdate\u001b[39m({\n    \u001b[90m   | \u001b[39m        \u001b[31m^\u001b[39m\n    \u001b[90m1128| \u001b[39m          where\u001b[33m:\u001b[39m { id\u001b[33m:\u001b[39m vigente\u001b[33m.\u001b[39mid }\u001b[33m,\u001b[39m\n    \u001b[90m1129| \u001b[39m          data\u001b[33m:\u001b[39m {\n\u001b[90m \u001b[2m❯\u001b[22m Proxy._transactionWithCallback node_modules/@prisma/client/src/runtime/getPrismaClient.ts:\u001b[2m722:18\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m test/integracion/dominio.test.ts:\u001b[2m859:21\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯\u001b[22m\u001b[39m"
+      "estado": "OK",
+      "exit_code": 0,
+      "duracion_ms": 96888,
+      "detalle": ""
     },
     {
       "nombre": "verify:drive",
       "comando": "npx vitest run --project drive",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 2959,
+      "duracion_ms": 4413,
       "detalle": ""
     },
     {
@@ -119,7 +119,7 @@
       "comando": "npx vitest run --project importers",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 5405,
+      "duracion_ms": 6838,
       "detalle": ""
     },
     {
@@ -127,7 +127,7 @@
       "comando": "npx vitest run --project web",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 38665,
+      "duracion_ms": 35007,
       "detalle": ""
     },
     {
@@ -135,7 +135,7 @@
       "comando": "node scripts/verificar-kpi.mjs",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 141,
+      "duracion_ms": 148,
       "detalle": ""
     },
     {
@@ -143,23 +143,23 @@
       "comando": "npm run typecheck:e2e",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4831,
+      "duracion_ms": 4196,
       "detalle": ""
     },
     {
       "nombre": "test:e2e",
       "comando": "npx playwright test",
-      "estado": "FALLO",
-      "exit_code": 1,
-      "duracion_ms": 94500,
-      "detalle": "Running 3 tests using 1 worker\n\n  ok 1 [chromium] › e2e\\pruebas\\flujo-principal.spec.ts:20:1 › dirección inicia sesión, navega, ve datos reales, y cierra sesión (11.3s)\n  x  2 [chromium] › e2e\\pruebas\\primer-acceso.spec.ts:24:1 › una cuenta nueva configura su segundo factor, cambia su contraseña y recién ahí entra (36.5s)\n  ok 3 [chromium] › e2e\\pruebas\\rbac.spec.ts:16:1 › auxiliar no tiene acceso al recurso \"usuario\": ve el 403 real del servidor (3.0s)\n\n\n  1) [chromium] › e2e\\pruebas\\primer-acceso.spec.ts:24:1 › una cuenta nueva configura su segundo factor, cambia su contraseña y recién ahí entra \n\n    TimeoutError: locator.fill: Timeout 15000ms exceeded.\n    Call log:\n      - waiting for getByLabel('Código de verificación')\n\n\n      82 |   await page.getByRole('button', { name: 'Ingresar' }).click();\n      83 |\n    > 84 |   await page.getByLabel('Código de verificación').fill(authenticator.generate(secreto));\n         |                                                   ^\n      85 |   await page.getByRole('button', { name: 'Verificar' }).click();\n      86 |\n      87 |   await expect(page.getByRole('button', { name: 'Panel general', exact: true })).toHaveAttribute(\n        at C:\\Users\\Daniel\\NexusFlow AI\\effort-control-360\\e2e\\pruebas\\primer-acceso.spec.ts:84:51\n\n    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────\n    test-results\\primer-acceso-una-cuenta-n-1c030-ntraseña-y-recién-ahí-entra-chromium\\test-failed-1.png\n    ────────────────────────────────────────────────────────────────────────────────────────────────\n\n    Error Context: test-results\\primer-acceso-una-cuenta-n-1c030-ntraseña-y-recién-ahí-entra-chromium\\error-context.md\n\n    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────\n    test-results\\primer-acceso-una-cuenta-n-1c030-ntraseña-y-recién-ahí-entra-chromium\\trace.zip\n    Usage:\n\n        npx playwright show-trace test-results\\primer-acceso-una-cuenta-n-1c030-ntraseña-y-recién-ahí-entra-chromium\\trace.zip\n\n    ────────────────────────────────────────────────────────────────────────────────────────────────\n\n  1 failed\n    [chromium] › e2e\\pruebas\\primer-acceso.spec.ts:24:1 › una cuenta nueva configura su segundo factor, cambia su contraseña y recién ahí entra \n  2 passed (1.5m)"
+      "estado": "OK",
+      "exit_code": 0,
+      "duracion_ms": 94545,
+      "detalle": ""
     },
     {
       "nombre": "audit",
       "comando": "node scripts/auditar-dependencias.mjs",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 11270,
+      "duracion_ms": 9387,
       "detalle": ""
     },
     {
@@ -167,12 +167,12 @@
       "comando": "npm run build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 11951,
+      "duracion_ms": 8922,
       "detalle": ""
     }
   ],
-  "checks_ok": 19,
+  "checks_ok": 21,
   "checks_pendientes": 0,
-  "checks_fallidos": 2,
-  "todo_verde": false
+  "checks_fallidos": 0,
+  "todo_verde": true
 }

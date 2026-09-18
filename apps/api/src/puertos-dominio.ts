@@ -396,6 +396,14 @@ export interface RepositorioDeSolicitudes {
   listarPorCliente(clienteId: string, filtro: FiltroDeCartera): Promise<SolicitudAlmacenada[]>;
   buscarPorId(id: string, filtro: FiltroDeCartera): Promise<SolicitudAlmacenada | null>;
   /**
+   * Todas las que todavía pueden recibir un recordatorio (no `ENTREGADA`,
+   * `CERRADA_MANUALMENTE` ni `AGOTADA`), de toda la cartera. Es lo que barre
+   * el despachador de recordatorios (tarea 96) en cada corrida — no filtra
+   * por período porque una solicitud abierta de un mes viejo sigue
+   * necesitando que se le insista.
+   */
+  listarAbiertas(): Promise<SolicitudAlmacenada[]>;
+  /**
    * Abre el seguimiento de un cliente para un período. Idempotente: pedirlo
    * de nuevo para el mismo (cliente, período) no crea una fila duplicada, la
    * devuelve tal cual — abrir el seguimiento dos veces no es un error.
@@ -407,6 +415,53 @@ export interface RepositorioDeSolicitudes {
     estado: 'ENTREGADA' | 'CERRADA_MANUALMENTE',
     usuarioId: string,
   ): Promise<SolicitudAlmacenada>;
+  /**
+   * Deja constancia de que se envió (o se intentó enviar) un recordatorio:
+   * suma uno a `recordatoriosEnviados`, fija `ultimoRecordatorioEn`, y si el
+   * envío llevaba copia a dirección pasa el estado a `ESCALADA` (solo si
+   * todavía estaba `ABIERTA`/`RESPONDIDA_SIN_ENTREGA` — no pisa un estado
+   * que ya avanzó por otra vía).
+   */
+  registrarRecordatorioEnviado(
+    id: string,
+    fecha: Date,
+    numeroDeRecordatorio: number,
+    esEscalamiento: boolean,
+  ): Promise<SolicitudAlmacenada>;
+}
+
+/* ========================================================================== */
+/* Recordatorios de seguimiento enviados (tarea 96)                          */
+/* ========================================================================== */
+
+export interface AltaDeRecordatorioEnviado {
+  readonly reglaId: string;
+  readonly clienteId: string;
+  readonly solicitudId: string;
+  readonly destinatario: string;
+  readonly asunto: string;
+  readonly numeroDeRecordatorio: number;
+  readonly esEscalamiento: boolean;
+  readonly estado: 'ENVIADO' | 'FALLIDO';
+  readonly idMensajeProveedor: string | null;
+  readonly errorProveedor: string | null;
+  readonly despachadoEn: Date | null;
+}
+
+export interface RecordatorioEnviadoAlmacenado extends AltaDeRecordatorioEnviado {
+  readonly id: string;
+  readonly creadoEn: Date;
+}
+
+export interface RepositorioDeRecordatorios {
+  /** Ya intentados, para no repetir el mismo número de recordatorio dos veces. */
+  enviados(): Promise<{ solicitudId: string; numeroDeRecordatorio: number }[]>;
+  /**
+   * Historial de una solicitud, del más reciente al más viejo — es lo que
+   * consulta la tarea 99 para contar fallos consecutivos.
+   */
+  listarPorSolicitud(solicitudId: string): Promise<RecordatorioEnviadoAlmacenado[]>;
+  registrar(datos: AltaDeRecordatorioEnviado): Promise<void>;
 }
 
 /* ========================================================================== */

@@ -44,6 +44,7 @@ import type {
   RepositorioDeEnvios,
   RepositorioDeEvidencias,
   RepositorioDeObligaciones,
+  RepositorioDeRecordatorios,
   RepositorioDeReglasDeNotificacion,
   RepositorioDeReglasImpositivas,
   RepositorioDeSolicitudes,
@@ -90,6 +91,8 @@ export interface Dependencias {
    */
   readonly driveDeOrigen: DriveDeArchivos | null;
   readonly solicitudes: RepositorioDeSolicitudes;
+  /** Recordatorios de seguimiento efectivamente mandados (tarea 96). */
+  readonly recordatorios: RepositorioDeRecordatorios;
   readonly balances: RepositorioDeBalances;
   readonly exportacionesSiga: RepositorioDeExportacionesSiga;
   readonly liquidaciones: RepositorioDeLiquidaciones;

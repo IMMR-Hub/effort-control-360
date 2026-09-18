@@ -200,6 +200,7 @@ la variable.
 | `AVISOS_POR_CORREO` | `no` | Correos de las alertas críticas. **Apagado por orden de Daniel (2026-09-16)**: se enciende recién en las pruebas finales con EFFORT, con su autorización. |
 | `AVISOS_DESTINATARIOS` | vacío | A quiénes se avisa, separados por coma. Vacío = no sale ningún correo aunque el interruptor esté en `si`. Ya no se deducen de los usuarios de dirección. |
 | `AVISOS_TOPE_POR_CORRIDA` | `5` | Máximo de correos por corrida (0 a 100). El resto queda en la pantalla de Alertas. Solo se avisa de alertas levantadas en las últimas 24 horas. |
+| `RECORDATORIOS_AUTOMATICOS` | `no` | Recordatorios de entrega de documentación (tareas 96, 97, 99). **Apagado por defecto, misma REGLA 0-bis que `AVISOS_POR_CORREO`.** Necesita, además de este interruptor en `si`, una regla "Entrega de documentación" activa y solicitudes abiertas — sin eso no hay a quién avisar aunque esté encendido. |
 
 Las alertas de libro (diferencias de IVA) solo se levantan desde el período
 `2025-01` (`PRIMER_PERIODO_CON_ALERTAS_DE_LIBRO` en

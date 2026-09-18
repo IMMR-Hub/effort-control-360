@@ -88,6 +88,15 @@ export interface RepositorioDeUsuarios {
   /** El equipo completo, para la pantalla de dirección. */
   listar(): Promise<UsuarioListado[]>;
   buscarListadoPorId(id: string): Promise<UsuarioListado | null>;
+  /**
+   * Quiénes tienen asignado un cliente con un rol determinado, vigente hoy.
+   *
+   * Existe para resolver destinatarios `RESPONSABLE_DEL_CLIENTE` y
+   * `COORDINADOR_DEL_CLIENTE` de una regla de notificación (tarea 96): sin
+   * esto, una regla que apunta al responsable de un cliente no tiene forma
+   * de encontrar a quién es.
+   */
+  listarAsignadosAlCliente(clienteId: string, rol: RolEnCliente): Promise<UsuarioListado[]>;
   crear(datos: AltaDeUsuario): Promise<UsuarioListado>;
   actualizar(
     id: string,
@@ -217,6 +226,8 @@ export interface ContactoAlmacenado {
   readonly id: string;
   readonly clienteId: string;
   readonly periodo: string;
+  /** Solicitud de documentación a la que responde este contacto, si aplica. */
+  readonly solicitudId: string | null;
   readonly canal: string;
   readonly direccion: string;
   readonly origenContacto: string;

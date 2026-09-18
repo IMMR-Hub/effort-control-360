@@ -143,6 +143,19 @@ export class UsuariosPrisma implements RepositorioDeUsuarios {
     return fila as UsuarioListado | null;
   }
 
+  async listarAsignadosAlCliente(clienteId: string, rol: RolEnCliente): Promise<UsuarioListado[]> {
+    const filas = await this.prisma.asignacionCliente.findMany({
+      where: {
+        clienteId,
+        rol: rol as never,
+        OR: [{ hasta: null }, { hasta: { gt: new Date() } }],
+      },
+      select: { usuario: { select: CAMPOS_LISTADO } },
+    });
+
+    return filas.map((fila) => fila.usuario as UsuarioListado);
+  }
+
   async crear(datos: AltaDeUsuario): Promise<UsuarioListado> {
     const fila = await this.prisma.usuario.create({
       data: {
