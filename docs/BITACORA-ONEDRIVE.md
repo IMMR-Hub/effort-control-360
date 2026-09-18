@@ -264,3 +264,31 @@ En concreto:
 - **Qué NO se hizo, y no se va a hacer:** borrar, mover o renombrar ningún
   archivo. Daniel, 2026-09-15: *"No quiero que modifiques ni borres ni cambies
   NADA en la carpeta de Lau y Lili. Eso quedó prohibido."*
+
+---
+
+## 2026-09-18 — Relectura de la carpeta de SIPAR (P10 / punto 27)
+
+- **Qué:** se listó (recursivo, `GET` únicamente, nada bajado ni escrito) la
+  carpeta completa `CLIENTES EFFORT E.A.S/CLIENTES/043 SIPAR S.A` en el
+  OneDrive de origen (`lsosa@effort.com.py`).
+- **Por qué:** Daniel mostró una captura con una subcarpeta `RG 90` (10
+  elementos) y archivos de balance/IRE con fecha de modificación reciente
+  (2026-09-16) que la lectura del 2026-09-15 no había visto — necesario
+  confirmar si cambió algo desde esa fecha antes de responder.
+- **Para qué:** cerrar o actualizar el punto 27 de `docs/DISCREPANCIAS.md` y
+  B3 del roadmap con datos reales, en vez de repetir la respuesta vieja.
+- **Qué se encontró:** la carpeta tiene subcarpetas por año (`2024/`, `2025/`,
+  `2026/`), cada una con su propia `DOCUMENTOS CONTABLES` — la del año actual
+  (`2026/DOCUMENTOS CONTABLES/`) sí tiene contenido nuevo, agregado
+  recientemente: `BALANCE 2025-2024 SILICATOS.xlsx` (modificado 2026-09-16),
+  `CALCULO IRE SIPAR S.A. 2025.xlsx`, `PATENTE 1ER PERIODO SILICATOS 2026`, y
+  una carpeta `EXTRACTOS DE CUENTA` creada ese mismo día. **Pero la subcarpeta
+  `RG 90` (10 elementos) sigue siendo exactamente lo que el punto 27 ya
+  describía: exportaciones TXT/ZIP de Marangatú
+  (`80012742_202603_COMPRAS_304254_1.txt` y similares), sin desglose de IVA
+  por comprobante — no la planilla Excel de 28 columnas que el sistema
+  necesita.** No es una carpeta distinta ni una cuenta distinta: es la misma
+  de siempre, con más contenido nuevo alrededor pero el mismo hueco en el
+  centro.
+- **Qué NO se hizo:** nada se bajó, escribió, movió ni borró.

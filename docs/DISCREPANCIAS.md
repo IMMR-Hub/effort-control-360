@@ -1431,7 +1431,7 @@ IRE (ECOAGRO 35 días, COPESA 8, FUMIPRO 3) siguen igual en cualquier caso.
 
 ---
 
-## 27. SIPAR no tiene declaraciones en OneDrive — ABIERTO (2026-09-15)
+## 27. SIPAR no tiene declaraciones en OneDrive — ABIERTO, RELEÍDO 2026-09-18
 
 Verificado en modo solo lectura contra el OneDrive de origen (`lsosa@`): SIPAR
 tiene **una sola carpeta, `043 SIPAR S.A`, con 230 archivos**, todos
@@ -1442,25 +1442,66 @@ los PDFs). Lo que hay: actas y documentos legales, extractos de BASA,
 compras y ventas como TXT de Marangatú (sin desglose de IVA, punto de la
 consulta del 2026-09-13).
 
+**Releído el 2026-09-18** (Daniel mostró una captura con contenido que parecía
+nuevo): la carpeta tiene subcarpetas por año, y la de `2026/DOCUMENTOS
+CONTABLES/` sí ganó contenido real desde el 2026-09-15 — `BALANCE 2025-2024
+SILICATOS.xlsx`, `CALCULO IRE SIPAR S.A. 2025.xlsx`, `PATENTE 1ER PERIODO
+SILICATOS 2026` y una carpeta `EXTRACTOS DE CUENTA` nueva. **Pero la subcarpeta
+`2026/DOCUMENTOS CONTABLES/RG 90/` (10 elementos, la que aparece en la
+captura) sigue siendo la misma exportación TXT/ZIP de Marangatú de siempre**
+(`80012742_202603_COMPRAS_304254_1.txt` y siete pares más), sin desglose de
+IVA por comprobante — no la planilla Excel de 28 columnas que
+`importarLibroRg90` necesita para calcular el IVA. Detalle completo en
+`docs/BITACORA-ONEDRIVE.md`, entrada 2026-09-18. No es un problema de carpeta
+ni de cuenta equivocada: es la misma `043 SIPAR S.A` de siempre, con más
+alrededor pero el mismo hueco en el centro.
+
 **Cómo se cierra.** EFFORT dice dónde guarda las presentaciones de SIPAR y pasa
-el Excel de la RG 90 que exporta SIGA. Mientras tanto, los 30 vencimientos de
-SIPAR siguen pendientes, y es lo correcto: el sistema no tiene prueba.
+el Excel de la RG 90 que exporta SIGA (el que se exporta en formato Excel, no
+el TXT de Marangatú que ya está). Mientras tanto, los 30 vencimientos de SIPAR
+y su IVA siguen pendientes, y es lo correcto: el sistema no tiene prueba en el
+formato que necesita.
 
 ---
 
-## 28. Talones de RG 90 que no están en OneDrive — ABIERTO (2026-09-15)
+## 28. Talones de RG 90 que no están en OneDrive — RELEÍDO 2026-09-18, corregido en parte
 
 El talón de la RG 90 es el **formulario 241, "Talón de presentación — Registro
 de comprobantes"**, que la DNIT genera al presentar la planilla. COPESA lo
 guardaba como PDF del talón (2023-2025) y en 2026 como el aviso del buzón de
 Marangatú impreso; los dos formatos se reconocen.
 
-Sin prueba en OneDrive: **RG 90 de DIBEC, FUMIPRO y ECOAGRO de diciembre 2025 a
-agosto 2026**, y de **COPESA de diciembre 2025, febrero, junio, julio y agosto
-2026**.
+**El texto original de este punto (2026-09-15) mezclaba dos cosas distintas y
+llevaba a confusión — corregido con una relectura real el 2026-09-18** (Daniel
+cuestionó si se estaba repitiendo el mismo error que con SIPAR; tenía razón en
+parte):
 
-**Cómo se cierra.** EFFORT dice dónde guarda esos talones (o si no los guarda).
-Si los guarda en otro lugar, hay que sumar esa carpeta a la sincronización.
+- **La planilla RG 90 en sí (Excel) SÍ está**, para los tres clientes, la
+  mayoría de los meses de 2025 y 2026 — esto NO es lo que falta. Verificado
+  leyendo las carpetas reales:
+  - FUMIPRO: `RG COMPRAS`/`RG VENTAS .xlsx` presentes enero–agosto 2026.
+  - ECOAGRO: `RG COMPRAS` presente enero–julio 2026 (7/7); `RG VENTAS`
+    presente en 5 de esos 7 meses (faltan febrero y mayo, a confirmar si es
+    un hueco real o un archivo con otro nombre).
+  - DIBEC: presente al menos enero–noviembre 2025 (no se releyó 2026 todavía
+    con este mismo detalle).
+  - COPESA: `RG 90 COMPRAS` y `RG 90 VENTAS` presentes enero–julio 2026 (7/7
+    cada una). Agosto 2026 todavía no aparece en ninguno de los 4 clientes —
+    esperable, es el mes que acaba de cerrar.
+- **Lo que sí falta es el talón/comprobante de presentación como documento
+  aparte:** de los 4 clientes, **solo COPESA tiene una carpeta dedicada**
+  (`TALON DE PRESENTACION`, dentro de `PERIODO 2026`), y ahí están cargados
+  **enero, marzo, abril y mayo — faltan febrero, junio, julio y agosto
+  2026**. **DIBEC, FUMIPRO y ECOAGRO no tienen ninguna carpeta con ese nombre
+  ni algo reconocible como talón** — puede ser que no lo guarden como
+  documento aparte (la DDJJ IVA en PDF podría ser lo que hace de comprobante
+  para ellos) o que esté en otro lugar. Esto sigue sin confirmar.
+
+**Cómo se cierra.** Dos preguntas separadas para EFFORT: (1) para COPESA,
+¿dónde están los talones de febrero/junio/julio/agosto 2026 (y diciembre
+2025)? (2) para DIBEC, FUMIPRO y ECOAGRO, ¿guardan el talón de la RG 90 como
+documento aparte, o la DDJJ IVA en PDF ya cumple esa función? Si lo guardan en
+otro lugar, hay que sumar esa carpeta a la sincronización.
 
 ---
 
