@@ -914,6 +914,16 @@ este entorno tuvo cortes intermitentes ese día). **No se cambió
 solo medir y anotar, y la decisión (mover de región, o no) sigue siendo de
 Daniel, como ya decía este punto.
 
+**Segunda medición, el 2026-09-19, mismo método:** `[899, 201, 314, 226, 205,
+271, 218, 226, 196, 458]` ms — **promedio 321 ms, mínimo 196 ms, máximo 899
+ms.** Una consulta real (alertas abiertas) tardó 803 ms. Esto confirma la
+hipótesis (b) de arriba: sin cambiar nada, un día después, el pooler está
+casi tres veces más rápido en promedio y el máximo bajó de 2.684 ms a 899 ms.
+El pico del 2026-09-18 fue una condición puntual de esa medición (probable
+inestabilidad de red del entorno, no del pooler de Supabase en sí) — no un
+problema persistente que necesite acción inmediata. Sigue valiendo medir de
+nuevo alguna vez más, pero no urge.
+
 ---
 
 ## 19. Feriados, traslados por decreto y el segundo calendario de la DNIT — ABIERTO (2026-09-12)
