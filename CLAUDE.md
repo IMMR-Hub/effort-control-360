@@ -189,6 +189,38 @@ obedece mal, porque no se sabe qué caso de borde cubre.
    procesos del sistema, y en cualquier lugar que imprima el comando que
    falló — no hace falta que nadie lo imprima a propósito.*
 
+10. **Un script que vuelca "las claves del `.env`" también vuelca lo que no es
+    una clave.** Al día siguiente del incidente anterior, un script pensado
+    para listar solo los NOMBRES de las variables (sin sus valores) imprimió
+    igual el secreto viejo de Azure: alguien había dejado una nota suelta en
+    el `.env` (`Contraseña vieja:<secreto>`, sin el `=` de una variable real)
+    y el script la mostró completa porque no distinguía "línea con formato de
+    variable" de "cualquier línea del archivo" (2026-09-19). *Lección: nunca
+    hay que leer ni volcar el contenido de un `.env` completo para "solo
+    sacar los nombres" — un archivo de secretos puede tener cualquier cosa
+    adentro, con o sin el formato esperado. Si hace falta saber qué variables
+    existen, se lee el código que las declara (`configuracion.ts`), no el
+    archivo con los valores reales.*
+11. **"Pregunta pendiente" significa una sola cosa, siempre.** Al describir la
+    tarea 138 se escribió "antes de tocarla: respaldo y las tres preguntas de
+    `CLAUDE.md`" — una frase real (esas tres preguntas existen, son el
+    autochequeo de la sección de arriba), pero mezclada en el mismo texto
+    donde el roadmap también usa "pregunta" para las de la COLA B, que sí son
+    respuestas que EFFORT tiene que dar. Daniel la leyó como si hubiera
+    preguntas de EFFORT bloqueando la 138, cuando en realidad no había
+    ninguna — lo que faltaba era una verificación de Claude contra un archivo
+    real, todavía sin hacer (2026-09-19). *Lección: "pregunta pendiente" en
+    este proyecto se reserva SIEMPRE para lo que espera una respuesta de
+    Daniel o de EFFORT (las de la COLA B). Un autochequeo de Claude (las tres
+    preguntas de las decisiones difíciles) o una verificación técnica
+    pendiente (leer un archivo real antes de programar) se nombran así — "
+    autochequeo" o "verificación pendiente" — nunca "pregunta", ni en el
+    roadmap ni en la respuesta al chat. Y antes de escribir el "qué hacer" de
+    una tarea que asume poder leer un dato nuevo de un archivo real (un
+    campo, una columna, un texto), hay que decir explícitamente si esa
+    lectura ya se probó contra un archivo real o si sigue siendo un
+    supuesto — nunca dejarlo implícito.*
+
 **Cómo se usa esta sección:** antes de escribir algo que lea archivos externos,
 borre datos, o corra solo, buscá acá si ya nos pasó. Y cuando algo salga mal,
 agregá la entrada — el valor está en que siga creciendo.
@@ -244,6 +276,11 @@ agregá la entrada — el valor está en que siga creciendo.
    cualquier CLI), ni siquiera en un script de prueba fuera del repo. Va
    por la variable de entorno del proceso hijo. Ver lección 9 más arriba —
    costó un secreto de Azure AD expuesto en un chat, el 2026-09-18.
+9. **El `.env` nunca se lee completo, ni siquiera "solo para ver qué claves
+   hay".** Para saber qué variables existen, se lee `configuracion.ts` (la
+   fuente de verdad de qué se espera), no el archivo con los valores reales.
+   Ver lección 10 — un secreto ya expuesto una vez volvió a aparecer al día
+   siguiente por esto mismo, el 2026-09-19.
 
 ## Lo que sabemos del dominio, y costó descubrir
 
