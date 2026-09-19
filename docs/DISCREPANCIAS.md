@@ -878,10 +878,19 @@ paga ese viaje 6 veces.
    API↔base pasaría de ~310 ms a ~5 ms, que es la mejora más grande y de lejos.
    Contra: los datos contables de EFFORT saldrían de Sudamérica — es una
    decisión de la empresa, no técnica, y por eso no se toma acá.
-2. **Reducir llamadas por pantalla.** `Seguimiento` hace una consulta de
+2. ~~**Reducir llamadas por pantalla.** `Seguimiento` hace una consulta de
    contactos POR CLIENTE (patrón N+1); con 144 clientes reales eso no escala.
-   Arreglarlo es código nuestro y no depende de nadie más.
-3. **Dejarlo así.** Con 5 clientes es incómodo pero usable. Con 144 no.
+   Arreglarlo es código nuestro y no depende de nadie más.~~ **Revisado el
+   2026-09-19: ya está resuelto.** `Seguimiento.tsx` usa
+   `listarContactosDelPeriodo` (una sola consulta para toda la cartera) y
+   agrupa en memoria — el comentario del propio código lo dice: "se agrupan
+   acá, en memoria, en vez de pedirlos cliente por cliente". No se encontró
+   ningún otro patrón de consulta por cliente en el resto de las pantallas
+   (`grep` sobre todas). Este punto quedaba desactualizado, no reflejaba el
+   código actual.
+3. **Dejarlo así.** Con 5 clientes es incómodo pero usable. Con 144, sin la
+   opción 2 (ya resuelta) probablemente ya alcance — falta medirlo con más
+   clientes reales para confirmarlo.
 
 Ninguna es urgente hoy, pero la 2 conviene hacerla igual, y la 1 conviene
 decidirla antes de cargar los 144 clientes reales — mover una base con datos
