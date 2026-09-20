@@ -1572,3 +1572,76 @@ gratuito.
 y borrarlos **solo con autorización expresa de Daniel** (es un `DROP SCHEMA`,
 bloqueado además por el guardia de comandos).
 
+
+---
+
+## 31. Tres declaraciones archivadas bajo el cliente equivocado — ABIERTO (2026-09-20)
+
+Al bajar un formulario 120 real de OneDrive para la verificación técnica de la
+tarea 138, el PDF que está en la carpeta de COPESA resultó ser de **otra
+empresa**. Se revisó entonces todo lo leído (`lectura_de_declaracion` guarda el
+RUC que dice cada PDF) contra el RUC del cliente en cuya carpeta está:
+
+| Carpeta del cliente | RUC del cliente | Archivo | RUC que dice el PDF | Período |
+|---|---|---|---|---|
+| COPESA CONSTRUCCIONES SA | 80003112 | `120-07-2026.pdf` | 80135322 — MACOMA ENVIRONMENTAL TECHNOLOGIES | 2026-07 |
+| COPESA CONSTRUCCIONES SA | 80003112 | `ACUSE DDJJ IVA 102023 MARIO ANTONIO VILALBA VILLALBA .pdf` | 7243805 (persona física) | 2023-10 |
+| DIBEC SOCIEDAD ANONIMA | 80082006 | `FORM 158 FUMIPRO 2022.pdf` | 80119631 — FUMIPRO | 2022-12 |
+
+**Lo bueno: el sistema NO se dejó engañar.** `detectorDePresentaciones.ts` exige
+`p.ruc === rucBase(vencimiento.rucCliente)` antes de marcar un vencimiento como
+presentado, así que ninguno de los tres apagó una alerta. La defensa que estaba
+escrita justo para esto funcionó.
+
+**Lo malo: nadie se entera.** El archivo se ignora en silencio. Consecuencia
+concreta y verificada hoy en producción: el IVA de **COPESA período 2026-07**
+figura `VIGENTE` sin fecha de presentación, porque el único formulario 120 de
+julio que hay en su carpeta es de MACOMA. Las dos lecturas posibles son muy
+distintas y el sistema no distingue:
+
+1. COPESA sí presentó y el PDF correcto nunca se guardó (o se guardó en otro
+   lado) — hay que pedírselo a EFFORT.
+2. COPESA no presentó — la alerta es correcta y urgente.
+
+**Cómo se cierra.** Dos cosas, ninguna bloqueada por Laura ni Lili:
+
+- **En el sistema (tarea nueva):** levantar un hallazgo/alerta de criticidad
+  media cuando una declaración leída trae un RUC que no es el del cliente en
+  cuya carpeta está. El dato ya está guardado; hoy solo se descarta.
+- **Con EFFORT (a confirmar, no a asumir):** preguntar por el formulario 120 de
+  COPESA de julio 2026, y avisar de los tres archivos mal ubicados. **No los
+  mueve ni los borra el sistema**: los reubica EFFORT si corresponde.
+
+---
+
+## 32. Cómo aparece el saldo a favor en el formulario 120 — VERIFICADO (2026-09-20)
+
+Verificación técnica que faltaba para la tarea 138, hecha contra un PDF real
+(`120-07-2026.pdf`, bajado de OneDrive y leído con el mismo `extraerTextoDePdf`
+que usa el detector). El texto sale limpio y **cada importe viene precedido por
+el número de casilla de la DNIT**, que es lo que lo hace parseable sin ambigüedad:
+
+```
+... Inc. c Saldo a favor del contribuyente del periodo anterior ...   46   717.945
+... Inc. d SALDO A FAVOR DEL CONTRIBUYENTE cuando el Inc. a sea menor ...  166   954.463
+... Inc. f SALDO A FAVOR DEL CONTRIBUYENTE (Monto a trasladar ... siguiente periodo fiscal) ...  47   954.463
+... Inc. g Saldo a favor del fisco ...   48   0
+```
+
+**Tres cosas que hay que no confundir, y que solo se ven mirando el PDF real:**
+
+1. **Hay DOS "saldo a favor" distintos.** El del **Rubro 4** es el *saldo
+   técnico* de IVA (casilla **47**, lo que se arrastra al período siguiente), y
+   el del **Rubro 5** es el *saldo financiero* (casilla **54**, retenciones y
+   percepciones, explícitamente "No trasladable al Rubro 4"). El que corresponde
+   al arrastre de IVA es el **47**; tomar el 54 sería un error silencioso.
+2. **La casilla 46 es la entrada y la 47 la salida.** La 46 de un período tiene
+   que ser igual a la 47 del período anterior. Eso da una comprobación de
+   continuidad gratis, sin planillas de por medio.
+3. **Formato de número:** el punto es separador de miles y no hay decimales
+   ("LOS IMPORTES SE CONSIGNARÁN SIN CÉNTIMOS"). `717.945` son seiscientos mil y
+   pico de guaraníes, no 717 con 945 milésimas.
+
+Con esto la tarea 138 ya no tiene supuestos sin verificar. Lo que queda es
+programarla, y eso **lleva migración de base** — o sea, respaldo y el autochequeo
+de `CLAUDE.md` antes de tocar nada.
