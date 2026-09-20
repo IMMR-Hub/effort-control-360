@@ -65,6 +65,18 @@ export default defineConfig({
       },
       {
         test: {
+          // Los scripts de `scripts/` no tenían pruebas. Se agregó el proyecto
+          // el 2026-09-20, cuando la lectura de contraseñas de
+          // `crear-equipo.mjs` resultó estar rota en PowerShell y nada lo
+          // había avisado.
+          name: 'scripts',
+          root: './scripts',
+          include: ['test/**/*.test.mjs'],
+          environment: 'node',
+        },
+      },
+      {
+        test: {
           name: 'integracion',
           root: './apps/api',
           include: ['test/integracion/**/*.test.ts'],

@@ -34,9 +34,10 @@
  *   node scripts/crear-equipo.mjs
  */
 
-import { createInterface } from 'node:readline';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
+
+import { leerContrasena } from './leer-contrasena.mjs';
 
 /**
  * El equipo de EFFORT.
@@ -82,20 +83,9 @@ function cargarEntorno(ruta) {
 
 cargarEntorno(fileURLToPath(new URL('../.env', import.meta.url)));
 
-/** Lee una línea sin mostrar lo que se escribe. */
-function preguntarEnSilencio(pregunta) {
-  return new Promise((resolver) => {
-    const lector = createInterface({ input: process.stdin, output: process.stdout, terminal: true });
-    lector._writeToOutput = (texto) => {
-      if (texto.includes(pregunta)) process.stdout.write(pregunta);
-    };
-    lector.question(pregunta, (respuesta) => {
-      process.stdout.write('\n');
-      lector.close();
-      resolver(respuesta);
-    });
-  });
-}
+// La lectura de la contraseña vive aparte (`leer-contrasena.mjs`) porque la
+// comparte con el script de arranque y porque tiene su propia historia: la
+// versión anterior no funcionaba en PowerShell.
 
 // Igual que el script de arranque: los paquetes se resuelven desde `apps/api`,
 // porque Node los busca a partir de la ubicación del archivo y no del
@@ -135,20 +125,43 @@ if (aCrear.length < EQUIPO.length) {
 console.log('\nCada persona va a tener que cambiar esta contraseña y configurar');
 console.log('la verificación en dos pasos en su primer acceso.\n');
 
-const contrasena = await preguntarEnSilencio('Contraseña inicial (no se muestra): ');
-const repetida = await preguntarEnSilencio('Repetir contraseña: ');
+/**
+ * Mínimo de caracteres. El mismo que exige la pantalla de Usuarios: este
+ * script no puede ser una puerta de atrás con reglas más flojas.
+ */
+const LARGO_MINIMO = 12;
 
-if (contrasena !== repetida) {
-  console.error('\nLas contraseñas no coinciden. No se creó nada.');
-  await prisma.$disconnect();
-  process.exit(1);
+/**
+ * Pide la contraseña hasta que sirva, en vez de abortar al primer tropiezo.
+ *
+ * La versión anterior cancelaba todo y había que volver a correr el script
+ * desde cero. Daniel se comió eso tres veces seguidas el 2026-09-20 —dos por
+ * un bug de lectura ya corregido y una por escribir once caracteres— y no hay
+ * ninguna razón para castigar un error de tipeo con volver a empezar.
+ */
+async function pedirContrasena() {
+  for (;;) {
+    console.log(`Mínimo ${LARGO_MINIMO} caracteres. Ctrl+C para salir.`);
+    const primera = await leerContrasena('Contraseña inicial (se muestra un * por letra): ');
+
+    if (primera.length < LARGO_MINIMO) {
+      console.error(
+        `  Tiene ${primera.length} caracteres y hacen falta ${LARGO_MINIMO}. Probá de nuevo.\n`,
+      );
+      continue;
+    }
+
+    const segunda = await leerContrasena('Repetir contraseña: ');
+    if (primera !== segunda) {
+      console.error('  Las dos no coinciden. Probá de nuevo.\n');
+      continue;
+    }
+
+    return primera;
+  }
 }
 
-if (contrasena.length < 12) {
-  console.error('\nLa contraseña tiene que tener al menos 12 caracteres. No se creó nada.');
-  await prisma.$disconnect();
-  process.exit(1);
-}
+const contrasena = await pedirContrasena();
 
 // Se cifra UNA vez: Argon2id es deliberadamente lento, y hacerlo diez veces
 // para el mismo texto sería esperar diez veces al pedo.

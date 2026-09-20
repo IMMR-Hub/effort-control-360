@@ -37,6 +37,8 @@ import { createInterface } from 'node:readline';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 
+import { leerContrasena } from './leer-contrasena.mjs';
+
 function cargarEntorno(ruta) {
   try {
     for (const linea of readFileSync(ruta, 'utf8').split('\n')) {
@@ -50,26 +52,10 @@ function cargarEntorno(ruta) {
 
 cargarEntorno(fileURLToPath(new URL('../.env', import.meta.url)));
 
-/** Lee una línea de la terminal sin que se vea lo que se escribe. */
-function preguntarEnSilencio(pregunta) {
-  return new Promise((resolver) => {
-    const lector = createInterface({ input: process.stdin, output: process.stdout, terminal: true });
-    const salida = process.stdout;
-
-    // Se reemplaza el escritor de la interfaz para que no repita las teclas en
-    // pantalla: es lo que evita que la contraseña quede a la vista de quien
-    // pase por atrás, o en una captura.
-    lector._writeToOutput = (texto) => {
-      if (texto.includes(pregunta)) salida.write(pregunta);
-    };
-
-    lector.question(pregunta, (respuesta) => {
-      salida.write('\n');
-      lector.close();
-      resolver(respuesta);
-    });
-  });
-}
+// La lectura de la contraseña vive en `leer-contrasena.mjs`: la versión que
+// estaba acá pisaba `_writeToOutput` (API privada de Node) y no funcionaba en
+// PowerShell — devolvía la cadena vacía sin dejar escribir.
+const preguntarEnSilencio = leerContrasena;
 
 function preguntar(pregunta) {
   return new Promise((resolver) => {
