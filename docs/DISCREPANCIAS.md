@@ -1161,7 +1161,7 @@ en cada despliegue.
 
 ---
 
-## 22. Las 60 filas con las partes en cero son AUTOFACTURAS — ABIERTO (2026-09-14)
+## 22. Las 60 filas con las partes en cero son AUTOFACTURAS — RESPONDIDO POR EFFORT (2026-09-21)
 
 Mirando las celdas crudas de las planillas (ECOAGRO, por ejemplo
 `RG COMPRAS 092025.xlsx`, H Y N AVICULTURA LTDA, total Gs. 29.880.506): **no es
@@ -1172,6 +1172,19 @@ Las 33 revisadas en ECOAGRO 2025 son todas `TIPO DE COMPROBANTE = AUTOFACTURA`.
 Una autofactura no lleva IVA, pero el importe debería ir como "no gravado /
 exento" para que la planilla cierre. Pregunta para EFFORT: ¿SIGA las exporta
 así a propósito, o se están cargando mal?
+
+**Respuesta de EFFORT (Daniel, 2026-09-21): «está en 0 porque no existe
+autofactura cargada».** O sea: la planilla sale con las partes en cero porque
+detrás, en SIGA, no hay una autofactura cargada. **No es un error de lectura
+del sistema ni de la exportación** — la fila refleja un hueco de carga en SIGA.
+
+**Lo que abre esta respuesta, y que hay que medir antes de tocar nada:** hoy el
+sistema tiene **4.779 hallazgos `PARTES_NO_SUMAN_EL_TOTAL`, el 95% de los 5.050
+totales**. Si la mayoría son este caso, no son inconsistencias para revisar una
+por una: son el mismo hueco de carga repetido, y deberían contarse y explicarse
+aparte en vez de inflar el contador de "qué revisar". **Pero primero se mide**
+(tarea 148): bajar un contador de 4.779 a 271 sin entender exactamente qué se
+está sacando sería lo contrario de lo que este sistema existe para hacer.
 
 **Lo que sí era error de lectura, y apareció mirando esto:** el encabezado real
 dice "RUC / **Nº** de Identificación del Informado", y la normalización no saca
@@ -1433,9 +1446,34 @@ simultáneas), pero tampoco se descartó como causa.
 
 ---
 
-## 26. Prórroga de los estados financieros 2025 — ABIERTO, PRIMERA PREGUNTA (2026-09-15)
+## 26. Prórroga de los estados financieros 2025 — RESPONDIDO POR EFFORT, FALTA APLICARLO (2026-09-21)
 
-**Los hechos.**
+**Respuesta de EFFORT (Daniel, 2026-09-21):** *«Sí, todos están bajo el régimen
+IRE GENERAL. Es una resolución de prórroga que suelen sacar; si es así, no hay
+atraso por no presentar en abril.»*
+
+Con eso se cierra la duda: **la RG 50/2026 les aplica a los cinco**, y el
+vencimiento real de los EEFF del ejercicio 2025 era el **30/06/2026**.
+
+**Lo que hay que corregir en producción (tarea 146), medido el 2026-09-21:**
+
+| Cliente | Vencimiento cargado hoy | Presentado | Figura hoy | Con la prórroga |
+|---|---|---|---|---|
+| DIBEC | 20/04/2026 | 23/06/2026 | 64 días de atraso | **a tiempo** |
+| FUMIPRO | 09/04/2026 | 10/06/2026 | 62 días de atraso | **a tiempo** |
+| ECOAGRO | 27/04/2026 | 26/06/2026 | 60 días de atraso | **a tiempo** |
+| COPESA | 13/04/2026 | sin presentar | vencido | vencido, pero desde el 30/06 |
+| SIPAR | 13/04/2026 | sin presentar | vencido | vencido, pero desde el 30/06 |
+
+**Cuidado al aplicarlo:** hay que corregir **la regla que genera la fecha**, no
+solo las cinco filas — si se tocan solo las filas, la próxima generación las
+vuelve a poner en abril. Y la prórroga es **solo del ejercicio 2025**: los
+vencimientos de `2026-12` (abril de 2027) no se tocan, porque para ese ejercicio
+no hay ninguna resolución todavía.
+
+---
+
+**Los hechos que se habían reunido antes de preguntar.**
 
 - La **Resolución General DNIT N° 50/2026** (7 de abril de 2026) extendió la
   presentación de los estados financieros del ejercicio cerrado al 31/12/2025
@@ -1468,7 +1506,21 @@ IRE (ECOAGRO 35 días, COPESA 8, FUMIPRO 3) siguen igual en cualquier caso.
 
 ---
 
-## 27. SIPAR no tiene declaraciones en OneDrive — ABIERTO, RELEÍDO 2026-09-18
+## 27. SIPAR no tiene declaraciones en OneDrive — RESPONDIDO: EFFORT PUEDE EXPORTARLO (2026-09-21)
+
+**Respuesta de EFFORT (Daniel, 2026-09-21): «sí se puede».** Pueden exportar la
+RG 90 en Excel desde SIGA y dejarla en la carpeta de SIPAR, igual que para los
+otros cuatro clientes.
+
+**No hay nada que programar.** El sistema ya lee ese formato; lo que faltaba era
+el archivo. En cuanto EFFORT lo suba, la sincronización lo toma y el IVA de
+SIPAR se calcula en la siguiente corrida, sin tocar una línea de código.
+Mientras tanto, que SIPAR figure con todo pendiente **es correcto** y ahora
+además está explicado.
+
+---
+
+**Lo que se había verificado antes de preguntar (2026-09-18):**
 
 Verificado en modo solo lectura contra el OneDrive de origen (`lsosa@`): SIPAR
 tiene **una sola carpeta, `043 SIPAR S.A`, con 230 archivos**, todos
@@ -1501,7 +1553,21 @@ formato que necesita.
 
 ---
 
-## 28. Talones de RG 90 que no están en OneDrive — RELEÍDO 2026-09-18, corregido en parte
+## 28. Talones de RG 90 que no están en OneDrive — RESPUESTA AMBIGUA, HAY QUE REPREGUNTAR (2026-09-21)
+
+**La respuesta que llegó fue «ok», y eso no contesta ninguna de las dos
+preguntas que se hicieron.** Se preguntó (a) dónde están los talones de COPESA
+de febrero, junio, julio y agosto 2026, o si no se guardan para esos meses, y
+(b) si DIBEC, FUMIPRO y ECOAGRO guardan el talón como documento aparte en algún
+lado, o si para ellos la DDJJ IVA en PDF ya cumple esa función.
+
+**No se asume ninguna de las dos.** De la respuesta depende algo concreto: si el
+sistema tiene que seguir esperando un talón por mes para esos tres clientes
+—y mostrándolo como faltante— o dejar de hacerlo. Repreguntar solo eso, corto.
+
+---
+
+**Lo verificado el 2026-09-18:**
 
 El talón de la RG 90 es el **formulario 241, "Talón de presentación — Registro
 de comprobantes"**, que la DNIT genera al presentar la planilla. COPESA lo
