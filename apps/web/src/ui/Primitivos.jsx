@@ -232,9 +232,19 @@ export function CampoSelect({
  *   detalle?: import('react').ReactNode,
  *   tono?: string,
  *   destacado?: boolean,
+ *   icono?: import('lucide-react').LucideIcon | null,
+ *   retardoMs?: number,
  * }} props
  */
-export function Indicador({ etiqueta, valor, detalle, tono = 'pendiente', destacado = false }) {
+export function Indicador({
+  etiqueta,
+  valor,
+  detalle,
+  tono = 'pendiente',
+  destacado = false,
+  icono: Icono = null,
+  retardoMs = 0,
+}) {
   const barra = {
     completo: 'bg-completo',
     parcial: 'bg-parcial',
@@ -243,17 +253,70 @@ export function Indicador({ etiqueta, valor, detalle, tono = 'pendiente', destac
     pendiente: 'bg-pendiente',
   }[tono];
 
+  const iconoFondo = {
+    completo: 'bg-completo-fondo text-completo',
+    parcial: 'bg-parcial-fondo text-parcial',
+    critico: 'bg-critico-fondo text-critico',
+    proceso: 'bg-proceso-fondo text-proceso',
+    pendiente: 'bg-pendiente-fondo text-pendiente',
+  }[tono];
+
   return (
     <div
-      className={`relative overflow-hidden rounded-md border bg-superficie px-4 py-3 shadow-1 ${
+      className={`animar-entrada relative overflow-hidden rounded-md border bg-superficie px-4 py-3 shadow-1 transition-shadow duration-300 hover:shadow-2 ${
         destacado ? 'border-critico-borde' : 'border-borde'
       }`}
+      style={{ '--retardo-entrada': `${retardoMs}ms` }}
     >
       <span className={`absolute inset-y-0 left-0 w-1 ${barra}`} aria-hidden="true" />
-      <p className="text-[11px] font-medium uppercase tracking-wide text-tinta-tenue">{etiqueta}</p>
+      {/* Absoluto y no en fila con la etiqueta a propósito: varias pantallas
+          ubican esta tarjeta con `.closest('div')` desde el texto de la
+          etiqueta, y eso depende de que siga siendo hijo directo del div
+          exterior. Un `<div>` envolvente nuevo aquí sería el div más cercano
+          y rompería esa búsqueda en todas ellas. */}
+      {Icono && (
+        <span
+          className={`absolute right-3 top-3 flex h-6 w-6 shrink-0 items-center justify-center rounded ${iconoFondo}`}
+          aria-hidden="true"
+        >
+          <Icono size={13} strokeWidth={2.25} />
+        </span>
+      )}
+      <p className="max-w-[calc(100%-2rem)] text-[11px] font-medium uppercase tracking-wide text-tinta-tenue">{etiqueta}</p>
       <p className="cifra mt-1 text-2xl font-semibold leading-none text-tinta">{valor}</p>
       {detalle && <p className="mt-1.5 text-xs text-tinta-tenue">{detalle}</p>}
     </div>
+  );
+}
+
+/**
+ * Esqueleto de `Indicador`, misma huella (borde, alto, barra lateral) para
+ * que el primer instante de carga no salte de tamaño cuando llegan los datos.
+ */
+export function IndicadorEsqueleto() {
+  return (
+    <div className="relative overflow-hidden rounded-md border border-borde bg-superficie px-4 py-3 shadow-1" aria-hidden="true">
+      <span className="absolute inset-y-0 left-0 w-1 bg-borde" />
+      <div className="esqueleto h-2.5 w-24 rounded" />
+      <div className="esqueleto mt-2.5 h-6 w-12 rounded" />
+    </div>
+  );
+}
+
+/** Esqueleto de una `Tarjeta` con tabla adentro: encabezado + filas. */
+export function TarjetaEsqueleto({ filas = 4 }) {
+  return (
+    <Tarjeta aria-hidden="true">
+      <div className="flex flex-col gap-1.5 border-b border-borde px-5 py-4">
+        <div className="esqueleto h-3.5 w-40 rounded" />
+        <div className="esqueleto h-2.5 w-56 rounded" />
+      </div>
+      <div className="flex flex-col gap-3 px-5 py-4">
+        {Array.from({ length: filas }, (_, i) => (
+          <div key={i} className="esqueleto h-4 w-full rounded" />
+        ))}
+      </div>
+    </Tarjeta>
   );
 }
 
@@ -261,9 +324,14 @@ export function Indicador({ etiqueta, valor, detalle, tono = 'pendiente', destac
 
 export function Tabla({ children, etiqueta }) {
   // El contenedor scrollea solo, para que la página nunca scrollee horizontal.
+  // `[&_tbody_tr]` en vez de agregar la clase fila por fila: cualquier pantalla
+  // que ya arma sus <tr> sigue funcionando sin tocarlas una por una.
   return (
     <div className="overflow-x-auto">
-      <table className="w-full min-w-[52rem] border-collapse text-sm" aria-label={etiqueta}>
+      <table
+        className="w-full min-w-[52rem] border-collapse text-sm [&_tbody_tr]:transition-colors [&_tbody_tr]:duration-150 [&_tbody_tr:hover]:bg-superficie-hundida"
+        aria-label={etiqueta}
+      >
         {children}
       </table>
     </div>

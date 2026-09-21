@@ -189,6 +189,48 @@
     border-radius: 2px;
   }
 
+  /* Entrada de las tarjetas del Panel: un fade + leve ascenso, nunca un
+     rebote. `prefers-reduced-motion` de acá abajo ya la anula del todo —
+     ninguna pantalla necesita repetir esa guarda. */
+  @keyframes entrada-tarjeta {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animar-entrada {
+    animation: entrada-tarjeta 320ms ease-out both;
+    animation-delay: var(--retardo-entrada, 0ms);
+  }
+
+  /* Placeholder de carga: franja que recorre la tarjeta esqueleto. Reemplaza
+     al texto "Cargando…" centrado, que no anticipaba ninguna forma. */
+  @keyframes barrido-esqueleto {
+    100% {
+      transform: translateX(100%);
+    }
+  }
+
+  .esqueleto {
+    position: relative;
+    overflow: hidden;
+    background-color: hsl(var(--superficie-hundida));
+  }
+
+  .esqueleto::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, hsl(var(--superficie) / 0.6), transparent);
+    animation: barrido-esqueleto 1.6s ease-in-out infinite;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,

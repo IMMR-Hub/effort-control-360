@@ -9,7 +9,17 @@
  * misma regla que el resto del sistema (`CLAUDE.md`).
  */
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, type ComponentProps, type CSSProperties } from 'react';
+import {
+  AlertTriangle,
+  CalendarClock,
+  Clock,
+  FileClock,
+  Landmark,
+  SendHorizontal,
+  ShieldAlert,
+  Users,
+} from 'lucide-react';
 import {
   dentroDelRango,
   describirFiltro,
@@ -19,7 +29,18 @@ import {
   type FiltroDeFechas,
 } from '@effort/core';
 
-import { Badge, EncabezadoTarjeta, Indicador, Tabla, Tarjeta, Td, Th } from '../ui/Primitivos.jsx';
+import {
+  Badge,
+  EncabezadoTarjeta,
+  Indicador,
+  IndicadorEsqueleto,
+  Tabla,
+  Tarjeta,
+  TarjetaEsqueleto,
+  Td,
+  Th,
+} from '../ui/Primitivos.jsx';
+import { useConteoAnimado } from '../ui/useConteoAnimado.js';
 import { FiltroDeFechasSelector } from '../ui/FiltroDeFechas.js';
 import { ETIQUETA_NIVEL_ALERTA, ETIQUETA_CRITICIDAD, TONO_NIVEL_ALERTA, TONO_CRITICIDAD } from '../ui/etiquetas.js';
 import { ErrorDeApi } from '../api/cliente.js';
@@ -53,6 +74,24 @@ const ESTADOS_BALANCE_PENDIENTE = new Set<Balance['estado']>([
 const ESTADOS_LIQUIDACION_SIN_ENVIAR = new Set<Liquidacion['estado']>(['PENDIENTE', 'GENERADA']);
 
 const MAXIMO_EN_LISTAS = 5;
+
+/**
+ * `Indicador` con el número animado. Envuelve al primitivo en vez de
+ * modificarlo: las otras ocho pantallas que usan `Indicador` siguen
+ * recibiendo un número quieto, tal como lo tenían.
+ */
+function IndicadorAnimado({ valor, ...resto }: ComponentProps<typeof Indicador> & { valor: number }) {
+  return <Indicador valor={useConteoAnimado(valor)} {...resto} />;
+}
+
+/**
+ * `--retardo-entrada` es una variable CSS, no una propiedad que
+ * `CSSProperties` conozca — el cast queda en un solo lugar en vez de
+ * repetirse en cada `<Tarjeta>` que escalona su entrada.
+ */
+function estiloRetardo(ms: number): CSSProperties {
+  return { '--retardo-entrada': `${ms}ms` } as CSSProperties;
+}
 
 export default function Panel() {
   const hoy = useMemo(() => hoyEnParaguay(new Date()), []);
@@ -158,10 +197,20 @@ export default function Panel() {
   );
 
   if (cargando) {
+    // La misma forma que la pantalla real (8 indicadores + 2 tarjetas), para
+    // que nada salte de tamaño cuando llegan los datos — y para que el primer
+    // instante muestre una forma reconocible en vez de un texto centrado.
     return (
-      <div className="flex items-center justify-center py-24">
-        <p className="text-sm text-tinta-tenue">Cargando…</p>
-      </div>
+      <main className="mx-auto max-w-[86rem] space-y-5 px-5 py-6" aria-busy="true" aria-label="Cargando panel general">
+        <div className="esqueleto h-16 max-w-2xl rounded" />
+        <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          {Array.from({ length: 8 }, (_, i) => <IndicadorEsqueleto key={i} />)}
+        </section>
+        <div className="grid gap-5 lg:grid-cols-2">
+          <TarjetaEsqueleto />
+          <TarjetaEsqueleto />
+        </div>
+      </main>
     );
   }
 
@@ -187,14 +236,49 @@ export default function Panel() {
       </div>
 
       <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-label="Indicadores generales">
-        <Indicador etiqueta="Clientes activos" valor={clientesActivos} tono="proceso" />
-        <Indicador etiqueta="Vencimientos vencidos" valor={vencidos} tono="critico" destacado={vencidos > 0} />
-        <Indicador etiqueta="Vencimientos próximos" valor={proximos} tono="parcial" />
-        <Indicador etiqueta="Alertas críticas" valor={alertasCriticas} tono="critico" destacado={alertasCriticas > 0} />
-        <Indicador etiqueta="Documentación pendiente" valor={documentacionPendiente} detalle={detallePeriodos} tono="pendiente" />
-        <Indicador etiqueta="Balances sin aprobar" valor={balancesPendientes} detalle={detallePeriodos} tono="pendiente" />
-        <Indicador etiqueta="Liquidaciones sin enviar" valor={liquidacionesSinEnviar} detalle={detallePeriodos} tono="pendiente" />
-        <Indicador
+        <IndicadorAnimado etiqueta="Clientes activos" valor={clientesActivos} tono="proceso" icono={Users} retardoMs={0} />
+        <IndicadorAnimado
+          etiqueta="Vencimientos vencidos"
+          valor={vencidos}
+          tono="critico"
+          destacado={vencidos > 0}
+          icono={AlertTriangle}
+          retardoMs={40}
+        />
+        <IndicadorAnimado etiqueta="Vencimientos próximos" valor={proximos} tono="parcial" icono={Clock} retardoMs={80} />
+        <IndicadorAnimado
+          etiqueta="Alertas críticas"
+          valor={alertasCriticas}
+          tono="critico"
+          destacado={alertasCriticas > 0}
+          icono={ShieldAlert}
+          retardoMs={120}
+        />
+        <IndicadorAnimado
+          etiqueta="Documentación pendiente"
+          valor={documentacionPendiente}
+          detalle={detallePeriodos}
+          tono="pendiente"
+          icono={FileClock}
+          retardoMs={160}
+        />
+        <IndicadorAnimado
+          etiqueta="Balances sin aprobar"
+          valor={balancesPendientes}
+          detalle={detallePeriodos}
+          tono="pendiente"
+          icono={Landmark}
+          retardoMs={200}
+        />
+        <IndicadorAnimado
+          etiqueta="Liquidaciones sin enviar"
+          valor={liquidacionesSinEnviar}
+          detalle={detallePeriodos}
+          tono="pendiente"
+          icono={SendHorizontal}
+          retardoMs={240}
+        />
+        <IndicadorAnimado
           etiqueta="Presentadas con atraso"
           valor={conAtraso.length}
           detalle={
@@ -203,11 +287,13 @@ export default function Panel() {
               : `de ${presentadosEnRango.length} presentadas · ${diasDeAtrasoTotales} días en total`
           }
           tono="parcial"
+          icono={CalendarClock}
+          retardoMs={280}
         />
       </section>
 
       <div className="grid gap-5 lg:grid-cols-2">
-        <Tarjeta>
+        <Tarjeta className="animar-entrada" style={estiloRetardo(320)}>
           <EncabezadoTarjeta
             titulo="Alertas más urgentes"
             descripcion={alertasUrgentes.length === 0 ? 'Sin alertas críticas o altas activas' : `Las ${alertasUrgentes.length} más urgentes de ${alertasEnRango.length} activas — el resto, en la pantalla Alertas`}
@@ -243,7 +329,7 @@ export default function Panel() {
           </Tabla>
         </Tarjeta>
 
-        <Tarjeta>
+        <Tarjeta className="animar-entrada" style={estiloRetardo(360)}>
           <EncabezadoTarjeta
             titulo="Vencimientos más urgentes"
             descripcion={vencimientosUrgentes.length === 0 ? 'Sin vencimientos con alerta activa' : `Los ${vencimientosUrgentes.length} más urgentes de ${vencimientosEnRango.length} en el radar — el resto, en la pantalla Vencimientos`}
