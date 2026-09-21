@@ -137,6 +137,33 @@ planilla)?
 
 ---
 
+## 7. SIGA — ¿cómo se le cargan datos hoy, y qué permite?
+
+Para saber hasta dónde puede llegar el sistema en el paso siguiente (leer las
+facturas y dejar el Excel armado en el formato de SIGA), necesitamos entender
+cómo se conecta SIGA con el mundo exterior. Esto es información sobre SIGA, no
+una decisión de ustedes:
+
+7a. ¿SIGA tiene una opción de **importar un Excel o CSV** (carga masiva) desde
+su propia pantalla? Si sí, ¿en qué formato exacto lo espera? (Con un ejemplo de
+un archivo que ya hayan importado alcanza.)
+
+7b. ¿Saben si SIGA ofrece una **conexión oficial para otros sistemas** (API), o
+si sus términos de uso dicen algo sobre herramientas que cargan datos de forma
+automática?
+
+7c. ¿Tienen un contacto en el soporte de SIGA a quien se le pueda preguntar
+esto?
+
+**Por qué importa:** si SIGA permite importar por Excel, el sistema puede
+entregarles el archivo perfecto y una persona lo sube por la función oficial —
+sin ningún riesgo para la cuenta. Lo que **no** se va a hacer es un programa que
+entre a SIGA "como si fuera una persona": si SIGA no lo permite, pone en riesgo
+la cuenta de EFFORT, y lo que se carga ahí termina en declaraciones reales ante
+la DNIT — esa parte siempre la confirma una persona antes de enviar.
+
+---
+
 **Cómo responder:** alcanza con las respuestas cortas por punto (sí/no, o
 "están en tal carpeta"). No hace falta reunión para esto — se puede
 responder por escrito.

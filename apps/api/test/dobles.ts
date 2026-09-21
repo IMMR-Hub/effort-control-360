@@ -21,16 +21,20 @@ import type {
 import type { Sesion } from '../src/seguridad/sesiones.js';
 import type {
   AltaDeCliente,
+  AltaDeRegistroDeHoras,
   AltaDeUsuario,
   CamposEditablesDeCliente,
   CamposEditablesDeUsuario,
   ClienteListado,
   ContactoAlmacenado,
+  RegistroDeHorasAlmacenado,
   RepositorioDeClientes,
   RepositorioDeContactos,
+  RepositorioDeHoras,
   RepositorioDeSesiones,
   RepositorioDeUsuarios,
   RolEnCliente,
+  TotalDeHoras,
   UsuarioConCredenciales,
   UsuarioListado,
 } from '../src/puertos.js';
@@ -307,6 +311,70 @@ export class ContactosFalsos implements RepositorioDeContactos {
     const contacto: ContactoAlmacenado = { id: randomUUID(), ...datos };
     this.contactos.push(contacto);
     return contacto;
+  }
+}
+
+/** Compara solo el día: dos `Date` a distinta hora del mismo día son "el mismo día". */
+function mismoDia(a: Date, b: Date): boolean {
+  return a.toISOString().slice(0, 10) === b.toISOString().slice(0, 10);
+}
+
+export class HorasFalsas implements RepositorioDeHoras {
+  readonly registros: RegistroDeHorasAlmacenado[] = [];
+
+  async registrar(datos: AltaDeRegistroDeHoras): Promise<RegistroDeHorasAlmacenado> {
+    // Mismo upsert por (usuarioId, clienteId, fecha) que hace la base real vía
+    // el índice único — si el doble no lo replica, un test contra el doble
+    // podría pasar con una lógica que en producción rechazaría o duplicaría.
+    const existente = this.registros.find(
+      (r) => r.usuarioId === datos.usuarioId && r.clienteId === datos.clienteId && mismoDia(r.fecha, datos.fecha),
+    );
+
+    if (existente) {
+      const actualizado: RegistroDeHorasAlmacenado = {
+        ...existente,
+        minutos: datos.minutos,
+        tarea: datos.tarea,
+      };
+      const indice = this.registros.indexOf(existente);
+      this.registros[indice] = actualizado;
+      return actualizado;
+    }
+
+    const nuevo: RegistroDeHorasAlmacenado = { id: randomUUID(), ...datos };
+    this.registros.push(nuevo);
+    return nuevo;
+  }
+
+  async listarPropios(usuarioId: string, desde: Date, hasta: Date): Promise<RegistroDeHorasAlmacenado[]> {
+    return this.registros
+      .filter((r) => r.usuarioId === usuarioId && r.fecha >= desde && r.fecha <= hasta)
+      .sort((a, b) => b.fecha.getTime() - a.fecha.getTime());
+  }
+
+  async resumen(
+    desde: Date,
+    hasta: Date,
+    filtroClientes: readonly string[] | null,
+  ): Promise<TotalDeHoras[]> {
+    const enRango = this.registros.filter(
+      (r) =>
+        r.fecha >= desde &&
+        r.fecha <= hasta &&
+        (filtroClientes === null || r.clienteId === null || filtroClientes.includes(r.clienteId)),
+    );
+
+    const totales = new Map<string, TotalDeHoras>();
+    for (const r of enRango) {
+      const clave = `${r.usuarioId}|${r.clienteId ?? ''}`;
+      const previo = totales.get(clave);
+      totales.set(clave, {
+        usuarioId: r.usuarioId,
+        clienteId: r.clienteId,
+        minutos: (previo?.minutos ?? 0) + r.minutos,
+      });
+    }
+    return [...totales.values()];
   }
 }
 

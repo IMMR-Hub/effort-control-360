@@ -322,14 +322,20 @@ export function TarjetaEsqueleto({ filas = 4 }) {
 
 /* --- Tablas --------------------------------------------------------------- */
 
-export function Tabla({ children, etiqueta }) {
+/**
+ * `anchoMinimo` es una clase de Tailwind. El valor por defecto (52rem) es el
+ * que tienen todas las tablas anchas del sistema; una tabla de dos o tres
+ * columnas dentro de media pantalla lo sobrepasa y hace scroll sin ningún
+ * motivo, y ahí se pasa `min-w-0`.
+ */
+export function Tabla({ children, etiqueta, anchoMinimo = 'min-w-[52rem]' }) {
   // El contenedor scrollea solo, para que la página nunca scrollee horizontal.
   // `[&_tbody_tr]` en vez de agregar la clase fila por fila: cualquier pantalla
   // que ya arma sus <tr> sigue funcionando sin tocarlas una por una.
   return (
     <div className="overflow-x-auto">
       <table
-        className="w-full min-w-[52rem] border-collapse text-sm [&_tbody_tr]:transition-colors [&_tbody_tr]:duration-150 [&_tbody_tr:hover]:bg-superficie-hundida"
+        className={`w-full ${anchoMinimo} border-collapse text-sm [&_tbody_tr]:transition-colors [&_tbody_tr]:duration-150 [&_tbody_tr:hover]:bg-superficie-hundida`}
         aria-label={etiqueta}
       >
         {children}

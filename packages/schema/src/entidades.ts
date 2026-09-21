@@ -406,6 +406,41 @@ export const crearRegistroContactoSchema = z
   );
 
 /* ========================================================================== */
+/* Registro de horas (tarea 144)                                              */
+/* ========================================================================== */
+
+/** Tope de un solo registro: 16h es un turno largo de verdad, no un error de tipeo. */
+const MINUTOS_MAXIMOS_POR_REGISTRO = 16 * 60;
+
+/**
+ * Alta o corrección de la carga de horas de un día.
+ *
+ * `clienteId` en `null` es tiempo interno, no asignado a ningún cliente — la
+ * opción que evita que alguien cargue tiempo administrativo contra un cliente
+ * cualquiera para que el total del día cierre.
+ */
+export const registrarHorasSchema = z
+  .object({
+    clienteId: idSchema.nullable(),
+    fecha: fechaIsoSchema,
+    minutos: z.number().int().min(1, 'Cargá al menos un minuto.').max(MINUTOS_MAXIMOS_POR_REGISTRO),
+    tarea: textoCorto.nullable().default(null),
+  })
+  .strict()
+  .refine(
+    (datos) => {
+      // Un día de margen y no "hoy" en UTC a secas: Paraguay va detrás de UTC,
+      // así que su "hoy" real puede seguir siendo el "ayer" de UTC durante
+      // varias horas. Este paquete no depende de `@effort/core` (que sí sabe
+      // calcular el día civil de Paraguay) — es una validación de que no se
+      // tipeó mal un año, no una regla de negocio que necesite esa precisión.
+      const mananaUtc = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+      return datos.fecha <= mananaUtc;
+    },
+    { message: 'No se puede cargar tiempo de un día futuro.', path: ['fecha'] },
+  );
+
+/* ========================================================================== */
 /* Registro de eventos                                                        */
 /* ========================================================================== */
 

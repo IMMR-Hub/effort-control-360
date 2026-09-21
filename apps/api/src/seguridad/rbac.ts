@@ -36,7 +36,9 @@ export type Recurso =
   | 'constancia'
   | 'evento'
   | 'configuracion'
-  | 'regla_impositiva';
+  | 'regla_impositiva'
+  | 'horas'
+  | 'resumen_horas';
 
 export type Accion = 'ver' | 'crear' | 'editar' | 'eliminar' | 'aprobar' | 'exportar' | 'cerrar';
 
@@ -80,6 +82,18 @@ export const MATRIZ: MatrizDePermisos = Object.freeze({
     evento: ['ver', 'exportar'],
     configuracion: ['ver', 'editar'],
     regla_impositiva: ['ver', 'crear', 'editar'],
+    // Dirección también carga sus propias horas — hace trabajo facturable
+    // como cualquiera, y `horas` acá es siempre sobre uno mismo (ver
+    // `rutas/horas.ts`: nadie ve ni carga las horas de otra persona por esta
+    // vía, ni siquiera dirección).
+    horas: ['ver', 'crear'],
+    // El resumen agregado (cuánto le dedicó cada quien a cada cliente) es
+    // distinto: mismo criterio que restringió `evento` a dirección el
+    // 2026-09-10 — "eso incluye el trabajo de los compañeros, y que todo el
+    // equipo pueda leerlo cambia lo que la herramienta significa para
+    // quienes la usan". Nunca expone el registro día a día de otra persona,
+    // solo el total del período: ver `RepositorioDeHoras.resumen`.
+    resumen_horas: ['ver', 'exportar'],
   },
 
   responsable: {
@@ -103,6 +117,7 @@ export const MATRIZ: MatrizDePermisos = Object.freeze({
     constancia: ['ver', 'exportar'],
     configuracion: ['ver'],
     regla_impositiva: ['ver'],
+    horas: ['ver', 'crear'],
   },
 
   coordinador: {
@@ -122,6 +137,7 @@ export const MATRIZ: MatrizDePermisos = Object.freeze({
     constancia: ['ver', 'exportar'],
     configuracion: ['ver'],
     regla_impositiva: ['ver'],
+    horas: ['ver', 'crear'],
   },
 
   auxiliar: {
@@ -139,6 +155,7 @@ export const MATRIZ: MatrizDePermisos = Object.freeze({
     contacto: ['ver', 'crear'],
     constancia: ['ver'],
     regla_impositiva: ['ver'],
+    horas: ['ver', 'crear'],
   },
 
   revisor_balance: {
@@ -157,6 +174,7 @@ export const MATRIZ: MatrizDePermisos = Object.freeze({
     contacto: ['ver'],
     constancia: ['ver'],
     regla_impositiva: ['ver'],
+    horas: ['ver', 'crear'],
   },
 
   solo_lectura: {

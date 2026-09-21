@@ -189,4 +189,6 @@ export const ACCIONES = Object.freeze({
   REGLA_NOTIFICACION_MODIFICADA: 'regla_notificacion.modificada',
 
   ALERTA_CERRADA: 'alerta.cerrada',
+
+  HORAS_REGISTRADAS: 'registro_de_horas.registradas',
 } as const);

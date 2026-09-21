@@ -29,6 +29,7 @@ import {
   Receipt,
   Send,
   SlidersHorizontal,
+  Timer,
   UserCog,
   type LucideIcon,
 } from 'lucide-react';
@@ -49,6 +50,7 @@ export type Pantalla =
   | 'equipo'
   | 'reglas'
   | 'eventos'
+  | 'horas'
   | 'panel';
 
 interface EnlaceDeNav {
@@ -77,6 +79,14 @@ const ENLACES: readonly EnlaceDeNav[] = [
   { id: 'liquidaciones', etiqueta: 'Liquidaciones', icono: Send },
   { id: 'iva', etiqueta: 'IVA', icono: Receipt },
   { id: 'alertas', etiqueta: 'Alertas', icono: Bell },
+  // Todos los roles que hacen trabajo facturable cargan sus horas; `solo_lectura`
+  // no (el servidor tampoco se lo permite — ver `horas` en `rbac.ts`).
+  {
+    id: 'horas',
+    etiqueta: 'Horas',
+    icono: Timer,
+    soloRoles: ['direccion', 'responsable', 'coordinador', 'auxiliar', 'revisor_balance'],
+  },
   { id: 'equipo', etiqueta: 'Equipo', icono: UserCog },
   { id: 'reglas', etiqueta: 'Reglas', icono: SlidersHorizontal },
   { id: 'eventos', etiqueta: 'Eventos', icono: History, soloRoles: ['direccion'] },

@@ -25,6 +25,7 @@ import Reglas from './pantallas/Reglas.js';
 import Eventos from './pantallas/Eventos.js';
 import LiquidacionIva from './pantallas/LiquidacionIva.js';
 import Panel from './pantallas/Panel.js';
+import Horas from './pantallas/Horas.js';
 
 const PANTALLAS: Record<Pantalla, () => JSX.Element> = {
   seguimiento: Seguimiento,
@@ -39,6 +40,7 @@ const PANTALLAS: Record<Pantalla, () => JSX.Element> = {
   equipo: Equipo,
   reglas: Reglas,
   eventos: Eventos,
+  horas: Horas,
   panel: Panel,
 };
 

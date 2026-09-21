@@ -86,6 +86,7 @@ model Usuario {
   codigosRecuperacion  CodigoRecuperacion[]
   clientesAsignados    AsignacionCliente[]
   contactosRegistrados RegistroContacto[]
+  registrosDeHoras     RegistroDeHoras[]
 
   @@index([email])
   @@index([activo, rol])
@@ -181,6 +182,7 @@ model Cliente {
   hallazgosDeLibro  HallazgoDeLibroRg90[]
   archivosDeOrigen  ArchivoDeOrigen[]
   lecturasDeDeclaracion LecturaDeDeclaracion[]
+  registrosDeHoras RegistroDeHoras[]
 
   @@index([activo])
   @@map("cliente")
@@ -1147,4 +1149,51 @@ model LecturaDeDeclaracion {
 
   @@index([clienteId, formulario, periodo])
   @@map("lectura_de_declaracion")
+}
+
+/// Planilla diaria de horas (tarea 144). Daniel, 2026-09-21: "medir finalmente
+/// cuánto le cuesta a EFFORT cada cliente... controlar si solo 'trabajó' más
+/// horas o si realmente sus horas fueron eficientes en base al avance de su
+/// trabajo". El "avance" ya existía sin agregar nada acá: casi todas las
+/// tablas del sistema atribuyen sus acciones a un usuario y a un cliente
+/// (`creadoPorUsuarioId`, `cerradaPorUsuarioId`, etc.) — es la bitácora.
+/// Lo único que faltaba era el otro lado de la cuenta: cuánto TIEMPO le
+/// dedicó cada quien. Eso no se puede inferir de la actividad en pantalla sin
+/// mentir (el tiempo entre dos clics no es tiempo de trabajo), así que se
+/// autoreporta — como en cualquier estudio contable o jurídico real.
+model RegistroDeHoras {
+  id        String   @id @default(uuid()) @db.Uuid
+  usuarioId String   @map("usuario_id") @db.Uuid
+  /// NULL es tiempo interno, no asignado a ningún cliente. Sin esta opción,
+  /// alguien con tiempo administrativo lo carga contra un cliente cualquiera
+  /// para que el total del día cierre, y el costo por cliente queda falso —
+  /// exactamente el tipo de dato que este sistema existe para no mostrar.
+  clienteId String?  @map("cliente_id") @db.Uuid
+  fecha     DateTime @db.Date
+
+  /// Minutos, no horas con decimales: mismo motivo que el dinero en enteros
+  /// (ADR 0002) — sumar cientos de registros en el resumen no puede acumular
+  /// redondeo flotante, aunque acá no haya guaraníes de por medio.
+  minutos Int
+
+  tarea String? @db.VarChar(400)
+
+  creadoEn      DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn DateTime @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+  origen        Origen   @default(REAL)
+
+  usuario Usuario  @relation(fields: [usuarioId], references: [id])
+  cliente Cliente? @relation(fields: [clienteId], references: [id])
+
+  /// Un registro por persona, cliente y día: cargar de nuevo CORRIGE el
+  /// mismo registro, no lo duplica — tiempo interno (`clienteId` NULL)
+  /// incluido: `HorasPrisma.registrar` busca por `clienteId: null` con un
+  /// `WHERE` normal antes de decidir si crea o actualiza, y ahí NULL sí se
+  /// compara como NULL. (El índice de más abajo, solo, dejaría pasar dos
+  /// filas con `clienteId` NULL el mismo día — Postgres nunca las trata como
+  /// iguales en un índice único — pero la aplicación nunca llega a ese caso.)
+  @@unique([usuarioId, clienteId, fecha])
+  @@index([clienteId, fecha])
+  @@index([usuarioId, fecha])
+  @@map("registro_de_horas")
 }

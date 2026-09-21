@@ -252,3 +252,54 @@ export interface RepositorioDeContactos {
   listarDelPeriodo(periodo: string, filtro: readonly string[] | null): Promise<ContactoAlmacenado[]>;
   registrar(datos: Omit<ContactoAlmacenado, 'id'>): Promise<ContactoAlmacenado>;
 }
+
+/* --- Registro de horas (tarea 144) ----------------------------------------- */
+
+export interface RegistroDeHorasAlmacenado {
+  readonly id: string;
+  readonly usuarioId: string;
+  /** `null` es tiempo interno, no asignado a ningún cliente. */
+  readonly clienteId: string | null;
+  readonly fecha: Date;
+  readonly minutos: number;
+  readonly tarea: string | null;
+}
+
+export interface AltaDeRegistroDeHoras {
+  readonly usuarioId: string;
+  readonly clienteId: string | null;
+  readonly fecha: Date;
+  readonly minutos: number;
+  readonly tarea: string | null;
+}
+
+/**
+ * Un total agregado: cuántos minutos le dedicó UN colaborador a UN cliente (o
+ * a tiempo interno) en el rango. Nunca una fila individual — ver el
+ * comentario de `resumen` más abajo.
+ */
+export interface TotalDeHoras {
+  readonly usuarioId: string;
+  readonly clienteId: string | null;
+  readonly minutos: number;
+}
+
+export interface RepositorioDeHoras {
+  /**
+   * Alta o corrección del registro de un día. Upsert por
+   * (usuarioId, clienteId, fecha): cargar de nuevo el mismo día y cliente
+   * CORRIGE el registro existente, nunca lo duplica.
+   */
+  registrar(datos: AltaDeRegistroDeHoras): Promise<RegistroDeHorasAlmacenado>;
+  /** Los propios registros de un usuario, día por día, en un rango de fechas. */
+  listarPropios(usuarioId: string, desde: Date, hasta: Date): Promise<RegistroDeHorasAlmacenado[]>;
+  /**
+   * Totales por colaborador y cliente en el rango, agregados en la base — NUNCA
+   * expone la fila de un día individual de otra persona, solo la suma del
+   * período. Es la diferencia entre "cuánto le dedicamos al cliente X este
+   * mes" (legítimo para decidir precios) y "qué hizo Fulana el martes a las
+   * 14 hs" (vigilancia sin ningún fin de negocio). Ver `resumen_horas` en
+   * `seguridad/rbac.ts`.
+   */
+  resumen(desde: Date, hasta: Date, filtroClientes: readonly string[] | null): Promise<TotalDeHoras[]>;
+}

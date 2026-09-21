@@ -49,6 +49,10 @@ export const MODELOS_DEL_RESPALDO = [
   'alerta',
   // Referencia a `cliente`, `usuario` y `solicitudDocumentacion`, ya cargados.
   'registroContacto',
+  // Referencia a `usuario` y a `cliente` (este último puede ser NULL: tiempo
+  // interno). Es un dato que solo una persona puede volver a cargar, y no se
+  // puede reconstruir desde ningún otro lado: las horas se autoreportan.
+  'registroDeHoras',
   'envioNotificacion',
   'eventLog',
 ] as const;

@@ -34,6 +34,7 @@ import type { RepositorioDeBitacora } from './bitacora.js';
 import type {
   RepositorioDeClientes,
   RepositorioDeContactos,
+  RepositorioDeHoras,
   RepositorioDeSesiones,
   RepositorioDeUsuarios,
 } from './puertos.js';
@@ -60,6 +61,7 @@ export interface Dependencias {
   readonly sesiones: RepositorioDeSesiones;
   readonly clientes: RepositorioDeClientes;
   readonly contactos: RepositorioDeContactos;
+  readonly horas: RepositorioDeHoras;
   readonly bitacora: RepositorioDeBitacora;
   readonly documentos: RepositorioDeDocumentos;
   readonly procesoMensual: RepositorioDeProcesoMensual;

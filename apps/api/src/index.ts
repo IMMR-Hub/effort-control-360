@@ -12,12 +12,14 @@ import { cargarConfiguracion, type Configuracion } from './configuracion.js';
 import { construirServidor, type Dependencias } from './servidor.js';
 import { registrarRutasDeAutenticacion } from './rutas/autenticacion.js';
 import { registrarRutasDeContactos } from './rutas/contactos.js';
+import { registrarRutasDeHoras } from './rutas/horas.js';
 import { AlmacenEnMemoria } from './seguridad/limites.js';
 import { comprobarConexion, crearClientePrisma } from './repositorios/prisma.js';
 import { UsuariosPrisma } from './repositorios/usuarios.js';
 import { SesionesPrisma } from './repositorios/sesiones.js';
 import { ClientesPrisma } from './repositorios/clientes.js';
 import { ContactosPrisma } from './repositorios/contactos.js';
+import { HorasPrisma } from './repositorios/horas.js';
 import { BitacoraPrisma } from './repositorios/bitacora.js';
 import {
   AlertasPrisma,
@@ -132,6 +134,7 @@ export function construirDependencias(configuracion: Configuracion): Dependencia
     sesiones: new SesionesPrisma(prisma),
     clientes: new ClientesPrisma(prisma),
     contactos: new ContactosPrisma(prisma),
+    horas: new HorasPrisma(prisma),
     bitacora: new BitacoraPrisma(prisma),
     documentos: new DocumentosPrisma(prisma),
     procesoMensual: new ProcesoMensualPrisma(prisma),
@@ -176,6 +179,7 @@ export async function arrancar(dependencias: Dependencias): Promise<void> {
 
   await registrarRutasDeAutenticacion(app, dependencias);
   await registrarRutasDeContactos(app, dependencias);
+  await registrarRutasDeHoras(app, dependencias);
   await registrarRutasDeDocumentos(app, dependencias);
   await registrarRutasDeVencimientos(app, dependencias);
   await registrarRutasDeSolicitudes(app, dependencias);
