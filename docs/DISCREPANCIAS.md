@@ -4,7 +4,7 @@ Toda regla que el sistema aplica sobre dinero, plazos o estados y que todavía n
 fue contrastada contra un documento real de EFFORT se anota acá. Ninguna se
 resuelve por criterio propio: se confirma con Laura o Lili, o se deja marcada.
 
-## ▶ Índice de estado — actualizado el 2026-09-15
+## ▶ Índice de estado — actualizado el 2026-09-21
 
 **Esta tabla manda sobre los títulos de cada punto.** Si un título de más abajo
 dice otra cosa, vale lo que dice esta tabla (algunos títulos son históricos).
@@ -31,19 +31,24 @@ de Lili o Laura), **Daniel** (decisión o acción en una cuenta), **Claude**
 | 15 | Supabase inalcanzable (pausa) | Cerrado | nadie | Si se pausa: "Resume project" en Supabase |
 | 16 | Credenciales propias de cada usuario | Cerrado | nadie | — |
 | 17 | Calendario DNIT | Cerrado | nadie | — |
-| 18 | Latencia base ↔ API | Medido, decisión pendiente | Daniel | Decidir si la base se muda a EE.UU.; tarea 116 de la cola mide de nuevo |
+| 18 | Latencia base ↔ API | Medido, decisión pendiente. **2026-09-21: además la conexión desde la máquina de trabajo es intermitente (punto 34)** | Daniel | Decidir si la base se muda a EE.UU.; tarea 116 midió dos veces |
 | 19 | Feriados y dos calendarios | Cerrado, **salvo 19(e)** | EFFORT | 19(e): ver punto 26 (prórroga de EEFF) |
 | 20 | Tolerancia de redondeo del proveedor | Cerrado | nadie | Toda diferencia alerta; se acepta o se revisa |
 | 21 | Hallazgos repetidos en la base | Corregido en código, limpieza pendiente | Daniel | Autorizar `docs/propuestas/limpiar-hallazgos-repetidos.sql` (borra filas) |
-| 22 | Autofacturas con columnas en cero | Abierto | EFFORT | ¿SIGA las exporta así a propósito? |
+| 22 | Autofacturas con columnas en cero | **Respondido 2026-09-21**: «no existe autofactura cargada» — no es error de lectura | Claude | Tarea 148: medir cuántos de los 4.779 hallazgos `PARTES_NO_SUMAN_EL_TOTAL` son este caso, ANTES de tocar el contador |
 | 23 | Presentaciones desde el PDF de la DNIT | **Cerrado en código y producción 2026-09-15** | nadie | 42 de 150 presentados; lo que falta está en 27 y 28 |
-| 24 | IVA sumaba planillas repetidas | Cerrado | EFFORT (validar) | Confirmar que "la más reciente" es la buena cuando no hay "CORRECCION" (ECOAGRO feb-2025) |
-| 25 | Planillas RG 90 reconocidas por nombre | **Desplegado y verificado por base 2026-09-17, falta D1 (mirar la pantalla)** | Claude / EFFORT | Tarea 141: falta que Daniel mire la pantalla de IVA de COPESA; preguntar si una "CORRECCION" es siempre el libro completo (B7/P1) |
-| 26 | Prórroga de EEFF 2025 (RG DNIT 50/2026) | **Abierto — primera pregunta** | EFFORT | Confirmar si aplica; cambia 3 "atrasos" de ~60 días a "a tiempo" |
-| 27 | SIPAR sin declaraciones en OneDrive | Abierto | EFFORT | Dónde guardan sus DDJJ 2025-2026 y el Excel de la RG 90 |
-| 28 | Talones de RG 90 que no están | Abierto | EFFORT | Dónde guardan los talones de DIBEC, FUMIPRO, ECOAGRO y parte de COPESA |
+| 24 | IVA sumaba planillas repetidas | **Cerrado — criterio confirmado 2026-09-21** (gana la más reciente) | nadie | EFFORT va a usar «CORRECCION» en el nombre de ahora en más |
+| 25 | Planillas RG 90 reconocidas por nombre | **Cerrado 2026-09-18** (D1: se miró la pantalla de IVA de COPESA) | EFFORT | Solo queda una pregunta: si una «CORRECCION» es siempre el libro completo o solo las filas cambiadas (B7/P1) |
+| 26 | Prórroga de EEFF 2025 (RG DNIT 50/2026) | **Respondido 2026-09-21: aplica a los 5. FALTA APLICARLO** | Claude | Tarea 146: el botón «Prórroga» está desplegado, pero **no llega a las 3 filas presentadas** (DIBEC, ECOAGRO, FUMIPRO) — hay que agregarlo a la tabla de Presentados; después prorrogar los 5 a 30/06/2026 |
+| 27 | SIPAR sin declaraciones en OneDrive | **Respondido 2026-09-21: «sí se puede»** exportar la RG 90 | EFFORT | Subir el Excel de la RG 90 de SIPAR a su carpeta. No hay nada que programar |
+| 28 | Talones de RG 90 que no están | **Respondido 2026-09-21**: existen, guardados fuera de OneDrive | Claude (menor) / EFFORT | El faltante es correcto y no se cambia. Solo mejorar el texto: «no está archivado», no algo que suene a «nunca se presentó» |
 | 29 | Migraciones no automáticas en DigitalOcean | Abierto | Daniel | El job `migrar-base` no corre; se aplican a mano |
 | 30 | Esquemas de prueba sobrantes en Supabase | Abierto | Daniel | Autorizar el borrado de `pruebas_*` sobrantes |
+| 31 | Declaraciones archivadas bajo el cliente equivocado | **Alertado por el sistema (tarea 143, verificada 2026-09-21).** Sin respuesta de EFFORT | EFFORT | **¿COPESA presentó el IVA de julio 2026?** Y reubicar los 3 archivos (el sistema no los mueve) |
+| 32 | Cómo aparece el saldo a favor en el formulario 120 | Verificado contra un PDF real 2026-09-20 | Claude | Tarea 138: extraer la casilla **47** (no la 54). Lleva migración: respaldo + las tres preguntas |
+| 33 | El respaldo falla si el código va adelante del esquema | **Abierto** (2026-09-21) | Claude | Tarea 150: leer las tablas con SQL crudo, sin aflojar la cobertura total |
+| 34 | Conexión a la base intermitente desde la máquina de trabajo | **Observado 2026-09-21** | Daniel (decisión) | Reintentar antes de sospechar de un cambio; relacionado con el punto 18 |
+| 35 | Costo por hora de cada colaborador | **Abierto** (2026-09-21) | Daniel / EFFORT | Sin ese dato la planilla de horas no puede decir cuánto cuesta un cliente en guaraníes |
 
 ---
 
@@ -924,6 +929,9 @@ inestabilidad de red del entorno, no del pooler de Supabase en sí) — no un
 problema persistente que necesite acción inmediata. Sigue valiendo medir de
 nuevo alguna vez más, pero no urge.
 
+
+**2026-09-21 — otra cosa, distinta de la latencia:** la conexión al Session pooler (5432) desde la máquina de trabajo fue **intermitente** todo el día. Ver el punto 34.
+
 ---
 
 ## 19. Feriados, traslados por decreto y el segundo calendario de la DNIT — ABIERTO (2026-09-12)
@@ -1227,7 +1235,9 @@ marca presentado, y queda registrado como fuera de término.
 
 ---
 
-## 24. El IVA sumaba dos veces las planillas repetidas — CORREGIDO (2026-09-14)
+## 24. El IVA sumaba dos veces las planillas repetidas — CORREGIDO, CRITERIO CONFIRMADO POR EFFORT (2026-09-21)
+
+**Respuesta de EFFORT (Daniel, 2026-09-21):** cuando hay dos versiones de una planilla y ninguna dice «CORRECCION», **se toma el archivo más reciente** — es el criterio que el sistema ya aplicaba, así que **no cambia nada en el código**. Y agregaron una regla de su lado: *«mejor la palabra corrección para diferenciar»*, que es justo lo que propone `docs/GUIA-NOMENCLATURA-ARCHIVOS.md`. Lo que sigue abierto (tarea 141/N7) es si una planilla «CORRECCION» es siempre el libro completo del período o solo las filas cambiadas.
 
 Las filas de todas las planillas RG 90 de un cliente se juntaban por período
 sin mirar repeticiones. En el OneDrive real: FUMIPRO julio 2026 tiene
@@ -1321,7 +1331,9 @@ legales, extractos y los TXT de la RG 90).
 
 ---
 
-## 25. Las planillas RG 90 se reconocían por su nombre — DESPLEGADO, FALTA D1 (2026-09-17)
+## 25. Las planillas RG 90 se reconocían por su nombre — CERRADO, VERIFICADO EN PANTALLA (D1, 2026-09-18)
+
+**Actualización 2026-09-21:** la D1 se hizo el 2026-09-18 (Daniel entró con su sesión y se leyó la pantalla de IVA de COPESA: último período 2026-07, 306 comprobantes, 2025 y 2026 completos). El título anterior quedó desactualizado; lo que sigue abajo es el registro de cómo se llegó ahí.
 
 **Qué pasa.** `NOMBRE_DE_PLANILLA` en `apps/api/src/servicios/liquidacionDeIva.ts`
 solo acepta archivos cuyo nombre empieza con `RG COMPRAS` o `RG VENTAS`
@@ -1618,6 +1630,8 @@ otro lugar, hay que sumar esa carpeta a la sincronización.
 
 ## 29. Las migraciones no se aplican solas en DigitalOcean — ABIERTO (2026-09-15)
 
+**2026-09-21:** el procedimiento manual se usó dos veces más y funciona — `registro_de_horas` y `prorroga_de_vencimiento`, cada una con respaldo previo, con `migrate deploy` y **antes** del push (si el código llega primero, las rutas nuevas y el respaldo automático diario fallan contra una base sin la columna; ver el punto 33). Verificado tras cada una: columnas, RLS, índices, permisos de `effort_app` y que los datos existentes no cambiaron. Sigue siendo un procedimiento que depende de acordarse.
+
 `.do/app.yaml` declara un job `migrar-base` (`PRE_DEPLOY`, corre
 `prisma migrate deploy`), pero en los despliegues del 2026-09-14 y 15 las
 migraciones nuevas no se aplicaron: la tabla `lectura_de_declaracion` no existía
@@ -1650,6 +1664,8 @@ bloqueado además por el guardia de comandos).
 ---
 
 ## 31. Tres declaraciones archivadas bajo el cliente equivocado — AVISADO POR EL SISTEMA (2026-09-21), FALTA LA RESPUESTA DE EFFORT
+
+**Al 2026-09-21 la pregunta sigue sin respuesta.** Daniel trajo las respuestas 1 a 6 del documento para Laura y Lili, pero no la 0 ni la 0-bis, que es esta. La más urgente: **¿COPESA presentó el IVA de julio 2026?** Hoy figura sin presentar porque el único formulario 120 de julio en su carpeta es de MACOMA ENVIRONMENTAL TECHNOLOGIES. Puede ser que el PDF correcto nunca se guardó (y entonces está presentado y nadie lo ve) o que no se presentó (y entonces la alerta es correcta y es una multa en curso). El sistema no puede distinguirlo.
 
 Al bajar un formulario 120 real de OneDrive para la verificación técnica de la
 tarea 138, el PDF que está en la carpeta de COPESA resultó ser de **otra
@@ -1721,3 +1737,85 @@ el número de casilla de la DNIT**, que es lo que lo hace parseable sin ambigüe
 Con esto la tarea 138 ya no tiene supuestos sin verificar. Lo que queda es
 programarla, y eso **lleva migración de base** — o sea, respaldo y el autochequeo
 de `CLAUDE.md` antes de tocar nada.
+
+---
+
+## 33. El respaldo falla cuando el código va adelante del esquema desplegado — ABIERTO (2026-09-21)
+
+**Qué pasó.** Antes de aplicar las dos migraciones del día, `node scripts/respaldar-base.mjs`
+falló con `P2022` («la columna `vencimiento.fecha_vencimiento_original` no existe») y, la
+vez anterior, con `P2021` («la tabla `registro_de_horas` no existe»). El respaldo usa el
+cliente de Prisma, y ese cliente **ya conoce** las columnas y tablas nuevas porque el código
+va adelante de lo que hay en producción — exactamente en el momento en que el respaldo más
+hace falta: justo antes de migrar.
+
+**Por qué es un problema de fondo y no una molestia.** El respaldo automático diario
+(`apps/api/src/servicios/respaldoAutomatico.ts`) usa la misma lista y llama `findMany` sobre
+el mismo cliente de Prisma (`lectorParaRespaldo: prisma` en `index.ts`). Si un
+despliegue trae código nuevo antes que su migración, el respaldo de ese día falla — y un
+respaldo que falla no siempre hace ruido. Es la clase de fragilidad que el 2026-09-13
+convirtió un borrado en una pérdida.
+
+**Cómo se resolvió hoy, sin tocar el repo:** un script descartable que lee esas dos tablas con
+SQL crudo (`SELECT *`), que devuelve las columnas que EXISTEN de verdad, y el resto por el
+camino normal. Respaldos: `respaldos/respaldo-2026-09-21T14-30-55-previo-a-horas.json`
+(22.445 filas) y `…T18-04-01-previo-a-prorroga.json` (22.476).
+
+**Cómo se cierra (tarea 150).** Leer TODAS las tablas con SQL crudo, en el script manual y en
+el automático. **Lo que no se debe hacer es aflojar la cobertura:** el test
+`packages/core/test/modelosDelRespaldo.test.ts`, que compara la lista de modelos contra
+`schema.prisma`, atajó hoy mismo que `registro_de_horas` no estaba en el respaldo. Ese test
+tiene que seguir mandando.
+
+---
+
+## 34. La conexión a la base es intermitente desde la máquina de trabajo — OBSERVADO (2026-09-21)
+
+**Qué se vio.** Durante todo el día, y sin cambiar ninguna configuración: consultas de
+`scripts/consultar-produccion.mjs` con «Can't reach database server»; tests de integración
+que no llegaban ni a crear el esquema temporal; un `beforeAll` que tardó más de 120 s en una
+corrida y 30 s en la siguiente; y una prueba de «reglas impositivas» que falló con
+**«Transaction already closed… timeout 5000 ms, 5131 ms passed»**. `npm run verify` dio
+20/21 dos veces —una por un `hook timed out` de `verify:modulos`, otra por el timeout de
+transacción de arriba— y **21/21 en la corrida siguiente, sin tocar código entre medio**. Una
+tercera corrida dio 19/21, pero **mezclaba un fallo real** (el test de cobertura del respaldo,
+punto 33: `registro_de_horas` faltaba en la lista) **con uno de red**: no todo lo rojo del día
+fue la red, y eso hay que decirlo.
+
+**Qué NO es.** No es un cambio de esta sesión: los fallos aparecieron en código que no se
+tocó, y la misma corrida pasó verde poco después. **No es la app en producción**: esa usa el
+pooler de transacción (6543), y las pantallas que se miraron con el navegador real
+(Panel general y Horas) cargaron y guardaron sin error.
+
+**Qué hacer cuando aparece.** Reintentar **antes** de sospechar de un cambio; si un archivo
+falla solo, correrlo solo (`npx vitest run --project integracion <archivo>`). Un fallo de
+red se reconoce porque el mensaje habla de conexión o de un timeout de transacción, no de una
+aserción. **Lo que no se hace:** declarar «todo verde» sobre una corrida que fue intermitente
+sin decirlo, ni descartar un fallo como «la red» sin haberlo corrido de nuevo.
+
+**Relación con el punto 18.** Allí se midió la latencia (≈310 ms por consulta) y se planteó
+mudar la base a EE.UU. Esto es distinto —cortes, no lentitud— pero suma al mismo argumento, y
+la decisión sigue siendo de Daniel.
+
+---
+
+## 35. Costo por hora de cada colaborador — ABIERTO (2026-09-21)
+
+**Qué se pidió.** Daniel, 2026-09-21: medir *«cuánto le cuesta a EFFORT cada cliente»* y
+justificar lo que EFFORT paga por el sistema, incluida la posibilidad de **cobrarle más a
+algunos clientes**.
+
+**Qué hay hoy.** La planilla de horas (tarea 144) da **horas por persona y cliente**. Falta
+el otro factor de la cuenta: **cuánto cuesta una hora de cada persona**. Es un dato que el
+sistema no tiene, que no se puede deducir de nada y que **no se inventa** — un costo por
+cliente calculado con una tarifa supuesta sería un número sin fuente que alguien usaría para
+fijar un precio.
+
+**Y una advertencia de diseño, para quien lo construya.** Ese dato es sensible (cuánto cobra
+o cuesta cada persona) y hay que decidir **quién lo ve** antes de guardarlo. El criterio
+vigente para todo lo que expone el trabajo de los compañeros (bitácora, resumen de horas) es
+**solo dirección, y solo totales**.
+
+**Qué falta para cerrarlo.** Que Daniel decida si quiere ese cálculo y con qué dato: costo
+por hora individual, una tarifa promedio por rol, o solo horas sin guaraníes. Hasta entonces
+el resumen de horas dice horas, y lo dice sin convertirlas en plata.
