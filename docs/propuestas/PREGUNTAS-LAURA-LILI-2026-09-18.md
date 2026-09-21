@@ -137,30 +137,28 @@ planilla)?
 
 ---
 
-## 7. SIGA — ¿cómo se le cargan datos hoy, y qué permite?
+## 7. SIGA — la plantilla de carga
 
-Para saber hasta dónde puede llegar el sistema en el paso siguiente (leer las
-facturas y dejar el Excel armado en el formato de SIGA), necesitamos entender
-cómo se conecta SIGA con el mundo exterior. Esto es información sobre SIGA, no
-una decisión de ustedes:
+**Ya confirmado (Daniel, 2026-09-21):** SIGA no tiene API, pero acepta carga de
+planillas en su propio formato: se sube el Excel y SIGA extrae los datos y los
+carga directo, sin que nadie lo haga casilla por casilla. Es la mejor vía
+posible: el sistema puede leer las facturas y entregarles la planilla armada,
+y una persona la sube por la función oficial de SIGA. No hace falta (ni se va a
+hacer) nada que entre a SIGA como si fuera una persona.
 
-7a. ¿SIGA tiene una opción de **importar un Excel o CSV** (carga masiva) desde
-su propia pantalla? Si sí, ¿en qué formato exacto lo espera? (Con un ejemplo de
-un archivo que ya hayan importado alcanza.)
+**Lo único que falta para empezar:**
 
-7b. ¿Saben si SIGA ofrece una **conexión oficial para otros sistemas** (API), o
-si sus términos de uso dicen algo sobre herramientas que cargan datos de forma
-automática?
+7a. La **plantilla oficial de carga** de SIGA (el archivo en blanco, o el
+formato de columnas que documenta SIGA).
 
-7c. ¿Tienen un contacto en el soporte de SIGA a quien se le pueda preguntar
-esto?
+7b. Un **ejemplo de un archivo que ya hayan importado** de verdad, para ver
+cómo lo llenan ustedes en la práctica (qué va en cada columna, cómo ponen las
+fechas y los importes, qué hacen con las facturas anuladas).
 
-**Por qué importa:** si SIGA permite importar por Excel, el sistema puede
-entregarles el archivo perfecto y una persona lo sube por la función oficial —
-sin ningún riesgo para la cuenta. Lo que **no** se va a hacer es un programa que
-entre a SIGA "como si fuera una persona": si SIGA no lo permite, pone en riesgo
-la cuenta de EFFORT, y lo que se carga ahí termina en declaraciones reales ante
-la DNIT — esa parte siempre la confirma una persona antes de enviar.
+7c. ¿Qué tipos de documento cargan así — compras, ventas, ambos? ¿Y hay
+alguno que SIGA no acepte por planilla y haya que cargar a mano?
+
+Sin la plantilla no se puede escribir ni una línea: el formato no se adivina.
 
 ---
 
