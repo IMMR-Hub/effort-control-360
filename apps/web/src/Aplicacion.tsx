@@ -47,9 +47,16 @@ function AppShell() {
   const PantallaActual = PANTALLAS[pantallaActiva];
 
   return (
-    <div className="min-h-dvh bg-lienzo font-interfaz text-tinta">
+    // Fila desde `lg` (barra lateral fija + contenido), columna abajo de eso
+    // (barra arriba, contenido debajo) — mismo cambio de dirección que ya
+    // hace `Encabezado` con su propio contenido.
+    <div className="flex min-h-dvh flex-col bg-lienzo font-interfaz text-tinta lg:h-dvh lg:flex-row lg:overflow-hidden">
       <Encabezado activa={pantallaActiva} onCambiar={setPantallaActiva} />
-      <PantallaActual />
+      {/* Un único scroll, el de esta columna — no el de toda la página — para
+          que la barra lateral quede fija en vez de irse con el contenido. */}
+      <div className="min-w-0 flex-1 lg:overflow-y-auto">
+        <PantallaActual />
+      </div>
     </div>
   );
 }

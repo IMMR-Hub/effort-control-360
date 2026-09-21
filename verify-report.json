@@ -1,13 +1,13 @@
 {
-  "generado_en": "2026-09-21T02:03:52.720Z",
-  "commit": "d87ef6a687810faeb2535ca93175d2ddb561a0ba",
+  "generado_en": "2026-09-21T10:11:20.314Z",
+  "commit": "ecc68251f8811154b4ba9ad09f5e10ace6d33f23",
   "checks": [
     {
       "nombre": "typecheck",
       "comando": "npx tsc --build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 1769,
+      "duracion_ms": 1595,
       "detalle": ""
     },
     {
@@ -15,7 +15,7 @@
       "comando": "npm run typecheck --workspace @effort/web",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 9365,
+      "duracion_ms": 4436,
       "detalle": ""
     },
     {
@@ -23,7 +23,7 @@
       "comando": "npx vitest run",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 78222,
+      "duracion_ms": 71578,
       "detalle": ""
     },
     {
@@ -31,7 +31,7 @@
       "comando": "npx vitest run packages/core/test/golden.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6695,
+      "duracion_ms": 4981,
       "detalle": ""
     },
     {
@@ -39,7 +39,7 @@
       "comando": "npx eslint .",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 10269,
+      "duracion_ms": 8832,
       "detalle": ""
     },
     {
@@ -47,7 +47,7 @@
       "comando": "npx vitest run apps/api/test/rbac.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4275,
+      "duracion_ms": 3590,
       "detalle": ""
     },
     {
@@ -55,7 +55,7 @@
       "comando": "npx vitest run apps/api/test/seguridad.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3733,
+      "duracion_ms": 3843,
       "detalle": ""
     },
     {
@@ -63,7 +63,7 @@
       "comando": "npx vitest run packages/schema/test/contratos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3837,
+      "duracion_ms": 3519,
       "detalle": ""
     },
     {
@@ -71,23 +71,23 @@
       "comando": "npx vitest run apps/api/test/servidor.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6815,
+      "duracion_ms": 6172,
       "detalle": ""
     },
     {
       "nombre": "verify:modulos",
       "comando": "npx vitest run apps/api/test/modulos.test.ts",
-      "estado": "OK",
-      "exit_code": 0,
-      "duracion_ms": 40914,
-      "detalle": ""
+      "estado": "FALLO",
+      "exit_code": 1,
+      "duracion_ms": 10836257,
+      "detalle": "d in `fastify@6`.\n(node:19692) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:19692) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:19692) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:19692) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:19692) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:19692) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:19692) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:19692) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:19692) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:19692) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:19692) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:19692) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n\n\u001b[31m⎯⎯⎯⎯⎯⎯⎯\u001b[39m\u001b[1m\u001b[41m Failed Tests 1 \u001b[49m\u001b[22m\u001b[31m⎯⎯⎯⎯⎯⎯⎯\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[46m api \u001b[49m\u001b[39m test/modulos.test.ts\u001b[2m > \u001b[22mreglas impositivas\u001b[2m > \u001b[22muna tasa gravada exige divisor\n\u001b[31m\u001b[1mError\u001b[22m: Hook timed out in 10000ms.\nIf this is a long-running hook, pass a timeout value as the last argument or configure it globally with \"hookTimeout\".\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m test/modulos.test.ts:\u001b[2m221:1\u001b[22m\u001b[39m\n    \u001b[90m219| \u001b[39m\u001b[35mlet\u001b[39m soloLectura \u001b[33m=\u001b[39m \u001b[32m''\u001b[39m\u001b[33m;\u001b[39m\n    \u001b[90m220| \u001b[39m\n    \u001b[90m221| \u001b[39m\u001b[34mbeforeEach\u001b[39m(\u001b[35masync\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m   | \u001b[39m\u001b[31m^\u001b[39m\n    \u001b[90m222| \u001b[39m  ctx \u001b[33m=\u001b[39m \u001b[35mawait\u001b[39m \u001b[34mmontar\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m223| \u001b[39m  direccion \u001b[33m=\u001b[39m \u001b[35mawait\u001b[39m \u001b[34macceder\u001b[39m(ctx\u001b[33m,\u001b[39m \u001b[32m'laura@effort.com.py'\u001b[39m)\u001b[33m;\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯\u001b[22m\u001b[39m"
     },
     {
       "nombre": "verify:siga",
       "comando": "npx vitest run apps/api/test/siga.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 10248,
+      "duracion_ms": 16377830,
       "detalle": ""
     },
     {
@@ -95,7 +95,7 @@
       "comando": "npx vitest run apps/api/test/importaciones.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 8484,
+      "duracion_ms": 8777,
       "detalle": ""
     },
     {
@@ -103,7 +103,7 @@
       "comando": "npx vitest run --project integracion",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 48770,
+      "duracion_ms": 69324,
       "detalle": ""
     },
     {
@@ -111,7 +111,7 @@
       "comando": "npx vitest run --project drive",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4698,
+      "duracion_ms": 3007,
       "detalle": ""
     },
     {
@@ -119,7 +119,7 @@
       "comando": "npx vitest run --project importers",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7644,
+      "duracion_ms": 4053,
       "detalle": ""
     },
     {
@@ -127,7 +127,7 @@
       "comando": "npx vitest run --project web",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 42413,
+      "duracion_ms": 72737,
       "detalle": ""
     },
     {
@@ -135,7 +135,7 @@
       "comando": "node scripts/verificar-kpi.mjs",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 120,
+      "duracion_ms": 197,
       "detalle": ""
     },
     {
@@ -143,7 +143,7 @@
       "comando": "npm run typecheck:e2e",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4225,
+      "duracion_ms": 8331,
       "detalle": ""
     },
     {
@@ -151,7 +151,7 @@
       "comando": "npx playwright test",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 48165,
+      "duracion_ms": 111520,
       "detalle": ""
     },
     {
@@ -159,7 +159,7 @@
       "comando": "node scripts/auditar-dependencias.mjs",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 8382,
+      "duracion_ms": 20619,
       "detalle": ""
     },
     {
@@ -167,12 +167,12 @@
       "comando": "npm run build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 10278,
+      "duracion_ms": 31571,
       "detalle": ""
     }
   ],
-  "checks_ok": 21,
+  "checks_ok": 20,
   "checks_pendientes": 0,
-  "checks_fallidos": 0,
-  "todo_verde": true
+  "checks_fallidos": 1,
+  "todo_verde": false
 }
