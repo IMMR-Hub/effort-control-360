@@ -28,7 +28,7 @@ de 2026.
 > `docs/ROADMAP-MAESTRO.md`** (sección "▶ EMPEZAR ACÁ"), nunca este cuadro.
 
 **Este archivo se revisa cada 6 meses**, o cuando una conversación descubra algo
-que la siguiente necesitaría redescubrir. Última revisión: **2026-09-17**. No es
+que la siguiente necesitaría redescubrir. Última revisión: **2026-09-21**. No es
 un documento de arranque: es la memoria del proyecto, y su valor está en lo que
 evita repetir. Se agrega; no se borra.
 
@@ -221,6 +221,70 @@ obedece mal, porque no se sabe qué caso de borde cubre.
     lectura ya se probó contra un archivo real o si sigue siendo un
     supuesto — nunca dejarlo implícito.*
 
+12. **Un respaldo que depende del cliente del ORM falla justo cuando más hace
+    falta.** El 2026-09-21, antes de aplicar una migración, `respaldar-base.mjs`
+    falló dos veces con `P2021` y `P2022` («la tabla / la columna no existe»):
+    el cliente de Prisma ya conocía lo nuevo porque el código va adelante del
+    esquema desplegado, y el respaldo se cae en el único momento en que se
+    necesita. El respaldo automático diario tiene la misma fragilidad
+    (`lectorParaRespaldo: prisma` en `index.ts`). Se resolvió con un script
+    descartable que leyó esas dos tablas con SQL crudo. *Lección: el orden es
+    respaldar → migrar → pushear, nunca al revés (si el código llega antes que
+    su migración, las rutas nuevas y el respaldo del día fallan contra una base
+    sin la columna). La forma robusta es leer las tablas con `SELECT *`, y
+    **sin aflojar la cobertura total**: ese mismo día el test que compara la
+    lista de respaldo contra `schema.prisma` atajó que `registro_de_horas` no
+    estaba incluida. Ver `docs/DISCREPANCIAS.md` punto 33 y la tarea 150.*
+13. **Lo que se razona sobre la base hay que probarlo contra la base.** Tres
+    veces el 2026-09-21 una suposición sobre PostgreSQL o Prisma cayó ante una
+    prueba real, con los dobles en verde: (a) Prisma rechaza `null` dentro de la
+    clave compuesta de un `upsert` («Argument `clienteId` must not be null»);
+    (b) escribí en un comentario, como un hecho, que dos cargas de tiempo
+    interno el mismo día quedarían como dos filas, y el test de integración
+    mostró lo contrario; (c) `type="number"` descartaba la coma decimal
+    española. *Lección (refuerza la 6 y la 7): no se escribe en un comentario,
+    en una migración ni en un documento, como hecho, algo que solo se razonó.
+    Todo repositorio con lógica de unicidad o de valores nulos lleva su prueba
+    contra PostgreSQL real, y si la prueba contradice el comentario, se corrige
+    el comentario en el mismo commit.*
+14. **«Desplegado» no es «hecho», y la casilla y su nota tienen que decir lo
+    mismo.** El 2026-09-21 la tarea 149 quedó marcada `[x]` en el roadmap con
+    una nota que decía «falta desplegar y verlo en pantalla»: el propio renglón
+    contradecía la regla 4 del roadmap (hecho = verificado en producción,
+    mirando la pantalla). Se descubrió recién al actualizar el documento.
+    *Lección: `[x]` solo después de ver la pantalla. Si la nota dice «falta»,
+    la casilla es `[ ]`. Y en todo resumen se distinguen dos estados que no son
+    uno: «desplegado» (el bundle nuevo se sirve, confirmado con
+    `esperar-despliegue.mjs`) y «verificado en pantalla».*
+15. **Un rojo intermitente ni se descarta como «la red» ni se declara verde sin
+    decirlo.** El 2026-09-21 la conexión a la base fue intermitente todo el día
+    y `npm run verify` dio 20/21, 20/21, 19/21 y finalmente 21/21. Pero la
+    corrida de 19/21 mezclaba un fallo **real** (el test de cobertura del
+    respaldo, lección 12) con uno de red. *Lección: antes de decir «es la red»,
+    mirar QUÉ falló — un fallo de red habla de conexión o de un timeout de
+    transacción, no de una aserción —, correr ese archivo solo, y contarle a
+    Daniel que fue intermitente sin maquillarlo. Ver `docs/DISCREPANCIAS.md`
+    punto 34.*
+16. **Cambiar el marcado de un componente compartido rompe pruebas de otras
+    pantallas.** Al agregarle un ícono a `Indicador` envolví la etiqueta en un
+    `div` nuevo, y fallaron las pruebas de Vencimientos y del Panel, que ubican
+    la tarjeta con `.closest('div')` desde el texto de la etiqueta. Lo
+    encontraron esas pruebas, no yo. *Lección: antes de tocar el HTML de un
+    primitivo de `apps/web/src/ui/`, buscar `closest(` en `apps/web/test/` y
+    agregar sin anidar (el ícono quedó posicionado en absoluto). Las
+    consecuencias de un primitivo compartido llegan a todas las pantallas que
+    lo usan, no solo a la que se está mirando.*
+17. **Una referencia visual no es una especificación.** Daniel trajo capturas
+    de un mockup anterior que había gustado mucho. Tenía cosas reales de las
+    que aprender (un menú lateral, indicadores que llevan a su módulo) y cosas
+    que eran de maqueta de venta: clientes inventados, «36 horas ahorradas», un
+    forecast de carga a 14 días, «98 clientes» cuando son 144. *Lección: se
+    copia la forma (estructura, densidad, navegación), nunca las cifras: una
+    cifra que no sale de un cálculo del sistema rompe la regla 6. Y una skill o
+    un plugin de terceros no se instala sin leerlo antes — instalarlo cambia
+    cómo trabaja Claude en este proyecto (se leyó `taste-skill` y no se
+    instaló).*
+
 **Cómo se usa esta sección:** antes de escribir algo que lea archivos externos,
 borre datos, o corra solo, buscá acá si ya nos pasó. Y cuando algo salga mal,
 agregá la entrada — el valor está en que siga creciendo.
@@ -234,8 +298,16 @@ agregá la entrada — el valor está en que siga creciendo.
    humano registrado, con nombre y fecha, y solo por `revisor_balance` o
    `direccion`. Ver `docs/adr/0004-el-sistema-no-aprueba-balances.md`.
 3. **Vencimientos en `America/Asuncion`**, vía base IANA. Nunca offset fijo.
-4. **No se toca SIGA.** Se trabaja sobre sus exportaciones Excel/CSV/PDF. No
-   hay API de SIGA confirmada por el proveedor.
+4. **No se toca SIGA.** Se trabaja sobre sus exportaciones Excel/CSV/PDF.
+   SIGA **no tiene API** (confirmado por Daniel el 2026-09-21), pero **sí
+   acepta carga de planillas en su formato**: esa es la única vía de escritura
+   hacia SIGA — el sistema arma la planilla y **una persona la sube por la
+   función oficial** (tarea 145, en espera de la plantilla que tiene que dar
+   EFFORT). **Nunca un agente ni un navegador automatizado que maneje la
+   pantalla de SIGA:** no hace falta, arriesga la cuenta de EFFORT (términos
+   de uso, verificaciones anti-bot que no se sortean), y lo que se carga ahí
+   termina en declaraciones reales ante la DNIT. El envío de cualquier
+   formulario oficial lo confirma siempre una persona.
 5. **No se borra ni se modifica nada en las carpetas reales de EFFORT,
    nunca — EFFORT no tiene copia de seguridad de sus propios archivos, así
    que un error acá no tiene forma de deshacerse.** Regla vigente desde
@@ -281,6 +353,20 @@ agregá la entrada — el valor está en que siga creciendo.
    fuente de verdad de qué se espera), no el archivo con los valores reales.
    Ver lección 10 — un secreto ya expuesto una vez volvió a aparecer al día
    siguiente por esto mismo, el 2026-09-19.
+10. **Las horas se autoreportan; nunca se infieren de la actividad.** El tiempo
+    entre dos clics puede ser una llamada, un papel o un café, y el número de
+    horas va a decidir precios y sueldos (Daniel, 2026-09-21; tarea 144).
+    Cada persona ve y carga **solo las suyas** —siempre `sujeto.usuarioId`, nunca
+    uno que llegue en la petición, ni siquiera para dirección—; el resumen del
+    equipo es **solo de dirección y solo con totales**, jamás el día a día de
+    otra persona (mismo criterio que restringió la bitácora el 2026-09-10). El
+    resumen dice en voz alta que son horas autoreportadas. **No se convierten en
+    guaraníes con una tarifa supuesta**: ese dato no lo tenemos (DISCREPANCIAS 35).
+11. **Una fecha que se aparta de la regla del calendario lleva su motivo.** Una
+    prórroga de la DNIT es un dato del sistema, no un `UPDATE` silencioso: se
+    guarda la fecha que fijaba el calendario, el motivo es obligatorio (la
+    resolución) y una segunda prórroga no pisa la fecha original (tarea 146).
+    Sin eso, dentro de seis meses nadie sabe por qué esa fila no sigue la regla.
 
 ## Lo que sabemos del dominio, y costó descubrir
 
@@ -321,10 +407,45 @@ declaró, no para pisar uno declarado. Las diferencias se informan como hallazgo
 RG 90** (`RG COMPRAS …`, `RG VENTAS …`, Excel, formato oficial de 28 columnas).
 Es la única fuente de dinero real del sistema.
 
+**Las prórrogas de la DNIT llegan por resolución y cambian el vencimiento real.**
+La **RG 50/2026** (7 de abril de 2026) corrió al **30/06/2026** los estados
+financieros del ejercicio 2025 de los contribuyentes de IRE Régimen General, y
+EFFORT confirmó (2026-09-21) que **los cinco clientes lo son**. El sistema tenía
+esos vencimientos en abril y mostraba a DIBEC, FUMIPRO y ECOAGRO con 60 a 64 días
+de atraso cuando habían presentado a tiempo: un atraso falso dicho con
+seguridad es peor que no decir nada. Daniel: *«es una resolución de prórroga que
+suelen sacar»* — va a volver a pasar (regla 11; tarea 146).
+
+**En el formulario 120, el saldo que se arrastra es la casilla 47, no la 54.**
+Verificado contra un PDF real (2026-09-20): el Rubro 4 trae el *saldo técnico* de
+IVA (casilla **47**, entra al período siguiente por la 46) y el Rubro 5 trae un
+*saldo financiero* (casilla 54) que el propio formulario declara «no
+trasladable al Rubro 4». Tomar la 54 sería un error silencioso. Los importes
+usan el punto como separador de miles y no llevan decimales (DISCREPANCIAS 32).
+
+**En la carpeta de un cliente puede haber una declaración de otro contribuyente,
+y el RUC del PDF manda, no el nombre del archivo ni la carpeta.** Pasó con tres
+archivos reales (un 120 de MACOMA en la carpeta de COPESA, un 158 de FUMIPRO en
+la de DIBEC, un acuse de una persona física). El riesgo no es solo que el
+sistema los tome por presentados —no lo hace— sino que una persona los abra
+creyendo que son del cliente y transcriba esos importes al SIGA equivocado
+(tarea 143; DISCREPANCIAS 31).
+
+**Lo que dijo EFFORT el 2026-09-21 y ya es criterio del sistema:** una fila de
+autofactura con las partes en cero es «porque no existe autofactura cargada»,
+no un error de lectura; cuando hay dos versiones de una planilla y ninguna dice
+«CORRECCION», gana **la más reciente** (y de ahora en más van a usar la palabra
+«CORRECCION»); y un talón de RG 90 que no está en OneDrive **existe, guardado
+en otro lugar**, así que figurar como faltante es correcto — no está archivado
+donde corresponde.
+
 ## Fuera de alcance de esta etapa
 
-OCR de facturas, carga automática a SIGA, API de SIGA, WhatsApp Business API,
-portal de cliente, app móvil, aprobación automática de balances.
+OCR de facturas, WhatsApp Business API, portal de cliente, app móvil,
+aprobación automática de balances, y **cualquier cosa que maneje la pantalla de
+SIGA** (regla 4). La API de SIGA no existe. Lo que sí está previsto, en cuanto
+EFFORT entregue la plantilla, es **generar la planilla en el formato de carga
+de SIGA** (tarea 145): la sube una persona.
 
 El extractor de facturas con IA está previsto como contrato (`ExtractorPort`)
 para conectarse después sin rehacer nada — pero no se implementa ahora.
@@ -383,11 +504,40 @@ necesita su política antes de poder leer nada: sin política, RLS devuelve cero
 filas **sin dar error**. El rol de aplicación `effort_app` ya tiene la suya.
 Ver `docs/DISCREPANCIAS.md`, puntos 7 y 8.
 
+## Trampas que ya costaron tiempo
+
+Cada una con su motivo; ver las lecciones de más arriba.
+
+- **La conexión a Supabase desde la máquina de trabajo es intermitente.**
+  Consultas, tests de integración y `npm run verify` fallan a veces con «Can't
+  reach database server» o con un timeout de transacción de 5.000 ms.
+  Reintentar, y mirar qué falló, antes de sospechar de un cambio (lección 15).
+- **Migrar antes de pushear, con respaldo previo** (lección 12). Si
+  `respaldar-base.mjs` falla con `P2021`/`P2022`, el código va adelante del
+  esquema: no es un bug del respaldo, es el orden.
+- **Al esperar un despliegue, el marcador de `scripts/esperar-despliegue.mjs`
+  tiene que ser un texto que EXISTA en el bundle.** Comprobarlo antes contra
+  `apps/web/dist/assets/*.js` (una vez se usó uno inventado y el script falló
+  por un despliegue que había salido bien).
+- **En los tests de API, `await activarCsrfEnInject(app)`.** Sin el `await`, los
+  `inject` mutantes salen sin token y fallan con un 400 genérico que no explica
+  nada. Además `direccion` y `responsable` exigen segundo factor: el helper de
+  acceso tiene que completar el TOTP, como en `test/modulos.test.ts`.
+- **`window.prompt` (lo usan «Presentar» y «Prórroga») puede no funcionar con la
+  automatización del navegador.** Si no anda, lo carga una persona o se
+  reemplaza por un formulario.
+- **`prisma migrate diff`, `migrate dev`, `db push` y `migrate reset` están
+  bloqueados, y hacen bien.** Las migraciones se escriben a mano y se aplican con
+  `migrate deploy`.
+- **Los scripts largos de Python en el shell**: un bloque con muchas comillas
+  puede cortar el comando sin aplicar nada. Escribirlo a un archivo y correrlo.
+
 ## Al terminar cualquier tarea
 
 1. Correr `npm run verify` y pegar la salida real.
 2. Commitear.
-3. **Actualizar `docs/ROADMAP-MAESTRO.md`**: marcar la tarea, y corregir la
+3. **Actualizar `docs/ROADMAP-MAESTRO.md`**: marcar la tarea — `[x]` solo si se
+   vio en pantalla, no si solo se desplegó (lección 14) —, y corregir la
    numeración o el total si cambió el alcance. Un roadmap desactualizado hace
    que la próxima conversación duplique trabajo o se desvíe.
 4. Si apareció una decisión no trivial, agregarla a la bitácora al final del
