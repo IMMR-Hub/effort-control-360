@@ -1575,7 +1575,7 @@ bloqueado además por el guardia de comandos).
 
 ---
 
-## 31. Tres declaraciones archivadas bajo el cliente equivocado — ABIERTO (2026-09-20)
+## 31. Tres declaraciones archivadas bajo el cliente equivocado — AVISADO POR EL SISTEMA (2026-09-21), FALTA LA RESPUESTA DE EFFORT
 
 Al bajar un formulario 120 real de OneDrive para la verificación técnica de la
 tarea 138, el PDF que está en la carpeta de COPESA resultó ser de **otra
@@ -1605,9 +1605,11 @@ distintas y el sistema no distingue:
 
 **Cómo se cierra.** Dos cosas, ninguna bloqueada por Laura ni Lili:
 
-- **En el sistema (tarea nueva):** levantar un hallazgo/alerta de criticidad
-  media cuando una declaración leída trae un RUC que no es el del cliente en
-  cuya carpeta está. El dato ya está guardado; hoy solo se descarta.
+- **En el sistema: HECHO (tarea 143).** Verificado en producción el 2026-09-21
+  a las 01:14 UTC: el motor levantó las 3 alertas `ALTA`, una por archivo, con
+  el nombre del archivo en el título y el RUC ajeno en el detalle. El texto
+  advierte expresamente que no se transcriban esos importes al SIGA. Se cierran
+  solas si EFFORT reubica los archivos.
 - **Con EFFORT (a confirmar, no a asumir):** preguntar por el formulario 120 de
   COPESA de julio 2026, y avisar de los tres archivos mal ubicados. **No los
   mueve ni los borra el sistema**: los reubica EFFORT si corresponde.
