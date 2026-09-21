@@ -42,6 +42,14 @@ export interface DependenciasDelMotorDeAlertas {
    * motor existe para evitar.
    */
   readonly riesgoDeLibro: RepositorioDeRiesgoDeLibro;
+  /**
+   * Declaraciones archivadas bajo el cliente equivocado.
+   *
+   * Opcional porque las dos llamadas al motor existían antes que esto y un
+   * módulo que falte no puede dejar al sistema sin las alertas de vencimientos,
+   * que es lo que más caro sale no tener — el mismo criterio que `riesgoDeLibro`.
+   */
+  readonly declaracionesAjenas?: RepositorioDeDeclaracionesAjenas | undefined;
 }
 
 /** Resumen de lo que hay que revisar en el libro de un cliente y período. */
@@ -69,6 +77,31 @@ export interface RiesgoDeLibroPorPeriodo {
 
 export interface RepositorioDeRiesgoDeLibro {
   porPeriodo(): Promise<readonly RiesgoDeLibroPorPeriodo[]>;
+}
+
+/**
+ * Una declaración que está en la carpeta de un cliente pero es de otro
+ * contribuyente.
+ *
+ * Trae el nombre del archivo y el RUC ajeno porque el aviso tiene que poder
+ * leerse sin abrir nada: quien lo mira necesita saber CUÁL archivo y DE QUIÉN
+ * es, ahí mismo.
+ */
+export interface DeclaracionAjena {
+  /** La evidencia es la entidad de la alerta: su id es un UUID de verdad. */
+  readonly evidenciaId: string;
+  readonly clienteId: string;
+  readonly nombreDelCliente: string;
+  readonly nombreArchivo: string;
+  /** RUC que dice el PDF, sin dígito verificador. */
+  readonly rucDelDocumento: string;
+  /** Número de formulario de la DNIT, si se reconoció. */
+  readonly formulario: string | null;
+  readonly periodo: string | null;
+}
+
+export interface RepositorioDeDeclaracionesAjenas {
+  listar(): Promise<readonly DeclaracionAjena[]>;
 }
 
 /**
@@ -100,6 +133,30 @@ export const ORIGEN_DOCUMENTACION = 'documentacion_faltante';
  * proveedor y una diferencia dispara una revisión.
  */
 export const ORIGEN_LIBRO_RIESGO = 'libro_con_riesgo_de_multa';
+
+/**
+ * Una declaración de otro contribuyente guardada en la carpeta de un cliente.
+ *
+ * Descubierto el 2026-09-20 al bajar un formulario 120 real: `120-07-2026.pdf`
+ * estaba en la carpeta de COPESA y adentro decía MACOMA ENVIRONMENTAL
+ * TECHNOLOGIES. Había tres casos así en el piloto.
+ *
+ * El detector de presentaciones ya se defendía —compara el RUC antes de marcar
+ * un vencimiento como presentado, así que ninguno apagó una alerta— pero
+ * descartaba el archivo **en silencio**, y ese silencio es el problema.
+ *
+ * Daniel, 2026-09-20: *"puede costar una multa luego por que capaz al
+ * transcribir al SIGA se equivocan también"*. Ahí está el riesgo de verdad, y
+ * es peor que el del vencimiento: el sistema se defiende de SU error, pero no
+ * del error humano. Un archivo con el nombre correcto, en la carpeta correcta,
+ * con la fecha correcta y otra empresa adentro es exactamente lo que nadie
+ * abre para verificar — y los números terminan en la contabilidad de quien no
+ * corresponde.
+ *
+ * Va en ALTA y no en CRITICA: no hay una multa en curso, hay una equivocación
+ * esperando a que alguien la cometa.
+ */
+export const ORIGEN_DECLARACION_AJENA = 'declaracion_de_otro_contribuyente';
 
 /**
  * Desde qué período se alerta sobre los libros.
@@ -146,11 +203,12 @@ export async function evaluarAlertas(
   periodo: string,
   usuarioId: string,
 ): Promise<ResumenDeAlertas> {
-  const [vencimientos, procesos, abiertas, riesgos] = await Promise.all([
+  const [vencimientos, procesos, abiertas, riesgos, ajenas] = await Promise.all([
     deps.vencimientos.listar(null),
     deps.procesoMensual.listar(periodo, null),
     deps.alertas.listar(null),
     deps.riesgoDeLibro.porPeriodo(),
+    deps.declaracionesAjenas?.listar() ?? [],
   ]);
 
   // Clave de lo que ya está abierto, para no recontar como "creada" algo que
@@ -250,6 +308,42 @@ export async function evaluarAlertas(
     });
   }
 
+  /*
+   * Un aviso por archivo mal archivado.
+   *
+   * No se agrupa por cliente como el riesgo de libro: acá cada archivo es una
+   * cosa distinta que alguien tiene que ir a mirar y mover, y el aviso sirve
+   * justamente porque nombra CUÁL. "Hay 3 archivos raros en COPESA" no le
+   * ahorra el trabajo a nadie.
+   *
+   * Se cierra sola cuando el archivo deja de estar mal ubicado: si EFFORT lo
+   * mueve, la evidencia deja de aparecer en la carpeta de ese cliente y el
+   * cierre automático de más abajo la baja sin que nadie la toque.
+   */
+  for (const ajena of ajenas) {
+    const queEs = ajena.formulario ? `El formulario ${ajena.formulario}` : 'La declaración';
+    const deQuePeriodo = ajena.periodo ? ` del período ${ajena.periodo}` : '';
+
+    candidatas.push({
+      clienteId: ajena.clienteId,
+      periodo: ajena.periodo,
+      origen: ORIGEN_DECLARACION_AJENA,
+      criticidad: 'ALTA',
+      titulo: `"${ajena.nombreArchivo}" está en ${ajena.nombreDelCliente} pero es de otro contribuyente`,
+      detalle:
+        `${queEs}${deQuePeriodo} guardado como "${ajena.nombreArchivo}" en la carpeta de ` +
+        `${ajena.nombreDelCliente} declara el RUC ${ajena.rucDelDocumento}, que no es el de ese ` +
+        'cliente. **No uses estos números**: si se transcriben al SIGA, van a parar a la ' +
+        'contabilidad de quien no corresponde, y eso se arregla con una rectificativa. ' +
+        'El sistema NO lo tomó como presentado y NO tocó nada en OneDrive: mover o borrar el ' +
+        'archivo lo decide EFFORT. Revisá también si falta el documento que sí correspondía a ' +
+        'este cliente y período — puede estar sin presentar y nadie haberse enterado.',
+      entidadRelacionada: 'evidencia',
+      entidadRelacionadaId: ajena.evidenciaId,
+      fechaLimite: null,
+    });
+  }
+
   const nuevas = candidatas.filter(
     (alta) => !yaAbiertas.has(`${alta.origen}|${alta.entidadRelacionadaId ?? ''}`),
   );
@@ -277,10 +371,18 @@ export async function evaluarAlertas(
     if (
       alerta.origen !== ORIGEN_VENCIMIENTO &&
       alerta.origen !== ORIGEN_DOCUMENTACION &&
-      alerta.origen !== ORIGEN_LIBRO_RIESGO
+      alerta.origen !== ORIGEN_LIBRO_RIESGO &&
+      alerta.origen !== ORIGEN_DECLARACION_AJENA
     ) {
       continue;
     }
+
+    /*
+     * Sin el módulo conectado, `ajenas` viene vacío y TODAS las alertas de
+     * archivos mal ubicados parecerían resueltas. Cerrarlas sería mentir: el
+     * archivo puede seguir ahí. Mejor dejarlas abiertas.
+     */
+    if (alerta.origen === ORIGEN_DECLARACION_AJENA && !deps.declaracionesAjenas) continue;
 
     const clave = `${alerta.origen}|${alerta.entidadRelacionadaId ?? ''}`;
     if (vigentes.has(clave)) continue;
@@ -301,7 +403,7 @@ export async function evaluarAlertas(
   return {
     creadas,
     yaEstabanAbiertas: candidatas.length - creadas,
-    evaluadas: vencimientos.length + procesos.length + riesgos.length,
+    evaluadas: vencimientos.length + procesos.length + riesgos.length + ajenas.length,
     resueltas,
   };
 }

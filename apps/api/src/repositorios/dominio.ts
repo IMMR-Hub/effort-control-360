@@ -51,6 +51,11 @@ import type {
   AltaDeSolicitud,
   VencimientoAlmacenado,
 } from '../puertos-dominio.js';
+import { rucBase } from '../servicios/detectorDePresentaciones.js';
+import type {
+  DeclaracionAjena,
+  RepositorioDeDeclaracionesAjenas,
+} from '../servicios/motorDeAlertas.js';
 import type { PrismaClient } from './prisma.js';
 
 /**
@@ -1372,5 +1377,53 @@ export class ReglasDeNotificacionPrisma implements RepositorioDeReglasDeNotifica
     });
 
     return aReglaDeNotificacion(fila);
+  }
+}
+
+/**
+ * Declaraciones guardadas en la carpeta de un cliente que son de otro
+ * contribuyente (tarea 143).
+ *
+ * El dato ya estaba: `lectura_de_declaracion.ruc` guarda el RUC que dice cada
+ * PDF desde que existe el detector de presentaciones. Lo único que faltaba era
+ * compararlo con el del cliente de la carpeta y avisar cuando no coincide.
+ *
+ * **La comparación se hace en memoria, no en SQL, a propósito.** El criterio de
+ * "mismo RUC" es `rucBase` de `detectorDePresentaciones.ts`, la misma función
+ * que decide si una declaración sirve para marcar un vencimiento como
+ * presentado. Escribirlo otra vez en SQL (`split_part(ruc,'-',1)`) sería tener
+ * dos definiciones de lo mismo, y el día que una cambie el sistema empezaría a
+ * alertar por archivos que el detector acepta, o a callarse sobre los que
+ * descarta. Se traen solo las filas con RUC leído, que son pocas: una por PDF
+ * de declaración reconocido, no una por documento.
+ */
+export class DeclaracionesAjenasPrisma implements RepositorioDeDeclaracionesAjenas {
+  constructor(private readonly prisma: PrismaClient) {}
+
+  async listar(): Promise<DeclaracionAjena[]> {
+    const filas = await this.prisma.lecturaDeDeclaracion.findMany({
+      where: { ruc: { not: null } },
+      select: {
+        evidenciaId: true,
+        clienteId: true,
+        ruc: true,
+        formulario: true,
+        periodo: true,
+        evidencia: { select: { nombreArchivo: true } },
+        cliente: { select: { nombre: true, ruc: true } },
+      },
+    });
+
+    return filas
+      .filter((fila) => rucBase(fila.ruc!) !== rucBase(fila.cliente.ruc))
+      .map((fila) => ({
+        evidenciaId: fila.evidenciaId,
+        clienteId: fila.clienteId,
+        nombreDelCliente: fila.cliente.nombre,
+        nombreArchivo: fila.evidencia.nombreArchivo,
+        rucDelDocumento: fila.ruc!,
+        formulario: fila.formulario,
+        periodo: fila.periodo,
+      }));
   }
 }

@@ -104,8 +104,15 @@ export interface ResumenDelDetector {
  */
 export const PDFS_POR_VUELTA = 60;
 
-/** RUC sin dígito verificador: `80119631-0` → `80119631`. */
-function rucBase(ruc: string): string {
+/**
+ * RUC sin dígito verificador: `80119631-0` → `80119631`.
+ *
+ * Exportada porque el motor de alertas levanta un aviso justamente cuando esta
+ * comparación da distinto (`ORIGEN_DECLARACION_AJENA`). Si cada uno tuviera su
+ * propia versión, podría alertarse por un archivo que el detector sí aceptó, o
+ * peor, no alertarse por uno que descartó. Una sola definición, un solo criterio.
+ */
+export function rucBase(ruc: string): string {
   return ruc.split('-')[0]!.replace(/\D/g, '');
 }
 

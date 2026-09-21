@@ -297,6 +297,7 @@ export function programarCalculoDeVencimientosYAlertas(
           riesgoDeLibro: {
             porPeriodo: async () => deps.libroRg90?.riesgoPorPeriodo() ?? [],
           },
+          declaracionesAjenas: deps.declaracionesAjenas ?? undefined,
         },
         deps.ahora(),
         periodo,

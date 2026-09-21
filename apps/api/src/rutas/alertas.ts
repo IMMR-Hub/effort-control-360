@@ -57,6 +57,7 @@ export async function registrarRutasDeAlertas(
           // vencimientos, que es lo que más caro sale no tener.
           porPeriodo: async () => deps.libroRg90?.riesgoPorPeriodo() ?? [],
         },
+        declaracionesAjenas: deps.declaracionesAjenas ?? undefined,
       },
       deps.ahora(),
       periodo,

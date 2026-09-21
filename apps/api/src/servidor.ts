@@ -20,6 +20,7 @@ import { esProduccion, type Configuracion } from './configuracion.js';
 import type { LibroRg90Prisma } from './repositorios/libroRg90.js';
 import type { DeclaracionesPrisma } from './repositorios/declaraciones.js';
 import type { ArchivosDeOrigenPrisma } from './repositorios/dominio.js';
+import type { RepositorioDeDeclaracionesAjenas } from './servicios/motorDeAlertas.js';
 import type { LectorDeTablas } from './servicios/respaldoAutomatico.js';
 import { ErrorDeAutorizacion, type SujetoAutenticado } from './seguridad/rbac.js';
 import {
@@ -109,6 +110,11 @@ export interface Dependencias {
    * que el libro: sin OneDrive no hay declaraciones que leer.
    */
   readonly declaraciones?: DeclaracionesPrisma | null;
+  /**
+   * Declaraciones archivadas bajo el cliente equivocado (tarea 143). Opcional
+   * por lo mismo: se lee de lo que dejó el detector de presentaciones.
+   */
+  readonly declaracionesAjenas?: RepositorioDeDeclaracionesAjenas | null;
   readonly alertas: RepositorioDeAlertas;
   readonly reglasImpositivas: RepositorioDeReglasImpositivas;
   readonly reglasDeNotificacion: RepositorioDeReglasDeNotificacion;

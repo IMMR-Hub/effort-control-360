@@ -26,6 +26,39 @@ La guía es sobre archivos nuevos. Adjunto el archivo completo aparte.
 
 ---
 
+## 0-bis. URGENTE: tres archivos guardados en la carpeta de otro cliente
+
+Encontrado el 2026-09-20 al abrir un formulario 120 para verificar un cálculo.
+**Tres declaraciones están en la carpeta de un cliente pero por dentro son de
+otro contribuyente:**
+
+| Está en la carpeta de | Archivo | Pero por dentro dice |
+|---|---|---|
+| COPESA | `120-07-2026.pdf` | RUC 80135322 — **MACOMA ENVIRONMENTAL TECHNOLOGIES** |
+| COPESA | `ACUSE DDJJ IVA 102023 MARIO ANTONIO VILALBA VILLALBA .pdf` | RUC 7243805 — una persona física |
+| DIBEC | `FORM 158 FUMIPRO 2022.pdf` | RUC 80119631 — **FUMIPRO** |
+
+**Por qué se avisa aparte y primero.** El sistema compara el RUC antes de dar
+algo por presentado, así que no se equivocó: no marcó nada. El riesgo es otro
+y es humano — si alguien abre el `120-07-2026.pdf` creyendo que es el de
+COPESA y transcribe esos importes al SIGA, los números de una empresa terminan
+en la contabilidad de otra, y eso después se corrige con una rectificativa.
+
+**Consecuencia concreta que hay que mirar hoy:** el IVA de **COPESA del período
+2026-07** figura como NO presentado en el sistema, porque el único formulario
+120 de julio que hay en su carpeta es el de MACOMA.
+
+**Las preguntas:**
+1. ¿COPESA presentó el IVA de julio 2026? Si sí, ¿dónde quedó ese formulario
+   120? (Si existe y nos dicen dónde, el sistema lo toma solo.)
+2. Los tres archivos, ¿los mueven ustedes a donde corresponde?
+
+**El sistema no los mueve ni los borra**: no toca nunca el OneDrive de ustedes.
+Lo único que va a hacer de ahora en más es **avisar** cuando encuentre un caso
+así, en vez de ignorarlo en silencio como venía haciendo.
+
+---
+
 ## 1. Prórroga de Estados Financieros 2025 (B1)
 
 La Resolución General DNIT N° 50/2026 (7 de abril de 2026) extiende hasta el

@@ -14,7 +14,9 @@ import {
   evaluarAlertas,
   ORIGEN_DOCUMENTACION,
   ORIGEN_LIBRO_RIESGO,
+  ORIGEN_DECLARACION_AJENA,
   ORIGEN_VENCIMIENTO,
+  type DeclaracionAjena,
   type RiesgoDeLibroPorPeriodo,
 } from '../src/servicios/motorDeAlertas.js';
 import { AlertasFalsas, ProcesoMensualFalso, VencimientosFalsos } from './dobles-dominio.js';
@@ -31,12 +33,18 @@ const LIQUIDACION = '22222222-2222-4222-8222-222222222222';
 /** Reloj congelado: los días restantes tienen que ser deterministas. */
 const HOY = new Date('2026-04-21T13:00:00Z');
 
-function armar(riesgos: readonly RiesgoDeLibroPorPeriodo[] = []) {
+function armar(
+  riesgos: readonly RiesgoDeLibroPorPeriodo[] = [],
+  ajenas: readonly DeclaracionAjena[] | null = [],
+) {
   return {
     alertas: new AlertasFalsas(),
     vencimientos: new VencimientosFalsos(),
     procesoMensual: new ProcesoMensualFalso(),
     riesgoDeLibro: { porPeriodo: async () => riesgos },
+    // `null` simula que el módulo no está conectado, que no es lo mismo que
+    // "está conectado y no encontró nada".
+    declaracionesAjenas: ajenas === null ? undefined : { listar: async () => ajenas },
   };
 }
 
@@ -357,5 +365,98 @@ describe('motor de alertas', () => {
 
       expect(resumen.creadas, `no debería alertar sobre un vencimiento ${estado}`).toBe(0);
     }
+  });
+  /*
+   * Tarea 143. El caso real que la originó: `120-07-2026.pdf` en la carpeta de
+   * COPESA, y adentro MACOMA ENVIRONMENTAL TECHNOLOGIES.
+   */
+  describe('declaraciones archivadas bajo el cliente equivocado', () => {
+    const AJENA: DeclaracionAjena = {
+      evidenciaId: '33333333-3333-4333-8333-333333333333',
+      clienteId: CLIENTE,
+      nombreDelCliente: 'COPESA CONSTRUCCIONES SA',
+      nombreArchivo: '120-07-2026.pdf',
+      rucDelDocumento: '80135322',
+      formulario: '120',
+      periodo: '2026-07',
+    };
+
+    it('levanta una alerta ALTA que nombra el archivo y el RUC ajeno', async () => {
+      const deps = armar([], [AJENA]);
+
+      const resumen = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+
+      expect(resumen.creadas).toBe(1);
+      const alerta = deps.alertas.alertas[0]!;
+      expect(alerta.origen).toBe(ORIGEN_DECLARACION_AJENA);
+      expect(alerta.criticidad).toBe('ALTA');
+      // Sin el nombre del archivo el aviso no sirve: nadie sabe cuál ir a mirar.
+      expect(alerta.titulo).toContain('120-07-2026.pdf');
+      expect(alerta.detalle).toContain('80135322');
+      // La entidad es la evidencia, y su id tiene que ser el UUID: es lo que
+      // impide que la misma alerta se levante dos veces.
+      expect(alerta.entidadRelacionada).toBe('evidencia');
+      expect(alerta.entidadRelacionadaId).toBe(AJENA.evidenciaId);
+    });
+
+    it('advierte que no se transcriban esos números', async () => {
+      // El riesgo que señaló Daniel no es el vencimiento: es que alguien tome
+      // esos importes y los cargue al SIGA del cliente equivocado.
+      const deps = armar([], [AJENA]);
+
+      await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+
+      expect(deps.alertas.alertas[0]!.detalle).toMatch(/SIGA/);
+    });
+
+    it('no se repite si el motor corre muchas veces', async () => {
+      const deps = armar([], [AJENA]);
+
+      await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+      const segunda = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+
+      expect(segunda.creadas).toBe(0);
+      expect(deps.alertas.alertas).toHaveLength(1);
+    });
+
+    it('se cierra sola cuando el archivo deja de estar mal ubicado', async () => {
+      // EFFORT lo mueve a la carpeta que corresponde y el problema desaparece.
+      const deps = armar([], [AJENA]);
+      await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+
+      const yaMovido = {
+        ...deps,
+        declaracionesAjenas: { listar: async () => [] },
+      };
+      const resumen = await evaluarAlertas(yaMovido, HOY, '2026-03', 'usr-1');
+
+      expect(resumen.resueltas).toBe(1);
+      expect(deps.alertas.alertas[0]!.estado).not.toBe('ABIERTA');
+    });
+
+    it('NO la cierra cuando el módulo no está conectado', async () => {
+      /*
+       * La diferencia que importa: sin el módulo, la lista viene vacía igual
+       * que cuando el archivo se movió. Cerrar la alerta ahí sería afirmar que
+       * el problema se resolvió sin tener cómo saberlo — y el archivo puede
+       * seguir exactamente donde estaba.
+       */
+      const deps = armar([], [AJENA]);
+      await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+
+      const sinModulo = { ...deps, declaracionesAjenas: undefined };
+      const resumen = await evaluarAlertas(sinModulo, HOY, '2026-03', 'usr-1');
+
+      expect(resumen.resueltas).toBe(0);
+      expect(deps.alertas.alertas[0]!.estado).toBe('ABIERTA');
+    });
+
+    it('sin el módulo conectado no inventa alertas', async () => {
+      const deps = armar([], null);
+
+      const resumen = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+
+      expect(resumen.creadas).toBe(0);
+    });
   });
 });
