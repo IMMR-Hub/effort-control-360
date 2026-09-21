@@ -127,6 +127,45 @@ describeSiHayBase('repositorios de negocio contra PostgreSQL real', () => {
       expect(typeof recuperado?.total).toBe('bigint');
     });
 
+    /*
+     * Daniel, 2026-09-21: la lista solo decía «Declaración jurada», «Otro»…
+     * sin el nombre con que el archivo está guardado, y así nadie puede
+     * comprobar qué está cargado y qué no. El nombre vive en la evidencia.
+     */
+    it('la lista trae el nombre del archivo de la evidencia, y null si no hay evidencia', async () => {
+      const evidencia = await entorno.prisma.evidencia.create({
+        data: {
+          clienteId: mio,
+          periodo: PERIODO,
+          nombreArchivo: 'DDJJ IVA 032026 PRUEBA SA.pdf',
+          rutaOneDrive: '/prueba/DDJJ IVA 032026 PRUEBA SA.pdf',
+          tipoMime: 'application/pdf',
+          tamanoBytes: 1234n,
+          sha256: 'a'.repeat(64),
+          subidoPorUsuarioId: usuario,
+        },
+      });
+      await documentos.registrar({
+        clienteId: mio, periodo: PERIODO, tipo: 'CONTRATO', canalRecepcion: 'WHATSAPP',
+        recibidoEn: new Date('2026-03-15T12:00:00Z'), rucEmisor: null, timbrado: null,
+        numeroComprobante: null, total: null, tasa: null, anulado: false,
+        evidenciaId: evidencia.id, observaciones: 'con archivo', creadoPorUsuarioId: usuario,
+      });
+      await documentos.registrar({
+        clienteId: mio, periodo: PERIODO, tipo: 'CONTRATO', canalRecepcion: 'WHATSAPP',
+        recibidoEn: new Date('2026-03-15T12:00:00Z'), rucEmisor: null, timbrado: null,
+        numeroComprobante: null, total: null, tasa: null, anulado: false,
+        evidenciaId: null, observaciones: 'sin archivo', creadoPorUsuarioId: usuario,
+      });
+
+      const lista = await documentos.listar(mio, PERIODO, null);
+
+      expect(lista.find((d) => d.observaciones === 'con archivo')?.nombreArchivo).toBe(
+        'DDJJ IVA 032026 PRUEBA SA.pdf',
+      );
+      expect(lista.find((d) => d.observaciones === 'sin archivo')?.nombreArchivo).toBeNull();
+    });
+
     it('la base impide cargar dos veces el mismo comprobante del mismo cliente', async () => {
       await crearDocumento(mio, '001-001-0000100');
 

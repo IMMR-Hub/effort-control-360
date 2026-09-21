@@ -102,7 +102,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-async function montar(rol: string = 'direccion') {
+async function montar(rol: string = 'direccion', documentos: readonly unknown[] = [DOCUMENTO_GARSO]) {
   mock.mockDeRuta('GET /api/v1/yo', () =>
     respuestaJson({ usuarioId: 'u1', rol, veTodosLosClientes: true, cantidadDeClientesAsignados: 0 }),
   );
@@ -116,7 +116,7 @@ async function montar(rol: string = 'direccion') {
     }),
   );
   mock.mockDeRuta('GET /api/v1/clientes/cli-garso/documentos', () =>
-    respuestaJson({ documentos: [DOCUMENTO_GARSO] }),
+    respuestaJson({ documentos }),
   );
   mock.mockDeRuta('GET /api/v1/clientes/cli-sinproceso/documentos', () =>
     respuestaJson({ documentos: [] }),
@@ -170,6 +170,24 @@ describe('pantalla de documentos / IVA', () => {
 
     expect(await screen.findByText('Documentos — GARSO S.A.')).toBeVisible();
     expect(screen.getByText('80019012-2 · 12345678 · 001-001-0000001')).toBeVisible();
+  });
+
+  /*
+   * Daniel, 2026-09-21: «los documentos por cliente solo dicen si son IVA,
+   * Libro de venta, Extracto… ¿cómo controlo qué está y qué no está cargado?
+   * Deben aparecer los nombres tal y como se cargan en el sistema».
+   */
+  it('cada documento muestra el nombre con que está guardado el archivo', async () => {
+    await montar('direccion', [
+      { ...DOCUMENTO_GARSO, id: 'd1', evidenciaId: 'ev1', nombreArchivo: 'DDJJ IVA 032026 GARSO SA.pdf' },
+      { ...DOCUMENTO_GARSO, id: 'd2', numeroComprobante: null, rucEmisor: null, timbrado: null, total: null, tasa: null, evidenciaId: null, nombreArchivo: null },
+    ]);
+
+    await usuario.click(filaDelTablero('GARSO S.A.'));
+
+    const enlace = await screen.findByRole('link', { name: /DDJJ IVA 032026 GARSO SA\.pdf/ });
+    expect(enlace).toHaveAttribute('href', expect.stringContaining('/api/v1/documentos/d1/archivo'));
+    expect(enlace).toHaveAttribute('title', 'DDJJ IVA 032026 GARSO SA.pdf');
   });
 
   it('abrir el panel de un cliente sin proceso precarga el formulario vacío, no undefined', async () => {

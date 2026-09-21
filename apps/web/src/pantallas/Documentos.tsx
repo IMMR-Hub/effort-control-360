@@ -895,10 +895,11 @@ export default function Documentos() {
                           href={urlDeApi(`/api/v1/documentos/${doc.id}/archivo`)}
                           target="_blank"
                           rel="noreferrer"
-                          className="inline-flex items-center gap-1.5 text-sm text-marca-600 underline-offset-2 hover:underline"
+                          title={doc.nombreArchivo ?? undefined}
+                          className="inline-flex max-w-xs items-center gap-1.5 text-sm text-marca-600 underline-offset-2 hover:underline"
                         >
-                          <Eye size={14} aria-hidden="true" />
-                          Ver
+                          <Eye size={14} aria-hidden="true" className="shrink-0" />
+                          <span className="truncate">{doc.nombreArchivo ?? 'Ver'}</span>
                         </a>
                       ) : (
                         <span className="text-tinta-tenue">—</span>

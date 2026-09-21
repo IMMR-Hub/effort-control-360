@@ -8,6 +8,8 @@
 
 import { useState } from 'react';
 
+import type { FiltroDeNivel } from './ui/etiquetas.js';
+
 import { ProveedorDeSesion, useSesion } from './contexts/SesionContext.js';
 import { Acceso } from './pantallas/Acceso.js';
 import { CambioDeContrasena } from './pantallas/CambioDeContrasena.js';
@@ -34,7 +36,14 @@ import Horas from './pantallas/Horas.js';
  * así que las otras once no se tocan.
  */
 export interface PropsDePantalla {
-  readonly irA: (pantalla: Pantalla) => void;
+  readonly irA: (pantalla: Pantalla, opciones?: OpcionesDeNavegacion) => void;
+  /** Filtro con el que abre la pantalla si se llegó desde un indicador del Panel. */
+  readonly nivelInicial?: FiltroDeNivel;
+}
+
+/** Lo que un indicador del Panel le pide a la pantalla a la que lleva. */
+export interface OpcionesDeNavegacion {
+  readonly nivel?: FiltroDeNivel;
 }
 
 const PANTALLAS: Record<Pantalla, (props: PropsDePantalla) => JSX.Element> = {
@@ -56,18 +65,26 @@ const PANTALLAS: Record<Pantalla, (props: PropsDePantalla) => JSX.Element> = {
 
 function AppShell() {
   const [pantallaActiva, setPantallaActiva] = useState<Pantalla>('panel');
+  const [nivelInicial, setNivelInicial] = useState<FiltroDeNivel | undefined>(undefined);
   const PantallaActual = PANTALLAS[pantallaActiva];
+
+  // Un filtro pedido por un indicador vale solo para esa llegada: entrar
+  // después por el menú tiene que abrir la pantalla completa.
+  const irA = (pantalla: Pantalla, opciones?: OpcionesDeNavegacion) => {
+    setNivelInicial(opciones?.nivel);
+    setPantallaActiva(pantalla);
+  };
 
   return (
     // Fila desde `lg` (barra lateral fija + contenido), columna abajo de eso
     // (barra arriba, contenido debajo) — mismo cambio de dirección que ya
     // hace `Encabezado` con su propio contenido.
     <div className="flex min-h-dvh flex-col bg-lienzo font-interfaz text-tinta lg:h-dvh lg:flex-row lg:overflow-hidden">
-      <Encabezado activa={pantallaActiva} onCambiar={setPantallaActiva} />
+      <Encabezado activa={pantallaActiva} onCambiar={(pantalla) => irA(pantalla)} />
       {/* Un único scroll, el de esta columna — no el de toda la página — para
           que la barra lateral quede fija en vez de irse con el contenido. */}
       <div className="min-w-0 flex-1 lg:overflow-y-auto">
-        <PantallaActual irA={setPantallaActiva} />
+        <PantallaActual irA={irA} {...(nivelInicial ? { nivelInicial } : {})} />
       </div>
     </div>
   );

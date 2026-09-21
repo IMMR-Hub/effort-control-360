@@ -33,6 +33,11 @@ export interface DocumentoAlmacenado {
   readonly motivoRechazo: string | null;
   readonly evidenciaId: string | null;
   readonly observaciones: string | null;
+  /**
+   * Nombre con que el archivo está guardado (de la evidencia). Solo lo trae la
+   * lista: es lo que permite a una persona comprobar qué documento es cada fila.
+   */
+  readonly nombreArchivo?: string | null;
 }
 
 export interface AltaDeDocumento {

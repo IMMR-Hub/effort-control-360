@@ -35,6 +35,8 @@ export interface Documento {
   readonly motivoRechazo: string | null;
   readonly evidenciaId: string | null;
   readonly observaciones: string | null;
+  /** Nombre con que el archivo está guardado. Solo lo trae la lista; `null` si no hay archivo. */
+  readonly nombreArchivo?: string | null;
 }
 
 export function listarDocumentos(

@@ -56,6 +56,7 @@ import {
 import { listarSolicitudesPorPeriodo, type SolicitudDocumentacion } from '../api/solicitudes.js';
 import { listarBalances, type Balance } from '../api/balances.js';
 import { listarLiquidaciones, type Liquidacion } from '../api/liquidaciones.js';
+import type { FiltroDeNivel } from '../ui/etiquetas.js';
 
 const ESTADOS_SOLICITUD_ABIERTA = new Set<SolicitudDocumentacion['estado']>([
   'ABIERTA',
@@ -94,7 +95,11 @@ function estiloRetardo(ms: number): CSSProperties {
   return { '--retardo-entrada': `${ms}ms` } as CSSProperties;
 }
 
-export default function Panel({ irA }: { irA?: (pantalla: Pantalla) => void }) {
+export default function Panel({
+  irA,
+}: {
+  irA?: (pantalla: Pantalla, opciones?: { nivel: FiltroDeNivel }) => void;
+}) {
   const hoy = useMemo(() => hoyEnParaguay(new Date()), []);
   const mesActual = `${hoy.anio}-${String(hoy.mes).padStart(2, '0')}`;
 
@@ -242,7 +247,7 @@ export default function Panel({ irA }: { irA?: (pantalla: Pantalla) => void }) {
           irEtiqueta="Ver los clientes" valor={clientesActivos} tono="proceso" icono={Users} retardoMs={0} />
         <IndicadorAnimado
           etiqueta="Vencimientos vencidos"
-          onIr={irA ? () => irA('vencimientos') : null}
+          onIr={irA ? () => irA('vencimientos', { nivel: 'VENCIDO' }) : null}
           irEtiqueta="Ver los vencimientos vencidos"
           valor={vencidos}
           tono="critico"
@@ -251,7 +256,7 @@ export default function Panel({ irA }: { irA?: (pantalla: Pantalla) => void }) {
           retardoMs={40}
         />
         <IndicadorAnimado etiqueta="Vencimientos próximos"
-          onIr={irA ? () => irA('vencimientos') : null}
+          onIr={irA ? () => irA('vencimientos', { nivel: 'PROXIMOS' }) : null}
           irEtiqueta="Ver los vencimientos próximos" valor={proximos} tono="parcial" icono={Clock} retardoMs={80} />
         <IndicadorAnimado
           etiqueta="Alertas críticas"

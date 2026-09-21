@@ -318,7 +318,16 @@ describe('panel general', () => {
 
       fireEvent.click(await screen.findByRole('button', { name: 'Ver los vencimientos vencidos' }));
 
-      expect(irA).toHaveBeenCalledWith('vencimientos');
+      expect(irA).toHaveBeenCalledWith('vencimientos', { nivel: 'VENCIDO' });
+    });
+
+    it('apretar «Vencimientos próximos» lleva a la lista ya filtrada por próximos', async () => {
+      const irA = vi.fn();
+      await montarConNavegacion(irA);
+
+      fireEvent.click(await screen.findByRole('button', { name: 'Ver los vencimientos próximos' }));
+
+      expect(irA).toHaveBeenCalledWith('vencimientos', { nivel: 'PROXIMOS' });
     });
 
     it('apretar "Alertas críticas" lleva a la pantalla de alertas', async () => {

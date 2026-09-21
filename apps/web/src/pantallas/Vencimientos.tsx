@@ -34,6 +34,9 @@ import {
 } from '../ui/Primitivos.jsx';
 import {
   ETIQUETA_NIVEL_ALERTA,
+  OPCIONES_FILTRO_DE_NIVEL,
+  coincideConNivel,
+  type FiltroDeNivel,
   ETIQUETA_TIPO_DOCUMENTO,
   OPCIONES_RIESGO,
   OPCIONES_TIPO_DOCUMENTO,
@@ -93,7 +96,7 @@ function formularioVacio(clienteId: string): FormularioAlta {
   };
 }
 
-export default function Vencimientos() {
+export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nivelInicial?: FiltroDeNivel } = {}) {
   const { sesion } = useSesion();
   const puedeEditar = ROLES_QUE_EDITAN.has(sesion?.rol ?? '');
 
@@ -169,12 +172,20 @@ export default function Vencimientos() {
     [filtro],
   );
 
-  const filas = useMemo(
+  const [filtroDeNivel, setFiltroDeNivel] = useState<FiltroDeNivel>(nivelInicial);
+
+  // `filasDelRango` alimenta los indicadores (que cuentan todos los niveles);
+  // `filas`, la tabla, además aplica el filtro de nivel.
+  const filasDelRango = useMemo(
     () =>
       [...vencimientos]
         .filter((v) => dentroDelRango(v.fechaVencimiento, rango))
         .sort((a, b) => a.fechaVencimiento.localeCompare(b.fechaVencimiento)),
     [vencimientos, rango],
+  );
+  const filas = useMemo(
+    () => filasDelRango.filter((v) => coincideConNivel(v.nivelAlerta, filtroDeNivel)),
+    [filasDelRango, filtroDeNivel],
   );
 
   // Con filtro, el resumen se cuenta sobre lo filtrado: si no, los indicadores
@@ -182,9 +193,9 @@ export default function Vencimientos() {
   const resumenVisible: ResumenPorNivel = useMemo(() => {
     if (rango === null) return resumen;
     const cuenta = { ...RESUMEN_VACIO };
-    for (const v of filas) cuenta[v.nivelAlerta] += 1;
+    for (const v of filasDelRango) cuenta[v.nivelAlerta] += 1;
     return cuenta;
-  }, [rango, resumen, filas]);
+  }, [rango, resumen, filasDelRango]);
 
   function abrirAlta() {
     setFormulario(formularioVacio(clientesActivos[0]?.id ?? ''));
@@ -275,8 +286,18 @@ export default function Vencimientos() {
             Obligaciones societarias, legales y tributarias, ordenadas por urgencia. Días restantes y
             nivel de alerta calculados en zona Paraguay.
           </p>
-          <div className="mt-3">
+          <div className="mt-3 flex flex-wrap items-end gap-3">
             <FiltroDeFechasSelector id="filtroVencimientos" valor={filtro} onCambiar={setFiltro} permitirTodo />
+            <CampoSelect
+              id="filtroDeNivel"
+              etiqueta="Nivel de alerta"
+              value={filtroDeNivel}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                setFiltroDeNivel(e.target.value as FiltroDeNivel)
+              }
+              opciones={OPCIONES_FILTRO_DE_NIVEL}
+              className="w-56"
+            />
           </div>
         </div>
         {puedeEditar && (
@@ -331,7 +352,7 @@ export default function Vencimientos() {
         </div>
       )}
 
-      <section className="grid gap-3 sm:grid-cols-3 xl:grid-cols-6" aria-label="Resumen por nivel de alerta">
+      <section className="grid gap-3 sm:grid-cols-3 xl:grid-cols-6" aria-label="Resumen por nivel de alerta (según los días que faltan)">
         <Indicador etiqueta="Vencidos" valor={resumenVisible.VENCIDO} tono="critico" destacado={resumenVisible.VENCIDO > 0} />
         <Indicador etiqueta="Críticos" valor={resumenVisible.CRITICA} tono="critico" />
         <Indicador etiqueta="Altos" valor={resumenVisible.ALTA} tono="parcial" />
@@ -343,7 +364,11 @@ export default function Vencimientos() {
       <Tarjeta>
         <EncabezadoTarjeta
           titulo="Radar de vencimientos"
-          descripcion={`${filas.length} obligaciones activas · vencen: ${describirFiltro(filtro)}`}
+          descripcion={`${filas.length} obligaciones activas · vencen: ${describirFiltro(filtro)}${
+            filtroDeNivel === 'TODOS'
+              ? ''
+              : ` · nivel: ${OPCIONES_FILTRO_DE_NIVEL.find((o) => o.valor === filtroDeNivel)?.etiqueta ?? ''}`
+          }`}
         />
         <Tabla etiqueta="Radar de vencimientos">
           <thead>

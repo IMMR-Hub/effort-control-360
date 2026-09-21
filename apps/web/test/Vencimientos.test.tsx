@@ -59,7 +59,13 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-async function montar(rol: string = 'direccion') {
+async function montar(
+  rol: string = 'direccion',
+  opciones: {
+    nivelInicial?: 'TODOS' | 'PROXIMOS' | 'VENCIDO';
+    vencimientos?: readonly unknown[];
+  } = {},
+) {
   mock.mockDeRuta('GET /api/v1/yo', () =>
     respuestaJson({ usuarioId: 'u1', rol, veTodosLosClientes: true, cantidadDeClientesAsignados: 0 }),
   );
@@ -69,7 +75,7 @@ async function montar(rol: string = 'direccion') {
     respuestaJson({
       hoy: { anio: 2026, mes: 4, dia: 26 },
       resumen: RESUMEN,
-      vencimientos: [VENCIMIENTO_ABOGACIA],
+      vencimientos: opciones.vencimientos ?? [VENCIMIENTO_ABOGACIA],
     }),
   );
 
@@ -79,11 +85,12 @@ async function montar(rol: string = 'direccion') {
 
   render(
     <ProveedorDeSesion>
-      <Vencimientos />
+      <Vencimientos {...(opciones.nivelInicial ? { nivelInicial: opciones.nivelInicial } : {})} />
     </ProveedorDeSesion>,
   );
 
-  await screen.findByText('Presentación anual ante Abogacía');
+  if (opciones.vencimientos) await screen.findByLabelText('Nivel de alerta');
+  else await screen.findByText('Presentación anual ante Abogacía');
   await waitFor(() => {
     expect(mock.llamadasA('GET /api/v1/yo')).toHaveLength(1);
   });
@@ -267,6 +274,60 @@ describe('radar de vencimientos', () => {
       await screen.findByText('Estados financieros 2025');
 
       expect(screen.queryByRole('button', { name: /Prorrogar/ })).not.toBeInTheDocument();
+    });
+  });
+
+  /*
+   * Daniel, 2026-09-21: «Vencimientos próximos dice 2 pero no aparece. Va a la
+   * misma página y en la lista no aparece "próximo"». «Próximos» son los
+   * críticos y los altos (vencen en 7 días o menos); la lista no tenía cómo
+   * filtrarlos ni siquiera nombraba la palabra.
+   */
+  describe('filtro por nivel de alerta', () => {
+    const conNivel = (id: string, descripcion: string, nivelAlerta: string, diasRestantes: number) => ({
+      ...VENCIMIENTO_ABOGACIA, id, descripcion, nivelAlerta, diasRestantes,
+    });
+    const FILAS = [
+      conNivel('v1', 'Vencido uno', 'VENCIDO', -5),
+      conNivel('v2', 'Critico uno', 'CRITICA', 1),
+      conNivel('v3', 'Alto uno', 'ALTA', 5),
+      conNivel('v4', 'Medio uno', 'MEDIA', 12),
+      conNivel('v5', 'Lejano uno', 'SIN_ALERTA', 90),
+    ];
+
+    it('sin filtro muestra todo', async () => {
+      await montar('direccion', { vencimientos: FILAS });
+
+      for (const d of ['Vencido uno', 'Critico uno', 'Alto uno', 'Medio uno', 'Lejano uno']) {
+        expect(screen.getByText(d)).toBeVisible();
+      }
+    });
+
+    it('«Próximos» muestra solo críticos y altos', async () => {
+      await montar('direccion', { vencimientos: FILAS });
+
+      await usuario.selectOptions(screen.getByLabelText('Nivel de alerta'), 'PROXIMOS');
+
+      expect(screen.getByText('Critico uno')).toBeVisible();
+      expect(screen.getByText('Alto uno')).toBeVisible();
+      expect(screen.queryByText('Vencido uno')).not.toBeInTheDocument();
+      expect(screen.queryByText('Medio uno')).not.toBeInTheDocument();
+      expect(screen.queryByText('Lejano uno')).not.toBeInTheDocument();
+    });
+
+    it('llegar desde el Panel con «próximos» abre la lista ya filtrada', async () => {
+      await montar('direccion', { vencimientos: FILAS, nivelInicial: 'PROXIMOS' });
+
+      expect(screen.getByLabelText('Nivel de alerta')).toHaveValue('PROXIMOS');
+      expect(screen.getByText('Critico uno')).toBeVisible();
+      expect(screen.queryByText('Lejano uno')).not.toBeInTheDocument();
+    });
+
+    it('filtrar por vencidos deja solo los vencidos', async () => {
+      await montar('direccion', { vencimientos: FILAS, nivelInicial: 'VENCIDO' });
+
+      expect(screen.getByText('Vencido uno')).toBeVisible();
+      expect(screen.queryByText('Critico uno')).not.toBeInTheDocument();
     });
   });
 });
