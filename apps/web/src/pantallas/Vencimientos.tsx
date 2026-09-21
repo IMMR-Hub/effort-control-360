@@ -46,6 +46,7 @@ import {
   crearVencimiento,
   generarVencimientos,
   marcarPresentado,
+  prorrogar,
   obtenerRadar,
   type NivelRiesgo,
   type ResumenDeGeneracion,
@@ -231,6 +232,39 @@ export default function Vencimientos() {
     }
   }
 
+  /**
+   * Prórroga: la DNIT corre plazos por resolución seguido, y hasta ahora no
+   * había forma de reflejarlo — el sistema mostraba tres clientes con 60 días
+   * de atraso que habían presentado a tiempo. La fecha y el motivo los carga
+   * una persona: una resolución es algo que alguien leyó y verificó.
+   */
+  async function manejarProrroga(vencimiento: Vencimiento) {
+    const nuevaFecha = window.prompt(
+      `Nueva fecha de vencimiento de "${vencimiento.descripcion}" (AAAA-MM-DD).
+` +
+        `Hoy vence el ${vencimiento.fechaVencimiento}.`,
+      vencimiento.fechaVencimiento,
+    );
+    if (!nuevaFecha?.trim()) return;
+
+    const motivo = window.prompt(
+      '¿Por qué se prorroga? Poné la resolución, por ejemplo "RG 50/2026".',
+      vencimiento.motivoProrroga ?? '',
+    );
+    if (!motivo?.trim()) return;
+
+    try {
+      await prorrogar(vencimiento.id, nuevaFecha.trim(), motivo.trim());
+      await recargar();
+    } catch (motivoDelError) {
+      setError(
+        motivoDelError instanceof ErrorDeApi
+          ? motivoDelError.message
+          : 'No se pudo conectar con el servidor.',
+      );
+    }
+  }
+
   if (cargando) {
     return (
       <div className="flex items-center justify-center py-24">
@@ -347,7 +381,17 @@ export default function Vencimientos() {
                 <Td className="text-tinta-suave">{ETIQUETA_TIPO_DOCUMENTO[v.tipoDocumento]}</Td>
                 <Td>{v.descripcion}</Td>
                 <Td className="text-tinta-suave">{v.entidad}</Td>
-                <Td className="cifra text-tinta-suave">{v.fechaVencimiento}</Td>
+                <Td className="cifra text-tinta-suave">
+                  {v.fechaVencimiento}
+                  {v.fechaVencimientoOriginal && (
+                    // Sin esto, la fecha prorrogada parece un error de carga:
+                    // no sigue la regla del calendario y nada dice por qué.
+                    <span className="mt-0.5 block text-[11px] font-normal text-tinta-tenue">
+                      prorrogado del {v.fechaVencimientoOriginal}
+                      {v.motivoProrroga ? ` — ${v.motivoProrroga}` : ''}
+                    </span>
+                  )}
+                </Td>
                 <Td numerica className={v.diasRestantes <= 2 ? 'font-semibold text-critico' : ''}>
                   {v.diasRestantes}
                 </Td>
@@ -368,6 +412,14 @@ export default function Vencimientos() {
                       onClick={() => void manejarPresentar(v)}
                     >
                       Presentar
+                    </Boton>
+                    <Boton
+                      variante="fantasma"
+                      icono={CalendarClock}
+                      aria-label={`Prorrogar: ${v.descripcion}`}
+                      onClick={() => void manejarProrroga(v)}
+                    >
+                      Prórroga
                     </Boton>
                   </Td>
                 )}

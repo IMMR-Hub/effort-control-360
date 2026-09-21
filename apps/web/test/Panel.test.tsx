@@ -264,4 +264,81 @@ describe('panel general', () => {
     });
     expect(screen.queryByText(/multa/i)).toBeNull();
   });
+  /*
+   * Daniel, 2026-09-21: *"se quiere ver los vencidos, apretá sobre el botón de
+   * los vencidos y te lleva a la pantalla donde aparecen los que están
+   * vencidos, lo mismo con los que están por vencer, las alertas, etc."*
+   */
+  describe('los indicadores llevan a su módulo', () => {
+    async function montarConNavegacion(irA: (pantalla: string) => void) {
+      mock.mockDeRuta('GET /api/v1/yo', () =>
+        respuestaJson({ usuarioId: 'u1', rol: 'direccion', veTodosLosClientes: true, cantidadDeClientesAsignados: 0 }),
+      );
+      mock.mockDeRuta('GET /api/v1/csrf', () => respuestaJson({ csrfToken: 'token-de-prueba' }));
+      mock.mockDeRuta('GET /api/v1/clientes', () => respuestaJson({ clientes: [GARSO, CLIENTE_INACTIVO] }));
+      mock.mockDeRuta('GET /api/v1/vencimientos', () =>
+        respuestaJson({
+          hoy: { anio: 2026, mes: 4, dia: 22 },
+          resumen: { VENCIDO: 1, CRITICA: 0, ALTA: 0, MEDIA: 0, INFORMATIVA: 0, SIN_ALERTA: 0 },
+          vencimientos: [VENCIMIENTO_VENCIDO],
+        }),
+      );
+      mock.mockDeRuta('GET /api/v1/vencimientos/presentados', () => respuestaJson({ presentados: [] }));
+      mock.mockDeRuta('GET /api/v1/alertas', () =>
+        respuestaJson({ alertas: [ALERTA_CRITICA], resumen: { CRITICA: 1, ALTA: 0, MEDIA: 0, BAJA: 0 } }),
+      );
+      mock.mockDeRuta('GET /api/v1/solicitudes-documentacion', () => respuestaJson({ solicitudes: [] }));
+      mock.mockDeRuta('GET /api/v1/balances', () => respuestaJson({ balances: [] }));
+      mock.mockDeRuta('GET /api/v1/liquidaciones', () => respuestaJson({ liquidaciones: [] }));
+
+      vi.resetModules();
+      const { ProveedorDeSesion } = await import('../src/contexts/SesionContext.js');
+      const Panel = (await import('../src/pantallas/Panel.js')).default;
+
+      render(
+        <ProveedorDeSesion>
+          <Panel irA={irA as never} />
+        </ProveedorDeSesion>,
+      );
+      await screen.findByText('Panel general');
+    }
+
+    it('cada indicador es un botón de verdad, con un nombre que se entiende sin verlo', async () => {
+      await montarConNavegacion(() => undefined);
+
+      // "55" no le dice nada a quien usa un lector de pantalla: el nombre
+      // accesible tiene que decir a dónde lleva.
+      const boton = await screen.findByRole('button', { name: 'Ver los vencimientos vencidos' });
+      expect(boton).toBeVisible();
+    });
+
+    it('apretar "Vencimientos vencidos" lleva a la pantalla de vencimientos', async () => {
+      const irA = vi.fn();
+      await montarConNavegacion(irA);
+
+      fireEvent.click(await screen.findByRole('button', { name: 'Ver los vencimientos vencidos' }));
+
+      expect(irA).toHaveBeenCalledWith('vencimientos');
+    });
+
+    it('apretar "Alertas críticas" lleva a la pantalla de alertas', async () => {
+      const irA = vi.fn();
+      await montarConNavegacion(irA);
+
+      fireEvent.click(await screen.findByRole('button', { name: 'Ver las alertas críticas' }));
+
+      expect(irA).toHaveBeenCalledWith('alertas');
+    });
+
+    it('sin navegación disponible no finge ser un botón', async () => {
+      // El Panel se puede montar suelto (los tests de arriba lo hacen). Ahí no
+      // hay a dónde ir, y una tarjeta que parece apretable pero no hace nada
+      // es peor que una que no lo parece.
+      await montar();
+
+      expect(
+        screen.queryByRole('button', { name: 'Ver los vencimientos vencidos' }),
+      ).not.toBeInTheDocument();
+    });
+  });
 });

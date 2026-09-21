@@ -741,6 +741,104 @@ describe('radar de vencimientos', () => {
     );
   });
 
+  /*
+   * Prórroga (tarea 146). El caso real: la RG 50/2026 corrió los estados
+   * financieros del ejercicio 2025 de abril al 30/06/2026, y por no tenerlo
+   * cargado el sistema mostraba tres clientes con 60 días de atraso que en
+   * realidad habían presentado a tiempo.
+   */
+  describe('prórroga de un vencimiento', () => {
+    async function crear() {
+      const alta = await ctx.app.inject({
+        method: 'POST', url: `/api/v1/clientes/${MIO}/vencimientos`,
+        headers: { cookie: coordinador }, payload: abogacia,
+      });
+      return JSON.parse(alta.body).vencimiento as { id: string; fechaVencimiento: string };
+    }
+
+    it('corre la fecha y conserva la que fijaba el calendario', async () => {
+      const vencimiento = await crear();
+
+      const respuesta = await ctx.app.inject({
+        method: 'POST', url: `/api/v1/vencimientos/${vencimiento.id}/prorrogar`,
+        headers: { cookie: coordinador },
+        payload: { nuevaFecha: '2026-06-30', motivo: 'RG 50/2026' },
+      });
+
+      expect(respuesta.statusCode).toBe(200);
+      const prorrogado = JSON.parse(respuesta.body).vencimiento;
+      expect(prorrogado.fechaVencimiento).toBe('2026-06-30');
+      expect(prorrogado.fechaVencimientoOriginal).toBe(vencimiento.fechaVencimiento);
+    });
+
+    it('una segunda prórroga no pisa la fecha original: la que importa es la del calendario', async () => {
+      const vencimiento = await crear();
+      const prorrogar = (nuevaFecha: string) =>
+        ctx.app.inject({
+          method: 'POST', url: `/api/v1/vencimientos/${vencimiento.id}/prorrogar`,
+          headers: { cookie: coordinador }, payload: { nuevaFecha, motivo: 'RG 50/2026' },
+        });
+
+      await prorrogar('2026-06-30');
+      const segunda = await prorrogar('2026-07-31');
+
+      const prorrogado = JSON.parse(segunda.body).vencimiento;
+      expect(prorrogado.fechaVencimiento).toBe('2026-07-31');
+      expect(prorrogado.fechaVencimientoOriginal).toBe(vencimiento.fechaVencimiento);
+    });
+
+    it('exige un motivo: una fecha que no sigue la regla tiene que decir por qué', async () => {
+      const vencimiento = await crear();
+
+      const respuesta = await ctx.app.inject({
+        method: 'POST', url: `/api/v1/vencimientos/${vencimiento.id}/prorrogar`,
+        headers: { cookie: coordinador }, payload: { nuevaFecha: '2026-06-30' },
+      });
+
+      expect(respuesta.statusCode).toBe(400);
+    });
+
+    it('rechaza prorrogar a la misma fecha que ya tenía', async () => {
+      const vencimiento = await crear();
+
+      const respuesta = await ctx.app.inject({
+        method: 'POST', url: `/api/v1/vencimientos/${vencimiento.id}/prorrogar`,
+        headers: { cookie: coordinador },
+        payload: { nuevaFecha: vencimiento.fechaVencimiento, motivo: 'RG 50/2026' },
+      });
+
+      expect(respuesta.statusCode).toBe(400);
+    });
+
+    it('un rol de solo lectura no puede prorrogar', async () => {
+      const vencimiento = await crear();
+
+      const respuesta = await ctx.app.inject({
+        method: 'POST', url: `/api/v1/vencimientos/${vencimiento.id}/prorrogar`,
+        headers: { cookie: soloLectura },
+        payload: { nuevaFecha: '2026-06-30', motivo: 'RG 50/2026' },
+      });
+
+      expect(respuesta.statusCode).toBe(403);
+    });
+
+    it('queda en la bitácora con la fecha que tenía antes y el motivo', async () => {
+      const vencimiento = await crear();
+
+      await ctx.app.inject({
+        method: 'POST', url: `/api/v1/vencimientos/${vencimiento.id}/prorrogar`,
+        headers: { cookie: coordinador },
+        payload: { nuevaFecha: '2026-06-30', motivo: 'RG 50/2026' },
+      });
+
+      const entrada = ctx.bitacora.filas.find((f) => f.accion === 'vencimiento.prorrogado');
+      expect((entrada?.datosAntes as Record<string, unknown>)['fechaVencimiento']).toBe(
+        vencimiento.fechaVencimiento,
+      );
+      expect((entrada?.datosDespues as Record<string, unknown>)['motivo']).toBe('RG 50/2026');
+    });
+  });
+
   it('el radar de un usuario no incluye vencimientos de clientes ajenos', async () => {
     ctx.vencimientos.vencimientos.push({
       id: 'venc-ajeno', clienteId: AJENO, tipoDocumento: 'CERTIFICADO',

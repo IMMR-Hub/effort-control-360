@@ -29,6 +29,10 @@ export interface Vencimiento {
   readonly riesgo: NivelRiesgo;
   readonly evidenciaId: string | null;
   readonly proximaAccion: string | null;
+  /** Fecha que fijaba el calendario antes de una prórroga. `null` si nunca se prorrogó. */
+  readonly fechaVencimientoOriginal: string | null;
+  /** Resolución que dispuso la prórroga. `null` si nunca se prorrogó. */
+  readonly motivoProrroga: string | null;
   readonly diasRestantes: number;
   readonly nivelAlerta: NivelAlerta;
 }
@@ -116,4 +120,18 @@ export function marcarPresentado(
   evidenciaId: string | null = null,
 ): Promise<{ vencimiento: Vencimiento }> {
   return peticion('POST', `/api/v1/vencimientos/${id}/presentar`, { fechaPresentacion, evidenciaId });
+}
+
+/**
+ * Corre la fecha de vencimiento por una resolución de prórroga.
+ *
+ * El motivo no es opcional: una fecha que no sigue la regla del calendario y
+ * no dice por qué es un número sin explicación.
+ */
+export function prorrogar(
+  id: string,
+  nuevaFecha: string,
+  motivo: string,
+): Promise<{ vencimiento: Vencimiento }> {
+  return peticion('POST', `/api/v1/vencimientos/${id}/prorrogar`, { nuevaFecha, motivo });
 }

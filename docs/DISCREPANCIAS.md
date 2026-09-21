@@ -1553,17 +1553,25 @@ formato que necesita.
 
 ---
 
-## 28. Talones de RG 90 que no están en OneDrive — RESPUESTA AMBIGUA, HAY QUE REPREGUNTAR (2026-09-21)
+## 28. Talones de RG 90 que no están en OneDrive — RESPONDIDO (2026-09-21)
 
-**La respuesta que llegó fue «ok», y eso no contesta ninguna de las dos
-preguntas que se hicieron.** Se preguntó (a) dónde están los talones de COPESA
-de febrero, junio, julio y agosto 2026, o si no se guardan para esos meses, y
-(b) si DIBEC, FUMIPRO y ECOAGRO guardan el talón como documento aparte en algún
-lado, o si para ellos la DDJJ IVA en PDF ya cumple esa función.
+**Respuesta de EFFORT (Daniel, 2026-09-21): «guardaron en otro lugar y no se
+acordaron de subirlo al OneDrive».**
 
-**No se asume ninguna de las dos.** De la respuesta depende algo concreto: si el
-sistema tiene que seguir esperando un talón por mes para esos tres clientes
-—y mostrándolo como faltante— o dejar de hacerlo. Repreguntar solo eso, corto.
+Los talones **existen**: se emitieron y se guardaron, solo que fuera de la
+carpeta que el sistema mira. No es que EFFORT no los genere ni que la DDJJ IVA
+los reemplace.
+
+**Qué significa para el sistema, y es importante que no cambie nada:** que el
+talón figure como faltante **es correcto** y hay que dejarlo así. El sistema
+mira OneDrive; si el documento no está ahí, no está donde tiene que estar —
+para el día que la DNIT lo pida, "lo tenemos en otro lado" no es lo mismo que
+tenerlo archivado donde corresponde. El aviso está haciendo exactamente su
+trabajo: señaló un archivo que se traspapeló.
+
+**Lo que sí cambia:** el texto del faltante no debería sonar a «nunca se
+presentó» sino a «no está archivado». Son dos cosas distintas y el sistema
+hoy no las distingue. Queda anotado para cuando se toque esa pantalla.
 
 ---
 

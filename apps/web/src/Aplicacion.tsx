@@ -27,7 +27,17 @@ import LiquidacionIva from './pantallas/LiquidacionIva.js';
 import Panel from './pantallas/Panel.js';
 import Horas from './pantallas/Horas.js';
 
-const PANTALLAS: Record<Pantalla, () => JSX.Element> = {
+/**
+ * Lo que recibe cada pantalla. Hoy solo el Panel lo usa —sus indicadores
+ * llevan a su módulo—, pero cualquier pantalla puede navegar sin inventar su
+ * propio mecanismo. Una función con menos parámetros sigue siendo asignable,
+ * así que las otras once no se tocan.
+ */
+export interface PropsDePantalla {
+  readonly irA: (pantalla: Pantalla) => void;
+}
+
+const PANTALLAS: Record<Pantalla, (props: PropsDePantalla) => JSX.Element> = {
   seguimiento: Seguimiento,
   clientes: Clientes,
   documentos: Documentos,
@@ -57,7 +67,7 @@ function AppShell() {
       {/* Un único scroll, el de esta columna — no el de toda la página — para
           que la barra lateral quede fija en vez de irse con el contenido. */}
       <div className="min-w-0 flex-1 lg:overflow-y-auto">
-        <PantallaActual />
+        <PantallaActual irA={setPantallaActiva} />
       </div>
     </div>
   );

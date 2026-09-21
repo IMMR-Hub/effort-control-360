@@ -593,6 +593,15 @@ model Vencimiento {
   evidenciaId   String?           @map("evidencia_id") @db.Uuid
   proximaAccion String?           @map("proxima_accion") @db.VarChar(4000)
 
+  /// Prórroga (tarea 146). La DNIT corre plazos por resolución más seguido de
+  /// lo que uno esperaría — Daniel, 2026-09-21: *"es una resolución de
+  /// prórroga que suelen sacar"* —, así que la fecha nueva no reemplaza a la
+  /// vieja en silencio: `fechaVencimiento` pasa a ser la prorrogada y estas
+  /// dos columnas guardan de dónde venía y por qué. Sin el motivo, dentro de
+  /// un año nadie sabe por qué este vencimiento no sigue la regla general.
+  fechaVencimientoOriginal DateTime? @map("fecha_vencimiento_original") @db.Date
+  motivoProrroga           String?   @map("motivo_prorroga") @db.VarChar(300)
+
   creadoEn                DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
   creadoPorUsuarioId      String?  @map("creado_por_usuario_id") @db.Uuid
   actualizadoEn           DateTime @updatedAt @map("actualizado_en") @db.Timestamptz(3)

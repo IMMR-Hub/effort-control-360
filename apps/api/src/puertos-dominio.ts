@@ -184,6 +184,10 @@ export interface VencimientoAlmacenado {
   readonly riesgo: string;
   readonly evidenciaId: string | null;
   readonly proximaAccion: string | null;
+  /** Fecha que fijaba el calendario antes de una prórroga. `null` si nunca se prorrogó. */
+  readonly fechaVencimientoOriginal: Date | null;
+  /** Por qué se prorrogó: la resolución que lo dispuso. `null` si nunca se prorrogó. */
+  readonly motivoProrroga: string | null;
 }
 
 export interface AltaDeVencimiento {
@@ -231,6 +235,19 @@ export interface RepositorioDeVencimientos {
    * error en vez de una operación segura de repetir.
    */
   registrarGenerados(altas: readonly AltaDeVencimientoGenerado[]): Promise<number>;
+  /**
+   * Corre la fecha de vencimiento por una prórroga, guardando de dónde venía.
+   *
+   * La primera prórroga guarda la fecha original; una segunda sobre el mismo
+   * vencimiento NO la pisa — lo que interesa conservar es la que fijaba el
+   * calendario, no la prórroga anterior.
+   */
+  prorrogar(
+    id: string,
+    nuevaFecha: Date,
+    motivo: string,
+    usuarioId: string,
+  ): Promise<VencimientoAlmacenado>;
   marcarPresentado(
     id: string,
     fechaPresentacion: Date,

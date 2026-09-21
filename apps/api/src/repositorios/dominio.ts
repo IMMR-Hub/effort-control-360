@@ -362,6 +362,8 @@ const CAMPOS_VENCIMIENTO = {
   riesgo: true,
   evidenciaId: true,
   proximaAccion: true,
+  fechaVencimientoOriginal: true,
+  motivoProrroga: true,
 } as const;
 
 export class VencimientosPrisma implements RepositorioDeVencimientos {
@@ -481,6 +483,34 @@ export class VencimientosPrisma implements RepositorioDeVencimientos {
    * Guarda la fecha real de presentación, que puede no ser hoy: alguien puede
    * estar registrando el lunes una presentación hecha el viernes.
    */
+  async prorrogar(
+    id: string,
+    nuevaFecha: Date,
+    motivo: string,
+    usuarioId: string,
+  ): Promise<VencimientoAlmacenado> {
+    const previo = await this.prisma.vencimiento.findUnique({
+      where: { id },
+      select: { fechaVencimiento: true, fechaVencimientoOriginal: true },
+    });
+
+    const fila = await this.prisma.vencimiento.update({
+      where: { id },
+      data: {
+        fechaVencimiento: nuevaFecha,
+        // Solo la PRIMERA prórroga guarda el origen: si se prorroga dos veces,
+        // lo que hay que poder mostrar es la fecha que fijaba el calendario,
+        // no la prórroga intermedia.
+        fechaVencimientoOriginal: previo?.fechaVencimientoOriginal ?? previo?.fechaVencimiento ?? null,
+        motivoProrroga: motivo,
+        actualizadoPorUsuarioId: usuarioId,
+      },
+      select: CAMPOS_VENCIMIENTO,
+    });
+
+    return fila as VencimientoAlmacenado;
+  }
+
   async marcarPresentado(
     id: string,
     fechaPresentacion: Date,

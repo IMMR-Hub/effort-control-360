@@ -41,6 +41,7 @@ import {
   Th,
 } from '../ui/Primitivos.jsx';
 import { useConteoAnimado } from '../ui/useConteoAnimado.js';
+import type { Pantalla } from '../layout/Encabezado.js';
 import { FiltroDeFechasSelector } from '../ui/FiltroDeFechas.js';
 import { ETIQUETA_NIVEL_ALERTA, ETIQUETA_CRITICIDAD, TONO_NIVEL_ALERTA, TONO_CRITICIDAD } from '../ui/etiquetas.js';
 import { ErrorDeApi } from '../api/cliente.js';
@@ -93,7 +94,7 @@ function estiloRetardo(ms: number): CSSProperties {
   return { '--retardo-entrada': `${ms}ms` } as CSSProperties;
 }
 
-export default function Panel() {
+export default function Panel({ irA }: { irA?: (pantalla: Pantalla) => void }) {
   const hoy = useMemo(() => hoyEnParaguay(new Date()), []);
   const mesActual = `${hoy.anio}-${String(hoy.mes).padStart(2, '0')}`;
 
@@ -236,18 +237,26 @@ export default function Panel() {
       </div>
 
       <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-label="Indicadores generales">
-        <IndicadorAnimado etiqueta="Clientes activos" valor={clientesActivos} tono="proceso" icono={Users} retardoMs={0} />
+        <IndicadorAnimado etiqueta="Clientes activos"
+          onIr={irA ? () => irA('clientes') : null}
+          irEtiqueta="Ver los clientes" valor={clientesActivos} tono="proceso" icono={Users} retardoMs={0} />
         <IndicadorAnimado
           etiqueta="Vencimientos vencidos"
+          onIr={irA ? () => irA('vencimientos') : null}
+          irEtiqueta="Ver los vencimientos vencidos"
           valor={vencidos}
           tono="critico"
           destacado={vencidos > 0}
           icono={AlertTriangle}
           retardoMs={40}
         />
-        <IndicadorAnimado etiqueta="Vencimientos próximos" valor={proximos} tono="parcial" icono={Clock} retardoMs={80} />
+        <IndicadorAnimado etiqueta="Vencimientos próximos"
+          onIr={irA ? () => irA('vencimientos') : null}
+          irEtiqueta="Ver los vencimientos próximos" valor={proximos} tono="parcial" icono={Clock} retardoMs={80} />
         <IndicadorAnimado
           etiqueta="Alertas críticas"
+          onIr={irA ? () => irA('alertas') : null}
+          irEtiqueta="Ver las alertas críticas"
           valor={alertasCriticas}
           tono="critico"
           destacado={alertasCriticas > 0}
@@ -256,6 +265,8 @@ export default function Panel() {
         />
         <IndicadorAnimado
           etiqueta="Documentación pendiente"
+          onIr={irA ? () => irA('seguimiento') : null}
+          irEtiqueta="Ver el seguimiento de documentación"
           valor={documentacionPendiente}
           detalle={detallePeriodos}
           tono="pendiente"
@@ -264,6 +275,8 @@ export default function Panel() {
         />
         <IndicadorAnimado
           etiqueta="Balances sin aprobar"
+          onIr={irA ? () => irA('balances') : null}
+          irEtiqueta="Ver los balances"
           valor={balancesPendientes}
           detalle={detallePeriodos}
           tono="pendiente"
@@ -272,6 +285,8 @@ export default function Panel() {
         />
         <IndicadorAnimado
           etiqueta="Liquidaciones sin enviar"
+          onIr={irA ? () => irA('liquidaciones') : null}
+          irEtiqueta="Ver las liquidaciones"
           valor={liquidacionesSinEnviar}
           detalle={detallePeriodos}
           tono="pendiente"
@@ -280,6 +295,8 @@ export default function Panel() {
         />
         <IndicadorAnimado
           etiqueta="Presentadas con atraso"
+          onIr={irA ? () => irA('vencimientos') : null}
+          irEtiqueta="Ver las presentaciones con atraso"
           valor={conAtraso.length}
           detalle={
             presentadosEnRango.length === 0

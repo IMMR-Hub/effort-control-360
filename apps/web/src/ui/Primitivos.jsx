@@ -234,6 +234,8 @@ export function CampoSelect({
  *   destacado?: boolean,
  *   icono?: import('lucide-react').LucideIcon | null,
  *   retardoMs?: number,
+ *   onIr?: (() => void) | null,
+ *   irEtiqueta?: string,
  * }} props
  */
 export function Indicador({
@@ -244,6 +246,8 @@ export function Indicador({
   destacado = false,
   icono: Icono = null,
   retardoMs = 0,
+  onIr = null,
+  irEtiqueta = '',
 }) {
   const barra = {
     completo: 'bg-completo',
@@ -261,11 +265,33 @@ export function Indicador({
     pendiente: 'bg-pendiente-fondo text-pendiente',
   }[tono];
 
+  /*
+   * Con `onIr` la tarjeta entera es un botón que lleva a su módulo. Daniel,
+   * 2026-09-21: *"se quiere ver los vencidos, apretá sobre el botón de los
+   * vencidos y te lleva a la pantalla donde aparecen los que están vencidos"*.
+   *
+   * Un `<button>` de verdad y no un `<div onClick>`: así se llega con Tab, se
+   * activa con Enter y un lector de pantalla lo anuncia como algo que se
+   * puede apretar. El nombre accesible lo arma `irEtiqueta` — "1.500" no le
+   * dice nada a quien no ve la tarjeta.
+   */
+  const Contenedor = onIr ? 'button' : 'div';
+  const propsDeBoton = onIr
+    ? {
+        type: 'button',
+        onClick: onIr,
+        'aria-label': irEtiqueta || undefined,
+        className:
+          'w-full cursor-pointer text-left hover:border-borde-fuerte hover:shadow-2 active:shadow-1',
+      }
+    : {};
+
   return (
-    <div
+    <Contenedor
+      {...propsDeBoton}
       className={`animar-entrada relative overflow-hidden rounded-md border bg-superficie px-4 py-3 shadow-1 transition-shadow duration-300 hover:shadow-2 ${
         destacado ? 'border-critico-borde' : 'border-borde'
-      }`}
+      } ${propsDeBoton.className ?? ''}`}
       style={{ '--retardo-entrada': `${retardoMs}ms` }}
     >
       <span className={`absolute inset-y-0 left-0 w-1 ${barra}`} aria-hidden="true" />
@@ -285,7 +311,7 @@ export function Indicador({
       <p className="max-w-[calc(100%-2rem)] text-[11px] font-medium uppercase tracking-wide text-tinta-tenue">{etiqueta}</p>
       <p className="cifra mt-1 text-2xl font-semibold leading-none text-tinta">{valor}</p>
       {detalle && <p className="mt-1.5 text-xs text-tinta-tenue">{detalle}</p>}
-    </div>
+    </Contenedor>
   );
 }
 

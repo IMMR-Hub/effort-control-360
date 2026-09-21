@@ -56,6 +56,20 @@ const presentarSchema = z
   })
   .strict();
 
+/**
+ * Prórroga: la fecha nueva y por qué.
+ *
+ * El motivo es obligatorio y no tiene valor por defecto a propósito. Una fecha
+ * que no sigue la regla del calendario y además no dice por qué es exactamente
+ * el número sin explicación que este sistema existe para no tener.
+ */
+const prorrogarSchema = z
+  .object({
+    nuevaFecha: fechaIsoSchema,
+    motivo: textoCorto,
+  })
+  .strict();
+
 /** Vencimiento con los días restantes y el nivel de alerta ya calculados. */
 interface VencimientoConAlerta {
   readonly vencimiento: VencimientoAlmacenado;
@@ -86,6 +100,8 @@ function aSalida(item: VencimientoConAlerta) {
     fechaEmision: item.vencimiento.fechaEmision?.toISOString().slice(0, 10) ?? null,
     fechaVencimiento: item.vencimiento.fechaVencimiento.toISOString().slice(0, 10),
     fechaPresentacion: item.vencimiento.fechaPresentacion?.toISOString().slice(0, 10) ?? null,
+    fechaVencimientoOriginal:
+      item.vencimiento.fechaVencimientoOriginal?.toISOString().slice(0, 10) ?? null,
     diasRestantes: item.diasRestantes,
     nivelAlerta: item.nivelAlerta,
   };
@@ -297,6 +313,55 @@ export async function registrarRutasDeVencimientos(
         fechaPresentacion: cuerpo.fechaPresentacion,
         evidenciaId: cuerpo.evidenciaId,
       },
+      ip: peticion.ip,
+      agenteUsuario: peticion.headers['user-agent'] ?? null,
+      peticionId: String(peticion.id),
+    });
+
+    return { vencimiento: aSalida(conAlerta(vencimiento, deps.ahora())) };
+  });
+
+  /**
+   * Corre la fecha de vencimiento por una resolución de prórroga.
+   *
+   * Lo carga una persona a mano, con el motivo, y queda en la bitácora con la
+   * fecha que tenía antes: una prórroga es una decisión de la autoridad que
+   * alguien verificó, no algo que el sistema pueda deducir solo.
+   */
+  app.post('/api/v1/vencimientos/:id/prorrogar', async (peticion) => {
+    const { id } = paramsId.parse(peticion.params);
+    const sujeto = autorizar(peticion, 'vencimiento', 'editar');
+    const cuerpo = prorrogarSchema.parse(peticion.body);
+
+    const previo = await deps.vencimientos.buscarPorId(id, filtroDeClientes(sujeto));
+    if (!previo) {
+      throw new ErrorDeAplicacion(404, 'Recurso inexistente.', 'no_encontrado');
+    }
+
+    const anterior = previo.fechaVencimiento.toISOString().slice(0, 10);
+    if (cuerpo.nuevaFecha === anterior) {
+      throw new ErrorDeAplicacion(
+        400,
+        'La fecha nueva es la misma que la actual.',
+        'sin_cambio',
+      );
+    }
+
+    const vencimiento = await deps.vencimientos.prorrogar(
+      id,
+      new Date(`${cuerpo.nuevaFecha}T00:00:00.000Z`),
+      cuerpo.motivo,
+      sujeto.usuarioId,
+    );
+
+    await registrarEvento(deps.bitacora, peticion.log, {
+      usuarioId: sujeto.usuarioId,
+      accion: ACCIONES.VENCIMIENTO_PRORROGADO,
+      entidad: 'vencimiento',
+      entidadId: id,
+      clienteId: previo.clienteId,
+      datosAntes: { fechaVencimiento: anterior },
+      datosDespues: { fechaVencimiento: cuerpo.nuevaFecha, motivo: cuerpo.motivo },
       ip: peticion.ip,
       agenteUsuario: peticion.headers['user-agent'] ?? null,
       peticionId: String(peticion.id),

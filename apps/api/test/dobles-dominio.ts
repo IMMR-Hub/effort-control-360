@@ -382,6 +382,8 @@ export class VencimientosFalsos implements RepositorioDeVencimientos {
       riesgo: datos.riesgo,
       evidenciaId: datos.evidenciaId,
       proximaAccion: datos.proximaAccion,
+      fechaVencimientoOriginal: null,
+      motivoProrroga: null,
     };
     this.vencimientos.push(venc);
     return venc;
@@ -410,6 +412,25 @@ export class VencimientosFalsos implements RepositorioDeVencimientos {
     }
 
     return creados;
+  }
+
+  async prorrogar(
+    id: string,
+    nuevaFecha: Date,
+    motivo: string,
+  ): Promise<VencimientoAlmacenado> {
+    const indice = this.vencimientos.findIndex((venc) => venc.id === id);
+    const previo = this.vencimientos[indice]!;
+    const actualizado: VencimientoAlmacenado = {
+      ...previo,
+      fechaVencimiento: nuevaFecha,
+      // Igual que el repositorio real: solo la primera prórroga guarda el
+      // origen, para no perder la fecha que fijaba el calendario.
+      fechaVencimientoOriginal: previo.fechaVencimientoOriginal ?? previo.fechaVencimiento,
+      motivoProrroga: motivo,
+    };
+    this.vencimientos[indice] = actualizado;
+    return actualizado;
   }
 
   async marcarPresentado(
