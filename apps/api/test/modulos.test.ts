@@ -837,6 +837,41 @@ describe('radar de vencimientos', () => {
       );
       expect((entrada?.datosDespues as Record<string, unknown>)['motivo']).toBe('RG 50/2026');
     });
+
+    /*
+     * El caso que importa de verdad: DIBEC, ECOAGRO y FUMIPRO ya estaban
+     * PRESENTADAS cuando salió la resolución. El atraso que mostraba el sistema
+     * era falso, y la prórroga tiene que poder aplicarse a lo ya presentado.
+     */
+    it('prorrogar un vencimiento ya presentado deja el atraso en cero y lo dice en la lista de presentados', async () => {
+      const vencimiento = await crear();
+      // Presentado el 2026-05-08 contra un vencimiento del 2026-04-28: 10 días.
+      await ctx.app.inject({
+        method: 'POST', url: `/api/v1/vencimientos/${vencimiento.id}/presentar`,
+        headers: { cookie: coordinador }, payload: { fechaPresentacion: '2026-05-08' },
+      });
+      const antes = await ctx.app.inject({
+        method: 'GET', url: '/api/v1/vencimientos/presentados', headers: { cookie: coordinador },
+      });
+      expect(JSON.parse(antes.body).presentados[0].diasDeAtraso).toBe(10);
+      expect(JSON.parse(antes.body).presentados[0].fechaVencimientoOriginal).toBeNull();
+
+      const prorroga = await ctx.app.inject({
+        method: 'POST', url: `/api/v1/vencimientos/${vencimiento.id}/prorrogar`,
+        headers: { cookie: coordinador },
+        payload: { nuevaFecha: '2026-06-30', motivo: 'RG 50/2026' },
+      });
+      expect(prorroga.statusCode).toBe(200);
+
+      const despues = await ctx.app.inject({
+        method: 'GET', url: '/api/v1/vencimientos/presentados', headers: { cookie: coordinador },
+      });
+      const [fila] = JSON.parse(despues.body).presentados;
+      expect(fila.diasDeAtraso).toBe(0);
+      expect(fila.fechaVencimiento).toBe('2026-06-30');
+      expect(fila.fechaVencimientoOriginal).toBe(vencimiento.fechaVencimiento);
+      expect(fila.motivoProrroga).toBe('RG 50/2026');
+    });
   });
 
   it('el radar de un usuario no incluye vencimientos de clientes ajenos', async () => {

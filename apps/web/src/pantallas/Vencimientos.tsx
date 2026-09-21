@@ -46,7 +46,6 @@ import {
   crearVencimiento,
   generarVencimientos,
   marcarPresentado,
-  prorrogar,
   obtenerRadar,
   type NivelRiesgo,
   type ResumenDeGeneracion,
@@ -55,6 +54,7 @@ import {
   type Vencimiento,
 } from '../api/vencimientos.js';
 import { useSesion } from '../contexts/SesionContext.js';
+import { pedirProrroga } from './pedirProrroga.js';
 import VencimientosPresentados from './VencimientosPresentados.js';
 import { FiltroDeFechasSelector } from '../ui/FiltroDeFechas.js';
 
@@ -239,23 +239,8 @@ export default function Vencimientos() {
    * una persona: una resolución es algo que alguien leyó y verificó.
    */
   async function manejarProrroga(vencimiento: Vencimiento) {
-    const nuevaFecha = window.prompt(
-      `Nueva fecha de vencimiento de "${vencimiento.descripcion}" (AAAA-MM-DD).
-` +
-        `Hoy vence el ${vencimiento.fechaVencimiento}.`,
-      vencimiento.fechaVencimiento,
-    );
-    if (!nuevaFecha?.trim()) return;
-
-    const motivo = window.prompt(
-      '¿Por qué se prorroga? Poné la resolución, por ejemplo "RG 50/2026".',
-      vencimiento.motivoProrroga ?? '',
-    );
-    if (!motivo?.trim()) return;
-
     try {
-      await prorrogar(vencimiento.id, nuevaFecha.trim(), motivo.trim());
-      await recargar();
+      if (await pedirProrroga(vencimiento)) await recargar();
     } catch (motivoDelError) {
       setError(
         motivoDelError instanceof ErrorDeApi
@@ -436,7 +421,7 @@ export default function Vencimientos() {
         </Tabla>
       </Tarjeta>
 
-      <VencimientosPresentados clientes={clientes} rango={rango} />
+      <VencimientosPresentados clientes={clientes} rango={rango} puedeEditar={puedeEditar} />
 
       {formularioAbierto && puedeEditar && (
         <Tarjeta className="max-w-2xl">

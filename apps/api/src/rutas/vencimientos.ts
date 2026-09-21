@@ -170,6 +170,10 @@ export async function registrarRutasDeVencimientos(
           entidad: v.entidad,
           fechaVencimiento: v.fechaVencimiento.toISOString().slice(0, 10),
           fechaPresentacion: presentado?.toISOString().slice(0, 10) ?? null,
+          // Sin esto, una fecha prorrogada se ve como un error de carga: no
+          // sigue el calendario y nada dice por qué.
+          fechaVencimientoOriginal: v.fechaVencimientoOriginal?.toISOString().slice(0, 10) ?? null,
+          motivoProrroga: v.motivoProrroga,
           evidenciaId: v.evidenciaId,
           diasDeAtraso: Math.max(0, atraso),
           // La prueba es un aviso de Marangatú impreso: la fecha es la de

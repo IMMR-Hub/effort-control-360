@@ -55,6 +55,10 @@ export interface VencimientoPresentado {
   readonly entidad: string;
   readonly fechaVencimiento: string;
   readonly fechaPresentacion: string | null;
+  /** Fecha que fijaba el calendario antes de una prórroga. `null` si nunca se prorrogó. */
+  readonly fechaVencimientoOriginal: string | null;
+  /** Resolución que dispuso la prórroga. `null` si nunca se prorrogó. */
+  readonly motivoProrroga: string | null;
   readonly evidenciaId: string | null;
   /** 0 = a tiempo. */
   readonly diasDeAtraso: number;

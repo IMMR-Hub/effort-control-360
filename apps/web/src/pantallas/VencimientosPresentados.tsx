@@ -10,15 +10,17 @@
  * los días de atraso"*. Por eso la columna dice días y nada más.
  */
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import { CalendarClock } from 'lucide-react';
 
 import { dentroDelRango, type RangoDeFechas } from '@effort/core';
 
-import { Badge, EncabezadoTarjeta, Tabla, Tarjeta, Td, Th } from '../ui/Primitivos.jsx';
+import { Badge, Boton, EncabezadoTarjeta, Tabla, Tarjeta, Td, Th } from '../ui/Primitivos.jsx';
 import { ErrorDeApi } from '../api/cliente.js';
 import type { Cliente } from '../api/clientes.js';
 import { listarPresentados, type VencimientoPresentado } from '../api/vencimientos.js';
 import { obtenerEnlaceDeEvidencia } from '../api/onedrive.js';
+import { pedirProrroga } from './pedirProrroga.js';
 
 /**
  * Abre la declaración que prueba la presentación.
@@ -46,8 +48,11 @@ async function abrirDeclaracion(evidenciaId: string, alFallar: (mensaje: string)
 export default function VencimientosPresentados({
   clientes,
   rango = null,
+  puedeEditar = false,
 }: {
   readonly clientes: readonly Cliente[];
+  /** Muestra «Prórroga»: la DNIT corre plazos de lo ya presentado también. */
+  readonly puedeEditar?: boolean;
   /** Filtra por fecha de presentación. `null` = todas. */
   readonly rango?: RangoDeFechas | null;
 }) {
@@ -56,23 +61,31 @@ export default function VencimientosPresentados({
   const [error, setError] = useState<string | null>(null);
   const [cargando, setCargando] = useState(true);
 
+  const cargar = useCallback(
+    () =>
+      listarPresentados()
+        .then(({ presentados: lista }) => {
+          setPresentados(lista);
+          setCargando(false);
+        })
+        .catch((motivo) => {
+          setError(motivo instanceof ErrorDeApi ? motivo.message : 'No se pudo conectar con el servidor.');
+          setCargando(false);
+        }),
+    [],
+  );
+
   useEffect(() => {
-    let vigente = true;
-    listarPresentados()
-      .then(({ presentados: lista }) => {
-        if (!vigente) return;
-        setPresentados(lista);
-        setCargando(false);
-      })
-      .catch((motivo) => {
-        if (!vigente) return;
-        setError(motivo instanceof ErrorDeApi ? motivo.message : 'No se pudo conectar con el servidor.');
-        setCargando(false);
-      });
-    return () => {
-      vigente = false;
-    };
-  }, []);
+    void cargar();
+  }, [cargar]);
+
+  async function manejarProrroga(p: VencimientoPresentado) {
+    try {
+      if (await pedirProrroga(p)) await cargar();
+    } catch (motivo) {
+      setError(motivo instanceof ErrorDeApi ? motivo.message : 'No se pudo conectar con el servidor.');
+    }
+  }
 
   const nombre = (id: string) => clientes.find((c) => c.id === id)?.nombre ?? '—';
   const conAtraso = presentados.filter((p) => p.diasDeAtraso > 0).length;
@@ -108,6 +121,7 @@ export default function VencimientosPresentados({
               <Th>Presentado</Th>
               <Th numerica>Días de atraso</Th>
               <Th>Prueba</Th>
+              {puedeEditar && <Th>Acciones</Th>}
             </tr>
           </thead>
           <tbody>
@@ -115,7 +129,15 @@ export default function VencimientosPresentados({
               <tr key={p.id}>
                 <Td>{nombre(p.clienteId)}</Td>
                 <Td>{p.descripcion}</Td>
-                <Td>{p.fechaVencimiento}</Td>
+                <Td>
+                  {p.fechaVencimiento}
+                  {p.fechaVencimientoOriginal && (
+                    <span className="mt-0.5 block text-[11px] font-normal text-tinta-tenue">
+                      prorrogado del {p.fechaVencimientoOriginal}
+                      {p.motivoProrroga ? ` — ${p.motivoProrroga}` : ''}
+                    </span>
+                  )}
+                </Td>
                 <Td>{p.fechaPresentacion ?? '—'}</Td>
                 <Td numerica>
                   {p.diasDeAtraso === 0 ? (
@@ -148,6 +170,18 @@ export default function VencimientosPresentados({
                     <span className="text-xs text-tinta-tenue">Cargada a mano</span>
                   )}
                 </Td>
+                {puedeEditar && (
+                  <Td>
+                    <Boton
+                      variante="fantasma"
+                      icono={CalendarClock}
+                      aria-label={`Prorrogar: ${p.descripcion}`}
+                      onClick={() => void manejarProrroga(p)}
+                    >
+                      Prórroga
+                    </Boton>
+                  </Td>
+                )}
               </tr>
             ))}
           </tbody>

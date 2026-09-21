@@ -182,4 +182,91 @@ describe('radar de vencimientos', () => {
 
     expect(mock.llamadasA('POST /api/v1/vencimientos/venc-1/presentar')).toHaveLength(0);
   });
+
+  /*
+   * Tarea 146. DIBEC, ECOAGRO y FUMIPRO ya estaban presentadas cuando salió la
+   * RG 50/2026: el botón tiene que estar también en la lista de presentados.
+   */
+  describe('prórroga de lo ya presentado', () => {
+    const PRESENTADO = {
+      id: 'venc-p1',
+      clienteId: 'cli-garso',
+      descripcion: 'Estados financieros 2025',
+      entidad: 'DNIT',
+      fechaVencimiento: '2026-04-28',
+      fechaPresentacion: '2026-06-30',
+      fechaVencimientoOriginal: null,
+      motivoProrroga: null,
+      evidenciaId: null,
+      diasDeAtraso: 63,
+      fechaAproximada: false,
+    };
+
+    it('el botón «Prórroga» de un presentado manda la fecha y el motivo y recarga la lista', async () => {
+      mock.mockDeRuta('GET /api/v1/vencimientos/presentados', () =>
+        respuestaJson({ presentados: [PRESENTADO] }),
+      );
+      await montar();
+      await screen.findByText('Estados financieros 2025');
+      expect(screen.getByText('63 días')).toBeVisible();
+
+      const prompt = vi.spyOn(window, 'prompt')
+        .mockReturnValueOnce('2026-06-30')
+        .mockReturnValueOnce('RG 50/2026');
+      mock.mockDeRuta('POST /api/v1/vencimientos/venc-p1/prorrogar', () =>
+        respuestaJson({ vencimiento: { ...VENCIMIENTO_ABOGACIA, id: 'venc-p1' } }),
+      );
+      mock.mockDeRuta('GET /api/v1/vencimientos/presentados', () =>
+        respuestaJson({
+          presentados: [
+            {
+              ...PRESENTADO,
+              fechaVencimiento: '2026-06-30',
+              fechaVencimientoOriginal: '2026-04-28',
+              motivoProrroga: 'RG 50/2026',
+              diasDeAtraso: 0,
+            },
+          ],
+        }),
+      );
+
+      await usuario.click(screen.getByRole('button', { name: 'Prorrogar: Estados financieros 2025' }));
+
+      await waitFor(() => {
+        expect(mock.llamadasA('POST /api/v1/vencimientos/venc-p1/prorrogar')).toHaveLength(1);
+      });
+      const [, opciones] = mock.llamadasA('POST /api/v1/vencimientos/venc-p1/prorrogar')[0]!;
+      expect(JSON.parse(String(opciones?.body))).toEqual({
+        nuevaFecha: '2026-06-30',
+        motivo: 'RG 50/2026',
+      });
+      expect(prompt).toHaveBeenCalledTimes(2);
+
+      expect(await screen.findByText('A tiempo')).toBeVisible();
+      expect(screen.getByText(/prorrogado del 2026-04-28 — RG 50\/2026/)).toBeVisible();
+    });
+
+    it('cancelar la fecha no llama al servidor', async () => {
+      mock.mockDeRuta('GET /api/v1/vencimientos/presentados', () =>
+        respuestaJson({ presentados: [PRESENTADO] }),
+      );
+      await montar();
+      await screen.findByText('Estados financieros 2025');
+      vi.spyOn(window, 'prompt').mockReturnValue(null);
+
+      await usuario.click(screen.getByRole('button', { name: 'Prorrogar: Estados financieros 2025' }));
+
+      expect(mock.llamadasA('POST /api/v1/vencimientos/venc-p1/prorrogar')).toHaveLength(0);
+    });
+
+    it('un rol de solo lectura no ve «Prórroga» en los presentados', async () => {
+      mock.mockDeRuta('GET /api/v1/vencimientos/presentados', () =>
+        respuestaJson({ presentados: [PRESENTADO] }),
+      );
+      await montar('auxiliar');
+      await screen.findByText('Estados financieros 2025');
+
+      expect(screen.queryByRole('button', { name: /Prorrogar/ })).not.toBeInTheDocument();
+    });
+  });
 });
