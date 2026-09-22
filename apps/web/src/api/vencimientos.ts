@@ -139,3 +139,33 @@ export function prorrogar(
 ): Promise<{ vencimiento: Vencimiento }> {
   return peticion('POST', `/api/v1/vencimientos/${id}/prorrogar`, { nuevaFecha, motivo });
 }
+
+/** Lo que devuelve una prórroga por resolución, simulada o aplicada. */
+export interface ResumenDeProrrogaEnLote {
+  readonly modo: 'simulacion' | 'real';
+  readonly nuevaFecha: string;
+  readonly alcanzados: readonly { readonly id: string; readonly clienteId?: string }[];
+  /** Cuántos ya tenían la fecha nueva y por lo tanto no se tocaron. */
+  readonly yaEstaban: number;
+  readonly aplicados: number;
+}
+
+/**
+ * Corre el plazo de una obligación entera por una resolución.
+ *
+ * `simulacion` no escribe: sirve para saber a cuántos alcanzaría antes de
+ * decidir. El motivo solo es obligatorio al aplicar.
+ */
+export function prorrogarLote(
+  descripcion: string,
+  nuevaFecha: string,
+  motivo: string | null,
+  modo: 'simulacion' | 'real',
+): Promise<ResumenDeProrrogaEnLote> {
+  return peticion('POST', '/api/v1/vencimientos/prorrogar-lote', {
+    descripcion,
+    nuevaFecha,
+    motivo,
+    modo,
+  });
+}

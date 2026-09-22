@@ -839,6 +839,155 @@ describe('radar de vencimientos', () => {
     });
 
     /*
+     * Prórroga por resolución (Daniel, 2026-09-22): *"ahora son solo 5
+     * clientes, pero cuando acepten serán más de 140 adicionales y no quiero
+     * estar perdiendo minutos con cada uno"*. Una resolución de la DNIT no
+     * alcanza a una fila: alcanza a todos los contribuyentes de un régimen.
+     *
+     * Dos modos, como el importador de comprobantes: `simulacion` dice a
+     * quiénes alcanzaría sin escribir nada, `real` aplica. El modo no tiene
+     * valor por defecto — una escritura masiva no se dispara por omisión.
+     */
+    describe('prórroga por resolución (en lote)', () => {
+      const MISMA = 'Estados Financieros — período 2025-12';
+
+      async function crearTres() {
+        // Dos del cliente propio con la misma descripción, uno distinto.
+        for (const [descripcion, fechaVencimiento] of [
+          [MISMA, '2026-04-20'],
+          [MISMA, '2026-04-27'],
+          ['IRE — período 2025-12', '2026-04-20'],
+        ] as const) {
+          await ctx.app.inject({
+            method: 'POST', url: `/api/v1/clientes/${MIO}/vencimientos`,
+            headers: { cookie: coordinador },
+            payload: { ...abogacia, descripcion, fechaVencimiento },
+          });
+        }
+      }
+
+      it('la simulación dice a quiénes alcanza y no escribe nada', async () => {
+        await crearTres();
+
+        const respuesta = await ctx.app.inject({
+          method: 'POST', url: '/api/v1/vencimientos/prorrogar-lote',
+          headers: { cookie: coordinador },
+          payload: { descripcion: MISMA, nuevaFecha: '2026-06-30', motivo: 'RG 50/2026', modo: 'simulacion' },
+        });
+
+        expect(respuesta.statusCode).toBe(200);
+        const cuerpo = JSON.parse(respuesta.body);
+        expect(cuerpo.alcanzados).toHaveLength(2);
+        expect(cuerpo.aplicados).toBe(0);
+        // Nada cambió: las fechas siguen siendo las del calendario.
+        const radar = JSON.parse(
+          (await ctx.app.inject({ method: 'GET', url: '/api/v1/vencimientos', headers: { cookie: coordinador } })).body,
+        );
+        expect(radar.vencimientos.every((v: { fechaVencimiento: string }) => v.fechaVencimiento !== '2026-06-30')).toBe(true);
+      });
+
+      it('en modo real los corre a todos, y solo a los de esa obligación', async () => {
+        await crearTres();
+
+        const respuesta = await ctx.app.inject({
+          method: 'POST', url: '/api/v1/vencimientos/prorrogar-lote',
+          headers: { cookie: coordinador },
+          payload: { descripcion: MISMA, nuevaFecha: '2026-06-30', motivo: 'RG 50/2026', modo: 'real' },
+        });
+
+        expect(JSON.parse(respuesta.body).aplicados).toBe(2);
+        const radar = JSON.parse(
+          (await ctx.app.inject({ method: 'GET', url: '/api/v1/vencimientos', headers: { cookie: coordinador } })).body,
+        );
+        const porDescripcion = (d: string) =>
+          radar.vencimientos.filter((v: { descripcion: string }) => v.descripcion === d);
+        expect(porDescripcion(MISMA).map((v: { fechaVencimiento: string }) => v.fechaVencimiento)).toEqual([
+          '2026-06-30', '2026-06-30',
+        ]);
+        // Cada uno conserva la fecha que le fijaba el calendario, que no es la misma.
+        expect(
+          porDescripcion(MISMA).map((v: { fechaVencimientoOriginal: string }) => v.fechaVencimientoOriginal).sort(),
+        ).toEqual(['2026-04-20', '2026-04-27']);
+        expect(porDescripcion('IRE — período 2025-12')[0].fechaVencimiento).toBe('2026-04-20');
+      });
+
+      it('repetirlo no rompe ni vuelve a escribir: los que ya están en esa fecha se saltan', async () => {
+        await crearTres();
+        const aplicar = () =>
+          ctx.app.inject({
+            method: 'POST', url: '/api/v1/vencimientos/prorrogar-lote',
+            headers: { cookie: coordinador },
+            payload: { descripcion: MISMA, nuevaFecha: '2026-06-30', motivo: 'RG 50/2026', modo: 'real' },
+          });
+
+        await aplicar();
+        const segunda = await aplicar();
+
+        expect(segunda.statusCode).toBe(200);
+        expect(JSON.parse(segunda.body).aplicados).toBe(0);
+        expect(JSON.parse(segunda.body).yaEstaban).toBe(2);
+      });
+
+      it('deja una entrada de bitácora por vencimiento, no una sola del lote', async () => {
+        await crearTres();
+
+        await ctx.app.inject({
+          method: 'POST', url: '/api/v1/vencimientos/prorrogar-lote',
+          headers: { cookie: coordinador },
+          payload: { descripcion: MISMA, nuevaFecha: '2026-06-30', motivo: 'RG 50/2026', modo: 'real' },
+        });
+
+        const entradas = ctx.bitacora.filas.filter((f) => f.accion === 'vencimiento.prorrogado');
+        expect(entradas).toHaveLength(2);
+        expect(new Set(entradas.map((e) => e.entidadId)).size).toBe(2);
+      });
+
+      it('no alcanza a un cliente fuera de la cartera de quien lo pide', async () => {
+        ctx.vencimientos.vencimientos.push({
+          id: 'venc-ajeno-eeff', clienteId: AJENO, tipoDocumento: 'CONSTANCIA',
+          descripcion: MISMA, entidad: 'DNIT', fechaEmision: null,
+          fechaVencimiento: new Date('2026-04-20'), fechaPresentacion: null,
+          responsableId: null, estado: 'VIGENTE', riesgo: 'ALTO',
+          evidenciaId: null, proximaAccion: null,
+        });
+
+        const respuesta = await ctx.app.inject({
+          method: 'POST', url: '/api/v1/vencimientos/prorrogar-lote',
+          headers: { cookie: coordinador },
+          payload: { descripcion: MISMA, nuevaFecha: '2026-06-30', motivo: 'RG 50/2026', modo: 'real' },
+        });
+
+        expect(JSON.parse(respuesta.body).aplicados).toBe(0);
+        const ajeno = ctx.vencimientos.vencimientos.find((v) => v.id === 'venc-ajeno-eeff');
+        expect(ajeno?.fechaVencimiento.toISOString().slice(0, 10)).toBe('2026-04-20');
+      });
+
+      it('un rol de solo lectura no puede prorrogar en lote', async () => {
+        await crearTres();
+
+        const respuesta = await ctx.app.inject({
+          method: 'POST', url: '/api/v1/vencimientos/prorrogar-lote',
+          headers: { cookie: auxiliar },
+          payload: { descripcion: MISMA, nuevaFecha: '2026-06-30', motivo: 'RG 50/2026', modo: 'real' },
+        });
+
+        expect(respuesta.statusCode).toBe(403);
+      });
+
+      it('sin modo explícito no hace nada: una escritura masiva no se dispara por omisión', async () => {
+        await crearTres();
+
+        const respuesta = await ctx.app.inject({
+          method: 'POST', url: '/api/v1/vencimientos/prorrogar-lote',
+          headers: { cookie: coordinador },
+          payload: { descripcion: MISMA, nuevaFecha: '2026-06-30', motivo: 'RG 50/2026' },
+        });
+
+        expect(respuesta.statusCode).toBe(400);
+      });
+    });
+
+    /*
      * El caso que importa de verdad: DIBEC, ECOAGRO y FUMIPRO ya estaban
      * PRESENTADAS cuando salió la resolución. El atraso que mostraba el sistema
      * era falso, y la prórroga tiene que poder aplicarse a lo ya presentado.

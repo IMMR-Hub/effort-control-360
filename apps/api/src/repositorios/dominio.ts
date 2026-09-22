@@ -399,6 +399,19 @@ export class VencimientosPrisma implements RepositorioDeVencimientos {
     return filas as VencimientoAlmacenado[];
   }
 
+  async listarPorDescripcion(
+    descripcion: string,
+    filtro: FiltroDeCartera,
+  ): Promise<VencimientoAlmacenado[]> {
+    const filas = await this.prisma.vencimiento.findMany({
+      where: { descripcion, estado: { not: 'NO_APLICA' }, ...porCartera(filtro) },
+      select: CAMPOS_VENCIMIENTO,
+      orderBy: { fechaVencimiento: 'asc' },
+    });
+
+    return filas as VencimientoAlmacenado[];
+  }
+
   async listarPorCliente(
     clienteId: string,
     filtro: FiltroDeCartera,

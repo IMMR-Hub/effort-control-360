@@ -70,6 +70,28 @@ const prorrogarSchema = z
   })
   .strict();
 
+/**
+ * Prórroga por resolución: la misma obligación, para toda la cartera.
+ *
+ * `modo` no tiene valor por defecto, igual que el importador de comprobantes:
+ * una escritura que toca 145 filas de una vez no puede dispararse porque
+ * alguien omitió un campo. Sin modo es un 400, no un "simulá por las dudas".
+ */
+const prorrogarLoteSchema = z
+  .object({
+    descripcion: z.string().trim().min(1).max(400),
+    nuevaFecha: fechaIsoSchema,
+    // Opcional solo para simular: preguntar "a cuántos alcanzaría" no exige
+    // haber decidido todavía la resolución. Aplicar, sí.
+    motivo: textoCorto.nullable().default(null),
+    modo: z.enum(['simulacion', 'real']),
+  })
+  .strict()
+  .refine((cuerpo) => cuerpo.modo !== 'real' || Boolean(cuerpo.motivo?.trim()), {
+    message: 'Una prórroga sin la resolución que la dispone es una fecha sin explicación.',
+    path: ['motivo'],
+  });
+
 /** Vencimiento con los días restantes y el nivel de alerta ya calculados. */
 interface VencimientoConAlerta {
   readonly vencimiento: VencimientoAlmacenado;
@@ -332,6 +354,79 @@ export async function registrarRutasDeVencimientos(
    * fecha que tenía antes: una prórroga es una decisión de la autoridad que
    * alguien verificó, no algo que el sistema pueda deducir solo.
    */
+  /**
+   * Corre el plazo de una obligación entera por una resolución.
+   *
+   * Daniel, 2026-09-22: *"ahora son solo 5 clientes, pero cuando acepten serán
+   * más de 140 adicionales y no quiero estar perdiendo minutos con cada uno"*.
+   * Una resolución de la DNIT alcanza a todos los contribuyentes de un
+   * régimen, así que la unidad de trabajo es la obligación, no la fila.
+   *
+   * Tres garantías, todas con prueba: la simulación no escribe nada; cada
+   * vencimiento conserva la fecha que SU calendario le fijaba (no una común);
+   * y repetirlo no vuelve a escribir, porque los que ya están en la fecha
+   * nueva se saltan. Esto último es lo que lo hace seguro de reintentar.
+   */
+  app.post('/api/v1/vencimientos/prorrogar-lote', async (peticion) => {
+    const sujeto = autorizar(peticion, 'vencimiento', 'editar');
+    const cuerpo = prorrogarLoteSchema.parse(peticion.body);
+
+    const candidatos = await deps.vencimientos.listarPorDescripcion(
+      cuerpo.descripcion,
+      filtroDeClientes(sujeto),
+    );
+    const porCorrer = candidatos.filter(
+      (venc) => venc.fechaVencimiento.toISOString().slice(0, 10) !== cuerpo.nuevaFecha,
+    );
+
+    const alcanzados = candidatos.map((venc) => ({
+      id: venc.id,
+      clienteId: venc.clienteId,
+      descripcion: venc.descripcion,
+      estado: venc.estado,
+      fechaVencimiento: venc.fechaVencimiento.toISOString().slice(0, 10),
+      fechaVencimientoOriginal: venc.fechaVencimientoOriginal?.toISOString().slice(0, 10) ?? null,
+    }));
+    const resumen = {
+      modo: cuerpo.modo,
+      nuevaFecha: cuerpo.nuevaFecha,
+      motivo: cuerpo.motivo,
+      alcanzados,
+      yaEstaban: candidatos.length - porCorrer.length,
+    };
+
+    if (cuerpo.modo === 'simulacion') {
+      return { ...resumen, aplicados: 0 };
+    }
+
+    for (const venc of porCorrer) {
+      const anterior = venc.fechaVencimiento.toISOString().slice(0, 10);
+      await deps.vencimientos.prorrogar(
+        venc.id,
+        new Date(`${cuerpo.nuevaFecha}T00:00:00.000Z`),
+        cuerpo.motivo ?? '',
+        sujeto.usuarioId,
+      );
+
+      // Una entrada por vencimiento, no una del lote: dentro de seis meses la
+      // pregunta va a ser "por qué ESTA fila no sigue el calendario".
+      await registrarEvento(deps.bitacora, peticion.log, {
+        usuarioId: sujeto.usuarioId,
+        accion: ACCIONES.VENCIMIENTO_PRORROGADO,
+        entidad: 'vencimiento',
+        entidadId: venc.id,
+        clienteId: venc.clienteId,
+        datosAntes: { fechaVencimiento: anterior },
+        datosDespues: { fechaVencimiento: cuerpo.nuevaFecha, motivo: cuerpo.motivo, enLote: true },
+        ip: peticion.ip,
+        agenteUsuario: peticion.headers['user-agent'] ?? null,
+        peticionId: String(peticion.id),
+      });
+    }
+
+    return { ...resumen, aplicados: porCorrer.length };
+  });
+
   app.post('/api/v1/vencimientos/:id/prorrogar', async (peticion) => {
     const { id } = paramsId.parse(peticion.params);
     const sujeto = autorizar(peticion, 'vencimiento', 'editar');

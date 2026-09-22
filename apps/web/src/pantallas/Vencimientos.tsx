@@ -57,7 +57,7 @@ import {
   type Vencimiento,
 } from '../api/vencimientos.js';
 import { useSesion } from '../contexts/SesionContext.js';
-import { pedirProrroga } from './pedirProrroga.js';
+import { DialogoDeProrroga, type VencimientoProrrogable } from './DialogoDeProrroga.js';
 import VencimientosPresentados from './VencimientosPresentados.js';
 import { FiltroDeFechasSelector } from '../ui/FiltroDeFechas.js';
 
@@ -249,17 +249,7 @@ export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nive
    * de atraso que habían presentado a tiempo. La fecha y el motivo los carga
    * una persona: una resolución es algo que alguien leyó y verificó.
    */
-  async function manejarProrroga(vencimiento: Vencimiento) {
-    try {
-      if (await pedirProrroga(vencimiento)) await recargar();
-    } catch (motivoDelError) {
-      setError(
-        motivoDelError instanceof ErrorDeApi
-          ? motivoDelError.message
-          : 'No se pudo conectar con el servidor.',
-      );
-    }
-  }
+  const [prorrogando, setProrrogando] = useState<VencimientoProrrogable | null>(null);
 
   if (cargando) {
     return (
@@ -427,7 +417,7 @@ export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nive
                       variante="fantasma"
                       icono={CalendarClock}
                       aria-label={`Prorrogar: ${v.descripcion}`}
-                      onClick={() => void manejarProrroga(v)}
+                      onClick={() => setProrrogando(v)}
                     >
                       Prórroga
                     </Boton>
@@ -447,6 +437,14 @@ export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nive
       </Tarjeta>
 
       <VencimientosPresentados clientes={clientes} rango={rango} puedeEditar={puedeEditar} />
+
+      {prorrogando && (
+        <DialogoDeProrroga
+          vencimiento={prorrogando}
+          alCerrar={() => setProrrogando(null)}
+          alAplicar={recargar}
+        />
+      )}
 
       {formularioAbierto && puedeEditar && (
         <Tarjeta className="max-w-2xl">

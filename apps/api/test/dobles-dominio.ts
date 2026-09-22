@@ -353,6 +353,20 @@ export class VencimientosFalsos implements RepositorioDeVencimientos {
       .sort((a, b) => b.fechaVencimiento.getTime() - a.fechaVencimiento.getTime());
   }
 
+  async listarPorDescripcion(
+    descripcion: string,
+    filtro: FiltroDeCartera,
+  ): Promise<VencimientoAlmacenado[]> {
+    return this.vencimientos
+      .filter(
+        (venc) =>
+          venc.descripcion === descripcion &&
+          venc.estado !== 'NO_APLICA' &&
+          alcanza(filtro, venc.clienteId),
+      )
+      .sort((a, b) => a.fechaVencimiento.getTime() - b.fechaVencimiento.getTime());
+  }
+
   async listarPorCliente(
     clienteId: string,
     filtro: FiltroDeCartera,

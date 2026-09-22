@@ -6,7 +6,7 @@
  * mockear una fecha "de hoy".
  */
 
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -209,20 +209,130 @@ describe('radar de vencimientos', () => {
       fechaAproximada: false,
     };
 
-    it('el botón «Prórroga» de un presentado manda la fecha y el motivo y recarga la lista', async () => {
+    /*
+     * Daniel, 2026-09-22: con 145 clientes, dos cuadritos del navegador por
+     * fila no es una forma de trabajar. El formulario reemplaza a
+     * `window.prompt` (que además la automatización no puede completar) y trae
+     * la casilla que aplica la resolución a toda la obligación de una vez.
+     */
+    it('la prórroga se carga en un formulario de la pantalla, no en un prompt del navegador', async () => {
       mock.mockDeRuta('GET /api/v1/vencimientos/presentados', () =>
         respuestaJson({ presentados: [PRESENTADO] }),
       );
       await montar();
       await screen.findByText('Estados financieros 2025');
-      expect(screen.getByText('63 días')).toBeVisible();
-
-      const prompt = vi.spyOn(window, 'prompt')
-        .mockReturnValueOnce('2026-06-30')
-        .mockReturnValueOnce('RG 50/2026');
+      const prompt = vi.spyOn(window, 'prompt');
+      mock.mockDeRuta('POST /api/v1/vencimientos/prorrogar-lote', () =>
+        respuestaJson({ alcanzados: [{ id: 'venc-p1' }, { id: 'otro' }], aplicados: 0, yaEstaban: 0 }),
+      );
       mock.mockDeRuta('POST /api/v1/vencimientos/venc-p1/prorrogar', () =>
         respuestaJson({ vencimiento: { ...VENCIMIENTO_ABOGACIA, id: 'venc-p1' } }),
       );
+
+      await usuario.click(screen.getByRole('button', { name: 'Prorrogar: Estados financieros 2025' }));
+
+      const formulario = await screen.findByRole('dialog', { name: /Prorrogar/ });
+      expect(formulario).toBeVisible();
+      expect(prompt).not.toHaveBeenCalled();
+
+      fireEvent.change(screen.getByLabelText('Nueva fecha de vencimiento'), {
+        target: { value: '2026-06-30' },
+      });
+      await usuario.type(screen.getByLabelText(/Resolución que la dispone/), 'RG 50/2026');
+      await usuario.click(screen.getByRole('button', { name: 'Aplicar la prórroga' }));
+
+      await waitFor(() => {
+        expect(mock.llamadasA('POST /api/v1/vencimientos/venc-p1/prorrogar')).toHaveLength(1);
+      });
+      const [, opciones] = mock.llamadasA('POST /api/v1/vencimientos/venc-p1/prorrogar')[0]!;
+      expect(JSON.parse(String(opciones?.body))).toEqual({
+        nuevaFecha: '2026-06-30',
+        motivo: 'RG 50/2026',
+      });
+    });
+
+    it('con la casilla marcada aplica la resolución a toda la obligación de una vez', async () => {
+      mock.mockDeRuta('GET /api/v1/vencimientos/presentados', () =>
+        respuestaJson({ presentados: [PRESENTADO] }),
+      );
+      await montar();
+      await screen.findByText('Estados financieros 2025');
+      mock.mockDeRuta('POST /api/v1/vencimientos/prorrogar-lote', () =>
+        respuestaJson({
+          alcanzados: [{ id: 'venc-p1' }, { id: 'otro-1' }, { id: 'otro-2' }],
+          aplicados: 0,
+          yaEstaban: 0,
+        }),
+      );
+
+      await usuario.click(screen.getByRole('button', { name: 'Prorrogar: Estados financieros 2025' }));
+      // La simulación corre sola al abrir: sin ese número, la casilla pediría
+      // aceptar a ciegas una escritura sobre toda la cartera.
+      expect(await screen.findByText(/alcanza a 3 vencimientos/i)).toBeVisible();
+
+      fireEvent.change(screen.getByLabelText('Nueva fecha de vencimiento'), {
+        target: { value: '2026-06-30' },
+      });
+      await usuario.type(screen.getByLabelText(/Resolución que la dispone/), 'RG 50/2026');
+      await usuario.click(screen.getByLabelText(/Aplicar a los 3/));
+      await usuario.click(screen.getByRole('button', { name: 'Aplicar la prórroga' }));
+
+      await waitFor(() => {
+        const reales = mock
+          .llamadasA('POST /api/v1/vencimientos/prorrogar-lote')
+          .filter(([, o]) => JSON.parse(String(o?.body)).modo === 'real');
+        expect(reales).toHaveLength(1);
+      });
+      const real = mock
+        .llamadasA('POST /api/v1/vencimientos/prorrogar-lote')
+        .map(([, o]) => JSON.parse(String(o?.body)))
+        .find((c) => c.modo === 'real');
+      expect(real).toEqual({
+        descripcion: 'Estados financieros 2025',
+        nuevaFecha: '2026-06-30',
+        motivo: 'RG 50/2026',
+        modo: 'real',
+      });
+      expect(mock.llamadasA('POST /api/v1/vencimientos/venc-p1/prorrogar')).toHaveLength(0);
+    });
+
+    it('sin motivo no deja aplicar: una fecha sin resolución es un número sin explicación', async () => {
+      mock.mockDeRuta('GET /api/v1/vencimientos/presentados', () =>
+        respuestaJson({ presentados: [PRESENTADO] }),
+      );
+      await montar();
+      await screen.findByText('Estados financieros 2025');
+      mock.mockDeRuta('POST /api/v1/vencimientos/prorrogar-lote', () =>
+        respuestaJson({ alcanzados: [{ id: 'venc-p1' }], aplicados: 0, yaEstaban: 0 }),
+      );
+      mock.mockDeRuta('POST /api/v1/vencimientos/venc-p1/prorrogar', () =>
+        respuestaJson({ vencimiento: VENCIMIENTO_ABOGACIA }),
+      );
+
+      await usuario.click(screen.getByRole('button', { name: 'Prorrogar: Estados financieros 2025' }));
+      await screen.findByRole('dialog', { name: /Prorrogar/ });
+      await usuario.click(screen.getByRole('button', { name: 'Aplicar la prórroga' }));
+
+      expect(await screen.findByText(/poné la resolución/i)).toBeVisible();
+      expect(mock.llamadasA('POST /api/v1/vencimientos/venc-p1/prorrogar')).toHaveLength(0);
+    });
+
+    it('tras aplicarla, la fila se recarga y muestra de dónde venía la fecha', async () => {
+      mock.mockDeRuta('GET /api/v1/vencimientos/presentados', () =>
+        respuestaJson({ presentados: [PRESENTADO] }),
+      );
+      await montar();
+      await screen.findByText('Estados financieros 2025');
+      expect(screen.getByText('63 dias'.replace('dias', 'días'))).toBeVisible();
+      mock.mockDeRuta('POST /api/v1/vencimientos/prorrogar-lote', () =>
+        respuestaJson({ alcanzados: [{ id: 'venc-p1' }], aplicados: 0, yaEstaban: 0 }),
+      );
+      mock.mockDeRuta('POST /api/v1/vencimientos/venc-p1/prorrogar', () =>
+        respuestaJson({ vencimiento: { ...VENCIMIENTO_ABOGACIA, id: 'venc-p1' } }),
+      );
+
+      await usuario.click(screen.getByRole('button', { name: 'Prorrogar: Estados financieros 2025' }));
+      await screen.findByRole('dialog', { name: /Prorrogar/ });
       mock.mockDeRuta('GET /api/v1/vencimientos/presentados', () =>
         respuestaJson({
           presentados: [
@@ -236,34 +346,33 @@ describe('radar de vencimientos', () => {
           ],
         }),
       );
-
-      await usuario.click(screen.getByRole('button', { name: 'Prorrogar: Estados financieros 2025' }));
-
-      await waitFor(() => {
-        expect(mock.llamadasA('POST /api/v1/vencimientos/venc-p1/prorrogar')).toHaveLength(1);
-      });
-      const [, opciones] = mock.llamadasA('POST /api/v1/vencimientos/venc-p1/prorrogar')[0]!;
-      expect(JSON.parse(String(opciones?.body))).toEqual({
-        nuevaFecha: '2026-06-30',
-        motivo: 'RG 50/2026',
-      });
-      expect(prompt).toHaveBeenCalledTimes(2);
+      await usuario.type(screen.getByLabelText(/Resolución que la dispone/), 'RG 50/2026');
+      await usuario.click(screen.getByRole('button', { name: 'Aplicar la prórroga' }));
 
       expect(await screen.findByText('A tiempo')).toBeVisible();
       expect(screen.getByText(/prorrogado del 2026-04-28 — RG 50\/2026/)).toBeVisible();
+      // El formulario se cierra solo: dejarlo abierto invita a aplicarla dos veces.
+      await waitFor(() => {
+        expect(screen.queryByRole('dialog', { name: /Prorrogar/ })).not.toBeInTheDocument();
+      });
     });
 
-    it('cancelar la fecha no llama al servidor', async () => {
+    it('cancelar el formulario no llama al servidor', async () => {
       mock.mockDeRuta('GET /api/v1/vencimientos/presentados', () =>
         respuestaJson({ presentados: [PRESENTADO] }),
       );
       await montar();
       await screen.findByText('Estados financieros 2025');
-      vi.spyOn(window, 'prompt').mockReturnValue(null);
+      mock.mockDeRuta('POST /api/v1/vencimientos/prorrogar-lote', () =>
+        respuestaJson({ alcanzados: [{ id: 'venc-p1' }], aplicados: 0, yaEstaban: 0 }),
+      );
 
       await usuario.click(screen.getByRole('button', { name: 'Prorrogar: Estados financieros 2025' }));
+      await screen.findByRole('dialog', { name: /Prorrogar/ });
+      await usuario.click(screen.getByRole('button', { name: 'Cancelar' }));
 
       expect(mock.llamadasA('POST /api/v1/vencimientos/venc-p1/prorrogar')).toHaveLength(0);
+      expect(screen.queryByRole('dialog', { name: /Prorrogar/ })).not.toBeInTheDocument();
     });
 
     it('un rol de solo lectura no ve «Prórroga» en los presentados', async () => {

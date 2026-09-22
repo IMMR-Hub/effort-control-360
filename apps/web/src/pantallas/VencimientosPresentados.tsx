@@ -20,7 +20,7 @@ import { ErrorDeApi } from '../api/cliente.js';
 import type { Cliente } from '../api/clientes.js';
 import { listarPresentados, type VencimientoPresentado } from '../api/vencimientos.js';
 import { obtenerEnlaceDeEvidencia } from '../api/onedrive.js';
-import { pedirProrroga } from './pedirProrroga.js';
+import { DialogoDeProrroga, type VencimientoProrrogable } from './DialogoDeProrroga.js';
 
 /**
  * Abre la declaración que prueba la presentación.
@@ -79,13 +79,7 @@ export default function VencimientosPresentados({
     void cargar();
   }, [cargar]);
 
-  async function manejarProrroga(p: VencimientoPresentado) {
-    try {
-      if (await pedirProrroga(p)) await cargar();
-    } catch (motivo) {
-      setError(motivo instanceof ErrorDeApi ? motivo.message : 'No se pudo conectar con el servidor.');
-    }
-  }
+  const [prorrogando, setProrrogando] = useState<VencimientoProrrogable | null>(null);
 
   const nombre = (id: string) => clientes.find((c) => c.id === id)?.nombre ?? '—';
   const conAtraso = presentados.filter((p) => p.diasDeAtraso > 0).length;
@@ -176,7 +170,7 @@ export default function VencimientosPresentados({
                       variante="fantasma"
                       icono={CalendarClock}
                       aria-label={`Prorrogar: ${p.descripcion}`}
-                      onClick={() => void manejarProrroga(p)}
+                      onClick={() => setProrrogando(p)}
                     >
                       Prórroga
                     </Boton>
@@ -186,6 +180,14 @@ export default function VencimientosPresentados({
             ))}
           </tbody>
         </Tabla>
+      )}
+
+      {prorrogando && (
+        <DialogoDeProrroga
+          vencimiento={prorrogando}
+          alCerrar={() => setProrrogando(null)}
+          alAplicar={cargar}
+        />
       )}
     </Tarjeta>
   );

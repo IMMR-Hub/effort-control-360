@@ -232,6 +232,20 @@ export interface RepositorioDeVencimientos {
    */
   listarPresentados(filtro: FiltroDeCartera): Promise<VencimientoAlmacenado[]>;
   listarPorCliente(clienteId: string, filtro: FiltroDeCartera): Promise<VencimientoAlmacenado[]>;
+  /**
+   * Todos los de una misma obligación y período, presentados incluidos.
+   *
+   * Existe para las prórrogas por resolución: la DNIT no corre el plazo de un
+   * contribuyente, lo corre para todos los de un régimen. La descripción ya
+   * lleva el período adentro ("Estados Financieros — período 2025-12"), así
+   * que identifica la clase sin ambigüedad. Incluye los PRESENTADO a
+   * propósito: son justamente los que muestran un atraso falso hasta que la
+   * prórroga se carga. Excluye NO_APLICA, que no tiene plazo que correr.
+   */
+  listarPorDescripcion(
+    descripcion: string,
+    filtro: FiltroDeCartera,
+  ): Promise<VencimientoAlmacenado[]>;
   buscarPorId(id: string, filtro: FiltroDeCartera): Promise<VencimientoAlmacenado | null>;
   registrar(datos: AltaDeVencimiento): Promise<VencimientoAlmacenado>;
   /**
