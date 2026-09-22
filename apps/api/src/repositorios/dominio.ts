@@ -1201,6 +1201,15 @@ export class AlertasPrisma implements RepositorioDeAlertas {
     return resultado.count;
   }
 
+  async yaRegistradas(origen: string): Promise<ReadonlySet<string>> {
+    const filas = await this.prisma.alerta.findMany({
+      where: { origen, entidadRelacionadaId: { not: null } },
+      select: { entidadRelacionadaId: true },
+    });
+
+    return new Set(filas.map((fila) => fila.entidadRelacionadaId!));
+  }
+
   async cerrar(
     id: string,
     motivoCierre: string,

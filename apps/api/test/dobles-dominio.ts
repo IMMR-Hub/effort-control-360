@@ -840,6 +840,14 @@ export class AlertasFalsas implements RepositorioDeAlertas {
    * ABIERTAS del mismo origen sobre la misma entidad. Sin esto, el doble
    * aceptaría repetidas que la base real rechaza.
    */
+  async yaRegistradas(origen: string): Promise<ReadonlySet<string>> {
+    return new Set(
+      this.alertas
+        .filter((alerta) => alerta.origen === origen && alerta.entidadRelacionadaId !== null)
+        .map((alerta) => alerta.entidadRelacionadaId!),
+    );
+  }
+
   async crear(altas: readonly AltaDeAlerta[]): Promise<number> {
     let creadas = 0;
 

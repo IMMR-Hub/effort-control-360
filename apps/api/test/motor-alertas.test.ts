@@ -15,6 +15,7 @@ import {
   ORIGEN_DOCUMENTACION,
   ORIGEN_LIBRO_RIESGO,
   ORIGEN_DECLARACION_AJENA,
+  ORIGEN_PRESENTADO_CON_ATRASO,
   ORIGEN_VENCIMIENTO,
   type DeclaracionAjena,
   type RiesgoDeLibroPorPeriodo,
@@ -358,7 +359,12 @@ describe('motor de alertas', () => {
       const sinFiltrar = {
         ...deps,
         alertas: new AlertasFalsas(),
-        vencimientos: { ...deps.vencimientos, listar: async () => [yaPresentado] },
+        // `Object.assign` sobre el prototipo y no `{...instancia}`: el spread de
+        // una instancia de clase se queda con los datos y pierde los métodos, y
+        // acá hacen falta los demás (`listarPresentados`, por ejemplo).
+        vencimientos: Object.assign(Object.create(Object.getPrototypeOf(deps.vencimientos)), deps.vencimientos, {
+          listar: async () => [yaPresentado],
+        }),
       } as unknown as Parameters<typeof evaluarAlertas>[0];
 
       const resumen = await evaluarAlertas(sinFiltrar, HOY, '2026-03', 'usr-1');
@@ -458,5 +464,101 @@ describe('motor de alertas', () => {
 
       expect(resumen.creadas).toBe(0);
     });
+  });
+});
+
+/*
+ * Tarea 147. Presentar fuera de término es un hecho consumado: no urge, pero
+ * tiene que quedar dicho. Tres decisiones, cada una con su prueba:
+ *
+ *  - INFORMATIVA, no crítica: ya pasó, no hay nada que correr a hacer hoy.
+ *  - **Nunca la palabra "multa"** (Daniel, 2026-09-15): el sistema informa días
+ *    de atraso; quién y cuánto multa lo decide la DNIT, no nosotros.
+ *  - No se cierra sola, y **no se vuelve a levantar** si alguien ya la cerró.
+ *    Un hecho histórico no "se resuelve" solo: lo cierra una persona, con
+ *    motivo, y cerrarlo tiene que significar algo.
+ */
+describe('presentaciones fuera de término', () => {
+  async function presentar(deps: ReturnType<typeof armar>, vencimiento: string, presentacion: string) {
+    const venc = await agregarVencimiento(deps, vencimiento);
+    return deps.vencimientos.marcarPresentado(venc.id, new Date(`${presentacion}T00:00:00Z`), null, 'usr-1');
+  }
+
+  it('levanta una alerta informativa con los días de atraso, y sin la palabra multa', async () => {
+    const deps = armar();
+    await presentar(deps, '2026-04-13', '2026-04-20');
+
+    const resumen = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+
+    expect(resumen.creadas).toBe(1);
+    const alerta = deps.alertas.alertas[0]!;
+    expect(alerta.origen).toBe(ORIGEN_PRESENTADO_CON_ATRASO);
+    expect(alerta.criticidad).toBe('INFORMATIVA');
+    expect(alerta.titulo).toMatch(/7 días/);
+    expect(`${alerta.titulo} ${alerta.detalle}`.toLowerCase()).not.toMatch(/multa/);
+  });
+
+  it('presentar a tiempo no levanta nada', async () => {
+    const deps = armar();
+    await presentar(deps, '2026-04-13', '2026-04-13');
+
+    const resumen = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+
+    expect(resumen.creadas).toBe(0);
+  });
+
+  /*
+   * El caso de la RG 50/2026: DIBEC presentó el 23/06 contra un vencimiento de
+   * abril, y parecía tener 64 días de atraso. Con la prórroga cargada, el
+   * atraso no existe — y la alerta tampoco debe existir.
+   */
+  it('una prórroga que deja el atraso en cero evita la alerta', async () => {
+    const deps = armar();
+    const presentado = await presentar(deps, '2026-04-20', '2026-06-23');
+    await deps.vencimientos.prorrogar(presentado.id, new Date('2026-06-30T00:00:00Z'), 'RG 50/2026', 'usr-1');
+
+    const resumen = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+
+    expect(resumen.creadas).toBe(0);
+  });
+
+  it('correrlo dos veces no la duplica', async () => {
+    const deps = armar();
+    await presentar(deps, '2026-04-13', '2026-04-20');
+
+    await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+    const segunda = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+
+    expect(segunda.creadas).toBe(0);
+    expect(deps.alertas.alertas).toHaveLength(1);
+  });
+
+  it('no se cierra sola: el atraso sigue siendo cierto la corrida siguiente', async () => {
+    const deps = armar();
+    await presentar(deps, '2026-04-13', '2026-04-20');
+
+    await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+    const segunda = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+
+    expect(segunda.resueltas).toBe(0);
+    expect(deps.alertas.alertas[0]!.estado).toBe('ABIERTA');
+  });
+
+  /*
+   * Si alguien la cierra con motivo, el motor no puede volver a abrirla en la
+   * corrida siguiente: el índice único de la base solo cubre las ABIERTAS, así
+   * que sin esto reaparecería cada 15 minutos y cerrarla no serviría de nada.
+   */
+  it('una vez cerrada por una persona, no vuelve a levantarse', async () => {
+    const deps = armar();
+    await presentar(deps, '2026-04-13', '2026-04-20');
+    await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+    await deps.alertas.cerrar(deps.alertas.alertas[0]!.id, 'Revisado con el cliente.', 'usr-1', HOY);
+
+    const resumen = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+
+    expect(resumen.creadas).toBe(0);
+    expect(deps.alertas.alertas).toHaveLength(1);
+    expect(deps.alertas.alertas[0]!.estado).toBe('CERRADA');
   });
 });

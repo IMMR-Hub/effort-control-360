@@ -124,6 +124,22 @@ export interface ResumenDeAlertas {
 export const ORIGEN_VENCIMIENTO = 'vencimiento_por_vencer';
 export const ORIGEN_DOCUMENTACION = 'documentacion_faltante';
 /**
+ * Presentación hecha fuera de término (tarea 147).
+ *
+ * Es un aviso distinto de todos los demás: no pide hacer algo hoy, deja
+ * constancia de algo que ya pasó. De ahí las tres reglas que lo separan del
+ * resto — INFORMATIVA, no se cierra sola, y no se vuelve a levantar una vez
+ * que una persona la cerró con motivo.
+ *
+ * **Nunca dice "multa"** (Daniel, 2026-09-15): el sistema informa días de
+ * atraso; cuánto se multa lo decide la DNIT.
+ *
+ * Depende de que las prórrogas estén cargadas: el atraso se mide contra
+ * `fechaVencimiento`, que es la prorrogada cuando hubo resolución. Sin la RG
+ * 50/2026 cargada, esto habría avisado de tres atrasos que no existen.
+ */
+export const ORIGEN_PRESENTADO_CON_ATRASO = 'presentado_con_atraso';
+/**
  * Comprobantes del libro cuyo IVA declarado no coincide con la regla.
  *
  * Daniel, 2026-09-13: *"estas discrepancias también tienen que alertar, ya que
@@ -203,13 +219,17 @@ export async function evaluarAlertas(
   periodo: string,
   usuarioId: string,
 ): Promise<ResumenDeAlertas> {
-  const [vencimientos, procesos, abiertas, riesgos, ajenas] = await Promise.all([
-    deps.vencimientos.listar(null),
-    deps.procesoMensual.listar(periodo, null),
-    deps.alertas.listar(null),
-    deps.riesgoDeLibro.porPeriodo(),
-    deps.declaracionesAjenas?.listar() ?? [],
-  ]);
+  const [vencimientos, presentados, procesos, abiertas, riesgos, ajenas, yaAvisadas] =
+    await Promise.all([
+      deps.vencimientos.listar(null),
+      deps.vencimientos.listarPresentados(null),
+      deps.procesoMensual.listar(periodo, null),
+      deps.alertas.listar(null),
+      deps.riesgoDeLibro.porPeriodo(),
+      deps.declaracionesAjenas?.listar() ?? [],
+      // En cualquier estado, no solo abiertas: ver `ORIGEN_PRESENTADO_CON_ATRASO`.
+      deps.alertas.yaRegistradas(ORIGEN_PRESENTADO_CON_ATRASO),
+    ]);
 
   // Clave de lo que ya está abierto, para no recontar como "creada" algo que
   // la base va a saltar igual. La base es la que garantiza que no se duplique;
@@ -254,6 +274,40 @@ export async function evaluarAlertas(
       entidadRelacionada: 'vencimiento',
       entidadRelacionadaId: vencimiento.id,
       fechaLimite: vencimiento.fechaVencimiento,
+    });
+  }
+
+  /*
+   * Presentaciones fuera de término. Van después de los vencimientos porque
+   * son el otro lado de la misma moneda: aquello ya se presentó, así que no
+   * urge — pero que se haya presentado tarde tiene que quedar dicho una vez.
+   */
+  for (const presentado of presentados) {
+    if (!presentado.fechaPresentacion) continue;
+
+    const atraso = Math.round(
+      (presentado.fechaPresentacion.getTime() - presentado.fechaVencimiento.getTime()) / 86_400_000,
+    );
+    if (atraso <= 0) continue;
+
+    // Una vez levantada, no se vuelve a levantar: si una persona la cerró con
+    // motivo, reabrirla cada 15 minutos haría que cerrarla no signifique nada.
+    if (yaAvisadas.has(presentado.id)) continue;
+
+    const dias = `${atraso} día${atraso === 1 ? '' : 's'}`;
+    candidatas.push({
+      clienteId: presentado.clienteId,
+      periodo: null,
+      origen: ORIGEN_PRESENTADO_CON_ATRASO,
+      criticidad: 'INFORMATIVA',
+      titulo: `Presentado con ${dias} de atraso: ${presentado.descripcion}`,
+      detalle:
+        `Vencía el ${fechaAIso(presentado.fechaVencimiento)} ante ${presentado.entidad} y se ` +
+        `presentó el ${fechaAIso(presentado.fechaPresentacion)}: ${dias} de atraso. ` +
+        `Queda como constancia; la cierra una persona cuando corresponda.`,
+      entidadRelacionada: 'vencimiento',
+      entidadRelacionadaId: presentado.id,
+      fechaLimite: presentado.fechaVencimiento,
     });
   }
 
@@ -366,8 +420,12 @@ export async function evaluarAlertas(
 
   let resueltas = 0;
   for (const alerta of abiertas) {
-    // Solo las que levanta este motor. Una alerta de otro origen no se toca:
-    // no se sabe qué la resuelve.
+    /*
+     * Solo las que levanta este motor, y ni siquiera todas: las de
+     * `ORIGEN_PRESENTADO_CON_ATRASO` quedan deliberadamente fuera de esta
+     * lista. Un hecho consumado no deja de ser cierto porque el motor vuelva a
+     * correr — presentar tarde no se "resuelve". La cierra una persona.
+     */
     if (
       alerta.origen !== ORIGEN_VENCIMIENTO &&
       alerta.origen !== ORIGEN_DOCUMENTACION &&

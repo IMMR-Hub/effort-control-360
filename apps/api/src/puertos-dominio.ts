@@ -750,6 +750,15 @@ export interface RepositorioDeAlertas {
    */
   crear(altas: readonly AltaDeAlerta[]): Promise<number>;
   /**
+   * Las entidades que ya tuvieron una alerta de ese origen, en CUALQUIER estado.
+   *
+   * Hace falta para los avisos de hechos consumados (una presentación fuera de
+   * término): el índice único de la base solo cubre las ABIERTAS, así que sin
+   * esto una alerta cerrada por una persona volvería a levantarse en la corrida
+   * siguiente y cerrarla no significaría nada.
+   */
+  yaRegistradas(origen: string): Promise<ReadonlySet<string>>;
+  /**
    * Única forma de llegar a `CERRADA`. Exige motivo, usuario y momento: una
    * alerta cerrada sin explicación no se distingue de una que se ignoró.
    */
