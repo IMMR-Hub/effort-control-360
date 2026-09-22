@@ -164,7 +164,7 @@ async function principal() {
     // sistema y se deja dicho, en los datos del evento, que entró por este
     // script y no por la pantalla: dentro de seis meses la diferencia importa.
     const [operador] = await prisma.$queryRaw`
-      SELECT "id" FROM "usuario" WHERE "correo" = 'effort360@effort.com.py' LIMIT 1
+      SELECT "id" FROM "usuario" WHERE "email" = 'effort360@effort.com.py' LIMIT 1
     `;
     if (!operador) {
       console.error('No se encontró la cuenta del sistema para atribuir el cambio. Se aborta.');
