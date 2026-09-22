@@ -35,7 +35,7 @@ de Lili o Laura), **Daniel** (decisión o acción en una cuenta), **Claude**
 | 19 | Feriados y dos calendarios | Cerrado, **salvo 19(e)** | EFFORT | 19(e): ver punto 26 (prórroga de EEFF) |
 | 20 | Tolerancia de redondeo del proveedor | Cerrado | nadie | Toda diferencia alerta; se acepta o se revisa |
 | 21 | Hallazgos repetidos en la base | Corregido en código, limpieza pendiente | Daniel | Autorizar `docs/propuestas/limpiar-hallazgos-repetidos.sql` (borra filas) |
-| 22 | Autofacturas con columnas en cero | **Respondido 2026-09-21**: «no existe autofactura cargada» — no es error de lectura | Claude | Tarea 148: medir cuántos de los 4.779 hallazgos `PARTES_NO_SUMAN_EL_TOTAL` son este caso, ANTES de tocar el contador |
+| 22 | Autofacturas con columnas en cero | **MEDIDO 2026-09-22** (tarea 148). Falta decidir con Daniel | Daniel | De los 4.779 `PARTES_NO_SUMAN_EL_TOTAL`: **1.640 (34%)** tienen las partes en cero (el caso «no hay autofactura cargada»), **1.237 (26%)** difieren 1–2 Gs, **1.385 (29%)** entre 3 y 100 Gs, **479 (10%)** entre 101 y 10.000, y **38 (0,8%)** más de 10.000 Gs. O sea: el caso conocido NO es la mayoría, y lo realmente accionable son ~517 filas. Decidir si se separan en tres grupos en pantalla |
 | 23 | Presentaciones desde el PDF de la DNIT | **Cerrado en código y producción 2026-09-15** | nadie | 42 de 150 presentados; lo que falta está en 27 y 28 |
 | 24 | IVA sumaba planillas repetidas | **Cerrado — criterio confirmado 2026-09-21** (gana la más reciente) | nadie | EFFORT va a usar «CORRECCION» en el nombre de ahora en más |
 | 25 | Planillas RG 90 reconocidas por nombre | **Cerrado 2026-09-18** (D1: se miró la pantalla de IVA de COPESA) | EFFORT | Solo queda una pregunta: si una «CORRECCION» es siempre el libro completo o solo las filas cambiadas (B7/P1) |
@@ -46,7 +46,7 @@ de Lili o Laura), **Daniel** (decisión o acción en una cuenta), **Claude**
 | 30 | Esquemas de prueba sobrantes en Supabase | Abierto | Daniel | Autorizar el borrado de `pruebas_*` sobrantes |
 | 31 | Declaraciones archivadas bajo el cliente equivocado | **Alertado por el sistema (tarea 143, verificada 2026-09-21).** Sin respuesta de EFFORT | EFFORT | **¿COPESA presentó el IVA de julio 2026?** Y reubicar los 3 archivos (el sistema no los mueve) |
 | 32 | Cómo aparece el saldo a favor en el formulario 120 | Verificado contra un PDF real 2026-09-20 | Claude | Tarea 138: extraer la casilla **47** (no la 54). Lleva migración: respaldo + las tres preguntas |
-| 33 | El respaldo falla si el código va adelante del esquema | **Abierto** (2026-09-21) | Claude | Tarea 150: leer las tablas con SQL crudo, sin aflojar la cobertura total |
+| 33 | El respaldo falla si el código va adelante del esquema | **Cerrado 2026-09-22** | nadie | Tarea 150 hecha: `crearLectorCrudo` lee con `SELECT *` (tabla real del `@@map`, vía DMMF) en el script y en el respaldo diario. Una tabla que falta se saltea; un corte de red sigue cortando el respaldo. 4 pruebas |
 | 34 | Conexión a la base intermitente desde la máquina de trabajo | **Observado 2026-09-21** | Daniel (decisión) | Reintentar antes de sospechar de un cambio; relacionado con el punto 18 |
 | 35 | Costo por hora de cada colaborador | **Abierto** (2026-09-21) | Daniel / EFFORT | Sin ese dato la planilla de horas no puede decir cuánto cuesta un cliente en guaraníes |
 

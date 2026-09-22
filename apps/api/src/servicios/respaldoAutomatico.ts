@@ -70,6 +70,20 @@ function serializar(_clave: string, valor: unknown): unknown {
   return typeof valor === 'bigint' ? { __bigint: valor.toString() } : valor;
 }
 
+/**
+ * `42P01` es «la tabla no existe» y `42703` «la columna no existe», los dos
+ * códigos de PostgreSQL que aparecen cuando el código va adelante del esquema
+ * desplegado. `P2021`/`P2022` son los equivalentes de Prisma.
+ */
+function esTablaOColumnaInexistente(motivo: unknown): boolean {
+  const codigo = (motivo as { code?: unknown } | null)?.code;
+  if (typeof codigo === 'string' && ['42P01', '42703', 'P2021', 'P2022'].includes(codigo)) {
+    return true;
+  }
+  const mensaje = motivo instanceof Error ? motivo.message : '';
+  return /does not exist|no existe/i.test(mensaje) && /relation|column|table|tabla|columna/i.test(mensaje);
+}
+
 export async function generarRespaldo(
   lector: LectorDeTablas,
   drive: DriveDeArchivos,
@@ -88,7 +102,19 @@ export async function generarRespaldo(
       continue;
     }
 
-    const datos = await tabla.findMany();
+    let datos: unknown[];
+    try {
+      datos = await tabla.findMany();
+    } catch (motivo) {
+      // Solo se saltea lo que de verdad no existe todavía en la base. Un corte
+      // de red o un permiso denegado tienen que cortar el respaldo: tragárselos
+      // daría un volcado incompleto que se dice completo, que es justo lo que
+      // pasó el 2026-09-13.
+      if (!esTablaOColumnaInexistente(motivo)) throw motivo;
+      salteados.push(modelo);
+      continue;
+    }
+
     contenido[modelo] = datos;
     filas += datos.length;
   }

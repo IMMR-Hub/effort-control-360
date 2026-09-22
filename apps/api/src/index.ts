@@ -14,6 +14,8 @@ import { registrarRutasDeAutenticacion } from './rutas/autenticacion.js';
 import { registrarRutasDeContactos } from './rutas/contactos.js';
 import { registrarRutasDeHoras } from './rutas/horas.js';
 import { AlmacenEnMemoria } from './seguridad/limites.js';
+import { Prisma } from '@prisma/client';
+
 import { comprobarConexion, crearClientePrisma } from './repositorios/prisma.js';
 import { UsuariosPrisma } from './repositorios/usuarios.js';
 import { SesionesPrisma } from './repositorios/sesiones.js';
@@ -62,8 +64,8 @@ import {
 } from './servicios/programador.js';
 import {
   programarRespaldoDiario,
-  type LectorDeTablas,
 } from './servicios/respaldoAutomatico.js';
+import { crearLectorCrudo } from './servicios/lecturaCruda.js';
 
 export interface DependenciasReales extends Dependencias {
   readonly cerrar: () => Promise<void>;
@@ -142,7 +144,9 @@ export function construirDependencias(configuracion: Configuracion): Dependencia
     obligaciones: new ObligacionesPrisma(prisma),
     evidencias: new EvidenciasPrisma(prisma),
     archivosDeOrigen: new ArchivosDeOrigenPrisma(prisma),
-    lectorParaRespaldo: prisma as unknown as LectorDeTablas,
+    // Con SQL crudo, no con el cliente tipado: si el código va adelante del
+    // esquema desplegado, el respaldo del día tiene que salir igual (tarea 150).
+    lectorParaRespaldo: crearLectorCrudo(prisma, Prisma.dmmf.datamodel.models),
     envios: new EnviosPrisma(prisma),
     correo: crearCorreo(configuracion),
     drive: crearDrive(

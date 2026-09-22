@@ -92,15 +92,43 @@ if (!url) {
 
 const prisma = new PrismaClient({ datasourceUrl: url });
 
+/*
+ * Se lee con SQL crudo, no con el cliente tipado (tarea 150). El 2026-09-21
+ * este script falló dos veces con P2021/P2022 justo antes de una migración,
+ * porque el cliente ya conocía columnas que producción todavía no tenía —
+ * es decir, se caía en el único momento en que el respaldo hace falta.
+ */
+const { crearLectorCrudo } = await import('@effort/api/dist/servicios/lecturaCruda.js');
+const { Prisma } = await import('@effort/api/node_modules/@prisma/client/default.js').catch(
+  () => import('@prisma/client'),
+);
+const lector = crearLectorCrudo(prisma, Prisma.dmmf.datamodel.models);
+
 const respaldo = { generadoEn: new Date().toISOString(), modelos: {} };
 let totalFilas = 0;
 
 for (const modelo of MODELOS) {
-  if (typeof prisma[modelo]?.findMany !== 'function') {
+  if (typeof lector[modelo]?.findMany !== 'function') {
     console.warn(`  (se saltea ${modelo}: no existe en este esquema)`);
     continue;
   }
-  const filas = await prisma[modelo].findMany();
+  let filas;
+  try {
+    filas = await lector[modelo].findMany();
+  } catch (motivo) {
+    // Una tabla que todavía no existe no puede tumbar el respaldo entero: es
+    // el caso de "el código va adelante del esquema", que es justo cuando se
+    // respalda. Cualquier otro error sí corta, para no escribir un volcado
+    // incompleto que se diga completo.
+    const codigo = motivo?.code;
+    const mensaje = motivo instanceof Error ? motivo.message : String(motivo);
+    const noExiste =
+      ['42P01', '42703', 'P2021', 'P2022'].includes(codigo) ||
+      (/does not exist|no existe/i.test(mensaje) && /relation|column|table/i.test(mensaje));
+    if (!noExiste) throw motivo;
+    console.warn(`  (se saltea ${modelo}: la tabla no existe todavía en esta base)`);
+    continue;
+  }
   respaldo.modelos[modelo] = filas;
   totalFilas += filas.length;
   console.log(`  ${modelo.padEnd(24)} ${String(filas.length).padStart(6)} filas`);
