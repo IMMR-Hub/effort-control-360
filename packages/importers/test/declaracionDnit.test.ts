@@ -9,7 +9,7 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { reconocerDeclaracionDnit } from '../src/declaracionDnit.js';
+import { extraerSaldoDeIvaDeclarado, reconocerDeclaracionDnit } from '../src/declaracionDnit.js';
 
 const IVA_FUMIPRO =
   'DECLARACIÓN JURADA NORMALIZADA Formulario:120 V4 Contribuyente: 80119631 Control: 984308fd ' +
@@ -120,5 +120,67 @@ describe('reconocimiento de presentaciones ante la DNIT', () => {
       'NOMBRE O RAZÓN SOCIAL RUC DV ESTADO COPESA CONSTRUCCIONES SA 80003112 1 ACTIVO 2. PERIODO PERIODO ' +
       'VERSION 2023 3.2.2';
     expect(reconocerDeclaracionDnit(impreso)).toBeNull();
+  });
+});
+
+/*
+ * Tarea 138. El saldo a favor de IVA se toma de lo DECLARADO en el
+ * formulario 120, no de lo calculado desde las planillas: recalcularlo puede
+ * contradecir una determinación ya presentada ante la DNIT (COPESA, febrero
+ * 2026, trae un saldo a favor que ninguna planilla explica).
+ *
+ * El texto de acá es el extraído de un PDF real de OneDrive (`120-07-2026.pdf`,
+ * DISCREPANCIAS.md punto 32, verificado el 2026-09-20), recortado al fragmento
+ * que importa. Cada importe viene precedido por su número de casilla de la
+ * DNIT, que es lo que lo hace parseable sin ambigüedad.
+ */
+describe('saldo a favor de IVA declarado (formulario 120)', () => {
+  const FRAGMENTO_REAL =
+    'Inc. c Saldo a favor del contribuyente del periodo anterior actualizado 46 717.945 ' +
+    'Inc. d SALDO A FAVOR DEL CONTRIBUYENTE cuando el Inc. a sea menor que el Inc. b 166 954.463 ' +
+    'Inc. f SALDO A FAVOR DEL CONTRIBUYENTE (Monto a trasladar para su compensación en el siguiente ' +
+    'periodo fiscal) 47 954.463 Inc. g Saldo a favor del fisco 48 0';
+
+  it('lee la casilla 47 (el saldo técnico a trasladar), no la 166 ni la 48', () => {
+    expect(extraerSaldoDeIvaDeclarado(FRAGMENTO_REAL)?.saldoATrasladar).toBe(954463n);
+  });
+
+  it('lee también la casilla 46 (la entrada), para la comprobación de continuidad', () => {
+    expect(extraerSaldoDeIvaDeclarado(FRAGMENTO_REAL)?.saldoDePeriodoAnterior).toBe(717945n);
+  });
+
+  // El Rubro 5 tiene su propio "saldo a favor" (casilla 54) que el formulario
+  // declara explícitamente "no trasladable al Rubro 4". Tomarlo sería un error
+  // silencioso: no puede colarse aunque aparezca cerca en el texto.
+  it('no confunde el saldo financiero del Rubro 5 (casilla 54) con el técnico', () => {
+    const conRubro5 =
+      `${FRAGMENTO_REAL} Rubro 5 SALDO A FAVOR DEL CONTRIBUYENTE (No trasladable al Rubro 4) 54 12.345.678`;
+    expect(extraerSaldoDeIvaDeclarado(conRubro5)?.saldoATrasladar).toBe(954463n);
+  });
+
+  it('un total en cero se lee como cero, no como ausente', () => {
+    const sinSaldo = FRAGMENTO_REAL.replace('47 954.463', '47 0');
+    expect(extraerSaldoDeIvaDeclarado(sinSaldo)?.saldoATrasladar).toBe(0n);
+  });
+
+  it('sin las casillas esperadas no inventa un número', () => {
+    expect(extraerSaldoDeIvaDeclarado('un texto sin ninguna casilla de IVA')).toBeNull();
+  });
+
+  // Extremo a extremo: una declaración de IVA (120) real trae el saldo pegado
+  // al `reconocerDeclaracionDnit` que ya usa el detector de presentaciones.
+  it('reconocerDeclaracionDnit adjunta el saldo de IVA cuando el formulario es 120', () => {
+    const declaracion = reconocerDeclaracionDnit(`${IVA_FUMIPRO} ${FRAGMENTO_REAL}`);
+    expect(declaracion?.saldoDeIva).toEqual({ saldoATrasladar: 954463n, saldoDePeriodoAnterior: 717945n });
+  });
+
+  it('un formulario que no es 120 (EEFF) no trae saldoDeIva, aunque el texto tenga casillas parecidas', () => {
+    const declaracion = reconocerDeclaracionDnit(`${EEFF_DIBEC} ${FRAGMENTO_REAL}`);
+    expect(declaracion?.saldoDeIva).toBeUndefined();
+  });
+
+  it('el punto es separador de miles: "717.945" son 717.945 guaraníes, no 717 con decimales', () => {
+    const soloUnMillon = FRAGMENTO_REAL.replace('47 954.463', '47 1.000.000');
+    expect(extraerSaldoDeIvaDeclarado(soloUnMillon)?.saldoATrasladar).toBe(1_000_000n);
   });
 });

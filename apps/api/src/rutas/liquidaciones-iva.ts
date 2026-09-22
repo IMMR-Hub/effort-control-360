@@ -137,19 +137,35 @@ export async function registrarRutasDeLiquidacionesIva(
 
     const liquidaciones = await deps.libroRg90.liquidacionesDeCliente(clienteId);
 
+    // El saldo DECLARADO (formulario 120, tarea 138) es aparte del calculado:
+    // recalcularlo desde las planillas puede contradecir una determinación que
+    // la DNIT ya recibió. Se busca uno por período; si no hay lectura de ese
+    // período, o si el módulo de declaraciones no está disponible (no requiere
+    // OneDrive de origen en todos los entornos), no se muestra nada — nunca se
+    // inventa un saldo que ningún PDF dijo.
+    const saldosDeclarados = deps.declaraciones
+      ? await Promise.all(
+          liquidaciones.map((l) => deps.declaraciones!.saldoDeIvaDeclarado(clienteId, l.periodo)),
+        )
+      : liquidaciones.map(() => null);
+
     return {
-      liquidaciones: liquidaciones.map((l) => ({
-        periodo: l.periodo,
-        creditoFiscal: l.creditoFiscal.toString(),
-        debitoFiscal: l.debitoFiscal.toString(),
-        saldoAPagar: l.saldoAPagar.toString(),
-        saldoAFavor: l.saldoAFavor.toString(),
-        comprobantesCompras: l.comprobantesCompras,
-        comprobantesVentas: l.comprobantesVentas,
-        archivosLeidos: l.archivosLeidos,
-        filasRechazadas: l.filasRechazadas,
-        calculadoEn: l.calculadoEn.toISOString(),
-      })),
+      liquidaciones: liquidaciones.map((l, indice) => {
+        const declarado = saldosDeclarados[indice];
+        return {
+          periodo: l.periodo,
+          creditoFiscal: l.creditoFiscal.toString(),
+          debitoFiscal: l.debitoFiscal.toString(),
+          saldoAPagar: l.saldoAPagar.toString(),
+          saldoAFavor: l.saldoAFavor.toString(),
+          comprobantesCompras: l.comprobantesCompras,
+          comprobantesVentas: l.comprobantesVentas,
+          archivosLeidos: l.archivosLeidos,
+          filasRechazadas: l.filasRechazadas,
+          calculadoEn: l.calculadoEn.toISOString(),
+          saldoAFavorDeclarado: declarado ? declarado.saldoATrasladar.toString() : null,
+        };
+      }),
     };
   });
 

@@ -12,8 +12,8 @@ import { randomUUID } from 'node:crypto';
 
 import { DriveFalso } from '@effort/drive';
 
-import { sincronizarDesdeOneDrive } from '../src/servicios/sincronizadorDeOneDrive.js';
-import type { AltaDeEvidencia } from '../src/servicios/sincronizadorDeOneDrive.js';
+import { detalleParaBitacora, sincronizarDesdeOneDrive } from '../src/servicios/sincronizadorDeOneDrive.js';
+import type { AltaDeEvidencia, ResumenDeSincronizacion } from '../src/servicios/sincronizadorDeOneDrive.js';
 import { ClientesFalsos, clienteMinimo } from './dobles.js';
 import { DocumentosFalsos } from './dobles-dominio.js';
 
@@ -384,5 +384,41 @@ describe('sincronización desde OneDrive', () => {
     expect(resumen.fallos).toHaveLength(1);
     expect(resumen.fallos[0]!.archivo).toBe('video-institucional.mp4');
     expect(resumen.fallos[0]!.motivo).toMatch(/26\.0 MB/);
+  });
+});
+
+/*
+ * Daniel, 2026-09-22: "¿a qué te referís con 17 fallos? ¿Eso es básicamente
+ * que todo colapsó?". No — pero hasta esa fecha la bitácora solo guardaba el
+ * NÚMERO, y el detalle (qué archivo, de qué cliente, por qué) se descartaba en
+ * cada corrida. Esto es lo que lo hace visible sin leer el código.
+ */
+describe('detalle de fallos para la bitácora', () => {
+  function resumen(fallos: ResumenDeSincronizacion['fallos']): ResumenDeSincronizacion {
+    return { clientes: [], nuevosEnTotal: 3, fallos, quedaronPendientes: false };
+  }
+
+  it('convierte cada fallo en una línea legible, con cliente, archivo y motivo', () => {
+    const detalle = detalleParaBitacora(
+      resumen([{ cliente: 'ECOAGRO SA', archivo: 'video.mp4', motivo: 'Pesa 30.0 MB.' }]),
+    );
+
+    expect(detalle.fallos).toBe(1);
+    expect(detalle.fallosDetalle).toEqual(['ECOAGRO SA — video.mp4: Pesa 30.0 MB.']);
+  });
+
+  it('sin fallos, el detalle es una lista vacía, no ausente', () => {
+    expect(detalleParaBitacora(resumen([])).fallosDetalle).toEqual([]);
+  });
+
+  it('con muchos fallos, no escribe un JSON sin límite', () => {
+    const muchos = Array.from({ length: 50 }, (_, i) => ({
+      cliente: 'CLIENTE', archivo: `archivo-${i}.pdf`, motivo: 'motivo',
+    }));
+
+    const detalle = detalleParaBitacora(resumen(muchos));
+
+    expect(detalle.fallos).toBe(50);
+    expect(detalle.fallosDetalle.length).toBeLessThan(50);
   });
 });

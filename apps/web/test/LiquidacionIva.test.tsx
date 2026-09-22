@@ -44,6 +44,7 @@ const LIQUIDACION = {
   archivosLeidos: 2,
   filasRechazadas: 0,
   calculadoEn: '2026-09-13T12:00:00.000Z',
+  saldoAFavorDeclarado: null,
 };
 
 // Caso real: ECOAGRO, comprobante de AGROSOL. Doce guaraníes de crédito de más.
@@ -75,15 +76,13 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-async function montar(rol: string = 'direccion') {
+async function montar(rol: string = 'direccion', liquidaciones: readonly unknown[] = [LIQUIDACION]) {
   mock.mockDeRuta('GET /api/v1/yo', () =>
     respuestaJson({ usuarioId: 'u1', rol, veTodosLosClientes: true, cantidadDeClientesAsignados: 0 }),
   );
   mock.mockDeRuta('GET /api/v1/csrf', () => respuestaJson({ csrfToken: 'token-de-prueba' }));
   mock.mockDeRuta('GET /api/v1/clientes', () => respuestaJson({ clientes: [FUMIPRO] }));
-  mock.mockDeRuta('GET /api/v1/liquidaciones-iva', () =>
-    respuestaJson({ liquidaciones: [LIQUIDACION] }),
-  );
+  mock.mockDeRuta('GET /api/v1/liquidaciones-iva', () => respuestaJson({ liquidaciones }));
   mock.mockDeRuta('GET /api/v1/liquidaciones-iva/hallazgos', () =>
     respuestaJson({
       hallazgos: [HALLAZGO],
@@ -257,5 +256,34 @@ describe('pantalla de IVA', () => {
 
     expect(screen.queryByRole('button', { name: 'Aceptar' })).toBeNull();
     expect(screen.queryByRole('button', { name: 'Revisar' })).toBeNull();
+  });
+
+  /*
+   * Tarea 138. El saldo a favor de IVA se toma de lo DECLARADO ante la DNIT
+   * (formulario 120, casilla 47), no de lo calculado desde las planillas.
+   */
+  describe('saldo a favor declarado ante la DNIT', () => {
+    it('sin declaración leída, dice que no hay declaración, no un cero engañoso', async () => {
+      await montar();
+
+      expect(screen.getByText('sin declaración leída')).toBeVisible();
+    });
+
+    it('cuando coincide con lo calculado, lo muestra sin ninguna marca', async () => {
+      await montar('direccion', [{ ...LIQUIDACION, saldoAFavor: '500000', saldoAFavorDeclarado: '500000' }]);
+
+      const fila = (await screen.findByText('2026-06')).closest('tr')!;
+      expect(fila.textContent).not.toMatch(/sin declaración/);
+    });
+
+    it('cuando difiere de lo calculado, lo marca como una diferencia real', async () => {
+      await montar('direccion', [{ ...LIQUIDACION, saldoAFavor: '500000', saldoAFavorDeclarado: '480000' }]);
+
+      const fila = (await screen.findByText('2026-06')).closest('tr')!;
+      // Los dos números tienen que verse: el punto no es esconder el cálculo
+      // propio, es señalar que hay algo para revisar contra lo ya presentado.
+      expect(fila.textContent).toContain('500.000');
+      expect(fila.textContent).toContain('480.000');
+    });
   });
 });

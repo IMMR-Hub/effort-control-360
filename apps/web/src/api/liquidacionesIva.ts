@@ -26,6 +26,14 @@ export interface LiquidacionIva {
   readonly archivosLeidos: number;
   readonly filasRechazadas: number;
   readonly calculadoEn: string;
+  /**
+   * Saldo a favor tal como lo declaró el formulario 120 ante la DNIT (casilla
+   * 47), no el que este sistema calculó. `null` si nunca se leyó una
+   * declaración de IVA de ese período. Se toma de lo declarado porque
+   * recalcularlo desde las planillas puede contradecir una determinación ya
+   * presentada.
+   */
+  readonly saldoAFavorDeclarado: string | null;
 }
 
 export type RiesgoDeHallazgo =

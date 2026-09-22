@@ -1153,6 +1153,14 @@ model LecturaDeDeclaracion {
   error               String?   @db.VarChar(200)
   leidaEn             DateTime  @default(now()) @map("leida_en") @db.Timestamptz(3)
 
+  /// Casilla 47 del formulario 120 (tarea 138): saldo TÉCNICO a trasladar al
+  /// período siguiente. Solo se completa cuando `formulario = '120'`. Nunca la
+  /// casilla 54 (saldo financiero, "no trasladable al Rubro 4").
+  saldoAFavorATrasladar      BigInt? @map("saldo_a_favor_a_trasladar")
+  /// Casilla 46: lo que traía el período anterior. Sirve para la comprobación
+  /// de continuidad (la 46 de un mes debe igualar la 47 del anterior).
+  saldoAFavorPeriodoAnterior BigInt? @map("saldo_a_favor_periodo_anterior")
+
   evidencia Evidencia @relation(fields: [evidenciaId], references: [id], onDelete: Cascade)
   cliente   Cliente   @relation(fields: [clienteId], references: [id], onDelete: Cascade)
 

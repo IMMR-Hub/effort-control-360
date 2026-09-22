@@ -22,7 +22,7 @@ import { enviarAvisosDeAlertas, VENTANA_DE_AVISOS_MS } from './avisosPorCorreo.j
 import { enviarRecordatorios } from './recordatorios.js';
 import { intentarConCandado } from './candadoDeIva.js';
 import { evaluarAlertas } from './motorDeAlertas.js';
-import { sincronizarDesdeOneDrive } from './sincronizadorDeOneDrive.js';
+import { detalleParaBitacora, sincronizarDesdeOneDrive } from './sincronizadorDeOneDrive.js';
 import { liquidarIvaDesdeLibros } from './liquidacionDeIva.js';
 import { detectarPresentaciones } from './detectorDePresentaciones.js';
 import { extraerTextoDePdf } from './textoDePdf.js';
@@ -466,12 +466,10 @@ export function programarSincronizacionDeOneDrive(
           entidadId: null,
           clienteId: null,
           datosAntes: null,
-          datosDespues: {
-            nuevos: resumen.nuevosEnTotal,
-            fallos: resumen.fallos.length,
-            quedaronPendientes: resumen.quedaronPendientes,
-            disparo: 'automático',
-          },
+          // El detalle (cliente, archivo, motivo) va acá, no solo el número:
+          // un conteo sin detalle es invisible para quien mira la bitácora
+          // (ver `detalleParaBitacora`).
+          datosDespues: { ...detalleParaBitacora(resumen), disparo: 'automático' },
           ipTruncada: null,
           agenteUsuario: 'sincronización automática',
           peticionId: null,

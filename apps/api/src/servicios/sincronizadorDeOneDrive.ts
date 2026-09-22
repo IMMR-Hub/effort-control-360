@@ -155,6 +155,43 @@ export interface ResumenDeSincronizacion {
 }
 
 /**
+ * Cuántos fallos se detallan en la bitácora, como mucho.
+ *
+ * Hasta el 2026-09-22 solo se guardaba `fallos.length`: la corrida se sabía
+ * que fallaba 17 veces, pero nadie podía saber CUÁLES sin leer el código —
+ * Daniel, 2026-09-22: "¿a que te referís con 17 fallos? Eso es básicamente que
+ * todo colapsó?". No: son archivos de más de 25 MB que a propósito nunca se
+ * bajan (`CLAUDE.md`, lección 4), pero el detalle se descartaba cada 15
+ * minutos. El tope es para no escribir un JSON gigante si algún día son miles.
+ */
+const MAXIMO_FALLOS_DETALLADOS = 30;
+
+/**
+ * Arma el detalle de una corrida para la bitácora, legible sin leer el código.
+ *
+ * Separado de `sincronizarDesdeOneDrive` para poder probarlo sin un origen ni
+ * un destino de Drive de verdad: es una transformación pura de datos que ya
+ * existen en el resumen.
+ */
+export function detalleParaBitacora(
+  resumen: ResumenDeSincronizacion,
+): {
+  readonly nuevos: number;
+  readonly fallos: number;
+  readonly fallosDetalle: readonly string[];
+  readonly quedaronPendientes: boolean;
+} {
+  return {
+    nuevos: resumen.nuevosEnTotal,
+    fallos: resumen.fallos.length,
+    fallosDetalle: resumen.fallos
+      .slice(0, MAXIMO_FALLOS_DETALLADOS)
+      .map((f) => `${f.cliente} — ${f.archivo}: ${f.motivo}`),
+    quedaronPendientes: resumen.quedaronPendientes,
+  };
+}
+
+/**
  * Período al que pertenece un archivo, deducido de su fecha de modificación.
  *
  * Es una aproximación declarada, no un dato extraído del documento: sin leer el

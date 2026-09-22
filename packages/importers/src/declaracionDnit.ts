@@ -56,6 +56,12 @@ export interface DeclaracionDnit {
    * atraso que salgan de ella son un MÁXIMO, no un dato exacto.
    */
   readonly fechaAproximada: boolean;
+  /**
+   * Solo en el formulario 120 (IVA), y solo si el texto trae la casilla 47.
+   * `undefined` en cualquier otro formulario o si no se pudo leer — nunca se
+   * inventa un saldo que el documento no diga.
+   */
+  readonly saldoDeIva?: SaldoDeIvaDeclarado;
 }
 
 /** Qué obligación del sistema prueba cada formulario. */
@@ -101,6 +107,10 @@ function reconocerNormalizada(texto: string): DeclaracionDnit | null {
   }
   if (!periodo) return null;
 
+  // El saldo a favor de IVA es un dato del formulario 120, no de los demás:
+  // el 500 y el 158 no tienen Rubro 4 de IVA, y buscarlo ahí sería casualidad.
+  const saldoDeIva = formulario === '120' ? extraerSaldoDeIvaDeclarado(texto) : null;
+
   return {
     formulario,
     ruc,
@@ -108,6 +118,7 @@ function reconocerNormalizada(texto: string): DeclaracionDnit | null {
     numeroDeOrden: orden,
     fechaDePresentacion: fechaIso(fecha),
     fechaAproximada: false,
+    ...(saldoDeIva ? { saldoDeIva } : {}),
   };
 }
 
@@ -175,4 +186,58 @@ export function reconocerDeclaracionDnit(texto: string): DeclaracionDnit | null 
   // Un borrador nunca prueba nada, aunque copie la estructura del formulario.
   if (/\bPROFORMA\b|\bBORRADOR\b|SIN VALIDEZ/i.test(plano)) return null;
   return reconocerNormalizada(plano) ?? reconocerTalonRg90(plano) ?? reconocerAvisoDeBuzon241(plano);
+}
+
+/** Saldo a favor de IVA tal como lo declaró el formulario 120, no calculado. */
+export interface SaldoDeIvaDeclarado {
+  /** Casilla 46: lo que traía el período anterior. Sirve de comprobación de continuidad. */
+  readonly saldoDePeriodoAnterior: bigint | null;
+  /**
+   * Casilla 47 del Rubro 4: el saldo TÉCNICO que se traslada al período
+   * siguiente. Es el que corresponde usar — nunca la casilla 54 del Rubro 5
+   * (saldo financiero), que el propio formulario marca "no trasladable al
+   * Rubro 4". Tomar el 54 sería un error silencioso.
+   */
+  readonly saldoATrasladar: bigint;
+}
+
+/**
+ * `"717.945"` → `717945n`. El punto es separador de miles; el formulario no
+ * lleva decimales ("LOS IMPORTES SE CONSIGNARÁN SIN CÉNTIMOS").
+ */
+function importeDnit(texto: string): bigint {
+  return BigInt(texto.replace(/\./g, ''));
+}
+
+/**
+ * Cada importe del formulario 120 viene precedido por su número de casilla de
+ * la DNIT (verificado contra un PDF real, `docs/DISCREPANCIAS.md` punto 32),
+ * lo que lo hace parseable sin ambigüedad: se ancla en la etiqueta del inciso
+ * Y en el número de casilla juntos, para no confundir una casilla con otra que
+ * casualmente esté cerca en el texto (como la 166 o la 54, que traen "SALDO A
+ * FAVOR DEL CONTRIBUYENTE" con otro sentido).
+ */
+const REGEX_CASILLA_47 =
+  /SALDO A FAVOR DEL CONTRIBUYENTE\s*\(Monto a trasladar[\s\S]{0,120}?\b47\b\s+([\d.]+)/i;
+const REGEX_CASILLA_46 =
+  /Saldo a favor del contribuyente del periodo anterior[\s\S]{0,80}?\b46\b\s+([\d.]+)/i;
+
+/**
+ * Extrae el saldo a favor de IVA que la DNIT ya tiene registrado, del texto de
+ * un formulario 120.
+ *
+ * Devuelve `null` si no encuentra la casilla 47: sin ella no hay saldo que
+ * mostrar, y es mejor no mostrar nada que inventar un cero. La 46 es opcional
+ * — solo sirve para la comprobación de continuidad contra el período anterior.
+ */
+export function extraerSaldoDeIvaDeclarado(texto: string): SaldoDeIvaDeclarado | null {
+  const plano = texto.replace(/\s+/g, ' ');
+  const casilla47 = plano.match(REGEX_CASILLA_47)?.[1];
+  if (!casilla47) return null;
+
+  const casilla46 = plano.match(REGEX_CASILLA_46)?.[1];
+  return {
+    saldoATrasladar: importeDnit(casilla47),
+    saldoDePeriodoAnterior: casilla46 ? importeDnit(casilla46) : null,
+  };
 }

@@ -82,6 +82,10 @@ export class DeclaracionesPrisma {
       fechaAproximada: d?.fechaAproximada ?? false,
       error: resultado.error,
       leidaEn: new Date(),
+      // Tarea 138: solo el formulario 120 lo trae, y solo si el texto tenía la
+      // casilla 47. `null` en cualquier otro caso — nunca se inventa un saldo.
+      saldoAFavorATrasladar: d?.saldoDeIva?.saldoATrasladar ?? null,
+      saldoAFavorPeriodoAnterior: d?.saldoDeIva?.saldoDePeriodoAnterior ?? null,
     };
 
     await this.prisma.lecturaDeDeclaracion.upsert({
@@ -106,6 +110,33 @@ export class DeclaracionesPrisma {
       fechaDePresentacion: f.fechaDePresentacion!.toISOString().slice(0, 10),
       fechaAproximada: f.fechaAproximada,
     }));
+  }
+
+  /**
+   * Saldo a favor de IVA que la DNIT ya tiene registrado, para un cliente y
+   * período (tarea 138). Se toma de lo DECLARADO, no de lo calculado desde las
+   * planillas: recalcularlo puede contradecir una determinación ya presentada.
+   *
+   * Si hay una original y una rectificativa del mismo período, vale la más
+   * reciente (`leidaEn` más nueva) — es lo último que EFFORT presentó ante la
+   * DNIT. `null` si nunca se leyó una declaración de IVA de ese período, o si
+   * la que se leyó no traía la casilla 47.
+   */
+  async saldoDeIvaDeclarado(
+    clienteId: string,
+    periodo: string,
+  ): Promise<{ saldoATrasladar: bigint; saldoDePeriodoAnterior: bigint | null } | null> {
+    const fila = await this.prisma.lecturaDeDeclaracion.findFirst({
+      where: { clienteId, periodo, formulario: '120', saldoAFavorATrasladar: { not: null } },
+      orderBy: { leidaEn: 'desc' },
+      select: { saldoAFavorATrasladar: true, saldoAFavorPeriodoAnterior: true },
+    });
+    if (!fila) return null;
+
+    return {
+      saldoATrasladar: fila.saldoAFavorATrasladar!,
+      saldoDePeriodoAnterior: fila.saldoAFavorPeriodoAnterior,
+    };
   }
 
   /** De estas evidencias, cuáles prueban una presentación con fecha aproximada. */

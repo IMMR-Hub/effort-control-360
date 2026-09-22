@@ -437,26 +437,52 @@ export default function LiquidacionIva() {
                 <Th numerica>Débito fiscal</Th>
                 <Th numerica>A pagar</Th>
                 <Th numerica>A favor</Th>
+                <Th numerica>A favor (declarado DNIT)</Th>
               </tr>
             </thead>
             <tbody>
-              {liquidaciones.filter((l) => enFiltro(l.periodo)).map((l) => (
-                <tr key={l.periodo}>
-                  <Td>{l.periodo}</Td>
-                  <Td numerica>{l.comprobantesCompras}</Td>
-                  <Td numerica>{importe(l.creditoFiscal)}</Td>
-                  <Td numerica>{l.comprobantesVentas}</Td>
-                  <Td numerica>{importe(l.debitoFiscal)}</Td>
-                  <Td numerica>
-                    {l.saldoAPagar === '0' ? (
-                      '—'
-                    ) : (
-                      <span className="font-semibold text-critico">{importe(l.saldoAPagar)}</span>
-                    )}
-                  </Td>
-                  <Td numerica>{l.saldoAFavor === '0' ? '—' : importe(l.saldoAFavor)}</Td>
-                </tr>
-              ))}
+              {liquidaciones.filter((l) => enFiltro(l.periodo)).map((l) => {
+                // Coincide si no hay declaración leída (nada que contrastar) o
+                // si los dos números son iguales. Cualquier otra cosa es una
+                // diferencia real entre lo que EFFORT presentó y lo que este
+                // sistema calculó desde las planillas — y eso merece verse.
+                const difiere =
+                  l.saldoAFavorDeclarado !== null && l.saldoAFavorDeclarado !== l.saldoAFavor;
+                return (
+                  <tr key={l.periodo}>
+                    <Td>{l.periodo}</Td>
+                    <Td numerica>{l.comprobantesCompras}</Td>
+                    <Td numerica>{importe(l.creditoFiscal)}</Td>
+                    <Td numerica>{l.comprobantesVentas}</Td>
+                    <Td numerica>{importe(l.debitoFiscal)}</Td>
+                    <Td numerica>
+                      {l.saldoAPagar === '0' ? (
+                        '—'
+                      ) : (
+                        <span className="font-semibold text-critico">{importe(l.saldoAPagar)}</span>
+                      )}
+                    </Td>
+                    <Td numerica>{l.saldoAFavor === '0' ? '—' : importe(l.saldoAFavor)}</Td>
+                    <Td numerica>
+                      {l.saldoAFavorDeclarado === null ? (
+                        <span className="text-tinta-tenue">sin declaración leída</span>
+                      ) : (
+                        <span
+                          className={difiere ? 'inline-flex items-center gap-1 font-semibold text-critico' : ''}
+                          title={
+                            difiere
+                              ? 'La DNIT ya tiene declarado un saldo distinto del que calcula este sistema.'
+                              : undefined
+                          }
+                        >
+                          {difiere && <AlertTriangle size={13} aria-hidden="true" />}
+                          {l.saldoAFavorDeclarado === '0' ? '—' : importe(l.saldoAFavorDeclarado)}
+                        </span>
+                      )}
+                    </Td>
+                  </tr>
+                );
+              })}
             </tbody>
           </Tabla>
         )}

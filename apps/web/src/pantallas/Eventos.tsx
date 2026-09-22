@@ -118,6 +118,11 @@ const ETIQUETA_CAMPO: Record<string, string> = {
   tipo: 'tipo',
   motivoCierre: 'motivo del cierre',
   segundoFactorPendiente: 'segundo factor pendiente',
+  nuevos: 'archivos nuevos',
+  fallos: 'fallos',
+  fallosDetalle: 'detalle de los fallos',
+  quedaronPendientes: 'quedaron pendientes',
+  disparo: 'disparo',
 };
 
 /** Un par clave/valor del detalle, ya listo para mostrar. */
