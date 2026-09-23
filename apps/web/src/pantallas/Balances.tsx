@@ -13,11 +13,11 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { ShieldCheck } from 'lucide-react';
 
-import { formatearGs, gs } from '@effort/core';
+import { formatearGs, gs, hoyEnParaguay, periodoATexto } from '@effort/core';
 
 import { periodoSchema } from '@effort/schema';
 
-import { Badge, Boton, CampoTexto, EncabezadoTarjeta, Indicador, Tabla, Tarjeta, Td, Th } from '../ui/Primitivos.jsx';
+import { Badge, Boton, CampoSelect, CampoTexto, EncabezadoTarjeta, Indicador, Tabla, Tarjeta, Td, Th } from '../ui/Primitivos.jsx';
 import { ErrorDeApi } from '../api/cliente.js';
 import { listarClientes, type Cliente } from '../api/clientes.js';
 import {
@@ -122,7 +122,24 @@ export default function Balances() {
   // 2026-09-15). Esta pantalla trabaja sobre UN período fiscal: con un rango se
   // elige cuál de los períodos que toca.
   const [filtro, setFiltro] = useState<FiltroDeFechas>(filtroDelMesActual);
-  const { periodos, periodo, elegirPeriodo } = usePeriodoDelFiltro(filtro);
+  const { periodos, periodo: periodoDelMes, elegirPeriodo } = usePeriodoDelFiltro(filtro);
+
+  /**
+   * "Ver por ejercicio" (tarea 153). Daniel, 2026-09-21: *"tiene que dar la
+   * opción de balance anual o por período"*. Un balance es una foto a una
+   * fecha, no algo que se sume mes a mes — el balance ANUAL de un ejercicio es
+   * el del cierre, que en Paraguay es diciembre (mismo período que usan los
+   * vencimientos de EEFF, ej. "2025-12"). No se inventa ningún cálculo nuevo:
+   * es el mismo `periodo` de siempre, fijado al mes de cierre.
+   */
+  const [modoBalance, setModoBalance] = useState<'mes' | 'ejercicio'>('mes');
+  const anioActual = hoyEnParaguay(new Date()).anio;
+  const [ejercicio, setEjercicio] = useState(anioActual);
+  const periodo = modoBalance === 'ejercicio' ? periodoATexto({ anio: ejercicio, mes: 12 }) : periodoDelMes;
+  const opcionesEjercicio = Array.from({ length: 7 }, (_, i) => anioActual - i).map((anio) => ({
+    valor: String(anio),
+    etiqueta: String(anio),
+  }));
 
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -275,8 +292,34 @@ export default function Balances() {
           </p>
         </div>
 <div className="flex flex-col gap-2">
-            <FiltroDeFechasSelector id="filtroPeriodo" valor={filtro} onCambiar={setFiltro} />
-            <PeriodosDelRango periodos={periodos} periodo={periodo} onElegir={elegirPeriodo} />
+            <CampoSelect
+              id="modoBalance"
+              etiqueta="Ver por"
+              opciones={[
+                { valor: 'mes', etiqueta: 'Mes' },
+                { valor: 'ejercicio', etiqueta: 'Ejercicio (anual)' },
+              ]}
+              value={modoBalance}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                setModoBalance(e.target.value as 'mes' | 'ejercicio')
+              }
+              className="w-48"
+            />
+            {modoBalance === 'mes' ? (
+              <>
+                <FiltroDeFechasSelector id="filtroPeriodo" valor={filtro} onCambiar={setFiltro} />
+                <PeriodosDelRango periodos={periodos} periodo={periodoDelMes} onElegir={elegirPeriodo} />
+              </>
+            ) : (
+              <CampoSelect
+                id="ejercicio"
+                etiqueta="Ejercicio"
+                opciones={opcionesEjercicio}
+                value={String(ejercicio)}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setEjercicio(Number(e.target.value))}
+                className="w-40"
+              />
+            )}
           </div>
       </div>
 
@@ -288,7 +331,14 @@ export default function Balances() {
       </section>
 
       <Tarjeta>
-        <EncabezadoTarjeta titulo="Balances por cliente" descripcion={`Período ${periodo}`} />
+        <EncabezadoTarjeta
+          titulo="Balances por cliente"
+          descripcion={
+            modoBalance === 'ejercicio'
+              ? `Ejercicio ${ejercicio} — balance al cierre (período ${periodo})`
+              : `Período ${periodo}`
+          }
+        />
         <Tabla etiqueta="Balances por cliente">
           <thead>
             <tr>

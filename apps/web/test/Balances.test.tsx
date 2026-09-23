@@ -220,4 +220,67 @@ describe('pantalla de balances', () => {
 
     expect(await screen.findByText('Sin inconsistencias detectadas.')).toBeVisible();
   });
+
+  describe('ver por ejercicio (tarea 153)', () => {
+    /**
+     * `mock.llamadasA` enruta por path, sin el query string (ver
+     * `ayuda-fetch-mock.ts`): para comprobar QUÉ período se pidió hay que
+     * mirar la URL completa de cada llamada real.
+     */
+    function periodosPedidos(): string[] {
+      return mock.fetchMock.mock.calls
+        .filter(([entrada, opciones]) => {
+          const url = new URL(String(entrada));
+          const metodo = String((opciones as RequestInit | undefined)?.method ?? 'GET').toUpperCase();
+          return metodo === 'GET' && url.pathname === '/api/v1/balances';
+        })
+        .map(([entrada]) => new URL(String(entrada)).searchParams.get('periodo') ?? '');
+    }
+
+    it('por defecto arranca "Por mes" y pide el período del mes en curso', async () => {
+      await montar('direccion');
+
+      await waitFor(() => {
+        expect(periodosPedidos()).toContain(PERIODO);
+      });
+    });
+
+    it('cambiar a "Ejercicio (anual)" pide el balance de diciembre de ese año, no algo sumado', async () => {
+      await montar('direccion');
+
+      await usuario.selectOptions(screen.getByLabelText('Ver por'), 'ejercicio');
+
+      await waitFor(() => {
+        expect(periodosPedidos()).toContain(`${HOY.anio}-12`);
+      });
+      expect(screen.getByText(new RegExp(`Ejercicio ${HOY.anio}`))).toBeVisible();
+    });
+
+    it('elegir otro año en "Ejercicio" vuelve a pedir el diciembre de ESE año', async () => {
+      await montar('direccion');
+      const anioAnterior = HOY.anio - 1;
+
+      await usuario.selectOptions(screen.getByLabelText('Ver por'), 'ejercicio');
+      await waitFor(() => expect(periodosPedidos()).toContain(`${HOY.anio}-12`));
+
+      await usuario.selectOptions(screen.getByLabelText('Ejercicio'), String(anioAnterior));
+
+      await waitFor(() => {
+        expect(periodosPedidos()).toContain(`${anioAnterior}-12`);
+      });
+    });
+
+    it('volver a "Mes" restaura el período del mes, sin quedar pegado en diciembre', async () => {
+      await montar('direccion');
+
+      await usuario.selectOptions(screen.getByLabelText('Ver por'), 'ejercicio');
+      await waitFor(() => expect(periodosPedidos()).toContain(`${HOY.anio}-12`));
+
+      await usuario.selectOptions(screen.getByLabelText('Ver por'), 'mes');
+
+      await waitFor(() => {
+        expect(periodosPedidos().filter((p) => p === PERIODO).length).toBeGreaterThan(0);
+      });
+    });
+  });
 });
