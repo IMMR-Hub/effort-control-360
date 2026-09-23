@@ -292,3 +292,38 @@ En concreto:
   de siempre, con más contenido nuevo alrededor pero el mismo hueco en el
   centro.
 - **Qué NO se hizo:** nada se bajó, escribió, movió ni borró.
+
+## 2026-09-22 — Relectura de declaraciones de IVA para completar su saldo (tarea 138)
+
+- **Qué:** `scripts/completar-saldo-de-iva.mjs` volvió a leer (`GET .../content`
+  únicamente) los 230 PDFs de formulario 120 que el sistema ya había leído
+  antes, para extraer la casilla 47. Las dos primeras corridas, en modo
+  simulación, apuntaron por error al drive de **origen** (`lsosa@`) con el id
+  de archivo del drive del **sistema**: las 230 lecturas dieron `404` — no se
+  bajó ni se tocó nada. La tercera corrida (simulación) y la definitiva
+  (`--aplicar`) leyeron del drive del **sistema** (`effort360@`, la copia que
+  ya hace la sincronización), no del original.
+- **Por qué:** el detector de presentaciones lee cada PDF una sola vez; sin
+  esta relectura, el saldo declarado nunca iba a aparecer para lo ya leído.
+- **Qué se escribió:** solo dos columnas de la base (`saldo_a_favor_*` de
+  `lectura_de_declaracion`). En OneDrive, **nada**.
+
+## 2026-09-23 — Auditoría: ¿el sistema modificó algo del OneDrive original?
+
+- **Qué:** a pedido de Daniel, se listaron (`GET` recursivo, solo metadatos,
+  nada bajado ni escrito) las carpetas de los 5 clientes en el OneDrive de
+  origen (`lsosa@effort.com.py`), pidiendo a Microsoft Graph `createdBy` y
+  `lastModifiedBy` de cada elemento.
+- **Resultado:** **5.155 elementos revisados; 0 creados o modificados por la
+  aplicación «EFFORT Control 360» ni por la cuenta `effort360@`.** Las únicas
+  aplicaciones que figuran como autoras son las del propio equipo de EFFORT
+  (OneDrive de escritorio 2.130, Microsoft Office 122, OneDrive iOS 17,
+  SharePoint 8). De los 81 archivos modificados desde el 2026-09-09, todos los
+  modificó una persona de EFFORT (kmedina, mgonzalez, kbaez, asanguina,
+  acampos, llaconich, aalvarenga) o su OneDrive de escritorio.
+- **Límite, dicho explícito:** `lastModifiedBy` prueba que no se escribió ni
+  se renombró nada, pero un archivo **borrado** ya no aparece en la lista. Ese
+  caso lo descarta el código: el adaptador (`packages/drive/src/adaptadorGraph.ts`)
+  no tiene ninguna llamada `DELETE` ni `PATCH`, y `DriveDeArchivos` no tiene
+  método de borrar, mover ni renombrar.
+- **Qué NO se hizo:** nada se bajó, escribió, movió ni borró.

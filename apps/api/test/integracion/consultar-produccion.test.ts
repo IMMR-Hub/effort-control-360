@@ -81,4 +81,16 @@ describeSiHayBase('consultar-produccion: transacción READ ONLY contra PostgreSQ
     const filas = await entorno.prisma.cliente.findMany({ where: { nombre: 'INTRUSO' } });
     expect(filas).toEqual([]);
   });
+
+  /*
+   * 2026-09-22: una consulta de esta CLI tardó 14 horas en volver (19:55 →
+   * 10:09 UTC), probablemente con la computadora suspendida en el medio.
+   * Una consulta de solo lectura que no termina tiene que fallar sola, con un
+   * mensaje, en vez de bloquear el trabajo esperando indefinidamente.
+   */
+  it('una consulta que tarda más que el tope se corta sola', async () => {
+    await expect(
+      consultaDeSoloLectura(entorno.prisma, 'SELECT pg_sleep(3)', { topeMs: 500 }),
+    ).rejects.toThrow(/statement timeout|canceling statement/i);
+  });
 });

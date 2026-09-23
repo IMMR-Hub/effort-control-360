@@ -52,6 +52,15 @@ function serializar(_clave, valor) {
 }
 
 async function principal() {
+  // Vigilante del lado del script: si la red se cuelga del todo, el tope de
+  // PostgreSQL nunca llega a disparar. `unref` para no demorar una salida
+  // normal. El 2026-09-22 una consulta tardó 14 horas en volver.
+  const vigilante = setTimeout(() => {
+    console.error('La consulta no terminó en 2 minutos: se corta. Reintentá; si se repite, revisá la conexión con Supabase.');
+    process.exit(3);
+  }, 120_000);
+  vigilante.unref();
+
   cargarEntorno(fileURLToPath(new URL('../.env', import.meta.url)));
 
   const argumentos = process.argv.slice(2);
