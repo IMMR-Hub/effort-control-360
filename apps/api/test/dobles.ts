@@ -52,6 +52,7 @@ export interface UsuarioFalso extends UsuarioConCredenciales {
   telefono?: string | null;
   cargo?: string | null;
   ultimoAccesoEn?: Date | null;
+  costoPorHora?: bigint | null;
 }
 
 function aListado(usuario: UsuarioFalso): UsuarioListado {
@@ -66,6 +67,10 @@ function aListado(usuario: UsuarioFalso): UsuarioListado {
     activo: usuario.activo,
     veTodosLosClientes: usuario.veTodosLosClientes,
     ultimoAccesoEn: usuario.ultimoAccesoEn ?? null,
+    // Mismo valor por defecto que la migración de producción (DISCREPANCIAS
+    // 35) — pero solo cuando el test no dijo nada; un `null` explícito
+    // (alguien lo borró) se respeta, no se le vuelve a poner el default.
+    costoPorHora: usuario.costoPorHora === undefined ? 200_000n : usuario.costoPorHora,
   };
 }
 

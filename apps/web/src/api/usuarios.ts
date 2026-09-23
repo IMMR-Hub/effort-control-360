@@ -23,6 +23,12 @@ export interface Usuario {
   readonly veTodosLosClientes: boolean;
   /** ISO 8601 con hora, o `null` si nunca inició sesión. */
   readonly ultimoAccesoEn: string | null;
+  /**
+   * Guaraníes por hora, en texto. Solo viene para `direccion` — cualquier
+   * otro rol que vea el equipo recibe este campo `undefined` (el servidor lo
+   * omite, no manda un `null` que sugeriría "sin configurar").
+   */
+  readonly costoPorHora?: string;
 }
 
 export function listarUsuarios(): Promise<{ usuarios: readonly Usuario[] }> {
@@ -57,6 +63,8 @@ export interface EdicionDeUsuario {
   readonly rol?: Rol;
   readonly activo?: boolean;
   readonly veTodosLosClientes?: boolean;
+  /** Guaraníes por hora, en texto. Ver DISCREPANCIAS 35. */
+  readonly costoPorHora?: string;
   /** Si se manda, reemplaza la cartera entera. Si se omite, no se toca. */
   readonly clientesAsignados?: readonly string[];
 }

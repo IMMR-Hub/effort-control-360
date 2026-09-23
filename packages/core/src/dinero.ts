@@ -86,6 +86,20 @@ export function dividirRedondeado(numerador: bigint, denominador: bigint): bigin
   return esNegativo ? -magnitud : magnitud;
 }
 
+/**
+ * Costo de una cantidad de minutos trabajados, a un valor por hora.
+ *
+ * Existe para la planilla de horas (tarea 156, DISCREPANCIAS 35): pasa por
+ * `dividirRedondeado` como cualquier otra conversión de dinero, para que el
+ * redondeo de guaraníes tenga un solo lugar en todo el sistema.
+ */
+export function costoDeMinutos(minutos: number, costoPorHora: Gs): Gs {
+  if (!Number.isInteger(minutos) || minutos < 0) {
+    throw new ErrorDeDinero(`Minutos inválidos: ${minutos}. Se espera un entero no negativo.`);
+  }
+  return gs(dividirRedondeado(BigInt(minutos) * costoPorHora, 60n));
+}
+
 /** Suma una lista de importes. Lista vacía suma cero. */
 export function sumar(importes: readonly Gs[]): Gs {
   let total = 0n;

@@ -297,7 +297,10 @@ describe('planilla de horas (tarea 144)', () => {
 
     expect(respuesta.statusCode).toBe(200);
     const { totales } = respuesta.json();
-    expect(totales).toEqual([{ usuarioId: 'usr-responsable', clienteId: MIO, minutos: 90 }]);
+    // costoGs: 90 min a Gs. 200.000/hora (valor por defecto) = 300.000 exacto.
+    expect(totales).toEqual([
+      { usuarioId: 'usr-responsable', clienteId: MIO, minutos: 90, costoGs: '300000' },
+    ]);
     // Ninguna fila trae `tarea`, `fecha` ni nada del día a día — solo el total.
     expect(JSON.stringify(totales)).not.toContain('confidencial');
   });
@@ -318,7 +321,32 @@ describe('planilla de horas (tarea 144)', () => {
     });
 
     const { totales } = respuesta.json();
-    expect(totales).toContainEqual({ usuarioId: 'usr-responsable', clienteId: null, minutos: 40 });
+    // costoGs: 40 min a Gs. 200.000/hora = 133.333,33... → redondea a 133.333.
+    expect(totales).toContainEqual({
+      usuarioId: 'usr-responsable', clienteId: null, minutos: 40, costoGs: '133333',
+    });
+  });
+
+  it('sin costoPorHora configurado, la fila no inventa un costo: queda null', async () => {
+    const otro = ctx.usuarios.usuarios.find((u) => u.id === 'usr-otro-responsable')!;
+    otro.costoPorHora = null;
+    const cookieOtro = await acceder(ctx, 'otro@effort.com.py');
+    const cookieDireccion = await acceder(ctx, 'laura@effort.com.py');
+
+    await ctx.app.inject({
+      method: 'POST', url: '/api/v1/horas', headers: { cookie: cookieOtro },
+      payload: { clienteId: MIO, fecha: '2026-09-20', minutos: 60, tarea: null },
+    });
+
+    const respuesta = await ctx.app.inject({
+      method: 'GET',
+      url: '/api/v1/horas/resumen?desde=2026-09-01&hasta=2026-09-30',
+      headers: { cookie: cookieDireccion },
+    });
+
+    const { totales } = respuesta.json();
+    const fila = totales.find((t: { usuarioId: string }) => t.usuarioId === 'usr-otro-responsable');
+    expect(fila.costoGs).toBeNull();
   });
 
   it('deja constancia en la bitácora, con el cliente correcto', async () => {

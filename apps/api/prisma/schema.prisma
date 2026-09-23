@@ -65,6 +65,12 @@ model Usuario {
 
   veTodosLosClientes Boolean @default(false) @map("ve_todos_los_clientes")
 
+  /// Guaraníes por hora, para el costo por cliente de la planilla de horas
+  /// (tarea 144/156). Valor nominal por defecto; dirección lo edita desde
+  /// Equipo. Sensible: mismo criterio de "solo dirección" que el resto de
+  /// lo que expone el trabajo de cada persona.
+  costoPorHora BigInt? @default(200000) @map("costo_por_hora")
+
   // Credenciales. Nunca salen por la API: el esquema `usuarioPublicoSchema`
   // de @effort/schema no las incluye.
   hashContrasena          String    @map("hash_contrasena") @db.VarChar(255)

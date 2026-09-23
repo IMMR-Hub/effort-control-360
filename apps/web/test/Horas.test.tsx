@@ -52,23 +52,21 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-async function montar(rol: string = 'responsable') {
+const TOTALES_POR_DEFECTO = [
+  { usuarioId: 'usr-ana', clienteId: 'cli-garso', minutos: 150, costoGs: '500000' },
+  { usuarioId: 'usr-ana', clienteId: null, minutos: 30, costoGs: '100000' },
+  { usuarioId: 'usr-sandra', clienteId: 'cli-garso', minutos: 90, costoGs: '300000' },
+  { usuarioId: 'usr-sandra', clienteId: 'cli-copesa', minutos: 240, costoGs: '800000' },
+];
+
+async function montar(rol: string = 'responsable', totales: readonly unknown[] = TOTALES_POR_DEFECTO) {
   mock.mockDeRuta('GET /api/v1/yo', () =>
     respuestaJson({ usuarioId: 'usr-ana', rol, veTodosLosClientes: true, cantidadDeClientesAsignados: 0 }),
   );
   mock.mockDeRuta('GET /api/v1/csrf', () => respuestaJson({ csrfToken: 'token-de-prueba' }));
   mock.mockDeRuta('GET /api/v1/clientes', () => respuestaJson({ clientes: [GARSO, COPESA] }));
   mock.mockDeRuta('GET /api/v1/horas', () => respuestaJson({ registros: [MI_REGISTRO] }));
-  mock.mockDeRuta('GET /api/v1/horas/resumen', () =>
-    respuestaJson({
-      totales: [
-        { usuarioId: 'usr-ana', clienteId: 'cli-garso', minutos: 150 },
-        { usuarioId: 'usr-ana', clienteId: null, minutos: 30 },
-        { usuarioId: 'usr-sandra', clienteId: 'cli-garso', minutos: 90 },
-        { usuarioId: 'usr-sandra', clienteId: 'cli-copesa', minutos: 240 },
-      ],
-    }),
-  );
+  mock.mockDeRuta('GET /api/v1/horas/resumen', () => respuestaJson({ totales }));
   mock.mockDeRuta('GET /api/v1/usuarios', () => respuestaJson({ usuarios: [ANA, SANDRA] }));
 
   vi.resetModules();
@@ -138,6 +136,26 @@ describe('planilla de horas', () => {
     expect(within(porPersona).getByText('5 h 30 min')).toBeVisible();
 
     expect(screen.getByText(/autoreportadas/)).toBeVisible();
+  });
+
+  it('el resumen muestra el costo en guaraníes, sumado sin perder precisión', async () => {
+    await montar('direccion');
+
+    // Costo del equipo: 500.000 + 100.000 + 300.000 + 800.000 = 1.700.000.
+    expect(screen.getByText('Gs. 1.700.000')).toBeVisible();
+
+    const porPersona = screen.getByRole('table', { name: 'Horas por colaborador' });
+    // Sandra: 300.000 (GARSO) + 800.000 (COPESA) = 1.100.000.
+    expect(within(porPersona).getByText('Gs. 1.100.000')).toBeVisible();
+  });
+
+  it('sin costo por hora configurado, muestra "—" en vez de inventar Gs. 0', async () => {
+    await montar('direccion', [
+      { usuarioId: 'usr-ana', clienteId: 'cli-garso', minutos: 150, costoGs: null },
+    ]);
+
+    const porCliente = screen.getByRole('table', { name: 'Horas por cliente' });
+    expect(within(porCliente).getByText('—')).toBeVisible();
   });
 
   it('cargar horas manda los minutos enteros, el cliente y null en lo que quedó vacío', async () => {

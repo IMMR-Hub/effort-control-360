@@ -38,6 +38,8 @@ export interface UsuarioListado {
   readonly activo: boolean;
   readonly veTodosLosClientes: boolean;
   readonly ultimoAccesoEn: Date | null;
+  /** Guaraníes por hora. Sensible: solo dirección lo ve y lo edita. Ver DISCREPANCIAS 35. */
+  readonly costoPorHora: bigint | null;
 }
 
 export interface AltaDeUsuario {
@@ -74,6 +76,7 @@ export type CamposEditablesDeUsuario = {
   rol?: Rol | undefined;
   activo?: boolean | undefined;
   veTodosLosClientes?: boolean | undefined;
+  costoPorHora?: bigint | undefined;
 };
 
 /** Rol válido para una asignación de cartera. `direccion` y `solo_lectura` no llevan una: la primera ve todo, la segunda es una auditoría general. */

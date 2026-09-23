@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest';
 import {
   ErrorDeDinero,
   aTexto,
+  costoDeMinutos,
   dividirRedondeado,
   formatearGs,
   gs,
@@ -115,5 +116,31 @@ describe('operaciones', () => {
   it('resta manteniendo el tipo', () => {
     expect(restar(gs(1000), gs(300))).toBe(700n);
     expect(restar(gs(300), gs(1000))).toBe(-700n);
+  });
+});
+
+describe('costoDeMinutos', () => {
+  it('una hora exacta cuesta el valor por hora', () => {
+    expect(costoDeMinutos(60, gs(200_000))).toBe(200_000n);
+  });
+
+  it('media hora es la mitad', () => {
+    expect(costoDeMinutos(30, gs(200_000))).toBe(100_000n);
+  });
+
+  it('redondea igual que el resto del dinero del sistema, no trunca', () => {
+    // 25 minutos a Gs. 200.000/hora = 83.333,33... → redondea a 83.333.
+    expect(costoDeMinutos(25, gs(200_000))).toBe(83_333n);
+    // 1 minuto a Gs. 90.000/hora = 1.500 exacto.
+    expect(costoDeMinutos(1, gs(90_000))).toBe(1_500n);
+  });
+
+  it('cero minutos cuesta cero', () => {
+    expect(costoDeMinutos(0, gs(200_000))).toBe(0n);
+  });
+
+  it('rechaza minutos negativos o no enteros', () => {
+    expect(() => costoDeMinutos(-5, gs(200_000))).toThrow(ErrorDeDinero);
+    expect(() => costoDeMinutos(1.5, gs(200_000))).toThrow(ErrorDeDinero);
   });
 });

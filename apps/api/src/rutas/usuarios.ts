@@ -14,17 +14,38 @@
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 
-import { emailSchema, idSchema, rolSchema, telefonoSchema, textoCorto } from '@effort/schema';
+import { emailSchema, guaraniesSchema, idSchema, rolSchema, telefonoSchema, textoCorto } from '@effort/schema';
 
 import { ACCIONES, registrarEvento } from '../bitacora.js';
-import type { RolEnCliente } from '../puertos.js';
+import type { RolEnCliente, UsuarioListado } from '../puertos.js';
 import { ErrorDeAplicacion, type Dependencias } from '../servidor.js';
+import type { SujetoAutenticado } from '../seguridad/rbac.js';
 import {
   ErrorDeCredenciales,
   LARGO_MINIMO_CONTRASENA,
   hashearContrasena,
 } from '../seguridad/credenciales.js';
+import { importeASalida } from './comun.js';
 import { autorizar, paramsId } from './comun.js';
+
+const costoPorHoraSchema = guaraniesSchema.refine(
+  (valor) => BigInt(valor) >= 0n,
+  'El costo por hora no puede ser negativo.',
+);
+
+/**
+ * Guaraníes por hora de cada persona: el mismo criterio de privacidad que ya
+ * rige la bitácora y el resumen de horas — "solo dirección, y solo
+ * totales" — acá es "solo dirección, y punto". `responsable` puede VER el
+ * equipo (`usuario.ver`), pero no le corresponde saber cuánto cuesta la hora
+ * de un compañero.
+ */
+function usuarioParaSalida(usuario: UsuarioListado, sujeto: SujetoAutenticado) {
+  return {
+    ...usuario,
+    costoPorHora: sujeto.rol === 'direccion' ? importeASalida(usuario.costoPorHora) : undefined,
+  };
+}
 
 const ROLES_CON_CARTERA: readonly RolEnCliente[] = [
   'responsable',
@@ -68,6 +89,7 @@ const edicionSchema = z
     rol: rolSchema.optional(),
     activo: z.boolean().optional(),
     veTodosLosClientes: z.boolean().optional(),
+    costoPorHora: costoPorHoraSchema.optional(),
     /** Si se manda, reemplaza la cartera entera. Si se omite, no se toca. */
     clientesAsignados: z.array(idSchema).optional(),
   })
@@ -78,10 +100,10 @@ export async function registrarRutasDeUsuarios(
   deps: Dependencias,
 ): Promise<void> {
   app.get('/api/v1/usuarios', async (peticion) => {
-    autorizar(peticion, 'usuario', 'ver');
+    const sujeto = autorizar(peticion, 'usuario', 'ver');
 
     const usuarios = await deps.usuarios.listar();
-    return { usuarios };
+    return { usuarios: usuarios.map((u) => usuarioParaSalida(u, sujeto)) };
   });
 
   /**
@@ -159,7 +181,7 @@ export async function registrarRutasDeUsuarios(
       peticionId: String(peticion.id),
     });
 
-    return respuesta.code(201).send({ usuario });
+    return respuesta.code(201).send({ usuario: usuarioParaSalida(usuario, sujeto) });
   });
 
   /**
@@ -190,7 +212,8 @@ export async function registrarRutasDeUsuarios(
       throw new ErrorDeAplicacion(400, 'Este rol no puede tener cartera asignada.', 'rol_sin_cartera');
     }
 
-    const { clientesAsignados, ...cambios } = cuerpo;
+    const { clientesAsignados, costoPorHora, ...resto } = cuerpo;
+    const cambios = { ...resto, ...(costoPorHora !== undefined ? { costoPorHora: BigInt(costoPorHora) } : {}) };
 
     const usuario =
       Object.keys(cambios).length > 0
@@ -212,17 +235,23 @@ export async function registrarRutasDeUsuarios(
       entidad: 'usuario',
       entidadId: id,
       clienteId: null,
-      datosAntes: { rol: previo.rol, activo: previo.activo, veTodosLosClientes: previo.veTodosLosClientes },
+      datosAntes: {
+        rol: previo.rol,
+        activo: previo.activo,
+        veTodosLosClientes: previo.veTodosLosClientes,
+        costoPorHora: importeASalida(previo.costoPorHora),
+      },
       datosDespues: {
         rol: usuario.rol,
         activo: usuario.activo,
         veTodosLosClientes: usuario.veTodosLosClientes,
+        costoPorHora: importeASalida(usuario.costoPorHora),
       },
       ip: peticion.ip,
       agenteUsuario: peticion.headers['user-agent'] ?? null,
       peticionId: String(peticion.id),
     });
 
-    return { usuario };
+    return { usuario: usuarioParaSalida(usuario, sujeto) };
   });
 }

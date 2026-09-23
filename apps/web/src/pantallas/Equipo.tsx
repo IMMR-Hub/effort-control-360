@@ -49,7 +49,12 @@ interface FormularioUsuario {
   activo: boolean;
   contrasenaInicial: string;
   clientesAsignados: string[];
+  /** Guaraníes por hora, en texto. Solo se manda al editar — al crear, nace con el valor por defecto del servidor. */
+  costoPorHora: string;
 }
+
+/** Mismo valor por defecto que la migración de producción (DISCREPANCIAS 35). */
+const COSTO_POR_HORA_POR_DEFECTO = '200000';
 
 function formularioVacio(): FormularioUsuario {
   return {
@@ -63,6 +68,7 @@ function formularioVacio(): FormularioUsuario {
     activo: true,
     contrasenaInicial: '',
     clientesAsignados: [],
+    costoPorHora: COSTO_POR_HORA_POR_DEFECTO,
   };
 }
 
@@ -78,6 +84,7 @@ function aFormulario(usuario: Usuario): FormularioUsuario {
     activo: usuario.activo,
     contrasenaInicial: '',
     clientesAsignados: [],
+    costoPorHora: usuario.costoPorHora ?? COSTO_POR_HORA_POR_DEFECTO,
   };
 }
 
@@ -182,6 +189,7 @@ export default function Equipo() {
           rol: formulario.rol,
           activo: formulario.activo,
           veTodosLosClientes: formulario.veTodosLosClientes,
+          costoPorHora: formulario.costoPorHora.trim(),
           clientesAsignados: cartera,
         });
       } else {
@@ -376,6 +384,17 @@ export default function Equipo() {
                   setFormulario({ ...formulario, rol: e.target.value as Rol })
                 }
               />
+              {edicion && (
+                <CampoTexto
+                  id="costoPorHora"
+                  etiqueta="Costo por hora (Gs.)"
+                  inputMode="numeric"
+                  value={formulario.costoPorHora}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFormulario({ ...formulario, costoPorHora: e.target.value })
+                  }
+                />
+              )}
               {!edicion && (
                 <CampoTexto
                   id="contrasenaInicial"

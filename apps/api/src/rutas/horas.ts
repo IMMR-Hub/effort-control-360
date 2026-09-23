@@ -11,11 +11,13 @@
 import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 
+import { costoDeMinutos, gs } from '@effort/core';
 import { fechaIsoSchema, registrarHorasSchema } from '@effort/schema';
 
 import { ACCIONES, registrarEvento } from '../bitacora.js';
 import { exigirSesion, type Dependencias } from '../servidor.js';
 import { exigirPermiso, filtroDeClientes } from '../seguridad/rbac.js';
+import { importeASalida } from './comun.js';
 
 const consultaDeRango = z
   .object({ desde: fechaIsoSchema, hasta: fechaIsoSchema })
@@ -85,6 +87,13 @@ export async function registrarRutasDeHoras(app: FastifyInstance, deps: Dependen
   /**
    * Resumen agregado por colaborador y cliente — exclusivo de `direccion`.
    * Nunca trae una fila individual de otra persona, solo el total del rango.
+   *
+   * `costoGs` (tarea 156, DISCREPANCIAS 35) se calcula acá, no en la
+   * pantalla: multiplicar minutos por un valor por hora es un cálculo de
+   * dinero, y todo cálculo de dinero pasa por `@effort/core`
+   * (`costoDeMinutos`), nunca a mano en el navegador. Sin `costoPorHora`
+   * configurado para alguien (no debería pasar, tiene valor por defecto),
+   * la fila no inventa un costo: queda `null`.
    */
   app.get('/api/v1/horas/resumen', async (peticion) => {
     const sujeto = exigirSesion(peticion);
@@ -92,7 +101,20 @@ export async function registrarRutasDeHoras(app: FastifyInstance, deps: Dependen
 
     exigirPermiso(sujeto, 'resumen_horas', 'ver');
 
-    const totales = await deps.horas.resumen(aFecha(desde), aFecha(hasta), filtroDeClientes(sujeto));
-    return { totales };
+    const [totales, usuarios] = await Promise.all([
+      deps.horas.resumen(aFecha(desde), aFecha(hasta), filtroDeClientes(sujeto)),
+      deps.usuarios.listar(),
+    ]);
+    const costoPorHoraPorUsuario = new Map(usuarios.map((u) => [u.id, u.costoPorHora]));
+
+    return {
+      totales: totales.map((t) => {
+        const costoPorHora = costoPorHoraPorUsuario.get(t.usuarioId);
+        return {
+          ...t,
+          costoGs: costoPorHora != null ? importeASalida(costoDeMinutos(t.minutos, gs(costoPorHora))) : null,
+        };
+      }),
+    };
   });
 }

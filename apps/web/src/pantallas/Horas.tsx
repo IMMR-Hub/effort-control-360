@@ -22,7 +22,7 @@
 
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { Pencil } from 'lucide-react';
-import { describirFiltro, hoyEnParaguay, rangoDelFiltro, type FiltroDeFechas } from '@effort/core';
+import { describirFiltro, formatearGs, gs, hoyEnParaguay, rangoDelFiltro, sumar, type FiltroDeFechas, type Gs } from '@effort/core';
 
 import {
   Boton,
@@ -158,17 +158,32 @@ export default function Horas() {
 
   /* --- Resumen del equipo: se deriva de `totales`, nunca se calcula aparte --- */
 
-  const porCliente = useMemo(() => {
-    const mapa = new Map<string | null, number>();
-    for (const t of totales) mapa.set(t.clienteId, (mapa.get(t.clienteId) ?? 0) + t.minutos);
-    return [...mapa.entries()].sort((a, b) => b[1] - a[1]);
-  }, [totales]);
+  /**
+   * Agrupa minutos y costo juntos, por la clave que sea (cliente o persona).
+   * El costo se suma en guaraníes (bigint), nunca como number: son cientos de
+   * miles de guaraníes y JS pierde precisión en la suma de punto flotante.
+   * Si NINGUNA fila del grupo tiene costo configurado, el total queda `null`
+   * en vez de mostrar "Gs. 0" — que mentiría diciendo que no cuesta nada.
+   */
+  function agruparPor<K>(clave: (t: TotalDeHoras) => K) {
+    const minutosPorClave = new Map<K, number>();
+    const costoPorClave = new Map<K, Gs[]>();
+    for (const t of totales) {
+      minutosPorClave.set(clave(t), (minutosPorClave.get(clave(t)) ?? 0) + t.minutos);
+      const lista = costoPorClave.get(clave(t)) ?? [];
+      if (t.costoGs !== null) lista.push(gs(t.costoGs));
+      costoPorClave.set(clave(t), lista);
+    }
+    return [...minutosPorClave.entries()]
+      .map(([k, minutos]) => {
+        const costos = costoPorClave.get(k) ?? [];
+        return [k, minutos, costos.length > 0 ? sumar(costos) : null] as const;
+      })
+      .sort((a, b) => b[1] - a[1]);
+  }
 
-  const porPersona = useMemo(() => {
-    const mapa = new Map<string, number>();
-    for (const t of totales) mapa.set(t.usuarioId, (mapa.get(t.usuarioId) ?? 0) + t.minutos);
-    return [...mapa.entries()].sort((a, b) => b[1] - a[1]);
-  }, [totales]);
+  const porCliente = useMemo(() => agruparPor((t) => t.clienteId), [totales]);
+  const porPersona = useMemo(() => agruparPor((t) => t.usuarioId), [totales]);
 
   const detalle = useMemo(
     () =>
@@ -181,6 +196,8 @@ export default function Horas() {
   );
 
   const minutosDelEquipo = totales.reduce((suma, t) => suma + t.minutos, 0);
+  const costosDelEquipo = totales.filter((t) => t.costoGs !== null).map((t) => gs(t.costoGs!));
+  const costoDelEquipo = costosDelEquipo.length > 0 ? sumar(costosDelEquipo) : null;
 
   function corregir(registro: RegistroDeHoras) {
     setFormulario({
@@ -416,12 +433,18 @@ export default function Horas() {
               dedicó, no cuánto avanzó. El avance real —lo que cada quien hizo en cada cliente— está
               en la pantalla Eventos, y no se puede inflar porque es el registro de lo que ocurrió.
               Para saber si las horas rindieron hay que mirar las dos cosas juntas. Este resumen
-              trae solo totales del período, nunca el día a día de una persona.
+              trae solo totales del período, nunca el día a día de una persona. El costo usa un
+              valor por hora nominal, configurado por persona — se edita en Equipo.
             </p>
           </div>
 
-          <section className="grid gap-3 sm:grid-cols-3" aria-label="Indicadores del equipo">
+          <section className="grid gap-3 sm:grid-cols-4" aria-label="Indicadores del equipo">
             <Indicador etiqueta="Horas del equipo" valor={formatearMinutos(minutosDelEquipo)} tono="proceso" />
+            <Indicador
+              etiqueta="Costo del equipo"
+              valor={costoDelEquipo !== null ? formatearGs(costoDelEquipo) : '—'}
+              tono="proceso"
+            />
             <Indicador etiqueta="Colaboradores con horas" valor={porPersona.length} tono="completo" />
             <Indicador
               etiqueta="Clientes con horas"
@@ -441,18 +464,20 @@ export default function Horas() {
                   <tr>
                     <Th>Cliente</Th>
                     <Th numerica>Horas</Th>
+                    <Th numerica>Costo</Th>
                   </tr>
                 </thead>
                 <tbody>
-                  {porCliente.map(([clienteId, minutos]) => (
+                  {porCliente.map(([clienteId, minutos, costo]) => (
                     <tr key={clienteId ?? SIN_CLIENTE}>
                       <Td className="font-medium">{nombreDeCliente(clienteId)}</Td>
                       <Td numerica>{formatearMinutos(minutos)}</Td>
+                      <Td numerica>{costo !== null ? formatearGs(costo) : '—'}</Td>
                     </tr>
                   ))}
                   {porCliente.length === 0 && (
                     <tr>
-                      <td colSpan={2} className="px-4 py-8 text-center text-sm text-tinta-tenue">
+                      <td colSpan={3} className="px-4 py-8 text-center text-sm text-tinta-tenue">
                         Nadie cargó horas en este período.
                       </td>
                     </tr>
@@ -471,18 +496,20 @@ export default function Horas() {
                   <tr>
                     <Th>Colaborador</Th>
                     <Th numerica>Horas</Th>
+                    <Th numerica>Costo</Th>
                   </tr>
                 </thead>
                 <tbody>
-                  {porPersona.map(([usuarioId, minutos]) => (
+                  {porPersona.map(([usuarioId, minutos, costo]) => (
                     <tr key={usuarioId}>
                       <Td className="font-medium">{nombreDePersona(usuarioId)}</Td>
                       <Td numerica>{formatearMinutos(minutos)}</Td>
+                      <Td numerica>{costo !== null ? formatearGs(costo) : '—'}</Td>
                     </tr>
                   ))}
                   {porPersona.length === 0 && (
                     <tr>
-                      <td colSpan={2} className="px-4 py-8 text-center text-sm text-tinta-tenue">
+                      <td colSpan={3} className="px-4 py-8 text-center text-sm text-tinta-tenue">
                         Nadie cargó horas en este período.
                       </td>
                     </tr>
@@ -503,6 +530,7 @@ export default function Horas() {
                   <Th>Colaborador</Th>
                   <Th>Cliente</Th>
                   <Th numerica>Horas</Th>
+                  <Th numerica>Costo</Th>
                 </tr>
               </thead>
               <tbody>
@@ -511,11 +539,12 @@ export default function Horas() {
                     <Td className="font-medium">{nombreDePersona(t.usuarioId)}</Td>
                     <Td>{nombreDeCliente(t.clienteId)}</Td>
                     <Td numerica>{formatearMinutos(t.minutos)}</Td>
+                    <Td numerica>{t.costoGs !== null ? formatearGs(gs(t.costoGs)) : '—'}</Td>
                   </tr>
                 ))}
                 {detalle.length === 0 && (
                   <tr>
-                    <td colSpan={3} className="px-4 py-8 text-center text-sm text-tinta-tenue">
+                    <td colSpan={4} className="px-4 py-8 text-center text-sm text-tinta-tenue">
                       Nadie cargó horas en este período.
                     </td>
                   </tr>

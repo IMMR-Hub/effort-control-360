@@ -38,6 +38,7 @@ const ARACELY = {
   activo: true,
   veTodosLosClientes: false,
   ultimoAccesoEn: null,
+  costoPorHora: '250000',
 };
 
 let mock: ReturnType<typeof crearFetchMock>;
@@ -180,10 +181,34 @@ describe('pantalla de equipo', () => {
     expect(screen.getByLabelText('Correo')).toHaveValue('aracely@effort.com.py');
     expect(screen.getByLabelText('Correo')).toBeDisabled();
     expect(screen.queryByLabelText('Contraseña inicial')).not.toBeInTheDocument();
+    expect(screen.getByLabelText('Costo por hora (Gs.)')).toHaveValue('250000');
 
     await waitFor(() => {
       expect(screen.getByLabelText('GARSO S.A.')).toBeChecked();
     });
+  });
+
+  it('editar el costo por hora lo manda en la actualización (tarea 156)', async () => {
+    await montar();
+    await screen.findByText('Aracely Gómez');
+
+    await usuario.click(screen.getByRole('button', { name: 'Editar Aracely Gómez' }));
+    const campoCosto = screen.getByLabelText('Costo por hora (Gs.)');
+    await usuario.clear(campoCosto);
+    await usuario.type(campoCosto, '350000');
+
+    mock.mockDeRuta('PATCH /api/v1/usuarios/usr-aracely', () =>
+      respuestaJson({ usuario: { ...ARACELY, costoPorHora: '350000' } }),
+    );
+
+    await usuario.click(screen.getByRole('button', { name: 'Guardar cambios' }));
+
+    await waitFor(() => {
+      expect(mock.llamadasA('PATCH /api/v1/usuarios/usr-aracely')).toHaveLength(1);
+    });
+    const [, opciones] = mock.llamadasA('PATCH /api/v1/usuarios/usr-aracely')[0]!;
+    const cuerpo = JSON.parse(String(opciones?.body));
+    expect(cuerpo.costoPorHora).toBe('350000');
   });
 
   it('marcar "Ve toda la cartera" oculta la lista de clientes', async () => {

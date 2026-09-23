@@ -38,6 +38,8 @@ export interface TotalDeHoras {
   readonly usuarioId: string;
   readonly clienteId: string | null;
   readonly minutos: number;
+  /** Guaraníes, en texto. `null` si a esa persona no se le configuró costo por hora. */
+  readonly costoGs: string | null;
 }
 
 /** Solo dirección. Totales agregados por colaborador y cliente, nunca el día a día de nadie. */

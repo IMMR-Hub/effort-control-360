@@ -1911,6 +1911,80 @@ describe('usuarios (equipo)', () => {
     });
   });
 
+  describe('costo por hora (tarea 156, DISCREPANCIAS 35)', () => {
+    it('nuevo usuario nace con el valor por defecto, Gs. 200.000', async () => {
+      const respuesta = await darDeAlta({
+        ...altaValida,
+        email: `costo-${randomUUID()}@effort.com.py`,
+      });
+
+      expect(JSON.parse(respuesta.body).usuario.costoPorHora).toBe('200000');
+    });
+
+    it('dirección puede editarlo', async () => {
+      const alta = await darDeAlta({ ...altaValida, email: `costo-${randomUUID()}@effort.com.py` });
+      const { id } = JSON.parse(alta.body).usuario;
+
+      const respuesta = await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/usuarios/${id}`,
+        headers: { cookie: direccion }, payload: { costoPorHora: '350000' },
+      });
+
+      expect(respuesta.statusCode).toBe(200);
+      expect(JSON.parse(respuesta.body).usuario.costoPorHora).toBe('350000');
+    });
+
+    it('rechaza un valor negativo', async () => {
+      const alta = await darDeAlta({ ...altaValida, email: `costo-${randomUUID()}@effort.com.py` });
+      const { id } = JSON.parse(alta.body).usuario;
+
+      const respuesta = await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/usuarios/${id}`,
+        headers: { cookie: direccion }, payload: { costoPorHora: '-1000' },
+      });
+
+      expect(respuesta.statusCode).toBe(400);
+    });
+
+    it('un responsable ve el equipo pero NO el costo por hora de nadie', async () => {
+      await darDeAlta({ ...altaValida, email: `costo-${randomUUID()}@effort.com.py` });
+
+      const respuesta = await ctx.app.inject({
+        method: 'GET', url: '/api/v1/usuarios', headers: { cookie: responsable },
+      });
+
+      expect(respuesta.statusCode).toBe(200);
+      const { usuarios } = JSON.parse(respuesta.body);
+      expect(usuarios.length).toBeGreaterThan(0);
+      for (const u of usuarios) {
+        expect(u.costoPorHora).toBeUndefined();
+      }
+    });
+
+    it('dirección sí lo ve en la lista del equipo', async () => {
+      await darDeAlta({ ...altaValida, email: `costo-${randomUUID()}@effort.com.py` });
+
+      const respuesta = await ctx.app.inject({
+        method: 'GET', url: '/api/v1/usuarios', headers: { cookie: direccion },
+      });
+
+      const { usuarios } = JSON.parse(respuesta.body);
+      expect(usuarios.some((u: { costoPorHora?: string }) => u.costoPorHora === '200000')).toBe(true);
+    });
+
+    it('un coordinador no puede editar (no tiene usuario.editar)', async () => {
+      const alta = await darDeAlta({ ...altaValida, email: `costo-${randomUUID()}@effort.com.py` });
+      const { id } = JSON.parse(alta.body).usuario;
+
+      const respuesta = await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/usuarios/${id}`,
+        headers: { cookie: coordinador }, payload: { costoPorHora: '999999' },
+      });
+
+      expect(respuesta.statusCode).toBe(403);
+    });
+  });
+
   describe('cartera de un usuario', () => {
     async function usuarioDePrueba(payload: Record<string, unknown> = {}) {
       const alta = await darDeAlta({ ...altaValida, email: `cartera-${randomUUID()}@effort.com.py`, ...payload });

@@ -15,10 +15,10 @@ de Lili o Laura), **Daniel** (decisión o acción en una cuenta), **Claude**
 | # | Tema | Estado | Quién | Qué falta, exactamente |
 |---|---|---|---|---|
 | 1 | Divisores de IVA | Cerrado | nadie | — (contrastado con 1.188 filas reales) |
-| 2 | Redondeo de negativos | Abierto, no urgente | EFFORT | Confirmar con una nota de crédito real que -2,5 redondea a -3 |
+| 2 | Redondeo de negativos | **Cerrado 2026-09-23** | nadie | Daniel: no existen notas de crédito con decimales en guaraníes — el caso de borde no ocurre en la práctica |
 | 3 | Clientes piloto | Cerrado | nadie | — |
-| 4 | Período del piloto | Abierto, no urgente | EFFORT | Confirmar que enero–junio 2026 es el período del piloto |
-| 5 | Umbrales de alerta 30/15/7/2 | Abierto, no urgente | EFFORT | Revisar por obligación (Abogacía necesita más aviso) |
+| 4 | Período del piloto | **Cerrado 2026-09-23** | nadie | Daniel: se deja abierto hasta donde ya hay datos cargados (julio 2026 y en adelante), no se acota a junio ni se borra nada |
+| 5 | Umbrales de alerta 30/15/7/2 | **Cerrado 2026-09-23** | nadie | Daniel: 30 días alcanza; desde el aviso de 7 días también les llega a Laura y Lili en su Dashboard (ver punto 36) |
 | 6 | Acceso a OneDrive | Cerrado | nadie | — |
 | 7 | Rol `effort_app` sin contraseña | Abierto | Daniel | La `.env` local conecta como `postgres` (dueño del esquema). El valor de `DATABASE_URL` en producción es un secreto de DigitalOcean y no se verificó. Para cerrarlo: asignar contraseña a `effort_app` y usarlo en `DATABASE_URL` de producción |
 | 8 | RLS de Supabase | Cerrado (mina desactivada) | nadie | Regla vigente: toda tabla nueva lleva su política `app_acceso` |
@@ -38,7 +38,7 @@ de Lili o Laura), **Daniel** (decisión o acción en una cuenta), **Claude**
 | 22 | Autofacturas con columnas en cero | **MEDIDO 2026-09-22** (tarea 148). Falta decidir con Daniel | Daniel | De los 4.779 `PARTES_NO_SUMAN_EL_TOTAL`: **1.640 (34%)** tienen las partes en cero (el caso «no hay autofactura cargada»), **1.237 (26%)** difieren 1–2 Gs, **1.385 (29%)** entre 3 y 100 Gs, **479 (10%)** entre 101 y 10.000, y **38 (0,8%)** más de 10.000 Gs. O sea: el caso conocido NO es la mayoría, y lo realmente accionable son ~517 filas. Decidir si se separan en tres grupos en pantalla |
 | 23 | Presentaciones desde el PDF de la DNIT | **Cerrado en código y producción 2026-09-15** | nadie | 42 de 150 presentados; lo que falta está en 27 y 28 |
 | 24 | IVA sumaba planillas repetidas | **Cerrado — criterio confirmado 2026-09-21** (gana la más reciente) | nadie | EFFORT va a usar «CORRECCION» en el nombre de ahora en más |
-| 25 | Planillas RG 90 reconocidas por nombre | **Cerrado 2026-09-18** (D1: se miró la pantalla de IVA de COPESA) | EFFORT | Solo queda una pregunta: si una «CORRECCION» es siempre el libro completo o solo las filas cambiadas (B7/P1) |
+| 25 | Planillas RG 90 reconocidas por nombre | **Cerrado del todo 2026-09-23** (D1 2026-09-18 + la última pregunta respondida) | nadie | — |
 | 26 | Prórroga de EEFF 2025 (RG DNIT 50/2026) | **Respondido 2026-09-21: aplica a los 5. FALTA APLICARLO** | Claude | Tarea 146: el botón «Prórroga» está desplegado, pero **no llega a las 3 filas presentadas** (DIBEC, ECOAGRO, FUMIPRO) — hay que agregarlo a la tabla de Presentados; después prorrogar los 5 a 30/06/2026 |
 | 27 | SIPAR sin declaraciones en OneDrive | **Respondido 2026-09-21: «sí se puede»** exportar la RG 90 | EFFORT | Subir el Excel de la RG 90 de SIPAR a su carpeta. No hay nada que programar |
 | 28 | Talones de RG 90 que no están | **Respondido 2026-09-21**: existen, guardados fuera de OneDrive | Claude (menor) / EFFORT | El faltante es correcto y no se cambia. Solo mejorar el texto: «no está archivado», no algo que suene a «nunca se presentó» |
@@ -48,7 +48,8 @@ de Lili o Laura), **Daniel** (decisión o acción en una cuenta), **Claude**
 | 32 | Cómo aparece el saldo a favor en el formulario 120 | Verificado contra un PDF real 2026-09-20 | Claude | Tarea 138: extraer la casilla **47** (no la 54). Lleva migración: respaldo + las tres preguntas |
 | 33 | El respaldo falla si el código va adelante del esquema | **Cerrado 2026-09-22** | nadie | Tarea 150 hecha: `crearLectorCrudo` lee con `SELECT *` (tabla real del `@@map`, vía DMMF) en el script y en el respaldo diario. Una tabla que falta se saltea; un corte de red sigue cortando el respaldo. 4 pruebas |
 | 34 | Conexión a la base intermitente desde la máquina de trabajo | **Observado 2026-09-21** | Daniel (decisión) | Reintentar antes de sospechar de un cambio; relacionado con el punto 18 |
-| 35 | Costo por hora de cada colaborador | **Abierto** (2026-09-21) | Daniel / EFFORT | Sin ese dato la planilla de horas no puede decir cuánto cuesta un cliente en guaraníes |
+| 35 | Costo por hora de cada colaborador | **Respondido 2026-09-23, falta construir** | Claude | Daniel: valor nominal por defecto Gs. 200.000/hora, editable desde el perfil de cada uno o por dirección |
+| 36 | Avisos de 7 días en el Dashboard de Laura y Lili | **Cerrado 2026-09-23 — ya funcionaba, sin código nuevo** | nadie | El Panel ya muestra las alertas ALTA (≤7 días) y CRÍTICA (≤2) juntas en "Alertas más urgentes"; Laura y Lili son `direccion`, ven toda la cartera. Ver `motorDeAlertas.ts`, `CRITICIDAD_POR_NIVEL` |
 
 ---
 
@@ -110,7 +111,7 @@ una liquidación vieja que con una nueva.
 
 ---
 
-## 2. Redondeo de importes negativos — DECISIÓN TOMADA, CONVIENE VALIDAR
+## 2. Redondeo de importes negativos — CERRADO 2026-09-23: EL CASO NO EXISTE EN LA PRÁCTICA
 
 **Regla aplicada:** -2,5 redondea a -3 (en magnitud), no a -2.
 
@@ -120,9 +121,14 @@ una liquidación vieja que con una nueva.
 importe redondeen al mismo valor absoluto. Con la convención alternativa, un
 crédito fiscal arrastrado se erosionaría de a un guaraní por período.
 
-**Cómo se cierra:** mostrar a EFFORT una nota de crédito real con importe que
-caiga justo en la mitad y confirmar el criterio. Ver
-`docs/adr/0002-representacion-del-dinero.md`.
+**Respuesta de Daniel, 2026-09-23:** *"No existen notas de crédito con
+decimales en Guaraníes. Deben ser números redondos siempre."* No hace falta
+mostrar un ejemplo real que caiga justo en la mitad porque ese caso no ocurre
+en la operatoria real de EFFORT: el guaraní no tiene fracción, así que un
+importe nunca llega a `,5` para empezar. La regla de `dividirRedondeado`
+sigue existiendo (aplica a los cálculos internos, no a lo que alguien tipeó a
+mano), pero el caso de borde que este punto pedía validar no tiene con qué
+ejercitarse. Ver `docs/adr/0002-representacion-del-dinero.md`.
 
 ---
 
@@ -163,15 +169,19 @@ que la del piloto es la S.A., no la unipersonal, antes de cargar nada.
 
 ---
 
-## 4. Período del piloto — DEFINIDO, FALTA CONFIRMAR CON EFFORT
+## 4. Período del piloto — CERRADO 2026-09-23: SE DEJA ABIERTO HASTA JULIO, NO SE ACOTA A JUNIO
 
-**Definido con Daniel (jul-2026):** enero a junio de 2026, los mismos 6 períodos
-para los 5 clientes. Seis períodos por cinco clientes son 30 filas de proceso
-mensual.
+**Definido originalmente con Daniel (jul-2026):** enero a junio de 2026, los
+mismos 6 períodos para los 5 clientes.
 
-**Cómo se cierra:** confirmar que EFFORT tenga los 6 períodos completos y
-cerrados para los 5 clientes. Si algún cliente arranca más tarde, se registra
-como período no aplicable en vez de quedar como faltante.
+**Redefinido por Daniel, 2026-09-23:** *"Como ya tenemos todo cargado hasta
+julio, mejor lo dejamos hasta julio así no nos completamos ni tampoco
+borrás nada."* El piloto ya no se acota a un límite fijo de junio: queda
+hasta donde los datos reales ya llegaron (julio de 2026 al día de esta
+actualización, y sigue avanzando con lo que se sincroniza). **No se borra ni
+se completa nada** para forzarlo a encajar en enero–junio — eso sería tocar
+datos reales para que coincidan con una definición vieja, exactamente lo que
+la REGLA 0 de `CLAUDE.md` existe para evitar.
 
 ---
 
@@ -1331,7 +1341,7 @@ legales, extractos y los TXT de la RG 90).
 
 ---
 
-## 25. Las planillas RG 90 se reconocían por su nombre — CERRADO, VERIFICADO EN PANTALLA (D1, 2026-09-18)
+## 25. Las planillas RG 90 se reconocían por su nombre — CERRADO DEL TODO 2026-09-23 (D1 2026-09-18 + última pregunta respondida)
 
 **Actualización 2026-09-21:** la D1 se hizo el 2026-09-18 (Daniel entró con su sesión y se leyó la pantalla de IVA de COPESA: último período 2026-07, 306 comprobantes, 2025 y 2026 completos). El título anterior quedó desactualizado; lo que sigue abajo es el registro de cómo se llegó ahí.
 
@@ -1455,6 +1465,15 @@ recuperó sola sin que se tocara ninguna configuración. Anotado por si se
 repite: no parece relacionado con el volumen de conexiones de esta sesión en
 particular (se repitió incluso después de esperar y con pocas conexiones
 simultáneas), pero tampoco se descartó como causa.
+
+**Última pregunta, respondida por Daniel el 2026-09-23 — CIERRA EL PUNTO DEL
+TODO.** Quedaba sin confirmar si una planilla «CORRECCION» reemplaza el libro
+completo del período o solo las filas que cambiaron. Daniel: *"Cuando suben
+un archivo 'Corrección' es el libro entero con la corrección. Por eso es ese
+nuevo archivo con el nombre CORRECCION el que es el válido."* Confirma
+exactamente el criterio que el sistema ya aplica (gana la planilla más
+reciente, sin mezclar filas de las dos versiones — tarea 127, DISCREPANCIAS
+24): no hace falta ningún cambio de código, la regla ya estaba bien.
 
 ---
 
@@ -1799,7 +1818,15 @@ la decisión sigue siendo de Daniel.
 
 ---
 
-## 35. Costo por hora de cada colaborador — ABIERTO (2026-09-21)
+## 35. Costo por hora de cada colaborador — RESPONDIDO 2026-09-23, EN CONSTRUCCIÓN (tarea 156)
+
+**Respuesta de Daniel, 2026-09-23:** *"Podés ponerle un valor nominal de
+200.000 por hora (pero que pueda ser cambiado desde el perfil de Laura, Lili
+o el mío)."* Cierra la decisión de diseño que este punto pedía: un valor
+nominal único por defecto (no por rol ni por persona), editable por
+dirección desde el perfil de cada uno — no un cálculo que el sistema deduzca
+solo. El criterio de "solo dirección, y solo totales" de más abajo sigue
+vigente para quién ve el resultado en guaraníes.
 
 **Qué se pidió.** Daniel, 2026-09-21: medir *«cuánto le cuesta a EFFORT cada cliente»* y
 justificar lo que EFFORT paga por el sistema, incluida la posibilidad de **cobrarle más a

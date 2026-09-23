@@ -71,6 +71,7 @@ const CAMPOS_LISTADO = {
   activo: true,
   veTodosLosClientes: true,
   ultimoAccesoEn: true,
+  costoPorHora: true,
 } as const;
 
 export class UsuariosPrisma implements RepositorioDeUsuarios {
