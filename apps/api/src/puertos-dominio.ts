@@ -193,6 +193,8 @@ export interface VencimientoAlmacenado {
   readonly fechaVencimientoOriginal: Date | null;
   /** Por qué se prorrogó: la resolución que lo dispuso. `null` si nunca se prorrogó. */
   readonly motivoProrroga: string | null;
+  /** "AAAA-MM". `null` en un vencimiento cargado a mano, sin período del calendario. */
+  readonly periodo: string | null;
 }
 
 export interface AltaDeVencimiento {

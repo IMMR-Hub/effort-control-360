@@ -24,6 +24,7 @@ import {
   History,
   Landmark,
   LayoutDashboard,
+  ListChecks,
   LogOut,
   MessageCircle,
   Receipt,
@@ -42,6 +43,7 @@ export type Pantalla =
   | 'clientes'
   | 'documentos'
   | 'vencimientos'
+  | 'faltantes'
   | 'balances'
   | 'siga'
   | 'liquidaciones'
@@ -74,6 +76,7 @@ const ENLACES: readonly EnlaceDeNav[] = [
   { id: 'clientes', etiqueta: 'Clientes', icono: Building2 },
   { id: 'documentos', etiqueta: 'Documentos / IVA', icono: FileText },
   { id: 'vencimientos', etiqueta: 'Vencimientos', icono: CalendarClock },
+  { id: 'faltantes', etiqueta: 'Faltantes', icono: ListChecks },
   { id: 'balances', etiqueta: 'Balances', icono: Landmark },
   { id: 'siga', etiqueta: 'SIGA / Conciliación', icono: Database },
   { id: 'liquidaciones', etiqueta: 'Liquidaciones', icono: Send },

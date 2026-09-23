@@ -245,6 +245,31 @@ export class LibroRg90Prisma {
     }));
   }
 
+  /**
+   * Comprobantes de compras y ventas cargados, por cliente y período — sin
+   * los importes.
+   *
+   * Alimenta el control de "qué falta subir al OneDrive" (tarea 152): ahí no
+   * hace falta el dinero, solo saber si el libro de compras y el de ventas
+   * ya se cargaron para ese período. `clienteIds` sigue el mismo criterio que
+   * el resto de los repositorios: `null` es la cartera completa.
+   */
+  async comprobantesPorClientePeriodo(
+    clienteIds: readonly string[] | null,
+  ): Promise<
+    readonly {
+      clienteId: string;
+      periodo: string;
+      comprobantesCompras: number;
+      comprobantesVentas: number;
+    }[]
+  > {
+    return this.prisma.liquidacionIvaRg90.findMany({
+      where: clienteIds === null ? {} : { clienteId: { in: [...clienteIds] } },
+      select: { clienteId: true, periodo: true, comprobantesCompras: true, comprobantesVentas: true },
+    });
+  }
+
   /** Liquidaciones de un cliente, de la más reciente a la más vieja. */
   async liquidacionesDeCliente(clienteId: string) {
     const filas = await this.prisma.liquidacionIvaRg90.findMany({

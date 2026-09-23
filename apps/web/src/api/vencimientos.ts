@@ -140,6 +140,45 @@ export function prorrogar(
   return peticion('POST', `/api/v1/vencimientos/${id}/prorrogar`, { nuevaFecha, motivo });
 }
 
+/** Estado de las planillas RG 90 de compras y ventas de un cliente y período. */
+export type EstadoPlanillaRg90 =
+  | 'NO_APLICA'
+  | 'SIN_LIQUIDACION'
+  | 'FALTA_COMPRAS'
+  | 'FALTA_VENTAS'
+  | 'FALTAN_AMBAS'
+  | 'COMPLETA';
+
+export interface ObligacionFaltante {
+  readonly id: string;
+  readonly clienteId: string;
+  readonly clienteNombre: string;
+  readonly periodo: string;
+  readonly tipoDocumento: string;
+  readonly descripcion: string;
+  readonly fechaVencimiento: string;
+  readonly diasDeAtraso: number;
+}
+
+/** Un cliente y período con algo pendiente de subir al OneDrive (tarea 152). */
+export interface FaltanteDeClientePeriodo {
+  readonly clienteId: string;
+  readonly clienteNombre: string;
+  readonly periodo: string;
+  readonly obligaciones: readonly ObligacionFaltante[];
+  readonly estadoPlanillaRg90: EstadoPlanillaRg90;
+}
+
+/**
+ * Lista de lo que falta subir al OneDrive, por cliente y período.
+ *
+ * No es una alerta más: es la vista para pasarle al equipo como lista de
+ * carga pendiente (comprobantes de presentación vencidos y planillas RG 90).
+ */
+export function obtenerFaltantes(): Promise<{ faltantes: readonly FaltanteDeClientePeriodo[] }> {
+  return peticion('GET', '/api/v1/vencimientos/faltantes');
+}
+
 /** Lo que devuelve una prórroga por resolución, simulada o aplicada. */
 export interface ResumenDeProrrogaEnLote {
   readonly modo: 'simulacion' | 'real';

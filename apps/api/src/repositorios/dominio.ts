@@ -367,6 +367,7 @@ const CAMPOS_VENCIMIENTO = {
   proximaAccion: true,
   fechaVencimientoOriginal: true,
   motivoProrroga: true,
+  periodo: true,
 } as const;
 
 export class VencimientosPrisma implements RepositorioDeVencimientos {

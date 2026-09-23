@@ -15,11 +15,13 @@ import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 
 import {
+  armarListaDeFaltantes,
   diasRestantes,
   fechaCivilDesdeIso,
   hoyEnParaguay,
   nivelAlertaPorDias,
   type NivelAlerta,
+  type VencimientoVencidoFaltante,
 } from '@effort/core';
 import { fechaIsoSchema, idSchema, nivelRiesgoSchema, periodoSchema, textoCorto, textoLargo, tipoDocumentoSchema } from '@effort/schema';
 
@@ -159,6 +161,50 @@ export async function registrarRutasDeVencimientos(
       resumen,
       vencimientos: conAlertas.map(aSalida),
     };
+  });
+
+  /**
+   * Lista de lo que falta subir al OneDrive, por cliente y período (tarea 152).
+   *
+   * Pedido de Daniel: *"¿cómo se supone que uno puede controlar qué está y
+   * qué no está cargado?"*. No es una alerta nueva — las alertas ya avisan
+   * vencimiento por vencimiento (tarea 151) — es la vista consolidada para
+   * pasarle al equipo como lista de lo que tiene que subir.
+   *
+   * Reusa el radar (`listar`, que ya excluye lo presentado) filtrado a
+   * `nivelAlerta = 'VENCIDO'`, y le suma el estado de la planilla RG 90 del
+   * mismo período. El libro RG 90 es opcional (como el resto de lo que
+   * depende de OneDrive): sin él, todo período con IVA queda `SIN_LIQUIDACION`
+   * en vez de romper la pantalla.
+   */
+  app.get('/api/v1/vencimientos/faltantes', async (peticion) => {
+    const sujeto = autorizar(peticion, 'vencimiento', 'ver');
+    const ahora = deps.ahora();
+    const filtro = filtroDeClientes(sujeto);
+
+    const [filas, clientes, liquidaciones] = await Promise.all([
+      deps.vencimientos.listar(filtro),
+      deps.clientes.listar(filtro),
+      deps.libroRg90?.comprobantesPorClientePeriodo(filtro) ?? Promise.resolve([]),
+    ]);
+
+    const nombrePorCliente = new Map(clientes.map((c) => [c.id, c.nombre]));
+
+    const vencidos: VencimientoVencidoFaltante[] = filas
+      .map((fila) => conAlerta(fila, ahora))
+      .filter((item) => item.nivelAlerta === 'VENCIDO' && item.vencimiento.periodo !== null)
+      .map((item) => ({
+        id: item.vencimiento.id,
+        clienteId: item.vencimiento.clienteId,
+        clienteNombre: nombrePorCliente.get(item.vencimiento.clienteId) ?? item.vencimiento.clienteId,
+        periodo: item.vencimiento.periodo as string,
+        tipoDocumento: item.vencimiento.tipoDocumento,
+        descripcion: item.vencimiento.descripcion,
+        fechaVencimiento: item.vencimiento.fechaVencimiento.toISOString().slice(0, 10),
+        diasDeAtraso: -item.diasRestantes,
+      }));
+
+    return { faltantes: armarListaDeFaltantes(vencidos, liquidaciones) };
   });
 
   /**

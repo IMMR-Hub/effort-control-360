@@ -1042,6 +1042,114 @@ describe('radar de vencimientos', () => {
 
 /* ========================================================================== */
 
+describe('faltantes de OneDrive (tarea 152)', () => {
+  /** 21/04/2026 es HOY: ambas fechas están vencidas y sin presentar. */
+  function vencido(datos: {
+    id: string;
+    clienteId: string;
+    periodo: string;
+    tipoDocumento: string;
+    descripcion: string;
+    fechaVencimiento: string;
+  }) {
+    ctx.vencimientos.vencimientos.push({
+      id: datos.id,
+      clienteId: datos.clienteId,
+      tipoDocumento: datos.tipoDocumento,
+      descripcion: datos.descripcion,
+      entidad: 'DNIT',
+      fechaEmision: null,
+      fechaVencimiento: new Date(`${datos.fechaVencimiento}T00:00:00.000Z`),
+      fechaPresentacion: null,
+      responsableId: null,
+      estado: 'VIGENTE',
+      riesgo: 'MEDIO',
+      evidenciaId: null,
+      proximaAccion: null,
+      fechaVencimientoOriginal: null,
+      motivoProrroga: null,
+      periodo: datos.periodo,
+    });
+  }
+
+  it('agrupa por cliente y período, sin liquidación cargada (libroRg90 no conectado en esta suite)', async () => {
+    vencido({
+      id: 'iva-1', clienteId: MIO, periodo: '2026-02',
+      tipoDocumento: 'IVA_GENERAL', descripcion: 'IVA General — período 2026-02',
+      fechaVencimiento: '2026-03-12',
+    });
+    vencido({
+      id: 'rg90-1', clienteId: MIO, periodo: '2026-02',
+      tipoDocumento: 'PLANILLA_RG90', descripcion: 'Planilla RG 90 — libro de compras y ventas — período 2026-02',
+      fechaVencimiento: '2026-03-12',
+    });
+
+    const respuesta = await ctx.app.inject({
+      method: 'GET', url: '/api/v1/vencimientos/faltantes', headers: { cookie: coordinador },
+    });
+
+    expect(respuesta.statusCode).toBe(200);
+    const { faltantes } = JSON.parse(respuesta.body);
+    expect(faltantes).toHaveLength(1);
+    expect(faltantes[0].clienteNombre).toBe('GARSO S.A.');
+    expect(faltantes[0].periodo).toBe('2026-02');
+    expect(faltantes[0].obligaciones).toHaveLength(2);
+    // Sin `libroRg90` conectado (deps no lo trae en esta suite), un período que
+    // sí lo necesita queda en SIN_LIQUIDACION, no en un valor inventado.
+    expect(faltantes[0].estadoPlanillaRg90).toBe('SIN_LIQUIDACION');
+  });
+
+  it('un EEFF vencido no exige planilla RG 90: NO_APLICA', async () => {
+    vencido({
+      id: 'eeff-1', clienteId: MIO, periodo: '2025-12',
+      tipoDocumento: 'EEFF', descripcion: 'Estados Financieros — período 2025-12',
+      fechaVencimiento: '2026-04-15',
+    });
+
+    const respuesta = await ctx.app.inject({
+      method: 'GET', url: '/api/v1/vencimientos/faltantes', headers: { cookie: coordinador },
+    });
+
+    const { faltantes } = JSON.parse(respuesta.body);
+    expect(faltantes[0].estadoPlanillaRg90).toBe('NO_APLICA');
+  });
+
+  it('un vencimiento no vencido (o ya presentado) no aparece en la lista', async () => {
+    vencido({
+      id: 'no-vencido', clienteId: MIO, periodo: '2026-09',
+      tipoDocumento: 'IVA_GENERAL', descripcion: 'IVA General — período 2026-09',
+      fechaVencimiento: '2026-10-12', // futuro respecto de HOY (21/04/2026)
+    });
+
+    const respuesta = await ctx.app.inject({
+      method: 'GET', url: '/api/v1/vencimientos/faltantes', headers: { cookie: coordinador },
+    });
+
+    expect(JSON.parse(respuesta.body).faltantes).toHaveLength(0);
+  });
+
+  it('respeta la cartera: un coordinador sin el cliente asignado no lo ve', async () => {
+    vencido({
+      id: 'ajeno-1', clienteId: AJENO, periodo: '2026-02',
+      tipoDocumento: 'IVA_GENERAL', descripcion: 'IVA General — período 2026-02',
+      fechaVencimiento: '2026-03-12',
+    });
+
+    const respuesta = await ctx.app.inject({
+      method: 'GET', url: '/api/v1/vencimientos/faltantes', headers: { cookie: coordinador },
+    });
+
+    expect(JSON.parse(respuesta.body).faltantes).toHaveLength(0);
+  });
+
+  it('exige el permiso vencimiento.ver: sin sesión, 401', async () => {
+    const respuesta = await ctx.app.inject({ method: 'GET', url: '/api/v1/vencimientos/faltantes' });
+    expect(respuesta.statusCode).toBe(401);
+  });
+});
+
+/* ========================================================================== */
+
 describe('solicitudes de documentación', () => {
   const PERIODO = '2026-03';
 
