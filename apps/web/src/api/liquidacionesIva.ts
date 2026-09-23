@@ -53,6 +53,11 @@ export interface HallazgoDeLibro {
   readonly contraparte: string;
   readonly tasa: string | null;
   readonly diferencia: string;
+  /**
+   * Solo en los comprobantes que no cierran (tarea 148): partes en cero (no hay
+   * autofactura cargada), redondeo de 1–2 Gs, o a revisar. `null` en el resto.
+   */
+  readonly grupo: GrupoDeInconsistencia | null;
   readonly detalle: string;
   /** PENDIENTE: nadie lo miró. EN_REVISION: sigue alertando. ACEPTADO: una persona lo aceptó con motivo. */
   readonly estado: EstadoDeHallazgo;
@@ -62,12 +67,20 @@ export interface HallazgoDeLibro {
 
 export type EstadoDeHallazgo = 'PENDIENTE' | 'EN_REVISION' | 'ACEPTADO';
 
+export type GrupoDeInconsistencia = 'SIN_AUTOFACTURA' | 'REDONDEO' | 'A_REVISAR';
+
 export interface ResumenDeHallazgos {
   readonly total: number;
   readonly conRiesgoDeMulta: number;
   readonly enRevision: number;
   readonly aceptados: number;
   readonly ivaEnRiesgo: string;
+  /** Los comprobantes que no cierran, por grupo. Suman lo mismo que antes: nada se descuenta. */
+  readonly inconsistencias?: {
+    readonly sinAutofactura: number;
+    readonly redondeo: number;
+    readonly aRevisar: number;
+  };
 }
 
 export interface ResumenDeCalculo {

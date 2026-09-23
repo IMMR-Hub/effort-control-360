@@ -14,7 +14,12 @@ import { describe, expect, it } from 'vitest';
 
 import { DIVISORES_CONFIRMADOS_POR_EFFORT, gs } from '@effort/core';
 
-import { analizarLibro, esRiesgoDeMulta, resumirHallazgos } from '../src/analisisDeLibro.js';
+import {
+  analizarLibro,
+  esRiesgoDeMulta,
+  grupoDeInconsistencia,
+  resumirHallazgos,
+} from '../src/analisisDeLibro.js';
 import type { FilaDeLibro } from '../src/libroRg90.js';
 
 function fila(parcial: Partial<FilaDeLibro> = {}): FilaDeLibro {
@@ -176,5 +181,39 @@ describe('resumen de hallazgos', () => {
       inconsistencias: 0,
       ivaEnRiesgo: 0n,
     });
+  });
+});
+
+/*
+ * Tarea 148. De los 4.779 comprobantes «que no cierran» (medido el
+ * 2026-09-22): 1.640 tienen las partes en cero —EFFORT: «no existe
+ * autofactura cargada»—, 1.237 difieren 1 o 2 Gs y 1.902 más. Contarlos
+ * juntos esconde los que hay que mirar detrás de los que ya tienen
+ * explicación. Se CLASIFICAN, no se esconden: Daniel decidió que toda
+ * diferencia alerta y que el ruido se resuelve aceptando (DISCREPANCIAS 20).
+ */
+describe('grupo de un comprobante que no cierra', () => {
+  const partes = (calculado: bigint, diferencia: bigint) => ({
+    tipo: 'PARTES_NO_SUMAN_EL_TOTAL', calculado, diferencia,
+  });
+
+  it('con todas las partes en cero es «sin autofactura cargada»', () => {
+    expect(grupoDeInconsistencia(partes(0n, -1_500_000n))).toBe('SIN_AUTOFACTURA');
+  });
+
+  it('una diferencia de 1 o 2 Gs es redondeo, en cualquier sentido', () => {
+    expect(grupoDeInconsistencia(partes(90_909n, 1n))).toBe('REDONDEO');
+    expect(grupoDeInconsistencia(partes(90_909n, -2n))).toBe('REDONDEO');
+  });
+
+  it('desde 3 Gs no se presume nada: queda para revisar', () => {
+    expect(grupoDeInconsistencia(partes(90_909n, 3n))).toBe('A_REVISAR');
+    expect(grupoDeInconsistencia(partes(90_909n, -250_000n))).toBe('A_REVISAR');
+  });
+
+  it('un hallazgo de IVA no es un comprobante que no cierra: no tiene grupo', () => {
+    expect(
+      grupoDeInconsistencia({ tipo: 'IVA_DECLARADO_NO_COINCIDE', calculado: 0n, diferencia: 1n }),
+    ).toBeNull();
   });
 });

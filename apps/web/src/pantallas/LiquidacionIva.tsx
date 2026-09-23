@@ -39,6 +39,7 @@ import {
   decidirHallazgo,
   listarHallazgos,
   listarLiquidacionesIva,
+  type GrupoDeInconsistencia,
   type HallazgoDeLibro,
   type LiquidacionIva,
   type ResumenDeCalculo,
@@ -95,6 +96,13 @@ const TONO_RIESGO: Record<string, 'critico' | 'parcial' | 'pendiente'> = {
   INCONSISTENCIA: 'pendiente',
 };
 
+/** Los tres grupos de comprobantes que no cierran (tarea 148). */
+const ETIQUETA_GRUPO: Record<GrupoDeInconsistencia, string> = {
+  SIN_AUTOFACTURA: 'Sin autofactura cargada',
+  REDONDEO: 'Redondeo (1–2 Gs)',
+  A_REVISAR: 'A revisar',
+};
+
 function importe(texto: string): string {
   return formatearGs(gs(texto));
 }
@@ -110,6 +118,9 @@ export default function LiquidacionIva() {
   const [hallazgos, setHallazgos] = useState<readonly HallazgoDeLibro[]>([]);
   const [resumen, setResumen] = useState<ResumenDeHallazgos>(RESUMEN_VACIO);
   const [soloRiesgo, setSoloRiesgo] = useState(true);
+  // Tarea 148: mirar un solo grupo de comprobantes que no cierran. Filtra la
+  // tabla, nunca los contadores: el total sigue diciendo cuántos hay.
+  const [grupo, setGrupo] = useState<'TODOS' | GrupoDeInconsistencia>('TODOS');
   const [cargando, setCargando] = useState(true);
   const [calculando, setCalculando] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -122,6 +133,9 @@ export default function LiquidacionIva() {
     return rango ? new Set(periodosDelRango(rango)) : null;
   }, [filtro]);
   const enFiltro = (periodo: string) => periodosVisibles === null || periodosVisibles.has(periodo);
+  const hallazgosVisibles = hallazgos.filter(
+    (h) => enFiltro(h.periodo) && (grupo === 'TODOS' || h.grupo === grupo),
+  );
   // Hallazgo que se está aceptando: el motivo se pide en la misma fila, sin modal.
   const [aceptando, setAceptando] = useState<string | null>(null);
   const [motivo, setMotivo] = useState('');
@@ -313,7 +327,37 @@ export default function LiquidacionIva() {
           <Indicador etiqueta="Aceptados" valor={String(resumen.aceptados)} tono="completo" />
         </div>
 
-        {hallazgos.filter((h) => enFiltro(h.periodo)).length === 0 ? (
+        {resumen.inconsistencias &&
+          resumen.inconsistencias.sinAutofactura + resumen.inconsistencias.redondeo + resumen.inconsistencias.aRevisar > 0 && (
+            <div className="flex flex-wrap items-end gap-4 border-t border-borde px-5 py-3">
+              <p className="text-sm text-tinta-suave">
+                Comprobantes que no cierran:{' '}
+                <strong>{resumen.inconsistencias.sinAutofactura} sin autofactura cargada</strong> ·{' '}
+                <strong>{resumen.inconsistencias.redondeo} de redondeo (1–2 Gs)</strong> ·{' '}
+                <strong>{resumen.inconsistencias.aRevisar} a revisar</strong>
+                <span className="block text-xs text-tinta-tenue">
+                  Separados por lo que ya se sabe de ellos; ninguno se esconde ni se descuenta.
+                </span>
+              </p>
+              <CampoSelect
+                id="grupoDeInconsistencia"
+                etiqueta="Comprobantes que no cierran"
+                value={grupo}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+                  setGrupo(e.target.value as 'TODOS' | GrupoDeInconsistencia)
+                }
+                opciones={[
+                  { valor: 'TODOS', etiqueta: 'Mostrar todos' },
+                  { valor: 'SIN_AUTOFACTURA', etiqueta: 'Sin autofactura cargada' },
+                  { valor: 'REDONDEO', etiqueta: 'Redondeo (1–2 Gs)' },
+                  { valor: 'A_REVISAR', etiqueta: 'A revisar' },
+                ]}
+                className="w-56"
+              />
+            </div>
+          )}
+
+        {hallazgosVisibles.length === 0 ? (
           <p className="px-5 py-8 text-center text-sm text-tinta-tenue">
             {cargando ? 'Cargando…' : 'No hay nada para revisar en este cliente.'}
           </p>
@@ -331,13 +375,16 @@ export default function LiquidacionIva() {
               </tr>
             </thead>
             <tbody>
-              {hallazgos.filter((h) => enFiltro(h.periodo)).map((h) => (
+              {hallazgosVisibles.map((h) => (
                 <tr key={h.id}>
                   <Td>{h.periodo}</Td>
                   <Td>
                     <Badge tono={TONO_RIESGO[h.riesgo] ?? 'pendiente'}>
                       {ETIQUETA_RIESGO[h.riesgo] ?? h.riesgo}
                     </Badge>
+                    {h.grupo && (
+                      <span className="mt-0.5 block text-xs text-tinta-tenue">{ETIQUETA_GRUPO[h.grupo]}</span>
+                    )}
                   </Td>
                   <Td>
                     {h.numeroComprobante}

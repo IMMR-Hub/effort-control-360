@@ -123,6 +123,36 @@ export function esRiesgoDeMulta(
   return magnitud > TOLERANCIA_DE_REDONDEO_DEL_PROVEEDOR;
 }
 
+/**
+ * A qué grupo pertenece un comprobante que no cierra (tarea 148).
+ *
+ * - `SIN_AUTOFACTURA`: las tres partes en cero. EFFORT lo explicó el
+ *   2026-09-21: «está en 0 porque no existe autofactura cargada» en SIGA. No
+ *   es un error de lectura ni del comprobante.
+ * - `REDONDEO`: 1 o 2 Gs. Gravado 10%, gravado 5% y exento vienen con
+ *   decimales y se redondean por separado, igual que el total: el error
+ *   acumulado de esos redondeos no pasa de 2 Gs.
+ * - `A_REVISAR`: todo lo demás. No se presume ninguna explicación.
+ *
+ * Clasifica, no filtra: ninguno deja de mostrarse ni de contarse. Daniel
+ * decidió que toda diferencia alerta y que el ruido se resuelve aceptando, no
+ * silenciando (DISCREPANCIAS 20).
+ */
+export type GrupoDeInconsistencia = 'SIN_AUTOFACTURA' | 'REDONDEO' | 'A_REVISAR';
+
+export const MAXIMO_DE_REDONDEO_DE_LAS_PARTES = 2n;
+
+export function grupoDeInconsistencia(hallazgo: {
+  readonly tipo: string;
+  readonly calculado: bigint;
+  readonly diferencia: bigint;
+}): GrupoDeInconsistencia | null {
+  if (hallazgo.tipo !== 'PARTES_NO_SUMAN_EL_TOTAL') return null;
+  if (hallazgo.calculado === 0n) return 'SIN_AUTOFACTURA';
+  const magnitud = hallazgo.diferencia < 0n ? -hallazgo.diferencia : hallazgo.diferencia;
+  return magnitud <= MAXIMO_DE_REDONDEO_DE_LAS_PARTES ? 'REDONDEO' : 'A_REVISAR';
+}
+
 function riesgoDeIva(
   tipoRegistro: FilaDeLibro['tipoRegistro'],
   diferencia: bigint,

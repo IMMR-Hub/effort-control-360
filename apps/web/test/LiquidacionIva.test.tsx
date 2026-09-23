@@ -59,6 +59,7 @@ const HALLAZGO = {
   contraparte: 'AGROSOL PARAGUAY SOCIEDAD ANONIMA',
   tasa: '10%',
   diferencia: '12',
+  grupo: null,
   detalle: 'Se estaría tomando crédito fiscal de más.',
   estado: 'PENDIENTE',
   notaDecision: null,
@@ -76,7 +77,11 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-async function montar(rol: string = 'direccion', liquidaciones: readonly unknown[] = [LIQUIDACION]) {
+async function montar(
+  rol: string = 'direccion',
+  liquidaciones: readonly unknown[] = [LIQUIDACION],
+  hallazgos: { hallazgos: readonly unknown[]; resumen: unknown } | null = null,
+) {
   mock.mockDeRuta('GET /api/v1/yo', () =>
     respuestaJson({ usuarioId: 'u1', rol, veTodosLosClientes: true, cantidadDeClientesAsignados: 0 }),
   );
@@ -84,10 +89,15 @@ async function montar(rol: string = 'direccion', liquidaciones: readonly unknown
   mock.mockDeRuta('GET /api/v1/clientes', () => respuestaJson({ clientes: [FUMIPRO] }));
   mock.mockDeRuta('GET /api/v1/liquidaciones-iva', () => respuestaJson({ liquidaciones }));
   mock.mockDeRuta('GET /api/v1/liquidaciones-iva/hallazgos', () =>
-    respuestaJson({
-      hallazgos: [HALLAZGO],
-      resumen: { total: 1, conRiesgoDeMulta: 1, enRevision: 0, aceptados: 0, ivaEnRiesgo: '12' },
-    }),
+    respuestaJson(
+      hallazgos ?? {
+        hallazgos: [HALLAZGO],
+        resumen: {
+          total: 1, conRiesgoDeMulta: 1, enRevision: 0, aceptados: 0, ivaEnRiesgo: '12',
+          inconsistencias: { sinAutofactura: 0, redondeo: 0, aRevisar: 0 },
+        },
+      },
+    ),
   );
 
   vi.resetModules();
@@ -284,6 +294,48 @@ describe('pantalla de IVA', () => {
       // propio, es señalar que hay algo para revisar contra lo ya presentado.
       expect(fila.textContent).toContain('500.000');
       expect(fila.textContent).toContain('480.000');
+    });
+  });
+
+  /*
+   * Tarea 148. Los comprobantes que no cierran se separan por lo que ya se
+   * sabe de ellos, sin esconder ninguno: toda diferencia sigue alertando.
+   */
+  describe('comprobantes que no cierran, agrupados', () => {
+    const inconsistencia = (id: string, grupo: string, diferencia: string) => ({
+      ...HALLAZGO, id, tipo: 'PARTES_NO_SUMAN_EL_TOTAL', riesgo: 'INCONSISTENCIA',
+      numeroComprobante: `001-001-000${id}`, grupo, diferencia,
+    });
+    const TODOS = {
+      hallazgos: [
+        inconsistencia('1', 'SIN_AUTOFACTURA', '-1500000'),
+        inconsistencia('2', 'REDONDEO', '1'),
+        inconsistencia('3', 'A_REVISAR', '250000'),
+      ],
+      resumen: {
+        total: 3, conRiesgoDeMulta: 0, enRevision: 0, aceptados: 0, ivaEnRiesgo: '0',
+        inconsistencias: { sinAutofactura: 1, redondeo: 1, aRevisar: 1 },
+      },
+    };
+
+    it('muestra cuántos hay de cada grupo, y el total no cambia', async () => {
+      await montar('direccion', [LIQUIDACION], TODOS);
+
+      expect(screen.getByText(/1 sin autofactura cargada/i)).toBeVisible();
+      expect(screen.getByText(/1 de redondeo/i)).toBeVisible();
+      expect(screen.getByText(/1 a revisar/i)).toBeVisible();
+      expect(screen.getByText('001-001-0003')).toBeVisible();
+      expect(screen.getByText('001-001-0001')).toBeVisible();
+    });
+
+    it('se puede mirar un solo grupo, sin que los otros desaparezcan del total', async () => {
+      await montar('direccion', [LIQUIDACION], TODOS);
+
+      await userEvent.selectOptions(screen.getByLabelText('Comprobantes que no cierran'), 'A_REVISAR');
+
+      expect(screen.getByText('001-001-0003')).toBeVisible();
+      expect(screen.queryByText('001-001-0001')).not.toBeInTheDocument();
+      expect(screen.getByText(/1 sin autofactura cargada/i)).toBeVisible();
     });
   });
 });

@@ -342,6 +342,10 @@ export function programarCalculoDeVencimientosYAlertas(
       if (
         generados > 0 ||
         alertas.creadas > 0 ||
+        // Poner al día o cerrar una alerta también cambia lo que ve EFFORT:
+        // tiene que quedar dicho cuándo pasó (tarea 151).
+        alertas.actualizadas > 0 ||
+        alertas.resueltas > 0 ||
         avisos.enviados > 0 ||
         ivaHallazgos > 0 ||
         presentacionesMarcadas > 0

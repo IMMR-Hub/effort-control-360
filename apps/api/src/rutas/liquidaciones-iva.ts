@@ -19,7 +19,7 @@ import type { FastifyInstance } from 'fastify';
 import { z } from 'zod';
 
 import { DIVISORES_CONFIRMADOS_POR_EFFORT } from '@effort/core';
-import { esRiesgoDeMulta, type RiesgoDeHallazgo } from '@effort/importers';
+import { esRiesgoDeMulta, grupoDeInconsistencia, type RiesgoDeHallazgo } from '@effort/importers';
 
 import { ACCIONES, registrarEvento } from '../bitacora.js';
 import { ErrorDeAplicacion, type Dependencias } from '../servidor.js';
@@ -220,6 +220,9 @@ export async function registrarRutasDeLiquidacionesIva(
         contraparte: h.contraparte,
         tasa: h.tasa,
         diferencia: h.diferencia.toString(),
+        // Solo los comprobantes que no cierran: SIN_AUTOFACTURA, REDONDEO o
+        // A_REVISAR (tarea 148). Clasifica, no esconde: todos se devuelven.
+        grupo: grupoDeInconsistencia(h),
         detalle: h.detalle,
         estado: h.estado,
         notaDecision: h.notaDecision,
@@ -230,6 +233,13 @@ export async function registrarRutasDeLiquidacionesIva(
         conRiesgoDeMulta: conRiesgo.length,
         enRevision: hallazgos.filter((h) => h.estado === 'EN_REVISION').length,
         aceptados: hallazgos.filter((h) => h.estado === 'ACEPTADO').length,
+        // Los comprobantes que no cierran, separados por lo que ya se sabe de
+        // ellos. Suman exactamente lo mismo que antes: nada se descuenta.
+        inconsistencias: {
+          sinAutofactura: hallazgos.filter((h) => grupoDeInconsistencia(h) === 'SIN_AUTOFACTURA').length,
+          redondeo: hallazgos.filter((h) => grupoDeInconsistencia(h) === 'REDONDEO').length,
+          aRevisar: hallazgos.filter((h) => grupoDeInconsistencia(h) === 'A_REVISAR').length,
+        },
         // En valor absoluto: un crédito de más y un débito de menos son dos
         // problemas, no uno que compensa al otro.
         ivaEnRiesgo: conRiesgo
