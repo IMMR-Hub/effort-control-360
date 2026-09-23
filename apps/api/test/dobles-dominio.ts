@@ -840,6 +840,17 @@ export class AlertasFalsas implements RepositorioDeAlertas {
    * ABIERTAS del mismo origen sobre la misma entidad. Sin esto, el doble
    * aceptaría repetidas que la base real rechaza.
    */
+  async actualizar(
+    id: string,
+    cambios: { titulo: string; detalle: string; criticidad: string; fechaLimite: Date | null },
+  ): Promise<void> {
+    const indice = this.alertas.findIndex(
+      (alerta) => alerta.id === id && ['ABIERTA', 'EN_CURSO'].includes(alerta.estado),
+    );
+    if (indice < 0) return;
+    this.alertas[indice] = { ...this.alertas[indice]!, ...cambios };
+  }
+
   async yaRegistradas(origen: string): Promise<ReadonlySet<string>> {
     return new Set(
       this.alertas

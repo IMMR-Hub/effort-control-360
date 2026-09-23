@@ -1201,6 +1201,23 @@ export class AlertasPrisma implements RepositorioDeAlertas {
     return resultado.count;
   }
 
+  async actualizar(
+    id: string,
+    cambios: { titulo: string; detalle: string; criticidad: string; fechaLimite: Date | null },
+  ): Promise<void> {
+    // `updateMany` con el estado en el filtro: si una persona la cerró entre
+    // que el motor la leyó y ahora, no se toca.
+    await this.prisma.alerta.updateMany({
+      where: { id, estado: { in: ['ABIERTA', 'EN_CURSO'] } },
+      data: {
+        titulo: cambios.titulo,
+        detalle: cambios.detalle,
+        criticidad: cambios.criticidad as never,
+        fechaLimite: cambios.fechaLimite,
+      },
+    });
+  }
+
   async yaRegistradas(origen: string): Promise<ReadonlySet<string>> {
     const filas = await this.prisma.alerta.findMany({
       where: { origen, entidadRelacionadaId: { not: null } },

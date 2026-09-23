@@ -358,6 +358,7 @@ export function programarCalculoDeVencimientosYAlertas(
             vencimientosGenerados: generados,
             alertasCreadas: alertas.creadas,
             alertasResueltas: alertas.resueltas,
+            alertasActualizadas: alertas.actualizadas,
             avisosEnviados: avisos.enviados,
             avisosFallidos: avisos.fallidos,
             ivaPeriodosCalculados: ivaPeriodos,

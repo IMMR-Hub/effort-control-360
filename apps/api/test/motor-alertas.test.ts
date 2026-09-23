@@ -76,7 +76,86 @@ describe('motor de alertas', () => {
     const alerta = deps.alertas.alertas[0]!;
     expect(alerta.criticidad).toBe('CRITICA');
     expect(alerta.origen).toBe(ORIGEN_VENCIMIENTO);
-    expect(alerta.titulo).toMatch(/Vencido sin presentar/);
+    expect(alerta.titulo).toMatch(/Vencido sin comprobante de presentación/);
+  });
+
+  /*
+   * B4 del roadmap y Daniel, 2026-09-22: «todo está presentado, solo que no
+   * subieron al OneDrive». Lo que el sistema sabe es que NO HAY comprobante
+   * archivado, no que no se presentó. El texto no puede afirmar lo segundo,
+   * pero tampoco puede tranquilizar: si de verdad no se presentó, es una
+   * multa. Por eso dice las dos posibilidades y sigue siendo CRÍTICA.
+   */
+  it('un vencido sin comprobante no afirma que no se presentó, y dice qué hacer', async () => {
+    const deps = armar();
+    await agregarVencimiento(deps, '2026-04-13');
+
+    await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+
+    const alerta = deps.alertas.alertas[0]!;
+    expect(alerta.criticidad).toBe('CRITICA');
+    expect(alerta.titulo).not.toMatch(/sin presentar/i);
+    expect(alerta.detalle).toMatch(/OneDrive/);
+    expect(alerta.detalle).toMatch(/si ya se presentó/i);
+    expect(alerta.detalle).toMatch(/archivar/i);
+  });
+
+  /*
+   * Encontrado en producción el 2026-09-23: una alerta abierta nunca se
+   * actualizaba. Dos decían «Vence en 1 día» con 9 días de vencidas, y una
+   * «Vence en 8 días», MEDIA, con 2 días de vencida. El motor corre cada hora:
+   * lo que dice una alerta abierta tiene que ser lo de hoy.
+   */
+  describe('una alerta abierta se mantiene al día', () => {
+    it('cuando pasa la fecha, «Vence en N días» se convierte en vencido y sube a CRÍTICA', async () => {
+      const deps = armar();
+      await agregarVencimiento(deps, '2026-04-29'); // HOY es 2026-04-21: vence en 8 días
+
+      await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+      expect(deps.alertas.alertas[0]!.criticidad).toBe('MEDIA');
+
+      const diezDiasDespues = new Date('2026-05-01T13:00:00Z');
+      const resumen = await evaluarAlertas(deps, diezDiasDespues, '2026-04', 'usr-1');
+
+      expect(deps.alertas.alertas).toHaveLength(1);
+      const alerta = deps.alertas.alertas[0]!;
+      expect(alerta.criticidad).toBe('CRITICA');
+      expect(alerta.titulo).toMatch(/Vencido sin comprobante/);
+      expect(alerta.estado).toBe('ABIERTA');
+      expect(resumen.actualizadas).toBe(1);
+    });
+
+    it('los días que faltan se recalculan cada vez', async () => {
+      const deps = armar();
+      await agregarVencimiento(deps, '2026-04-29');
+
+      await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+      await evaluarAlertas(deps, new Date('2026-04-25T13:00:00Z'), '2026-04', 'usr-1');
+
+      expect(deps.alertas.alertas[0]!.titulo).toMatch(/^Vence en 4 días/);
+    });
+
+    it('si nada cambió no reescribe nada', async () => {
+      const deps = armar();
+      await agregarVencimiento(deps, '2026-04-13');
+
+      await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+      const resumen = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+
+      expect(resumen.actualizadas).toBe(0);
+    });
+
+    it('no reescribe una alerta que una persona ya tomó y cerró', async () => {
+      const deps = armar();
+      await agregarVencimiento(deps, '2026-04-29');
+      await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+      await deps.alertas.cerrar(deps.alertas.alertas[0]!.id, 'Revisado con el cliente.', 'usr-1', HOY);
+
+      await evaluarAlertas(deps, new Date('2026-05-01T13:00:00Z'), '2026-04', 'usr-1');
+
+      const cerrada = deps.alertas.alertas.find((a) => a.estado === 'CERRADA')!;
+      expect(cerrada.titulo).toMatch(/^Vence en 8 días/);
+    });
   });
 
   it('no avisa de algo que vence dentro de mucho: sería ruido que tapa lo urgente', async () => {

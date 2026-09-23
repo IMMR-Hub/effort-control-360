@@ -763,6 +763,36 @@ describeSiHayBase('repositorios de negocio contra PostgreSQL real', () => {
       });
     }
 
+    /*
+     * 2026-09-23: una alerta abierta no se actualizaba nunca («Vence en 1 día»
+     * con 9 días de vencida). `actualizar` la pone al día — pero solo si sigue
+     * abierta: una cerrada ya la decidió una persona.
+     */
+    it('actualizar pone al día una abierta (texto y criticidad) y no toca una cerrada', async () => {
+      const abierta = await crearAlerta(mio, 'MEDIA', 'Vence en 8 días: prueba');
+      const cerrada = await crearAlerta(mio, 'MEDIA', 'Vence en 8 días: cerrada', 'CERRADA');
+      const limite = new Date('2026-09-21T00:00:00Z');
+
+      for (const id of [abierta.id, cerrada.id]) {
+        await alertas.actualizar(id, {
+          titulo: 'Vencido sin comprobante de presentación: prueba',
+          detalle: 'Detalle nuevo.',
+          criticidad: 'CRITICA',
+          fechaLimite: limite,
+        });
+      }
+
+      const a = await entorno.prisma.alerta.findUniqueOrThrow({ where: { id: abierta.id } });
+      expect(a.criticidad).toBe('CRITICA');
+      expect(a.titulo).toBe('Vencido sin comprobante de presentación: prueba');
+      expect(a.fechaLimite?.toISOString().slice(0, 10)).toBe('2026-09-21');
+      expect(a.estado).toBe('ABIERTA');
+
+      const c = await entorno.prisma.alerta.findUniqueOrThrow({ where: { id: cerrada.id } });
+      expect(c.criticidad).toBe('MEDIA');
+      expect(c.titulo).toBe('Vence en 8 días: cerrada');
+    });
+
     it('ordena por criticidad usando el orden declarado del enum en Postgres, no alfabético', async () => {
       // El orden alfabético sería ALTA, CRITICA, INFORMATIVA, MEDIA: si este
       // test pasara con el `orderBy` alfabético, no estaría probando nada.

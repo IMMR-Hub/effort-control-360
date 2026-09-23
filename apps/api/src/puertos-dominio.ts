@@ -759,6 +759,24 @@ export interface RepositorioDeAlertas {
    */
   yaRegistradas(origen: string): Promise<ReadonlySet<string>>;
   /**
+   * Pone al día el texto, la criticidad y la fecha límite de una alerta que
+   * sigue ABIERTA o EN CURSO. Nunca toca una cerrada: esa ya la decidió una
+   * persona.
+   *
+   * Existe porque hasta el 2026-09-23 una alerta se escribía una vez y no se
+   * tocaba más: en producción había dos que decían «Vence en 1 día» con nueve
+   * días de vencidas, y una «Vence en 8 días», MEDIA, ya vencida.
+   */
+  actualizar(
+    id: string,
+    cambios: {
+      readonly titulo: string;
+      readonly detalle: string;
+      readonly criticidad: string;
+      readonly fechaLimite: Date | null;
+    },
+  ): Promise<void>;
+  /**
    * Única forma de llegar a `CERRADA`. Exige motivo, usuario y momento: una
    * alerta cerrada sin explicación no se distingue de una que se ignoró.
    */

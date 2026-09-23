@@ -119,6 +119,8 @@ export interface ResumenDeAlertas {
   readonly evaluadas: number;
   /** Cerradas solas porque el problema que las originó ya no existe. */
   readonly resueltas: number;
+  /** Abiertas cuyo texto, criticidad o fecha se pusieron al día en esta corrida. */
+  readonly actualizadas: number;
 }
 
 export const ORIGEN_VENCIMIENTO = 'vencimiento_por_vencer';
@@ -264,12 +266,20 @@ export async function evaluarAlertas(
       periodo: null,
       origen: ORIGEN_VENCIMIENTO,
       criticidad,
+      /*
+       * Lo que el sistema sabe es que NO HAY comprobante archivado, no que no se
+       * presentó (B4 del roadmap; Daniel, 2026-09-22: «todo está presentado,
+       * solo que no subieron al OneDrive»). El texto no afirma ninguna de las
+       * dos cosas, dice qué hacer en cada caso, y sigue siendo CRÍTICA: si de
+       * verdad no se presentó, es una multa.
+       */
       titulo: vencido
-        ? `Vencido sin presentar: ${vencimiento.descripcion}`
+        ? `Vencido sin comprobante de presentación: ${vencimiento.descripcion}`
         : `Vence en ${dias} día${dias === 1 ? '' : 's'}: ${vencimiento.descripcion}`,
       detalle: vencido
-        ? `Venció el ${fechaAIso(vencimiento.fechaVencimiento)} ante ${vencimiento.entidad} ` +
-          `y todavía no está registrado como presentado.`
+        ? `Venció el ${fechaAIso(vencimiento.fechaVencimiento)} ante ${vencimiento.entidad} y en ` +
+          `OneDrive no hay ninguna declaración que pruebe la presentación. Si ya se presentó, ` +
+          `falta archivar el comprobante en la carpeta del cliente; si no, hay que presentarlo.`
         : `Vence el ${fechaAIso(vencimiento.fechaVencimiento)} ante ${vencimiento.entidad}.`,
       entidadRelacionada: 'vencimiento',
       entidadRelacionadaId: vencimiento.id,
@@ -405,6 +415,39 @@ export async function evaluarAlertas(
   const creadas = await deps.alertas.crear(nuevas);
 
   /*
+   * Puesta al día de lo que ya estaba abierto. Hasta el 2026-09-23 una alerta
+   * se escribía una vez y no se tocaba más: en producción había dos que decían
+   * «Vence en 1 día» con nueve días de vencidas, y una «Vence en 8 días»,
+   * MEDIA, ya vencida. El motor corre cada hora; lo que dice una alerta
+   * abierta tiene que ser lo de hoy, y su criticidad también.
+   */
+  const candidataPorClave = new Map(
+    candidatas.map((alta) => [`${alta.origen}|${alta.entidadRelacionadaId ?? ''}`, alta]),
+  );
+  let actualizadas = 0;
+  for (const alerta of abiertas) {
+    const vigente = candidataPorClave.get(`${alerta.origen}|${alerta.entidadRelacionadaId ?? ''}`);
+    if (!vigente) continue;
+    const fechaNueva = vigente.fechaLimite?.getTime() ?? null;
+    const fechaVieja = alerta.fechaLimite?.getTime() ?? null;
+    if (
+      alerta.titulo === vigente.titulo &&
+      alerta.detalle === vigente.detalle &&
+      alerta.criticidad === vigente.criticidad &&
+      fechaNueva === fechaVieja
+    ) {
+      continue;
+    }
+    await deps.alertas.actualizar(alerta.id, {
+      titulo: vigente.titulo,
+      detalle: vigente.detalle,
+      criticidad: vigente.criticidad,
+      fechaLimite: vigente.fechaLimite,
+    });
+    actualizadas += 1;
+  }
+
+  /*
    * Cierre automático: una alerta abierta cuya causa ya no aparece entre las
    * candidatas es una alerta resuelta.
    *
@@ -463,5 +506,6 @@ export async function evaluarAlertas(
     yaEstabanAbiertas: candidatas.length - creadas,
     evaluadas: vencimientos.length + procesos.length + riesgos.length + ajenas.length,
     resueltas,
+    actualizadas,
   };
 }
