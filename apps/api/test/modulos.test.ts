@@ -28,6 +28,7 @@ import { registrarRutasDeReglasImpositivas } from '../src/rutas/reglas-impositiv
 import { registrarRutasDeReglasDeNotificacion } from '../src/rutas/reglas-notificacion.js';
 import { registrarRutasDeEventos } from '../src/rutas/eventos.js';
 import { registrarRutasDeClientes } from '../src/rutas/clientes.js';
+import { registrarRutasDeActualizarAhora } from '../src/rutas/actualizar-ahora.js';
 import { hashearContrasena } from '../src/seguridad/credenciales.js';
 import { AlmacenEnMemoria } from '../src/seguridad/limites.js';
 import { nombreCookieSesion } from '../src/seguridad/sesiones.js';
@@ -150,6 +151,7 @@ async function montar(): Promise<Contexto> {
     obligaciones,
     evidencias,
     drive,
+    driveDeOrigen: drive,
     solicitudes,
     balances,
     exportacionesSiga: new ExportacionesSigaFalsas(),
@@ -173,6 +175,7 @@ async function montar(): Promise<Contexto> {
   await registrarRutasDeReglasDeNotificacion(app, deps);
   await registrarRutasDeEventos(app, deps);
   await registrarRutasDeClientes(app, deps);
+  await registrarRutasDeActualizarAhora(app, deps);
   await app.ready();
   await activarCsrfEnInject(app);
 
@@ -1145,6 +1148,63 @@ describe('faltantes de OneDrive (tarea 152)', () => {
   it('exige el permiso vencimiento.ver: sin sesión, 401', async () => {
     const respuesta = await ctx.app.inject({ method: 'GET', url: '/api/v1/vencimientos/faltantes' });
     expect(respuesta.statusCode).toBe(401);
+  });
+});
+
+/* ========================================================================== */
+
+describe('actualizar ahora (tarea 152-bis)', () => {
+  it('sin sesión, 401', async () => {
+    const respuesta = await ctx.app.inject({ method: 'POST', url: '/api/v1/actualizar-ahora' });
+    expect(respuesta.statusCode).toBe(401);
+  });
+
+  it('coordinador no puede: no tiene alerta.crear', async () => {
+    const respuesta = await ctx.app.inject({
+      method: 'POST', url: '/api/v1/actualizar-ahora', headers: { cookie: coordinador },
+    });
+    expect(respuesta.statusCode).toBe(403);
+  });
+
+  it('auxiliar no puede: no tiene liquidacion.crear ni alerta.crear', async () => {
+    const respuesta = await ctx.app.inject({
+      method: 'POST', url: '/api/v1/actualizar-ahora', headers: { cookie: auxiliar },
+    });
+    expect(respuesta.statusCode).toBe(403);
+  });
+
+  it('dirección puede: sincroniza, recalcula y evalúa, y devuelve un resumen', async () => {
+    const respuesta = await ctx.app.inject({
+      method: 'POST', url: '/api/v1/actualizar-ahora', headers: { cookie: direccion },
+    });
+
+    expect(respuesta.statusCode).toBe(200);
+    const cuerpo = JSON.parse(respuesta.body);
+    expect(cuerpo).toEqual(
+      expect.objectContaining({
+        archivosNuevos: 0,
+        archivosConFallo: 0,
+        ivaOcupado: false,
+        presentacionesMarcadas: 0,
+      }),
+    );
+  });
+
+  it('queda en la bitácora como actualización manual', async () => {
+    await ctx.app.inject({
+      method: 'POST', url: '/api/v1/actualizar-ahora', headers: { cookie: direccion },
+    });
+
+    const entradas = ctx.bitacora.filas.filter((e) => e.accion === 'sistema.actualizacion_manual');
+    expect(entradas).toHaveLength(1);
+    expect((entradas[0]?.datosDespues as { disparo?: string } | null)?.disparo).toBe('manual');
+  });
+
+  it('responsable también puede (tiene las tres acciones)', async () => {
+    const respuesta = await ctx.app.inject({
+      method: 'POST', url: '/api/v1/actualizar-ahora', headers: { cookie: responsable },
+    });
+    expect(respuesta.statusCode).toBe(200);
   });
 });
 

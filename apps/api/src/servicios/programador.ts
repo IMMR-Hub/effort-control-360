@@ -14,18 +14,13 @@
 
 import type { FastifyBaseLogger } from 'fastify';
 
-import { crearCalendario, DIVISORES_CONFIRMADOS_POR_EFFORT, feriadosParaguay, hoyEnParaguay } from '@effort/core';
+import { crearCalendario, feriadosParaguay, hoyEnParaguay } from '@effort/core';
 
 import type { Dependencias } from '../servidor.js';
-import { generarVencimientosDelPeriodo } from './generadorDeVencimientos.js';
 import { enviarAvisosDeAlertas, VENTANA_DE_AVISOS_MS } from './avisosPorCorreo.js';
 import { enviarRecordatorios } from './recordatorios.js';
-import { intentarConCandado } from './candadoDeIva.js';
-import { evaluarAlertas } from './motorDeAlertas.js';
 import { detalleParaBitacora, sincronizarDesdeOneDrive } from './sincronizadorDeOneDrive.js';
-import { liquidarIvaDesdeLibros } from './liquidacionDeIva.js';
-import { detectarPresentaciones } from './detectorDePresentaciones.js';
-import { extraerTextoDePdf } from './textoDePdf.js';
+import { ejecutarCicloDeCalculo } from './cicloDeCalculo.js';
 
 /** Cada cuánto se revisa la carpeta de EFFORT. Confirmado con Daniel. */
 const CADA_15_MINUTOS = 15 * 60 * 1000;
@@ -114,195 +109,65 @@ export function programarCalculoDeVencimientosYAlertas(
         return;
       }
 
-      const hoy = hoyEnParaguay(deps.ahora());
-      const periodo = `${hoy.anio}-${String(hoy.mes).padStart(2, '0')}`;
-
-      // El mes anterior también: el IVA de septiembre se presenta en octubre,
-      // así que en los primeros días del mes lo que urge es el período pasado.
-      const anterior =
-        hoy.mes === 1
-          ? `${hoy.anio - 1}-12`
-          : `${hoy.anio}-${String(hoy.mes - 1).padStart(2, '0')}`;
-
-      let generados = 0;
-      const sinRevisar = new Set<number>();
-      for (const cual of [anterior, periodo]) {
-        const resumen = await generarVencimientosDelPeriodo(
-          { clientes: deps.clientes, obligaciones: deps.obligaciones, vencimientos: deps.vencimientos },
-          cual,
-          usuario.id,
-        );
-        generados += resumen.creados;
-        for (const anio of resumen.aniosSinRevisarFeriados) sinRevisar.add(anio);
+      const inicio = Date.now();
+      const memoriaAntes = memoriaMB();
+      let ciclo;
+      try {
+        ciclo = await ejecutarCicloDeCalculo(deps, usuario.id, 'automático');
+      } catch (error) {
+        registrador.error({ err: error }, 'Falló el cálculo automático de vencimientos y alertas.');
+        return;
       }
+      const {
+        periodo,
+        vencimientosGenerados: generados,
+        aniosSinRevisarFeriados,
+        ivaPeriodosCalculados: ivaPeriodos,
+        ivaHallazgosNuevos: ivaHallazgos,
+        ivaOcupado,
+        presentacionesMarcadas,
+        presentadasFueraDeTermino,
+      } = ciclo;
 
       // Los feriados hay que revisarlos cada mes (regla de Daniel, 2026-09-12):
       // los móviles se trasladan por decreto y los extraordinarios aparecen
       // durante el año. Sin traslados cargados el cálculo no miente, pero avisa
       // antes de tiempo — y eso tiene que verse.
-      if (sinRevisar.size > 0) {
+      if (aniosSinRevisarFeriados.length > 0) {
         registrador.warn(
-          { anios: [...sinRevisar] },
+          { anios: aniosSinRevisarFeriados },
           'Hay años sin revisar el calendario de feriados. Los vencimientos de esos años ' +
             'se calculan con las fechas originales, sin los traslados por decreto.',
         );
       }
 
-      /*
-       * El IVA se recalcula ANTES de evaluar alertas, y el orden importa: un
-       * hallazgo nuevo —un comprobante cuyo IVA declarado no coincide— tiene que
-       * avisar en esta misma vuelta y no una hora más tarde. Presentar una
-       * declaración con una diferencia es de las cosas que no se deshacen: una
-       * vez presentada, se rectifica.
-       *
-       * Un fallo acá no puede impedir que se evalúen las alertas de
-       * vencimientos, que es lo que más caro sale no tener.
-       */
-      let ivaPeriodos = 0;
-      let ivaHallazgos = 0;
-      if (deps.drive && deps.libroRg90) {
-        const drive = deps.drive;
-        const libroRg90 = deps.libroRg90;
-        const inicio = Date.now();
-        const memoriaAntes = memoriaMB();
-        try {
-          // Comparte el candado con el botón "Recalcular": si alguien lo está
-          // corriendo a mano, esta vuelta saltea el IVA y sigue con las alertas.
-          const intento = await intentarConCandado(() =>
-            liquidarIvaDesdeLibros(
-              {
-                clientes: deps.clientes,
-                librosDelCliente: (clienteId) => libroRg90.librosDelCliente(clienteId),
-                drive,
-                guardarLiquidacion: (datos) => libroRg90.guardarLiquidacion(datos),
-                guardarHallazgos: (datos) => libroRg90.guardarHallazgos(datos),
-                divisores: DIVISORES_CONFIRMADOS_POR_EFFORT,
-                ahora: deps.ahora,
-              },
-              usuario.id,
-            ),
-          );
-
-          if (intento.ocupado) {
-            registrador.info('Hay un cálculo de IVA en curso: esta vuelta no lo repite.');
-          } else {
-            const liquidacion = intento.valor;
-            ivaPeriodos = liquidacion.periodosCalculados;
-            ivaHallazgos = liquidacion.hallazgosNuevos;
-
-            /*
-             * Todo lo que el cálculo dejó afuera tiene que quedar escrito: si
-             * nadie aprieta "Recalcular", el log es el único lugar donde se ve
-             * que una planilla se descartó o un cliente no se calculó. La
-             * memoria y la duración, porque este paso abre todas las planillas
-             * de cada cliente en un contenedor de 512 MB (CLAUDE.md, lección 4).
-             */
-            registrador.info(
-              {
-                periodos: liquidacion.periodosCalculados,
-                planillas: liquidacion.archivosLeidos,
-                ignorados: liquidacion.archivosIgnorados,
-                avisos: liquidacion.avisos.length + liquidacion.avisosOmitidos,
-                primerAviso: liquidacion.avisos[0],
-                clientesOmitidos: liquidacion.clientesOmitidos,
-                fallos: liquidacion.fallos.length,
-                hallazgosNuevos: liquidacion.hallazgosNuevos,
-                memoriaMBAntes: memoriaAntes,
-                memoriaMBDespues: memoriaMB(),
-                segundos: Math.round((Date.now() - inicio) / 1000),
-              },
-              'Cálculo automático de IVA terminado.',
-            );
-
-            if (liquidacion.fallos.length > 0) {
-              registrador.warn(
-                { fallos: liquidacion.fallos.length, primero: liquidacion.fallos[0] },
-                'Hay planillas RG 90 que no se pudieron leer.',
-              );
-            }
-          }
-        } catch (error) {
-          registrador.error({ err: error }, 'Falló el cálculo automático de IVA desde los libros.');
-        }
-      }
-
-      /*
-       * Las presentaciones se detectan ANTES de evaluar alertas, por la misma
-       * razón que el IVA: si la declaración ya está en OneDrive, la alerta de
-       * "vencido sin presentar" no tiene que salir en esta vuelta, ni mucho
-       * menos mandarse por correo.
-       *
-       * Un fallo acá no impide evaluar las alertas: sin el detector el sistema
-       * avisa de más, que es la dirección segura.
-       */
-      let presentacionesMarcadas = 0;
-      let presentadasFueraDeTermino = 0;
-      if (deps.drive && deps.declaraciones) {
-        const repo = deps.declaraciones;
-        const drive = deps.drive;
-        try {
-          const detectadas = await detectarPresentaciones(
-            {
-              pdfsPorLeer: (limite) => repo.pdfsPorLeer(limite),
-              leerArchivo: (itemId) => drive.leer(itemId),
-              extraerTexto: extraerTextoDePdf,
-              guardarLectura: (pdf, resultado) => repo.guardarLectura(pdf, resultado),
-              presentacionesLeidas: () => repo.presentacionesLeidas(),
-              vencimientosPendientes: () => repo.vencimientosPendientes(),
-              marcarPresentado: async (id, fecha, evidenciaId, quien) => {
-                await deps.vencimientos.marcarPresentado(id, fecha, evidenciaId, quien);
-              },
-              registrarEnBitacora: (entrada) =>
-                deps.bitacora.registrar({
-                  usuarioId: usuario.id,
-                  accion: 'vencimiento.presentado',
-                  entidad: 'vencimiento',
-                  entidadId: entrada.vencimientoId,
-                  clienteId: entrada.clienteId,
-                  datosAntes: null,
-                  datosDespues: {
-                    estado: 'PRESENTADO',
-                    fechaPresentacion: entrada.fechaDePresentacion,
-                    evidenciaId: entrada.evidenciaId,
-                    numeroDeOrden: entrada.numeroDeOrden,
-                    fueraDeTermino: entrada.fueraDeTermino,
-                    diasDeAtraso: entrada.diasDeAtraso,
-                    fechaAproximada: entrada.fechaAproximada,
-                    disparo: 'automático: declaración de la DNIT encontrada en OneDrive',
-                  },
-                  ipTruncada: null,
-                  agenteUsuario: null,
-                  peticionId: null,
-                }),
-            },
-            usuario.id,
-          );
-          presentacionesMarcadas = detectadas.vencimientosMarcados;
-          presentadasFueraDeTermino = detectadas.fueraDeTermino;
-
-          registrador.info(
-            { ...detectadas, memoriaMB: memoriaMB() },
-            'Detección de presentaciones terminada.',
-          );
-        } catch (error) {
-          registrador.error({ err: error }, 'Falló la detección de presentaciones.');
-        }
-      }
-
-      const alertas = await evaluarAlertas(
-        {
-          alertas: deps.alertas,
-          vencimientos: deps.vencimientos,
-          procesoMensual: deps.procesoMensual,
-          riesgoDeLibro: {
-            porPeriodo: async () => deps.libroRg90?.riesgoPorPeriodo() ?? [],
+      if (ivaOcupado) {
+        registrador.info('Hay un cálculo de IVA en curso: esta vuelta no lo repite.');
+      } else if (deps.drive && deps.libroRg90) {
+        registrador.info(
+          {
+            periodos: ivaPeriodos,
+            hallazgosNuevos: ivaHallazgos,
+            memoriaMBAntes: memoriaAntes,
+            memoriaMBDespues: memoriaMB(),
+            segundos: Math.round((Date.now() - inicio) / 1000),
           },
-          declaracionesAjenas: deps.declaracionesAjenas ?? undefined,
-        },
-        deps.ahora(),
-        periodo,
-        usuario.id,
-      );
+          'Cálculo automático de IVA terminado.',
+        );
+      }
+
+      if (deps.drive && deps.declaraciones) {
+        registrador.info(
+          { presentacionesMarcadas, presentadasFueraDeTermino, memoriaMB: memoriaMB() },
+          'Detección de presentaciones terminada.',
+        );
+      }
+
+      const alertas = {
+        creadas: ciclo.alertasCreadas,
+        actualizadas: ciclo.alertasActualizadas,
+        resueltas: ciclo.alertasResueltas,
+      };
 
       /*
        * Los avisos salen DESPUÉS de evaluar, para que una alerta recién

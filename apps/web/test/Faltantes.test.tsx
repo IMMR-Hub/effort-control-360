@@ -6,7 +6,8 @@
  * muestra lo que llega y que el CSV no se ofrece con la lista vacía.
  */
 
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { crearFetchMock, respuestaJson } from './ayuda-fetch-mock.js';
@@ -31,19 +32,21 @@ const UN_FALTANTE = {
 };
 
 let mock: ReturnType<typeof crearFetchMock>;
+let usuario: ReturnType<typeof userEvent.setup>;
 
 beforeEach(() => {
   mock = crearFetchMock();
   vi.stubGlobal('fetch', mock.fetchMock);
+  usuario = userEvent.setup();
 });
 
 afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-async function montar(faltantes: readonly unknown[] = [UN_FALTANTE]) {
+async function montar(faltantes: readonly unknown[] = [UN_FALTANTE], rol: string = 'direccion') {
   mock.mockDeRuta('GET /api/v1/yo', () =>
-    respuestaJson({ usuarioId: 'u1', rol: 'direccion', veTodosLosClientes: true, cantidadDeClientesAsignados: 0 }),
+    respuestaJson({ usuarioId: 'u1', rol, veTodosLosClientes: true, cantidadDeClientesAsignados: 0 }),
   );
   mock.mockDeRuta('GET /api/v1/csrf', () => respuestaJson({ csrfToken: 'token-de-prueba' }));
   mock.mockDeRuta('GET /api/v1/vencimientos/faltantes', () => respuestaJson({ faltantes }));
@@ -57,6 +60,7 @@ async function montar(faltantes: readonly unknown[] = [UN_FALTANTE]) {
       <Faltantes />
     </ProveedorDeSesion>,
   );
+  await screen.findByRole('heading', { name: 'Faltantes' });
 }
 
 describe('Faltantes', () => {
@@ -98,5 +102,55 @@ describe('Faltantes', () => {
     // 2 filas (cliente+período), 3 comprobantes en total (1 + 2).
     expect(screen.getByText('2')).toBeInTheDocument();
     expect(screen.getByText('3')).toBeInTheDocument();
+  });
+
+  describe('"Actualizar ahora" (tarea 152-bis)', () => {
+    it('un coordinador no ve el botón: el servidor no lo dejaría de todos modos', async () => {
+      await montar([UN_FALTANTE], 'coordinador');
+
+      expect(screen.queryByRole('button', { name: /actualizar ahora/i })).not.toBeInTheDocument();
+    });
+
+    it('dirección lo ve, y al apretarlo sincroniza y vuelve a pedir la lista', async () => {
+      await montar([UN_FALTANTE]);
+
+      mock.mockDeRuta('POST /api/v1/actualizar-ahora', () =>
+        respuestaJson({
+          archivosNuevos: 3,
+          archivosConFallo: 0,
+          ivaPeriodosCalculados: 1,
+          ivaHallazgosNuevos: 0,
+          ivaOcupado: false,
+          presentacionesMarcadas: 1,
+          presentadasFueraDeTermino: 0,
+          alertasCreadas: 0,
+          alertasActualizadas: 0,
+          alertasResueltas: 1,
+        }),
+      );
+      // Después de actualizar, la fila de COPESA ya no falta.
+      mock.mockDeRuta('GET /api/v1/vencimientos/faltantes', () => respuestaJson({ faltantes: [] }));
+
+      await usuario.click(screen.getByRole('button', { name: /actualizar ahora/i }));
+
+      await waitFor(() => {
+        expect(mock.llamadasA('POST /api/v1/actualizar-ahora')).toHaveLength(1);
+      });
+      expect(await screen.findByText(/no hay nada pendiente/i)).toBeInTheDocument();
+      expect(screen.getByText(/1 presentación\(es\) detectada\(s\)/)).toBeInTheDocument();
+    });
+
+    it('un error de la actualización se muestra tal cual, sin perder la lista actual', async () => {
+      await montar([UN_FALTANTE]);
+
+      mock.mockDeRuta('POST /api/v1/actualizar-ahora', () =>
+        respuestaJson({ error: 'drive_no_configurado', mensaje: 'La conexión con OneDrive no está configurada.' }, { status: 503 }),
+      );
+
+      await usuario.click(screen.getByRole('button', { name: /actualizar ahora/i }));
+
+      expect(await screen.findByRole('alert')).toBeInTheDocument();
+      expect(screen.getByText('COPESA CONSTRUCCIONES SA')).toBeInTheDocument();
+    });
   });
 });

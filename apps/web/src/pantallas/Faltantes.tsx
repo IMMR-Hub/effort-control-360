@@ -11,7 +11,7 @@
  */
 
 import { useEffect, useMemo, useState } from 'react';
-import { Download } from 'lucide-react';
+import { Download, RefreshCw } from 'lucide-react';
 
 import { Badge, Boton, EncabezadoTarjeta, Indicador, Tabla, Tarjeta, Td, Th } from '../ui/Primitivos.jsx';
 import { ErrorDeApi } from '../api/cliente.js';
@@ -20,6 +20,17 @@ import {
   type EstadoPlanillaRg90,
   type FaltanteDeClientePeriodo,
 } from '../api/vencimientos.js';
+import { actualizarAhora, type ResumenDeActualizacion } from '../api/actualizarAhora.js';
+import { useSesion } from '../contexts/SesionContext.js';
+
+/**
+ * Quién puede apretar "Actualizar ahora": exactamente los roles que el
+ * servidor deja encadenar sincronizar + recalcular IVA + evaluar alertas
+ * (`evidencia.crear` + `liquidacion.crear` + `alerta.crear` juntos, ver
+ * `rutas/actualizar-ahora.ts`) — direccion y responsable, que es quién va a
+ * estar mostrando el sistema.
+ */
+const ROLES_QUE_ACTUALIZAN = new Set(['direccion', 'responsable']);
 
 type TonoBadge = 'completo' | 'parcial' | 'critico' | 'proceso' | 'pendiente';
 
@@ -66,9 +77,16 @@ function descargarCsv(filas: readonly FaltanteDeClientePeriodo[]): void {
 }
 
 export default function Faltantes() {
+  const { sesion } = useSesion();
+  const puedeActualizar = ROLES_QUE_ACTUALIZAN.has(sesion?.rol ?? '');
+
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [faltantes, setFaltantes] = useState<readonly FaltanteDeClientePeriodo[]>([]);
+
+  const [actualizando, setActualizando] = useState(false);
+  const [resumenActualizacion, setResumenActualizacion] = useState<ResumenDeActualizacion | null>(null);
+  const [errorActualizacion, setErrorActualizacion] = useState<string | null>(null);
 
   async function recargar() {
     setCargando(true);
@@ -80,6 +98,27 @@ export default function Faltantes() {
       setError(motivo instanceof ErrorDeApi ? motivo.message : 'No se pudo conectar con el servidor.');
     } finally {
       setCargando(false);
+    }
+  }
+
+  /**
+   * Sincroniza OneDrive, recalcula IVA, detecta presentaciones y evalúa
+   * alertas — y recién ahí vuelve a pedir la lista. Es lo que hace que subir
+   * un comprobante durante la reunión se vea reflejado en el momento, en vez
+   * de esperar hasta una hora a que corra solo.
+   */
+  async function manejarActualizarAhora() {
+    setActualizando(true);
+    setErrorActualizacion(null);
+    try {
+      setResumenActualizacion(await actualizarAhora());
+      await recargar();
+    } catch (motivo) {
+      setErrorActualizacion(
+        motivo instanceof ErrorDeApi ? motivo.message : 'No se pudo conectar con el servidor.',
+      );
+    } finally {
+      setActualizando(false);
     }
   }
 
@@ -117,13 +156,50 @@ export default function Faltantes() {
 
   return (
     <main className="mx-auto max-w-[86rem] space-y-5 px-5 py-6">
-      <div>
-        <h1 className="text-lg font-semibold">Faltantes</h1>
-        <p className="mt-1 max-w-2xl text-sm text-tinta-suave">
-          Por cliente y período, con vencimiento ya vencido: qué comprobante de presentación falta y
-          si las planillas RG 90 de compras y ventas ya se cargaron. Lo que no aparece acá está al día.
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-lg font-semibold">Faltantes</h1>
+          <p className="mt-1 max-w-2xl text-sm text-tinta-suave">
+            Por cliente y período, con vencimiento ya vencido: qué comprobante de presentación falta y
+            si las planillas RG 90 de compras y ventas ya se cargaron. Lo que no aparece acá está al día.
+          </p>
+        </div>
+        {puedeActualizar && (
+          <Boton
+            variante="primario"
+            icono={RefreshCw}
+            onClick={() => void manejarActualizarAhora()}
+            disabled={actualizando}
+          >
+            {actualizando ? 'Actualizando…' : 'Actualizar ahora'}
+          </Boton>
+        )}
       </div>
+
+      {errorActualizacion && (
+        <p
+          role="alert"
+          className="rounded border border-critico-borde bg-critico-fondo px-3 py-2 text-sm text-critico"
+        >
+          {errorActualizacion}
+        </p>
+      )}
+
+      {resumenActualizacion && !errorActualizacion && (
+        <div
+          role="status"
+          className="rounded border border-borde-marca bg-superficie-tenue px-4 py-3 text-sm text-tinta-suave"
+        >
+          <p>
+            {resumenActualizacion.archivosNuevos} archivo(s) nuevo(s) de OneDrive ·{' '}
+            {resumenActualizacion.presentacionesMarcadas} presentación(es) detectada(s) ·{' '}
+            {resumenActualizacion.ivaOcupado
+              ? 'IVA: ya había un cálculo en curso, no se repitió'
+              : `${resumenActualizacion.ivaPeriodosCalculados} período(s) de IVA recalculados`}{' '}
+            · {resumenActualizacion.alertasResueltas} alerta(s) resuelta(s).
+          </p>
+        </div>
+      )}
 
       <section className="grid gap-3 sm:grid-cols-3" aria-label="Resumen de lo que falta subir">
         <Indicador

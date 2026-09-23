@@ -55,6 +55,7 @@ import { registrarRutasDeClientes } from './rutas/clientes.js';
 import { registrarRutasDeMiCuenta } from './rutas/mi-cuenta.js';
 import { registrarRutasDeOneDrive } from './rutas/onedrive.js';
 import { registrarRutasDeLiquidacionesIva } from './rutas/liquidaciones-iva.js';
+import { registrarRutasDeActualizarAhora } from './rutas/actualizar-ahora.js';
 import { LibroRg90Prisma } from './repositorios/libroRg90.js';
 import { DeclaracionesPrisma } from './repositorios/declaraciones.js';
 import {
@@ -199,6 +200,7 @@ export async function arrancar(dependencias: Dependencias): Promise<void> {
   await registrarRutasDeMiCuenta(app, dependencias);
   await registrarRutasDeOneDrive(app, dependencias);
   await registrarRutasDeLiquidacionesIva(app, dependencias);
+  await registrarRutasDeActualizarAhora(app, dependencias);
 
   programarSincronizacionDeOneDrive(dependencias, app.log);
 
