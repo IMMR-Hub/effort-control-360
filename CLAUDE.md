@@ -545,7 +545,31 @@ Cada una con su motivo; ver las lecciones de más arriba.
 
 ## No hacer sin permiso explícito
 
-- `git push` (el repositorio es `IMMR-Hub/effort-control-360` en GitHub).
 - Tocar nada fuera de `effort-control-360/`.
 - Agregar dependencias fuera de las ya presentes sin justificarlo.
 - Commitear `.env` ni credenciales.
+
+**`git push` — autorización permanente desde 2026-09-23, con condiciones.**
+Daniel: *"no sé luego por qué por cada cosita me pides permiso si ya tienes el
+permiso en Auto y si las reglas son demasiado claras"*. Tiene razón: pedir
+confirmación para cada push entrena a aprobar sin leer, que es exactamente lo
+que la sección de "las tres preguntas" (más arriba) dice que hay que evitar.
+Por eso `git push` a `main` **ya no pide autorización caso por caso**, siempre
+que se cumplan las tres, sin excepción:
+
+1. `npm run verify` (completo o el subconjunto relevante al cambio) está en
+   verde, y se corrió de verdad — no se asume.
+2. Es la tarea que sigue en `docs/ROADMAP-MAESTRO.md`, en su orden — nunca
+   trabajo nuevo que no esté ahí.
+3. Se hizo el respaldo previo (`node scripts/respaldar-base.mjs`) cuando el
+   cambio toca la base — no hace falta si es solo frontend/documentación.
+
+**Esto NO toca ninguna otra regla.** Sigue exactamente igual de absoluto,
+sin excepción y sin importar el modo: REGLA 0 (nada se borra ni se resetea
+sin autorización expresa, para esa operación, en esa conversación), REGLA
+0-bis (ningún correo sin que Daniel lo diga) y REGLA 5 (las carpetas reales
+de EFFORT en OneDrive son de solo lectura, siempre — no se escribe, no se
+mueve, no se renombra, no se borra nada ahí, ni con autorización). Git push
+mueve código a producción, que se revierte con otro commit; borrar datos o
+tocar OneDrive no se puede deshacer, y por eso siguen pidiendo autorización
+cada vez.
