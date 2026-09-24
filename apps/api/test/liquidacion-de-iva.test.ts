@@ -711,3 +711,102 @@ describe('liquidación de IVA desde los libros', () => {
     expect(resumen.fallos).toEqual([]);
   });
 });
+
+describe('liquidación de IVA: solo lo que cambió (tarea 157)', () => {
+  /** «Hoy» de estos escenarios: 28 de septiembre de 2026, posterior a LOGICA_VIGENTE_DESDE. */
+  const AHORA = new Date('2026-09-28T15:00:00Z');
+  /** Un cálculo de ese mismo mes, posterior a LOGICA_VIGENTE_DESDE. */
+  const CALCULADO = new Date('2026-09-25T12:00:00Z');
+
+  async function escenario(
+    cambioEn: Date | null | undefined,
+    ultimoCalculo: Date | null,
+    opciones: { soloLoQueCambio?: boolean } = { soloLoQueCambio: true },
+    ahora: Date = AHORA,
+  ) {
+    const contenidos = new Map<string, Buffer | Error>([
+      ['it-1', await planilla([{ registro: 'COMPRAS', numero: '001-001-0000001', gravado10: 110000, iva10: 10000 }])],
+    ]);
+    const ctx = armar(
+      [archivo({ itemIdOneDrive: 'it-1', ...(cambioEn === undefined ? {} : { cambioEn }) })],
+      contenidos,
+    );
+    let lecturas = 0;
+    const leer = (ctx.deps.drive as unknown as { leer: (id: string) => Promise<Buffer> }).leer;
+    const deps = {
+      ...ctx.deps,
+      drive: {
+        leer: async (id: string) => {
+          lecturas += 1;
+          return leer(id);
+        },
+      } as never,
+      ultimoCalculoDelCliente: async () => ultimoCalculo,
+      ahora: () => ahora,
+    };
+    const resumen = await liquidarIvaDesdeLibros(deps, USUARIO, opciones);
+    return { resumen, lecturas, liquidaciones: ctx.liquidaciones };
+  }
+
+  it('si ninguna planilla cambió desde el último cálculo, no baja ni parsea nada', async () => {
+    const { resumen, lecturas, liquidaciones } = await escenario(new Date('2026-09-10T00:00:00Z'), CALCULADO);
+
+    expect(lecturas).toBe(0);
+    expect(resumen.clientesSinCambios).toBe(1);
+    expect(resumen.periodosCalculados).toBe(0);
+    expect(liquidaciones).toEqual([]);
+  });
+
+  it('una planilla que cambió después del último cálculo se relee', async () => {
+    const { resumen, lecturas } = await escenario(new Date('2026-09-25T13:00:00Z'), CALCULADO);
+
+    expect(lecturas).toBe(1);
+    expect(resumen.clientesSinCambios).toBe(0);
+    expect(resumen.periodosCalculados).toBe(1);
+  });
+
+  it('si no se sabe cuándo cambió una planilla, se relee: ante la duda, se lee', async () => {
+    expect((await escenario(undefined, CALCULADO)).lecturas).toBe(1);
+    expect((await escenario(null, CALCULADO)).lecturas).toBe(1);
+  });
+
+  it('un cliente que nunca se calculó se lee', async () => {
+    const { lecturas } = await escenario(new Date('2026-09-10T00:00:00Z'), null);
+    expect(lecturas).toBe(1);
+  });
+
+  it('un cálculo de un mes anterior no vale: un período «futuro» puede haber dejado de serlo', async () => {
+    // Calculado el 25/09 (vale por lógica y por archivos) pero «hoy» ya es octubre.
+    const { lecturas } = await escenario(
+      new Date('2026-09-10T00:00:00Z'),
+      CALCULADO,
+      { soloLoQueCambio: true },
+      new Date('2026-10-02T15:00:00Z'),
+    );
+    expect(lecturas).toBe(1);
+  });
+
+  it('un cálculo anterior al último cambio de lógica se rehace aunque los archivos no hayan cambiado', async () => {
+    const { lecturas } = await escenario(new Date('2026-09-01T00:00:00Z'), new Date('2026-09-02T00:00:00Z'));
+    expect(lecturas).toBe(1);
+  });
+
+  it('sin la opción, «Recalcular» lo relee todo aunque nada haya cambiado', async () => {
+    const { lecturas, resumen } = await escenario(new Date('2026-09-10T00:00:00Z'), CALCULADO, {});
+
+    expect(lecturas).toBe(1);
+    expect(resumen.clientesSinCambios).toBe(0);
+  });
+
+  it('la liquidación queda fechada cuando se consultó la lista de planillas, no cuando terminó', async () => {
+    const contenidos = new Map<string, Buffer | Error>([
+      ['it-1', await planilla([{ registro: 'COMPRAS', numero: '001-001-0000001', gravado10: 110000, iva10: 10000 }])],
+    ]);
+    const ctx = armar([archivo({ itemIdOneDrive: 'it-1' })], contenidos);
+
+    await liquidarIvaDesdeLibros(ctx.deps, USUARIO);
+
+    // HOY menos el colchón de un minuto entre el reloj de la aplicación y el de la base.
+    expect(ctx.liquidaciones[0]!.calculadoEn).toEqual(new Date(HOY.getTime() - 60_000));
+  });
+});

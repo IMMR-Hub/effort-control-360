@@ -91,10 +91,15 @@ export async function ejecutarCicloDeCalculo(
           drive,
           guardarLiquidacion: (datos) => libroRg90.guardarLiquidacion(datos),
           guardarHallazgos: (datos) => libroRg90.guardarHallazgos(datos),
+          ultimoCalculoDelCliente: (clienteId) => libroRg90.ultimoCalculoDelCliente(clienteId),
           divisores: DIVISORES_CONFIRMADOS_POR_EFFORT,
           ahora: deps.ahora,
         },
         usuarioId,
+        // Solo lo que cambió (tarea 157): releer todos los libros de todos los
+        // clientes tardaba más de 10 minutos. El botón «Recalcular» de IVA sí
+        // relee todo, porque quien lo aprieta lo pide.
+        { soloLoQueCambio: true },
       ),
     );
     if (intento.ocupado) {

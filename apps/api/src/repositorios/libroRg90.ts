@@ -41,8 +41,17 @@ export class LibroRg90Prisma {
   async librosDelCliente(clienteId: string): Promise<ArchivoDeLibro[]> {
     const documentos = await this.prisma.documento.findMany({
       where: { clienteId, tipo: { in: ['LIBRO_COMPRAS', 'LIBRO_VENTAS'] }, evidenciaId: { not: null } },
-      select: { evidenciaId: true },
+      select: { evidenciaId: true, creadoEn: true, actualizadoEn: true },
     });
+
+    // Lo último que se tocó de cada archivo del lado de los documentos: si una
+    // reclasificación lo convirtió en libro, la liquidación anterior no lo vio.
+    const tocadoElDocumento = new Map<string, number>();
+    for (const d of documentos) {
+      const momento = Math.max(d.creadoEn.getTime(), d.actualizadoEn.getTime());
+      const previo = tocadoElDocumento.get(d.evidenciaId!) ?? 0;
+      if (momento > previo) tocadoElDocumento.set(d.evidenciaId!, momento);
+    }
 
     const ids = documentos.map((d) => d.evidenciaId!).filter(Boolean);
     if (ids.length === 0) return [];
@@ -58,6 +67,7 @@ export class LibroRg90Prisma {
         modificadoEnOrigen: true,
         rutaOneDrive: true,
         tamanoBytes: true,
+        creadoEn: true,
       },
     });
 
@@ -74,7 +84,31 @@ export class LibroRg90Prisma {
         modificadoEnOrigen: e.modificadoEnOrigen,
         rutaOneDrive: e.rutaOneDrive,
         tamanoBytes: Number(e.tamanoBytes),
+        cambioEn: new Date(
+          Math.max(
+            e.creadoEn.getTime(),
+            e.modificadoEnOrigen?.getTime() ?? 0,
+            tocadoElDocumento.get(e.id) ?? 0,
+          ),
+        ),
       }));
+  }
+
+  /**
+   * Cuándo se guardó por última vez una liquidación de este cliente (`null` si
+   * nunca). El servicio lo compara contra el cambio más reciente de sus
+   * planillas para saltear la relectura (tarea 157).
+   *
+   * Es el máximo y no el mínimo, a propósito: un cálculo escribe todos los
+   * períodos del cliente juntos, y un período cuya planilla desapareció conserva
+   * su fecha vieja para siempre.
+   */
+  async ultimoCalculoDelCliente(clienteId: string): Promise<Date | null> {
+    const resultado = await this.prisma.liquidacionIvaRg90.aggregate({
+      where: { clienteId },
+      _max: { calculadoEn: true },
+    });
+    return resultado._max.calculadoEn;
   }
 
   /**
@@ -101,7 +135,7 @@ export class LibroRg90Prisma {
       exentoVentas: datos.exentoVentas,
       archivosLeidos: datos.archivosLeidos,
       filasRechazadas: datos.filasRechazadas,
-      calculadoEn: new Date(),
+      calculadoEn: datos.calculadoEn,
       calculadoPorUsuarioId: datos.calculadoPorUsuarioId,
     };
 

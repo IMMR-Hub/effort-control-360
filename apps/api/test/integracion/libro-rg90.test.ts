@@ -18,6 +18,8 @@ import type { AltaDeHallazgo } from '../../src/servicios/liquidacionDeIva.js';
 
 const describeSiHayBase = HAY_BASE_DE_DATOS ? describe : describe.skip;
 
+const FECHA_DE_CALCULO = new Date('2026-09-15T12:00:00.000Z');
+
 describeSiHayBase('libro RG 90 contra PostgreSQL real', () => {
   let entorno: EntornoDePrueba;
   let libro: LibroRg90Prisma;
@@ -67,12 +69,63 @@ describeSiHayBase('libro RG 90 contra PostgreSQL real', () => {
       gravado10Compras: gs(0), gravado5Compras: gs(0), exentoCompras: gs(0),
       gravado10Ventas: gs(0), gravado5Ventas: gs(0), exentoVentas: gs(0),
       archivosLeidos: 1, filasRechazadas: 0, calculadoPorUsuarioId: null,
+      calculadoEn: FECHA_DE_CALCULO,
     } as Parameters<LibroRg90Prisma['guardarLiquidacion']>[0]);
   }, 120_000);
 
   afterAll(async () => {
     await entorno?.destruir();
   }, 60_000);
+
+  it('guarda la liquidación con la fecha que le dice el servicio, y el último cálculo del cliente sale de ahí (tarea 157)', async () => {
+    expect(await libro.ultimoCalculoDelCliente(clienteId)).toEqual(FECHA_DE_CALCULO);
+    // Un cliente sin liquidaciones no tiene último cálculo: se lee, no se saltea.
+    expect(await libro.ultimoCalculoDelCliente('99999999-9999-4999-8999-999999999999')).toBeNull();
+  });
+
+  it('cada planilla trae su «cambioEn»: el más reciente entre sincronizada, modificada en origen y tocada como documento (tarea 157)', async () => {
+    const modificada = new Date('2026-01-05T00:00:00.000Z');
+    const evidencia = await entorno.prisma.evidencia.create({
+      data: {
+        clienteId,
+        periodo: '2026-03',
+        nombreArchivo: 'RG COMPRAS MARZO 2026.xlsx',
+        rutaOneDrive: 'EFFORT Control 360/Entrada/ECOAGRO/RG COMPRAS MARZO 2026.xlsx',
+        itemIdOneDrive: 'item-157',
+        tipoMime: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        tamanoBytes: 1000n,
+        sha256: 'a'.repeat(64),
+        modificadoEnOrigen: modificada,
+        subidoPorUsuarioId: usuarioId,
+      },
+    });
+    const documento = await entorno.prisma.documento.create({
+      data: {
+        clienteId,
+        periodo: '2026-03',
+        tipo: 'LIBRO_COMPRAS',
+        canalRecepcion: 'ONEDRIVE',
+        recibidoEn: modificada,
+        evidenciaId: evidencia.id,
+      },
+    });
+
+    const [planilla] = await libro.librosDelCliente(clienteId);
+    expect(planilla).toBeDefined();
+    // Sincronizada (creadoEn) y documento (creadoEn/actualizadoEn) son de "ahora",
+    // muy posteriores a la fecha de modificación en origen.
+    expect(planilla!.cambioEn!.getTime()).toBeGreaterThan(modificada.getTime());
+    expect(planilla!.cambioEn!.getTime()).toBeGreaterThanOrEqual(evidencia.creadoEn.getTime());
+
+    // Reclasificar el documento después cuenta como un cambio: lo que el cálculo
+    // anterior vio de esta planilla ya no es lo que el sistema sabe hoy.
+    const tocado = await entorno.prisma.documento.update({
+      where: { id: documento.id },
+      data: { observaciones: 'reclasificado' },
+    });
+    const [despues] = await libro.librosDelCliente(clienteId);
+    expect(despues!.cambioEn!.getTime()).toBeGreaterThanOrEqual(tocado.actualizadoEn.getTime());
+  });
 
   it('un hallazgo sin tasa no se duplica al guardarlo dos veces', async () => {
     const sinTasa = hallazgo({

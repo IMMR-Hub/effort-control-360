@@ -90,6 +90,35 @@ export interface ArchivoDeLibro {
    */
   readonly rutaOneDrive?: string | null;
   readonly tamanoBytes?: number | null;
+  /**
+   * Cuándo cambió por última vez lo que el sistema sabe de esta planilla: el más
+   * reciente entre su fecha de modificación en OneDrive, el momento en que se
+   * sincronizó y la última vez que se tocó su documento (una reclasificación
+   * también puede convertir un Excel en libro). Decide si hace falta releerla
+   * (tarea 157). Ausente = no se sabe, y entonces se relee.
+   */
+  readonly cambioEn?: Date | null;
+}
+
+/**
+ * Las liquidaciones calculadas ANTES de este instante se recalculan siempre,
+ * aunque ninguna planilla haya cambiado.
+ *
+ * Existe porque el salteo de la tarea 157 compara fechas de archivos, no la
+ * lógica que los interpreta: si una corrección cambia cómo se lee una planilla,
+ * un cliente sin archivos nuevos no se enteraría nunca. **Al cambiar la lógica de
+ * este servicio (o de `@effort/importers` en lo que afecta al IVA), se sube esta
+ * fecha al día del despliegue** y cada cliente se recalcula una vez más.
+ */
+export const LOGICA_VIGENTE_DESDE = new Date('2026-09-24T00:00:00Z');
+
+export interface OpcionesDeLiquidacion {
+  /**
+   * Saltear los clientes cuyas planillas no cambiaron desde su último cálculo.
+   * Lo usan las corridas automáticas y «Actualizar ahora»; el botón «Recalcular»
+   * de IVA no lo usa, porque quien lo aprieta pide releer todo a propósito.
+   */
+  readonly soloLoQueCambio?: boolean;
 }
 
 export interface AltaDeLiquidacion {
@@ -112,7 +141,21 @@ export interface AltaDeLiquidacion {
   /** Filas descartadas de las planillas que aportaron a ESTE período. */
   readonly filasRechazadas: number;
   readonly calculadoPorUsuarioId: string;
+  /**
+   * A qué momento corresponde esta liquidación: cuando se consultó la lista de
+   * planillas, y no cuando se terminó de escribir. Una corrida completa dura
+   * minutos, y un archivo que se sincroniza mientras tanto no está en su lista:
+   * si se guardara la hora de fin, el salteo de la tarea 157 lo daría por leído.
+   */
+  readonly calculadoEn: Date;
 }
+
+/**
+ * Colchón entre el reloj de la aplicación y el de la base (`creadoEn` lo pone
+ * PostgreSQL). Un archivo sincronizado justo antes del cálculo se relee una vez
+ * de más; nunca se saltea uno que no se leyó.
+ */
+const MARGEN_DE_RELOJ_MS = 60_000;
 
 export interface AltaDeHallazgo extends HallazgoDeLibro {
   readonly clienteId: string;
@@ -126,6 +169,11 @@ export interface DependenciasDeLiquidacion {
   readonly drive: DriveDeArchivos;
   readonly guardarLiquidacion: (datos: AltaDeLiquidacion) => Promise<void>;
   readonly guardarHallazgos: (datos: readonly AltaDeHallazgo[]) => Promise<number>;
+  /**
+   * Última vez que se guardó una liquidación de este cliente (`null` si nunca).
+   * Sin esta dependencia no hay salteo posible y se lee todo.
+   */
+  readonly ultimoCalculoDelCliente?: (clienteId: string) => Promise<Date | null>;
   readonly divisores: DivisoresIva;
   /** Reloj de la aplicación. Decide qué período es "futuro". */
   readonly ahora?: () => Date;
@@ -176,6 +224,12 @@ export interface ResumenDeLiquidacion {
    * pasajera, y calcular sin ella podría hacer ganar a una versión vieja.
    */
   readonly clientesOmitidos: readonly ClienteOmitido[];
+  /**
+   * Clientes que no se releyeron porque ninguna de sus planillas cambió desde el
+   * último cálculo (solo con `soloLoQueCambio`). Sus avisos y fallos de una
+   * corrida anterior no se repiten acá: se ven con «Recalcular».
+   */
+  readonly clientesSinCambios: number;
   readonly fallos: readonly FalloDeLiquidacion[];
 }
 
@@ -302,6 +356,39 @@ interface Ganadora {
 
 class ClienteOmitidoError extends Error {}
 
+interface ParcialDeCliente {
+  periodos: number;
+  archivos: number;
+  filas: number;
+  rechazadas: number;
+  hallazgos: number;
+  repetidos: number;
+  /** No se leyó nada: ninguna planilla cambió desde el último cálculo. */
+  sinCambios: boolean;
+}
+
+/**
+ * ¿Sigue valiendo la última liquidación del cliente? (tarea 157)
+ *
+ * Solo si TODO esto se cumple; ante cualquier duda, `false` y se relee:
+ * - hubo un cálculo, y es posterior a `LOGICA_VIGENTE_DESDE`;
+ * - se hizo en el mes en curso (un período que era «futuro» ya puede no serlo);
+ * - cada planilla sabe cuándo cambió y ese momento no es posterior al cálculo.
+ *
+ * Se compara contra el ÚLTIMO cálculo del cliente y no contra el más viejo: un
+ * período cuya planilla ya no existe conserva su fecha vieja para siempre, y
+ * usarla haría que ese cliente se releyera en cada vuelta.
+ */
+function sigueVigente(
+  ultimoCalculo: Date | null,
+  archivos: readonly ArchivoDeLibro[],
+  ahora: Date,
+): boolean {
+  if (ultimoCalculo === null || ultimoCalculo < LOGICA_VIGENTE_DESDE) return false;
+  if (mesEnCurso(ultimoCalculo) !== mesEnCurso(ahora)) return false;
+  return archivos.every((a) => a.cambioEn != null && a.cambioEn <= ultimoCalculo);
+}
+
 async function liquidarCliente(
   deps: DependenciasDeLiquidacion,
   cliente: ClienteListado,
@@ -309,14 +396,8 @@ async function liquidarCliente(
   fallos: FalloDeLiquidacion[],
   avisos: Avisos,
   ignorados: Ignorados,
-): Promise<{
-  periodos: number;
-  archivos: number;
-  filas: number;
-  rechazadas: number;
-  hallazgos: number;
-  repetidos: number;
-}> {
+  opciones: OpcionesDeLiquidacion,
+): Promise<ParcialDeCliente> {
   const avisar = (archivo: ArchivoDeLibro, motivo: string) =>
     avisos.agregar({ cliente: cliente.nombre, archivo: identificar(archivo), motivo });
   const ignorar = (archivo: ArchivoDeLibro) => {
@@ -337,12 +418,28 @@ async function liquidarCliente(
    * período es la ganadora, y las filas de las que pierden se sueltan apenas
    * se leen, en vez de guardar todas las planillas del cliente en memoria.
    */
+  const ahora = (deps.ahora ?? (() => new Date()))();
   const todos = await deps.librosDelCliente(cliente.id);
+
+  /*
+   * Bajar y reparsear cada planilla de cada cliente en cada corrida tardaba más
+   * de 10 minutos con datos reales y ralentizaba el resto del sistema (tarea 157,
+   * hallazgo de la 155). Si nada cambió desde el último cálculo, no hay nada que
+   * releer; y sin planillas tampoco hay qué calcular, así que ese caso sigue por
+   * el camino de siempre (no cuesta nada).
+   */
+  if (opciones.soloLoQueCambio && deps.ultimoCalculoDelCliente && todos.length > 0) {
+    const ultimoCalculo = await deps.ultimoCalculoDelCliente(cliente.id);
+    if (sigueVigente(ultimoCalculo, todos, ahora)) {
+      return { periodos: 0, archivos: 0, filas: 0, rechazadas: 0, hallazgos: 0, repetidos: 0, sinCambios: true };
+    }
+  }
+
   for (const viejo of todos.filter((a) => a.tipoMime === XLS)) {
     avisar(viejo, 'Formato .xls (Excel viejo): no se puede leer. Si es una planilla RG 90, guardarla como .xlsx.');
   }
   const archivos = todos.filter((a) => a.tipoMime === XLSX).sort((a, b) => prioridad(b, a));
-  const tope = mesEnCurso((deps.ahora ?? (() => new Date()))());
+  const tope = mesEnCurso(ahora);
 
   const ganadoras = new Map<string, Ganadora>();
   const planillas: DatosDePlanilla[] = [];
@@ -588,6 +685,7 @@ async function liquidarCliente(
       archivosLeidos: usadas.size,
       filasRechazadas: rechazadasDelPeriodo,
       calculadoPorUsuarioId: usuarioId,
+      calculadoEn: new Date(ahora.getTime() - MARGEN_DE_RELOJ_MS),
     });
 
     const encontrados = analizarLibro(delPeriodo, deps.divisores).map((h) => ({
@@ -605,12 +703,14 @@ async function liquidarCliente(
     rechazadas: planillas.reduce((suma, p) => suma + p.filasDescartadas, 0),
     hallazgos,
     repetidos,
+    sinCambios: false,
   };
 }
 
 export async function liquidarIvaDesdeLibros(
   deps: DependenciasDeLiquidacion,
   usuarioId: string,
+  opciones: OpcionesDeLiquidacion = {},
 ): Promise<ResumenDeLiquidacion> {
   const clientes = await deps.clientes.listar(null);
   const fallos: FalloDeLiquidacion[] = [];
@@ -624,13 +724,14 @@ export async function liquidarIvaDesdeLibros(
   let filasRechazadas = 0;
   let hallazgosNuevos = 0;
   let comprobantesRepetidos = 0;
+  let clientesSinCambios = 0;
 
   for (const cliente of clientes) {
     if (!cliente.activo) continue;
 
     let parcial;
     try {
-      parcial = await liquidarCliente(deps, cliente, usuarioId, fallos, avisos, ignorados);
+      parcial = await liquidarCliente(deps, cliente, usuarioId, fallos, avisos, ignorados, opciones);
     } catch (error) {
       if (!(error instanceof ClienteOmitidoError)) throw error;
       // No se escribió nada de este cliente: la liquidación anterior queda como
@@ -647,6 +748,7 @@ export async function liquidarIvaDesdeLibros(
     filasRechazadas += parcial.rechazadas;
     hallazgosNuevos += parcial.hallazgos;
     comprobantesRepetidos += parcial.repetidos;
+    if (parcial.sinCambios) clientesSinCambios += 1;
   }
 
   return {
@@ -661,6 +763,7 @@ export async function liquidarIvaDesdeLibros(
     avisos: avisos.lista,
     avisosOmitidos: avisos.omitidos,
     clientesOmitidos,
+    clientesSinCambios,
     fallos,
   };
 }
