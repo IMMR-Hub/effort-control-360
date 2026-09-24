@@ -48,7 +48,7 @@ export async function registrarRutasDeOneDrive(
   });
 
   app.post('/api/v1/onedrive/sincronizar', async (peticion) => {
-    const sujeto = autorizar(peticion, 'evidencia', 'crear');
+    const sujeto = autorizar(peticion, 'actualizacion', 'crear');
 
     if (!deps.drive || !deps.driveDeOrigen) {
       throw new ErrorDeAplicacion(

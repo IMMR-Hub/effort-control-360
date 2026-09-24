@@ -19,7 +19,9 @@
  * (`CLAUDE.md`, lección 2), así que el atajo tiene salidas a la pasada completa:
  *
  *  - al arrancar el servidor (el token vive en memoria);
- *  - una vez por día, por si un cambio se escapó;
+ *  - a la medianoche de lunes a sábado (hora de Paraguay), por si alguien se olvidó
+ *    de actualizar algo o un cambio se escapó (Daniel, 2026-09-24): a esa hora
+ *    nadie está mirando, así que no importa que tarde, y hace de respaldo;
  *  - si Graph responde 410 o falla la consulta de cambios;
  *  - si aparece un cliente que todavía no se conocía;
  *  - si hay demasiados cambios juntos (una pasada completa sale más barata y más
@@ -46,8 +48,41 @@ import {
   type ResumenDeSincronizacion,
 } from './sincronizadorDeOneDrive.js';
 
-/** Cada cuántas horas, como mucho, se recorre todo aunque los cambios no lo pidan. */
-export const HORAS_ENTRE_PASADAS_COMPLETAS = 24;
+const ZONA = 'America/Asuncion';
+
+/** Hora de pared de `instante` en Paraguay, expresada como si fuera UTC (para poder restar). */
+function horaDeParedComoUtc(instante: number): number {
+  const partes = new Intl.DateTimeFormat('en-CA', {
+    timeZone: ZONA, hourCycle: 'h23',
+    year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit',
+  }).formatToParts(new Date(instante));
+  const n = (tipo: string) => Number(partes.find((p) => p.type === tipo)!.value);
+  return Date.UTC(n('year'), n('month') - 1, n('day'), n('hour'), n('minute'), n('second'));
+}
+
+/** El instante en que en Paraguay son las 00:00 de ese día. Base IANA, nunca un desfase fijo (regla 3). */
+function medianocheEnParaguay(anio: number, mes: number, dia: number): number {
+  const objetivo = Date.UTC(anio, mes - 1, dia);
+  let candidato = objetivo;
+  for (let i = 0; i < 3; i += 1) candidato += objetivo - horaDeParedComoUtc(candidato);
+  return candidato;
+}
+
+/**
+ * La última medianoche programada para la pasada completa: las 00:00 de Paraguay
+ * de un día de lunes a sábado. El domingo no hay (Daniel, 2026-09-24), así que un
+ * domingo devuelve la del sábado.
+ */
+export function ultimaMedianocheProgramada(ahora: Date): Date {
+  const hoy = new Date(horaDeParedComoUtc(ahora.getTime()));
+  for (let atras = 0; atras < 7; atras += 1) {
+    const dia = new Date(Date.UTC(hoy.getUTCFullYear(), hoy.getUTCMonth(), hoy.getUTCDate() - atras));
+    if (dia.getUTCDay() === 0) continue; // domingo
+    const instante = medianocheEnParaguay(dia.getUTCFullYear(), dia.getUTCMonth() + 1, dia.getUTCDate());
+    if (instante <= ahora.getTime()) return new Date(instante);
+  }
+  throw new Error('No se pudo calcular la última medianoche programada.');
+}
 
 /** Con más cambios que esto juntos, se hace la pasada completa. */
 export const MAXIMO_DE_CAMBIOS_INCREMENTALES = 300;
@@ -128,11 +163,8 @@ function motivoDePasadaCompleta(
   ahora: Date,
 ): string | null {
   if (estado.token === null) return 'primera pasada desde que arrancó el servidor, o la anterior no terminó limpia';
-  if (
-    estado.ultimaPasadaCompletaEn === null ||
-    ahora.getTime() - estado.ultimaPasadaCompletaEn.getTime() >= HORAS_ENTRE_PASADAS_COMPLETAS * 3_600_000
-  ) {
-    return `pasada completa diaria (cada ${HORAS_ENTRE_PASADAS_COMPLETAS} h, por si un cambio se escapó)`;
+  if (estado.ultimaPasadaCompletaEn === null || estado.ultimaPasadaCompletaEn < ultimaMedianocheProgramada(ahora)) {
+    return 'pasada completa de la medianoche (lunes a sábado): revisa todo por si alguien se olvidó de actualizar';
   }
   if (carpetasDeClientes.some((id) => !estado.rutasDeClientes.has(id))) {
     return 'hay un cliente cuya carpeta todavía no se conocía';

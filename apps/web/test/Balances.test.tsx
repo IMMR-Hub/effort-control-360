@@ -123,17 +123,20 @@ describe('pantalla de balances', () => {
     expect(screen.queryByLabelText('Activo (Gs.)')).not.toBeInTheDocument();
   });
 
-  it('coordinador puede editar las cifras pero no ve el botón de aprobar', async () => {
-    await montar('coordinador');
+  it.each(['coordinador', 'revisor_balance'] as const)(
+    'desde 2026-09-24 solo dirección edita y aprueba: %s solo ve',
+    async (rol) => {
+      await montar(rol);
 
-    await usuario.click(screen.getByText('GARSO S.A.'));
+      await usuario.click(screen.getByText('GARSO S.A.'));
 
-    expect(screen.getByLabelText('Activo (Gs.)')).toBeVisible();
-    expect(screen.queryByRole('button', { name: 'Aprobar balance' })).not.toBeInTheDocument();
-  });
+      expect(screen.queryByLabelText('Activo (Gs.)')).not.toBeInTheDocument();
+      expect(screen.queryByRole('button', { name: 'Aprobar balance' })).not.toBeInTheDocument();
+    },
+  );
 
-  it('revisor_balance ve el botón de aprobar, habilitado cuando está listo y sin bloqueantes', async () => {
-    await montar('revisor_balance');
+  it('dirección ve el botón de aprobar, habilitado cuando está listo y sin bloqueantes', async () => {
+    await montar('direccion');
 
     await usuario.click(screen.getByText('GARSO S.A.'));
 
@@ -142,7 +145,7 @@ describe('pantalla de balances', () => {
   });
 
   it('el botón de aprobar queda deshabilitado si hay bloqueantes, aunque el rol pueda aprobar', async () => {
-    await montar('revisor_balance', BALANCE_CON_BLOQUEANTE);
+    await montar('direccion', BALANCE_CON_BLOQUEANTE);
 
     await usuario.click(screen.getByText('GARSO S.A.'));
 

@@ -6,6 +6,7 @@
  * ni necesitar PostgreSQL.
  */
 
+import { authenticator } from 'otplib';
 import type { FastifyInstance } from 'fastify';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
@@ -78,6 +79,16 @@ async function montar(opciones: { bitacoraRota?: boolean } = {}): Promise<Contex
       veTodosLosClientes: true, hashContrasena: hash, secretoTotp: 'JBSWY3DPEHPK3PXP',
       segundoFactorActivo: true, debeCambiarContrasena: false,
     },
+    /*
+     * Dirección con la cartera acotada a un cliente. Desde el 2026-09-24 solo
+     * dirección puede escribir; antes lo hacía un rol de menor jerarquía. La
+     * cartera es una capa independiente del rol, y esa es la que se ejercita.
+     */
+    {
+      id: 'usr-direccion-acotada', email: 'karina@effort.com.py', rol: 'direccion', activo: true,
+      veTodosLosClientes: false, hashContrasena: hash, secretoTotp: 'JBSWY3DPEHPK3PXP',
+      segundoFactorActivo: true, debeCambiarContrasena: false,
+    },
     {
       id: 'usr-inactivo', email: 'exempleado@effort.com.py', rol: 'coordinador', activo: false,
       veTodosLosClientes: false, hashContrasena: hash, secretoTotp: null,
@@ -91,6 +102,7 @@ async function montar(opciones: { bitacoraRota?: boolean } = {}): Promise<Contex
   );
 
   usuarios.asignaciones.set('usr-auxiliar', [CLIENTE_ASIGNADO]);
+  usuarios.asignaciones.set('usr-direccion-acotada', [CLIENTE_ASIGNADO]);
 
   clientes.clientes.push(
     clienteMinimo({ id: CLIENTE_ASIGNADO, nombre: 'GARSO S.A.', ruc: '80017726-6', activo: true }),
@@ -125,7 +137,7 @@ async function montar(opciones: { bitacoraRota?: boolean } = {}): Promise<Contex
 }
 
 /** Accede y devuelve la cookie de sesión ya con el segundo factor resuelto. */
-async function acceder(ctx: Contexto, email: string): Promise<string> {
+async function acceder(ctx: Contexto, email: string, completarSegundoFactor = true): Promise<string> {
   const respuesta = await ctx.app.inject({
     method: 'POST',
     url: '/api/v1/acceso',
@@ -134,7 +146,17 @@ async function acceder(ctx: Contexto, email: string): Promise<string> {
 
   const cookie = respuesta.cookies.find((c) => c.name === nombreCookieSesion(false));
   if (!cookie) throw new Error(`El acceso no devolvió cookie: ${respuesta.body}`);
-  return `${cookie.name}=${cookie.value}`;
+  const valor = `${cookie.name}=${cookie.value}`;
+  if (completarSegundoFactor && JSON.parse(respuesta.body).segundoFactorRequerido) {
+    const usuario = ctx.usuarios.usuarios.find((u) => u.email === email);
+    if (usuario?.secretoTotp) {
+      await ctx.app.inject({
+        method: 'POST', url: '/api/v1/acceso/segundo-factor',
+        headers: { cookie: valor }, payload: { codigo: authenticator.generate(usuario.secretoTotp) },
+      });
+    }
+  }
+  return valor;
 }
 
 let ctx: Contexto;
@@ -294,7 +316,7 @@ describe('acceso', () => {
   });
 
   it('la sesión con segundo factor pendiente no habilita ninguna ruta', async () => {
-    const cookie = await acceder(ctx, 'lili@effort.com.py');
+    const cookie = await acceder(ctx, 'lili@effort.com.py', false);
     const respuesta = await ctx.app.inject({
       method: 'GET', url: '/api/v1/clientes', headers: { cookie },
     });
@@ -370,7 +392,7 @@ describe('acceso', () => {
 
 describe('alcance por cartera en las rutas', () => {
   it('el auxiliar solo ve los clientes que tiene asignados', async () => {
-    const cookie = await acceder(ctx, 'aracely@effort.com.py');
+    const cookie = await acceder(ctx, 'karina@effort.com.py');
     const respuesta = await ctx.app.inject({
       method: 'GET', url: '/api/v1/clientes', headers: { cookie },
     });
@@ -381,7 +403,7 @@ describe('alcance por cartera en las rutas', () => {
   });
 
   it('pedir un cliente ajeno devuelve 404, no 403: su existencia no se confirma', async () => {
-    const cookie = await acceder(ctx, 'aracely@effort.com.py');
+    const cookie = await acceder(ctx, 'karina@effort.com.py');
     const respuesta = await ctx.app.inject({
       method: 'GET', url: `/api/v1/clientes/${CLIENTE_AJENO}`, headers: { cookie },
     });
@@ -391,7 +413,7 @@ describe('alcance por cartera en las rutas', () => {
   });
 
   it('no se pueden leer los contactos de un cliente ajeno', async () => {
-    const cookie = await acceder(ctx, 'aracely@effort.com.py');
+    const cookie = await acceder(ctx, 'karina@effort.com.py');
     const respuesta = await ctx.app.inject({
       method: 'GET', url: `/api/v1/clientes/${CLIENTE_AJENO}/contactos`, headers: { cookie },
     });
@@ -399,7 +421,7 @@ describe('alcance por cartera en las rutas', () => {
   });
 
   it('no se puede registrar un contacto en un cliente ajeno', async () => {
-    const cookie = await acceder(ctx, 'aracely@effort.com.py');
+    const cookie = await acceder(ctx, 'karina@effort.com.py');
     const respuesta = await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${CLIENTE_AJENO}/contactos`, headers: { cookie },
       payload: {
@@ -413,7 +435,7 @@ describe('alcance por cartera en las rutas', () => {
   });
 
   it('no se puede apuntar el contacto a otro cliente desde el cuerpo', async () => {
-    const cookie = await acceder(ctx, 'aracely@effort.com.py');
+    const cookie = await acceder(ctx, 'karina@effort.com.py');
     const respuesta = await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${CLIENTE_ASIGNADO}/contactos`, headers: { cookie },
       payload: {
@@ -430,7 +452,7 @@ describe('alcance por cartera en las rutas', () => {
 
 describe('registro de contactos', () => {
   it('registra un contacto válido y lo marca como manual', async () => {
-    const cookie = await acceder(ctx, 'aracely@effort.com.py');
+    const cookie = await acceder(ctx, 'karina@effort.com.py');
     const respuesta = await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${CLIENTE_ASIGNADO}/contactos`, headers: { cookie },
       payload: {
@@ -444,11 +466,11 @@ describe('registro de contactos', () => {
     const { contacto } = JSON.parse(respuesta.body);
     expect(contacto.origenContacto).toBe('MANUAL');
     // Se atribuye a quien tiene la sesión, no a lo que diga el cuerpo.
-    expect(contacto.registradoPorUsuarioId).toBe('usr-auxiliar');
+    expect(contacto.registradoPorUsuarioId).toBe('usr-direccion-acotada');
   });
 
   it('rechaza un contacto con respuesta pero sin quién atendió', async () => {
-    const cookie = await acceder(ctx, 'aracely@effort.com.py');
+    const cookie = await acceder(ctx, 'karina@effort.com.py');
     const respuesta = await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${CLIENTE_ASIGNADO}/contactos`, headers: { cookie },
       payload: {
@@ -463,7 +485,7 @@ describe('registro de contactos', () => {
   });
 
   it('rechaza campos desconocidos en el cuerpo', async () => {
-    const cookie = await acceder(ctx, 'aracely@effort.com.py');
+    const cookie = await acceder(ctx, 'karina@effort.com.py');
     const respuesta = await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${CLIENTE_ASIGNADO}/contactos`, headers: { cookie },
       payload: {
@@ -480,7 +502,7 @@ describe('registro de contactos', () => {
   });
 
   it('cada registro deja una entrada en la bitácora', async () => {
-    const cookie = await acceder(ctx, 'aracely@effort.com.py');
+    const cookie = await acceder(ctx, 'karina@effort.com.py');
     await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${CLIENTE_ASIGNADO}/contactos`, headers: { cookie },
       payload: {
@@ -520,7 +542,7 @@ describe('resistencia', () => {
     const conBitacoraRota = await montar({ bitacoraRota: true });
 
     try {
-      const cookie = await acceder(conBitacoraRota, 'aracely@effort.com.py');
+      const cookie = await acceder(conBitacoraRota, 'karina@effort.com.py');
       const respuesta = await conBitacoraRota.app.inject({
         method: 'POST',
         url: `/api/v1/clientes/${CLIENTE_ASIGNADO}/contactos`,

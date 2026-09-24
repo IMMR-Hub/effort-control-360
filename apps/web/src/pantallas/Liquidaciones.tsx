@@ -27,7 +27,7 @@ import { periodoSchema } from '@effort/schema';
 import { FiltroDeFechasSelector, PeriodosDelRango, filtroDelMesActual, usePeriodoDelFiltro } from '../ui/FiltroDeFechas.js';
 import type { FiltroDeFechas } from '@effort/core';
 
-const ROLES_QUE_EDITAN = new Set(['direccion', 'responsable', 'coordinador']);
+const ROLES_QUE_EDITAN = new Set(['direccion']);
 
 const TONO_ESTADO: Record<EstadoLiquidacion, 'pendiente' | 'proceso' | 'parcial' | 'completo' | 'critico'> = {
   PENDIENTE: 'pendiente',

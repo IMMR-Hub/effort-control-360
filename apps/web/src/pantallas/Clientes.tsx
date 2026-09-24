@@ -96,7 +96,7 @@ function vacioANulo(valor: string): string | null {
 
 export default function Clientes() {
   const { sesion } = useSesion();
-  const puedeEditar = sesion?.rol === 'direccion' || sesion?.rol === 'responsable';
+  const puedeEditar = sesion?.rol === 'direccion';
 
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);

@@ -65,7 +65,7 @@ import { FiltroDeFechasSelector, PeriodosDelRango, filtroDelMesActual, usePeriod
 import type { FiltroDeFechas } from '@effort/core';
 
 /** Mismos roles que la matriz deja crear una solicitud. */
-const ROLES_QUE_ABREN = new Set(['direccion', 'responsable', 'coordinador']);
+const ROLES_QUE_ABREN = new Set(['direccion']);
 
 const ICONO_CANAL: Record<Contacto['canal'], typeof Phone> = {
   LLAMADA: Phone,

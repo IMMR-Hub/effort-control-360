@@ -9,9 +9,9 @@
  * `programador.ts` (cada hora) y el botón "Sincronizar ahora" de Documentos
  * (cada 15 minutos), disparado a mano y junto.
  *
- * Permiso: las tres acciones que encadena (`evidencia.crear`,
- * `liquidacion.crear`, `alerta.crear`) solo las tiene junto `direccion` y
- * `responsable` — que es exactamente quién va a estar mostrando el sistema.
+ * Permiso: `actualizacion.crear`, que tienen todos los roles salvo `solo_lectura`
+ * (2026-09-24, Daniel: el equipo tiene que poder refrescar su cliente sin
+ * pedírselo a dirección). Todo lo demás es solo de dirección.
  */
 
 import type { FastifyInstance } from 'fastify';
@@ -27,9 +27,7 @@ export async function registrarRutasDeActualizarAhora(
   deps: Dependencias,
 ): Promise<void> {
   app.post('/api/v1/actualizar-ahora', async (peticion) => {
-    const sujeto = autorizar(peticion, 'evidencia', 'crear');
-    autorizar(peticion, 'liquidacion', 'crear');
-    autorizar(peticion, 'alerta', 'crear');
+    const sujeto = autorizar(peticion, 'actualizacion', 'crear');
 
     if (!deps.drive || !deps.driveDeOrigen) {
       throw new ErrorDeAplicacion(

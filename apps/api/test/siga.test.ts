@@ -7,6 +7,7 @@
  * uno que está en SIGA sin respaldo, y uno cargado con un importe distinto.
  */
 
+import { authenticator } from 'otplib';
 import type { FastifyInstance } from 'fastify';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
@@ -42,6 +43,8 @@ const MIO = '11111111-1111-4111-8111-111111111111';
 const AJENO = '22222222-2222-4222-8222-222222222222';
 const HOY = new Date('2026-04-21T13:00:00Z');
 
+const SECRETO_TOTP = 'JBSWY3DPEHPK3PXP';
+
 const configuracion: Configuracion = {
   NODE_ENV: 'test',
   PORT: 3000,
@@ -72,11 +75,19 @@ async function montar(): Promise<Contexto> {
   };
 
   usuarios.usuarios.push(
-    { id: 'usr-coordinador', email: 'karina@effort.com.py', rol: 'coordinador', veTodosLosClientes: false, ...base },
+    /*
+     * Dirección con la cartera acotada a un cliente. Desde el 2026-09-24 solo
+     * dirección puede escribir; antes lo hacía un rol de menor jerarquía. La
+     * cartera es una capa independiente del rol, y esa es la que se ejercita.
+     */
+    {
+      id: 'usr-direccion-acotada', email: 'karina@effort.com.py', rol: 'direccion', veTodosLosClientes: false,
+      ...base, secretoTotp: SECRETO_TOTP, segundoFactorActivo: true,
+    },
     { id: 'usr-auxiliar', email: 'aracely@effort.com.py', rol: 'auxiliar', veTodosLosClientes: false, ...base },
     { id: 'usr-lectura', email: 'lectura@effort.com.py', rol: 'solo_lectura', veTodosLosClientes: true, ...base },
   );
-  usuarios.asignaciones.set('usr-coordinador', [MIO]);
+  usuarios.asignaciones.set('usr-direccion-acotada', [MIO]);
   usuarios.asignaciones.set('usr-auxiliar', [MIO]);
 
   clientes.clientes.push(
@@ -118,7 +129,14 @@ async function acceder(ctx: Contexto, email: string): Promise<string> {
   });
   const cookie = r.cookies.find((c) => c.name === nombreCookieSesion(false));
   if (!cookie) throw new Error(`Sin cookie: ${r.body}`);
-  return `${cookie.name}=${cookie.value}`;
+  const valor = `${cookie.name}=${cookie.value}`;
+  if (JSON.parse(r.body).segundoFactorRequerido) {
+    await ctx.app.inject({
+      method: 'POST', url: '/api/v1/acceso/segundo-factor',
+      headers: { cookie: valor }, payload: { codigo: authenticator.generate(SECRETO_TOTP) },
+    });
+  }
+  return valor;
 }
 
 let ctx: Contexto;

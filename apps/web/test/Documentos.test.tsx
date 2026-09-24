@@ -208,15 +208,14 @@ describe('pantalla de documentos / IVA', () => {
     expect(screen.queryByLabelText('Estado general')).not.toBeInTheDocument();
   });
 
-  it('un rol sin permiso de edición tampoco ve los botones de cambiar estado del documento', async () => {
+  it('un rol que no es dirección no ve ningún botón de escritura (2026-09-24)', async () => {
     await montar('auxiliar');
 
     await usuario.click(filaDelTablero('GARSO S.A.'));
 
     expect(await screen.findByText('Documentos — GARSO S.A.')).toBeVisible();
     expect(screen.queryByRole('button', { name: /cargado en SIGA/ })).not.toBeInTheDocument();
-    // Pero sí puede dar de alta un documento nuevo.
-    expect(screen.getByRole('button', { name: 'Nuevo documento' })).toBeVisible();
+    expect(screen.queryByRole('button', { name: 'Nuevo documento' })).not.toBeInTheDocument();
   });
 
   it('guardar el proceso mensual manda el saldo de IVA como texto, no como número', async () => {

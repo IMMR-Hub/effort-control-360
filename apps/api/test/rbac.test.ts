@@ -76,15 +76,71 @@ describe('la matriz cubre toda combinación posible', () => {
 });
 
 describe('aprobación de balances', () => {
-  it('solo dirección y revisor de balance pueden aprobar', () => {
+  it('solo dirección puede aprobar (desde 2026-09-24 el revisor de balance ya no: ADR 0004)', () => {
     const puedenAprobar = ROLES.filter((rol) => puede(sujeto({ rol }), 'balance', 'aprobar'));
-    expect(puedenAprobar).toEqual(['direccion', 'revisor_balance']);
+    expect(puedenAprobar).toEqual(['direccion']);
   });
 
-  it('un coordinador puede editar el balance pero no aprobarlo', () => {
+  it('un coordinador ve el balance pero no lo edita ni lo aprueba', () => {
     const coordinador = sujeto({ rol: 'coordinador' });
-    expect(puede(coordinador, 'balance', 'editar')).toBe(true);
+    expect(puede(coordinador, 'balance', 'ver')).toBe(true);
+    expect(puede(coordinador, 'balance', 'editar')).toBe(false);
     expect(puede(coordinador, 'balance', 'aprobar')).toBe(false);
+  });
+});
+
+/*
+ * LA REGLA (Daniel, 2026-09-24): SOLAMENTE dirección —Laura, Lili y Daniel—
+ * puede hacer cambios. Estas pruebas la fijan sobre la matriz entera, no sobre
+ * los casos que a alguien se le ocurrieron: si un recurso nuevo le da a otro rol
+ * un permiso de escritura, fallan.
+ */
+describe('solo dirección puede hacer cambios', () => {
+  /** Las ÚNICAS escrituras que tiene permitidas alguien que no es dirección. */
+  const EXCEPCIONES = new Set(['horas|crear', 'actualizacion|crear']);
+  const ESCRITURAS: Accion[] = ['crear', 'editar', 'eliminar', 'aprobar', 'cerrar'];
+  const TODOS_LOS_RECURSOS = [...new Set(Object.values(MATRIZ).flatMap((m) => Object.keys(m)))] as Recurso[];
+
+  it('ningún otro rol tiene una escritura que no sea una de las dos excepciones', () => {
+    const permitidas: string[] = [];
+    for (const rol of ROLES.filter((r) => r !== 'direccion')) {
+      for (const recurso of TODOS_LOS_RECURSOS) {
+        for (const accion of ESCRITURAS) {
+          if (puede(sujeto({ rol }), recurso, accion) && !EXCEPCIONES.has(`${recurso}|${accion}`)) {
+            permitidas.push(`${rol} puede ${accion} ${recurso}`);
+          }
+        }
+      }
+    }
+    expect(permitidas).toEqual([]);
+  });
+
+  it('las dos excepciones son exactamente estas: cargar SUS horas y «Actualizar»', () => {
+    const conExcepcion = ROLES.filter((r) => r !== 'direccion').flatMap((rol) =>
+      [...EXCEPCIONES].filter((e) => {
+        const [recurso, accion] = e.split('|') as [Recurso, Accion];
+        return puede(sujeto({ rol }), recurso, accion);
+      }).map((e) => `${rol}|${e}`),
+    );
+    // solo_lectura no carga horas ni actualiza; los demás sí, y solo esas dos.
+    expect(conExcepcion.sort()).toEqual(
+      ['auxiliar', 'coordinador', 'responsable', 'revisor_balance']
+        .flatMap((rol) => [`${rol}|actualizacion|crear`, `${rol}|horas|crear`])
+        .sort(),
+    );
+  });
+
+  it('dirección conserva todo lo que tenía, incluidas las horas y «Actualizar»', () => {
+    const direccion = sujeto({ rol: 'direccion' });
+    expect(puede(direccion, 'usuario', 'editar')).toBe(true); // incluye el costo por hora
+    expect(puede(direccion, 'balance', 'aprobar')).toBe(true);
+    expect(puede(direccion, 'horas', 'crear')).toBe(true);
+    expect(puede(direccion, 'actualizacion', 'crear')).toBe(true);
+  });
+
+  it('el costo por hora y los usuarios los edita solo dirección', () => {
+    const editan = ROLES.filter((rol) => puede(sujeto({ rol }), 'usuario', 'editar'));
+    expect(editan).toEqual(['direccion']);
   });
 });
 
@@ -141,13 +197,14 @@ describe('alcance por cliente: la capa que evita fugas entre empresas', () => {
   });
 
   it('el rol amplio no sobreescribe el alcance de cartera', () => {
-    // Un responsable puede editar clientes, pero no los que no tiene asignados.
-    const responsable = sujeto({ rol: 'responsable', clientesAsignados: ['cli-1'] });
-    expect(puede(responsable, 'cliente', 'editar')).toBe(true);
-    expect(() => exigirPermiso(responsable, 'cliente', 'editar', 'cli-9')).toThrow(
+    // Una dirección con la cartera acotada puede editar clientes, pero no los que
+    // no tiene asignados: el rol amplio no pisa la capa de cartera.
+    const acotada = sujeto({ rol: 'direccion', veTodosLosClientes: false, clientesAsignados: ['cli-1'] });
+    expect(puede(acotada, 'cliente', 'editar')).toBe(true);
+    expect(() => exigirPermiso(acotada, 'cliente', 'editar', 'cli-9')).toThrow(
       ErrorDeAutorizacion,
     );
-    expect(() => exigirPermiso(responsable, 'cliente', 'editar', 'cli-1')).not.toThrow();
+    expect(() => exigirPermiso(acotada, 'cliente', 'editar', 'cli-1')).not.toThrow();
   });
 });
 

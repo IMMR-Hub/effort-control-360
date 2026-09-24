@@ -49,10 +49,10 @@ import { useSesion } from '../contexts/SesionContext.js';
 import { FiltroDeFechasSelector } from '../ui/FiltroDeFechas.js';
 
 /** Mismos roles que la matriz de permisos deja calcular. */
-const ROLES_QUE_CALCULAN = new Set(['direccion', 'responsable']);
+const ROLES_QUE_CALCULAN = new Set(['direccion']);
 
 /** Mismos roles que la matriz deja editar una liquidación: son los que deciden sobre un hallazgo. */
-const ROLES_QUE_DECIDEN = new Set(['direccion', 'responsable', 'coordinador']);
+const ROLES_QUE_DECIDEN = new Set(['direccion']);
 
 const RESUMEN_VACIO: ResumenDeHallazgos = {
   total: 0,

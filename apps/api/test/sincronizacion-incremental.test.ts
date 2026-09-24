@@ -15,6 +15,7 @@ import { DriveFalso } from '@effort/drive';
 import {
   crearEstadoDeSincronizacion,
   estadoDeSincronizacion,
+  ultimaMedianocheProgramada,
   intentarSincronizar,
   sincronizarConCambios,
   sincronizarOneDrive,
@@ -30,13 +31,13 @@ const NUEVO = '22222222-2222-4222-8222-222222222222';
 const RAIZ = 'CLIENTES/002 FUMIPRO';
 const USUARIO = 'usr-sistema';
 
-function armar() {
+function armar(inicio: Date = new Date('2026-09-24T12:00:00Z')) {
   const clientes = new ClientesFalsos();
   const documentos = new DocumentosFalsos();
   const origen = new DriveFalso();
   const destino = new DriveFalso();
   const estado = crearEstadoDeSincronizacion();
-  let ahora = new Date('2026-09-24T12:00:00Z');
+  let ahora = inicio;
 
   const porSha = new Map<string, { id: string }>();
   const altas: AltaDeEvidencia[] = [];
@@ -239,16 +240,45 @@ describe('sincronización de OneDrive por cambios', () => {
     expect((await ctx.correr()).cambiosRecibidos).toBe(0);
   });
 
-  it('una vez por día hace la pasada completa, por si un cambio se escapó', async () => {
-    const ctx = armar();
+  // Daniel, 2026-09-24: a la medianoche de lunes a sábado se revisa todo, por si
+  // alguien se olvidó de actualizar algo. A esa hora nadie mira, así que no importa
+  // que tarde, y hace de respaldo. Paraguay es UTC-3: 04:00Z son las 01:00 locales.
+  it('a la medianoche de Paraguay hace la pasada completa, por si un cambio se escapó', async () => {
+    const ctx = armar(new Date('2026-09-24T12:00:00Z')); // jueves 09:00 en Paraguay
     await ctx.correr();
-    ctx.avanzarHoras(23);
+
+    ctx.avanzarHoras(14); // jueves 23:00 local: todavía no fue medianoche
     expect((await ctx.correr()).modo).toBe('incremental');
 
-    ctx.avanzarHoras(2);
-    const diaria = await ctx.correr();
-    expect(diaria.modo).toBe('completa');
-    expect(diaria.motivoDePasadaCompleta).toMatch(/diaria/);
+    ctx.avanzarHoras(2); // viernes 01:00 local: ya pasó la medianoche
+    const noche = await ctx.correr();
+    expect(noche.modo).toBe('completa');
+    expect(noche.motivoDePasadaCompleta).toMatch(/medianoche/);
+
+    // Y una vez hecha, no se repite hasta la medianoche siguiente.
+    expect((await ctx.correr()).modo).toBe('incremental');
+  });
+
+  it('el domingo no hay pasada completa: la que sigue es la del lunes', async () => {
+    const ctx = armar(new Date('2026-09-26T12:00:00Z')); // sábado 09:00 local
+    await ctx.correr();
+
+    ctx.avanzarHoras(16); // domingo 01:00 local: la medianoche del domingo no se programa
+    expect((await ctx.correr()).modo).toBe('incremental');
+
+    ctx.avanzarHoras(24); // lunes 01:00 local
+    expect((await ctx.correr()).modo).toBe('completa');
+  });
+
+  it('la última medianoche programada es siempre las 00:00 de Paraguay de un día de lunes a sábado', () => {
+    // jueves 24/09 09:00 local → jueves 00:00 local = 03:00Z
+    expect(ultimaMedianocheProgramada(new Date('2026-09-24T12:00:00Z')).toISOString()).toBe('2026-09-24T03:00:00.000Z');
+    // sábado 26/09 23:30 local → sábado 00:00 local
+    expect(ultimaMedianocheProgramada(new Date('2026-09-27T02:30:00Z')).toISOString()).toBe('2026-09-26T03:00:00.000Z');
+    // domingo 27/09 15:00 local → la del sábado
+    expect(ultimaMedianocheProgramada(new Date('2026-09-27T18:00:00Z')).toISOString()).toBe('2026-09-26T03:00:00.000Z');
+    // lunes 28/09 00:10 local → lunes 00:00 local
+    expect(ultimaMedianocheProgramada(new Date('2026-09-28T03:10:00Z')).toISOString()).toBe('2026-09-28T03:00:00.000Z');
   });
 
   it('un cliente que todavía no se conocía obliga a la pasada completa', async () => {

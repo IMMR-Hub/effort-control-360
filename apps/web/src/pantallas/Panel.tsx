@@ -43,7 +43,7 @@ import {
 import { useConteoAnimado } from '../ui/useConteoAnimado.js';
 import type { Pantalla } from '../layout/Encabezado.js';
 import { FiltroDeFechasSelector } from '../ui/FiltroDeFechas.js';
-import { ETIQUETA_NIVEL_ALERTA, ETIQUETA_CRITICIDAD, TONO_NIVEL_ALERTA, TONO_CRITICIDAD } from '../ui/etiquetas.js';
+import { ETIQUETA_NIVEL_ALERTA, ETIQUETA_CRITICIDAD, TONO_NIVEL_ALERTA, TONO_CRITICIDAD, coincideConNivel } from '../ui/etiquetas.js';
 import { ErrorDeApi } from '../api/cliente.js';
 import { listarClientes, type Cliente } from '../api/clientes.js';
 import { obtenerAlertas, type Alerta } from '../api/alertas.js';
@@ -179,8 +179,9 @@ export default function Panel({
   const diasDeAtrasoTotales = conAtraso.reduce((suma, p) => suma + p.diasDeAtraso, 0);
 
   const vencidos = vencimientosEnRango.filter((v) => v.nivelAlerta === 'VENCIDO').length;
-  const proximos = vencimientosEnRango.filter((v) => v.nivelAlerta === 'CRITICA' || v.nivelAlerta === 'ALTA').length;
-  const alertasCriticas = alertasEnRango.filter((a) => a.criticidad === 'CRITICA').length;
+  const proximos = vencimientosEnRango.filter((v) => coincideConNivel(v.nivelAlerta, 'PROXIMOS')).length;
+  // Vencen en 7 días o menos, o ya vencieron (Daniel, 2026-09-24): CRÍTICA ≤2 días y ALTA ≤7, más lo vencido.
+  const alertasCriticas = alertasEnRango.filter((a) => a.criticidad === 'CRITICA' || a.criticidad === 'ALTA').length;
   const detallePeriodos = periodos.length === 1 ? `Período ${periodos[0]}` : `Períodos ${periodos[0]} a ${periodos[periodos.length - 1]}`;
   const documentacionPendiente = solicitudes.filter((s) => ESTADOS_SOLICITUD_ABIERTA.has(s.estado)).length;
   const balancesPendientes = balances.filter((b) => ESTADOS_BALANCE_PENDIENTE.has(b.estado)).length;

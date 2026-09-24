@@ -105,9 +105,13 @@ describe('Faltantes', () => {
   });
 
   describe('"Actualizar ahora" (tarea 152-bis)', () => {
-    it('un coordinador no ve el botón: el servidor no lo dejaría de todos modos', async () => {
+    it('todo el equipo ve el botón, salvo solo lectura (2026-09-24: actualizar no cambia datos de negocio)', async () => {
       await montar([UN_FALTANTE], 'coordinador');
+      expect(screen.getByRole('button', { name: /actualizar ahora/i })).toBeVisible();
+    });
 
+    it('un rol de solo lectura no ve el botón: el servidor no lo dejaría de todos modos', async () => {
+      await montar([UN_FALTANTE], 'solo_lectura');
       expect(screen.queryByRole('button', { name: /actualizar ahora/i })).not.toBeInTheDocument();
     });
 

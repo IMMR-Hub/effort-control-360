@@ -121,8 +121,8 @@ describe('radar de vencimientos', () => {
     expect(screen.queryByRole('button', { name: /Marcar presentado/ })).not.toBeInTheDocument();
   });
 
-  it('coordinador puede dar de alta un vencimiento nuevo', async () => {
-    await montar('coordinador');
+  it('dirección puede dar de alta un vencimiento nuevo', async () => {
+    await montar('direccion');
 
     await usuario.click(screen.getByRole('button', { name: 'Nuevo vencimiento' }));
     await usuario.type(screen.getByLabelText('Descripción'), 'Renovación de patente');
@@ -412,15 +412,15 @@ describe('radar de vencimientos', () => {
       }
     });
 
-    it('«Próximos» muestra solo críticos y altos', async () => {
+    it('«Próximos» muestra críticos, altos y medios: los que vencen en 15 días o menos (2026-09-24)', async () => {
       await montar('direccion', { vencimientos: FILAS });
 
       await usuario.selectOptions(screen.getByLabelText('Nivel de alerta'), 'PROXIMOS');
 
       expect(screen.getByText('Critico uno')).toBeVisible();
       expect(screen.getByText('Alto uno')).toBeVisible();
+      expect(screen.getByText('Medio uno')).toBeVisible();
       expect(screen.queryByText('Vencido uno')).not.toBeInTheDocument();
-      expect(screen.queryByText('Medio uno')).not.toBeInTheDocument();
       expect(screen.queryByText('Lejano uno')).not.toBeInTheDocument();
     });
 

@@ -74,9 +74,9 @@ import {
 } from '../api/documentos.js';
 import { useSesion } from '../contexts/SesionContext.js';
 
-const ROLES_QUE_EDITAN_PROCESO = new Set(['direccion', 'responsable', 'coordinador', 'auxiliar']);
-const ROLES_QUE_CREAN_DOCUMENTO = new Set(['direccion', 'responsable', 'coordinador', 'auxiliar']);
-const ROLES_QUE_CAMBIAN_ESTADO = new Set(['direccion', 'responsable', 'coordinador']);
+const ROLES_QUE_EDITAN_PROCESO = new Set(['direccion']);
+const ROLES_QUE_CREAN_DOCUMENTO = new Set(['direccion']);
+const ROLES_QUE_CAMBIAN_ESTADO = new Set(['direccion']);
 
 const TONO_ESTADO_GENERAL: Record<EstadoGeneral, 'completo' | 'parcial' | 'pendiente' | 'critico'> = {
   COMPLETO: 'completo',

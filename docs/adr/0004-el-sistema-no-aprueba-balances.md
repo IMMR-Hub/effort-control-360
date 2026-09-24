@@ -49,3 +49,12 @@ es `aprobarBalance()`, y exige los tres requisitos de arriba.
 - Cualquier módulo futuro (incluida una IA de revisión documental) puede
   proponer y señalar, pero entra por el mismo cuello: no hay otra ruta a
   `APROBADO`.
+
+## Actualización 2026-09-24 — solo dirección aprueba
+
+Daniel pidió que **solamente Laura, Lili y él** puedan hacer cambios en el
+sistema. Aprobar un balance es un cambio, así que `revisor_balance` **deja de
+poder aprobar**: el permiso `balance: aprobar` queda únicamente en `direccion`
+(`rbac.ts`, fijado por `rbac.test.ts`). Lo demás de este ADR sigue igual: el
+sistema prepara la revisión, y aprobar es un acto humano registrado con nombre y
+fecha. Lo que cambia es quién puede ser esa persona.

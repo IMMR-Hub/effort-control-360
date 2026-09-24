@@ -131,14 +131,14 @@ describe('pantalla de reglas', () => {
     expect(screen.queryByRole('button', { name: /Editar Recordatorio/ })).not.toBeInTheDocument();
   });
 
-  it('responsable puede editar reglas de notificación pero no darlas de alta, y no toca reglas impositivas', async () => {
+  it('un responsable ya no edita ni da de alta ninguna regla: solo dirección (2026-09-24)', async () => {
     await montar('responsable');
     await screen.findByText('Recordatorio de documentación');
 
     expect(screen.queryByRole('button', { name: 'Nueva tasa' })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: /Editar IVA General/ })).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Nueva regla' })).not.toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Editar Recordatorio/ })).toBeVisible();
+    expect(screen.queryByRole('button', { name: /Editar Recordatorio/ })).not.toBeInTheDocument();
   });
 
   it('dirección da de alta una regla impositiva nueva', async () => {

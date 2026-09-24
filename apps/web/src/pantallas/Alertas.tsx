@@ -35,9 +35,9 @@ import {
   type FiltroDeFechas,
 } from '@effort/core';
 
-const ROLES_QUE_CIERRAN = new Set(['direccion', 'responsable', 'coordinador']);
+const ROLES_QUE_CIERRAN = new Set(['direccion']);
 /** Mismos roles que la matriz de permisos deja pedir una evaluación. */
-const ROLES_QUE_EVALUAN = new Set(['direccion', 'responsable']);
+const ROLES_QUE_EVALUAN = new Set(['direccion']);
 
 const RESUMEN_VACIO: ResumenPorCriticidad = { CRITICA: 0, ALTA: 0, MEDIA: 0, INFORMATIVA: 0 };
 

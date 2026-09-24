@@ -115,7 +115,10 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-async function montar(rol: string = 'direccion') {
+async function montar(
+  rol: string = 'direccion',
+  datos: { vencimientos?: readonly unknown[]; alertas?: readonly unknown[] } = {},
+) {
   mock.mockDeRuta('GET /api/v1/yo', () =>
     respuestaJson({ usuarioId: 'u1', rol, veTodosLosClientes: true, cantidadDeClientesAsignados: 0 }),
   );
@@ -125,11 +128,11 @@ async function montar(rol: string = 'direccion') {
     respuestaJson({
       hoy: { anio: 2026, mes: 4, dia: 22 },
       resumen: { VENCIDO: 1, CRITICA: 0, ALTA: 0, MEDIA: 0, INFORMATIVA: 0, SIN_ALERTA: 0 },
-      vencimientos: [VENCIMIENTO_VENCIDO],
+      vencimientos: datos.vencimientos ?? [VENCIMIENTO_VENCIDO],
     }),
   );
   mock.mockDeRuta('GET /api/v1/alertas', () =>
-    respuestaJson({ resumen: { CRITICA: 1, ALTA: 0, MEDIA: 0, INFORMATIVA: 0 }, alertas: [ALERTA_CRITICA] }),
+    respuestaJson({ resumen: { CRITICA: 1, ALTA: 0, MEDIA: 0, INFORMATIVA: 0 }, alertas: datos.alertas ?? [ALERTA_CRITICA] }),
   );
   mock.mockDeRuta('GET /api/v1/solicitudes-documentacion', () => respuestaJson({ solicitudes: [SOLICITUD_ABIERTA] }));
   mock.mockDeRuta('GET /api/v1/balances', () => respuestaJson({ balances: [BALANCE_PENDIENTE] }));
@@ -163,6 +166,36 @@ async function montar(rol: string = 'direccion') {
 }
 
 describe('panel general', () => {
+  // Daniel, 2026-09-24: «Vencimientos próximos» = los que vencen en 15 días o menos
+  // (antes 7), y «Alertas críticas» = las que vencen en 7 días o menos, más lo vencido.
+  it('«Vencimientos próximos» cuenta críticos, altos y medios (15 días o menos), no lejanos ni vencidos', async () => {
+    const venc = (id: string, nivelAlerta: string, diasRestantes: number) => ({
+      ...VENCIMIENTO_VENCIDO, id, descripcion: `venc ${id}`, nivelAlerta, diasRestantes,
+      fechaVencimiento: '2026-04-28', estado: 'PENDIENTE',
+    });
+    await montar('direccion', {
+      vencimientos: [
+        venc('a', 'CRITICA', 1), venc('b', 'ALTA', 6), venc('c', 'MEDIA', 12),
+        venc('d', 'INFORMATIVA', 25), venc('e', 'VENCIDO', -3),
+      ],
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('Vencimientos próximos').closest('div')!.textContent).toContain('3');
+    });
+  });
+
+  it('«Alertas críticas» cuenta las críticas y las altas (7 días o menos, y lo vencido), no las medias', async () => {
+    const alerta = (id: string, criticidad: string) => ({ ...ALERTA_CRITICA, id, criticidad });
+    await montar('direccion', {
+      alertas: [alerta('1', 'CRITICA'), alerta('2', 'ALTA'), alerta('3', 'ALTA'), alerta('4', 'MEDIA')],
+    });
+
+    await waitFor(() => {
+      expect(screen.getByText('Alertas críticas').closest('div')!.textContent).toContain('3');
+    });
+  });
+
   it('los indicadores se calculan sobre los datos ya traídos, no sobre un número escrito a mano', async () => {
     await montar();
 

@@ -33,7 +33,7 @@ import { periodoSchema } from '@effort/schema';
 import { FiltroDeFechasSelector, PeriodosDelRango, filtroDelMesActual, usePeriodoDelFiltro } from '../ui/FiltroDeFechas.js';
 import type { FiltroDeFechas } from '@effort/core';
 
-const ROLES_QUE_IMPORTAN = new Set(['direccion', 'responsable', 'coordinador', 'auxiliar']);
+const ROLES_QUE_IMPORTAN = new Set(['direccion']);
 
 const ETIQUETA_TIPO_REPORTE: Record<TipoReporteSiga, string> = {
   LIBRO_COMPRAS: 'Libro de compras',

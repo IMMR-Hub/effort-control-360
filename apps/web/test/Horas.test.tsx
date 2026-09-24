@@ -142,7 +142,9 @@ describe('planilla de horas', () => {
     await montar('direccion');
 
     // Costo del equipo: 500.000 + 100.000 + 300.000 + 800.000 = 1.700.000.
-    expect(screen.getByText('Gs. 1.700.000')).toBeVisible();
+    // Se espera el texto: el resumen llega de forma asíncrona, y con la máquina cargada
+    // (`npm run verify`) buscarlo de golpe fallaba a veces.
+    expect(await screen.findByText('Gs. 1.700.000')).toBeVisible();
 
     const porPersona = screen.getByRole('table', { name: 'Horas por colaborador' });
     // Sandra: 300.000 (GARSO) + 800.000 (COPESA) = 1.100.000.

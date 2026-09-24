@@ -470,7 +470,7 @@ function notificacionAFormulario(regla: ReglaDeNotificacion): FormularioNotifica
 function ReglasDeNotificacion({ clientes }: { readonly clientes: readonly Cliente[] }) {
   const { sesion } = useSesion();
   const puedeCrear = sesion?.rol === 'direccion';
-  const puedeEditar = sesion?.rol === 'direccion' || sesion?.rol === 'responsable';
+  const puedeEditar = sesion?.rol === 'direccion';
 
   const [reglas, setReglas] = useState<readonly ReglaDeNotificacion[]>([]);
   const [errorCarga, setErrorCarga] = useState<string | null>(null);

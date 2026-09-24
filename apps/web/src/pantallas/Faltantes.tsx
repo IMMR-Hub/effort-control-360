@@ -30,7 +30,9 @@ import { useSesion } from '../contexts/SesionContext.js';
  * `rutas/actualizar-ahora.ts`) — direccion y responsable, que es quién va a
  * estar mostrando el sistema.
  */
-const ROLES_QUE_ACTUALIZAN = new Set(['direccion', 'responsable']);
+// «Actualizar» no cambia datos de negocio: lo puede apretar todo el equipo, salvo solo_lectura
+// (permiso `actualizacion.crear`, rbac.ts).
+const ROLES_QUE_ACTUALIZAN = new Set(['direccion', 'responsable', 'coordinador', 'auxiliar', 'revisor_balance']);
 
 type TonoBadge = 'completo' | 'parcial' | 'critico' | 'proceso' | 'pendiente';
 

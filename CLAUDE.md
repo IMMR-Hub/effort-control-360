@@ -368,6 +368,23 @@ agregá la entrada — el valor está en que siga creciendo.
     resolución) y una segunda prórroga no pisa la fecha original (tarea 146).
     Sin eso, dentro de seis meses nadie sabe por qué esa fila no sigue la regla.
 
+12. **SOLAMENTE dirección —Laura, Lili y Daniel— puede hacer cambios.**
+    Daniel, 2026-09-24: *«Deja bien las reglas que SOLAMENTE Laura, Lili o yo
+    podamos hacer cualquier cambio, incluido modificar el precio por hora»*.
+    Todos los demás roles (`responsable`, `coordinador`, `auxiliar`,
+    `revisor_balance`, `solo_lectura`) son de **lectura**, con exactamente dos
+    excepciones en `MATRIZ` (`rbac.ts`): `horas: crear` (cada persona carga SUS
+    horas, regla 10) y `actualizacion: crear` (el botón «Actualizar», que trae lo
+    que ya está en OneDrive y recalcula; no cambia datos que alguien escribió).
+    Cambiar la propia contraseña y el propio segundo factor no pasan por la matriz
+    (`/api/v1/mi/...`, solo tocan al usuario de la sesión). **Esto lo hace cumplir
+    `rbac.test.ts` → «solo dirección puede hacer cambios», que recorre TODA la
+    matriz:** un recurso nuevo que le dé escritura a otro rol lo rompe. Al agregar
+    una ruta que modifica algo, pedir el permiso con `autorizar(...)` sobre un
+    recurso/acción que solo tenga dirección; la interfaz (`ROLES_QUE_...` en
+    `apps/web/src/pantallas/`) tiene que decir lo mismo que la matriz. El
+    `revisor_balance` ya no aprueba balances: aprobar es un cambio (ADR 0004).
+
 ## Lo que sabemos del dominio, y costó descubrir
 
 Esto no está en ningún manual: salió de leer 39 planillas reales y de

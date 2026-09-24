@@ -61,7 +61,7 @@ import { DialogoDeProrroga, type VencimientoProrrogable } from './DialogoDeProrr
 import VencimientosPresentados from './VencimientosPresentados.js';
 import { FiltroDeFechasSelector } from '../ui/FiltroDeFechas.js';
 
-const ROLES_QUE_EDITAN = new Set(['direccion', 'responsable', 'coordinador']);
+const ROLES_QUE_EDITAN = new Set(['direccion']);
 
 const RESUMEN_VACIO: ResumenPorNivel = {
   VENCIDO: 0,

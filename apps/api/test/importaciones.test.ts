@@ -10,6 +10,7 @@
  */
 
 import ExcelJS from 'exceljs';
+import { authenticator } from 'otplib';
 import type { FastifyInstance } from 'fastify';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
@@ -47,6 +48,7 @@ const MIO = '11111111-1111-4111-8111-111111111111';
 const AJENO = '22222222-2222-4222-8222-222222222222';
 const HOY = new Date('2026-04-21T13:00:00Z');
 const RUC_VALIDO = '80017726-6';
+const SECRETO_TOTP = 'JBSWY3DPEHPK3PXP';
 
 const configuracion: Configuracion = {
   NODE_ENV: 'test',
@@ -78,10 +80,18 @@ async function montar(): Promise<Contexto> {
   };
 
   usuarios.usuarios.push(
-    { id: 'usr-coordinador', email: 'karina@effort.com.py', rol: 'coordinador', veTodosLosClientes: false, ...base },
+    /*
+     * Dirección con la cartera acotada a un cliente. Desde el 2026-09-24 solo
+     * dirección puede importar; antes lo hacía un coordinador. La cartera es una
+     * capa independiente del rol, y esa es la que estas pruebas ejercitan.
+     */
+    {
+      id: 'usr-direccion-acotada', email: 'karina@effort.com.py', rol: 'direccion', veTodosLosClientes: false,
+      ...base, secretoTotp: SECRETO_TOTP, segundoFactorActivo: true,
+    },
     { id: 'usr-lectura', email: 'lectura@effort.com.py', rol: 'solo_lectura', veTodosLosClientes: true, ...base },
   );
-  usuarios.asignaciones.set('usr-coordinador', [MIO]);
+  usuarios.asignaciones.set('usr-direccion-acotada', [MIO]);
 
   clientes.clientes.push(
     clienteMinimo({ id: MIO, nombre: 'GARSO S.A.', ruc: RUC_VALIDO, activo: true }),
@@ -124,7 +134,14 @@ async function acceder(ctx: Contexto, email: string): Promise<string> {
   });
   const cookie = r.cookies.find((c) => c.name === nombreCookieSesion(false));
   if (!cookie) throw new Error(`Sin cookie: ${r.body}`);
-  return `${cookie.name}=${cookie.value}`;
+  const valor = `${cookie.name}=${cookie.value}`;
+  if (JSON.parse(r.body).segundoFactorRequerido) {
+    await ctx.app.inject({
+      method: 'POST', url: '/api/v1/acceso/segundo-factor',
+      headers: { cookie: valor }, payload: { codigo: authenticator.generate(SECRETO_TOTP) },
+    });
+  }
+  return valor;
 }
 
 const ENCABEZADOS_COMPROBANTES = [

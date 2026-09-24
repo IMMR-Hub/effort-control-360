@@ -125,13 +125,26 @@ async function montar(): Promise<Contexto> {
       ...base, secretoTotp: SECRETO_TOTP_DIRECCION, segundoFactorActivo: true,
     },
     { id: 'usr-auxiliar', email: 'aracely@effort.com.py', rol: 'auxiliar', veTodosLosClientes: false, ...base },
-    { id: 'usr-coordinador', email: 'karina@effort.com.py', rol: 'coordinador', veTodosLosClientes: false, ...base },
+    /*
+     * Dirección con la cartera ACOTADA a un cliente. Desde el 2026-09-24 solo
+     * dirección puede escribir, así que las pruebas que ejercitan una escritura
+     * bajo el alcance de una cartera (validaciones, bitácora, cliente ajeno) las
+     * hace este usuario. Antes era un coordinador. Es un caso real: la cartera
+     * es una capa independiente del rol (rbac.ts, capa 2).
+     */
+    {
+      id: 'usr-direccion-acotada', email: 'karina@effort.com.py', rol: 'direccion', veTodosLosClientes: false,
+      ...base, secretoTotp: SECRETO_TOTP_DIRECCION, segundoFactorActivo: true,
+    },
+    // Roles reales que, desde 2026-09-24, solo leen: para probar que no pueden escribir.
+    { id: 'usr-coordinador', email: 'coordinador@effort.com.py', rol: 'coordinador', veTodosLosClientes: false, ...base },
     { id: 'usr-revisor', email: 'revisor@effort.com.py', rol: 'revisor_balance', veTodosLosClientes: true, ...base },
     { id: 'usr-lectura', email: 'lectura@effort.com.py', rol: 'solo_lectura', veTodosLosClientes: true, ...base },
   );
 
   usuarios.asignaciones.set('usr-auxiliar', [MIO]);
   usuarios.asignaciones.set('usr-coordinador', [MIO]);
+  usuarios.asignaciones.set('usr-direccion-acotada', [MIO]);
 
   clientes.clientes.push(
     clienteMinimo({ id: MIO, nombre: 'GARSO S.A.', ruc: '80017726-6', activo: true }),
@@ -218,6 +231,7 @@ let direccion = '';
 let responsable = '';
 let auxiliar = '';
 let coordinador = '';
+let direccionAcotada = '';
 let revisor = '';
 let soloLectura = '';
 
@@ -226,7 +240,8 @@ beforeEach(async () => {
   direccion = await acceder(ctx, 'laura@effort.com.py');
   responsable = await acceder(ctx, 'responsable@effort.com.py');
   auxiliar = await acceder(ctx, 'aracely@effort.com.py');
-  coordinador = await acceder(ctx, 'karina@effort.com.py');
+  direccionAcotada = await acceder(ctx, 'karina@effort.com.py');
+  coordinador = await acceder(ctx, 'coordinador@effort.com.py');
   revisor = await acceder(ctx, 'revisor@effort.com.py');
   soloLectura = await acceder(ctx, 'lectura@effort.com.py');
 });
@@ -344,7 +359,7 @@ describe('documentos', () => {
   it('registra un comprobante y devuelve el importe como texto, no como número', async () => {
     const respuesta = await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${MIO}/documentos`,
-      headers: { cookie: auxiliar }, payload: comprobante,
+      headers: { cookie: direccionAcotada }, payload: comprobante,
     });
 
     expect(respuesta.statusCode).toBe(201);
@@ -360,7 +375,7 @@ describe('documentos', () => {
     // ni detectar como duplicado.
     const respuesta = await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${MIO}/documentos`,
-      headers: { cookie: auxiliar },
+      headers: { cookie: direccionAcotada },
       payload: { ...comprobante, timbrado: null, numeroComprobante: null },
     });
 
@@ -370,7 +385,7 @@ describe('documentos', () => {
   it('acepta un documento sin identificación de comprobante (un contrato, un acta)', async () => {
     const respuesta = await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${MIO}/documentos`,
-      headers: { cookie: auxiliar },
+      headers: { cookie: direccionAcotada },
       payload: {
         periodo: '2026-03', tipo: 'CONTRATO', canalRecepcion: 'EMAIL',
         recibidoEn: '2026-04-05T12:00:00Z',
@@ -385,7 +400,7 @@ describe('documentos', () => {
   it('un documento con importe debe declarar su tasa de IVA', async () => {
     const respuesta = await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${MIO}/documentos`,
-      headers: { cookie: auxiliar }, payload: { ...comprobante, tasa: null },
+      headers: { cookie: direccionAcotada }, payload: { ...comprobante, tasa: null },
     });
 
     expect(respuesta.statusCode).toBe(400);
@@ -394,7 +409,7 @@ describe('documentos', () => {
   it('no se pueden cargar documentos en un cliente ajeno', async () => {
     const respuesta = await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${AJENO}/documentos`,
-      headers: { cookie: auxiliar }, payload: comprobante,
+      headers: { cookie: direccionAcotada }, payload: comprobante,
     });
 
     expect(respuesta.statusCode).toBe(403);
@@ -413,19 +428,19 @@ describe('documentos', () => {
   it('rechazar un documento exige explicar por qué', async () => {
     const alta = await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${MIO}/documentos`,
-      headers: { cookie: auxiliar }, payload: comprobante,
+      headers: { cookie: direccionAcotada }, payload: comprobante,
     });
     const { documento } = JSON.parse(alta.body);
 
     const sinMotivo = await ctx.app.inject({
       method: 'PATCH', url: `/api/v1/documentos/${documento.id}/estado`,
-      headers: { cookie: coordinador }, payload: { estado: 'RECHAZADO' },
+      headers: { cookie: direccionAcotada }, payload: { estado: 'RECHAZADO' },
     });
     expect(sinMotivo.statusCode).toBe(400);
 
     const conMotivo = await ctx.app.inject({
       method: 'PATCH', url: `/api/v1/documentos/${documento.id}/estado`,
-      headers: { cookie: coordinador },
+      headers: { cookie: direccionAcotada },
       payload: { estado: 'RECHAZADO', motivoRechazo: 'Comprobante ilegible.' },
     });
     expect(conMotivo.statusCode).toBe(200);
@@ -434,13 +449,13 @@ describe('documentos', () => {
   it('el cambio de estado queda en la bitácora con el valor anterior', async () => {
     const alta = await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${MIO}/documentos`,
-      headers: { cookie: auxiliar }, payload: comprobante,
+      headers: { cookie: direccionAcotada }, payload: comprobante,
     });
     const { documento } = JSON.parse(alta.body);
 
     await ctx.app.inject({
       method: 'PATCH', url: `/api/v1/documentos/${documento.id}/estado`,
-      headers: { cookie: coordinador }, payload: { estado: 'CARGADO_EN_SIGA' },
+      headers: { cookie: direccionAcotada }, payload: { estado: 'CARGADO_EN_SIGA' },
     });
 
     const entrada = ctx.bitacora.filas.find((f) => f.accion === 'documento.cambio_estado');
@@ -456,7 +471,7 @@ describe('proceso mensual', () => {
   it('editar un período que nadie abrió lo crea al vuelo', async () => {
     const respuesta = await ctx.app.inject({
       method: 'PUT', url: `/api/v1/clientes/${MIO}/proceso-mensual/2026-03`,
-      headers: { cookie: coordinador },
+      headers: { cookie: direccionAcotada },
       payload: { comprobantesRetirados: true, documentosRecibidos: 42 },
     });
 
@@ -469,7 +484,7 @@ describe('proceso mensual', () => {
   it('el IVA no puede quedar a pagar y a favor al mismo tiempo', async () => {
     const respuesta = await ctx.app.inject({
       method: 'PUT', url: `/api/v1/clientes/${MIO}/proceso-mensual/2026-03`,
-      headers: { cookie: coordinador },
+      headers: { cookie: direccionAcotada },
       payload: { ivaSaldoAPagar: '500000', ivaSaldoAFavor: '300000' },
     });
 
@@ -479,7 +494,7 @@ describe('proceso mensual', () => {
   it('acepta saldo a pagar con el otro en cero', async () => {
     const respuesta = await ctx.app.inject({
       method: 'PUT', url: `/api/v1/clientes/${MIO}/proceso-mensual/2026-03`,
-      headers: { cookie: coordinador },
+      headers: { cookie: direccionAcotada },
       payload: { ivaSaldoAPagar: '500000', ivaSaldoAFavor: '0' },
     });
 
@@ -490,7 +505,7 @@ describe('proceso mensual', () => {
   it('rechaza campos que no existen en el proceso mensual', async () => {
     const respuesta = await ctx.app.inject({
       method: 'PUT', url: `/api/v1/clientes/${MIO}/proceso-mensual/2026-03`,
-      headers: { cookie: coordinador },
+      headers: { cookie: direccionAcotada },
       payload: { clienteId: AJENO, comprobantesRetirados: true },
     });
 
@@ -501,14 +516,14 @@ describe('proceso mensual', () => {
   it('el tablero del período solo trae los clientes de la cartera', async () => {
     await ctx.app.inject({
       method: 'PUT', url: `/api/v1/clientes/${MIO}/proceso-mensual/2026-03`,
-      headers: { cookie: coordinador }, payload: { comprobantesRetirados: true },
+      headers: { cookie: direccionAcotada }, payload: { comprobantesRetirados: true },
     });
     ctx.procesoMensual.procesos.push({
       ...ctx.procesoMensual.procesos[0]!, id: 'otro', clienteId: AJENO,
     });
 
     const respuesta = await ctx.app.inject({
-      method: 'GET', url: '/api/v1/proceso-mensual/2026-03', headers: { cookie: coordinador },
+      method: 'GET', url: '/api/v1/proceso-mensual/2026-03', headers: { cookie: direccionAcotada },
     });
 
     const { procesos } = JSON.parse(respuesta.body);
@@ -544,7 +559,7 @@ describe('proceso mensual', () => {
     // Sin ninguna fila en proceso_mensual: el cliente está "Sin iniciar" y
     // aun así el conteo real tiene que aparecer.
     const respuesta = await ctx.app.inject({
-      method: 'GET', url: '/api/v1/proceso-mensual/2026-03', headers: { cookie: coordinador },
+      method: 'GET', url: '/api/v1/proceso-mensual/2026-03', headers: { cookie: direccionAcotada },
     });
 
     const { procesos, documentosReales } = JSON.parse(respuesta.body);
@@ -552,12 +567,18 @@ describe('proceso mensual', () => {
     expect(documentosReales[MIO]).toBe(1);
   });
 
-  it('un auxiliar puede editar el proceso, un solo_lectura no', async () => {
+  it('solo dirección edita el proceso: ni un auxiliar ni un solo_lectura (2026-09-24)', async () => {
+    const conDireccion = await ctx.app.inject({
+      method: 'PUT', url: `/api/v1/clientes/${MIO}/proceso-mensual/2026-03`,
+      headers: { cookie: direccionAcotada }, payload: { documentosRecibidos: 10 },
+    });
+    expect(conDireccion.statusCode).toBe(200);
+
     const conAuxiliar = await ctx.app.inject({
       method: 'PUT', url: `/api/v1/clientes/${MIO}/proceso-mensual/2026-03`,
       headers: { cookie: auxiliar }, payload: { documentosRecibidos: 10 },
     });
-    expect(conAuxiliar.statusCode).toBe(200);
+    expect(conAuxiliar.statusCode).toBe(403);
 
     const conLectura = await ctx.app.inject({
       method: 'PUT', url: `/api/v1/clientes/${MIO}/proceso-mensual/2026-03`,
@@ -581,7 +602,7 @@ describe('radar de vencimientos', () => {
   it('calcula los días restantes en zona Paraguay, no en la del navegador', async () => {
     const respuesta = await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${MIO}/vencimientos`,
-      headers: { cookie: coordinador }, payload: abogacia,
+      headers: { cookie: direccionAcotada }, payload: abogacia,
     });
 
     expect(respuesta.statusCode).toBe(201);
@@ -610,7 +631,7 @@ describe('radar de vencimientos', () => {
     for (const [fecha, dias, nivel] of fechas) {
       const respuesta = await ctx.app.inject({
         method: 'POST', url: `/api/v1/clientes/${MIO}/vencimientos`,
-        headers: { cookie: coordinador },
+        headers: { cookie: direccionAcotada },
         payload: { ...abogacia, fechaVencimiento: fecha },
       });
 
@@ -624,13 +645,13 @@ describe('radar de vencimientos', () => {
     for (const fecha of ['2026-04-19', '2026-04-22', '2026-04-30']) {
       await ctx.app.inject({
         method: 'POST', url: `/api/v1/clientes/${MIO}/vencimientos`,
-        headers: { cookie: coordinador },
+        headers: { cookie: direccionAcotada },
         payload: { ...abogacia, fechaVencimiento: fecha },
       });
     }
 
     const respuesta = await ctx.app.inject({
-      method: 'GET', url: '/api/v1/vencimientos', headers: { cookie: coordinador },
+      method: 'GET', url: '/api/v1/vencimientos', headers: { cookie: direccionAcotada },
     });
 
     const { resumen, vencimientos } = JSON.parse(respuesta.body);
@@ -645,7 +666,7 @@ describe('radar de vencimientos', () => {
   it('rechaza una emisión posterior al vencimiento', async () => {
     const respuesta = await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${MIO}/vencimientos`,
-      headers: { cookie: coordinador },
+      headers: { cookie: direccionAcotada },
       payload: { ...abogacia, fechaEmision: '2026-05-01' },
     });
 
@@ -655,19 +676,19 @@ describe('radar de vencimientos', () => {
   it('marcar como presentado saca la obligación del radar', async () => {
     const alta = await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${MIO}/vencimientos`,
-      headers: { cookie: coordinador }, payload: abogacia,
+      headers: { cookie: direccionAcotada }, payload: abogacia,
     });
     const { vencimiento } = JSON.parse(alta.body);
 
     const presentar = await ctx.app.inject({
       method: 'POST', url: `/api/v1/vencimientos/${vencimiento.id}/presentar`,
-      headers: { cookie: coordinador },
+      headers: { cookie: direccionAcotada },
       payload: { fechaPresentacion: '2026-04-20' },
     });
     expect(presentar.statusCode).toBe(200);
 
     const radar = await ctx.app.inject({
-      method: 'GET', url: '/api/v1/vencimientos', headers: { cookie: coordinador },
+      method: 'GET', url: '/api/v1/vencimientos', headers: { cookie: direccionAcotada },
     });
     expect(JSON.parse(radar.body).vencimientos).toHaveLength(0);
   });
@@ -684,17 +705,17 @@ describe('radar de vencimientos', () => {
     ] as const) {
       const alta = await ctx.app.inject({
         method: 'POST', url: `/api/v1/clientes/${MIO}/vencimientos`,
-        headers: { cookie: coordinador }, payload: { ...abogacia, descripcion },
+        headers: { cookie: direccionAcotada }, payload: { ...abogacia, descripcion },
       });
       const { vencimiento } = JSON.parse(alta.body);
       await ctx.app.inject({
         method: 'POST', url: `/api/v1/vencimientos/${vencimiento.id}/presentar`,
-        headers: { cookie: coordinador }, payload: { fechaPresentacion },
+        headers: { cookie: direccionAcotada }, payload: { fechaPresentacion },
       });
     }
 
     const respuesta = await ctx.app.inject({
-      method: 'GET', url: '/api/v1/vencimientos/presentados', headers: { cookie: coordinador },
+      method: 'GET', url: '/api/v1/vencimientos/presentados', headers: { cookie: direccionAcotada },
     });
 
     expect(respuesta.statusCode).toBe(200);
@@ -708,18 +729,18 @@ describe('radar de vencimientos', () => {
   it('no se puede presentar dos veces la misma obligación', async () => {
     const alta = await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${MIO}/vencimientos`,
-      headers: { cookie: coordinador }, payload: abogacia,
+      headers: { cookie: direccionAcotada }, payload: abogacia,
     });
     const { vencimiento } = JSON.parse(alta.body);
 
     await ctx.app.inject({
       method: 'POST', url: `/api/v1/vencimientos/${vencimiento.id}/presentar`,
-      headers: { cookie: coordinador }, payload: { fechaPresentacion: '2026-04-20' },
+      headers: { cookie: direccionAcotada }, payload: { fechaPresentacion: '2026-04-20' },
     });
 
     const segunda = await ctx.app.inject({
       method: 'POST', url: `/api/v1/vencimientos/${vencimiento.id}/presentar`,
-      headers: { cookie: coordinador }, payload: { fechaPresentacion: '2026-04-21' },
+      headers: { cookie: direccionAcotada }, payload: { fechaPresentacion: '2026-04-21' },
     });
 
     expect(segunda.statusCode).toBe(409);
@@ -728,17 +749,17 @@ describe('radar de vencimientos', () => {
   it('la presentación queda en la bitácora: es la prueba de que se hizo', async () => {
     const alta = await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${MIO}/vencimientos`,
-      headers: { cookie: coordinador }, payload: abogacia,
+      headers: { cookie: direccionAcotada }, payload: abogacia,
     });
     const { vencimiento } = JSON.parse(alta.body);
 
     await ctx.app.inject({
       method: 'POST', url: `/api/v1/vencimientos/${vencimiento.id}/presentar`,
-      headers: { cookie: coordinador }, payload: { fechaPresentacion: '2026-04-20' },
+      headers: { cookie: direccionAcotada }, payload: { fechaPresentacion: '2026-04-20' },
     });
 
     const entrada = ctx.bitacora.filas.find((f) => f.accion === 'vencimiento.presentado');
-    expect(entrada?.usuarioId).toBe('usr-coordinador');
+    expect(entrada?.usuarioId).toBe('usr-direccion-acotada');
     expect((entrada?.datosDespues as Record<string, unknown>)['fechaPresentacion']).toBe(
       '2026-04-20',
     );
@@ -754,7 +775,7 @@ describe('radar de vencimientos', () => {
     async function crear() {
       const alta = await ctx.app.inject({
         method: 'POST', url: `/api/v1/clientes/${MIO}/vencimientos`,
-        headers: { cookie: coordinador }, payload: abogacia,
+        headers: { cookie: direccionAcotada }, payload: abogacia,
       });
       return JSON.parse(alta.body).vencimiento as { id: string; fechaVencimiento: string };
     }
@@ -764,7 +785,7 @@ describe('radar de vencimientos', () => {
 
       const respuesta = await ctx.app.inject({
         method: 'POST', url: `/api/v1/vencimientos/${vencimiento.id}/prorrogar`,
-        headers: { cookie: coordinador },
+        headers: { cookie: direccionAcotada },
         payload: { nuevaFecha: '2026-06-30', motivo: 'RG 50/2026' },
       });
 
@@ -779,7 +800,7 @@ describe('radar de vencimientos', () => {
       const prorrogar = (nuevaFecha: string) =>
         ctx.app.inject({
           method: 'POST', url: `/api/v1/vencimientos/${vencimiento.id}/prorrogar`,
-          headers: { cookie: coordinador }, payload: { nuevaFecha, motivo: 'RG 50/2026' },
+          headers: { cookie: direccionAcotada }, payload: { nuevaFecha, motivo: 'RG 50/2026' },
         });
 
       await prorrogar('2026-06-30');
@@ -795,7 +816,7 @@ describe('radar de vencimientos', () => {
 
       const respuesta = await ctx.app.inject({
         method: 'POST', url: `/api/v1/vencimientos/${vencimiento.id}/prorrogar`,
-        headers: { cookie: coordinador }, payload: { nuevaFecha: '2026-06-30' },
+        headers: { cookie: direccionAcotada }, payload: { nuevaFecha: '2026-06-30' },
       });
 
       expect(respuesta.statusCode).toBe(400);
@@ -806,7 +827,7 @@ describe('radar de vencimientos', () => {
 
       const respuesta = await ctx.app.inject({
         method: 'POST', url: `/api/v1/vencimientos/${vencimiento.id}/prorrogar`,
-        headers: { cookie: coordinador },
+        headers: { cookie: direccionAcotada },
         payload: { nuevaFecha: vencimiento.fechaVencimiento, motivo: 'RG 50/2026' },
       });
 
@@ -830,7 +851,7 @@ describe('radar de vencimientos', () => {
 
       await ctx.app.inject({
         method: 'POST', url: `/api/v1/vencimientos/${vencimiento.id}/prorrogar`,
-        headers: { cookie: coordinador },
+        headers: { cookie: direccionAcotada },
         payload: { nuevaFecha: '2026-06-30', motivo: 'RG 50/2026' },
       });
 
@@ -863,7 +884,7 @@ describe('radar de vencimientos', () => {
         ] as const) {
           await ctx.app.inject({
             method: 'POST', url: `/api/v1/clientes/${MIO}/vencimientos`,
-            headers: { cookie: coordinador },
+            headers: { cookie: direccionAcotada },
             payload: { ...abogacia, descripcion, fechaVencimiento },
           });
         }
@@ -874,7 +895,7 @@ describe('radar de vencimientos', () => {
 
         const respuesta = await ctx.app.inject({
           method: 'POST', url: '/api/v1/vencimientos/prorrogar-lote',
-          headers: { cookie: coordinador },
+          headers: { cookie: direccionAcotada },
           payload: { descripcion: MISMA, nuevaFecha: '2026-06-30', motivo: 'RG 50/2026', modo: 'simulacion' },
         });
 
@@ -884,7 +905,7 @@ describe('radar de vencimientos', () => {
         expect(cuerpo.aplicados).toBe(0);
         // Nada cambió: las fechas siguen siendo las del calendario.
         const radar = JSON.parse(
-          (await ctx.app.inject({ method: 'GET', url: '/api/v1/vencimientos', headers: { cookie: coordinador } })).body,
+          (await ctx.app.inject({ method: 'GET', url: '/api/v1/vencimientos', headers: { cookie: direccionAcotada } })).body,
         );
         expect(radar.vencimientos.every((v: { fechaVencimiento: string }) => v.fechaVencimiento !== '2026-06-30')).toBe(true);
       });
@@ -894,13 +915,13 @@ describe('radar de vencimientos', () => {
 
         const respuesta = await ctx.app.inject({
           method: 'POST', url: '/api/v1/vencimientos/prorrogar-lote',
-          headers: { cookie: coordinador },
+          headers: { cookie: direccionAcotada },
           payload: { descripcion: MISMA, nuevaFecha: '2026-06-30', motivo: 'RG 50/2026', modo: 'real' },
         });
 
         expect(JSON.parse(respuesta.body).aplicados).toBe(2);
         const radar = JSON.parse(
-          (await ctx.app.inject({ method: 'GET', url: '/api/v1/vencimientos', headers: { cookie: coordinador } })).body,
+          (await ctx.app.inject({ method: 'GET', url: '/api/v1/vencimientos', headers: { cookie: direccionAcotada } })).body,
         );
         const porDescripcion = (d: string) =>
           radar.vencimientos.filter((v: { descripcion: string }) => v.descripcion === d);
@@ -919,7 +940,7 @@ describe('radar de vencimientos', () => {
         const aplicar = () =>
           ctx.app.inject({
             method: 'POST', url: '/api/v1/vencimientos/prorrogar-lote',
-            headers: { cookie: coordinador },
+            headers: { cookie: direccionAcotada },
             payload: { descripcion: MISMA, nuevaFecha: '2026-06-30', motivo: 'RG 50/2026', modo: 'real' },
           });
 
@@ -936,7 +957,7 @@ describe('radar de vencimientos', () => {
 
         await ctx.app.inject({
           method: 'POST', url: '/api/v1/vencimientos/prorrogar-lote',
-          headers: { cookie: coordinador },
+          headers: { cookie: direccionAcotada },
           payload: { descripcion: MISMA, nuevaFecha: '2026-06-30', motivo: 'RG 50/2026', modo: 'real' },
         });
 
@@ -956,7 +977,7 @@ describe('radar de vencimientos', () => {
 
         const respuesta = await ctx.app.inject({
           method: 'POST', url: '/api/v1/vencimientos/prorrogar-lote',
-          headers: { cookie: coordinador },
+          headers: { cookie: direccionAcotada },
           payload: { descripcion: MISMA, nuevaFecha: '2026-06-30', motivo: 'RG 50/2026', modo: 'real' },
         });
 
@@ -982,7 +1003,7 @@ describe('radar de vencimientos', () => {
 
         const respuesta = await ctx.app.inject({
           method: 'POST', url: '/api/v1/vencimientos/prorrogar-lote',
-          headers: { cookie: coordinador },
+          headers: { cookie: direccionAcotada },
           payload: { descripcion: MISMA, nuevaFecha: '2026-06-30', motivo: 'RG 50/2026' },
         });
 
@@ -1000,23 +1021,23 @@ describe('radar de vencimientos', () => {
       // Presentado el 2026-05-08 contra un vencimiento del 2026-04-28: 10 días.
       await ctx.app.inject({
         method: 'POST', url: `/api/v1/vencimientos/${vencimiento.id}/presentar`,
-        headers: { cookie: coordinador }, payload: { fechaPresentacion: '2026-05-08' },
+        headers: { cookie: direccionAcotada }, payload: { fechaPresentacion: '2026-05-08' },
       });
       const antes = await ctx.app.inject({
-        method: 'GET', url: '/api/v1/vencimientos/presentados', headers: { cookie: coordinador },
+        method: 'GET', url: '/api/v1/vencimientos/presentados', headers: { cookie: direccionAcotada },
       });
       expect(JSON.parse(antes.body).presentados[0].diasDeAtraso).toBe(10);
       expect(JSON.parse(antes.body).presentados[0].fechaVencimientoOriginal).toBeNull();
 
       const prorroga = await ctx.app.inject({
         method: 'POST', url: `/api/v1/vencimientos/${vencimiento.id}/prorrogar`,
-        headers: { cookie: coordinador },
+        headers: { cookie: direccionAcotada },
         payload: { nuevaFecha: '2026-06-30', motivo: 'RG 50/2026' },
       });
       expect(prorroga.statusCode).toBe(200);
 
       const despues = await ctx.app.inject({
-        method: 'GET', url: '/api/v1/vencimientos/presentados', headers: { cookie: coordinador },
+        method: 'GET', url: '/api/v1/vencimientos/presentados', headers: { cookie: direccionAcotada },
       });
       const [fila] = JSON.parse(despues.body).presentados;
       expect(fila.diasDeAtraso).toBe(0);
@@ -1036,7 +1057,7 @@ describe('radar de vencimientos', () => {
     });
 
     const respuesta = await ctx.app.inject({
-      method: 'GET', url: '/api/v1/vencimientos', headers: { cookie: coordinador },
+      method: 'GET', url: '/api/v1/vencimientos', headers: { cookie: direccionAcotada },
     });
 
     expect(JSON.parse(respuesta.body).vencimientos).toHaveLength(0);
@@ -1088,7 +1109,7 @@ describe('faltantes de OneDrive (tarea 152)', () => {
     });
 
     const respuesta = await ctx.app.inject({
-      method: 'GET', url: '/api/v1/vencimientos/faltantes', headers: { cookie: coordinador },
+      method: 'GET', url: '/api/v1/vencimientos/faltantes', headers: { cookie: direccionAcotada },
     });
 
     expect(respuesta.statusCode).toBe(200);
@@ -1110,7 +1131,7 @@ describe('faltantes de OneDrive (tarea 152)', () => {
     });
 
     const respuesta = await ctx.app.inject({
-      method: 'GET', url: '/api/v1/vencimientos/faltantes', headers: { cookie: coordinador },
+      method: 'GET', url: '/api/v1/vencimientos/faltantes', headers: { cookie: direccionAcotada },
     });
 
     const { faltantes } = JSON.parse(respuesta.body);
@@ -1125,7 +1146,7 @@ describe('faltantes de OneDrive (tarea 152)', () => {
     });
 
     const respuesta = await ctx.app.inject({
-      method: 'GET', url: '/api/v1/vencimientos/faltantes', headers: { cookie: coordinador },
+      method: 'GET', url: '/api/v1/vencimientos/faltantes', headers: { cookie: direccionAcotada },
     });
 
     expect(JSON.parse(respuesta.body).faltantes).toHaveLength(0);
@@ -1139,7 +1160,7 @@ describe('faltantes de OneDrive (tarea 152)', () => {
     });
 
     const respuesta = await ctx.app.inject({
-      method: 'GET', url: '/api/v1/vencimientos/faltantes', headers: { cookie: coordinador },
+      method: 'GET', url: '/api/v1/vencimientos/faltantes', headers: { cookie: direccionAcotada },
     });
 
     expect(JSON.parse(respuesta.body).faltantes).toHaveLength(0);
@@ -1159,16 +1180,24 @@ describe('actualizar ahora (tarea 152-bis)', () => {
     expect(respuesta.statusCode).toBe(401);
   });
 
-  it('coordinador no puede: no tiene alerta.crear', async () => {
+  // 2026-09-24 (Daniel): el equipo tiene que poder refrescar su cliente sin
+  // pedírselo a dirección. «Actualizar» trae lo que ya está en OneDrive; no cambia
+  // ningún dato de negocio que alguien haya escrito.
+  it.each([
+    ['responsable', () => responsable],
+    ['coordinador', () => coordinador],
+    ['auxiliar', () => auxiliar],
+    ['revisor de balance', () => revisor],
+  ])('%s SÍ puede actualizar', async (_rol, cookie) => {
     const respuesta = await ctx.app.inject({
-      method: 'POST', url: '/api/v1/actualizar-ahora', headers: { cookie: coordinador },
+      method: 'POST', url: '/api/v1/actualizar-ahora', headers: { cookie: cookie() },
     });
-    expect(respuesta.statusCode).toBe(403);
+    expect(respuesta.statusCode).toBe(200);
   });
 
-  it('auxiliar no puede: no tiene liquidacion.crear ni alerta.crear', async () => {
+  it('solo lectura no puede actualizar', async () => {
     const respuesta = await ctx.app.inject({
-      method: 'POST', url: '/api/v1/actualizar-ahora', headers: { cookie: auxiliar },
+      method: 'POST', url: '/api/v1/actualizar-ahora', headers: { cookie: soloLectura },
     });
     expect(respuesta.statusCode).toBe(403);
   });
@@ -1216,7 +1245,7 @@ describe('solicitudes de documentación', () => {
   it('abrir el seguimiento de un cliente para un período lo deja ABIERTA', async () => {
     const respuesta = await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${MIO}/solicitudes-documentacion`,
-      headers: { cookie: coordinador },
+      headers: { cookie: direccionAcotada },
       payload: { periodo: PERIODO, cuentaDesde: '2026-04-01' },
     });
 
@@ -1229,12 +1258,12 @@ describe('solicitudes de documentación', () => {
   it('abrir el mismo (cliente, período) dos veces no duplica', async () => {
     const primera = await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${MIO}/solicitudes-documentacion`,
-      headers: { cookie: coordinador },
+      headers: { cookie: direccionAcotada },
       payload: { periodo: PERIODO, cuentaDesde: '2026-04-01' },
     });
     const segunda = await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${MIO}/solicitudes-documentacion`,
-      headers: { cookie: coordinador },
+      headers: { cookie: direccionAcotada },
       payload: { periodo: PERIODO, cuentaDesde: '2026-04-01' },
     });
 
@@ -1254,7 +1283,7 @@ describe('solicitudes de documentación', () => {
 
     const respuesta = await ctx.app.inject({
       method: 'GET', url: `/api/v1/solicitudes-documentacion?periodo=${PERIODO}`,
-      headers: { cookie: coordinador },
+      headers: { cookie: direccionAcotada },
     });
 
     const { solicitudes } = JSON.parse(respuesta.body);
@@ -1265,37 +1294,37 @@ describe('solicitudes de documentación', () => {
   it('cerrar marca el estado indicado y queda en la bitácora', async () => {
     const alta = await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${MIO}/solicitudes-documentacion`,
-      headers: { cookie: coordinador }, payload: { periodo: PERIODO, cuentaDesde: '2026-04-01' },
+      headers: { cookie: direccionAcotada }, payload: { periodo: PERIODO, cuentaDesde: '2026-04-01' },
     });
     const { solicitud } = JSON.parse(alta.body);
 
     const cierre = await ctx.app.inject({
       method: 'POST', url: `/api/v1/solicitudes-documentacion/${solicitud.id}/cerrar`,
-      headers: { cookie: coordinador }, payload: { estado: 'ENTREGADA' },
+      headers: { cookie: direccionAcotada }, payload: { estado: 'ENTREGADA' },
     });
 
     expect(cierre.statusCode).toBe(200);
     expect(JSON.parse(cierre.body).solicitud.estado).toBe('ENTREGADA');
 
     const entrada = ctx.bitacora.filas.find((f) => f.accion === 'solicitud.cerrada');
-    expect(entrada?.usuarioId).toBe('usr-coordinador');
+    expect(entrada?.usuarioId).toBe('usr-direccion-acotada');
     expect((entrada?.datosDespues as Record<string, unknown>)['estado']).toBe('ENTREGADA');
   });
 
   it('no se puede cerrar dos veces la misma solicitud', async () => {
     const alta = await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${MIO}/solicitudes-documentacion`,
-      headers: { cookie: coordinador }, payload: { periodo: PERIODO, cuentaDesde: '2026-04-01' },
+      headers: { cookie: direccionAcotada }, payload: { periodo: PERIODO, cuentaDesde: '2026-04-01' },
     });
     const { solicitud } = JSON.parse(alta.body);
 
     await ctx.app.inject({
       method: 'POST', url: `/api/v1/solicitudes-documentacion/${solicitud.id}/cerrar`,
-      headers: { cookie: coordinador }, payload: { estado: 'ENTREGADA' },
+      headers: { cookie: direccionAcotada }, payload: { estado: 'ENTREGADA' },
     });
     const segunda = await ctx.app.inject({
       method: 'POST', url: `/api/v1/solicitudes-documentacion/${solicitud.id}/cerrar`,
-      headers: { cookie: coordinador }, payload: { estado: 'CERRADA_MANUALMENTE' },
+      headers: { cookie: direccionAcotada }, payload: { estado: 'CERRADA_MANUALMENTE' },
     });
 
     expect(segunda.statusCode).toBe(409);
@@ -1310,7 +1339,7 @@ describe('solicitudes de documentación', () => {
 
     const respuesta = await ctx.app.inject({
       method: 'POST', url: `/api/v1/solicitudes-documentacion/${solicitud.id}/cerrar`,
-      headers: { cookie: coordinador }, payload: { estado: 'ENTREGADA' },
+      headers: { cookie: direccionAcotada }, payload: { estado: 'ENTREGADA' },
     });
 
     expect(respuesta.statusCode).toBe(404);
@@ -1357,7 +1386,7 @@ describe('balances: el sistema no aprueba', () => {
 
     const respuesta = await ctx.app.inject({
       method: 'PUT', url: `/api/v1/clientes/${MIO}/balances/2026-03`,
-      headers: { cookie: coordinador }, payload: balanceLimpio,
+      headers: { cookie: direccionAcotada }, payload: balanceLimpio,
     });
 
     expect(respuesta.statusCode).toBe(200);
@@ -1373,7 +1402,7 @@ describe('balances: el sistema no aprueba', () => {
 
     const respuesta = await ctx.app.inject({
       method: 'PUT', url: `/api/v1/clientes/${MIO}/balances/2026-03`,
-      headers: { cookie: coordinador },
+      headers: { cookie: direccionAcotada },
       payload: { ...balanceLimpio, activo: '1000000001' },
     });
 
@@ -1394,7 +1423,7 @@ describe('balances: el sistema no aprueba', () => {
 
     const respuesta = await ctx.app.inject({
       method: 'PUT', url: `/api/v1/clientes/${MIO}/balances/2026-03`,
-      headers: { cookie: coordinador }, payload: balanceLimpio,
+      headers: { cookie: direccionAcotada }, payload: balanceLimpio,
     });
 
     const { balance, revision } = JSON.parse(respuesta.body);
@@ -1411,7 +1440,7 @@ describe('balances: el sistema no aprueba', () => {
     // Intentar declarar en el cuerpo que no falta nada.
     const respuesta = await ctx.app.inject({
       method: 'PUT', url: `/api/v1/clientes/${MIO}/balances/2026-03`,
-      headers: { cookie: coordinador },
+      headers: { cookie: direccionAcotada },
       payload: { ...balanceLimpio, documentosFaltantes: 0 },
     });
 
@@ -1419,11 +1448,30 @@ describe('balances: el sistema no aprueba', () => {
     expect(respuesta.statusCode).toBe(400);
   });
 
-  it('el revisor de balance puede aprobar uno que está listo', async () => {
+  it('dirección puede aprobar un balance que está listo (el revisor ya no: 2026-09-24)', async () => {
     await prepararProceso();
     await ctx.app.inject({
       method: 'PUT', url: `/api/v1/clientes/${MIO}/balances/2026-03`,
-      headers: { cookie: coordinador }, payload: balanceLimpio,
+      headers: { cookie: direccionAcotada }, payload: balanceLimpio,
+    });
+
+    const respuesta = await ctx.app.inject({
+      method: 'POST', url: `/api/v1/clientes/${MIO}/balances/2026-03/aprobar`,
+      headers: { cookie: direccion },
+    });
+
+    expect(respuesta.statusCode).toBe(200);
+    const { balance } = JSON.parse(respuesta.body);
+    expect(balance.estado).toBe('APROBADO');
+    expect(balance.aprobadoPorUsuarioId).toBe('usr-direccion');
+    expect(balance.aprobadoEn).not.toBeNull();
+  });
+
+  it('el revisor de balance ya no puede aprobar: solo dirección (ADR 0004, 2026-09-24)', async () => {
+    await prepararProceso();
+    await ctx.app.inject({
+      method: 'PUT', url: `/api/v1/clientes/${MIO}/balances/2026-03`,
+      headers: { cookie: direccionAcotada }, payload: balanceLimpio,
     });
 
     const respuesta = await ctx.app.inject({
@@ -1431,18 +1479,15 @@ describe('balances: el sistema no aprueba', () => {
       headers: { cookie: revisor },
     });
 
-    expect(respuesta.statusCode).toBe(200);
-    const { balance } = JSON.parse(respuesta.body);
-    expect(balance.estado).toBe('APROBADO');
-    expect(balance.aprobadoPorUsuarioId).toBe('usr-revisor');
-    expect(balance.aprobadoEn).not.toBeNull();
+    expect(respuesta.statusCode).toBe(403);
+    expect(ctx.balances.balances[0]?.estado).not.toBe('APROBADO');
   });
 
-  it('un coordinador puede preparar el balance pero no aprobarlo', async () => {
+  it('un coordinador no puede aprobar el balance', async () => {
     await prepararProceso();
     await ctx.app.inject({
       method: 'PUT', url: `/api/v1/clientes/${MIO}/balances/2026-03`,
-      headers: { cookie: coordinador }, payload: balanceLimpio,
+      headers: { cookie: direccionAcotada }, payload: balanceLimpio,
     });
 
     const respuesta = await ctx.app.inject({
@@ -1458,7 +1503,7 @@ describe('balances: el sistema no aprueba', () => {
     await prepararProceso();
     await ctx.app.inject({
       method: 'PUT', url: `/api/v1/clientes/${MIO}/balances/2026-03`,
-      headers: { cookie: coordinador }, payload: balanceLimpio,
+      headers: { cookie: direccionAcotada }, payload: balanceLimpio,
     });
 
     const respuesta = await ctx.app.inject({
@@ -1469,17 +1514,17 @@ describe('balances: el sistema no aprueba', () => {
     expect(respuesta.statusCode).toBe(403);
   });
 
-  it('no se puede aprobar un balance observado, ni siendo revisor', async () => {
+  it('no se puede aprobar un balance observado, ni siendo dirección', async () => {
     await prepararProceso();
     await ctx.app.inject({
       method: 'PUT', url: `/api/v1/clientes/${MIO}/balances/2026-03`,
-      headers: { cookie: coordinador },
+      headers: { cookie: direccionAcotada },
       payload: { ...balanceLimpio, activo: '999999999' },
     });
 
     const respuesta = await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${MIO}/balances/2026-03/aprobar`,
-      headers: { cookie: revisor },
+      headers: { cookie: direccion },
     });
 
     expect(respuesta.statusCode).toBe(409);
@@ -1490,16 +1535,16 @@ describe('balances: el sistema no aprueba', () => {
     await prepararProceso();
     await ctx.app.inject({
       method: 'PUT', url: `/api/v1/clientes/${MIO}/balances/2026-03`,
-      headers: { cookie: coordinador }, payload: balanceLimpio,
+      headers: { cookie: direccionAcotada }, payload: balanceLimpio,
     });
     await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${MIO}/balances/2026-03/aprobar`,
-      headers: { cookie: revisor },
+      headers: { cookie: direccion },
     });
 
     const segunda = await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${MIO}/balances/2026-03/aprobar`,
-      headers: { cookie: revisor },
+      headers: { cookie: direccion },
     });
 
     expect(segunda.statusCode).toBe(409);
@@ -1510,18 +1555,18 @@ describe('balances: el sistema no aprueba', () => {
     await prepararProceso();
     await ctx.app.inject({
       method: 'PUT', url: `/api/v1/clientes/${MIO}/balances/2026-03`,
-      headers: { cookie: coordinador }, payload: balanceLimpio,
+      headers: { cookie: direccionAcotada }, payload: balanceLimpio,
     });
     await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${MIO}/balances/2026-03/aprobar`,
-      headers: { cookie: revisor },
+      headers: { cookie: direccion },
     });
 
     const entrada = ctx.bitacora.filas.find((f) => f.accion === 'balance.aprobado');
-    expect(entrada?.usuarioId).toBe('usr-revisor');
+    expect(entrada?.usuarioId).toBe('usr-direccion');
 
     const datos = entrada?.datosDespues as Record<string, unknown>;
-    expect(datos['rol']).toBe('revisor_balance');
+    expect(datos['rol']).toBe('direccion');
     expect(datos['aprobadoEn']).toBe(HOY.toISOString());
   });
 
@@ -1536,7 +1581,7 @@ describe('balances: el sistema no aprueba', () => {
 
     const respuesta = await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${MIO}/balances/2026-03/aprobar`,
-      headers: { cookie: revisor },
+      headers: { cookie: direccion },
     });
 
     expect(respuesta.statusCode).toBe(409);
@@ -1547,7 +1592,7 @@ describe('balances: el sistema no aprueba', () => {
     await prepararProceso();
     const respuesta = await ctx.app.inject({
       method: 'PUT', url: `/api/v1/clientes/${MIO}/balances/2026-03`,
-      headers: { cookie: coordinador }, payload: balanceLimpio,
+      headers: { cookie: direccionAcotada }, payload: balanceLimpio,
     });
 
     const { balance } = JSON.parse(respuesta.body);
@@ -1587,7 +1632,7 @@ describe('alertas', () => {
     );
 
     const respuesta = await ctx.app.inject({
-      method: 'GET', url: '/api/v1/alertas', headers: { cookie: coordinador },
+      method: 'GET', url: '/api/v1/alertas', headers: { cookie: direccionAcotada },
     });
 
     expect(respuesta.statusCode).toBe(200);
@@ -1606,7 +1651,7 @@ describe('alertas', () => {
     );
 
     const respuesta = await ctx.app.inject({
-      method: 'GET', url: '/api/v1/alertas', headers: { cookie: coordinador },
+      method: 'GET', url: '/api/v1/alertas', headers: { cookie: direccionAcotada },
     });
 
     const { alertas } = JSON.parse(respuesta.body);
@@ -1647,13 +1692,13 @@ describe('alertas', () => {
 
     const sinMotivo = await ctx.app.inject({
       method: 'POST', url: `/api/v1/alertas/${alerta.id}/cerrar`,
-      headers: { cookie: coordinador }, payload: {},
+      headers: { cookie: direccionAcotada }, payload: {},
     });
     expect(sinMotivo.statusCode).toBe(400);
 
     const conMotivo = await ctx.app.inject({
       method: 'POST', url: `/api/v1/alertas/${alerta.id}/cerrar`,
-      headers: { cookie: coordinador }, payload: { motivoCierre: 'Se presentó a tiempo.' },
+      headers: { cookie: direccionAcotada }, payload: { motivoCierre: 'Se presentó a tiempo.' },
     });
     expect(conMotivo.statusCode).toBe(200);
     expect(JSON.parse(conMotivo.body).alerta.estado).toBe('CERRADA');
@@ -1665,12 +1710,12 @@ describe('alertas', () => {
 
     await ctx.app.inject({
       method: 'POST', url: `/api/v1/alertas/${alerta.id}/cerrar`,
-      headers: { cookie: coordinador }, payload: { motivoCierre: 'Resuelta.' },
+      headers: { cookie: direccionAcotada }, payload: { motivoCierre: 'Resuelta.' },
     });
 
     const segunda = await ctx.app.inject({
       method: 'POST', url: `/api/v1/alertas/${alerta.id}/cerrar`,
-      headers: { cookie: coordinador }, payload: { motivoCierre: 'De nuevo.' },
+      headers: { cookie: direccionAcotada }, payload: { motivoCierre: 'De nuevo.' },
     });
 
     expect(segunda.statusCode).toBe(409);
@@ -1683,7 +1728,7 @@ describe('alertas', () => {
 
     const respuesta = await ctx.app.inject({
       method: 'POST', url: `/api/v1/alertas/${alerta.id}/cerrar`,
-      headers: { cookie: coordinador }, payload: { motivoCierre: 'Intento.' },
+      headers: { cookie: direccionAcotada }, payload: { motivoCierre: 'Intento.' },
     });
 
     expect(respuesta.statusCode).toBe(404);
@@ -1707,7 +1752,7 @@ describe('alertas', () => {
 
     await ctx.app.inject({
       method: 'POST', url: `/api/v1/alertas/${alerta.id}/cerrar`,
-      headers: { cookie: coordinador }, payload: { motivoCierre: 'Se presentó a tiempo.' },
+      headers: { cookie: direccionAcotada }, payload: { motivoCierre: 'Se presentó a tiempo.' },
     });
 
     const entrada = ctx.bitacora.filas.find((f) => f.accion === 'alerta.cerrada');
@@ -2251,7 +2296,7 @@ describe('reglas de notificación', () => {
     expect(regla.clientesAlcanzados).toEqual([]);
   });
 
-  it('responsable puede editar reglas existentes, pero no dar de alta una nueva', async () => {
+  it('responsable ya no puede ni dar de alta ni editar reglas: solo dirección (2026-09-24)', async () => {
     const crear = await ctx.app.inject({
       method: 'POST', url: '/api/v1/reglas-notificacion',
       headers: { cookie: responsable }, payload: altaValida,
@@ -2265,7 +2310,7 @@ describe('reglas de notificación', () => {
       method: 'PATCH', url: `/api/v1/reglas-notificacion/${regla.id}`,
       headers: { cookie: responsable }, payload: { activa: false },
     });
-    expect(editar.statusCode).toBe(200);
+    expect(editar.statusCode).toBe(403);
   });
 
   it('exige al menos un destinatario inicial', async () => {
@@ -2375,7 +2420,7 @@ describe('eventos (event log)', () => {
   it('trae los eventos ya generados por otras acciones, más reciente primero', async () => {
     await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${MIO}/vencimientos`,
-      headers: { cookie: coordinador },
+      headers: { cookie: direccionAcotada },
       payload: {
         tipoDocumento: 'CONSTANCIA', descripcion: 'Constancia RUC', entidad: 'SET',
         fechaVencimiento: '2026-12-31',
@@ -2393,7 +2438,7 @@ describe('eventos (event log)', () => {
   it('filtra por entidad', async () => {
     await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${MIO}/vencimientos`,
-      headers: { cookie: coordinador },
+      headers: { cookie: direccionAcotada },
       payload: {
         tipoDocumento: 'CONSTANCIA', descripcion: 'Constancia RUC', entidad: 'SET',
         fechaVencimiento: '2026-12-31',
@@ -2412,14 +2457,14 @@ describe('eventos (event log)', () => {
   it('respeta el límite pedido', async () => {
     await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${MIO}/vencimientos`,
-      headers: { cookie: coordinador },
+      headers: { cookie: direccionAcotada },
       payload: {
         tipoDocumento: 'CONSTANCIA', descripcion: 'Uno', entidad: 'SET', fechaVencimiento: '2026-12-31',
       },
     });
     await ctx.app.inject({
       method: 'POST', url: `/api/v1/clientes/${MIO}/vencimientos`,
-      headers: { cookie: coordinador },
+      headers: { cookie: direccionAcotada },
       payload: {
         tipoDocumento: 'CONSTANCIA', descripcion: 'Dos', entidad: 'SET', fechaVencimiento: '2026-12-31',
       },
@@ -2485,11 +2530,11 @@ describe('clientes', () => {
     expect(cliente.activo).toBe(true);
   });
 
-  it('responsable también puede dar de alta', async () => {
+  it('responsable ya no puede dar de alta: solo dirección (2026-09-24)', async () => {
     const respuesta = await darDeAlta(
       { ...altaValida, ruc: '80025000-1' }, responsable,
     );
-    expect(respuesta.statusCode).toBe(201);
+    expect(respuesta.statusCode).toBe(403);
   });
 
   it('coordinador no puede dar de alta un cliente', async () => {
@@ -2581,7 +2626,7 @@ describe('clientes', () => {
 
       const respuesta = await ctx.app.inject({
         method: 'PATCH', url: `/api/v1/clientes/${cliente.id}`,
-        headers: { cookie: coordinador }, payload: { activo: false },
+        headers: { cookie: direccionAcotada }, payload: { activo: false },
       });
       expect(respuesta.statusCode).toBe(403);
     });

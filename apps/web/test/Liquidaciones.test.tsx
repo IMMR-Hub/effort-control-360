@@ -119,8 +119,8 @@ describe('pantalla de liquidaciones', () => {
     expect(screen.queryByRole('button', { name: /Registrar respuesta/ })).not.toBeInTheDocument();
   });
 
-  it('coordinador puede dar de alta una liquidación nueva', async () => {
-    await montar('coordinador');
+  it('dirección puede dar de alta una liquidación nueva', async () => {
+    await montar('direccion');
 
     await usuario.click(screen.getByRole('button', { name: 'Nueva liquidación' }));
     await usuario.type(screen.getByLabelText('Tipo'), 'Ganancias');

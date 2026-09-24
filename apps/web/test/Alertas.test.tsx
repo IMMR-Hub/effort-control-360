@@ -139,8 +139,8 @@ describe('radar de alertas', () => {
     expect(screen.queryByRole('button', { name: /Cerrar alerta/ })).not.toBeInTheDocument();
   });
 
-  it('coordinador puede cerrar una alerta con motivo', async () => {
-    await montar('coordinador');
+  it('dirección puede cerrar una alerta con motivo', async () => {
+    await montar('direccion');
     vi.spyOn(window, 'prompt').mockReturnValue('Ya se presentó ante Abogacía, se confirmó con el cliente.');
 
     mock.mockDeRuta('POST /api/v1/alertas/alerta-1/cerrar', () =>

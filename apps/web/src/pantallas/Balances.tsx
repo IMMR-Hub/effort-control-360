@@ -34,8 +34,8 @@ import { useSesion } from '../contexts/SesionContext.js';
 import { FiltroDeFechasSelector, PeriodosDelRango, filtroDelMesActual, usePeriodoDelFiltro } from '../ui/FiltroDeFechas.js';
 import type { FiltroDeFechas } from '@effort/core';
 
-const ROLES_QUE_EDITAN = new Set(['direccion', 'responsable', 'coordinador', 'revisor_balance']);
-const ROLES_QUE_APRUEBAN = new Set(['direccion', 'revisor_balance']);
+const ROLES_QUE_EDITAN = new Set(['direccion']);
+const ROLES_QUE_APRUEBAN = new Set(['direccion']);
 
 const TONO_ESTADO: Record<EstadoBalance, 'completo' | 'parcial' | 'pendiente' | 'critico' | 'proceso'> = {
   NO_APLICA: 'pendiente',

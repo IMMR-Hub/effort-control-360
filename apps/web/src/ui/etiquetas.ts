@@ -80,15 +80,16 @@ export const ETIQUETA_CRITICIDAD: Record<Criticidad, string> = {
  * Filtro de la lista de vencimientos por nivel de alerta.
  *
  * «Próximos» no es un nivel del servidor: es el nombre que el Panel le da a los
- * críticos y los altos juntos (vencen en 7 días o menos). Vive acá para que el
- * Panel y la lista cuenten lo mismo con la misma palabra.
+ * críticos, los altos y los medios juntos (vencen en 15 días o menos; Daniel,
+ * 2026-09-24, antes eran 7). Vive acá para que el Panel y la lista cuenten lo
+ * mismo con la misma palabra.
  */
 export type FiltroDeNivel = 'TODOS' | 'PROXIMOS' | NivelAlerta;
 
 export const OPCIONES_FILTRO_DE_NIVEL: { valor: FiltroDeNivel; etiqueta: string }[] = [
   { valor: 'TODOS', etiqueta: 'Todos' },
   { valor: 'VENCIDO', etiqueta: 'Vencidos' },
-  { valor: 'PROXIMOS', etiqueta: 'Próximos (críticos y altos)' },
+  { valor: 'PROXIMOS', etiqueta: 'Próximos (15 días o menos)' },
   { valor: 'CRITICA', etiqueta: 'Solo críticos' },
   { valor: 'ALTA', etiqueta: 'Solo altos' },
   { valor: 'MEDIA', etiqueta: 'Medios' },
@@ -98,6 +99,6 @@ export const OPCIONES_FILTRO_DE_NIVEL: { valor: FiltroDeNivel; etiqueta: string 
 
 export function coincideConNivel(nivel: NivelAlerta, filtro: FiltroDeNivel): boolean {
   if (filtro === 'TODOS') return true;
-  if (filtro === 'PROXIMOS') return nivel === 'CRITICA' || nivel === 'ALTA';
+  if (filtro === 'PROXIMOS') return nivel === 'CRITICA' || nivel === 'ALTA' || nivel === 'MEDIA';
   return nivel === filtro;
 }

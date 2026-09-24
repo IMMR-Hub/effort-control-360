@@ -50,6 +50,7 @@ de Lili o Laura), **Daniel** (decisión o acción en una cuenta), **Claude**
 | 34 | Conexión a la base intermitente desde la máquina de trabajo | **Observado 2026-09-21** | Daniel (decisión) | Reintentar antes de sospechar de un cambio; relacionado con el punto 18 |
 | 35 | Costo por hora de cada colaborador | **Respondido 2026-09-23, falta construir** | Claude | Daniel: valor nominal por defecto Gs. 200.000/hora, editable desde el perfil de cada uno o por dirección |
 | 36 | Avisos de 7 días en el Dashboard de Laura y Lili | **Cerrado 2026-09-23 — ya funcionaba, sin código nuevo** | nadie | El Panel ya muestra las alertas ALTA (≤7 días) y CRÍTICA (≤2) juntas en "Alertas más urgentes"; Laura y Lili son `direccion`, ven toda la cartera. Ver `motorDeAlertas.ts`, `CRITICIDAD_POR_NIVEL` |
+| 37 | Umbrales de los indicadores del Panel | **Cerrado 2026-09-24** | nadie | Daniel: «Vencimientos próximos» = los que vencen en **15 días o menos** (antes 7) y «Alertas críticas» = las que vencen en **7 días o menos, más lo vencido** (antes solo CRÍTICA, ≤2 días). Cambia SOLO lo que muestra el indicador: el motor de alertas y los umbrales 30/15/7/2 no se tocaron. Ver el punto 37 |
 
 ---
 
@@ -1846,3 +1847,23 @@ vigente para todo lo que expone el trabajo de los compañeros (bitácora, resume
 **Qué falta para cerrarlo.** Que Daniel decida si quiere ese cálculo y con qué dato: costo
 por hora individual, una tarifa promedio por rol, o solo horas sin guaraníes. Hasta entonces
 el resumen de horas dice horas, y lo dice sin convertirlas en plata.
+
+---
+
+## 37. Umbrales de los indicadores del Panel — CERRADO 2026-09-24 (solo el indicador, no el motor)
+
+Daniel, 2026-09-24: *«Vencimientos próximos debería ser en los próximos 15 días.
+Alertas críticas, 7 días (que es donde ya les llega a Laura, Lili y a mí una
+notificación)»*. Se le preguntó si quería cambiar solo lo que muestra el Panel, o
+también el motor de alertas (que el nivel CRÍTICA pase de ≤2 a ≤7 días), o
+excluir los ya vencidos del número. **Eligió lo primero.**
+
+- **«Vencimientos próximos»** cuenta los vencimientos con nivel CRÍTICA, ALTA o
+  MEDIA (vencen en 15 días o menos; `coincideConNivel(..., 'PROXIMOS')` en
+  `apps/web/src/ui/etiquetas.ts`, compartido con el filtro de la lista de
+  Vencimientos, así que el número del Panel y la lista dicen lo mismo).
+- **«Alertas críticas»** cuenta las alertas abiertas de criticidad CRÍTICA o
+  ALTA: vencen en 7 días o menos, y las ya vencidas (que el motor deja como
+  CRÍTICA).
+- **No se tocó** `UMBRALES_ALERTA` (30/15/7/2, punto 5), ni `CRITICIDAD_POR_NIVEL`,
+  ni a quién le llegan los avisos (punto 36).

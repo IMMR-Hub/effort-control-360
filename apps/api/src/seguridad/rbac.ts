@@ -38,7 +38,8 @@ export type Recurso =
   | 'configuracion'
   | 'regla_impositiva'
   | 'horas'
-  | 'resumen_horas';
+  | 'resumen_horas'
+  | 'actualizacion';
 
 export type Accion = 'ver' | 'crear' | 'editar' | 'eliminar' | 'aprobar' | 'exportar' | 'cerrar';
 
@@ -94,68 +95,89 @@ export const MATRIZ: MatrizDePermisos = Object.freeze({
     // quienes la usan". Nunca expone el registro día a día de otra persona,
     // solo el total del período: ver `RepositorioDeHoras.resumen`.
     resumen_horas: ['ver', 'exportar'],
+    actualizacion: ['crear'],
   },
 
+  /*
+   * REGLA VIGENTE DESDE 2026-09-24 (Daniel): SOLAMENTE dirección —Laura, Lili y
+   * Daniel— puede hacer cambios. Todos los demás roles son de lectura, con
+   * exactamente dos excepciones, ambas explícitas y probadas en `rbac.test.ts`:
+   *
+   *  - `horas: crear` — cada persona carga SUS horas (regla 10 de CLAUDE.md), y
+   *    la ruta usa siempre el usuario de la sesión, nunca uno que llegue en la
+   *    petición.
+   *  - `actualizacion: crear` — el botón «Actualizar». Trae a la base lo que ya
+   *    está en OneDrive y recalcula lo derivado; no cambia ningún dato de
+   *    negocio que una persona haya escrito.
+   *
+   * Cambiar su propia contraseña y su segundo factor no pasa por esta matriz:
+   * son rutas de la propia cuenta (`/api/v1/mi/...`) que solo tocan al usuario
+   * de la sesión.
+   *
+   * `exportar` se conserva donde ya existía: sacar datos no los modifica.
+   * `revisor_balance` ya no aprueba: aprobar es un cambio, y queda solo en
+   * dirección (ADR 0004).
+   */
   responsable: {
-    cliente: ['ver', 'crear', 'editar', 'exportar'],
+    cliente: ['ver', 'exportar'],
     usuario: ['ver'],
-    documento: ['ver', 'crear', 'editar', 'exportar'],
-    evidencia: ['ver', 'crear', 'exportar'],
-    proceso_mensual: ['ver', 'crear', 'editar', 'exportar'],
-    exportacion_siga: ['ver', 'crear', 'editar', 'exportar'],
-    liquidacion: ['ver', 'crear', 'editar', 'exportar'],
-    balance: ['ver', 'crear', 'editar', 'exportar'],
-    vencimiento: ['ver', 'crear', 'editar', 'exportar'],
-    // 'crear' acá significa 'puede pedirle al sistema que evalúe y levante las
-    // que correspondan', no 'puede inventar una alerta a mano': no existe ruta
-    // de alta manual. Ver rutas/alertas.ts.
-    alerta: ['ver', 'crear', 'cerrar', 'exportar'],
+    documento: ['ver', 'exportar'],
+    evidencia: ['ver', 'exportar'],
+    proceso_mensual: ['ver', 'exportar'],
+    exportacion_siga: ['ver', 'exportar'],
+    liquidacion: ['ver', 'exportar'],
+    balance: ['ver', 'exportar'],
+    vencimiento: ['ver', 'exportar'],
+    alerta: ['ver', 'exportar'],
     obligacion: ['ver'],
-    regla_notificacion: ['ver', 'editar'],
-    solicitud: ['ver', 'crear', 'cerrar', 'exportar'],
-    contacto: ['ver', 'crear', 'exportar'],
+    regla_notificacion: ['ver'],
+    solicitud: ['ver', 'exportar'],
+    contacto: ['ver', 'exportar'],
     constancia: ['ver', 'exportar'],
     configuracion: ['ver'],
     regla_impositiva: ['ver'],
     horas: ['ver', 'crear'],
+    actualizacion: ['crear'],
   },
 
   coordinador: {
     cliente: ['ver'],
-    documento: ['ver', 'crear', 'editar'],
-    evidencia: ['ver', 'crear'],
-    proceso_mensual: ['ver', 'editar'],
-    exportacion_siga: ['ver', 'crear', 'editar'],
-    liquidacion: ['ver', 'crear', 'editar'],
-    balance: ['ver', 'editar'],
-    vencimiento: ['ver', 'crear', 'editar'],
-    alerta: ['ver', 'cerrar'],
+    documento: ['ver'],
+    evidencia: ['ver'],
+    proceso_mensual: ['ver'],
+    exportacion_siga: ['ver'],
+    liquidacion: ['ver'],
+    balance: ['ver'],
+    vencimiento: ['ver'],
+    alerta: ['ver'],
     obligacion: ['ver'],
     regla_notificacion: ['ver'],
-    solicitud: ['ver', 'crear', 'cerrar'],
-    contacto: ['ver', 'crear'],
+    solicitud: ['ver'],
+    contacto: ['ver'],
     constancia: ['ver', 'exportar'],
     configuracion: ['ver'],
     regla_impositiva: ['ver'],
     horas: ['ver', 'crear'],
+    actualizacion: ['crear'],
   },
 
   auxiliar: {
     cliente: ['ver'],
-    documento: ['ver', 'crear'],
-    evidencia: ['ver', 'crear'],
-    proceso_mensual: ['ver', 'editar'],
-    exportacion_siga: ['ver', 'crear'],
+    documento: ['ver'],
+    evidencia: ['ver'],
+    proceso_mensual: ['ver'],
+    exportacion_siga: ['ver'],
     liquidacion: ['ver'],
     balance: ['ver'],
     vencimiento: ['ver'],
     alerta: ['ver'],
     obligacion: ['ver'],
     solicitud: ['ver'],
-    contacto: ['ver', 'crear'],
+    contacto: ['ver'],
     constancia: ['ver'],
     regla_impositiva: ['ver'],
     horas: ['ver', 'crear'],
+    actualizacion: ['crear'],
   },
 
   revisor_balance: {
@@ -165,8 +187,7 @@ export const MATRIZ: MatrizDePermisos = Object.freeze({
     proceso_mensual: ['ver'],
     exportacion_siga: ['ver'],
     liquidacion: ['ver'],
-    // Único rol además de dirección que puede aprobar un balance.
-    balance: ['ver', 'editar', 'aprobar', 'exportar'],
+    balance: ['ver', 'exportar'],
     vencimiento: ['ver'],
     alerta: ['ver'],
     obligacion: ['ver'],
@@ -175,6 +196,7 @@ export const MATRIZ: MatrizDePermisos = Object.freeze({
     constancia: ['ver'],
     regla_impositiva: ['ver'],
     horas: ['ver', 'crear'],
+    actualizacion: ['crear'],
   },
 
   solo_lectura: {
