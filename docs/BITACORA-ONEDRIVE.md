@@ -327,3 +327,18 @@ En concreto:
   no tiene ninguna llamada `DELETE` ni `PATCH`, y `DriveDeArchivos` no tiene
   método de borrar, mover ni renombrar.
 - **Qué NO se hizo:** nada se bajó, escribió, movió ni borró.
+
+## 2026-09-24 — Cronometraje del listado de carpetas (tarea 158)
+
+- **Qué:** una corrida de **solo lectura** que lista (`GET .../children`, solo
+  metadatos) las carpetas de los 5 clientes en el OneDrive de origen
+  (`lsosa@effort.com.py`) y mide cuánto tarda. Script descartable en el
+  scratchpad de la sesión, no versionado.
+- **Por qué:** «Actualizar ahora» tardaba ~2 minutos con IVA ya salteado y la
+  sincronización automática de cada 15 minutos usa la misma función. Daniel:
+  «cuando sean 150, ¿cuántas horas va a demorar?». Había que medirlo, no suponerlo.
+- **Resultado:** 4.519 archivos en 5 clientes, **215 s** solo de listado (COPESA
+  2.132 archivos / 208 carpetas: 81 s; DIBEC 26 s; ECOAGRO 62 s; FUMIPRO 34 s;
+  SIPAR 12 s). Cuesta ~0,4 s por carpeta, en secuencia.
+- **Qué NO se hizo:** nada se bajó, escribió, movió ni borró. Los secretos se
+  leyeron del entorno del proceso y no se imprimieron.
