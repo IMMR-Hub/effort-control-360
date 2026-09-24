@@ -66,7 +66,7 @@ function descargarCsv(filas: readonly FaltanteDeClientePeriodo[]): void {
     ETIQUETA_ESTADO_RG90[f.estadoPlanillaRg90],
   ]);
   // BOM al inicio: sin él, Excel en Windows desarma los acentos del archivo.
-  const csv = `﻿${[encabezado, ...lineas].map((fila) => fila.map(celdaCsv).join(',')).join('\r\n')}`;
+  const csv = `\uFEFF${[encabezado, ...lineas].map((fila) => fila.map(celdaCsv).join(',')).join('\r\n')}`;
 
   const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
   const enlace = document.createElement('a');
