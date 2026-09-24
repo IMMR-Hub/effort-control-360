@@ -209,6 +209,16 @@ export default function Faltantes() {
               : `${resumenActualizacion.ivaPeriodosCalculados} período(s) de IVA recalculados`}{' '}
             · {resumenActualizacion.alertasResueltas} alerta(s) resuelta(s).
           </p>
+          {resumenActualizacion.sincronizacionMs !== undefined && resumenActualizacion.cicloMs !== undefined && (
+            <p className="mt-1 text-xs">
+              Tardó {((resumenActualizacion.sincronizacionMs + resumenActualizacion.cicloMs) / 1000).toFixed(1)} s:
+              OneDrive {(resumenActualizacion.sincronizacionMs / 1000).toFixed(1)} s (
+              {resumenActualizacion.modoDeSincronizacion === 'completa'
+                ? 'recorrió todas las carpetas'
+                : 'solo lo que cambió'}
+              ) y cálculo {(resumenActualizacion.cicloMs / 1000).toFixed(1)} s.
+            </p>
+          )}
         </div>
       )}
 

@@ -18,7 +18,7 @@ import type { FastifyInstance } from 'fastify';
 
 import { ACCIONES, registrarEvento } from '../bitacora.js';
 import { ErrorDeAplicacion, type Dependencias } from '../servidor.js';
-import { sincronizarDesdeOneDrive } from '../servicios/sincronizadorDeOneDrive.js';
+import { intentarSincronizar, sincronizarOneDrive } from '../servicios/sincronizacionIncremental.js';
 import { ejecutarCicloDeCalculo } from '../servicios/cicloDeCalculo.js';
 import { autorizar } from './comun.js';
 
@@ -39,21 +39,35 @@ export async function registrarRutasDeActualizarAhora(
       );
     }
 
-    const sincronizacion = await sincronizarDesdeOneDrive(
-      {
-        clientes: deps.clientes,
-        documentos: deps.documentos,
-        origen: deps.driveDeOrigen,
-        destino: deps.drive,
-        registrarEvidencia: (datos) => deps.evidencias.registrarOVincular(datos),
-        huellasDeOrigen: (clienteId) => deps.archivosDeOrigen.huellas(clienteId),
-        marcarArchivoDeOrigen: (datos) => deps.archivosDeOrigen.marcar(datos),
-        ahora: deps.ahora,
-      },
-      sujeto.usuarioId,
+    const origen = deps.driveDeOrigen;
+    const destino = deps.drive;
+    const intento = await intentarSincronizar(() =>
+      sincronizarOneDrive(
+        {
+          clientes: deps.clientes,
+          documentos: deps.documentos,
+          origen,
+          destino,
+          registrarEvidencia: (datos) => deps.evidencias.registrarOVincular(datos),
+          huellasDeOrigen: (clienteId) => deps.archivosDeOrigen.huellas(clienteId),
+          marcarArchivoDeOrigen: (datos) => deps.archivosDeOrigen.marcar(datos),
+          ahora: deps.ahora,
+        },
+        sujeto.usuarioId,
+      ),
     );
+    if (intento.ocupado) {
+      throw new ErrorDeAplicacion(
+        409,
+        'Ya hay una sincronización en curso (la automática, o alguien apretó antes). Esperá un momento y volvé a intentar.',
+        'sincronizacion_en_curso',
+      );
+    }
+    const sincronizacion = intento.valor;
 
+    const inicioDelCiclo = Date.now();
     const ciclo = await ejecutarCicloDeCalculo(deps, sujeto.usuarioId, 'manual');
+    const cicloMs = Date.now() - inicioDelCiclo;
 
     await registrarEvento(deps.bitacora, peticion.log, {
       usuarioId: sujeto.usuarioId,
@@ -70,6 +84,9 @@ export async function registrarRutasDeActualizarAhora(
         alertasCreadas: ciclo.alertasCreadas,
         alertasActualizadas: ciclo.alertasActualizadas,
         alertasResueltas: ciclo.alertasResueltas,
+        modoDeSincronizacion: sincronizacion.modo,
+        sincronizacionMs: sincronizacion.duracionMs,
+        cicloMs,
         disparo: 'manual',
       },
       ip: peticion.ip,
@@ -88,6 +105,11 @@ export async function registrarRutasDeActualizarAhora(
       alertasCreadas: ciclo.alertasCreadas,
       alertasActualizadas: ciclo.alertasActualizadas,
       alertasResueltas: ciclo.alertasResueltas,
+      // Cuánto tardó cada parte: sin esto, «tarda mucho» es una impresión y no
+      // un dato (tarea 158).
+      modoDeSincronizacion: sincronizacion.modo,
+      sincronizacionMs: sincronizacion.duracionMs,
+      cicloMs,
     };
   });
 }

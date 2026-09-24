@@ -13,7 +13,14 @@
  * `scripts/verify.mjs`).
  */
 
-import { ErrorTransitorioDeDrive, type ArchivoDrive, type DriveDeArchivos } from './puerto.js';
+import {
+  ErrorTransitorioDeDrive,
+  TokenDeCambiosVencido,
+  type ArchivoDrive,
+  type CambioDeArchivo,
+  type DriveDeArchivos,
+  type FuenteDeCambios,
+} from './puerto.js';
 
 export interface ConfiguracionGraph {
   readonly tenantId: string;
@@ -71,10 +78,47 @@ interface ElementoGraph {
   readonly lastModifiedDateTime: string;
   readonly file?: { readonly mimeType?: string };
   readonly folder?: unknown;
+  readonly deleted?: unknown;
+  readonly parentReference?: { readonly path?: string };
 }
 
 interface ListadoGraph {
   readonly value: readonly ElementoGraph[];
+}
+
+/** Página de la consulta de cambios de Graph (`/delta`). */
+interface PaginaDeCambios extends ListadoGraph {
+  readonly '@odata.nextLink'?: string;
+  readonly '@odata.deltaLink'?: string;
+}
+
+/** Una respuesta de error de Graph, con su código para poder decidir qué hacer. */
+class ErrorDeGraph extends Error {
+  constructor(
+    mensaje: string,
+    readonly estado: number,
+  ) {
+    super(mensaje);
+  }
+}
+
+/**
+ * Ruta desde la raíz del drive que Graph informa en `parentReference.path`
+ * (`/drives/{id}/root:/CLIENTES/COPESA`, con los espacios codificados).
+ * Devuelve `''` para la raíz y `null` si no hay una ruta que leer.
+ */
+function rutaDesdeReferencia(ruta: string | undefined): string | null {
+  if (!ruta) return null;
+  const indice = ruta.indexOf('root:');
+  if (indice < 0) return null;
+  return decodeURIComponent(ruta.slice(indice + 'root:'.length)).replace(/^\/+/, '').replace(/\/+$/, '');
+}
+
+/** Un enlace de cambios de Graph trae su token en el parámetro `token`. */
+function tokenDelEnlace(enlace: string): string {
+  const token = new URL(enlace).searchParams.get('token');
+  if (!token) throw new Error('Microsoft Graph devolvió un enlace de cambios sin token.');
+  return token;
 }
 
 function aArchivoDrive(item: ElementoGraph, carpeta: string): ArchivoDrive {
@@ -99,7 +143,7 @@ function normalizarCarpeta(carpeta: string): string {
   return carpeta.replace(/^\/+/, '').replace(/\/+$/, '');
 }
 
-export class DriveGraph implements DriveDeArchivos {
+export class DriveGraph implements DriveDeArchivos, FuenteDeCambios {
   #tokenEnCache: { token: string; expiraEn: number } | null = null;
   #driveEnCache: string | null = null;
 
@@ -171,8 +215,9 @@ export class DriveGraph implements DriveDeArchivos {
     });
 
     if (!respuesta.ok) {
-      throw new Error(
+      throw new ErrorDeGraph(
         `Microsoft Graph devolvió ${respuesta.status} en ${ruta}: ${await respuesta.text()}`,
+        respuesta.status,
       );
     }
 
@@ -242,6 +287,92 @@ export class DriveGraph implements DriveDeArchivos {
     }
 
     return encontrados;
+  }
+
+  /**
+   * Un token que dice «desde ahora» (`?token=latest`): la respuesta no trae los
+   * archivos que ya existen, solo el enlace para preguntar después qué cambió.
+   */
+  async tokenDeCambiosActual(): Promise<string> {
+    const respuesta = await this.#peticion(`/drives/${await this.#drive()}/root/delta?token=latest`);
+    const pagina = (await respuesta.json()) as PaginaDeCambios;
+    const enlace = pagina['@odata.deltaLink'];
+    if (!enlace) throw new Error('Microsoft Graph no devolvió el enlace de cambios.');
+    return tokenDelEnlace(enlace);
+  }
+
+  /**
+   * Cambios de TODO el drive desde `token` (en OneDrive Empresarial la consulta
+   * de cambios solo existe en la raíz, no por carpeta). Sigue las páginas hasta
+   * el enlace final: cortar antes perdería cambios en silencio.
+   */
+  async cambiosDesde(
+    token: string,
+  ): Promise<{ readonly cambios: readonly CambioDeArchivo[]; readonly tokenSiguiente: string }> {
+    const cambios: CambioDeArchivo[] = [];
+    let url: string | null = `/drives/${await this.#drive()}/root/delta?token=${encodeURIComponent(token)}`;
+    let tokenSiguiente: string | null = null;
+
+    while (url) {
+      let pagina: PaginaDeCambios;
+      try {
+        pagina = (await (await this.#peticion(url)).json()) as PaginaDeCambios;
+      } catch (error) {
+        if (error instanceof ErrorDeGraph && error.estado === 410) {
+          throw new TokenDeCambiosVencido(error.message);
+        }
+        throw error;
+      }
+
+      for (const item of pagina.value) {
+        cambios.push({
+          itemId: item.id,
+          nombre: item.name,
+          tamanoBytes: item.size ?? 0,
+          modificadoEn: new Date(item.lastModifiedDateTime),
+          tipoMime: item.file?.mimeType ?? null,
+          eliminado: item.deleted !== undefined,
+          esCarpeta: item.folder !== undefined,
+        });
+      }
+
+      const siguiente = pagina['@odata.nextLink'];
+      const final = pagina['@odata.deltaLink'];
+      if (siguiente) url = siguiente.replace('https://graph.microsoft.com/v1.0', '');
+      else {
+        url = null;
+        if (final) tokenSiguiente = tokenDelEnlace(final);
+      }
+    }
+
+    if (tokenSiguiente === null) throw new Error('Microsoft Graph no cerró la consulta de cambios.');
+    return { cambios, tokenSiguiente };
+  }
+
+  async rutaDeLaCarpetaDe(itemId: string): Promise<string | null> {
+    try {
+      const respuesta = await this.#peticion(
+        `/drives/${await this.#drive()}/items/${itemId}?$select=id,parentReference`,
+      );
+      const item = (await respuesta.json()) as ElementoGraph;
+      return rutaDesdeReferencia(item.parentReference?.path);
+    } catch (error) {
+      // Borrado o movido fuera de alcance entre el cambio y esta consulta.
+      if (error instanceof ErrorDeGraph && error.estado === 404) return null;
+      throw error;
+    }
+  }
+
+  async rutaDeCarpetaPorId(itemId: string): Promise<string> {
+    const respuesta = await this.#peticion(
+      `/drives/${await this.#drive()}/items/${itemId}?$select=id,name,parentReference`,
+    );
+    const item = (await respuesta.json()) as ElementoGraph;
+    const padre = rutaDesdeReferencia(item.parentReference?.path);
+    if (padre === null) {
+      throw new Error(`Microsoft Graph no informó la ruta de la carpeta ${itemId}.`);
+    }
+    return padre === '' ? item.name : `${padre}/${item.name}`;
   }
 
   async enlaceWeb(itemId: string): Promise<string> {

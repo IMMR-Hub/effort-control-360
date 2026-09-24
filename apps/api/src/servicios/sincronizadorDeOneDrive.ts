@@ -152,6 +152,13 @@ export interface ResumenDeSincronizacion {
   readonly fallos: readonly FalloDeSincronizacion[];
   /** True si se alcanzó el tope y quedaron archivos para la próxima corrida. */
   readonly quedaronPendientes: boolean;
+  /**
+   * Fallos que se arreglan reintentando (una carpeta que no se pudo leer, una
+   * copia que se cortó). No cuenta los archivos demasiado grandes: esos son una
+   * decisión, y reintentarlos no cambia nada. La sincronización por cambios
+   * (tarea 158) solo da por visto un cambio si esto es cero.
+   */
+  readonly errores: number;
 }
 
 /**
@@ -236,6 +243,7 @@ export async function sincronizarDesdeOneDrive(
   let nuevosEnTotal = 0;
   let descargas = 0;
   let quedaronPendientes = false;
+  let errores = 0;
 
   for (const cliente of clientes) {
     if (!cliente.activo || !cliente.carpetaOneDriveId) continue;
@@ -244,6 +252,7 @@ export async function sincronizarDesdeOneDrive(
     try {
       archivos = await deps.origen.listarRecursivoPorId(cliente.carpetaOneDriveId);
     } catch (error) {
+      errores += 1;
       fallos.push({
         cliente: cliente.nombre,
         archivo: '(la carpeta entera)',
@@ -370,6 +379,7 @@ export async function sincronizarDesdeOneDrive(
         nuevos += 1;
         nuevosEnTotal += 1;
       } catch (error) {
+        errores += 1;
         fallos.push({
           cliente: cliente.nombre,
           archivo: archivo.nombre,
@@ -381,5 +391,5 @@ export async function sincronizarDesdeOneDrive(
     porCliente.push({ cliente: cliente.nombre, revisados, nuevos, yaEstaban, sinCambios });
   }
 
-  return { clientes: porCliente, nuevosEnTotal, fallos, quedaronPendientes };
+  return { clientes: porCliente, nuevosEnTotal, fallos, quedaronPendientes, errores };
 }

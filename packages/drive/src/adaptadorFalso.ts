@@ -8,16 +8,30 @@
 
 import { randomUUID } from 'node:crypto';
 
-import type { ArchivoDrive, DriveDeArchivos } from './puerto.js';
+import {
+  TokenDeCambiosVencido,
+  type ArchivoDrive,
+  type CambioDeArchivo,
+  type DriveDeArchivos,
+  type FuenteDeCambios,
+} from './puerto.js';
 
 interface EntradaFalsa {
   readonly meta: ArchivoDrive;
   readonly contenido: Buffer;
 }
 
-export class DriveFalso implements DriveDeArchivos {
+export class DriveFalso implements DriveDeArchivos, FuenteDeCambios {
   readonly #archivos = new Map<string, EntradaFalsa>();
   readonly #carpetas = new Map<string, string>();
+
+  /** Registro de cambios en orden: el token es cuántos había cuando se pidió. */
+  readonly #cambios: { readonly itemId: string; readonly eliminado: boolean }[] = [];
+  #tokensVencidos = false;
+  /** Cuántas veces se recorrió una carpeta entera: lo que la tarea 158 quiere evitar. */
+  recorridosCompletos = 0;
+  /** Cuántas veces se pidió la ruta de la carpeta de un archivo cambiado. */
+  consultasDeRuta = 0;
 
   async listar(carpeta: string): Promise<ArchivoDrive[]> {
     return [...this.#archivos.values()]
@@ -34,6 +48,7 @@ export class DriveFalso implements DriveDeArchivos {
    * cuelga de ella.
    */
   async listarRecursivoPorId(itemId: string): Promise<ArchivoDrive[]> {
+    this.recorridosCompletos += 1;
     const raiz = this.#carpetas.get(itemId);
     if (raiz === undefined) {
       throw new Error(`Carpeta inexistente en el drive falso: ${itemId}`);
@@ -84,7 +99,55 @@ export class DriveFalso implements DriveDeArchivos {
     };
 
     this.#archivos.set(meta.itemId, { meta, contenido });
+    this.#cambios.push({ itemId: meta.itemId, eliminado: false });
     return meta;
+  }
+
+  async tokenDeCambiosActual(): Promise<string> {
+    return String(this.#cambios.length);
+  }
+
+  async cambiosDesde(
+    token: string,
+  ): Promise<{ readonly cambios: readonly CambioDeArchivo[]; readonly tokenSiguiente: string }> {
+    if (this.#tokensVencidos) throw new TokenDeCambiosVencido('410 Gone (simulado)');
+
+    const cambios: CambioDeArchivo[] = [];
+    for (const { itemId, eliminado } of this.#cambios.slice(Number(token))) {
+      const entrada = this.#archivos.get(itemId);
+      cambios.push({
+        itemId,
+        nombre: entrada?.meta.nombre ?? '',
+        tamanoBytes: entrada?.meta.tamanoBytes ?? 0,
+        modificadoEn: entrada?.meta.modificadoEn ?? new Date(0),
+        tipoMime: entrada?.meta.tipoMime ?? null,
+        eliminado,
+        esCarpeta: false,
+      });
+    }
+    return { cambios, tokenSiguiente: String(this.#cambios.length) };
+  }
+
+  async rutaDeLaCarpetaDe(itemId: string): Promise<string | null> {
+    this.consultasDeRuta += 1;
+    return this.#archivos.get(itemId)?.meta.rutaCarpeta ?? null;
+  }
+
+  async rutaDeCarpetaPorId(itemId: string): Promise<string> {
+    const ruta = this.#carpetas.get(itemId);
+    if (ruta === undefined) throw new Error(`Carpeta inexistente en el drive falso: ${itemId}`);
+    return ruta;
+  }
+
+  /** Solo para pruebas: simula que Graph responde 410 a cualquier token. */
+  vencerTokens(): void {
+    this.#tokensVencidos = true;
+  }
+
+  /** Solo para pruebas: simula que alguien borró el archivo en OneDrive. */
+  eliminarParaPruebas(itemId: string): void {
+    this.#archivos.delete(itemId);
+    this.#cambios.push({ itemId, eliminado: true });
   }
 
   /**
@@ -110,6 +173,7 @@ export class DriveFalso implements DriveDeArchivos {
       tipoMime: null,
     };
     this.#archivos.set(meta.itemId, { meta, contenido });
+    this.#cambios.push({ itemId: meta.itemId, eliminado: false });
     return meta;
   }
 }

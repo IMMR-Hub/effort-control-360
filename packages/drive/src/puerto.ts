@@ -22,6 +22,52 @@ export class ErrorTransitorioDeDrive extends Error {
   override readonly name = 'ErrorTransitorioDeDrive';
 }
 
+/**
+ * El token de cambios que se tenía ya no sirve (Graph respondió 410 Gone).
+ *
+ * Quien llama tiene que hacer una pasada completa: no hay forma de saber qué
+ * cambió mientras el token estuvo vencido (tarea 158).
+ */
+export class TokenDeCambiosVencido extends Error {
+  override readonly name = 'TokenDeCambiosVencido';
+}
+
+/** Un archivo que Graph informó como creado, modificado o borrado desde un token. */
+export interface CambioDeArchivo {
+  readonly itemId: string;
+  readonly nombre: string;
+  readonly tamanoBytes: number;
+  readonly modificadoEn: Date;
+  readonly tipoMime: string | null;
+  readonly eliminado: boolean;
+  /** Las carpetas también aparecen entre los cambios; no se copian. */
+  readonly esCarpeta: boolean;
+}
+
+/**
+ * Detectar qué cambió en el drive sin recorrerlo entero (tarea 158).
+ *
+ * Recorrer todas las carpetas de todos los clientes cuesta ~0,4 s por carpeta y
+ * crece con la cantidad de clientes; preguntar «qué cambió desde la última vez»
+ * cuesta una llamada. Es un contrato aparte de `DriveDeArchivos` para que el
+ * resto del sistema no dependa de él: quien no lo tenga sigue recorriendo todo.
+ *
+ * Todo es de solo lectura.
+ */
+export interface FuenteDeCambios {
+  /** Un token que representa «desde ahora». No devuelve los archivos existentes. */
+  tokenDeCambiosActual(): Promise<string>;
+  /**
+   * Cambios de todo el drive desde `token`, y el token para la próxima vez.
+   * Lanza `TokenDeCambiosVencido` si el token ya no sirve.
+   */
+  cambiosDesde(token: string): Promise<{ readonly cambios: readonly CambioDeArchivo[]; readonly tokenSiguiente: string }>;
+  /** Ruta, desde la raíz del drive, de la carpeta que contiene el archivo; `null` si ya no existe. */
+  rutaDeLaCarpetaDe(itemId: string): Promise<string | null>;
+  /** Ruta, desde la raíz del drive, de una carpeta identificada por su id. */
+  rutaDeCarpetaPorId(itemId: string): Promise<string>;
+}
+
 export interface ArchivoDrive {
   readonly itemId: string;
   readonly nombre: string;

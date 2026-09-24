@@ -162,6 +162,26 @@ describe('Faltantes', () => {
       expect(screen.getByText(/1 presentación\(es\) detectada\(s\)/)).toBeInTheDocument();
     });
 
+    it('dice cuánto tardó cada parte y si OneDrive se recorrió entero o solo lo que cambió (tarea 158)', async () => {
+      await montar([UN_FALTANTE]);
+
+      mock.mockDeRuta('POST /api/v1/actualizar-ahora', () =>
+        respuestaJson({
+          archivosNuevos: 0, archivosConFallo: 0, ivaPeriodosCalculados: 0, ivaHallazgosNuevos: 0,
+          ivaOcupado: false, presentacionesMarcadas: 0, presentadasFueraDeTermino: 0,
+          alertasCreadas: 0, alertasActualizadas: 0, alertasResueltas: 0,
+          modoDeSincronizacion: 'incremental', sincronizacionMs: 1500, cicloMs: 2500,
+        }),
+      );
+
+      await usuario.click(screen.getByRole('button', { name: /actualizar ahora/i }));
+
+      const linea = await screen.findByText(/Tardó 4\.0 s/);
+      expect(linea).toHaveTextContent('OneDrive 1.5 s');
+      expect(linea).toHaveTextContent('solo lo que cambió');
+      expect(linea).toHaveTextContent('cálculo 2.5 s');
+    });
+
     it('un error de la actualización se muestra tal cual, sin perder la lista actual', async () => {
       await montar([UN_FALTANTE]);
 

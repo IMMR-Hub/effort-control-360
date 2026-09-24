@@ -19,7 +19,8 @@ import { crearCalendario, feriadosParaguay, hoyEnParaguay } from '@effort/core';
 import type { Dependencias } from '../servidor.js';
 import { enviarAvisosDeAlertas, VENTANA_DE_AVISOS_MS } from './avisosPorCorreo.js';
 import { enviarRecordatorios } from './recordatorios.js';
-import { detalleParaBitacora, sincronizarDesdeOneDrive } from './sincronizadorDeOneDrive.js';
+import { detalleParaBitacora } from './sincronizadorDeOneDrive.js';
+import { intentarSincronizar, sincronizarOneDrive } from './sincronizacionIncremental.js';
 import { ejecutarCicloDeCalculo } from './cicloDeCalculo.js';
 
 /** Cada cuánto se revisa la carpeta de EFFORT. Confirmado con Daniel. */
@@ -286,76 +287,88 @@ export function programarSincronizacionDeOneDrive(
     return;
   }
 
-  // Una corrida por vez. Sin esto, una sincronización lenta (muchos archivos,
-  // red lenta) se solaparía con la siguiente y las dos leerían y escribirían lo
-  // mismo al mismo tiempo.
-  let enCurso = false;
-
   async function correr(): Promise<void> {
-    if (enCurso) {
-      registrador.info('Sincronización de OneDrive salteada: la anterior sigue corriendo.');
-      return;
-    }
-    enCurso = true;
+    // Una corrida por vez, compartida con el botón «Actualizar ahora»: dos
+    // sincronizaciones simultáneas bajarían lo mismo dos veces y se pisarían el
+    // token de cambios (tarea 158).
+    const intento = await intentarSincronizar(async () => {
+      // Este par de líneas existe por la caída del 2026-09-12: cuando el kernel
+      // mata el proceso por memoria no queda NADA en el log, así que la única
+      // forma de saber que fue memoria es haber anotado cuánta había justo antes.
+      registrador.info({ memoriaMB: memoriaMB() }, 'Sincronización de OneDrive: empieza.');
 
-    // Este par de líneas existe por la caída del 2026-09-12: cuando el kernel
-    // mata el proceso por memoria no queda NADA en el log, así que la única
-    // forma de saber que fue memoria es haber anotado cuánta había justo antes.
-    registrador.info({ memoriaMB: memoriaMB() }, 'Sincronización de OneDrive: empieza.');
+      try {
+        const usuario = await deps.usuarios.buscarPorEmail(CORREO_DEL_SISTEMA);
+        if (!usuario) {
+          registrador.error(
+            `No existe el usuario ${CORREO_DEL_SISTEMA}: no se puede atribuir la importación a nadie.`,
+          );
+          return;
+        }
 
-    try {
-      const usuario = await deps.usuarios.buscarPorEmail(CORREO_DEL_SISTEMA);
-      if (!usuario) {
-        registrador.error(
-          `No existe el usuario ${CORREO_DEL_SISTEMA}: no se puede atribuir la importación a nadie.`,
+        const resumen = await sincronizarOneDrive(
+          {
+            clientes: deps.clientes,
+            documentos: deps.documentos,
+            origen: deps.driveDeOrigen!,
+            destino: deps.drive!,
+            registrarEvidencia: (datos) => deps.evidencias.registrarOVincular(datos),
+            huellasDeOrigen: (clienteId) => deps.archivosDeOrigen.huellas(clienteId),
+            marcarArchivoDeOrigen: (datos) => deps.archivosDeOrigen.marcar(datos),
+            ahora: deps.ahora,
+          },
+          usuario.id,
         );
-        return;
-      }
 
-      const resumen = await sincronizarDesdeOneDrive(
-        {
-          clientes: deps.clientes,
-          documentos: deps.documentos,
-          origen: deps.driveDeOrigen!,
-          destino: deps.drive!,
-          registrarEvidencia: (datos) => deps.evidencias.registrarOVincular(datos),
-          huellasDeOrigen: (clienteId) => deps.archivosDeOrigen.huellas(clienteId),
-          marcarArchivoDeOrigen: (datos) => deps.archivosDeOrigen.marcar(datos),
-          ahora: deps.ahora,
-        },
-        usuario.id,
-      );
-
-      // Solo se escribe en la bitácora cuando hubo algo que contar: un evento
-      // cada 15 minutos diciendo "no pasó nada" enterraría los que sí importan.
-      if (resumen.nuevosEnTotal > 0 || resumen.fallos.length > 0) {
-        await deps.bitacora.registrar({
-          usuarioId: usuario.id,
-          accion: 'evidencia.onedrive_sincronizado',
-          entidad: 'evidencia',
-          entidadId: null,
-          clienteId: null,
-          datosAntes: null,
-          // El detalle (cliente, archivo, motivo) va acá, no solo el número:
-          // un conteo sin detalle es invisible para quien mira la bitácora
-          // (ver `detalleParaBitacora`).
-          datosDespues: { ...detalleParaBitacora(resumen), disparo: 'automático' },
-          ipTruncada: null,
-          agenteUsuario: 'sincronización automática',
-          peticionId: null,
-        });
-
+        // Cada vuelta deja una línea en el log con cuánto tardó y de qué modo:
+        // sin esto, medir si la sincronización se volvió lenta (tarea 158)
+        // obliga a adivinar. Al log y no a la bitácora: un evento cada 15
+        // minutos diciendo "no pasó nada" enterraría los que sí importan.
         registrador.info(
-          { nuevos: resumen.nuevosEnTotal, fallos: resumen.fallos.length, memoriaMB: memoriaMB() },
+          {
+            modo: resumen.modo,
+            motivoDePasadaCompleta: resumen.motivoDePasadaCompleta,
+            duracionMs: resumen.duracionMs,
+            cambiosRecibidos: resumen.cambiosRecibidos,
+            nuevos: resumen.nuevosEnTotal,
+            fallos: resumen.fallos.length,
+            memoriaMB: memoriaMB(),
+          },
           'Sincronización de OneDrive terminada.',
         );
+
+        // Solo se escribe en la bitácora cuando hubo algo que contar.
+        if (resumen.nuevosEnTotal > 0 || resumen.fallos.length > 0) {
+          await deps.bitacora.registrar({
+            usuarioId: usuario.id,
+            accion: 'evidencia.onedrive_sincronizado',
+            entidad: 'evidencia',
+            entidadId: null,
+            clienteId: null,
+            datosAntes: null,
+            // El detalle (cliente, archivo, motivo) va acá, no solo el número:
+            // un conteo sin detalle es invisible para quien mira la bitácora
+            // (ver `detalleParaBitacora`).
+            datosDespues: {
+              ...detalleParaBitacora(resumen),
+              disparo: 'automático',
+              modo: resumen.modo,
+              duracionMs: resumen.duracionMs,
+            },
+            ipTruncada: null,
+            agenteUsuario: 'sincronización automática',
+            peticionId: null,
+          });
+        }
+      } catch (error) {
+        // Un fallo acá no puede tumbar el proceso: la API tiene que seguir
+        // atendiendo aunque OneDrive esté caído.
+        registrador.error({ err: error }, 'Falló la sincronización automática de OneDrive.');
       }
-    } catch (error) {
-      // Un fallo acá no puede tumbar el proceso: la API tiene que seguir
-      // atendiendo aunque OneDrive esté caído.
-      registrador.error({ err: error }, 'Falló la sincronización automática de OneDrive.');
-    } finally {
-      enCurso = false;
+    });
+
+    if (intento.ocupado) {
+      registrador.info('Sincronización de OneDrive salteada: la anterior sigue corriendo.');
     }
   }
 

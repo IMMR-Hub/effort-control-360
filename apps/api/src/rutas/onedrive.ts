@@ -10,7 +10,7 @@ import type { FastifyInstance } from 'fastify';
 
 import { ACCIONES, registrarEvento } from '../bitacora.js';
 import { ErrorDeAplicacion, type Dependencias } from '../servidor.js';
-import { sincronizarDesdeOneDrive } from '../servicios/sincronizadorDeOneDrive.js';
+import { intentarSincronizar, sincronizarOneDrive } from '../servicios/sincronizacionIncremental.js';
 import { autorizar, paramsId } from './comun.js';
 
 export async function registrarRutasDeOneDrive(
@@ -58,19 +58,31 @@ export async function registrarRutasDeOneDrive(
       );
     }
 
-    const resumen = await sincronizarDesdeOneDrive(
-      {
-        clientes: deps.clientes,
-        documentos: deps.documentos,
-        origen: deps.driveDeOrigen,
-        destino: deps.drive,
-        registrarEvidencia: (datos) => deps.evidencias.registrarOVincular(datos),
-        huellasDeOrigen: (clienteId) => deps.archivosDeOrigen.huellas(clienteId),
-        marcarArchivoDeOrigen: (datos) => deps.archivosDeOrigen.marcar(datos),
-        ahora: deps.ahora,
-      },
-      sujeto.usuarioId,
+    const origen = deps.driveDeOrigen;
+    const destino = deps.drive;
+    const intento = await intentarSincronizar(() =>
+      sincronizarOneDrive(
+        {
+          clientes: deps.clientes,
+          documentos: deps.documentos,
+          origen,
+          destino,
+          registrarEvidencia: (datos) => deps.evidencias.registrarOVincular(datos),
+          huellasDeOrigen: (clienteId) => deps.archivosDeOrigen.huellas(clienteId),
+          marcarArchivoDeOrigen: (datos) => deps.archivosDeOrigen.marcar(datos),
+          ahora: deps.ahora,
+        },
+        sujeto.usuarioId,
+      ),
     );
+    if (intento.ocupado) {
+      throw new ErrorDeAplicacion(
+        409,
+        'Ya hay una sincronización en curso. Esperá un momento y volvé a intentar.',
+        'sincronizacion_en_curso',
+      );
+    }
+    const resumen = intento.valor;
 
     await registrarEvento(deps.bitacora, peticion.log, {
       usuarioId: sujeto.usuarioId,
@@ -82,6 +94,8 @@ export async function registrarRutasDeOneDrive(
         nuevos: resumen.nuevosEnTotal,
         fallos: resumen.fallos.length,
         quedaronPendientes: resumen.quedaronPendientes,
+        modo: resumen.modo,
+        duracionMs: resumen.duracionMs,
         disparo: 'manual',
       },
       ip: peticion.ip,

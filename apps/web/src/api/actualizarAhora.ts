@@ -20,6 +20,10 @@ export interface ResumenDeActualizacion {
   readonly alertasCreadas: number;
   readonly alertasActualizadas: number;
   readonly alertasResueltas: number;
+  /** Cuánto tardó cada parte (tarea 158). Ausentes en respuestas de versiones anteriores. */
+  readonly modoDeSincronizacion?: 'completa' | 'incremental';
+  readonly sincronizacionMs?: number;
+  readonly cicloMs?: number;
 }
 
 export function actualizarAhora(): Promise<ResumenDeActualizacion> {
