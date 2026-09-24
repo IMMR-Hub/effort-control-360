@@ -115,7 +115,7 @@ describe('Faltantes', () => {
       expect(screen.queryByRole('button', { name: /actualizar ahora/i })).not.toBeInTheDocument();
     });
 
-    it('mientras corre, avisa que puede tardar varios minutos — no parece congelado', async () => {
+    it('mientras corre, avisa cuánto suele tardar — no parece congelado', async () => {
       await montar([UN_FALTANTE]);
 
       let resolver!: (respuesta: Response) => void;
@@ -126,7 +126,7 @@ describe('Faltantes', () => {
 
       await usuario.click(screen.getByRole('button', { name: /actualizar ahora/i }));
 
-      expect(await screen.findByText(/puede tardar varios minutos/i)).toBeInTheDocument();
+      expect(await screen.findByText(/suele tardar menos de un minuto/i)).toBeInTheDocument();
 
       resolver(
         respuestaJson({

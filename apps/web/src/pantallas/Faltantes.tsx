@@ -183,9 +183,9 @@ export default function Faltantes() {
           role="status"
           className="rounded border border-borde-marca bg-superficie-tenue px-3 py-2 text-sm text-tinta-suave"
         >
-          Releyendo OneDrive y recalculando el IVA de toda la cartera — con los libros reales de los 5
-          clientes esto puede tardar varios minutos. No hace falta esperar mirando esta pantalla: se
-          puede seguir trabajando en otra pestaña y volver después.
+          Buscando lo que cambió en OneDrive y recalculando — suele tardar menos de un minuto; la
+          primera vez después de una actualización del sistema, cerca de dos. No hace falta esperar
+          mirando esta pantalla: se puede seguir trabajando en otra pestaña y volver después.
         </p>
       )}
 

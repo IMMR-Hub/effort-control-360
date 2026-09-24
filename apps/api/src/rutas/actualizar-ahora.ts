@@ -85,6 +85,7 @@ export async function registrarRutasDeActualizarAhora(
         modoDeSincronizacion: sincronizacion.modo,
         sincronizacionMs: sincronizacion.duracionMs,
         cicloMs,
+        cicloPorEtapaMs: ciclo.tiemposMs,
         disparo: 'manual',
       },
       ip: peticion.ip,

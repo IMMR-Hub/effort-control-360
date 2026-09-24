@@ -44,6 +44,18 @@ export interface ResumenDelCiclo {
   readonly alertasCreadas: number;
   readonly alertasActualizadas: number;
   readonly alertasResueltas: number;
+  /**
+   * Cuánto tardó cada etapa, en milisegundos. Sin esto, «el ciclo tarda 19 s»
+   * no dice dónde: la tarea 158 dejó la sincronización en segundos y el resto
+   * es el cálculo, y hay que saber cuál de las cuatro etapas es la lenta antes
+   * de tocar nada.
+   */
+  readonly tiemposMs: {
+    readonly vencimientos: number;
+    readonly iva: number;
+    readonly presentaciones: number;
+    readonly alertas: number;
+  };
 }
 
 export async function ejecutarCicloDeCalculo(
@@ -58,6 +70,15 @@ export async function ejecutarCicloDeCalculo(
   const anterior =
     hoy.mes === 1 ? `${hoy.anio - 1}-12` : `${hoy.anio}-${String(hoy.mes - 1).padStart(2, '0')}`;
 
+  const marca = () => Date.now();
+  let inicioDeEtapa = marca();
+  const tiempos = { vencimientos: 0, iva: 0, presentaciones: 0, alertas: 0 };
+  const cerrarEtapa = (nombre: keyof typeof tiempos) => {
+    const ahoraMs = marca();
+    tiempos[nombre] = ahoraMs - inicioDeEtapa;
+    inicioDeEtapa = ahoraMs;
+  };
+
   let vencimientosGenerados = 0;
   const sinRevisar = new Set<number>();
   for (const cual of [anterior, periodo]) {
@@ -69,6 +90,7 @@ export async function ejecutarCicloDeCalculo(
     vencimientosGenerados += resumen.creados;
     for (const anio of resumen.aniosSinRevisarFeriados) sinRevisar.add(anio);
   }
+  cerrarEtapa('vencimientos');
 
   /*
    * El IVA se recalcula ANTES de evaluar alertas: un hallazgo nuevo tiene que
@@ -109,6 +131,7 @@ export async function ejecutarCicloDeCalculo(
       ivaHallazgosNuevos = intento.valor.hallazgosNuevos;
     }
   }
+  cerrarEtapa('iva');
 
   /*
    * Las presentaciones se detectan ANTES de evaluar alertas, por la misma
@@ -159,6 +182,7 @@ export async function ejecutarCicloDeCalculo(
     presentacionesMarcadas = detectadas.vencimientosMarcados;
     presentadasFueraDeTermino = detectadas.fueraDeTermino;
   }
+  cerrarEtapa('presentaciones');
 
   const alertas = await evaluarAlertas(
     {
@@ -185,5 +209,6 @@ export async function ejecutarCicloDeCalculo(
     alertasCreadas: alertas.creadas,
     alertasActualizadas: alertas.actualizadas,
     alertasResueltas: alertas.resueltas,
+    tiemposMs: (cerrarEtapa('alertas'), tiempos),
   };
 }

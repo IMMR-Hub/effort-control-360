@@ -235,6 +235,8 @@ export function programarCalculoDeVencimientosYAlertas(
             ivaHallazgosNuevos: ivaHallazgos,
             presentacionesMarcadas,
             presentadasFueraDeTermino,
+            // Cuánto tardó cada etapa (tarea 158): sin esto, medir el ciclo obliga a apretar el botón.
+            tiemposMs: ciclo.tiemposMs,
             disparo: 'automático',
           },
           ipTruncada: null,
