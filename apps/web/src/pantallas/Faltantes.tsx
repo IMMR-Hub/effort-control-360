@@ -176,6 +176,17 @@ export default function Faltantes() {
         )}
       </div>
 
+      {actualizando && (
+        <p
+          role="status"
+          className="rounded border border-borde-marca bg-superficie-tenue px-3 py-2 text-sm text-tinta-suave"
+        >
+          Releyendo OneDrive y recalculando el IVA de toda la cartera — con los libros reales de los 5
+          clientes esto puede tardar varios minutos. No hace falta esperar mirando esta pantalla: se
+          puede seguir trabajando en otra pestaña y volver después.
+        </p>
+      )}
+
       {errorActualizacion && (
         <p
           role="alert"

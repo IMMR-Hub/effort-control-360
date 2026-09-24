@@ -111,6 +111,28 @@ describe('Faltantes', () => {
       expect(screen.queryByRole('button', { name: /actualizar ahora/i })).not.toBeInTheDocument();
     });
 
+    it('mientras corre, avisa que puede tardar varios minutos — no parece congelado', async () => {
+      await montar([UN_FALTANTE]);
+
+      let resolver!: (respuesta: Response) => void;
+      mock.mockDeRuta(
+        'POST /api/v1/actualizar-ahora',
+        () => new Promise<Response>((resolve) => { resolver = resolve; }) as unknown as Response,
+      );
+
+      await usuario.click(screen.getByRole('button', { name: /actualizar ahora/i }));
+
+      expect(await screen.findByText(/puede tardar varios minutos/i)).toBeInTheDocument();
+
+      resolver(
+        respuestaJson({
+          archivosNuevos: 0, archivosConFallo: 0, ivaPeriodosCalculados: 0, ivaHallazgosNuevos: 0,
+          ivaOcupado: false, presentacionesMarcadas: 0, presentadasFueraDeTermino: 0,
+          alertasCreadas: 0, alertasActualizadas: 0, alertasResueltas: 0,
+        }),
+      );
+    });
+
     it('dirección lo ve, y al apretarlo sincroniza y vuelve a pedir la lista', async () => {
       await montar([UN_FALTANTE]);
 
