@@ -464,7 +464,13 @@ export default function LiquidacionIva() {
       <Tarjeta>
         <EncabezadoTarjeta
           titulo={cliente ? `IVA por período — ${cliente.nombre}` : 'IVA por período'}
-          descripcion="Crédito de las compras, débito de las ventas, y el saldo que resulta."
+          descripcion={
+            'Crédito de las compras y débito de las ventas de cada mes, leídos de las planillas RG 90. ' +
+            'El saldo es solo de ese mes: no suma el saldo a favor que viene del mes anterior ni las ' +
+            'retenciones, por eso puede no coincidir con el formulario 120 presentado (última columna, ' +
+            'que es lo que vale ante la DNIT). Un mes con 0 ventas suele ser una planilla de ventas que ' +
+            'todavía no está cargada.'
+          }
         />
 
         {liquidaciones.filter((l) => enFiltro(l.periodo)).length === 0 ? (
@@ -518,7 +524,7 @@ export default function LiquidacionIva() {
                           className={difiere ? 'inline-flex items-center gap-1 font-semibold text-critico' : ''}
                           title={
                             difiere
-                              ? 'La DNIT ya tiene declarado un saldo distinto del que calcula este sistema.'
+                              ? 'El formulario 120 presentado tiene otro saldo: suma el saldo del mes anterior y las retenciones, que este cálculo mensual no incluye. Lo presentado es lo que vale ante la DNIT.'
                               : undefined
                           }
                         >

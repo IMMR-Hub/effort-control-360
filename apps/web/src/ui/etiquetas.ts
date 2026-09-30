@@ -35,6 +35,24 @@ export const OPCIONES_TIPO_DOCUMENTO = Object.entries(ETIQUETA_TIPO_DOCUMENTO).m
   ([valor, etiqueta]) => ({ valor, etiqueta }),
 );
 
+/**
+ * Los vencimientos generados desde el calendario de la DNIT traen el código de
+ * la OBLIGACIÓN (`IVA_GENERAL`, `PLANILLA_RG90`…), no un tipo de documento. Sin
+ * esto la columna «Tipo» de Vencimientos quedaba vacía en las 107 filas reales
+ * (encontrado revisando producción el 2026-09-30).
+ */
+const ETIQUETA_OBLIGACION: Record<string, string> = {
+  IVA_GENERAL: 'IVA',
+  PLANILLA_RG90: 'RG 90',
+  IRE: 'IRE',
+  EEFF: 'Estados financieros',
+};
+
+/** Etiqueta del tipo de un vencimiento: documento, obligación, o el código tal cual. */
+export function etiquetaDeTipoDeVencimiento(tipo: string): string {
+  return (ETIQUETA_TIPO_DOCUMENTO as Record<string, string>)[tipo] ?? ETIQUETA_OBLIGACION[tipo] ?? tipo;
+}
+
 export const TONO_RIESGO: Record<NivelRiesgo, 'completo' | 'pendiente' | 'parcial' | 'critico'> = {
   BAJO: 'completo',
   MEDIO: 'pendiente',

@@ -73,6 +73,7 @@ import {
   type TipoDocumento,
 } from '../api/documentos.js';
 import { useSesion } from '../contexts/SesionContext.js';
+import { agruparVersiones } from './versionesDeDocumentos.js';
 
 const ROLES_QUE_EDITAN_PROCESO = new Set(['direccion']);
 const ROLES_QUE_CREAN_DOCUMENTO = new Set(['direccion']);
@@ -243,6 +244,11 @@ export default function Documentos() {
 
   const [clienteSeleccionado, setClienteSeleccionado] = useState<string | null>(null);
   const [documentos, setDocumentos] = useState<readonly Documento[]>([]);
+  // Una fila por archivo, la versión más reciente (2026-09-30: un Excel editado
+  // dos días aparecía 20 veces). Las anteriores se pueden ver con un clic.
+  const [verVersionesAnteriores, setVerVersionesAnteriores] = useState(false);
+  const agrupados = useMemo(() => agruparVersiones(documentos), [documentos]);
+  const filasDeDocumentos = verVersionesAnteriores ? documentos : agrupados.ultimas;
   const [cargandoDocumentos, setCargandoDocumentos] = useState(false);
 
   const [panelProceso, setPanelProceso] = useState(false);
@@ -847,7 +853,7 @@ export default function Documentos() {
         <Tarjeta>
           <EncabezadoTarjeta
             titulo={`Documentos — ${nombreClienteSeleccionado}`}
-            descripcion={`${porFechaDeRecepcion ? `Recibidos ${describirFiltro(filtro)}` : `Período ${periodo}`} · ${documentos.length} documento${documentos.length === 1 ? '' : 's'}`}
+            descripcion={`${porFechaDeRecepcion ? `Recibidos ${describirFiltro(filtro)}` : `Período ${periodo}`} · ${agrupados.ultimas.length} archivo${agrupados.ultimas.length === 1 ? '' : 's'}${agrupados.anteriores > 0 ? ` (${documentos.length} contando versiones anteriores)` : ''}`}
             acciones={
               <div className="flex flex-wrap items-end gap-3">
                 {/* Cambiar de cliente sin volver a la tabla de arriba. */}
@@ -863,6 +869,16 @@ export default function Documentos() {
                   }
                   className="w-56"
                 />
+                {agrupados.anteriores > 0 && (
+                  <label className="flex items-center gap-2 pb-2 text-sm text-tinta-suave">
+                    <input
+                      type="checkbox"
+                      checked={verVersionesAnteriores}
+                      onChange={(e) => setVerVersionesAnteriores(e.target.checked)}
+                    />
+                    Ver versiones anteriores ({agrupados.anteriores})
+                  </label>
+                )}
                 {puedeCrearDocumento && (
                   <Boton variante="primario" icono={Plus} onClick={abrirAltaDocumento}>
                     Nuevo documento
@@ -887,7 +903,7 @@ export default function Documentos() {
                 </tr>
               </thead>
               <tbody>
-                {documentos.map((doc) => (
+                {filasDeDocumentos.map((doc) => (
                   <tr key={doc.id}>
                     <Td>
                       {doc.evidenciaId ? (
@@ -903,6 +919,11 @@ export default function Documentos() {
                         </a>
                       ) : (
                         <span className="text-tinta-tenue">—</span>
+                      )}
+                      {!verVersionesAnteriores && (agrupados.versiones.get(doc.id) ?? 1) > 1 && (
+                        <span className="ml-1 whitespace-nowrap text-xs text-tinta-tenue">
+                          · {agrupados.versiones.get(doc.id)} versiones
+                        </span>
                       )}
                     </Td>
                     <Td className="font-medium">{ETIQUETA_TIPO_DOCUMENTO[doc.tipo]}</Td>

@@ -31,7 +31,7 @@ de Lili o Laura), **Daniel** (decisión o acción en una cuenta), **Claude**
 | 15 | Supabase inalcanzable (pausa) | Cerrado | nadie | Si se pausa: "Resume project" en Supabase |
 | 16 | Credenciales propias de cada usuario | Cerrado | nadie | — |
 | 17 | Calendario DNIT | Cerrado | nadie | — |
-| 18 | Latencia base ↔ API | Medido, decisión pendiente. **2026-09-21: además la conexión desde la máquina de trabajo es intermitente (punto 34)** | Daniel | Decidir si la base se muda a EE.UU.; tarea 116 midió dos veces |
+| 18 | Latencia base ↔ API | Medido, decisión pendiente. **2026-09-21: además la conexión desde la máquina de trabajo es intermitente (punto 34)** | Daniel | Decidir si la base se muda a EE.UU.; tarea 116 midió dos veces | **2026-09-30: incidente abierto de Supabase «Intermittent latency in Eastern US» (afecta a servidores en el este de EE.UU. sin importar la región del proyecto; la app está en Atlanta): 3–4 s por pedido con sesión, el Panel tarda ~8 s.**
 | 19 | Feriados y dos calendarios | Cerrado, **salvo 19(e)** | EFFORT | 19(e): ver punto 26 (prórroga de EEFF) |
 | 20 | Tolerancia de redondeo del proveedor | Cerrado | nadie | Toda diferencia alerta; se acepta o se revisa |
 | 21 | Hallazgos repetidos en la base | Corregido en código, limpieza pendiente | Daniel | Autorizar `docs/propuestas/limpiar-hallazgos-repetidos.sql` (borra filas) |
@@ -51,6 +51,7 @@ de Lili o Laura), **Daniel** (decisión o acción en una cuenta), **Claude**
 | 35 | Costo por hora de cada colaborador | **Respondido 2026-09-23, falta construir** | Claude | Daniel: valor nominal por defecto Gs. 200.000/hora, editable desde el perfil de cada uno o por dirección |
 | 36 | Avisos de 7 días en el Dashboard de Laura y Lili | **Cerrado 2026-09-23 — ya funcionaba, sin código nuevo** | nadie | El Panel ya muestra las alertas ALTA (≤7 días) y CRÍTICA (≤2) juntas en "Alertas más urgentes"; Laura y Lili son `direccion`, ven toda la cartera. Ver `motorDeAlertas.ts`, `CRITICIDAD_POR_NIVEL` |
 | 37 | Umbrales de los indicadores del Panel | **Cerrado 2026-09-24** | nadie | Daniel: «Vencimientos próximos» = los que vencen en **15 días o menos** (antes 7) y «Alertas críticas» = las que vencen en **7 días o menos, más lo vencido** (antes solo CRÍTICA, ≤2 días). Cambia SOLO lo que muestra el indicador: el motor de alertas y los umbrales 30/15/7/2 no se tocaron. Ver el punto 37 |
+| 38 | Cada versión guardada de un archivo es un documento nuevo | **Abierto 2026-09-30** | Daniel | La pantalla ya agrupa (tarea 162). Falta decidir el arreglo de fondo: reemplazar la versión anterior en vez de sumar, y si se limpian los duplicados que ya hay (eso es borrar: REGLA 0) |
 
 ---
 
@@ -1867,3 +1868,25 @@ excluir los ya vencidos del número. **Eligió lo primero.**
   CRÍTICA).
 - **No se tocó** `UMBRALES_ALERTA` (30/15/7/2, punto 5), ni `CRITICIDAD_POR_NIVEL`,
   ni a quién le llegan los avisos (punto 36).
+
+---
+
+## 38. Cada versión guardada de un archivo es un documento nuevo — ABIERTO 2026-09-30
+
+Encontrado revisando producción antes de la reunión. Un Excel de COPESA
+(`80003112_202608_COMPRAS_548075_1.xlsx`) aparecía 20 veces en Documentos.
+Comprobado en la base: es la misma ruta de OneDrive, y cada versión tiene otra
+fecha de modificación y otro tamaño (de 36 KB a 42 KB, del 29/09 12:00 al 30/09
+09:30). Alguien lo estuvo editando; OneDrive guarda solo, y la sincronización
+—correctamente— trae cada cambio. Lo que no está bien es qué hace con él: la
+evidencia nueva genera **un documento nuevo** en vez de reemplazar al anterior.
+Pasa desde antes de la sincronización por cambios (tarea 158): «ROTULO LOMO.xlsx»
+tiene 11 versiones desde el 13/09.
+
+**Qué se hizo (tarea 162):** la pantalla agrupa por ruta y muestra la versión más
+reciente, con «N versiones» y la opción de ver las anteriores. No se tocó la base.
+
+**Qué falta decidir:** (1) que una versión nueva de un archivo ya conocido
+actualice su documento en vez de crear otro — la evidencia vieja se conserva, que
+es la prueba de qué había antes; (2) si se limpian los documentos repetidos que ya
+existen. Lo segundo es borrar filas: lo autoriza Daniel, para esa operación.

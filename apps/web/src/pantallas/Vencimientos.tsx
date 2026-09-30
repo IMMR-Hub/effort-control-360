@@ -37,7 +37,7 @@ import {
   OPCIONES_FILTRO_DE_NIVEL,
   coincideConNivel,
   type FiltroDeNivel,
-  ETIQUETA_TIPO_DOCUMENTO,
+  etiquetaDeTipoDeVencimiento,
   OPCIONES_RIESGO,
   OPCIONES_TIPO_DOCUMENTO,
   TONO_NIVEL_ALERTA,
@@ -378,7 +378,7 @@ export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nive
             {filas.map((v) => (
               <tr key={v.id}>
                 <Td className="font-medium">{nombreDeCliente(v.clienteId)}</Td>
-                <Td className="text-tinta-suave">{ETIQUETA_TIPO_DOCUMENTO[v.tipoDocumento]}</Td>
+                <Td className="text-tinta-suave">{etiquetaDeTipoDeVencimiento(v.tipoDocumento)}</Td>
                 <Td>{v.descripcion}</Td>
                 <Td className="text-tinta-suave">{v.entidad}</Td>
                 <Td className="cifra text-tinta-suave">

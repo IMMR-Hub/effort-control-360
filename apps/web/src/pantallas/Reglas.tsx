@@ -257,7 +257,9 @@ function ReglasImpositivas() {
     <Tarjeta>
       <EncabezadoTarjeta
         titulo="Reglas impositivas"
-        descripcion="Todavía no conectadas a ningún cálculo real — ver DISCREPANCIAS.md, punto 9."
+        // Texto para quien usa el sistema, no una nota de desarrollo (antes citaba
+        // DISCREPANCIAS.md en pantalla). Sigue siendo cierto: ver punto 9.
+        descripcion="Referencia de las tasas vigentes. El cálculo de IVA usa hoy los divisores confirmados por EFFORT (11 para el 10%, 21 para el 5%): editar esta tabla todavía no cambia ningún cálculo."
         acciones={
           puedeEditar && (
             <Boton variante="primario" icono={Plus} onClick={abrirAlta}>

@@ -41,6 +41,44 @@ const ROLES_QUE_EVALUAN = new Set(['direccion']);
 
 const RESUMEN_VACIO: ResumenPorCriticidad = { CRITICA: 0, ALTA: 0, MEDIA: 0, INFORMATIVA: 0 };
 
+/**
+ * El origen en palabras. Hasta el 2026-09-30 la tabla mostraba el código interno
+ * (`vencimiento_por_vencer`), que además decía «por vencer» en alertas ya
+ * vencidas. Los códigos son los de `motorDeAlertas.ts`; uno nuevo sin etiqueta
+ * se muestra legible igual, sin guiones bajos.
+ */
+const ETIQUETA_ORIGEN: Record<string, string> = {
+  vencimiento_por_vencer: 'Vencimiento',
+  documentacion_faltante: 'Documentación faltante',
+  presentado_con_atraso: 'Presentado con atraso',
+  libro_con_riesgo_de_multa: 'Libro RG 90',
+  declaracion_de_otro_contribuyente: 'Declaración de otro contribuyente',
+};
+
+function etiquetaDeOrigen(origen: string): string {
+  const texto = ETIQUETA_ORIGEN[origen] ?? origen.replace(/_/g, ' ');
+  return texto.charAt(0).toUpperCase() + texto.slice(1);
+}
+
+/** `AAAA-MM-DD`, sin la hora: la fecha límite es un día, no un instante. */
+function soloFecha(fecha: string | null | undefined): string | null {
+  return fecha ? fecha.slice(0, 10) : null;
+}
+
+/**
+ * Solo una alerta de vencimiento TODAVÍA NO presentado ofrece registrar la
+ * presentación. Las de «presentado con atraso» también apuntan a un
+ * vencimiento, pero ese vencimiento ya está presentado: el botón llevaba a un
+ * «no se puede presentar dos veces» del servidor.
+ */
+function ofreceRegistrarPresentacion(alerta: Alerta): boolean {
+  return (
+    alerta.entidadRelacionada === 'vencimiento' &&
+    Boolean(alerta.entidadRelacionadaId) &&
+    alerta.origen !== 'presentado_con_atraso'
+  );
+}
+
 export default function Alertas() {
   const { sesion } = useSesion();
   const puedeCerrar = ROLES_QUE_CIERRAN.has(sesion?.rol ?? '');
@@ -125,7 +163,7 @@ export default function Alertas() {
     const hoy = new Date().toISOString().slice(0, 10);
     const fecha = window.prompt(
       `¿Qué día se presentó "${alerta.titulo}"? (AAAA-MM-DD)`,
-      alerta.fechaLimite ?? hoy,
+      soloFecha(alerta.fechaLimite) ?? hoy,
     );
     if (!fecha || !fecha.trim()) return;
 
@@ -238,8 +276,8 @@ export default function Alertas() {
                 </Td>
                 <Td>{a.titulo}</Td>
                 <Td className="max-w-xs text-tinta-suave">{a.detalle}</Td>
-                <Td className="text-tinta-suave">{a.origen}</Td>
-                <Td className="cifra text-tinta-suave">{a.fechaLimite ?? '—'}</Td>
+                <Td className="text-tinta-suave">{etiquetaDeOrigen(a.origen)}</Td>
+                <Td className="cifra whitespace-nowrap text-tinta-suave">{soloFecha(a.fechaLimite) ?? '—'}</Td>
                 {puedeCerrar && (
                   <Td>
                     <div className="flex gap-1">
@@ -251,7 +289,7 @@ export default function Alertas() {
                         Por eso el camino corto es "registrar la presentación",
                         que además cierra la alerta sola.
                       */}
-                      {a.entidadRelacionada === 'vencimiento' && a.entidadRelacionadaId && (
+                      {ofreceRegistrarPresentacion(a) && (
                         <Boton
                           variante="secundario"
                           icono={CalendarCheck}

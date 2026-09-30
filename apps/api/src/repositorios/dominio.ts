@@ -108,13 +108,14 @@ export class DocumentosPrisma implements RepositorioDeDocumentos {
           ...(filtro === null ? [] : [{ clienteId: { in: [...filtro] } }]),
         ],
       },
-      select: { ...CAMPOS_DOCUMENTO, evidencia: { select: { nombreArchivo: true } } },
+      select: { ...CAMPOS_DOCUMENTO, evidencia: { select: { nombreArchivo: true, rutaOneDrive: true } } },
       orderBy: { recibidoEn: 'desc' },
     });
 
     return filas.map(({ evidencia, ...documento }) => ({
       ...documento,
       nombreArchivo: evidencia?.nombreArchivo ?? null,
+      rutaOneDrive: evidencia?.rutaOneDrive ?? null,
     })) as DocumentoAlmacenado[];
   }
 

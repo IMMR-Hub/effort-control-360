@@ -38,6 +38,11 @@ export interface DocumentoAlmacenado {
    * lista: es lo que permite a una persona comprobar qué documento es cada fila.
    */
   readonly nombreArchivo?: string | null;
+  /**
+   * Dónde está guardado el archivo (de la evidencia). Solo lo trae la lista: la
+   * pantalla agrupa por esto las versiones de un mismo archivo (2026-09-30).
+   */
+  readonly rutaOneDrive?: string | null;
 }
 
 export interface AltaDeDocumento {
