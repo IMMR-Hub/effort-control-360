@@ -4,7 +4,7 @@ Toda regla que el sistema aplica sobre dinero, plazos o estados y que todavía n
 fue contrastada contra un documento real de EFFORT se anota acá. Ninguna se
 resuelve por criterio propio: se confirma con Laura o Lili, o se deja marcada.
 
-## ▶ Índice de estado — actualizado el 2026-09-21
+## ▶ Índice de estado — actualizado el 2026-10-01
 
 **Esta tabla manda sobre los títulos de cada punto.** Si un título de más abajo
 dice otra cosa, vale lo que dice esta tabla (algunos títulos son históricos).
@@ -14,7 +14,7 @@ de Lili o Laura), **Daniel** (decisión o acción en una cuenta), **Claude**
 
 | # | Tema | Estado | Quién | Qué falta, exactamente |
 |---|---|---|---|---|
-| 1 | Divisores de IVA | Cerrado | nadie | — (contrastado con 1.188 filas reales) |
+| 1 | Divisores de IVA | Cerrado | nadie | — (contrastado con 1.188 filas reales; el 2026-09-30 se corrigió la fuente en Reglas y se quitó «requiere confirmación del cliente») |
 | 2 | Redondeo de negativos | **Cerrado 2026-09-23** | nadie | Daniel: no existen notas de crédito con decimales en guaraníes — el caso de borde no ocurre en la práctica |
 | 3 | Clientes piloto | Cerrado | nadie | — |
 | 4 | Período del piloto | **Cerrado 2026-09-23** | nadie | Daniel: se deja abierto hasta donde ya hay datos cargados (julio 2026 y en adelante), no se acota a junio ni se borra nada |
@@ -25,7 +25,7 @@ de Lili o Laura), **Daniel** (decisión o acción en una cuenta), **Claude**
 | 9 | `regla_impositiva` no conectada | Mitad cerrado | Claude, sin cola | El divisor sale de `DIVISORES_CONFIRMADOS_POR_EFFORT`; conectar a la tabla cuando haya determinación desde documentos |
 | 10 | Layout del importador de comprobantes | Abierto | EFFORT | Una planilla real de comprobantes |
 | 11 | Layout del importador SIGA | Abierto | EFFORT | Una exportación real de SIGA |
-| 12 | `npm audit` brace-expansion | Excepción documentada | nadie | — |
+| 12 | `npm audit` brace-expansion | **Cerrado 2026-10-01** | nadie | Actualizado dentro de sus rangos (1.1.21 / 2.1.7 / 5.0.12); `undici` también (7.30.0). Ver el punto |
 | 13 | Proveedor de correo | **Cerrado 2026-09-15** | nadie | Se usa Microsoft Graph `sendMail` (ver el punto) |
 | 14 | `npm audit` deepmerge-ts | Excepción documentada | nadie | — |
 | 15 | Supabase inalcanzable (pausa) | Cerrado | nadie | Si se pausa: "Resume project" en Supabase |
@@ -56,6 +56,15 @@ de Lili o Laura), **Daniel** (decisión o acción en una cuenta), **Claude**
 ---
 
 ## 1. Divisores de IVA — CONTRASTADOS CONTRA DOCUMENTOS REALES (2026-09-12)
+
+> **2026-09-30 — lo que pedía este punto al cerrarse, hecho.** En la tabla
+> `regla_impositiva` se desmarcó «requiere confirmación del cliente» en las
+> tasas del 10% y del 5%, y se reescribió su fuente (desde la pantalla Reglas,
+> con bitácora): la anterior seguía diciendo «falta contraste … ver
+> DISCREPANCIAS #1», y Laura la podía leer en la reunión. **Dato nuevo, medido:**
+> al 5% no hay **ningún** hallazgo de diferencia de IVA en los 72 de 92 períodos
+> que tienen comprobantes a esa tasa; al 10% hay 272, de redondeo del proveedor.
+> Esta tabla sigue sin alimentar ningún cálculo (punto 9).
 
 > **Se hizo exactamente lo que este punto pedía desde julio:** comparar el IVA
 > calculado contra el de liquidaciones ya presentadas, comprobante por
@@ -526,7 +535,28 @@ libro de ventas, etc.) y ajustar `ENCABEZADOS` según sus columnas reales.
 
 ---
 
-## 12. `npm audit` en rojo por `brace-expansion` — EXCEPCIÓN DOCUMENTADA, NO ES UNA REGRESIÓN
+## 12. `npm audit` en rojo por `brace-expansion` — CERRADO 2026-10-01
+
+> **Cierre.** El 2026-09-30 aparecieron dos avisos nuevos: `brace-expansion` con
+> el rango ampliado (GHSA-q2hr-2g5m-vwhr, también CPU) y `undici` <7.29.1 (diez
+> avisos, vía `jsdom`, solo pruebas). Los dos ya tenían versión corregida
+> **dentro del rango que el proyecto ya permite**, así que no hizo falta ninguna
+> excepción ni salto de versión mayor.
+>
+> **Cómo se hizo, y por qué así:** `npm audit fix` (sin `--force`) falló, porque
+> intenta arreglar todo a la vez y arrastra `prisma` a 6.12.0 — lo que el punto
+> 14 descartó. Se actualizó **solo lo necesario**: `npm update undici
+> brace-expansion`, y la copia de la raíz (`brace-expansion` 1.1.18, que usa
+> `eslint` → `minimatch@3`) no se movía con `npm update` porque no es dependencia
+> directa de nadie; se quitó solo esa entrada del lockfile y `npm install` la
+> volvió a resolver dentro de `^1.1.7` → 1.1.21. El diff del lockfile tiene
+> únicamente esos dos paquetes. Resultado: `brace-expansion` y `undici`
+> desaparecieron del informe, y `scripts/auditar-dependencias.mjs` dice «Sin
+> vulnerabilidades nuevas». **Lección: ante un aviso nuevo, mirar primero si hay
+> versión corregida dentro del rango (`npm view <paquete>@<mayor> version`)
+> antes de escribir una excepción.**
+
+**Historia (jul-2026), ya no vigente:**
 
 **Qué pasó:** el 2026-07-24, sin ningún cambio de dependencias de por medio,
 `npm audit --audit-level=high` (el check `audit` de `scripts/verify.mjs`) pasó
