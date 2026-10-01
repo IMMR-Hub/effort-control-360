@@ -238,7 +238,11 @@ const FERIADOS_EXTRAORDINARIOS: Readonly<Record<number, readonly Feriado[]>> = {
  * alguien se acuerde.
  */
 export const REVISION_DE_FERIADOS: Readonly<Record<number, string>> = {
-  2026: '2026-09-12',
+  // 2026-10-01: sin cambios. Los cuatro móviles de 2026 ya pasaron (el último, el
+  // 29/09, ya está trasladado al 28/09) y no se encontró ningún decreto nuevo de
+  // feriado ni de traslado para octubre-diciembre; solo queda el 8/12 (fijo) y
+  // el 25/12. Quedan 2 de los 3 extraordinarios que permite la Ley 7544/2025.
+  2026: '2026-10-01',
 };
 
 /** Fecha de la última revisión del calendario de un año, o `null` si nunca se revisó. */
