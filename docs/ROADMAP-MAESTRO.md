@@ -30,6 +30,33 @@ skill global **`backend-datos-sensibles`**, reutilizable en otros proyectos.
 
 ---
 
+## ▶ HANDOFF — 2026-10-01 (para la próxima conversación)
+
+> Frase de arranque: *«Leé `docs/ROADMAP-MAESTRO.md` y `docs/DISCREPANCIAS.md` en el repo `effort-control-360`, y seguí desde la primera tarea sin marcar.»*
+
+**Dónde está todo.** `main` = `origin/main` = `5f13cc8`. Producción: https://effort360.disaak.com (DigitalOcean App Platform `effort-control-360`, Atlanta; base Supabase São Paulo). Desplegado y visto en pantalla hasta la 162. Lo último (lockfile, docs, feriados) está subido; DigitalOcean lo reconstruye solo.
+
+**Qué hay que hacer, en orden.**
+1. **Antes que nada, Daniel:** DigitalOcean avisa una deuda de **US$15,93 que vence el viernes 2026-10-02** (botón «Pay Now» en su panel); si no se paga pueden restringir la cuenta y la app se cae. Claude no paga nada.
+2. **155** — esperar a que alguien de EFFORT suba un comprobante real a OneDrive, apretar «Actualizar ahora» y ver caer la fila en Faltantes. Claude no escribe en OneDrive.
+3. **160** — ver las pantallas con la sesión de un responsable real (que no tenga botones de escritura).
+4. **118** — feriados: próxima revisión primera semana de **noviembre** (en diciembre, los móviles de 2027).
+5. **Decisiones de Daniel:** DISCREPANCIAS 38 (versiones repetidas de un archivo; limpiar es borrar → REGLA 0), 18 (la app en Atlanta y la base en São Paulo), B14 (columna «Riesgo»), 21, 29, 30; y B10/B13: la plantilla de SIGA que debe dar EFFORT, el IVA de julio de COPESA y el Excel de la RG 90 de SIPAR.
+
+**Cómo se trabaja acá (lo que no está en el código).**
+- Quien escribe es **solo dirección** (Laura, Lili, Daniel). Los otros 8 usuarios solo leen, más cargar sus horas y apretar «Actualizar». Regla 12 de `CLAUDE.md`, fijada por `rbac.test.ts`.
+- **OneDrive original de Laura y Lili: solo lectura, siempre.** El sistema escribe únicamente en su copia (`/EFFORT Control 360/`). Todo acceso se anota en `docs/BITACORA-ONEDRIVE.md`.
+- **Nada de correos** hasta que Daniel lo diga (REGLA 0-bis). **Nada se borra** sin su autorización expresa (REGLA 0).
+- `git push` a `main` no pide permiso si `verify` está en verde, es la tarea que sigue y (si toca base) hubo respaldo. **`prisma migrate deploy` SÍ lo bloquea el clasificador de permisos**: lo corre Daniel desde PowerShell con `.ppspi
+ode_modules\.bin\prisma.cmd migrate deploy --schema=apps/api/prisma/schema.prisma` (el `prisma` de la raíz no existe).
+- Producción se mira con `node scripts/consultar-produccion.mjs "SELECT …"` (solo lectura), y con la extensión de Chrome sobre la sesión ya abierta de Daniel. **Claude nunca escribe credenciales**: si pide login, Daniel entra.
+- La conexión a Supabase desde la máquina de trabajo es intermitente: reintentar antes de sospechar de un cambio (lección 15). Hoy además hay un incidente abierto de Supabase (latencia desde el este de EE.UU.): 3–4 s por pedido.
+- Si un cliente de Prisma local no conoce una columna nueva: `npm run postinstall --workspace @effort/api`.
+- Medir antes de afirmar: «Actualizar ahora» tarda ~23 s (OneDrive 5,7 s incremental + cálculo ~17 s); la sincronización automática es cada 15 min, por cambios (Graph delta), con pasada completa a las 00:00 de Paraguay de lunes a sábado.
+- Recomendar siempre modelo y esfuerzo en cada «siguiente paso» (memoria del proyecto).
+
+**Hecho en esta tanda (2026-09-24 → 10-01), por si hay que buscarlo:** 156 costo por hora; 157/158 velocidad (IVA solo si cambió; OneDrive por cambios); 160 solo dirección; 161 indicadores y pasada de medianoche; 162 revisión pre-reunión (5 arreglos); tasas de IVA corregidas desde la app; `npm audit` limpio; 118 octubre.
+
 ## ▶ EMPEZAR ACÁ — estado real al 2026-10-01 (última actualización de este archivo)
 
 > **⚠ 2026-10-01 — lo más nuevo. Leer esto primero: los bloques de más abajo son historia.**

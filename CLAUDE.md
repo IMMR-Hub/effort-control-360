@@ -28,7 +28,7 @@ de 2026.
 > `docs/ROADMAP-MAESTRO.md`** (sección "▶ EMPEZAR ACÁ"), nunca este cuadro.
 
 **Este archivo se revisa cada 6 meses**, o cuando una conversación descubra algo
-que la siguiente necesitaría redescubrir. Última revisión: **2026-09-21**. No es
+que la siguiente necesitaría redescubrir. Última revisión: **2026-10-01**. No es
 un documento de arranque: es la memoria del proyecto, y su valor está en lo que
 evita repetir. Se agrega; no se borra.
 
@@ -285,6 +285,32 @@ obedece mal, porque no se sabe qué caso de borde cubre.
     cómo trabaja Claude en este proyecto (se leyó `taste-skill` y no se
     instaló).*
 
+18. **Un trabajo que "mantiene vivo" algo dentro de una conversación cuesta cada vez más.**
+    El 2026-09-24 se programó una recarga de las páginas de Supabase, DigitalOcean y
+    EFFORT cada 15 minutos dentro de la sesión de Claude: cada vuelta se sumaba a la
+    misma conversación, que ya tenía 570.000 tokens, y además moría con la sesión
+    (pasaron seis días sin que corriera). Daniel la canceló el 2026-09-30. *Lección:
+    una tarea periódica que no necesita razonar (abrir una página y mirar un texto)
+    no va en un chat; va en un script o una tarea del sistema operativo. Y recargar
+    una pantalla no extiende una sesión que vence a las 24 h absolutas.*
+19. **Una medición de velocidad sin datos reales no vale.** La tarea 157 se pensó
+    contra dobles y recién el botón apretado en producción mostró 10 minutos; la 158
+    bajó a 23 s y recién ahí se supo que el resto era el cálculo (~17 s). *Lección:
+    medir con la sesión real de Daniel, por etapas (`tiemposMs`), antes y después, y
+    escribir en el roadmap el número y lo que NO se logró.*
+20. **Revisar la pantalla como la vería Laura encuentra lo que los tests no.** El
+    2026-09-30, recorriendo producción antes de una reunión, aparecieron cinco cosas
+    con todos los tests en verde: una columna vacía en las 107 filas, un botón que
+    llevaba a un error en 24 alertas, fechas con hora, un archivo repetido 20 veces
+    y una nota interna en pantalla. *Lección: antes de una demostración, recorrer cada
+    pantalla con los datos reales buscando vacíos, repetidos, `undefined` y códigos
+    internos; y comprobar en la base si un "error" es del sistema o del dato.*
+21. **Antes de escribir una excepción de seguridad, buscar la versión corregida.**
+    Dos avisos nuevos de `npm audit` tenían versión corregida dentro del rango ya
+    permitido; `npm audit fix` en cambio arrastraba Prisma a 6.12.0. *Lección:
+    `npm view <paquete>@<mayor> version`, actualizar solo ese paquete, y revisar que
+    el diff del lockfile tenga únicamente eso.*
+
 **Cómo se usa esta sección:** antes de escribir algo que lea archivos externos,
 borre datos, o corra solo, buscá acá si ya nos pasó. Y cuando algo salga mal,
 agregá la entrada — el valor está en que siga creciendo.
@@ -295,8 +321,8 @@ agregá la entrada — el valor está en que siga creciendo.
    hacia arriba en magnitud, en un solo lugar (`dividirRedondeado`).
    Ver `docs/adr/0002-representacion-del-dinero.md`.
 2. **El sistema no aprueba balances.** Prepara la revisión; aprobar es un acto
-   humano registrado, con nombre y fecha, y solo por `revisor_balance` o
-   `direccion`. Ver `docs/adr/0004-el-sistema-no-aprueba-balances.md`.
+   humano registrado, con nombre y fecha, y **solo por `direccion`** (desde
+   2026-09-24; antes también `revisor_balance`: regla 12). Ver `docs/adr/0004-el-sistema-no-aprueba-balances.md`.
 3. **Vencimientos en `America/Asuncion`**, vía base IANA. Nunca offset fijo.
 4. **No se toca SIGA.** Se trabaja sobre sus exportaciones Excel/CSV/PDF.
    SIGA **no tiene API** (confirmado por Daniel el 2026-09-21), pero **sí
