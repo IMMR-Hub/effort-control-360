@@ -60,6 +60,7 @@ import { useSesion } from '../contexts/SesionContext.js';
 import { DialogoDeProrroga, type VencimientoProrrogable } from './DialogoDeProrroga.js';
 import VencimientosPresentados from './VencimientosPresentados.js';
 import { FiltroDeFechasSelector } from '../ui/FiltroDeFechas.js';
+import { FiltroDeClienteSelector, TODOS_LOS_CLIENTES, coincideConCliente, type FiltroDeCliente } from '../ui/FiltroDeCliente.js';
 
 const ROLES_QUE_EDITAN = new Set(['direccion']);
 
@@ -173,6 +174,7 @@ export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nive
   );
 
   const [filtroDeNivel, setFiltroDeNivel] = useState<FiltroDeNivel>(nivelInicial);
+  const [filtroDeCliente, setFiltroDeCliente] = useState<FiltroDeCliente>(TODOS_LOS_CLIENTES);
 
   // `filasDelRango` alimenta los indicadores (que cuentan todos los niveles);
   // `filas`, la tabla, además aplica el filtro de nivel.
@@ -180,8 +182,9 @@ export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nive
     () =>
       [...vencimientos]
         .filter((v) => dentroDelRango(v.fechaVencimiento, rango))
+        .filter((v) => coincideConCliente(v.clienteId, filtroDeCliente))
         .sort((a, b) => a.fechaVencimiento.localeCompare(b.fechaVencimiento)),
-    [vencimientos, rango],
+    [vencimientos, rango, filtroDeCliente],
   );
   const filas = useMemo(
     () => filasDelRango.filter((v) => coincideConNivel(v.nivelAlerta, filtroDeNivel)),
@@ -191,11 +194,11 @@ export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nive
   // Con filtro, el resumen se cuenta sobre lo filtrado: si no, los indicadores
   // dirían una cosa y la tabla otra.
   const resumenVisible: ResumenPorNivel = useMemo(() => {
-    if (rango === null) return resumen;
+    if (rango === null && filtroDeCliente === TODOS_LOS_CLIENTES) return resumen;
     const cuenta = { ...RESUMEN_VACIO };
     for (const v of filasDelRango) cuenta[v.nivelAlerta] += 1;
     return cuenta;
-  }, [rango, resumen, filasDelRango]);
+  }, [rango, resumen, filasDelRango, filtroDeCliente]);
 
   function abrirAlta() {
     setFormulario(formularioVacio(clientesActivos[0]?.id ?? ''));
@@ -288,6 +291,12 @@ export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nive
               opciones={OPCIONES_FILTRO_DE_NIVEL}
               className="w-56"
             />
+            <FiltroDeClienteSelector
+              id="filtroDeClienteVencimientos"
+              clientes={clientes}
+              valor={filtroDeCliente}
+              onCambiar={setFiltroDeCliente}
+            />
           </div>
         </div>
         {puedeEditar && (
@@ -358,7 +367,7 @@ export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nive
             filtroDeNivel === 'TODOS'
               ? ''
               : ` · nivel: ${OPCIONES_FILTRO_DE_NIVEL.find((o) => o.valor === filtroDeNivel)?.etiqueta ?? ''}`
-          }`}
+          }${filtroDeCliente === TODOS_LOS_CLIENTES ? '' : ` · cliente: ${nombreDeCliente(filtroDeCliente)}`}`}
         />
         <Tabla etiqueta="Radar de vencimientos">
           <thead>
@@ -436,7 +445,7 @@ export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nive
         </Tabla>
       </Tarjeta>
 
-      <VencimientosPresentados clientes={clientes} rango={rango} puedeEditar={puedeEditar} />
+      <VencimientosPresentados clientes={clientes} rango={rango} clienteId={filtroDeCliente} puedeEditar={puedeEditar} />
 
       {prorrogando && (
         <DialogoDeProrroga

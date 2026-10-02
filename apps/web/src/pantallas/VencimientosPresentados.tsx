@@ -48,6 +48,7 @@ async function abrirDeclaracion(evidenciaId: string, alFallar: (mensaje: string)
 export default function VencimientosPresentados({
   clientes,
   rango = null,
+  clienteId = '',
   puedeEditar = false,
 }: {
   readonly clientes: readonly Cliente[];
@@ -55,9 +56,13 @@ export default function VencimientosPresentados({
   readonly puedeEditar?: boolean;
   /** Filtra por fecha de presentación. `null` = todas. */
   readonly rango?: RangoDeFechas | null;
+  /** El mismo filtro de cliente de la lista de arriba. `''` = todos. */
+  readonly clienteId?: string;
 }) {
   const [todos, setPresentados] = useState<readonly VencimientoPresentado[]>([]);
-  const presentados = todos.filter((p) => dentroDelRango(p.fechaPresentacion, rango));
+  const presentados = todos.filter(
+    (p) => dentroDelRango(p.fechaPresentacion, rango) && (clienteId === '' || p.clienteId === clienteId),
+  );
   const [error, setError] = useState<string | null>(null);
   const [cargando, setCargando] = useState(true);
 

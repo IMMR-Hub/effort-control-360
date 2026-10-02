@@ -64,13 +64,14 @@ async function montar(
   opciones: {
     nivelInicial?: 'TODOS' | 'PROXIMOS' | 'VENCIDO';
     vencimientos?: readonly unknown[];
+    clientes?: readonly unknown[];
   } = {},
 ) {
   mock.mockDeRuta('GET /api/v1/yo', () =>
     respuestaJson({ usuarioId: 'u1', rol, veTodosLosClientes: true, cantidadDeClientesAsignados: 0 }),
   );
   mock.mockDeRuta('GET /api/v1/csrf', () => respuestaJson({ csrfToken: 'token-de-prueba' }));
-  mock.mockDeRuta('GET /api/v1/clientes', () => respuestaJson({ clientes: [GARSO] }));
+  mock.mockDeRuta('GET /api/v1/clientes', () => respuestaJson({ clientes: opciones.clientes ?? [GARSO] }));
   mock.mockDeRuta('GET /api/v1/vencimientos', () =>
     respuestaJson({
       hoy: { anio: 2026, mes: 4, dia: 26 },
@@ -100,7 +101,7 @@ describe('radar de vencimientos', () => {
   it('muestra el radar con los días restantes y el nivel de alerta que manda el servidor', async () => {
     await montar();
 
-    expect(screen.getByText('GARSO S.A.')).toBeVisible();
+    expect(screen.getByText('GARSO S.A.', { selector: 'td' })).toBeVisible();
     expect(screen.getByText('Abogacía del Tesoro')).toBeVisible();
     expect(screen.getByText('2026-04-28')).toBeVisible();
     expect(screen.getByText('2')).toBeVisible();
@@ -392,6 +393,31 @@ describe('radar de vencimientos', () => {
    * críticos y los altos (vencen en 7 días o menos); la lista no tenía cómo
    * filtrarlos ni siquiera nombraba la palabra.
    */
+  describe('filtro por cliente (2026-10-01)', () => {
+    const OTRO = { ...GARSO, id: 'cli-otro', nombre: 'OTRO S.A.', ruc: '80000001-1' };
+    const DOS = [
+      VENCIMIENTO_ABOGACIA,
+      { ...VENCIMIENTO_ABOGACIA, id: 'venc-2', clienteId: 'cli-otro', descripcion: 'Patente municipal' },
+    ];
+
+    it('elegir un cliente deja solo sus vencimientos, y «Todos los clientes» los vuelve a mostrar', async () => {
+      await montar('direccion', { clientes: [GARSO, OTRO], vencimientos: DOS });
+      expect(screen.getByText('Presentación anual ante Abogacía')).toBeVisible();
+      expect(screen.getByText('Patente municipal')).toBeVisible();
+
+      await usuario.selectOptions(screen.getByLabelText('Cliente'), 'cli-otro');
+
+      expect(screen.queryByText('Presentación anual ante Abogacía')).not.toBeInTheDocument();
+      expect(screen.getByText('Patente municipal')).toBeVisible();
+      expect(screen.getByText(/1 obligaciones activas .*cliente: OTRO S\.A\./)).toBeVisible();
+
+      await usuario.selectOptions(screen.getByLabelText('Cliente'), '');
+
+      expect(screen.getByText('Presentación anual ante Abogacía')).toBeVisible();
+      expect(screen.getByText('Patente municipal')).toBeVisible();
+    });
+  });
+
   describe('filtro por nivel de alerta', () => {
     const conNivel = (id: string, descripcion: string, nivelAlerta: string, diasRestantes: number) => ({
       ...VENCIMIENTO_ABOGACIA, id, descripcion, nivelAlerta, diasRestantes,

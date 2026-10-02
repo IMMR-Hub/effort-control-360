@@ -78,14 +78,14 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-async function montar(rol: string = 'direccion') {
+async function montar(rol: string = 'direccion', alertas: readonly unknown[] = [ALERTA_VENCIMIENTO, ALERTA_SIN_CLIENTE], clientes: readonly unknown[] = [GARSO]) {
   mock.mockDeRuta('GET /api/v1/yo', () =>
     respuestaJson({ usuarioId: 'u1', rol, veTodosLosClientes: true, cantidadDeClientesAsignados: 0 }),
   );
   mock.mockDeRuta('GET /api/v1/csrf', () => respuestaJson({ csrfToken: 'token-de-prueba' }));
-  mock.mockDeRuta('GET /api/v1/clientes', () => respuestaJson({ clientes: [GARSO] }));
+  mock.mockDeRuta('GET /api/v1/clientes', () => respuestaJson({ clientes }));
   mock.mockDeRuta('GET /api/v1/alertas', () =>
-    respuestaJson({ resumen: RESUMEN, alertas: [ALERTA_VENCIMIENTO, ALERTA_SIN_CLIENTE] }),
+    respuestaJson({ resumen: RESUMEN, alertas }),
   );
 
   vi.resetModules();
@@ -105,10 +105,29 @@ async function montar(rol: string = 'direccion') {
 }
 
 describe('radar de alertas', () => {
+  it('el filtro por cliente deja solo sus alertas, y cuenta solo esas (2026-10-01)', async () => {
+    const OTRO = { ...GARSO, id: 'cli-otro', nombre: 'OTRO S.A.', ruc: '80000001-1' };
+    const DEL_OTRO = { ...ALERTA_VENCIMIENTO, id: 'alerta-3', clienteId: 'cli-otro', criticidad: 'ALTA', titulo: 'Patente por vencer' };
+    await montar('direccion', [ALERTA_VENCIMIENTO, ALERTA_SIN_CLIENTE, DEL_OTRO], [GARSO, OTRO]);
+    expect(screen.getByText('Patente por vencer')).toBeVisible();
+
+    await usuario.selectOptions(screen.getByLabelText('Cliente'), 'cli-garso');
+
+    expect(screen.getByText('Vencimiento sin presentar')).toBeVisible();
+    expect(screen.queryByText('Patente por vencer')).not.toBeInTheDocument();
+    // Una alerta sin cliente no es de GARSO: tampoco aparece.
+    expect(screen.queryByText('Tasa de IVA actualizada')).not.toBeInTheDocument();
+    expect(screen.getByText('Altas').closest('div')!.textContent).toContain('0');
+    expect(screen.getByText(/1 alertas activas .*cliente: GARSO S\.A\./)).toBeVisible();
+
+    await usuario.selectOptions(screen.getByLabelText('Cliente'), '');
+    expect(screen.getByText('Patente por vencer')).toBeVisible();
+  });
+
   it('muestra el radar con los datos que manda el servidor', async () => {
     await montar();
 
-    expect(screen.getByText('GARSO S.A.')).toBeVisible();
+    expect(screen.getByText('GARSO S.A.', { selector: 'td' })).toBeVisible();
     expect(screen.getByText('Crítica')).toBeVisible();
     expect(screen.getByText('Presentación anual ante Abogacía vencida hace 3 días.')).toBeVisible();
   });

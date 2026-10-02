@@ -28,6 +28,7 @@ import {
 } from '../api/alertas.js';
 import { useSesion } from '../contexts/SesionContext.js';
 import { FiltroDeFechasSelector } from '../ui/FiltroDeFechas.js';
+import { FiltroDeClienteSelector, TODOS_LOS_CLIENTES, coincideConCliente, type FiltroDeCliente } from '../ui/FiltroDeCliente.js';
 import {
   dentroDelRango,
   describirFiltro,
@@ -94,17 +95,21 @@ export default function Alertas() {
   // Por fecha en que se levantó la alerta. Arranca en "todas": el radar
   // existe para mostrar todo lo abierto.
   const [filtro, setFiltro] = useState<FiltroDeFechas>({ tipo: 'todo' });
+  const [filtroDeCliente, setFiltroDeCliente] = useState<FiltroDeCliente>(TODOS_LOS_CLIENTES);
   const rango = useMemo(() => rangoDelFiltro(filtro, hoyEnParaguay(new Date())), [filtro]);
   const alertasVisibles = useMemo(
-    () => alertas.filter((a) => dentroDelRango(a.creadoEn ?? null, rango)),
-    [alertas, rango],
+    () =>
+      alertas.filter(
+        (a) => dentroDelRango(a.creadoEn ?? null, rango) && coincideConCliente(a.clienteId, filtroDeCliente),
+      ),
+    [alertas, rango, filtroDeCliente],
   );
   const resumenVisible = useMemo(() => {
-    if (rango === null) return resumen;
+    if (rango === null && filtroDeCliente === TODOS_LOS_CLIENTES) return resumen;
     const cuenta = { ...RESUMEN_VACIO };
     for (const a of alertasVisibles) cuenta[a.criticidad] += 1;
     return cuenta;
-  }, [rango, resumen, alertasVisibles]);
+  }, [rango, resumen, alertasVisibles, filtroDeCliente]);
 
   const puedeEvaluar = ROLES_QUE_EVALUAN.has(sesion?.rol ?? '');
 
@@ -212,8 +217,14 @@ export default function Alertas() {
             Vencimientos por vencer o vencidos y documentación faltante, consolidados por
             criticidad. Las genera el sistema, no un usuario a mano.
           </p>
-          <div className="mt-3">
+          <div className="mt-3 flex flex-wrap items-end gap-3">
             <FiltroDeFechasSelector id="filtroAlertas" valor={filtro} onCambiar={setFiltro} permitirTodo />
+            <FiltroDeClienteSelector
+              id="filtroDeClienteAlertas"
+              clientes={clientes}
+              valor={filtroDeCliente}
+              onCambiar={setFiltroDeCliente}
+            />
           </div>
         </div>
         {puedeEvaluar && (
@@ -251,7 +262,9 @@ export default function Alertas() {
       <Tarjeta>
         <EncabezadoTarjeta
           titulo="Radar de alertas"
-          descripcion={`${alertasVisibles.length} alertas activas · levantadas: ${describirFiltro(filtro)}`}
+          descripcion={`${alertasVisibles.length} alertas activas · levantadas: ${describirFiltro(filtro)}${
+            filtroDeCliente === TODOS_LOS_CLIENTES ? '' : ` · cliente: ${nombreDeCliente(filtroDeCliente)}`
+          }`}
         />
         <Tabla etiqueta="Radar de alertas">
           <thead>

@@ -25,6 +25,7 @@ import {
 import { useSesion } from '../contexts/SesionContext.js';
 import { periodoSchema } from '@effort/schema';
 import { FiltroDeFechasSelector, PeriodosDelRango, filtroDelMesActual, usePeriodoDelFiltro } from '../ui/FiltroDeFechas.js';
+import { FiltroDeClienteSelector, TODOS_LOS_CLIENTES, coincideConCliente, type FiltroDeCliente } from '../ui/FiltroDeCliente.js';
 import type { FiltroDeFechas } from '@effort/core';
 
 const ROLES_QUE_EDITAN = new Set(['direccion']);
@@ -75,7 +76,13 @@ export default function Liquidaciones() {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [clientes, setClientes] = useState<readonly Cliente[]>([]);
-  const [liquidaciones, setLiquidaciones] = useState<readonly Liquidacion[]>([]);
+  const [todasLasLiquidaciones, setLiquidaciones] = useState<readonly Liquidacion[]>([]);
+  const [filtroDeCliente, setFiltroDeCliente] = useState<FiltroDeCliente>(TODOS_LOS_CLIENTES);
+  // Lo que se muestra y se cuenta: los indicadores tienen que decir lo mismo que la tabla.
+  const liquidaciones = useMemo(
+    () => todasLasLiquidaciones.filter((l) => coincideConCliente(l.clienteId, filtroDeCliente)),
+    [todasLasLiquidaciones, filtroDeCliente],
+  );
 
   const [panel, setPanel] = useState<Panel | null>(null);
   const [guardando, setGuardando] = useState(false);
@@ -231,6 +238,12 @@ export default function Liquidaciones() {
             <FiltroDeFechasSelector id="filtroPeriodo" valor={filtro} onCambiar={setFiltro} />
             <PeriodosDelRango periodos={periodos} periodo={periodo} onElegir={elegirPeriodo} />
           </div>
+          <FiltroDeClienteSelector
+            id="filtroDeClienteLiquidaciones"
+            clientes={clientes}
+            valor={filtroDeCliente}
+            onCambiar={setFiltroDeCliente}
+          />
           {puedeEditar && (
             <Boton variante="primario" icono={Plus} onClick={abrirAlta}>
               Nueva liquidación
@@ -247,7 +260,12 @@ export default function Liquidaciones() {
       </section>
 
       <Tarjeta>
-        <EncabezadoTarjeta titulo="Liquidaciones del período" descripcion={`Período ${periodo}`} />
+        <EncabezadoTarjeta
+          titulo="Liquidaciones del período"
+          descripcion={`Período ${periodo}${
+            filtroDeCliente === TODOS_LOS_CLIENTES ? '' : ` · cliente: ${nombreDeCliente(filtroDeCliente)}`
+          }`}
+        />
         <Tabla etiqueta="Liquidaciones del período">
           <thead>
             <tr>
@@ -306,7 +324,9 @@ export default function Liquidaciones() {
             {liquidaciones.length === 0 && (
               <tr>
                 <td colSpan={puedeEditar ? 6 : 5} className="px-4 py-8 text-center text-sm text-tinta-tenue">
-                  Todavía no hay liquidaciones para este período.
+                  {filtroDeCliente === TODOS_LOS_CLIENTES
+                    ? 'Todavía no hay liquidaciones para este período.'
+                    : 'Este cliente no tiene liquidaciones en este período.'}
                 </td>
               </tr>
             )}

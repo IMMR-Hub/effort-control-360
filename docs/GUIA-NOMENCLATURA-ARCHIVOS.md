@@ -1,8 +1,9 @@
-# Guía de nombres de archivos y carpetas — PROPUESTA
+# Guía de nombres de archivos y carpetas — VIGENTE
 
-**Estado:** propuesta del 2026-09-14, para revisar con Lili y Laura. No está
-aceptada. Mientras no lo esté, el sistema sigue funcionando con los nombres de
-siempre.
+**Estado:** vigente desde el 2026-10-01. Propuesta el 2026-09-14, aprobada por
+Daniel el 2026-09-22 y confirmada como «la que deben usar de ahora en más» el
+2026-10-01. Vale para los archivos **nuevos**: los viejos siguen funcionando
+con los nombres de siempre, y renombrarlos lo decide y lo hace EFFORT.
 
 ## Por qué existe
 
@@ -92,10 +93,10 @@ lee el PDF de la DNIT y busca el número de orden y la fecha de presentación. U
 archivo mal nombrado no hace que algo figure como presentado sin estarlo. Lo
 peor que puede pasar con un mal nombre es que el documento quede en "Otro".
 
-## Preguntas para decidir
+## Lo que queda por decidir
 
-1. ¿Esta estructura se parece a cómo ya trabajan, o conviene otra?
-2. ¿Quién la aplicaría a los archivos nuevos: cada responsable, o una persona?
+1. ~~¿Esta estructura se parece a cómo ya trabajan?~~ Aprobada por Daniel (2026-09-22 y 2026-10-01).
+2. ¿Quién la aplica a los archivos nuevos: cada responsable, o una persona? (EFFORT)
 3. ~~¿Qué es el formulario 145 y el 526?~~ Verificado abriendo los PDFs: el
    145 es la Declaración Rectificativa, el 525 la liquidación de retenciones de
    las rentas y el 526 la liquidación de retenciones del IDU.

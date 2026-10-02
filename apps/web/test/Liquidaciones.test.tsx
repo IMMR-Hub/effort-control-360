@@ -67,12 +67,12 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-async function montar(rol: string = 'direccion', liquidaciones: unknown[] = [LIQUIDACION_GENERADA]) {
+async function montar(rol: string = 'direccion', liquidaciones: unknown[] = [LIQUIDACION_GENERADA], clientes: readonly unknown[] = [GARSO]) {
   mock.mockDeRuta('GET /api/v1/yo', () =>
     respuestaJson({ usuarioId: 'u1', rol, veTodosLosClientes: true, cantidadDeClientesAsignados: 0 }),
   );
   mock.mockDeRuta('GET /api/v1/csrf', () => respuestaJson({ csrfToken: 'token-de-prueba' }));
-  mock.mockDeRuta('GET /api/v1/clientes', () => respuestaJson({ clientes: [GARSO] }));
+  mock.mockDeRuta('GET /api/v1/clientes', () => respuestaJson({ clientes }));
   mock.mockDeRuta('GET /api/v1/liquidaciones', () => respuestaJson({ liquidaciones }));
 
   vi.resetModules();
@@ -85,13 +85,30 @@ async function montar(rol: string = 'direccion', liquidaciones: unknown[] = [LIQ
     </ProveedorDeSesion>,
   );
 
-  await screen.findByText('GARSO S.A.');
+  await screen.findByText('GARSO S.A.', { selector: 'td' });
   await waitFor(() => {
     expect(mock.llamadasA('GET /api/v1/yo')).toHaveLength(1);
   });
 }
 
 describe('pantalla de liquidaciones', () => {
+  it('el filtro por cliente deja solo sus liquidaciones, y los indicadores cuentan solo esas (2026-10-01)', async () => {
+    const OTRO = { ...GARSO, id: 'cli-otro', nombre: 'OTRO S.A.', ruc: '80000001-1' };
+    await montar(
+      'direccion',
+      [LIQUIDACION_GENERADA, { ...LIQUIDACION_GENERADA, id: 'liq-otro', clienteId: 'cli-otro' }],
+      [GARSO, OTRO],
+    );
+    expect(screen.getByText('OTRO S.A.', { selector: 'td' })).toBeVisible();
+    expect(screen.getByText('Total').closest('div')!.textContent).toContain('2');
+
+    await usuario.selectOptions(screen.getByLabelText('Cliente'), 'cli-otro');
+
+    expect(screen.queryByText('GARSO S.A.', { selector: 'td' })).not.toBeInTheDocument();
+    expect(screen.getByText('OTRO S.A.', { selector: 'td' })).toBeVisible();
+    expect(screen.getByText('Total').closest('div')!.textContent).toContain('1');
+  });
+
   it('muestra el estado de cada liquidación del período', async () => {
     await montar();
 

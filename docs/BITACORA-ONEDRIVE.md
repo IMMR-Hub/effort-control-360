@@ -342,3 +342,24 @@ En concreto:
   SIPAR 12 s). Cuesta ~0,4 s por carpeta, en secuencia.
 - **Qué NO se hizo:** nada se bajó, escribió, movió ni borró. Los secretos se
   leyeron del entorno del proceso y no se imprimieron.
+
+## 2026-10-01 — Inventario de metadatos de los 144 clientes, para estimar orden y migración
+
+- **Qué:** una corrida de **solo lectura** sobre el OneDrive de origen
+  (`lsosa@effort.com.py`): la consulta de cambios de Graph desde cero
+  (`/root/delta`, 210 páginas, 41.856 elementos, 2 min 29 s) pidiendo solo
+  nombre, tamaño, carpeta, fecha y la huella `quickXorHash` que calcula
+  Microsoft. Script descartable en el scratchpad de la sesión, no versionado.
+- **Por qué:** Daniel pidió saber cuánto llevaría ordenar el OneDrive de EFFORT
+  (duplicados, mal ubicados, mal nombrados) y migrar todos los clientes al
+  sistema, **sin hacer nada todavía**.
+- **Resultado:** `CLIENTES EFFORT E.A.S/CLIENTES` tiene 146 elementos, 139
+  carpetas de cliente (8 vacías), **27.755 archivos en 5.204 carpetas, 15,1 GB**;
+  65 archivos de más de 25 MB; **1.185 copias idénticas dentro del mismo cliente
+  (853 MB)** — el piloto da 423, coincide con las 422 del informe del 15/09
+  hecho bajando los archivos. Fuera del piloto: 134 clientes, 23.208 archivos,
+  4.557 carpetas, 12,3 GB, 762 copias idénticas. Mediana 94 archivos por
+  cliente; el más grande, 2.234; hasta 8 niveles de carpetas.
+- **Qué NO se hizo:** no se bajó el contenido de ningún archivo, no se escribió,
+  movió, renombró ni borró nada. Los secretos se leyeron del entorno del
+  proceso y no se imprimieron.
