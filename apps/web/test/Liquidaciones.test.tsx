@@ -6,9 +6,22 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { hoyEnParaguay } from '@effort/core';
+import { describirFiltro, hoyEnParaguay } from '@effort/core';
 
 import { crearFetchMock, respuestaJson } from './ayuda-fetch-mock.js';
+import type { HojaDeReporte, Reporte } from '../src/ui/reporteExcel.js';
+
+// La descarga real necesita un navegador; acá se mira QUÉ se iba a descargar.
+const { descargarReporte } = vi.hoisted(() => ({ descargarReporte: vi.fn(async () => {}) }));
+vi.mock('../src/ui/reporteExcel.js', async (original) => ({
+  ...(await original<typeof import('../src/ui/reporteExcel.js')>()),
+  descargarReporte,
+}));
+
+/** Cada fila de la hoja como la vería Excel: los valores de sus columnas. */
+function celdas(hoja: HojaDeReporte): unknown[][] {
+  return hoja.filas.map((fila) => hoja.columnas.map((c) => c.valor(fila as never)));
+}
 
 const HOY = hoyEnParaguay(new Date());
 const PERIODO = `${HOY.anio}-${String(HOY.mes).padStart(2, '0')}`;
@@ -58,6 +71,7 @@ let mock: ReturnType<typeof crearFetchMock>;
 let usuario: ReturnType<typeof userEvent.setup>;
 
 beforeEach(() => {
+  descargarReporte.mockClear();
   mock = crearFetchMock();
   vi.stubGlobal('fetch', mock.fetchMock);
   usuario = userEvent.setup();
@@ -92,6 +106,57 @@ async function montar(rol: string = 'direccion', liquidaciones: unknown[] = [LIQ
 }
 
 describe('pantalla de liquidaciones', () => {
+  describe('Excel (2026-10-02)', () => {
+    const OTRO = { ...GARSO, id: 'cli-otro', nombre: 'OTRO S.A.', ruc: '80000001-1' };
+
+    it('con un cliente elegido descarga solo sus liquidaciones, con las etiquetas de pantalla y los filtros escritos', async () => {
+      const DEL_OTRO = {
+        ...LIQUIDACION_ENVIADA,
+        id: 'liq-otro',
+        clienteId: 'cli-otro',
+        estado: 'RESPONDIDA',
+        respondidaEn: `${PERIODO}-12T09:00:00.000Z`,
+      };
+      // Lo puede bajar cualquier rol que vea la pantalla: descargar es leer.
+      await montar('auxiliar', [LIQUIDACION_GENERADA, DEL_OTRO], [GARSO, OTRO]);
+      await usuario.selectOptions(screen.getByLabelText('Cliente'), 'cli-otro');
+
+      await usuario.click(screen.getByRole('button', { name: 'Descargar Excel' }));
+
+      await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(1));
+      const [reporte, detalle] = descargarReporte.mock.calls[0] as unknown as [Reporte, string | null];
+      expect(detalle).toBe('OTRO S.A.');
+      expect(reporte.titulo).toBe('Liquidaciones');
+      expect(reporte.filtros).toContain('Cliente: OTRO S.A.');
+      expect(reporte.filtros).toContain(`Fechas: ${describirFiltro({ tipo: 'mes', periodo: PERIODO })}`);
+      expect(reporte.filtros).toContain(`Período: ${PERIODO}`);
+      expect(reporte.hojas.map((h) => h.nombre)).toEqual(['Liquidaciones']);
+      const [liquidaciones] = reporte.hojas as [HojaDeReporte];
+      expect(liquidaciones.columnas.map((c) => c.titulo)).toEqual([
+        'Cliente', 'Tipo', 'Estado', 'Envío', 'Canal del envío', 'Destinatario', 'Respuesta',
+      ]);
+      expect(celdas(liquidaciones)).toEqual([
+        ['OTRO S.A.', 'IVA', 'Respondida', `${PERIODO}-10`, 'Correo', 'contacto@garso.com.py', `${PERIODO}-12`],
+      ]);
+    });
+
+    it('sin filtro trae todas; una liquidación sin enviar deja vacíos el envío, el canal y la respuesta', async () => {
+      await montar('direccion', [LIQUIDACION_GENERADA, { ...LIQUIDACION_GENERADA, id: 'liq-otro', clienteId: 'cli-otro', tipo: 'IRE' }], [GARSO, OTRO]);
+
+      await usuario.click(screen.getByRole('button', { name: 'Descargar Excel' }));
+
+      await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(1));
+      const [reporte, detalle] = descargarReporte.mock.calls[0] as unknown as [Reporte, string | null];
+      expect(detalle).toBeNull();
+      expect(reporte.filtros).toContain('Cliente: todos');
+      const [liquidaciones] = reporte.hojas as [HojaDeReporte];
+      expect(celdas(liquidaciones)).toEqual([
+        ['GARSO S.A.', 'IVA', 'Generada', null, null, null, null],
+        ['OTRO S.A.', 'IRE', 'Generada', null, null, null, null],
+      ]);
+    });
+  });
+
   it('el filtro por cliente deja solo sus liquidaciones, y los indicadores cuentan solo esas (2026-10-01)', async () => {
     const OTRO = { ...GARSO, id: 'cli-otro', nombre: 'OTRO S.A.', ruc: '80000001-1' };
     await montar(

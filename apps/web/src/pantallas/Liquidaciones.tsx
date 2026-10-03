@@ -25,8 +25,17 @@ import {
 import { useSesion } from '../contexts/SesionContext.js';
 import { periodoSchema } from '@effort/schema';
 import { FiltroDeFechasSelector, PeriodosDelRango, filtroDelMesActual, usePeriodoDelFiltro } from '../ui/FiltroDeFechas.js';
-import { FiltroDeClienteSelector, TODOS_LOS_CLIENTES, coincideConCliente, type FiltroDeCliente } from '../ui/FiltroDeCliente.js';
-import type { FiltroDeFechas } from '@effort/core';
+import {
+  FiltroDeClienteSelector,
+  TODOS_LOS_CLIENTES,
+  coincideConCliente,
+  filtroDeClienteEnPalabras,
+  nombreDelClienteFiltrado,
+  type FiltroDeCliente,
+} from '../ui/FiltroDeCliente.js';
+import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
+import { hoja, type Reporte } from '../ui/reporteExcel.js';
+import { describirFiltro, type FiltroDeFechas } from '@effort/core';
 
 const ROLES_QUE_EDITAN = new Set(['direccion']);
 
@@ -57,6 +66,19 @@ const ETIQUETA_CANAL: Record<CanalRecepcion, string> = {
 };
 
 const OPCIONES_CANAL = Object.entries(ETIQUETA_CANAL).map(([valor, etiqueta]) => ({ valor, etiqueta }));
+
+/**
+ * El día calendario con el que la pantalla muestra una fecha con hora
+ * (`toLocaleDateString`): el del huso del navegador. El Excel usa el mismo día,
+ * para que las dos cosas digan lo mismo.
+ */
+function diaComoSeVe(iso: string | null): string | null {
+  if (!iso) return null;
+  const fecha = new Date(iso);
+  if (Number.isNaN(fecha.getTime())) return null;
+  const dos = (n: number) => String(n).padStart(2, '0');
+  return `${fecha.getFullYear()}-${dos(fecha.getMonth() + 1)}-${dos(fecha.getDate())}`;
+}
 
 type Panel =
   | { tipo: 'alta' }
@@ -133,6 +155,34 @@ export default function Liquidaciones() {
   const enviadas = liquidaciones.filter((l) => l.estado === 'ENVIADA' || l.estado === 'RESPONDIDA' || l.estado === 'CONFIRMADA').length;
   const respondidas = liquidaciones.filter((l) => l.estado === 'RESPONDIDA' || l.estado === 'CONFIRMADA').length;
   const reclamadas = liquidaciones.filter((l) => l.estado === 'RECLAMADA').length;
+
+  /** Lo mismo que muestra la tabla, con sus filtros: mismas filas, mismas etiquetas. */
+  function reporte(): Reporte {
+    return {
+      titulo: 'Liquidaciones',
+      filtros: [
+        filtroDeClienteEnPalabras(filtroDeCliente, clientes),
+        `Fechas: ${describirFiltro(filtro)}`,
+        `Período: ${periodo}`,
+      ],
+      hojas: [
+        hoja(
+          'Liquidaciones',
+          [
+            { titulo: 'Cliente', valor: (l: Liquidacion) => nombreDeCliente(l.clienteId) },
+            { titulo: 'Tipo', valor: (l) => l.tipo },
+            { titulo: 'Estado', valor: (l) => ETIQUETA_ESTADO[l.estado] },
+            // La tabla junta fecha, canal y destinatario en una sola celda: acá van separados.
+            { titulo: 'Envío', valor: (l) => diaComoSeVe(l.fechaEnvio), formato: 'fecha' },
+            { titulo: 'Canal del envío', valor: (l) => (l.canal ? ETIQUETA_CANAL[l.canal] : null) },
+            { titulo: 'Destinatario', valor: (l) => l.destinatario },
+            { titulo: 'Respuesta', valor: (l) => diaComoSeVe(l.respondidaEn), formato: 'fecha' },
+          ],
+          liquidaciones,
+        ),
+      ],
+    };
+  }
 
   function abrirAlta() {
     setClienteAlta(clientesActivos[0]?.id ?? '');
@@ -244,6 +294,7 @@ export default function Liquidaciones() {
             valor={filtroDeCliente}
             onCambiar={setFiltroDeCliente}
           />
+          <BotonDescargarExcel reporte={reporte} detalleDelNombre={nombreDelClienteFiltrado(filtroDeCliente, clientes)} />
           {puedeEditar && (
             <Boton variante="primario" icono={Plus} onClick={abrirAlta}>
               Nueva liquidación

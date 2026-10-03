@@ -2,6 +2,10 @@
  * Panel general (tarea 104, pantalla 12 de 12 — la última, porque agrega los
  * demás módulos).
  *
+ * Filtro por cliente y Excel (2026-10-02): con un cliente elegido, todos los
+ * indicadores y las dos listas son de ese cliente. El Excel es el «reporte
+ * general»: los indicadores, y los mismos indicadores cliente por cliente.
+ *
  * Solo lectura: ningún número de acá se puede tocar desde esta pantalla, se
  * edita en el módulo correspondiente (Vencimientos, Alertas, Balances,
  * Liquidaciones, Seguimiento). Todos los indicadores salen de un cálculo
@@ -57,6 +61,16 @@ import { listarSolicitudesPorPeriodo, type SolicitudDocumentacion } from '../api
 import { listarBalances, type Balance } from '../api/balances.js';
 import { listarLiquidaciones, type Liquidacion } from '../api/liquidaciones.js';
 import type { FiltroDeNivel } from '../ui/etiquetas.js';
+import {
+  FiltroDeClienteSelector,
+  TODOS_LOS_CLIENTES,
+  coincideConCliente,
+  filtroDeClienteEnPalabras,
+  nombreDelClienteFiltrado,
+  type FiltroDeCliente,
+} from '../ui/FiltroDeCliente.js';
+import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
+import { hoja, type Reporte } from '../ui/reporteExcel.js';
 
 const ESTADOS_SOLICITUD_ABIERTA = new Set<SolicitudDocumentacion['estado']>([
   'ABIERTA',
@@ -76,6 +90,51 @@ const ESTADOS_BALANCE_PENDIENTE = new Set<Balance['estado']>([
 const ESTADOS_LIQUIDACION_SIN_ENVIAR = new Set<Liquidacion['estado']>(['PENDIENTE', 'GENERADA']);
 
 const MAXIMO_EN_LISTAS = 5;
+
+interface DatosDelPanel {
+  readonly vencimientos: readonly Vencimiento[];
+  readonly alertas: readonly Alerta[];
+  readonly presentados: readonly VencimientoPresentado[];
+  readonly solicitudes: readonly SolicitudDocumentacion[];
+  readonly balances: readonly Balance[];
+  readonly liquidaciones: readonly Liquidacion[];
+}
+
+/**
+ * Los indicadores del panel sobre un conjunto de datos ya recortado (por
+ * fechas, y por cliente si hay filtro). Una sola cuenta para la pantalla y
+ * para cada fila del Excel: si no, el total y el detalle podrían no coincidir.
+ */
+function indicadoresDe(datos: DatosDelPanel) {
+  const conAtraso = datos.presentados.filter((p) => p.diasDeAtraso > 0);
+  return {
+    vencidos: datos.vencimientos.filter((v) => v.nivelAlerta === 'VENCIDO').length,
+    proximos: datos.vencimientos.filter((v) => coincideConNivel(v.nivelAlerta, 'PROXIMOS')).length,
+    // Vencen en 7 días o menos, o ya vencieron (Daniel, 2026-09-24): CRÍTICA ≤2 días y ALTA ≤7, más lo vencido.
+    alertasCriticas: datos.alertas.filter((a) => a.criticidad === 'CRITICA' || a.criticidad === 'ALTA').length,
+    documentacionPendiente: datos.solicitudes.filter((s) => ESTADOS_SOLICITUD_ABIERTA.has(s.estado)).length,
+    balancesPendientes: datos.balances.filter((b) => ESTADOS_BALANCE_PENDIENTE.has(b.estado)).length,
+    liquidacionesSinEnviar: datos.liquidaciones.filter((l) => ESTADOS_LIQUIDACION_SIN_ENVIAR.has(l.estado)).length,
+    presentadas: datos.presentados.length,
+    conAtraso: conAtraso.length,
+    diasDeAtrasoTotales: conAtraso.reduce((suma, p) => suma + p.diasDeAtraso, 0),
+  };
+}
+
+type Indicadores = ReturnType<typeof indicadoresDe>;
+
+function deCliente(datos: DatosDelPanel, clienteId: string | null): DatosDelPanel {
+  const delCliente = <T extends { readonly clienteId: string | null }>(lista: readonly T[]) =>
+    lista.filter((x) => x.clienteId === clienteId);
+  return {
+    vencimientos: delCliente(datos.vencimientos),
+    alertas: delCliente(datos.alertas),
+    presentados: delCliente(datos.presentados),
+    solicitudes: delCliente(datos.solicitudes),
+    balances: delCliente(datos.balances),
+    liquidaciones: delCliente(datos.liquidaciones),
+  };
+}
 
 /**
  * `Indicador` con el número animado. Envuelve al primitivo en vez de
@@ -171,26 +230,102 @@ export default function Panel({
     return (clienteId: string | null) => (clienteId ? mapa.get(clienteId) ?? clienteId : '—');
   }, [clientes]);
 
-  const clientesActivos = clientes.filter((c) => c.activo).length;
-  const vencimientosEnRango = vencimientos.filter((v) => dentroDelRango(v.fechaVencimiento, rango));
-  const alertasEnRango = alertas.filter((a) => dentroDelRango(a.creadoEn ?? null, rango));
-  const presentadosEnRango = presentados.filter((p) => dentroDelRango(p.fechaPresentacion, rango));
-  const conAtraso = presentadosEnRango.filter((p) => p.diasDeAtraso > 0);
-  const diasDeAtrasoTotales = conAtraso.reduce((suma, p) => suma + p.diasDeAtraso, 0);
+  const [filtroDeCliente, setFiltroDeCliente] = useState<FiltroDeCliente>(TODOS_LOS_CLIENTES);
+  const delFiltro = <T extends { readonly clienteId: string | null }>(lista: readonly T[]) =>
+    lista.filter((x) => coincideConCliente(x.clienteId, filtroDeCliente));
 
-  const vencidos = vencimientosEnRango.filter((v) => v.nivelAlerta === 'VENCIDO').length;
-  const proximos = vencimientosEnRango.filter((v) => coincideConNivel(v.nivelAlerta, 'PROXIMOS')).length;
-  // Vencen en 7 días o menos, o ya vencieron (Daniel, 2026-09-24): CRÍTICA ≤2 días y ALTA ≤7, más lo vencido.
-  const alertasCriticas = alertasEnRango.filter((a) => a.criticidad === 'CRITICA' || a.criticidad === 'ALTA').length;
+  const clientesVisibles = clientes.filter((c) => c.activo && coincideConCliente(c.id, filtroDeCliente));
+  const clientesActivos = clientesVisibles.length;
+  const vencimientosEnRango = delFiltro(vencimientos).filter((v) => dentroDelRango(v.fechaVencimiento, rango));
+  const alertasEnRango = delFiltro(alertas).filter((a) => dentroDelRango(a.creadoEn ?? null, rango));
+  const presentadosEnRango = delFiltro(presentados).filter((p) => dentroDelRango(p.fechaPresentacion, rango));
+  const datosVisibles: DatosDelPanel = {
+    vencimientos: vencimientosEnRango,
+    alertas: alertasEnRango,
+    presentados: presentadosEnRango,
+    solicitudes: delFiltro(solicitudes),
+    balances: delFiltro(balances),
+    liquidaciones: delFiltro(liquidaciones),
+  };
+  const {
+    vencidos,
+    proximos,
+    alertasCriticas,
+    documentacionPendiente,
+    balancesPendientes,
+    liquidacionesSinEnviar,
+    conAtraso,
+    diasDeAtrasoTotales,
+  } = indicadoresDe(datosVisibles);
   const detallePeriodos = periodos.length === 1 ? `Período ${periodos[0]}` : `Períodos ${periodos[0]} a ${periodos[periodos.length - 1]}`;
-  const documentacionPendiente = solicitudes.filter((s) => ESTADOS_SOLICITUD_ABIERTA.has(s.estado)).length;
-  const balancesPendientes = balances.filter((b) => ESTADOS_BALANCE_PENDIENTE.has(b.estado)).length;
-  const liquidacionesSinEnviar = liquidaciones.filter((l) => ESTADOS_LIQUIDACION_SIN_ENVIAR.has(l.estado)).length;
+  const clienteFiltrado = nombreDelClienteFiltrado(filtroDeCliente, clientes);
+
+  /**
+   * El reporte general: los indicadores de arriba, y los mismos cliente por
+   * cliente (una fila por cliente activo, aunque no tenga nada pendiente).
+   */
+  function reporte(): Reporte {
+    const filaDeTotales: { readonly etiqueta: string; readonly valor: number; readonly detalle: string | null }[] = [
+      { etiqueta: 'Clientes activos', valor: clientesActivos, detalle: null },
+      { etiqueta: 'Vencimientos vencidos', valor: vencidos, detalle: null },
+      { etiqueta: 'Vencimientos próximos (15 días o menos)', valor: proximos, detalle: null },
+      { etiqueta: 'Alertas críticas (7 días o menos, y lo vencido)', valor: alertasCriticas, detalle: null },
+      { etiqueta: 'Documentación pendiente', valor: documentacionPendiente, detalle: detallePeriodos },
+      { etiqueta: 'Balances sin aprobar', valor: balancesPendientes, detalle: detallePeriodos },
+      { etiqueta: 'Liquidaciones sin enviar', valor: liquidacionesSinEnviar, detalle: detallePeriodos },
+      {
+        etiqueta: 'Presentadas con atraso',
+        valor: conAtraso,
+        detalle: `de ${presentadosEnRango.length} presentadas · ${diasDeAtrasoTotales} días en total`,
+      },
+    ];
+    const porCliente: { readonly nombre: string; readonly indicadores: Indicadores }[] = clientesVisibles.map((c) => ({
+      nombre: c.nombre,
+      indicadores: indicadoresDe(deCliente(datosVisibles, c.id)),
+    }));
+    // Una alerta puede no tener cliente (p. ej. una tasa de IVA nueva): sin esta
+    // fila, la suma de la columna no daría el total de la hoja «Resumen».
+    if (filtroDeCliente === TODOS_LOS_CLIENTES) {
+      const sinCliente = indicadoresDe(deCliente(datosVisibles, null));
+      if (sinCliente.alertasCriticas > 0) porCliente.push({ nombre: '(alertas sin cliente)', indicadores: sinCliente });
+    }
+    return {
+      titulo: 'Panel general',
+      filtros: [filtroDeClienteEnPalabras(filtroDeCliente, clientes), `Fechas: ${describirFiltro(filtro)}`],
+      hojas: [
+        hoja(
+          'Resumen',
+          [
+            { titulo: 'Indicador', valor: (f) => f.etiqueta },
+            { titulo: 'Cantidad', valor: (f) => f.valor, formato: 'entero' },
+            { titulo: 'Detalle', valor: (f) => f.detalle },
+          ],
+          filaDeTotales,
+        ),
+        hoja(
+          'Por cliente',
+          [
+            { titulo: 'Cliente', valor: (f) => f.nombre },
+            { titulo: 'Vencimientos vencidos', valor: (f) => f.indicadores.vencidos, formato: 'entero' },
+            { titulo: 'Vencimientos próximos', valor: (f) => f.indicadores.proximos, formato: 'entero' },
+            { titulo: 'Alertas críticas', valor: (f) => f.indicadores.alertasCriticas, formato: 'entero' },
+            { titulo: 'Documentación pendiente', valor: (f) => f.indicadores.documentacionPendiente, formato: 'entero' },
+            { titulo: 'Balances sin aprobar', valor: (f) => f.indicadores.balancesPendientes, formato: 'entero' },
+            { titulo: 'Liquidaciones sin enviar', valor: (f) => f.indicadores.liquidacionesSinEnviar, formato: 'entero' },
+            { titulo: 'Presentadas', valor: (f) => f.indicadores.presentadas, formato: 'entero' },
+            { titulo: 'Presentadas con atraso', valor: (f) => f.indicadores.conAtraso, formato: 'entero' },
+            { titulo: 'Días de atraso en total', valor: (f) => f.indicadores.diasDeAtrasoTotales, formato: 'entero' },
+          ],
+          porCliente,
+        ),
+      ],
+    };
+  }
 
   const alertasUrgentes = useMemo(
     () => [...alertasEnRango].filter((a) => a.criticidad === 'CRITICA' || a.criticidad === 'ALTA').slice(0, MAXIMO_EN_LISTAS),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [alertas, rango],
+    [alertas, rango, filtroDeCliente],
   );
 
   const vencimientosUrgentes = useMemo(
@@ -200,7 +335,7 @@ export default function Panel({
         .sort((a, b) => a.diasRestantes - b.diasRestantes)
         .slice(0, MAXIMO_EN_LISTAS),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [vencimientos, rango],
+    [vencimientos, rango, filtroDeCliente],
   );
 
   if (cargando) {
@@ -237,9 +372,21 @@ export default function Panel({
           <p className="mt-1 max-w-2xl text-sm text-tinta-suave">
             Resumen de la cartera. Cada número se edita en su propio módulo, acá solo se mira.
           </p>
-          <p className="mt-1 text-xs text-tinta-tenue">Mostrando: {describirFiltro(filtro)}.</p>
+          <p className="mt-1 text-xs text-tinta-tenue">
+            Mostrando: {describirFiltro(filtro)}
+            {clienteFiltrado ? ` · cliente: ${clienteFiltrado}` : ''}.
+          </p>
         </div>
-        <FiltroDeFechasSelector id="filtroPanel" valor={filtro} onCambiar={setFiltro} permitirTodo />
+        <div className="flex flex-wrap items-end gap-3">
+          <FiltroDeFechasSelector id="filtroPanel" valor={filtro} onCambiar={setFiltro} permitirTodo />
+          <FiltroDeClienteSelector
+            id="filtroDeClientePanel"
+            clientes={clientes}
+            valor={filtroDeCliente}
+            onCambiar={setFiltroDeCliente}
+          />
+          <BotonDescargarExcel reporte={reporte} detalleDelNombre={clienteFiltrado} />
+        </div>
       </div>
 
       <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4" aria-label="Indicadores generales">
@@ -303,7 +450,7 @@ export default function Panel({
           etiqueta="Presentadas con atraso"
           onIr={irA ? () => irA('vencimientos') : null}
           irEtiqueta="Ver las presentaciones con atraso"
-          valor={conAtraso.length}
+          valor={conAtraso}
           detalle={
             presentadosEnRango.length === 0
               ? 'sin presentaciones registradas'

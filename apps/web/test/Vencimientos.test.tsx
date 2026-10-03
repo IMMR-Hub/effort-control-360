@@ -11,6 +11,19 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { crearFetchMock, respuestaJson } from './ayuda-fetch-mock.js';
+import type { HojaDeReporte, Reporte } from '../src/ui/reporteExcel.js';
+
+// La descarga real necesita un navegador; acá se mira QUÉ se iba a descargar.
+const { descargarReporte } = vi.hoisted(() => ({ descargarReporte: vi.fn(async () => {}) }));
+vi.mock('../src/ui/reporteExcel.js', async (original) => ({
+  ...(await original<typeof import('../src/ui/reporteExcel.js')>()),
+  descargarReporte,
+}));
+
+/** Cada fila de la hoja como la vería Excel: los valores de sus columnas. */
+function celdas(hoja: HojaDeReporte): unknown[][] {
+  return hoja.filas.map((fila) => hoja.columnas.map((c) => c.valor(fila as never)));
+}
 
 const GARSO = {
   id: 'cli-garso',
@@ -50,6 +63,7 @@ let mock: ReturnType<typeof crearFetchMock>;
 let usuario: ReturnType<typeof userEvent.setup>;
 
 beforeEach(() => {
+  descargarReporte.mockClear();
   mock = crearFetchMock();
   vi.stubGlobal('fetch', mock.fetchMock);
   usuario = userEvent.setup();
@@ -415,6 +429,52 @@ describe('radar de vencimientos', () => {
 
       expect(screen.getByText('Presentación anual ante Abogacía')).toBeVisible();
       expect(screen.getByText('Patente municipal')).toBeVisible();
+    });
+  });
+
+  describe('Excel (2026-10-02)', () => {
+    it('descarga el radar y los presentados que quedan a la vista, con los filtros escritos', async () => {
+      const OTRO = { ...GARSO, id: 'cli-otro', nombre: 'OTRO S.A.', ruc: '80000001-1' };
+      const presentado = {
+        id: 'pres-1',
+        clienteId: 'cli-otro',
+        descripcion: 'IVA — período 2026-08',
+        entidad: 'DNIT',
+        fechaVencimiento: '2026-09-21',
+        fechaPresentacion: '2026-09-23',
+        fechaVencimientoOriginal: null,
+        motivoProrroga: null,
+        evidenciaId: 'ev-1',
+        diasDeAtraso: 2,
+        fechaAproximada: false,
+      };
+      mock.mockDeRuta('GET /api/v1/vencimientos/presentados', () =>
+        respuestaJson({ presentados: [presentado, { ...presentado, id: 'pres-2', clienteId: 'cli-garso' }] }),
+      );
+      await montar('auxiliar', {
+        clientes: [GARSO, OTRO],
+        vencimientos: [
+          VENCIMIENTO_ABOGACIA,
+          { ...VENCIMIENTO_ABOGACIA, id: 'venc-2', clienteId: 'cli-otro', descripcion: 'Patente municipal' },
+        ],
+      });
+      await usuario.selectOptions(screen.getByLabelText('Cliente'), 'cli-otro');
+      await screen.findByText('IVA — período 2026-08');
+
+      await usuario.click(screen.getByRole('button', { name: 'Descargar Excel' }));
+
+      await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(1));
+      const [reporte, detalle] = descargarReporte.mock.calls[0] as unknown as [Reporte, string | null];
+      expect(detalle).toBe('OTRO S.A.');
+      expect(reporte.titulo).toBe('Vencimientos');
+      expect(reporte.filtros).toContain('Cliente: OTRO S.A.');
+      expect(reporte.hojas.map((h) => h.nombre)).toEqual(['Radar', 'Presentados']);
+      const [radar, presentados] = reporte.hojas as [HojaDeReporte, HojaDeReporte];
+      expect(celdas(radar)).toHaveLength(1);
+      expect(celdas(radar)[0]).toEqual(expect.arrayContaining(['OTRO S.A.', 'Patente municipal', '2026-04-28', 2, 'Crítica']));
+      expect(celdas(presentados)).toEqual([
+        expect.arrayContaining(['OTRO S.A.', 'IVA — período 2026-08', '2026-09-23', 2, 'Declaración en OneDrive']),
+      ]);
     });
   });
 

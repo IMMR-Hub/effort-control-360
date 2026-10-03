@@ -74,6 +74,16 @@ import {
 } from '../api/documentos.js';
 import { useSesion } from '../contexts/SesionContext.js';
 import { agruparVersiones } from './versionesDeDocumentos.js';
+import {
+  FiltroDeClienteSelector,
+  TODOS_LOS_CLIENTES,
+  coincideConCliente,
+  filtroDeClienteEnPalabras,
+  nombreDelClienteFiltrado,
+  type FiltroDeCliente,
+} from '../ui/FiltroDeCliente.js';
+import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
+import { hoja, type HojaDeReporte, type Reporte } from '../ui/reporteExcel.js';
 
 const ROLES_QUE_EDITAN_PROCESO = new Set(['direccion']);
 const ROLES_QUE_CREAN_DOCUMENTO = new Set(['direccion']);
@@ -112,6 +122,29 @@ const OPCIONES_CANAL = Object.entries(ETIQUETA_CANAL).map(([valor, etiqueta]) =>
 /** Formatea un importe en texto (o `null`) para mostrar. `'—'` si no hay valor. */
 function mostrarGs(importe: string | null): string {
   return importe === null ? '—' : formatearGs(gs(importe));
+}
+
+/** La columna «SIGA C/V» de un cliente con proceso: compras / ventas cargadas. */
+function textoDeSiga(proceso: ProcesoMensual): string {
+  return `${proceso.comprasCargadasSiga ? '✓' : '—'} / ${proceso.ventasCargadasSiga ? '✓' : '—'}`;
+}
+
+/**
+ * La columna «IVA»: el saldo a pagar y, solo si no hay, el saldo a favor. El
+ * servidor no deja cargar los dos a la vez; esta es la misma precedencia que ya
+ * tenía la tabla, ahora compartida con el Excel para que no se desvíen.
+ */
+function ivaDelProceso(proceso: ProcesoMensual | null): { aPagar: string | null; aFavor: string | null } {
+  if (proceso?.ivaSaldoAPagar) return { aPagar: proceso.ivaSaldoAPagar, aFavor: null };
+  if (proceso?.ivaSaldoAFavor) return { aPagar: null, aFavor: proceso.ivaSaldoAFavor };
+  return { aPagar: null, aFavor: null };
+}
+
+function textoDeIva(proceso: ProcesoMensual | null): string {
+  const { aPagar, aFavor } = ivaDelProceso(proceso);
+  if (aPagar !== null) return `${mostrarGs(aPagar)} a pagar`;
+  if (aFavor !== null) return `${mostrarGs(aFavor)} a favor`;
+  return '—';
 }
 
 /** `''` en un input numérico de dinero significa "sin cargar": se manda `null`. */
@@ -243,6 +276,7 @@ export default function Documentos() {
   const [documentosReales, setDocumentosReales] = useState<Readonly<Record<string, number>>>({});
 
   const [clienteSeleccionado, setClienteSeleccionado] = useState<string | null>(null);
+  const [filtroDeCliente, setFiltroDeCliente] = useState<FiltroDeCliente>(TODOS_LOS_CLIENTES);
   const [documentos, setDocumentos] = useState<readonly Documento[]>([]);
   // Una fila por archivo, la versión más reciente (2026-09-30: un Excel editado
   // dos días aparecía 20 veces). Las anteriores se pueden ver con un clic.
@@ -362,14 +396,16 @@ export default function Documentos() {
     () =>
       clientes
         .filter((c) => c.activo)
+        .filter((c) => coincideConCliente(c.id, filtroDeCliente))
         .map((cliente) => ({
           cliente,
           proceso: procesos.find((p) => p.clienteId === cliente.id) ?? null,
         }))
         .sort((a, b) => a.cliente.nombre.localeCompare(b.cliente.nombre, 'es')),
-    [clientes, procesos],
+    [clientes, procesos, filtroDeCliente],
   );
 
+  // Los indicadores cuentan `filas`, o sea lo filtrado: si no, dirían una cosa y la tabla otra.
   const completos = filas.filter((f) => f.proceso?.estadoGeneral === 'COMPLETO').length;
   const criticos = filas.filter((f) => f.proceso?.estadoGeneral === 'CRITICO').length;
   const sinIniciar = filas.filter((f) => f.proceso === null).length;
@@ -478,6 +514,95 @@ export default function Documentos() {
   const nombreClienteSeleccionado =
     clientes.find((c) => c.id === clienteSeleccionado)?.nombre ?? '';
 
+  /**
+   * Elegir un cliente en el filtro lleva también sus documentos a la tarjeta de
+   * abajo: si no, la tabla mostraría a uno y la lista de documentos a otro.
+   */
+  function cambiarFiltroDeCliente(valor: FiltroDeCliente) {
+    setFiltroDeCliente(valor);
+    if (valor !== TODOS_LOS_CLIENTES) setClienteSeleccionado(valor);
+  }
+
+  /** Con un cliente filtrado, cambiar de cliente en la tarjeta de documentos mueve también el filtro. */
+  function elegirClienteDeDocumentos(clienteId: string) {
+    setClienteSeleccionado(clienteId);
+    if (filtroDeCliente !== TODOS_LOS_CLIENTES) setFiltroDeCliente(clienteId);
+  }
+
+  /**
+   * Lo mismo que muestra la pantalla, con sus filtros: el proceso mensual y, si
+   * hay un cliente con su lista de documentos a la vista, esa lista tal como se
+   * ve (con o sin versiones anteriores, según la casilla). Mientras la lista
+   * carga se deja afuera: ahí `documentos` todavía es la del cliente anterior.
+   */
+  function reporte(): Reporte {
+    const hayListaDeDocumentos = clienteSeleccionado !== null && !cargandoDocumentos;
+    const hojas: HojaDeReporte[] = [
+      hoja(
+        'Proceso mensual',
+        [
+          { titulo: 'Cliente', valor: (f: (typeof filas)[number]) => f.cliente.nombre },
+          { titulo: 'Estado', valor: (f) => (f.proceso ? f.proceso.estadoGeneral : 'Sin iniciar') },
+          { titulo: 'Riesgo', valor: (f) => f.proceso?.riesgo },
+          { titulo: 'Recibidos', valor: (f) => documentosReales[f.cliente.id] ?? 0, formato: 'entero' },
+          { titulo: 'Faltantes', valor: (f) => f.proceso?.documentosFaltantes, formato: 'entero' },
+          { titulo: 'SIGA C/V', valor: (f) => (f.proceso ? textoDeSiga(f.proceso) : '') },
+          { titulo: 'IVA a pagar', valor: (f) => ivaDelProceso(f.proceso).aPagar, formato: 'guaranies' },
+          { titulo: 'IVA a favor', valor: (f) => ivaDelProceso(f.proceso).aFavor, formato: 'guaranies' },
+          { titulo: 'Próxima acción', valor: (f) => f.proceso?.proximaAccion },
+        ],
+        filas,
+      ),
+    ];
+    if (hayListaDeDocumentos) {
+      hojas.push(
+        hoja(
+          'Documentos',
+          [
+            {
+              titulo: 'Archivo',
+              valor: (d: Documento) => (d.evidenciaId ? (d.nombreArchivo ?? 'Ver') : ''),
+            },
+            {
+              titulo: 'Versiones',
+              // Lo mismo que el « · N versiones» de la tabla: solo cuando se agrupan.
+              valor: (d) => {
+                const cantidad = agrupados.versiones.get(d.id) ?? 1;
+                return !verVersionesAnteriores && cantidad > 1 ? cantidad : null;
+              },
+              formato: 'entero',
+            },
+            { titulo: 'Tipo', valor: (d) => ETIQUETA_TIPO_DOCUMENTO[d.tipo] },
+            {
+              titulo: 'Comprobante',
+              valor: (d) => (d.numeroComprobante ? `${d.rucEmisor} · ${d.timbrado} · ${d.numeroComprobante}` : ''),
+            },
+            { titulo: 'Total', valor: (d) => d.total, formato: 'guaranies' },
+            { titulo: 'Tasa', valor: (d) => (d.tasa ? ETIQUETA_TASA[d.tasa] : '') },
+            { titulo: 'Estado', valor: (d) => d.estado },
+          ],
+          filasDeDocumentos,
+        ),
+      );
+    }
+    return {
+      titulo: 'Documentos / IVA',
+      filtros: [
+        filtroDeClienteEnPalabras(filtroDeCliente, clientes),
+        `Período/Fechas: ${describirFiltro(filtro)}`,
+        `Proceso mensual: período ${periodo}`,
+        ...(hayListaDeDocumentos
+          ? [
+              `Documentos de ${nombreClienteSeleccionado}: ${
+                porFechaDeRecepcion ? `recibidos ${describirFiltro(filtro)}` : `período ${periodo}`
+              }, ${verVersionesAnteriores ? 'con' : 'sin'} versiones anteriores de los archivos`,
+            ]
+          : []),
+      ],
+      hojas,
+    };
+  }
+
   if (cargando) {
     return (
       <div className="flex items-center justify-center py-24">
@@ -515,6 +640,16 @@ export default function Documentos() {
             </Boton>
           )}
           <FiltroDeFechasSelector id="filtroDocumentos" valor={filtro} onCambiar={setFiltro} />
+          <FiltroDeClienteSelector
+            id="filtroDeClienteDocumentos"
+            clientes={clientes}
+            valor={filtroDeCliente}
+            onCambiar={cambiarFiltroDeCliente}
+          />
+          <BotonDescargarExcel
+            reporte={reporte}
+            detalleDelNombre={nombreDelClienteFiltrado(filtroDeCliente, clientes)}
+          />
         </div>
       </div>
 
@@ -551,7 +686,9 @@ export default function Documentos() {
       <Tarjeta>
         <EncabezadoTarjeta
           titulo="Proceso mensual"
-          descripcion={`Período ${periodo} · ${filas.length} clientes · hacé clic en un cliente para ver sus documentos`}
+          descripcion={`Período ${periodo} · ${filas.length} clientes${
+            filtroDeCliente === TODOS_LOS_CLIENTES ? '' : ` · cliente: ${nombreDelClienteFiltrado(filtroDeCliente, clientes)}`
+          } · hacé clic en un cliente para ver sus documentos`}
         />
         <Tabla etiqueta="Proceso mensual por cliente">
           <thead>
@@ -598,14 +735,10 @@ export default function Documentos() {
                   {proceso?.documentosFaltantes ?? '—'}
                 </Td>
                 <Td className="text-tinta-suave">
-                  {proceso ? `${proceso.comprasCargadasSiga ? '✓' : '—'} / ${proceso.ventasCargadasSiga ? '✓' : '—'}` : '—'}
+                  {proceso ? textoDeSiga(proceso) : '—'}
                 </Td>
                 <Td className="cifra text-tinta-suave">
-                  {proceso?.ivaSaldoAPagar
-                    ? `${mostrarGs(proceso.ivaSaldoAPagar)} a pagar`
-                    : proceso?.ivaSaldoAFavor
-                      ? `${mostrarGs(proceso.ivaSaldoAFavor)} a favor`
-                      : '—'}
+                  {textoDeIva(proceso)}
                 </Td>
                 <Td className="text-tinta-suave">{proceso?.proximaAccion ?? '—'}</Td>
               </tr>
@@ -865,7 +998,7 @@ export default function Documentos() {
                     .map((cliente) => ({ valor: cliente.id, etiqueta: cliente.nombre }))}
                   value={clienteSeleccionado ?? ''}
                   onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                    setClienteSeleccionado(e.target.value)
+                    elegirClienteDeDocumentos(e.target.value)
                   }
                   className="w-56"
                 />

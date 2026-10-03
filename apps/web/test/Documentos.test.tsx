@@ -10,9 +10,22 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { hoyEnParaguay } from '@effort/core';
+import { describirFiltro, hoyEnParaguay } from '@effort/core';
 
 import { crearFetchMock, respuestaJson } from './ayuda-fetch-mock.js';
+import type { HojaDeReporte, Reporte } from '../src/ui/reporteExcel.js';
+
+// La descarga real necesita un navegador; acá se mira QUÉ se iba a descargar.
+const { descargarReporte } = vi.hoisted(() => ({ descargarReporte: vi.fn(async () => {}) }));
+vi.mock('../src/ui/reporteExcel.js', async (original) => ({
+  ...(await original<typeof import('../src/ui/reporteExcel.js')>()),
+  descargarReporte,
+}));
+
+/** Cada fila de la hoja como la vería Excel: los valores de sus columnas. */
+function celdas(hoja: HojaDeReporte): unknown[][] {
+  return hoja.filas.map((fila) => hoja.columnas.map((c) => c.valor(fila as never)));
+}
 
 const HOY = hoyEnParaguay(new Date());
 const PERIODO = `${HOY.anio}-${String(HOY.mes).padStart(2, '0')}`;
@@ -89,10 +102,24 @@ function filaDelTablero(nombre: string): HTMLElement {
   return within(tablero).getByText(nombre);
 }
 
+/**
+ * Hay dos selectores con la etiqueta «Cliente»: el filtro de arriba y el que
+ * cambia de cliente en la tarjeta de documentos. Se distinguen por su id.
+ */
+function selectorDeCliente(id: 'filtroDeClienteDocumentos' | 'clienteDeDocumentos'): HTMLElement {
+  return screen.getAllByLabelText('Cliente').find((el) => el.id === id)!;
+}
+
+/** Lo que dice un indicador del resumen del período (su etiqueta es un `<p>`): etiqueta + número. */
+function indicador(etiqueta: string): string {
+  return screen.getByText(etiqueta, { selector: 'p' }).closest('div')!.textContent ?? '';
+}
+
 let mock: ReturnType<typeof crearFetchMock>;
 let usuario: ReturnType<typeof userEvent.setup>;
 
 beforeEach(() => {
+  descargarReporte.mockClear();
   mock = crearFetchMock();
   vi.stubGlobal('fetch', mock.fetchMock);
   usuario = userEvent.setup();
@@ -102,7 +129,11 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-async function montar(rol: string = 'direccion', documentos: readonly unknown[] = [DOCUMENTO_GARSO]) {
+async function montar(
+  rol: string = 'direccion',
+  documentos: readonly unknown[] = [DOCUMENTO_GARSO],
+  procesos: readonly unknown[] = [PROCESO_GARSO],
+) {
   mock.mockDeRuta('GET /api/v1/yo', () =>
     respuestaJson({ usuarioId: 'u1', rol, veTodosLosClientes: true, cantidadDeClientesAsignados: 0 }),
   );
@@ -111,7 +142,7 @@ async function montar(rol: string = 'direccion', documentos: readonly unknown[] 
   mock.mockDeRuta(`GET /api/v1/proceso-mensual/${PERIODO}`, () =>
     respuestaJson({
       periodo: PERIODO,
-      procesos: [PROCESO_GARSO],
+      procesos,
       documentosReales: { 'cli-garso': 12, 'cli-sinproceso': 3 },
     }),
   );
@@ -351,5 +382,154 @@ describe('pantalla de documentos / IVA', () => {
     await usuario.click(screen.getByRole('button', { name: /^Rechazar/ }));
 
     expect(mock.llamadasA('PATCH /api/v1/documentos/doc-1/estado')).toHaveLength(0);
+  });
+
+  describe('filtro por cliente (2026-10-02)', () => {
+    it('elegir un cliente deja solo su fila y sus indicadores, lleva sus documentos a la tarjeta y «Todos los clientes» lo revierte', async () => {
+      await montar();
+      const tablero = screen.getByRole('table', { name: 'Proceso mensual por cliente' });
+      expect(within(tablero).getByText('GARSO S.A.')).toBeVisible();
+      expect(within(tablero).getByText('CLIENTE SIN PROCESO S.A.')).toBeVisible();
+      expect(indicador('Clientes')).toBe('Clientes2');
+      expect(indicador('Sin iniciar')).toBe('Sin iniciar1');
+
+      await usuario.selectOptions(selectorDeCliente('filtroDeClienteDocumentos'), 'cli-garso');
+
+      expect(within(tablero).getByText('GARSO S.A.')).toBeVisible();
+      expect(within(tablero).queryByText('CLIENTE SIN PROCESO S.A.')).not.toBeInTheDocument();
+      // Los indicadores cuentan lo filtrado: GARSO tiene proceso, ya no hay nadie «Sin iniciar».
+      expect(indicador('Clientes')).toBe('Clientes1');
+      expect(indicador('Sin iniciar')).toBe('Sin iniciar0');
+      expect(screen.getByText(/1 clientes · cliente: GARSO S\.A\./)).toBeVisible();
+
+      await usuario.selectOptions(selectorDeCliente('filtroDeClienteDocumentos'), 'cli-sinproceso');
+
+      expect(within(tablero).queryByText('GARSO S.A.')).not.toBeInTheDocument();
+      expect(within(tablero).getByText('CLIENTE SIN PROCESO S.A.')).toBeVisible();
+      expect(indicador('Sin iniciar')).toBe('Sin iniciar1');
+      // La tarjeta de abajo sigue al filtro: la tabla y la lista hablan del mismo cliente.
+      expect(await screen.findByText('Documentos — CLIENTE SIN PROCESO S.A.')).toBeVisible();
+
+      await usuario.selectOptions(selectorDeCliente('filtroDeClienteDocumentos'), '');
+
+      expect(within(tablero).getByText('GARSO S.A.')).toBeVisible();
+      expect(within(tablero).getByText('CLIENTE SIN PROCESO S.A.')).toBeVisible();
+      expect(indicador('Clientes')).toBe('Clientes2');
+    });
+
+    it('con un cliente filtrado, cambiar de cliente en la tarjeta de documentos mueve también el filtro; sin filtro, no lo toca', async () => {
+      await montar();
+      const tablero = screen.getByRole('table', { name: 'Proceso mensual por cliente' });
+
+      await usuario.selectOptions(selectorDeCliente('clienteDeDocumentos'), 'cli-sinproceso');
+      await screen.findByText('Documentos — CLIENTE SIN PROCESO S.A.');
+      expect(selectorDeCliente('filtroDeClienteDocumentos')).toHaveValue('');
+      expect(within(tablero).getByText('GARSO S.A.')).toBeVisible();
+
+      await usuario.selectOptions(selectorDeCliente('filtroDeClienteDocumentos'), 'cli-sinproceso');
+      await usuario.selectOptions(selectorDeCliente('clienteDeDocumentos'), 'cli-garso');
+
+      expect(await screen.findByText('Documentos — GARSO S.A.')).toBeVisible();
+      expect(selectorDeCliente('filtroDeClienteDocumentos')).toHaveValue('cli-garso');
+      expect(within(tablero).queryByText('CLIENTE SIN PROCESO S.A.')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Excel (2026-10-02)', () => {
+    it('con un cliente filtrado descarga su fila del proceso mensual y su lista de documentos, con los filtros escritos', async () => {
+      await montar('auxiliar');
+      await usuario.selectOptions(selectorDeCliente('filtroDeClienteDocumentos'), 'cli-garso');
+      await screen.findByText('80019012-2 · 12345678 · 001-001-0000001');
+
+      await usuario.click(screen.getByRole('button', { name: 'Descargar Excel' }));
+
+      await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(1));
+      const [reporte, detalle] = descargarReporte.mock.calls[0] as unknown as [Reporte, string | null];
+      expect(detalle).toBe('GARSO S.A.');
+      expect(reporte.titulo).toBe('Documentos / IVA');
+      expect(reporte.filtros).toEqual([
+        'Cliente: GARSO S.A.',
+        `Período/Fechas: ${describirFiltro({ tipo: 'mes', periodo: PERIODO })}`,
+        `Proceso mensual: período ${PERIODO}`,
+        `Documentos de GARSO S.A.: período ${PERIODO}, sin versiones anteriores de los archivos`,
+      ]);
+      expect(reporte.hojas.map((h) => h.nombre)).toEqual(['Proceso mensual', 'Documentos']);
+      const [proceso, documentos] = reporte.hojas as [HojaDeReporte, HojaDeReporte];
+      expect(proceso.columnas.map((c) => c.titulo)).toEqual([
+        'Cliente', 'Estado', 'Riesgo', 'Recibidos', 'Faltantes', 'SIGA C/V', 'IVA a pagar', 'IVA a favor', 'Próxima acción',
+      ]);
+      expect(celdas(proceso)).toEqual([
+        ['GARSO S.A.', 'PARCIAL', 'MEDIO', 12, 2, '✓ / —', '1500000', null, 'Pedir extractos bancarios'],
+      ]);
+      expect(proceso.columnas.find((c) => c.titulo === 'IVA a pagar')?.formato).toBe('guaranies');
+      expect(documentos.columnas.map((c) => c.titulo)).toEqual([
+        'Archivo', 'Versiones', 'Tipo', 'Comprobante', 'Total', 'Tasa', 'Estado',
+      ]);
+      expect(celdas(documentos)).toEqual([
+        ['', null, 'Factura de compra', '80019012-2 · 12345678 · 001-001-0000001', '1100000', '10%', 'RECIBIDO'],
+      ]);
+      expect(documentos.columnas.find((c) => c.titulo === 'Total')?.formato).toBe('guaranies');
+    });
+
+    it('sin filtro trae a todos los clientes, y uno sin proceso sale como «Sin iniciar» con sus recibidos reales', async () => {
+      await montar();
+
+      await usuario.click(screen.getByRole('button', { name: 'Descargar Excel' }));
+
+      await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(1));
+      const [reporte, detalle] = descargarReporte.mock.calls[0] as unknown as [Reporte, string | null];
+      expect(detalle).toBeNull();
+      expect(reporte.filtros).toContain('Cliente: todos');
+      const [proceso] = reporte.hojas as [HojaDeReporte];
+      // Orden de la tabla: por nombre.
+      expect(celdas(proceso).map((fila) => fila[0])).toEqual(['CLIENTE SIN PROCESO S.A.', 'GARSO S.A.']);
+      expect(celdas(proceso)[0]).toEqual([
+        'CLIENTE SIN PROCESO S.A.', 'Sin iniciar', undefined, 3, undefined, '', null, null, undefined,
+      ]);
+    });
+
+    it('el saldo a favor sale en su columna y la de a pagar queda vacía', async () => {
+      await montar('direccion', [DOCUMENTO_GARSO], [{ ...PROCESO_GARSO, ivaSaldoAPagar: null, ivaSaldoAFavor: '420000' }]);
+      await screen.findByText('Gs. 420.000 a favor');
+
+      await usuario.click(screen.getByRole('button', { name: 'Descargar Excel' }));
+
+      await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(1));
+      const [reporte] = descargarReporte.mock.calls[0] as unknown as [Reporte];
+      const [proceso] = reporte.hojas as [HojaDeReporte];
+      const garso = celdas(proceso).find((fila) => fila[0] === 'GARSO S.A.')!;
+      expect(garso.slice(6, 8)).toEqual([null, '420000']);
+    });
+
+    it('los documentos salen tal como se ven: una fila por archivo, y con la casilla, también las versiones anteriores', async () => {
+      const archivo = {
+        ...DOCUMENTO_GARSO,
+        evidenciaId: 'ev-1',
+        nombreArchivo: 'RG COMPRAS.xlsx',
+        rutaOneDrive: '/GARSO/RG COMPRAS.xlsx',
+      };
+      await montar('direccion', [
+        { ...archivo, id: 'doc-viejo', recibidoEn: `${PERIODO}-02T12:00:00.000Z` },
+        { ...archivo, id: 'doc-nuevo', recibidoEn: `${PERIODO}-09T12:00:00.000Z` },
+      ]);
+      await screen.findByText(/Ver versiones anteriores \(1\)/);
+
+      await usuario.click(screen.getByRole('button', { name: 'Descargar Excel' }));
+      await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(1));
+      const [sinVersiones] = descargarReporte.mock.calls[0] as unknown as [Reporte];
+      const hojaSin = sinVersiones.hojas[1]!;
+      expect(celdas(hojaSin)).toHaveLength(1);
+      expect(celdas(hojaSin)[0]!.slice(0, 2)).toEqual(['RG COMPRAS.xlsx', 2]);
+      expect(sinVersiones.filtros.at(-1)).toContain('sin versiones anteriores');
+
+      await usuario.click(screen.getByLabelText(/Ver versiones anteriores/));
+      await usuario.click(screen.getByRole('button', { name: 'Descargar Excel' }));
+      await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(2));
+      const [conVersiones] = descargarReporte.mock.calls[1] as unknown as [Reporte];
+      const hojaCon = conVersiones.hojas[1]!;
+      expect(celdas(hojaCon)).toHaveLength(2);
+      expect(celdas(hojaCon).map((fila) => fila[1])).toEqual([null, null]);
+      expect(conVersiones.filtros.at(-1)).toContain('con versiones anteriores');
+    });
   });
 });

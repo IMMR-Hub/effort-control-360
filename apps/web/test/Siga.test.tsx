@@ -14,6 +14,19 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { hoyEnParaguay } from '@effort/core';
 
 import { crearFetchMock, respuestaJson } from './ayuda-fetch-mock.js';
+import type { HojaDeReporte, Reporte } from '../src/ui/reporteExcel.js';
+
+// La descarga real necesita un navegador; acá se mira QUÉ se iba a descargar.
+const { descargarReporte } = vi.hoisted(() => ({ descargarReporte: vi.fn(async () => {}) }));
+vi.mock('../src/ui/reporteExcel.js', async (original) => ({
+  ...(await original<typeof import('../src/ui/reporteExcel.js')>()),
+  descargarReporte,
+}));
+
+/** Cada fila de la hoja como la vería Excel: los valores de sus columnas. */
+function celdas(hoja: HojaDeReporte): unknown[][] {
+  return hoja.filas.map((fila) => hoja.columnas.map((c) => c.valor(fila as never)));
+}
 
 const HOY = hoyEnParaguay(new Date());
 const PERIODO = `${HOY.anio}-${String(HOY.mes).padStart(2, '0')}`;
@@ -63,6 +76,7 @@ let mock: ReturnType<typeof crearFetchMock>;
 let usuario: ReturnType<typeof userEvent.setup>;
 
 beforeEach(() => {
+  descargarReporte.mockClear();
   mock = crearFetchMock();
   vi.stubGlobal('fetch', mock.fetchMock);
   usuario = userEvent.setup();
@@ -87,7 +101,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-async function montar(rol: string = 'direccion') {
+async function montar(rol: string = 'direccion', conciliacion: unknown = CONCILIACION_LIMPIA) {
   mock.mockDeRuta('GET /api/v1/yo', () =>
     respuestaJson({ usuarioId: 'u1', rol, veTodosLosClientes: true, cantidadDeClientesAsignados: 0 }),
   );
@@ -97,7 +111,7 @@ async function montar(rol: string = 'direccion') {
     respuestaJson({ exportaciones: [EXPORTACION] }),
   );
   mock.mockDeRuta(`GET /api/v1/clientes/cli-garso/siga/${PERIODO}/conciliacion`, () =>
-    respuestaJson(CONCILIACION_LIMPIA),
+    respuestaJson(conciliacion),
   );
 
   vi.resetModules();
@@ -244,5 +258,64 @@ describe('pantalla SIGA / conciliación', () => {
     );
 
     expect(await screen.findByText(/Gs\. 250\.000/)).toBeVisible();
+  });
+
+  describe('Excel (2026-10-02)', () => {
+    const CON_DIFERENCIAS = {
+      ...CONCILIACION_LIMPIA,
+      conciliado: false,
+      totalRecibidos: 7,
+      totalEnSiga: 6,
+      coincidentes: 4,
+      sinIdentificacion: 1,
+      faltaCargarEnSiga: [
+        { rucEmisor: '80017726-6', timbrado: '12345678', numeroComprobante: '001-001-9', total: '250000', tasa: 'DIEZ', anulado: false },
+      ],
+      sinRespaldoDocumental: [
+        { rucEmisor: '80003112-1', timbrado: '87654321', numeroComprobante: '002-003-0000077', total: '1500000', tasa: 'CINCO', anulado: false },
+      ],
+      diferenciasDeMonto: [
+        { clave: '80017726-6|12345678|001-001-5', recibido: '100000', enSiga: '90000', diferencia: '10000' },
+      ],
+      magnitudDeLasDiferencias: '10000',
+    };
+
+    it('descarga las exportaciones y cada lista de la conciliación del cliente y el período que se ven', async () => {
+      await montar('direccion', CON_DIFERENCIAS);
+
+      await usuario.click(screen.getByRole('button', { name: 'Descargar Excel' }));
+
+      await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(1));
+      const [reporte, detalle] = descargarReporte.mock.calls[0] as unknown as [Reporte, string | null];
+      expect(detalle).toBe('GARSO S.A.');
+      expect(reporte.titulo).toBe('SIGA / Conciliación');
+      expect(reporte.filtros).toContain('Cliente: GARSO S.A.');
+      expect(reporte.filtros).toContain(`Período fiscal que se muestra: ${PERIODO}`);
+      expect(reporte.filtros.some((f) => f.startsWith('Período/Fechas: '))).toBe(true);
+      expect(reporte.hojas.map((h) => h.nombre)).toEqual([
+        'Exportaciones',
+        'Resumen de la conciliación',
+        'Falta cargar en SIGA',
+        'Sin respaldo documental',
+        'Diferencias de monto',
+      ]);
+      const [exportaciones, resumen, falta, sinRespaldo, diferencias] = reporte.hojas as [
+        HojaDeReporte, HojaDeReporte, HojaDeReporte, HojaDeReporte, HojaDeReporte,
+      ];
+      // La hora depende de la base horaria del sistema donde corre la prueba: no se compara.
+      expect(celdas(exportaciones).map((fila) => fila.slice(0, 5))).toEqual([
+        ['Libro de compras', 'EXCEL', 5, 'IMPORTADA', `${PERIODO}-10`],
+      ]);
+      expect(celdas(resumen)).toEqual([[7, 6, 4, 1, 'No', '10000']]);
+      expect(celdas(falta)).toEqual([['80017726-6', '12345678', '001-001-9', '250000']]);
+      expect(celdas(sinRespaldo)).toEqual([['80003112-1', '87654321', '002-003-0000077', '1500000']]);
+      expect(celdas(diferencias)).toEqual([['80017726-6|12345678|001-001-5', '100000', '90000', '10000']]);
+    });
+
+    it('lo puede bajar también quien no puede importar', async () => {
+      await montar('revisor_balance');
+
+      expect(screen.getByRole('button', { name: 'Descargar Excel' })).toBeVisible();
+    });
   });
 });

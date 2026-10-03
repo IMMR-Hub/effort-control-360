@@ -25,6 +25,7 @@ import {
 import {
   armarConstanciaDeGestion,
   crearCalendario,
+  describirFiltro,
   fechaCivilAIso,
   fechaCivilDesdeIso,
   feriadosParaguay,
@@ -63,6 +64,16 @@ import {
 import { useSesion } from '../contexts/SesionContext.js';
 import { FiltroDeFechasSelector, PeriodosDelRango, filtroDelMesActual, usePeriodoDelFiltro } from '../ui/FiltroDeFechas.js';
 import type { FiltroDeFechas } from '@effort/core';
+import {
+  FiltroDeClienteSelector,
+  TODOS_LOS_CLIENTES,
+  coincideConCliente,
+  filtroDeClienteEnPalabras,
+  nombreDelClienteFiltrado,
+  type FiltroDeCliente,
+} from '../ui/FiltroDeCliente.js';
+import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
+import { hoja, type HojaDeReporte, type Reporte } from '../ui/reporteExcel.js';
 
 /** Mismos roles que la matriz deja crear una solicitud. */
 const ROLES_QUE_ABREN = new Set(['direccion']);
@@ -95,6 +106,25 @@ function formatearFechaHora(fechaIso: string): string {
     hour: '2-digit',
     minute: '2-digit',
   }).format(new Date(fechaIso));
+}
+
+/** `AAAA-MM-DD` del día del instante, en Paraguay (es lo que se le da a Excel como fecha). */
+function diaEnParaguay(fechaIso: string): string {
+  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Asuncion' }).format(new Date(fechaIso));
+}
+
+function horaEnParaguay(fechaIso: string): string {
+  return new Intl.DateTimeFormat('es-PY', {
+    timeZone: 'America/Asuncion',
+    hour: '2-digit',
+    minute: '2-digit',
+    hour12: false,
+  }).format(new Date(fechaIso));
+}
+
+/** «Llamada», «Whatsapp»…: como se lee en el selector de vía y en la bitácora. */
+function etiquetaDeCanal(canal: string): string {
+  return canal.charAt(0) + canal.slice(1).toLowerCase();
 }
 
 function formatearPeriodo(periodo: string): string {
@@ -165,7 +195,7 @@ const CONTACTO_VACIO: FormularioDeContacto = {
 
 const OPCIONES_CANAL = Object.keys(ICONO_CANAL).map((valor) => ({
   valor,
-  etiqueta: valor.charAt(0) + valor.slice(1).toLowerCase(),
+  etiqueta: etiquetaDeCanal(valor),
 }));
 
 const OPCIONES_DIRECCION = [
@@ -181,6 +211,27 @@ interface FilaDeSeguimiento {
   readonly ultimoContacto: Contacto | null;
   readonly diasSinContacto: number | null;
   readonly respondioAlgunaVez: boolean;
+}
+
+/** La celda «Último contacto» de la tabla; el Excel usa este mismo texto. */
+function ultimoContactoEnTexto(fila: FilaDeSeguimiento): string {
+  return fila.ultimoContacto
+    ? `${formatearFechaHora(fila.ultimoContacto.ocurridoEn)} · ${fila.ultimoContacto.canal.toLowerCase()}`
+    : 'sin contacto';
+}
+
+/**
+ * La celda «Próxima acción» en texto plano, para el Excel. La tabla la dibuja
+ * con íconos pero dice lo mismo: si cambia una, hay que cambiar la otra.
+ */
+function proximaAccionEnTexto(fila: FilaDeSeguimiento): string {
+  if (fila.solicitud.estado === 'ENTREGADA') return 'Nada pendiente';
+  if (fila.plan) {
+    return `Aviso ${fila.plan.numeroDeRecordatorio} el ${fechaCivilAIso(fila.plan.fecha)}${
+      fila.plan.esEscalamiento ? ' con dirección' : ''
+    }`;
+  }
+  return 'Avisos agotados — decidir';
 }
 
 export default function Seguimiento() {
@@ -204,6 +255,7 @@ export default function Seguimiento() {
     Readonly<Record<string, readonly Contacto[]>>
   >({});
   const [clienteSeleccionado, setClienteSeleccionado] = useState<string | null>(null);
+  const [filtroDeCliente, setFiltroDeCliente] = useState<FiltroDeCliente>(TODOS_LOS_CLIENTES);
 
   const [altaAbierta, setAltaAbierta] = useState(false);
   const [guardando, setGuardando] = useState(false);
@@ -407,12 +459,101 @@ export default function Seguimiento() {
 
   const nombreCliente = clientes.find((c) => c.id === clienteSeleccionado)?.nombre ?? '';
 
-  const sinEntregar = filas.filter((f) => f.solicitud.estado !== 'ENTREGADA').length;
-  const escalados = filas.filter((f) => f.plan?.esEscalamiento).length;
-  const agotados = filas.filter(
+  // Tabla e indicadores cuentan lo mismo: lo del cliente elegido (o todos).
+  const filasVisibles = useMemo(
+    () => filas.filter((f) => coincideConCliente(f.solicitud.clienteId, filtroDeCliente)),
+    [filas, filtroDeCliente],
+  );
+
+  /**
+   * Con un cliente elegido, la bitácora y la constancia de abajo pasan a ser las
+   * suyas: si no, quedaría a la vista el detalle de otro cliente. Con «Todos» no
+   * se toca lo que ya estaba seleccionado.
+   */
+  function cambiarFiltroDeCliente(nuevo: FiltroDeCliente) {
+    setFiltroDeCliente(nuevo);
+    if (nuevo !== TODOS_LOS_CLIENTES) setClienteSeleccionado(nuevo);
+  }
+
+  /**
+   * Lo mismo que muestra la pantalla con sus filtros: la tabla «Estado de
+   * entrega» y, del cliente que está a la vista, su bitácora de contactos y su
+   * constancia de gestión (lo que se le muestra cuando reclama).
+   */
+  function reporte(): Reporte {
+    const hojas: HojaDeReporte[] = [
+      hoja(
+        'Estado de entrega',
+        [
+          { titulo: 'Cliente', valor: (f: FilaDeSeguimiento) => f.cliente?.nombre ?? f.solicitud.clienteId },
+          { titulo: 'Estado', valor: (f) => ETIQUETA_ESTADO[f.solicitud.estado].texto },
+          { titulo: 'Venció', valor: (f) => f.limite, formato: 'fecha' },
+          { titulo: 'Avisos', valor: (f) => f.solicitud.recordatoriosEnviados, formato: 'entero' },
+          { titulo: 'Último contacto', valor: ultimoContactoEnTexto },
+          { titulo: 'Días sin respuesta', valor: (f) => f.diasSinContacto, formato: 'entero' },
+          { titulo: 'Próxima acción', valor: proximaAccionEnTexto },
+        ],
+        filasVisibles,
+      ),
+    ];
+
+    const filtros = [
+      filtroDeClienteEnPalabras(filtroDeCliente, clientes),
+      `Período: ${periodoActivo}${filtro.tipo === 'mes' ? '' : ` (rango elegido: ${describirFiltro(filtro)})`}`,
+    ];
+
+    if (clienteSeleccionado !== null && constancia !== null) {
+      const cliente = nombreCliente || clienteSeleccionado;
+      filtros.push(`Bitácora y constancia de: ${cliente}`);
+      hojas.push(
+        hoja(
+          'Bitácora de contactos',
+          [
+            { titulo: 'Cliente', valor: () => cliente },
+            { titulo: 'Fecha', valor: (c: Contacto) => diaEnParaguay(c.ocurridoEn), formato: 'fecha' },
+            { titulo: 'Hora', valor: (c) => horaEnParaguay(c.ocurridoEn) },
+            { titulo: 'Vía', valor: (c) => etiquetaDeCanal(c.canal) },
+            { titulo: 'Origen', valor: (c) => (c.origenContacto === 'AUTOMATICO' ? 'Automático' : 'Manual') },
+            { titulo: 'Respuesta', valor: (c) => (c.huboRespuesta ? 'Respondió' : 'Sin respuesta') },
+            { titulo: 'Qué se habló', valor: (c) => c.resumen },
+            { titulo: 'Atendió', valor: (c) => c.quienAtendio ?? 'Nadie atendió' },
+            { titulo: 'Evidencia', valor: (c) => (c.evidenciaId ? 'Con evidencia adjunta' : null) },
+          ],
+          contactosDelCliente,
+        ),
+        hoja(
+          'Constancia de gestión',
+          [
+            { titulo: 'Cliente', valor: () => cliente },
+            { titulo: 'Concepto', valor: (fila: { concepto: string; valor: string | number }) => fila.concepto },
+            { titulo: 'Valor', valor: (fila) => fila.valor },
+          ],
+          [
+            { concepto: 'Síntesis', valor: constancia.sintesis },
+            { concepto: 'Intentos totales', valor: constancia.totalDeContactos },
+            { concepto: 'Respuestas', valor: constancia.vecesQueRespondieron },
+            { concepto: 'Avisos del sistema', valor: constancia.contactosAutomaticos },
+            { concepto: 'Gestiones a mano', valor: constancia.contactosManuales },
+            ...Object.entries(constancia.contactosPorCanal)
+              .filter(([, cantidad]) => cantidad > 0)
+              .map(([canal, cantidad]) => ({ concepto: `Por vía: ${canal.toLowerCase()}`, valor: cantidad })),
+            ...(constancia.personasQueAtendieron.length > 0
+              ? [{ concepto: 'Atendieron', valor: constancia.personasQueAtendieron.join(' · ') }]
+              : []),
+          ],
+        ),
+      );
+    }
+
+    return { titulo: 'Seguimiento', filtros, hojas };
+  }
+
+  const sinEntregar = filasVisibles.filter((f) => f.solicitud.estado !== 'ENTREGADA').length;
+  const escalados = filasVisibles.filter((f) => f.plan?.esEscalamiento).length;
+  const agotados = filasVisibles.filter(
     (f) => f.solicitud.estado !== 'ENTREGADA' && f.plan === null,
   ).length;
-  const nuncaRespondieron = filas.filter(
+  const nuncaRespondieron = filasVisibles.filter(
     (f) => f.solicitud.estado !== 'ENTREGADA' && !f.respondioAlgunaVez,
   ).length;
 
@@ -441,6 +582,15 @@ export default function Seguimiento() {
             Quién no entregó, qué se le reclamó y con qué respaldo. Los recordatorios salen solos
             según la regla configurada; cada intento queda registrado para poder demostrarlo después.
           </p>
+          <div className="mt-3 flex flex-wrap items-end gap-3">
+            <FiltroDeClienteSelector
+              id="filtroDeClienteSeguimiento"
+              clientes={clientes}
+              valor={filtroDeCliente}
+              onCambiar={cambiarFiltroDeCliente}
+            />
+            <BotonDescargarExcel reporte={reporte} detalleDelNombre={nombreDelClienteFiltrado(filtroDeCliente, clientes)} />
+          </div>
         </div>
         <div className="flex flex-col items-end gap-2">
           <FiltroDeFechasSelector id="filtroSeguimiento" valor={filtro} onCambiar={setFiltro} />
@@ -451,7 +601,8 @@ export default function Seguimiento() {
             que no hacían nada al hacer clic. Se sacaron el 2026-09-11 en vez de
             dejarlos: un botón que no responde hace dudar de todo lo demás de la
             pantalla, incluso de lo que sí funciona. Vuelven cuando tengan su
-            función escrita.
+            función escrita. («Exportar» volvió el 2026-10-02 como «Descargar
+            Excel», junto al filtro de cliente, con la función ya escrita.)
           */}
         </div>
       </div>
@@ -463,7 +614,7 @@ export default function Seguimiento() {
           <Indicador
             etiqueta="Sin entregar"
             valor={sinEntregar}
-            detalle={`de ${filas.length} clientes del piloto`}
+            detalle={`de ${filasVisibles.length} ${filasVisibles.length === 1 ? 'cliente' : 'clientes'} del piloto`}
             tono="critico"
           />
           <Indicador
@@ -490,11 +641,11 @@ export default function Seguimiento() {
         <Tarjeta>
           <EncabezadoTarjeta
             titulo="Estado de entrega por cliente"
-            descripcion={
+            descripcion={`${
               regla
                 ? `Plazo: ${regla.diasHabilesDePlazo}º día hábil · Aviso ${regla.horaDeEnvio} · Insiste cada ${regla.reintentarCadaDiasHabiles} días hábiles`
                 : 'Sin regla de "Entrega de documentación" configurada todavía.'
-            }
+            }${filtroDeCliente === TODOS_LOS_CLIENTES ? '' : ` · cliente: ${nombreDelClienteFiltrado(filtroDeCliente, clientes)}`}`}
           />
           <Tabla etiqueta="Estado de entrega de documentación por cliente">
             <thead>
@@ -509,7 +660,7 @@ export default function Seguimiento() {
               </tr>
             </thead>
             <tbody>
-              {filas.map((fila) => {
+              {filasVisibles.map((fila) => {
                 const estado = ETIQUETA_ESTADO[fila.solicitud.estado];
                 const seleccionada = fila.solicitud.clienteId === clienteSeleccionado;
 
@@ -525,11 +676,7 @@ export default function Seguimiento() {
                     <Td><Badge tono={estado.tono}>{estado.texto}</Badge></Td>
                     <Td className="text-tinta-suave">{fila.limite}</Td>
                     <Td numerica>{fila.solicitud.recordatoriosEnviados}</Td>
-                    <Td className="text-tinta-suave">
-                      {fila.ultimoContacto
-                        ? `${formatearFechaHora(fila.ultimoContacto.ocurridoEn)} · ${fila.ultimoContacto.canal.toLowerCase()}`
-                        : 'sin contacto'}
-                    </Td>
+                    <Td className="text-tinta-suave">{ultimoContactoEnTexto(fila)}</Td>
                     <Td
                       numerica
                       className={
@@ -561,6 +708,13 @@ export default function Seguimiento() {
                   </tr>
                 );
               })}
+              {filas.length > 0 && filasVisibles.length === 0 && (
+                <tr>
+                  <td colSpan={7} className="px-4 py-8 text-center text-sm text-tinta-tenue">
+                    Este cliente no tiene el seguimiento abierto para este período.
+                  </td>
+                </tr>
+              )}
               {filas.length === 0 && (
                 <tr>
                   <td colSpan={7} className="px-4 py-8 text-center text-sm text-tinta-tenue">

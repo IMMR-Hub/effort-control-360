@@ -14,6 +14,19 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { crearFetchMock, respuestaJson } from './ayuda-fetch-mock.js';
+import type { HojaDeReporte, Reporte } from '../src/ui/reporteExcel.js';
+
+// La descarga real necesita un navegador; acá se mira QUÉ se iba a descargar.
+const { descargarReporte } = vi.hoisted(() => ({ descargarReporte: vi.fn(async () => {}) }));
+vi.mock('../src/ui/reporteExcel.js', async (original) => ({
+  ...(await original<typeof import('../src/ui/reporteExcel.js')>()),
+  descargarReporte,
+}));
+
+/** Cada fila de la hoja como la vería Excel: los valores de sus columnas. */
+function celdas(hoja: HojaDeReporte): unknown[][] {
+  return hoja.filas.map((fila) => hoja.columnas.map((c) => c.valor(fila as never)));
+}
 
 const GARSO = {
   id: 'cli-garso',
@@ -62,6 +75,7 @@ let mock: ReturnType<typeof crearFetchMock>;
 let usuario: ReturnType<typeof userEvent.setup>;
 
 beforeEach(() => {
+  descargarReporte.mockClear();
   mock = crearFetchMock();
   vi.stubGlobal('fetch', mock.fetchMock);
   usuario = userEvent.setup();
@@ -71,16 +85,19 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-async function montar(rol: string = 'direccion') {
+async function montar(
+  rol: string = 'direccion',
+  listas: { impositivas?: readonly unknown[]; notificacion?: readonly unknown[] } = {},
+) {
   mock.mockDeRuta('GET /api/v1/yo', () =>
     respuestaJson({ usuarioId: 'u1', rol, veTodosLosClientes: true, cantidadDeClientesAsignados: 0 }),
   );
   mock.mockDeRuta('GET /api/v1/csrf', () => respuestaJson({ csrfToken: 'token-de-prueba' }));
   mock.mockDeRuta('GET /api/v1/clientes', () => respuestaJson({ clientes: [GARSO] }));
-  mock.mockDeRuta('GET /api/v1/reglas-impositivas', () => respuestaJson({ reglas: [REGLA_IVA_DIEZ] }));
+  mock.mockDeRuta('GET /api/v1/reglas-impositivas', () => respuestaJson({ reglas: listas.impositivas ?? [REGLA_IVA_DIEZ] }));
 
   if (ROLES_CON_ACCESO_A_NOTIFICACION.has(rol)) {
-    mock.mockDeRuta('GET /api/v1/reglas-notificacion', () => respuestaJson({ reglas: [REGLA_NOTIF] }));
+    mock.mockDeRuta('GET /api/v1/reglas-notificacion', () => respuestaJson({ reglas: listas.notificacion ?? [REGLA_NOTIF] }));
   } else {
     mock.mockDeRuta('GET /api/v1/reglas-notificacion', () =>
       respuestaJson({ error: 'no_autorizado', mensaje: 'No tenés permiso para realizar esta acción.' }, { status: 403 }),
@@ -104,6 +121,59 @@ async function montar(rol: string = 'direccion') {
 }
 
 describe('pantalla de reglas', () => {
+  describe('Excel (2026-10-02)', () => {
+    it('descarga las dos tablas, una hoja cada una, con las etiquetas de pantalla; son reglas generales, sin filtros', async () => {
+      const IVA_CINCO = { ...REGLA_IVA_DIEZ, id: 'regla-iva-5', nombre: 'IVA 5%', tasa: 'CINCO', vigenteHasta: '2026-12-31', requiereConfirmacionCliente: false };
+      const AVISO = {
+        ...REGLA_NOTIF,
+        id: 'regla-notif-2',
+        nombre: 'Aviso de vencimiento',
+        evento: 'VENCIMIENTO_PROXIMO',
+        activa: false,
+        clientesAlcanzados: ['cli-garso'],
+      };
+      // Lo puede bajar cualquier rol que vea la tabla: descargar es leer.
+      await montar('coordinador', { impositivas: [REGLA_IVA_DIEZ, IVA_CINCO], notificacion: [REGLA_NOTIF, AVISO] });
+      await screen.findByText('Recordatorio de documentación');
+      await screen.findByText('Aviso de vencimiento');
+
+      await usuario.click(screen.getByRole('button', { name: 'Descargar Excel' }));
+
+      await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(1));
+      const [reporte, detalle] = descargarReporte.mock.calls[0] as unknown as [Reporte, string | null];
+      expect(detalle).toBeNull();
+      expect(reporte.titulo).toBe('Reglas');
+      expect(reporte.filtros).toEqual([]);
+      expect(reporte.hojas.map((h) => h.nombre)).toEqual(['Reglas impositivas', 'Reglas de notificación']);
+      const [impositivas, notificacion] = reporte.hojas as [HojaDeReporte, HojaDeReporte];
+      expect(impositivas.columnas.map((c) => c.titulo)).toEqual([
+        'Nombre', 'Tasa', 'Vigente desde', 'Vigente hasta', 'Confirmación cliente', 'Fuente',
+      ]);
+      expect(celdas(impositivas)).toEqual([
+        ['IVA General 10%', '10%', '2024-01-01', null, 'Sí', 'Ley 125/91, Art. 91'],
+        ['IVA 5%', '5%', '2024-01-01', '2026-12-31', 'No', 'Ley 125/91, Art. 91'],
+      ]);
+      expect(notificacion.columnas.map((c) => c.titulo)).toEqual([
+        'Nombre', 'Evento', 'Estado', 'Plazo (días hábiles)', 'Hora de envío', 'Cartera alcanzada',
+      ]);
+      expect(celdas(notificacion)).toEqual([
+        ['Recordatorio de documentación', 'Documentación no entregada', 'Activa', 3, '09:00', 'Toda la cartera'],
+        ['Aviso de vencimiento', 'Vencimiento próximo', 'Inactiva', 3, '09:00', '1 clientes'],
+      ]);
+    });
+
+    it('si el rol no puede ver las reglas de notificación, el Excel trae solo la hoja que sí ve', async () => {
+      await montar('auxiliar');
+      await screen.findByText('No tenés permiso para realizar esta acción.');
+
+      await usuario.click(screen.getByRole('button', { name: 'Descargar Excel' }));
+
+      await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(1));
+      const [reporte] = descargarReporte.mock.calls[0] as unknown as [Reporte, string | null];
+      expect(reporte.hojas.map((h) => h.nombre)).toEqual(['Reglas impositivas']);
+    });
+  });
+
   it('muestra ambos tableros con los datos del servidor', async () => {
     await montar();
 

@@ -34,6 +34,8 @@ import {
   type TipoDestinatario,
 } from '../api/reglasNotificacion.js';
 import { useSesion } from '../contexts/SesionContext.js';
+import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
+import { hoja, type Reporte } from '../ui/reporteExcel.js';
 
 const ETIQUETA_TASA: Record<TasaIva, string> = { DIEZ: '10%', CINCO: '5%', EXENTA: 'Exenta' };
 const OPCIONES_TASA = Object.entries(ETIQUETA_TASA).map(([valor, etiqueta]) => ({ valor, etiqueta }));
@@ -183,11 +185,17 @@ function impositivaAFormulario(regla: ReglaImpositiva): FormularioImpositiva {
   };
 }
 
-function ReglasImpositivas() {
+function ReglasImpositivas({
+  alCambiarVisibles,
+}: {
+  /** Lo que la tabla muestra (`null` si no se pudo cargar), para el Excel de la pantalla. */
+  readonly alCambiarVisibles?: (reglas: readonly ReglaImpositiva[] | null) => void;
+}) {
   const { sesion } = useSesion();
   const puedeEditar = sesion?.rol === 'direccion';
 
   const [reglas, setReglas] = useState<readonly ReglaImpositiva[]>([]);
+  const [cargada, setCargada] = useState(false);
   const [errorCarga, setErrorCarga] = useState<string | null>(null);
   const [edicion, setEdicion] = useState<ReglaImpositiva | null>(null);
   const [abierto, setAbierto] = useState(false);
@@ -199,6 +207,7 @@ function ReglasImpositivas() {
     try {
       const { reglas: lista } = await listarReglasImpositivas();
       setReglas(lista);
+      setCargada(true);
       setErrorCarga(null);
     } catch (motivo) {
       setErrorCarga(motivo instanceof ErrorDeApi ? motivo.message : 'No se pudo conectar con el servidor.');
@@ -208,6 +217,11 @@ function ReglasImpositivas() {
   useEffect(() => {
     void recargar();
   }, []);
+
+  // Con la tabla escondida por un error, el Excel tampoco la trae: no hay nada que ver.
+  useEffect(() => {
+    alCambiarVisibles?.(cargada && !errorCarga ? reglas : null);
+  }, [reglas, cargada, errorCarga, alCambiarVisibles]);
 
   function abrirAlta() {
     setEdicion(null);
@@ -469,12 +483,20 @@ function notificacionAFormulario(regla: ReglaDeNotificacion): FormularioNotifica
   };
 }
 
-function ReglasDeNotificacion({ clientes }: { readonly clientes: readonly Cliente[] }) {
+function ReglasDeNotificacion({
+  clientes,
+  alCambiarVisibles,
+}: {
+  readonly clientes: readonly Cliente[];
+  /** Lo que la tabla muestra (`null` si no se pudo cargar, p. ej. un rol sin acceso), para el Excel de la pantalla. */
+  readonly alCambiarVisibles?: (reglas: readonly ReglaDeNotificacion[] | null) => void;
+}) {
   const { sesion } = useSesion();
   const puedeCrear = sesion?.rol === 'direccion';
   const puedeEditar = sesion?.rol === 'direccion';
 
   const [reglas, setReglas] = useState<readonly ReglaDeNotificacion[]>([]);
+  const [cargada, setCargada] = useState(false);
   const [errorCarga, setErrorCarga] = useState<string | null>(null);
   const [edicion, setEdicion] = useState<ReglaDeNotificacion | null>(null);
   const [abierto, setAbierto] = useState(false);
@@ -488,6 +510,7 @@ function ReglasDeNotificacion({ clientes }: { readonly clientes: readonly Client
     try {
       const { reglas: lista } = await listarReglasDeNotificacion();
       setReglas(lista);
+      setCargada(true);
       setErrorCarga(null);
     } catch (motivo) {
       setErrorCarga(motivo instanceof ErrorDeApi ? motivo.message : 'No se pudo conectar con el servidor.');
@@ -497,6 +520,10 @@ function ReglasDeNotificacion({ clientes }: { readonly clientes: readonly Client
   useEffect(() => {
     void recargar();
   }, []);
+
+  useEffect(() => {
+    alCambiarVisibles?.(cargada && !errorCarga ? reglas : null);
+  }, [reglas, cargada, errorCarga, alCambiarVisibles]);
 
   function abrirAlta() {
     setEdicion(null);
@@ -769,6 +796,58 @@ export default function Reglas() {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [clientes, setClientes] = useState<readonly Cliente[]>([]);
+  // Lo que muestra cada tabla, para el Excel. `null` = esa tabla no se ve (todavía no cargó, o dio error).
+  const [impositivasVisibles, setImpositivasVisibles] = useState<readonly ReglaImpositiva[] | null>(null);
+  const [notificacionVisibles, setNotificacionVisibles] = useState<readonly ReglaDeNotificacion[] | null>(null);
+
+  /**
+   * Son reglas generales, no de un cliente: no hay filtro por cliente ni por
+   * fechas, así que el reporte lleva las dos tablas completas, una hoja cada una.
+   */
+  function reporte(): Reporte {
+    return {
+      titulo: 'Reglas',
+      filtros: [],
+      hojas: [
+        ...(impositivasVisibles === null
+          ? []
+          : [
+              hoja(
+                'Reglas impositivas',
+                [
+                  { titulo: 'Nombre', valor: (r: ReglaImpositiva) => r.nombre },
+                  { titulo: 'Tasa', valor: (r) => ETIQUETA_TASA[r.tasa] },
+                  { titulo: 'Vigente desde', valor: (r) => r.vigenteDesde, formato: 'fecha' },
+                  { titulo: 'Vigente hasta', valor: (r) => r.vigenteHasta, formato: 'fecha' },
+                  { titulo: 'Confirmación cliente', valor: (r) => (r.requiereConfirmacionCliente ? 'Sí' : 'No') },
+                  { titulo: 'Fuente', valor: (r) => r.fuente },
+                ],
+                impositivasVisibles,
+              ),
+            ]),
+        ...(notificacionVisibles === null
+          ? []
+          : [
+              hoja(
+                'Reglas de notificación',
+                [
+                  { titulo: 'Nombre', valor: (r: ReglaDeNotificacion) => r.nombre },
+                  { titulo: 'Evento', valor: (r) => ETIQUETA_EVENTO[r.evento] },
+                  { titulo: 'Estado', valor: (r) => (r.activa ? 'Activa' : 'Inactiva') },
+                  { titulo: 'Plazo (días hábiles)', valor: (r) => r.diasHabilesDePlazo, formato: 'entero' },
+                  { titulo: 'Hora de envío', valor: (r) => r.horaDeEnvio },
+                  {
+                    titulo: 'Cartera alcanzada',
+                    valor: (r) =>
+                      r.clientesAlcanzados.length === 0 ? 'Toda la cartera' : `${r.clientesAlcanzados.length} clientes`,
+                  },
+                ],
+                notificacionVisibles,
+              ),
+            ]),
+      ],
+    };
+  }
 
   useEffect(() => {
     (async () => {
@@ -803,15 +882,18 @@ export default function Reglas() {
 
   return (
     <main className="mx-auto max-w-[86rem] space-y-5 px-5 py-6">
-      <div>
-        <h1 className="text-lg font-semibold">Reglas</h1>
-        <p className="mt-1 max-w-2xl text-sm text-tinta-suave">
-          Tasas de IVA y reglas de recordatorio automático.
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-lg font-semibold">Reglas</h1>
+          <p className="mt-1 max-w-2xl text-sm text-tinta-suave">
+            Tasas de IVA y reglas de recordatorio automático.
+          </p>
+        </div>
+        <BotonDescargarExcel reporte={reporte} />
       </div>
 
-      <ReglasImpositivas />
-      <ReglasDeNotificacion clientes={clientes} />
+      <ReglasImpositivas alCambiarVisibles={setImpositivasVisibles} />
+      <ReglasDeNotificacion clientes={clientes} alCambiarVisibles={setNotificacionVisibles} />
     </main>
   );
 }

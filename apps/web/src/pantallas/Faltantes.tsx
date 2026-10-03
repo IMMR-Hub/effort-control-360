@@ -15,6 +15,7 @@ import { Download, RefreshCw } from 'lucide-react';
 
 import { Badge, Boton, EncabezadoTarjeta, Indicador, Tabla, Tarjeta, Td, Th } from '../ui/Primitivos.jsx';
 import { ErrorDeApi } from '../api/cliente.js';
+import { listarClientes, type Cliente } from '../api/clientes.js';
 import {
   obtenerFaltantes,
   type EstadoPlanillaRg90,
@@ -22,6 +23,16 @@ import {
 } from '../api/vencimientos.js';
 import { actualizarAhora, type ResumenDeActualizacion } from '../api/actualizarAhora.js';
 import { useSesion } from '../contexts/SesionContext.js';
+import {
+  FiltroDeClienteSelector,
+  TODOS_LOS_CLIENTES,
+  coincideConCliente,
+  filtroDeClienteEnPalabras,
+  nombreDelClienteFiltrado,
+  type FiltroDeCliente,
+} from '../ui/FiltroDeCliente.js';
+import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
+import { hoja, type Reporte } from '../ui/reporteExcel.js';
 
 /**
  * Quién puede apretar "Actualizar ahora": exactamente los roles que el
@@ -54,6 +65,14 @@ const TONO_ESTADO_RG90: Record<EstadoPlanillaRg90, TonoBadge> = {
   COMPLETA: 'completo',
 };
 
+/** Lo que aclara la tabla debajo de «Falta ventas»; el Excel lo repite en su propia columna. */
+const ACLARACION_FALTA_VENTAS = 'Puede ser legítimo si el cliente no facturó ese mes.';
+
+/** Cómo se lee una obligación en la tabla: «IVA General — período 2026-07 (42 día(s) de atraso)». */
+function obligacionEnTexto(o: FaltanteDeClientePeriodo['obligaciones'][number]): string {
+  return `${o.descripcion} (${o.diasDeAtraso} día(s) de atraso)`;
+}
+
 function celdaCsv(valor: string): string {
   return /[",\r\n]/.test(valor) ? `"${valor.replace(/"/g, '""')}"` : valor;
 }
@@ -85,6 +104,8 @@ export default function Faltantes() {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [faltantes, setFaltantes] = useState<readonly FaltanteDeClientePeriodo[]>([]);
+  const [clientes, setClientes] = useState<readonly Cliente[]>([]);
+  const [filtroDeCliente, setFiltroDeCliente] = useState<FiltroDeCliente>(TODOS_LOS_CLIENTES);
 
   const [actualizando, setActualizando] = useState(false);
   const [resumenActualizacion, setResumenActualizacion] = useState<ResumenDeActualizacion | null>(null);
@@ -94,8 +115,12 @@ export default function Faltantes() {
     setCargando(true);
     setError(null);
     try {
-      const { faltantes: lista } = await obtenerFaltantes();
+      const [{ faltantes: lista }, { clientes: listaDeClientes }] = await Promise.all([
+        obtenerFaltantes(),
+        listarClientes(),
+      ]);
       setFaltantes(lista);
+      setClientes(listaDeClientes);
     } catch (motivo) {
       setError(motivo instanceof ErrorDeApi ? motivo.message : 'No se pudo conectar con el servidor.');
     } finally {
@@ -128,17 +153,46 @@ export default function Faltantes() {
     void recargar();
   }, []);
 
+  // Lo que se ve (tabla, indicadores, CSV y Excel) es siempre lo del cliente elegido.
+  const filas = useMemo(
+    () => faltantes.filter((f) => coincideConCliente(f.clienteId, filtroDeCliente)),
+    [faltantes, filtroDeCliente],
+  );
   const totalObligaciones = useMemo(
-    () => faltantes.reduce((total, f) => total + f.obligaciones.length, 0),
-    [faltantes],
+    () => filas.reduce((total, f) => total + f.obligaciones.length, 0),
+    [filas],
   );
   const conPlanillaIncompleta = useMemo(
     () =>
-      faltantes.filter(
+      filas.filter(
         (f) => f.estadoPlanillaRg90 !== 'NO_APLICA' && f.estadoPlanillaRg90 !== 'COMPLETA',
       ).length,
-    [faltantes],
+    [filas],
   );
+
+  /** Lo mismo que muestra la tabla «Lo que falta subir», con el filtro de cliente puesto. */
+  function reporte(): Reporte {
+    return {
+      titulo: 'Faltantes',
+      filtros: [filtroDeClienteEnPalabras(filtroDeCliente, clientes)],
+      hojas: [
+        hoja(
+          'Lo que falta subir',
+          [
+            { titulo: 'Cliente', valor: (f: FaltanteDeClientePeriodo) => f.clienteNombre },
+            { titulo: 'Período', valor: (f) => f.periodo },
+            { titulo: 'Comprobantes sin presentar', valor: (f) => f.obligaciones.map(obligacionEnTexto).join(' | ') },
+            { titulo: 'Planilla RG 90', valor: (f) => ETIQUETA_ESTADO_RG90[f.estadoPlanillaRg90] },
+            {
+              titulo: 'Aclaración',
+              valor: (f) => (f.estadoPlanillaRg90 === 'FALTA_VENTAS' ? ACLARACION_FALTA_VENTAS : null),
+            },
+          ],
+          filas,
+        ),
+      ],
+    };
+  }
 
   if (cargando) {
     return (
@@ -165,6 +219,15 @@ export default function Faltantes() {
             Por cliente y período, con vencimiento ya vencido: qué comprobante de presentación falta y
             si las planillas RG 90 de compras y ventas ya se cargaron. Lo que no aparece acá está al día.
           </p>
+          <div className="mt-3 flex flex-wrap items-end gap-3">
+            <FiltroDeClienteSelector
+              id="filtroDeClienteFaltantes"
+              clientes={clientes}
+              valor={filtroDeCliente}
+              onCambiar={setFiltroDeCliente}
+            />
+            <BotonDescargarExcel reporte={reporte} detalleDelNombre={nombreDelClienteFiltrado(filtroDeCliente, clientes)} />
+          </div>
         </div>
         {puedeActualizar && (
           <Boton
@@ -227,9 +290,9 @@ export default function Faltantes() {
       <section className="grid gap-3 sm:grid-cols-3" aria-label="Resumen de lo que falta subir">
         <Indicador
           etiqueta="Cliente y período con algo pendiente"
-          valor={faltantes.length}
+          valor={filas.length}
           tono="critico"
-          destacado={faltantes.length > 0}
+          destacado={filas.length > 0}
         />
         <Indicador etiqueta="Comprobantes sin presentar" valor={totalObligaciones} tono="critico" />
         <Indicador etiqueta="Con planilla RG 90 incompleta" valor={conPlanillaIncompleta} tono="parcial" />
@@ -238,13 +301,15 @@ export default function Faltantes() {
       <Tarjeta>
         <EncabezadoTarjeta
           titulo="Lo que falta subir"
-          descripcion={`${faltantes.length} fila(s) — cliente y período con algo pendiente`}
+          descripcion={`${filas.length} fila(s) — cliente y período con algo pendiente${
+            filtroDeCliente === TODOS_LOS_CLIENTES ? '' : ` · cliente: ${nombreDelClienteFiltrado(filtroDeCliente, clientes)}`
+          }`}
           acciones={
             <Boton
               variante="secundario"
               icono={Download}
-              onClick={() => descargarCsv(faltantes)}
-              disabled={faltantes.length === 0}
+              onClick={() => descargarCsv(filas)}
+              disabled={filas.length === 0}
             >
               Exportar CSV
             </Boton>
@@ -260,7 +325,7 @@ export default function Faltantes() {
             </tr>
           </thead>
           <tbody>
-            {faltantes.map((f) => (
+            {filas.map((f) => (
               <tr key={`${f.clienteId}-${f.periodo}`}>
                 <Td className="font-medium">{f.clienteNombre}</Td>
                 <Td className="cifra text-tinta-suave">{f.periodo}</Td>
@@ -281,17 +346,17 @@ export default function Faltantes() {
                     {ETIQUETA_ESTADO_RG90[f.estadoPlanillaRg90]}
                   </Badge>
                   {f.estadoPlanillaRg90 === 'FALTA_VENTAS' && (
-                    <p className="mt-1 text-xs text-tinta-tenue">
-                      Puede ser legítimo si el cliente no facturó ese mes.
-                    </p>
+                    <p className="mt-1 text-xs text-tinta-tenue">{ACLARACION_FALTA_VENTAS}</p>
                   )}
                 </Td>
               </tr>
             ))}
-            {faltantes.length === 0 && (
+            {filas.length === 0 && (
               <tr>
                 <td colSpan={4} className="px-4 py-8 text-center text-sm text-tinta-tenue">
-                  No hay nada pendiente: todo lo vencido tiene su comprobante y sus planillas RG 90.
+                  {filtroDeCliente === TODOS_LOS_CLIENTES
+                    ? 'No hay nada pendiente: todo lo vencido tiene su comprobante y sus planillas RG 90.'
+                    : 'No hay nada pendiente para este cliente: todo lo vencido tiene su comprobante y sus planillas RG 90.'}
                 </td>
               </tr>
             )}

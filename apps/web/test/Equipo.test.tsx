@@ -12,6 +12,19 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { crearFetchMock, respuestaJson } from './ayuda-fetch-mock.js';
+import type { HojaDeReporte, Reporte } from '../src/ui/reporteExcel.js';
+
+// La descarga real necesita un navegador; acá se mira QUÉ se iba a descargar.
+const { descargarReporte } = vi.hoisted(() => ({ descargarReporte: vi.fn(async () => {}) }));
+vi.mock('../src/ui/reporteExcel.js', async (original) => ({
+  ...(await original<typeof import('../src/ui/reporteExcel.js')>()),
+  descargarReporte,
+}));
+
+/** Cada fila de la hoja como la vería Excel: los valores de sus columnas. */
+function celdas(hoja: HojaDeReporte): unknown[][] {
+  return hoja.filas.map((fila) => hoja.columnas.map((c) => c.valor(fila as never)));
+}
 
 const GARSO = {
   id: 'cli-garso',
@@ -45,6 +58,7 @@ let mock: ReturnType<typeof crearFetchMock>;
 let usuario: ReturnType<typeof userEvent.setup>;
 
 beforeEach(() => {
+  descargarReporte.mockClear();
   mock = crearFetchMock();
   vi.stubGlobal('fetch', mock.fetchMock);
   usuario = userEvent.setup();
@@ -54,7 +68,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-async function montar(rol: string = 'direccion') {
+async function montar(rol: string = 'direccion', usuarios: readonly unknown[] = [ARACELY]) {
   mock.mockDeRuta('GET /api/v1/yo', () =>
     respuestaJson({ usuarioId: 'u1', rol, veTodosLosClientes: true, cantidadDeClientesAsignados: 0 }),
   );
@@ -63,7 +77,7 @@ async function montar(rol: string = 'direccion') {
   mock.mockDeRuta('GET /api/v1/usuarios/usr-aracely/clientes', () => respuestaJson({ clienteIds: [] }));
 
   if (rol === 'direccion' || rol === 'responsable') {
-    mock.mockDeRuta('GET /api/v1/usuarios', () => respuestaJson({ usuarios: [ARACELY] }));
+    mock.mockDeRuta('GET /api/v1/usuarios', () => respuestaJson({ usuarios }));
   } else {
     mock.mockDeRuta('GET /api/v1/usuarios', () =>
       respuestaJson({ error: 'no_autorizado', mensaje: 'No tenés permiso para realizar esta acción.' }, { status: 403 }),
@@ -232,5 +246,67 @@ describe('pantalla de equipo', () => {
 
     expect(screen.queryByLabelText('Contraseña inicial')).not.toBeInTheDocument();
     expect(mock.llamadasA('POST /api/v1/usuarios')).toHaveLength(0);
+  });
+
+  /*
+   * 2026-10-02: no hay filtro por cliente en esta pantalla. La lista de usuarios
+   * solo dice si alguien ve toda la cartera o una acotada; qué clientes tiene
+   * cada una se pide persona por persona (`/usuarios/:id/clientes`).
+   */
+  describe('Excel (2026-10-02)', () => {
+    const LAURA = {
+      ...ARACELY,
+      id: 'usr-laura',
+      nombre: 'Laura',
+      apellido: 'Pérez',
+      email: 'laura@effort.com.py',
+      cargo: null,
+      rol: 'direccion',
+      veTodosLosClientes: true,
+      costoPorHora: '300000',
+    };
+    const PEDRO = {
+      ...ARACELY,
+      id: 'usr-pedro',
+      nombre: 'Pedro',
+      apellido: 'Ruiz',
+      email: 'pedro@effort.com.py',
+      rol: 'solo_lectura',
+      activo: false,
+      costoPorHora: '123456',
+    };
+
+    it('descarga la tabla tal como se ve, con las etiquetas de la pantalla y sin el costo por hora', async () => {
+      await montar('direccion', [ARACELY, LAURA, PEDRO]);
+      await screen.findByText('Pedro Ruiz');
+
+      await usuario.click(screen.getByRole('button', { name: 'Descargar Excel' }));
+
+      await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(1));
+      const [reporte, detalle] = descargarReporte.mock.calls[0] as unknown as [Reporte, string | null];
+      expect(detalle).toBeNull();
+      expect(reporte.titulo).toBe('Equipo');
+      expect(reporte.filtros).toEqual([]);
+      expect(reporte.hojas.map((h) => h.nombre)).toEqual(['Equipo']);
+      const [equipo] = reporte.hojas as [HojaDeReporte];
+      expect(equipo.columnas.map((c) => c.titulo)).toEqual(['Nombre', 'Correo', 'Cargo', 'Rol', 'Cartera', 'Estado']);
+      expect(celdas(equipo)).toEqual([
+        ['Aracely Gómez', 'aracely@effort.com.py', 'Auxiliar contable', 'Auxiliar', 'Acotada', 'Activo'],
+        ['Laura Pérez', 'laura@effort.com.py', null, 'Dirección', 'Cartera completa', 'Activo'],
+        ['Pedro Ruiz', 'pedro@effort.com.py', 'Auxiliar contable', 'Solo lectura', '—', 'Inactivo'],
+      ]);
+      // Lo que la tabla no muestra no sale en el archivo: ni el costo por hora ni el último acceso.
+      const todo = JSON.stringify(celdas(equipo)) + equipo.columnas.map((c) => c.titulo).join(' ');
+      for (const secreto of ['250000', '300000', '123456', 'osto']) expect(todo).not.toContain(secreto);
+    });
+
+    it('responsable, que ve el equipo pero no lo edita, también puede descargarlo', async () => {
+      await montar('responsable');
+      await screen.findByText('Aracely Gómez');
+
+      await usuario.click(screen.getByRole('button', { name: 'Descargar Excel' }));
+
+      await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(1));
+    });
   });
 });

@@ -10,7 +10,7 @@
  * los días de atraso"*. Por eso la columna dice días y nada más.
  */
 
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { CalendarClock } from 'lucide-react';
 
 import { dentroDelRango, type RangoDeFechas } from '@effort/core';
@@ -50,6 +50,7 @@ export default function VencimientosPresentados({
   rango = null,
   clienteId = '',
   puedeEditar = false,
+  alCambiarVisibles,
 }: {
   readonly clientes: readonly Cliente[];
   /** Muestra «Prórroga»: la DNIT corre plazos de lo ya presentado también. */
@@ -58,11 +59,20 @@ export default function VencimientosPresentados({
   readonly rango?: RangoDeFechas | null;
   /** El mismo filtro de cliente de la lista de arriba. `''` = todos. */
   readonly clienteId?: string;
+  /** Lo que queda a la vista con los filtros, para que el Excel de la pantalla lo incluya. */
+  readonly alCambiarVisibles?: (presentados: readonly VencimientoPresentado[]) => void;
 }) {
   const [todos, setPresentados] = useState<readonly VencimientoPresentado[]>([]);
-  const presentados = todos.filter(
-    (p) => dentroDelRango(p.fechaPresentacion, rango) && (clienteId === '' || p.clienteId === clienteId),
+  const presentados = useMemo(
+    () =>
+      todos.filter(
+        (p) => dentroDelRango(p.fechaPresentacion, rango) && (clienteId === '' || p.clienteId === clienteId),
+      ),
+    [todos, rango, clienteId],
   );
+  useEffect(() => {
+    alCambiarVisibles?.(presentados);
+  }, [presentados, alCambiarVisibles]);
   const [error, setError] = useState<string | null>(null);
   const [cargando, setCargando] = useState(true);
 

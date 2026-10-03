@@ -24,6 +24,8 @@ import {
   type Usuario,
 } from '../api/usuarios.js';
 import { useSesion } from '../contexts/SesionContext.js';
+import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
+import { hoja, type Reporte } from '../ui/reporteExcel.js';
 
 const ROLES_CON_CARTERA = new Set<Rol>(['responsable', 'coordinador', 'auxiliar', 'revisor_balance']);
 
@@ -92,6 +94,17 @@ function vacioANulo(valor: string): string | null {
   return valor.trim() === '' ? null : valor.trim();
 }
 
+/**
+ * La columna «Cartera»: de qué tamaño es la cartera de la persona, no cuáles
+ * clientes. La lista de usuarios del servidor no trae sus clientes (eso es un
+ * pedido aparte por persona, `obtenerCarteraDeUsuario`), por eso esta pantalla
+ * no tiene filtro por cliente.
+ */
+function textoDeCartera(usuario: Usuario): string {
+  if (usuario.veTodosLosClientes) return 'Cartera completa';
+  return ROLES_CON_CARTERA.has(usuario.rol) ? 'Acotada' : '—';
+}
+
 export default function Equipo() {
   const { sesion } = useSesion();
   const puedeEditar = sesion?.rol === 'direccion';
@@ -133,6 +146,32 @@ export default function Equipo() {
   const activos = usuarios.filter((u) => u.activo).length;
 
   const mostrarCartera = ROLES_CON_CARTERA.has(formulario.rol) && !formulario.veTodosLosClientes;
+
+  /**
+   * Lo mismo que muestra la tabla, fila por fila. Solo lo que la tabla muestra:
+   * ni el costo por hora (que el servidor manda únicamente a dirección y que
+   * solo aparece en el formulario de edición) ni nada de acceso.
+   */
+  function reporte(): Reporte {
+    return {
+      titulo: 'Equipo',
+      filtros: [],
+      hojas: [
+        hoja(
+          'Equipo',
+          [
+            { titulo: 'Nombre', valor: (u: Usuario) => `${u.nombre} ${u.apellido}` },
+            { titulo: 'Correo', valor: (u) => u.email },
+            { titulo: 'Cargo', valor: (u) => u.cargo },
+            { titulo: 'Rol', valor: (u) => ETIQUETA_ROL[u.rol] },
+            { titulo: 'Cartera', valor: (u) => textoDeCartera(u) },
+            { titulo: 'Estado', valor: (u) => (u.activo ? 'Activo' : 'Inactivo') },
+          ],
+          usuarios,
+        ),
+      ],
+    };
+  }
 
   function abrirAlta() {
     setEdicion(null);
@@ -242,11 +281,14 @@ export default function Equipo() {
             Usuarios y roles de EFFORT. {puedeEditar ? 'Alta y edición completas.' : 'Vista de solo lectura.'}
           </p>
         </div>
-        {puedeEditar && (
-          <Boton variante="primario" icono={Plus} onClick={abrirAlta}>
-            Nuevo usuario
-          </Boton>
-        )}
+        <div className="flex flex-wrap items-end gap-3">
+          <BotonDescargarExcel reporte={reporte} />
+          {puedeEditar && (
+            <Boton variante="primario" icono={Plus} onClick={abrirAlta}>
+              Nuevo usuario
+            </Boton>
+          )}
+        </div>
       </div>
 
       <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3" aria-label="Resumen del equipo">
@@ -276,9 +318,7 @@ export default function Equipo() {
                 <Td className="text-tinta-suave">{usuario.email}</Td>
                 <Td className="text-tinta-suave">{usuario.cargo ?? '—'}</Td>
                 <Td className="text-tinta-suave">{ETIQUETA_ROL[usuario.rol]}</Td>
-                <Td className="text-tinta-suave">
-                  {usuario.veTodosLosClientes ? 'Cartera completa' : ROLES_CON_CARTERA.has(usuario.rol) ? 'Acotada' : '—'}
-                </Td>
+                <Td className="text-tinta-suave">{textoDeCartera(usuario)}</Td>
                 <Td>
                   <Badge tono={usuario.activo ? 'completo' : 'pendiente'} conIcono={false}>
                     {usuario.activo ? 'Activo' : 'Inactivo'}

@@ -21,6 +21,23 @@ export function coincideConCliente(clienteId: string | null | undefined, filtro:
   return filtro === TODOS_LOS_CLIENTES || clienteId === filtro;
 }
 
+/** El nombre del cliente elegido, o `null` si son todos (para encabezados, reportes y nombres de archivo). */
+export function nombreDelClienteFiltrado(
+  filtro: FiltroDeCliente,
+  clientes: readonly { readonly id: string; readonly nombre: string }[],
+): string | null {
+  if (filtro === TODOS_LOS_CLIENTES) return null;
+  return clientes.find((c) => c.id === filtro)?.nombre ?? filtro;
+}
+
+/** «Cliente: GARSO S.A.» o «Cliente: todos», para la línea de filtros de un reporte. */
+export function filtroDeClienteEnPalabras(
+  filtro: FiltroDeCliente,
+  clientes: readonly { readonly id: string; readonly nombre: string }[],
+): string {
+  return `Cliente: ${nombreDelClienteFiltrado(filtro, clientes) ?? 'todos'}`;
+}
+
 export function FiltroDeClienteSelector({
   id,
   clientes,

@@ -5,11 +5,24 @@
  * helper compartido de `ayuda-fetch-mock.ts`.
  */
 
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { crearFetchMock, respuestaJson } from './ayuda-fetch-mock.js';
+import type { HojaDeReporte, Reporte } from '../src/ui/reporteExcel.js';
+
+// La descarga real necesita un navegador; acá se mira QUÉ se iba a descargar.
+const { descargarReporte } = vi.hoisted(() => ({ descargarReporte: vi.fn(async () => {}) }));
+vi.mock('../src/ui/reporteExcel.js', async (original) => ({
+  ...(await original<typeof import('../src/ui/reporteExcel.js')>()),
+  descargarReporte,
+}));
+
+/** Cada fila de la hoja como la vería Excel: los valores de sus columnas. */
+function celdas(hoja: HojaDeReporte): unknown[][] {
+  return hoja.filas.map((fila) => hoja.columnas.map((c) => c.valor(fila as never)));
+}
 
 const GARSO = {
   id: 'cli-garso',
@@ -31,6 +44,7 @@ let mock: ReturnType<typeof crearFetchMock>;
 let usuario: ReturnType<typeof userEvent.setup>;
 
 beforeEach(() => {
+  descargarReporte.mockClear();
   mock = crearFetchMock();
   vi.stubGlobal('fetch', mock.fetchMock);
   usuario = userEvent.setup();
@@ -40,12 +54,12 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-async function montar(rol: string = 'direccion') {
+async function montar(rol: string = 'direccion', clientes: readonly unknown[] = [GARSO, CLIENTE_INACTIVO]) {
   mock.mockDeRuta('GET /api/v1/yo', () =>
     respuestaJson({ usuarioId: 'u1', rol, veTodosLosClientes: true, cantidadDeClientesAsignados: 0 }),
   );
   mock.mockDeRuta('GET /api/v1/csrf', () => respuestaJson({ csrfToken: 'token-de-prueba' }));
-  mock.mockDeRuta('GET /api/v1/clientes', () => respuestaJson({ clientes: [GARSO, CLIENTE_INACTIVO] }));
+  mock.mockDeRuta('GET /api/v1/clientes', () => respuestaJson({ clientes }));
 
   vi.resetModules();
   const { ProveedorDeSesion } = await import('../src/contexts/SesionContext.js');
@@ -89,9 +103,105 @@ describe('pantalla de clientes', () => {
   it('la búsqueda filtra por nombre o RUC', async () => {
     await montar();
 
-    await usuario.type(screen.getByLabelText('Buscar cliente por nombre o RUC'), '80017726');
+    await usuario.type(screen.getByLabelText('Buscar cliente'), '80017726');
 
     expect(screen.getByText('GARSO S.A.')).toBeVisible();
+  });
+
+  /*
+   * Daniel, 2026-10-02: el filtro por cliente en todas las pantallas. Acá la
+   * pantalla ES la lista de clientes, así que el filtro es una búsqueda.
+   */
+  describe('búsqueda de cliente (2026-10-02)', () => {
+    const GARCIA = { ...GARSO, id: 'cli-garcia', nombre: 'GARCÍA ÑANDÚ S.A.', ruc: '80000002-3', tipoPersona: 'FISICA', canalPreferido: null };
+
+    function indicador(etiqueta: string): string {
+      return screen.getByText(etiqueta, { selector: 'p' }).closest('div')!.textContent ?? '';
+    }
+
+    it('busca por nombre sin distinguir mayúsculas ni tildes, y por RUC', async () => {
+      await montar('direccion', [GARSO, GARCIA, CLIENTE_INACTIVO]);
+      const tabla = screen.getByRole('table', { name: 'Cartera de clientes' });
+      expect(within(tabla).getByText('GARSO S.A.')).toBeVisible();
+      expect(within(tabla).getByText('GARCÍA ÑANDÚ S.A.')).toBeVisible();
+
+      await usuario.type(screen.getByLabelText('Buscar cliente'), 'garcia nandu');
+
+      expect(within(tabla).getByText('GARCÍA ÑANDÚ S.A.')).toBeVisible();
+      expect(within(tabla).queryByText('GARSO S.A.')).not.toBeInTheDocument();
+      expect(screen.getByText(/1 de 3 clientes · búsqueda: «garcia nandu»/)).toBeVisible();
+
+      await usuario.clear(screen.getByLabelText('Buscar cliente'));
+      await usuario.type(screen.getByLabelText('Buscar cliente'), 'GARCÍA');
+      expect(within(tabla).getByText('GARCÍA ÑANDÚ S.A.')).toBeVisible();
+
+      await usuario.clear(screen.getByLabelText('Buscar cliente'));
+      await usuario.type(screen.getByLabelText('Buscar cliente'), '80000002');
+      expect(within(tabla).getByText('GARCÍA ÑANDÚ S.A.')).toBeVisible();
+      expect(within(tabla).queryByText('GARSO S.A.')).not.toBeInTheDocument();
+
+      await usuario.clear(screen.getByLabelText('Buscar cliente'));
+      expect(within(tabla).getByText('GARSO S.A.')).toBeVisible();
+      expect(within(tabla).getByText('GARCÍA ÑANDÚ S.A.')).toBeVisible();
+    });
+
+    it('los indicadores cuentan lo que coincide con la búsqueda, activos e inactivos, aunque «Solo activos» oculte filas de la tabla', async () => {
+      await montar('direccion', [GARSO, GARCIA, CLIENTE_INACTIVO]);
+      expect(indicador('Clientes')).toContain('3');
+      expect(indicador('Activos')).toBe('Activos2');
+      expect(indicador('Inactivos')).toBe('Inactivos1');
+
+      await usuario.type(screen.getByLabelText('Buscar cliente'), 'viejo');
+
+      expect(indicador('Clientes')).toContain('1');
+      expect(indicador('Activos')).toBe('Activos0');
+      expect(indicador('Inactivos')).toBe('Inactivos1');
+      // «Solo activos» sigue puesto: el inactivo no está en la tabla.
+      expect(screen.getByText('Ningún cliente coincide con la búsqueda.')).toBeVisible();
+
+      await usuario.click(screen.getByLabelText('Solo activos'));
+      expect(within(screen.getByRole('table', { name: 'Cartera de clientes' })).getByText('CLIENTE VIEJO S.A.')).toBeVisible();
+    });
+  });
+
+  describe('Excel (2026-10-02)', () => {
+    const GARCIA = { ...GARSO, id: 'cli-garcia', nombre: 'GARCÍA ÑANDÚ S.A.', ruc: '80000002-3', tipoPersona: 'FISICA', canalPreferido: null };
+
+    it('descarga la cartera tal como queda con la búsqueda, con la búsqueda escrita en los filtros', async () => {
+      await montar('auxiliar', [GARSO, GARCIA, CLIENTE_INACTIVO, { ...GARSO, id: 'cli-otro', nombre: 'OTRO S.A.', ruc: '80000009-9' }]);
+      await usuario.type(screen.getByLabelText('Buscar cliente'), 'gar');
+
+      await usuario.click(screen.getByRole('button', { name: 'Descargar Excel' }));
+
+      await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(1));
+      const [reporte] = descargarReporte.mock.calls[0] as unknown as [Reporte, string | null];
+      expect(reporte.titulo).toBe('Clientes');
+      expect(reporte.filtros).toEqual(['Cliente: nombre o RUC con «gar»', 'Estado: solo activos']);
+      expect(reporte.hojas.map((h) => h.nombre)).toEqual(['Cartera']);
+      const [cartera] = reporte.hojas as [HojaDeReporte];
+      expect(cartera.columnas.map((c) => c.titulo)).toEqual(['Nombre', 'RUC', 'Tipo', 'Canal preferido', 'Estado']);
+      // Las mismas filas y el mismo orden que la tabla: sin el inactivo ni «OTRO».
+      expect(celdas(cartera)).toEqual([
+        ['GARCÍA ÑANDÚ S.A.', '80000002-3', 'Física', '', 'Activo'],
+        ['GARSO S.A.', '80017726-6', 'Jurídica', 'WhatsApp', 'Activo'],
+      ]);
+    });
+
+    it('sin búsqueda y con «Solo activos» destildado, trae toda la cartera con los inactivos', async () => {
+      await montar('direccion');
+      await usuario.click(screen.getByLabelText('Solo activos'));
+
+      await usuario.click(screen.getByRole('button', { name: 'Descargar Excel' }));
+
+      await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(1));
+      const [reporte] = descargarReporte.mock.calls[0] as unknown as [Reporte, string | null];
+      expect(reporte.filtros).toEqual(['Cliente: todos', 'Estado: activos e inactivos']);
+      const [cartera] = reporte.hojas as [HojaDeReporte];
+      expect(celdas(cartera).map((fila) => [fila[0], fila[4]])).toEqual([
+        ['CLIENTE VIEJO S.A.', 'Inactivo'],
+        ['GARSO S.A.', 'Activo'],
+      ]);
+    });
   });
 
   it('un rol de solo lectura no ve el botón de alta ni el de editar', async () => {

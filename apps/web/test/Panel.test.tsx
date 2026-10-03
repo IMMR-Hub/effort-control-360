@@ -11,6 +11,18 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { crearFetchMock, respuestaJson } from './ayuda-fetch-mock.js';
+import type { HojaDeReporte, Reporte } from '../src/ui/reporteExcel.js';
+
+// La descarga real necesita un navegador; acá se mira QUÉ se iba a descargar.
+const { descargarReporte } = vi.hoisted(() => ({ descargarReporte: vi.fn(async () => {}) }));
+vi.mock('../src/ui/reporteExcel.js', async (original) => ({
+  ...(await original<typeof import('../src/ui/reporteExcel.js')>()),
+  descargarReporte,
+}));
+
+function celdas(hoja: HojaDeReporte): unknown[][] {
+  return hoja.filas.map((fila) => hoja.columnas.map((c) => c.valor(fila as never)));
+}
 
 const GARSO = {
   id: 'cli-garso',
@@ -107,6 +119,7 @@ const LIQUIDACION_PENDIENTE = {
 let mock: ReturnType<typeof crearFetchMock>;
 
 beforeEach(() => {
+  descargarReporte.mockClear();
   mock = crearFetchMock();
   vi.stubGlobal('fetch', mock.fetchMock);
 });
@@ -117,13 +130,13 @@ afterEach(() => {
 
 async function montar(
   rol: string = 'direccion',
-  datos: { vencimientos?: readonly unknown[]; alertas?: readonly unknown[] } = {},
+  datos: { vencimientos?: readonly unknown[]; alertas?: readonly unknown[]; clientes?: readonly unknown[] } = {},
 ) {
   mock.mockDeRuta('GET /api/v1/yo', () =>
     respuestaJson({ usuarioId: 'u1', rol, veTodosLosClientes: true, cantidadDeClientesAsignados: 0 }),
   );
   mock.mockDeRuta('GET /api/v1/csrf', () => respuestaJson({ csrfToken: 'token-de-prueba' }));
-  mock.mockDeRuta('GET /api/v1/clientes', () => respuestaJson({ clientes: [GARSO, CLIENTE_INACTIVO] }));
+  mock.mockDeRuta('GET /api/v1/clientes', () => respuestaJson({ clientes: datos.clientes ?? [GARSO, CLIENTE_INACTIVO] }));
   mock.mockDeRuta('GET /api/v1/vencimientos', () =>
     respuestaJson({
       hoy: { anio: 2026, mes: 4, dia: 22 },
@@ -166,6 +179,82 @@ async function montar(
 }
 
 describe('panel general', () => {
+  describe('filtro por cliente y Excel (2026-10-02)', () => {
+    const OTRO = { ...GARSO, id: 'cli-otro', nombre: 'OTRO S.A.', ruc: '80000001-1' };
+    const DATOS = {
+      clientes: [GARSO, OTRO, CLIENTE_INACTIVO],
+      vencimientos: [
+        VENCIMIENTO_VENCIDO,
+        { ...VENCIMIENTO_VENCIDO, id: 'venc-2', clienteId: 'cli-otro', descripcion: 'Patente de OTRO' },
+        { ...VENCIMIENTO_VENCIDO, id: 'venc-3', clienteId: 'cli-otro', descripcion: 'IVA de OTRO', nivelAlerta: 'ALTA', diasRestantes: 5 },
+      ],
+      alertas: [ALERTA_CRITICA, { ...ALERTA_CRITICA, id: 'alerta-sin-cliente', clienteId: null, titulo: 'Tasa nueva' }],
+    };
+
+    it('con un cliente elegido, los indicadores y las listas son solo de ese cliente', async () => {
+      await montar('direccion', DATOS);
+      await waitFor(() => {
+        expect(screen.getByText('Vencimientos vencidos').closest('div')!.textContent).toContain('2');
+      });
+      expect(screen.getByText('Clientes activos').closest('div')!.textContent).toContain('2');
+
+      fireEvent.change(screen.getByLabelText('Cliente'), { target: { value: 'cli-otro' } });
+
+      // Los números se animan hasta el valor nuevo: se espera a que lleguen.
+      await waitFor(() => {
+        expect(screen.getByText('Vencimientos vencidos').closest('div')!.textContent).toContain('1');
+        expect(screen.getByText('Vencimientos próximos').closest('div')!.textContent).toContain('1');
+        expect(screen.getByText('Clientes activos').closest('div')!.textContent).toContain('1');
+        // Las alertas, la documentación, el balance y la liquidación son de GARSO.
+        expect(screen.getByText('Alertas críticas').closest('div')!.textContent).toContain('0');
+        expect(screen.getByText('Balances sin aprobar').closest('div')!.textContent).toContain('0');
+      });
+      expect(screen.getByText(/Mostrando: .*cliente: OTRO S\.A\./)).toBeVisible();
+      const tablaVencimientos = within(screen.getByRole('table', { name: 'Vencimientos más urgentes' }));
+      expect(tablaVencimientos.queryByText('Presentación anual ante Abogacía')).not.toBeInTheDocument();
+      expect(tablaVencimientos.getByText('Patente de OTRO')).toBeVisible();
+    });
+
+    it('el Excel es el reporte general: los indicadores y los mismos cliente por cliente, con las alertas sin cliente aparte', async () => {
+      await montar('direccion', DATOS);
+      await waitFor(() => {
+        expect(screen.getByText('Vencimientos vencidos').closest('div')!.textContent).toContain('2');
+      });
+
+      fireEvent.click(screen.getByRole('button', { name: 'Descargar Excel' }));
+
+      await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(1));
+      const [reporte, detalle] = descargarReporte.mock.calls[0] as unknown as [Reporte, string | null];
+      expect(detalle).toBeNull();
+      expect(reporte.titulo).toBe('Panel general');
+      expect(reporte.filtros).toContain('Cliente: todos');
+      const [resumen, porCliente] = reporte.hojas as [HojaDeReporte, HojaDeReporte];
+      expect(celdas(resumen)).toContainEqual(['Vencimientos vencidos', 2, null]);
+      expect(celdas(resumen)).toContainEqual(['Alertas críticas (7 días o menos, y lo vencido)', 2, null]);
+      // El inactivo no aparece; la alerta sin cliente, en su propia fila: la columna suma el total.
+      expect(celdas(porCliente).map((f) => f[0])).toEqual(['GARSO S.A.', 'OTRO S.A.', '(alertas sin cliente)']);
+      expect(celdas(porCliente)[0]).toEqual(['GARSO S.A.', 1, 0, 1, 1, 1, 1, 1, 1, 7]);
+      expect(celdas(porCliente)[1]).toEqual(['OTRO S.A.', 1, 1, 0, 0, 0, 0, 0, 0, 0]);
+      expect(celdas(porCliente)[2]![3]).toBe(1);
+    });
+
+    it('con un cliente elegido, el Excel lleva su nombre y solo su fila', async () => {
+      await montar('direccion', DATOS);
+      await waitFor(() => {
+        expect(screen.getByText('Vencimientos vencidos').closest('div')!.textContent).toContain('2');
+      });
+      fireEvent.change(screen.getByLabelText('Cliente'), { target: { value: 'cli-otro' } });
+
+      fireEvent.click(screen.getByRole('button', { name: 'Descargar Excel' }));
+
+      await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(1));
+      const [reporte, detalle] = descargarReporte.mock.calls[0] as unknown as [Reporte, string | null];
+      expect(detalle).toBe('OTRO S.A.');
+      expect(reporte.filtros).toContain('Cliente: OTRO S.A.');
+      expect(celdas(reporte.hojas[1]!).map((f) => f[0])).toEqual(['OTRO S.A.']);
+    });
+  });
+
   // Daniel, 2026-09-24: «Vencimientos próximos» = los que vencen en 15 días o menos
   // (antes 7), y «Alertas críticas» = las que vencen en 7 días o menos, más lo vencido.
   it('«Vencimientos próximos» cuenta críticos, altos y medios (15 días o menos), no lejanos ni vencidos', async () => {

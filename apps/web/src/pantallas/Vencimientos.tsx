@@ -55,12 +55,22 @@ import {
   type ResumenPorNivel,
   type TipoDocumento,
   type Vencimiento,
+  type VencimientoPresentado,
 } from '../api/vencimientos.js';
 import { useSesion } from '../contexts/SesionContext.js';
 import { DialogoDeProrroga, type VencimientoProrrogable } from './DialogoDeProrroga.js';
 import VencimientosPresentados from './VencimientosPresentados.js';
 import { FiltroDeFechasSelector } from '../ui/FiltroDeFechas.js';
-import { FiltroDeClienteSelector, TODOS_LOS_CLIENTES, coincideConCliente, type FiltroDeCliente } from '../ui/FiltroDeCliente.js';
+import {
+  FiltroDeClienteSelector,
+  TODOS_LOS_CLIENTES,
+  coincideConCliente,
+  filtroDeClienteEnPalabras,
+  nombreDelClienteFiltrado,
+  type FiltroDeCliente,
+} from '../ui/FiltroDeCliente.js';
+import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
+import { hoja, type Reporte } from '../ui/reporteExcel.js';
 
 const ROLES_QUE_EDITAN = new Set(['direccion']);
 
@@ -175,6 +185,8 @@ export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nive
 
   const [filtroDeNivel, setFiltroDeNivel] = useState<FiltroDeNivel>(nivelInicial);
   const [filtroDeCliente, setFiltroDeCliente] = useState<FiltroDeCliente>(TODOS_LOS_CLIENTES);
+  // Los presentados los trae su propia tarjeta; los guarda acá solo para el Excel.
+  const [presentadosVisibles, setPresentadosVisibles] = useState<readonly VencimientoPresentado[]>([]);
 
   // `filasDelRango` alimenta los indicadores (que cuentan todos los niveles);
   // `filas`, la tabla, además aplica el filtro de nivel.
@@ -199,6 +211,58 @@ export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nive
     for (const v of filasDelRango) cuenta[v.nivelAlerta] += 1;
     return cuenta;
   }, [rango, resumen, filasDelRango, filtroDeCliente]);
+
+  const etiquetaDelNivel = OPCIONES_FILTRO_DE_NIVEL.find((o) => o.valor === filtroDeNivel)?.etiqueta ?? '';
+
+  /** Lo mismo que muestra la pantalla, con sus filtros: el radar y los presentados. */
+  function reporte(): Reporte {
+    return {
+      titulo: 'Vencimientos',
+      filtros: [
+        filtroDeClienteEnPalabras(filtroDeCliente, clientes),
+        `Fechas: ${describirFiltro(filtro)} (el radar, por fecha de vencimiento; los presentados, por fecha de presentación)`,
+        `Nivel de alerta: ${etiquetaDelNivel}`,
+      ],
+      hojas: [
+        hoja(
+          'Radar',
+          [
+            { titulo: 'Cliente', valor: (v: Vencimiento) => nombreDeCliente(v.clienteId) },
+            { titulo: 'Tipo', valor: (v) => etiquetaDeTipoDeVencimiento(v.tipoDocumento) },
+            { titulo: 'Descripción', valor: (v) => v.descripcion },
+            { titulo: 'Entidad', valor: (v) => v.entidad },
+            { titulo: 'Vence', valor: (v) => v.fechaVencimiento, formato: 'fecha' },
+            { titulo: 'Días restantes', valor: (v) => v.diasRestantes, formato: 'entero' },
+            { titulo: 'Alerta', valor: (v) => ETIQUETA_NIVEL_ALERTA[v.nivelAlerta] },
+            { titulo: 'Riesgo', valor: (v) => v.riesgo },
+            { titulo: 'Prorrogado del', valor: (v) => v.fechaVencimientoOriginal, formato: 'fecha' },
+            { titulo: 'Motivo de la prórroga', valor: (v) => v.motivoProrroga },
+            { titulo: 'Próxima acción', valor: (v) => v.proximaAccion },
+          ],
+          filas,
+        ),
+        hoja(
+          'Presentados',
+          [
+            { titulo: 'Cliente', valor: (p: VencimientoPresentado) => nombreDeCliente(p.clienteId) },
+            { titulo: 'Obligación', valor: (p) => p.descripcion },
+            { titulo: 'Entidad', valor: (p) => p.entidad },
+            { titulo: 'Vencía', valor: (p) => p.fechaVencimiento, formato: 'fecha' },
+            { titulo: 'Presentado', valor: (p) => p.fechaPresentacion, formato: 'fecha' },
+            { titulo: 'Días de atraso', valor: (p) => p.diasDeAtraso, formato: 'entero' },
+            {
+              titulo: 'Fecha de presentación',
+              valor: (p) => (p.fechaAproximada ? 'Aproximada (aviso de Marangatú: el atraso es un máximo)' : 'Exacta'),
+            },
+            { titulo: 'Prueba', valor: (p) => (p.evidenciaId ? 'Declaración en OneDrive' : 'Cargada a mano') },
+            { titulo: 'Prorrogado del', valor: (p) => p.fechaVencimientoOriginal, formato: 'fecha' },
+            { titulo: 'Motivo de la prórroga', valor: (p) => p.motivoProrroga },
+          ],
+          presentadosVisibles,
+        ),
+      ],
+    };
+  }
 
   function abrirAlta() {
     setFormulario(formularioVacio(clientesActivos[0]?.id ?? ''));
@@ -297,6 +361,7 @@ export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nive
               valor={filtroDeCliente}
               onCambiar={setFiltroDeCliente}
             />
+            <BotonDescargarExcel reporte={reporte} detalleDelNombre={nombreDelClienteFiltrado(filtroDeCliente, clientes)} />
           </div>
         </div>
         {puedeEditar && (
@@ -366,7 +431,7 @@ export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nive
           descripcion={`${filas.length} obligaciones activas · vencen: ${describirFiltro(filtro)}${
             filtroDeNivel === 'TODOS'
               ? ''
-              : ` · nivel: ${OPCIONES_FILTRO_DE_NIVEL.find((o) => o.valor === filtroDeNivel)?.etiqueta ?? ''}`
+              : ` · nivel: ${etiquetaDelNivel}`
           }${filtroDeCliente === TODOS_LOS_CLIENTES ? '' : ` · cliente: ${nombreDeCliente(filtroDeCliente)}`}`}
         />
         <Tabla etiqueta="Radar de vencimientos">
@@ -445,7 +510,13 @@ export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nive
         </Tabla>
       </Tarjeta>
 
-      <VencimientosPresentados clientes={clientes} rango={rango} clienteId={filtroDeCliente} puedeEditar={puedeEditar} />
+      <VencimientosPresentados
+        clientes={clientes}
+        rango={rango}
+        clienteId={filtroDeCliente}
+        puedeEditar={puedeEditar}
+        alCambiarVisibles={setPresentadosVisibles}
+      />
 
       {prorrogando && (
         <DialogoDeProrroga

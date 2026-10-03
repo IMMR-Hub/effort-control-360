@@ -15,6 +15,19 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { hoyEnParaguay } from '@effort/core';
 
 import { crearFetchMock, respuestaJson } from './ayuda-fetch-mock.js';
+import type { HojaDeReporte, Reporte } from '../src/ui/reporteExcel.js';
+
+// La descarga real necesita un navegador; acá se mira QUÉ se iba a descargar.
+const { descargarReporte } = vi.hoisted(() => ({ descargarReporte: vi.fn(async () => {}) }));
+vi.mock('../src/ui/reporteExcel.js', async (original) => ({
+  ...(await original<typeof import('../src/ui/reporteExcel.js')>()),
+  descargarReporte,
+}));
+
+/** Cada fila de la hoja como la vería Excel: los valores de sus columnas. */
+function celdas(hoja: HojaDeReporte): unknown[][] {
+  return hoja.filas.map((fila) => hoja.columnas.map((c) => c.valor(fila as never)));
+}
 
 const HOY = hoyEnParaguay(new Date());
 const PERIODO = `${HOY.anio}-${String(HOY.mes).padStart(2, '0')}`;
@@ -66,6 +79,7 @@ let mock: ReturnType<typeof crearFetchMock>;
 let usuario: ReturnType<typeof userEvent.setup>;
 
 beforeEach(() => {
+  descargarReporte.mockClear();
   mock = crearFetchMock();
   vi.stubGlobal('fetch', mock.fetchMock);
   usuario = userEvent.setup();
@@ -75,14 +89,18 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-async function montar(rol: string, balance: typeof BALANCE_LISTO | null = BALANCE_LISTO) {
+async function montar(
+  rol: string,
+  balance: typeof BALANCE_LISTO | null = BALANCE_LISTO,
+  extra: { clientes?: readonly unknown[]; balances?: readonly unknown[] } = {},
+) {
   mock.mockDeRuta('GET /api/v1/yo', () =>
     respuestaJson({ usuarioId: 'u1', rol, veTodosLosClientes: true, cantidadDeClientesAsignados: 0 }),
   );
   mock.mockDeRuta('GET /api/v1/csrf', () => respuestaJson({ csrfToken: 'token-de-prueba' }));
-  mock.mockDeRuta('GET /api/v1/clientes', () => respuestaJson({ clientes: [GARSO] }));
+  mock.mockDeRuta('GET /api/v1/clientes', () => respuestaJson({ clientes: extra.clientes ?? [GARSO] }));
   mock.mockDeRuta('GET /api/v1/balances', () =>
-    respuestaJson({ balances: balance ? [balance] : [] }),
+    respuestaJson({ balances: extra.balances ?? (balance ? [balance] : []) }),
   );
 
   vi.resetModules();
@@ -95,7 +113,7 @@ async function montar(rol: string, balance: typeof BALANCE_LISTO | null = BALANC
     </ProveedorDeSesion>,
   );
 
-  await screen.findByText('GARSO S.A.');
+  await screen.findByText('GARSO S.A.', { selector: 'td' });
   await waitFor(() => {
     expect(mock.llamadasA('GET /api/v1/yo')).toHaveLength(1);
   });
@@ -118,7 +136,7 @@ describe('pantalla de balances', () => {
   it('auxiliar no ve el formulario de cifras: solo mira', async () => {
     await montar('auxiliar');
 
-    await usuario.click(screen.getByText('GARSO S.A.'));
+    await usuario.click(screen.getByText('GARSO S.A.', { selector: 'td' }));
 
     expect(screen.queryByLabelText('Activo (Gs.)')).not.toBeInTheDocument();
   });
@@ -128,7 +146,7 @@ describe('pantalla de balances', () => {
     async (rol) => {
       await montar(rol);
 
-      await usuario.click(screen.getByText('GARSO S.A.'));
+      await usuario.click(screen.getByText('GARSO S.A.', { selector: 'td' }));
 
       expect(screen.queryByLabelText('Activo (Gs.)')).not.toBeInTheDocument();
       expect(screen.queryByRole('button', { name: 'Aprobar balance' })).not.toBeInTheDocument();
@@ -138,7 +156,7 @@ describe('pantalla de balances', () => {
   it('dirección ve el botón de aprobar, habilitado cuando está listo y sin bloqueantes', async () => {
     await montar('direccion');
 
-    await usuario.click(screen.getByText('GARSO S.A.'));
+    await usuario.click(screen.getByText('GARSO S.A.', { selector: 'td' }));
 
     const boton = await screen.findByRole('button', { name: 'Aprobar balance' });
     expect(boton).toBeEnabled();
@@ -147,7 +165,7 @@ describe('pantalla de balances', () => {
   it('el botón de aprobar queda deshabilitado si hay bloqueantes, aunque el rol pueda aprobar', async () => {
     await montar('direccion', BALANCE_CON_BLOQUEANTE);
 
-    await usuario.click(screen.getByText('GARSO S.A.'));
+    await usuario.click(screen.getByText('GARSO S.A.', { selector: 'td' }));
 
     const boton = await screen.findByRole('button', { name: 'Aprobar balance' });
     expect(boton).toBeDisabled();
@@ -159,7 +177,7 @@ describe('pantalla de balances', () => {
     await montar('direccion');
     vi.spyOn(window, 'confirm').mockReturnValue(false);
 
-    await usuario.click(screen.getByText('GARSO S.A.'));
+    await usuario.click(screen.getByText('GARSO S.A.', { selector: 'td' }));
     await usuario.click(await screen.findByRole('button', { name: 'Aprobar balance' }));
 
     expect(mock.llamadasA(`POST /api/v1/clientes/cli-garso/balances/${PERIODO}/aprobar`)).toHaveLength(0);
@@ -176,7 +194,7 @@ describe('pantalla de balances', () => {
       respuestaJson({ balances: [{ ...BALANCE_LISTO, estado: 'APROBADO', aprobadoEn: `${PERIODO}-15T10:00:00.000Z` }] }),
     );
 
-    await usuario.click(screen.getByText('GARSO S.A.'));
+    await usuario.click(screen.getByText('GARSO S.A.', { selector: 'td' }));
     await usuario.click(await screen.findByRole('button', { name: 'Aprobar balance' }));
 
     await waitFor(() => {
@@ -187,7 +205,7 @@ describe('pantalla de balances', () => {
   it('guardar cifras manda los importes como texto y muestra el checklist devuelto', async () => {
     await montar('direccion', null);
 
-    await usuario.click(screen.getByText('GARSO S.A.'));
+    await usuario.click(screen.getByText('GARSO S.A.', { selector: 'td' }));
     await usuario.type(screen.getByLabelText('Activo (Gs.)'), '10000000');
     await usuario.type(screen.getByLabelText('Pasivo (Gs.)'), '4000000');
     await usuario.type(screen.getByLabelText('Patrimonio neto (Gs.)'), '6000000');
@@ -222,6 +240,126 @@ describe('pantalla de balances', () => {
     });
 
     expect(await screen.findByText('Sin inconsistencias detectadas.')).toBeVisible();
+  });
+
+  describe('filtro por cliente (2026-10-02)', () => {
+    const OTRO = { ...GARSO, id: 'cli-otro', nombre: 'OTRO S.A.', ruc: '80000001-1' };
+    const BALANCE_DE_OTRO = {
+      ...BALANCE_CON_BLOQUEANTE,
+      id: 'bal-2',
+      clienteId: 'cli-otro',
+      activo: '20000000',
+      pasivo: '5000000',
+      patrimonioNeto: '15000000',
+      resultadoEjercicio: '2000000',
+    };
+    const DOS = { clientes: [GARSO, OTRO], balances: [BALANCE_LISTO, BALANCE_DE_OTRO] };
+    const indicador = (etiqueta: string) => screen.getByText(etiqueta).closest('div')!.textContent;
+
+    it('elegir un cliente deja solo su fila y sus indicadores, y «Todos los clientes» las vuelve a mostrar', async () => {
+      await montar('direccion', BALANCE_LISTO, DOS);
+      expect(screen.getByText('OTRO S.A.', { selector: 'td' })).toBeVisible();
+      expect(indicador('Clientes')).toContain('2');
+      expect(indicador('Listos para revisión')).toContain('1');
+      expect(indicador('Con bloqueantes')).toContain('1');
+
+      await usuario.selectOptions(screen.getByLabelText('Cliente'), 'cli-otro');
+
+      expect(screen.queryByText('GARSO S.A.', { selector: 'td' })).not.toBeInTheDocument();
+      expect(screen.getByText('OTRO S.A.', { selector: 'td' })).toBeVisible();
+      expect(screen.getByText(/Período .*cliente: OTRO S\.A\./)).toBeVisible();
+      // Los indicadores cuentan solo al cliente elegido: GARSO (el listo) ya no entra.
+      expect(indicador('Clientes')).toContain('1');
+      expect(indicador('Listos para revisión')).toContain('0');
+      expect(indicador('Con bloqueantes')).toContain('1');
+
+      await usuario.selectOptions(screen.getByLabelText('Cliente'), '');
+
+      expect(screen.getByText('GARSO S.A.', { selector: 'td' })).toBeVisible();
+      expect(screen.getByText('OTRO S.A.', { selector: 'td' })).toBeVisible();
+      expect(indicador('Clientes')).toContain('2');
+    });
+
+    it('sigue filtrando en el modo «Ejercicio (anual)»', async () => {
+      await montar('direccion', BALANCE_LISTO, DOS);
+      await usuario.selectOptions(screen.getByLabelText('Cliente'), 'cli-otro');
+
+      await usuario.selectOptions(screen.getByLabelText('Ver por'), 'ejercicio');
+
+      expect(await screen.findByText(/Ejercicio \d{4} — balance al cierre .*cliente: OTRO S\.A\./)).toBeVisible();
+      expect(screen.queryByText('GARSO S.A.', { selector: 'td' })).not.toBeInTheDocument();
+      expect(screen.getByText('OTRO S.A.', { selector: 'td' })).toBeVisible();
+    });
+
+    it('si el filtro deja afuera al cliente que se estaba editando, el panel de abajo se cierra', async () => {
+      await montar('direccion', BALANCE_LISTO, DOS);
+      await usuario.click(screen.getByText('GARSO S.A.', { selector: 'td' }));
+      expect(screen.getByLabelText('Activo (Gs.)')).toBeVisible();
+
+      await usuario.selectOptions(screen.getByLabelText('Cliente'), 'cli-otro');
+
+      expect(screen.queryByLabelText('Activo (Gs.)')).not.toBeInTheDocument();
+    });
+  });
+
+  describe('Excel (2026-10-02)', () => {
+    const OTRO = { ...GARSO, id: 'cli-otro', nombre: 'OTRO S.A.', ruc: '80000001-1' };
+    const BALANCE_DE_OTRO = {
+      ...BALANCE_CON_BLOQUEANTE,
+      id: 'bal-2',
+      clienteId: 'cli-otro',
+      activo: '20000000',
+      pasivo: '5000000',
+      patrimonioNeto: '15000000',
+      resultadoEjercicio: '2000000',
+    };
+
+    it('descarga solo la fila del cliente elegido, con los importes como guaraníes y el estado con su etiqueta', async () => {
+      await montar('auxiliar', BALANCE_LISTO, { clientes: [GARSO, OTRO], balances: [BALANCE_LISTO, BALANCE_DE_OTRO] });
+      await usuario.selectOptions(screen.getByLabelText('Cliente'), 'cli-otro');
+
+      await usuario.click(screen.getByRole('button', { name: 'Descargar Excel' }));
+
+      await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(1));
+      const [reporte, detalle] = descargarReporte.mock.calls[0] as unknown as [Reporte, string | null];
+      expect(detalle).toBe('OTRO S.A.');
+      expect(reporte.titulo).toBe('Balances');
+      expect(reporte.filtros).toEqual(['Cliente: OTRO S.A.', `Período ${PERIODO}`]);
+      expect(reporte.hojas.map((h) => h.nombre)).toEqual(['Balances por cliente']);
+      const [tabla] = reporte.hojas as [HojaDeReporte];
+      expect(tabla.columnas.map((c) => [c.titulo, c.formato])).toEqual([
+        ['Cliente', undefined],
+        ['Estado', undefined],
+        ['Activo', 'guaranies'],
+        ['Pasivo', 'guaranies'],
+        ['Patrimonio neto', 'guaranies'],
+        ['Resultado', 'guaranies'],
+        ['Bloqueantes', 'entero'],
+      ]);
+      // «Observado», no `OBSERVADO`; y 1 bloqueante, el que muestra la pantalla.
+      expect(celdas(tabla)).toEqual([['OTRO S.A.', 'Observado', '20000000', '5000000', '15000000', '2000000', 1]]);
+    });
+
+    it('en «Ejercicio (anual)» dice qué ejercicio es, y un cliente sin balance sale «Sin iniciar» con las cifras vacías', async () => {
+      await montar('direccion', null, { clientes: [GARSO, OTRO], balances: [BALANCE_DE_OTRO] });
+      await usuario.selectOptions(screen.getByLabelText('Ver por'), 'ejercicio');
+      await screen.findByText(/Ejercicio \d{4} — balance al cierre/);
+
+      await usuario.click(screen.getByRole('button', { name: 'Descargar Excel' }));
+
+      await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(1));
+      const [reporte, detalle] = descargarReporte.mock.calls[0] as unknown as [Reporte, string | null];
+      expect(detalle).toBeNull();
+      expect(reporte.filtros).toEqual([
+        'Cliente: todos',
+        `Ejercicio ${HOY.anio} — balance al cierre (período ${HOY.anio}-12)`,
+      ]);
+      const [tabla] = reporte.hojas as [HojaDeReporte];
+      expect(celdas(tabla)).toEqual([
+        ['GARSO S.A.', 'Sin iniciar', null, null, null, null, null],
+        ['OTRO S.A.', 'Observado', '20000000', '5000000', '15000000', '2000000', 1],
+      ]);
+    });
   });
 
   describe('ver por ejercicio (tarea 153)', () => {

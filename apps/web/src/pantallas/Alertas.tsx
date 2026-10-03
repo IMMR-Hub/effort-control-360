@@ -28,7 +28,16 @@ import {
 } from '../api/alertas.js';
 import { useSesion } from '../contexts/SesionContext.js';
 import { FiltroDeFechasSelector } from '../ui/FiltroDeFechas.js';
-import { FiltroDeClienteSelector, TODOS_LOS_CLIENTES, coincideConCliente, type FiltroDeCliente } from '../ui/FiltroDeCliente.js';
+import {
+  FiltroDeClienteSelector,
+  TODOS_LOS_CLIENTES,
+  coincideConCliente,
+  filtroDeClienteEnPalabras,
+  nombreDelClienteFiltrado,
+  type FiltroDeCliente,
+} from '../ui/FiltroDeCliente.js';
+import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
+import { hoja, type Reporte } from '../ui/reporteExcel.js';
 import {
   dentroDelRango,
   describirFiltro,
@@ -155,6 +164,32 @@ export default function Alertas() {
     return (clienteId: string | null) => (clienteId ? mapa.get(clienteId) ?? clienteId : '—');
   }, [clientes]);
 
+  /** Lo mismo que muestra la tabla, con sus filtros: mismas filas, mismas etiquetas. */
+  function reporte(): Reporte {
+    return {
+      titulo: 'Alertas',
+      filtros: [
+        filtroDeClienteEnPalabras(filtroDeCliente, clientes),
+        `Fechas (cuando se levantó la alerta): ${describirFiltro(filtro)}`,
+      ],
+      hojas: [
+        hoja(
+          'Alertas',
+          [
+            // Una alerta del sistema sin cliente (un cambio de tasa) queda con la celda vacía.
+            { titulo: 'Cliente', valor: (a: Alerta) => (a.clienteId ? nombreDeCliente(a.clienteId) : null) },
+            { titulo: 'Criticidad', valor: (a) => ETIQUETA_CRITICIDAD[a.criticidad] },
+            { titulo: 'Título', valor: (a) => a.titulo },
+            { titulo: 'Detalle', valor: (a) => a.detalle },
+            { titulo: 'Origen', valor: (a) => etiquetaDeOrigen(a.origen) },
+            { titulo: 'Vence', valor: (a) => soloFecha(a.fechaLimite), formato: 'fecha' },
+          ],
+          alertasVisibles,
+        ),
+      ],
+    };
+  }
+
   /**
    * Registra la presentación del vencimiento que originó la alerta.
    *
@@ -225,6 +260,7 @@ export default function Alertas() {
               valor={filtroDeCliente}
               onCambiar={setFiltroDeCliente}
             />
+            <BotonDescargarExcel reporte={reporte} detalleDelNombre={nombreDelClienteFiltrado(filtroDeCliente, clientes)} />
           </div>
         </div>
         {puedeEvaluar && (

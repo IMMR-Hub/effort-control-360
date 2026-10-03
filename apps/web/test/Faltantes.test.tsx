@@ -11,6 +11,38 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { crearFetchMock, respuestaJson } from './ayuda-fetch-mock.js';
+import type { HojaDeReporte, Reporte } from '../src/ui/reporteExcel.js';
+
+// La descarga real necesita un navegador; acá se mira QUÉ se iba a descargar.
+const { descargarReporte } = vi.hoisted(() => ({ descargarReporte: vi.fn(async () => {}) }));
+vi.mock('../src/ui/reporteExcel.js', async (original) => ({
+  ...(await original<typeof import('../src/ui/reporteExcel.js')>()),
+  descargarReporte,
+}));
+
+/** Cada fila de la hoja como la vería Excel: los valores de sus columnas. */
+function celdas(hoja: HojaDeReporte): unknown[][] {
+  return hoja.filas.map((fila) => hoja.columnas.map((c) => c.valor(fila as never)));
+}
+
+function unCliente(id: string, nombre: string) {
+  return {
+    id,
+    nombre,
+    ruc: '80017726-6',
+    tipoPersona: 'JURIDICA',
+    regimenTributario: null,
+    email: null,
+    telefono: null,
+    canalPreferido: 'WHATSAPP',
+    carpetaOneDriveId: null,
+    activo: true,
+    observaciones: null,
+  };
+}
+
+const COPESA = unCliente('cli-copesa', 'COPESA CONSTRUCCIONES SA');
+const DIBEC = unCliente('cli-dibec', 'DIBEC SOCIEDAD ANONIMA');
 
 const UN_FALTANTE = {
   clienteId: 'cli-copesa',
@@ -35,6 +67,7 @@ let mock: ReturnType<typeof crearFetchMock>;
 let usuario: ReturnType<typeof userEvent.setup>;
 
 beforeEach(() => {
+  descargarReporte.mockClear();
   mock = crearFetchMock();
   vi.stubGlobal('fetch', mock.fetchMock);
   usuario = userEvent.setup();
@@ -49,6 +82,7 @@ async function montar(faltantes: readonly unknown[] = [UN_FALTANTE], rol: string
     respuestaJson({ usuarioId: 'u1', rol, veTodosLosClientes: true, cantidadDeClientesAsignados: 0 }),
   );
   mock.mockDeRuta('GET /api/v1/csrf', () => respuestaJson({ csrfToken: 'token-de-prueba' }));
+  mock.mockDeRuta('GET /api/v1/clientes', () => respuestaJson({ clientes: [COPESA, DIBEC] }));
   mock.mockDeRuta('GET /api/v1/vencimientos/faltantes', () => respuestaJson({ faltantes }));
 
   vi.resetModules();
@@ -67,7 +101,7 @@ describe('Faltantes', () => {
   it('muestra el cliente, el período y el comprobante que falta', async () => {
     await montar();
 
-    expect(await screen.findByText('COPESA CONSTRUCCIONES SA')).toBeInTheDocument();
+    expect(await screen.findByText('COPESA CONSTRUCCIONES SA', { selector: 'td' })).toBeInTheDocument();
     expect(screen.getByText('2026-07')).toBeInTheDocument();
     expect(screen.getByText('IVA General — período 2026-07')).toBeInTheDocument();
     expect(screen.getByText('Falta ventas')).toBeInTheDocument();
@@ -98,10 +132,119 @@ describe('Faltantes', () => {
       },
     ]);
 
-    await screen.findByText('DIBEC SOCIEDAD ANONIMA');
+    await screen.findByText('DIBEC SOCIEDAD ANONIMA', { selector: 'td' });
     // 2 filas (cliente+período), 3 comprobantes en total (1 + 2).
     expect(screen.getByText('2')).toBeInTheDocument();
     expect(screen.getByText('3')).toBeInTheDocument();
+  });
+
+  describe('filtro por cliente (2026-10-02)', () => {
+    const DE_DIBEC = {
+      ...UN_FALTANTE,
+      clienteId: 'cli-dibec',
+      clienteNombre: 'DIBEC SOCIEDAD ANONIMA',
+      periodo: '2026-06',
+      estadoPlanillaRg90: 'COMPLETA',
+      obligaciones: [
+        { ...UN_FALTANTE.obligaciones[0], id: 'venc-eeff', tipoDocumento: 'EEFF', descripcion: 'Estados Financieros — período 2025-12' },
+        { ...UN_FALTANTE.obligaciones[0], id: 'venc-ire', tipoDocumento: 'IRE', descripcion: 'IRE — período 2025-12' },
+      ],
+    };
+
+    it('elegir un cliente deja solo sus filas y sus indicadores, y «Todos los clientes» las vuelve a mostrar', async () => {
+      await montar([UN_FALTANTE, DE_DIBEC]);
+      expect(screen.getByText('COPESA CONSTRUCCIONES SA', { selector: 'td' })).toBeVisible();
+      expect(screen.getByText('DIBEC SOCIEDAD ANONIMA', { selector: 'td' })).toBeVisible();
+      expect(screen.getByText('Cliente y período con algo pendiente').closest('div')!.textContent).toContain('2');
+
+      await usuario.selectOptions(screen.getByLabelText('Cliente'), 'cli-dibec');
+
+      expect(screen.queryByText('COPESA CONSTRUCCIONES SA', { selector: 'td' })).not.toBeInTheDocument();
+      expect(screen.getByText('DIBEC SOCIEDAD ANONIMA', { selector: 'td' })).toBeVisible();
+      expect(screen.getByText(/1 fila\(s\) .*cliente: DIBEC SOCIEDAD ANONIMA/)).toBeVisible();
+      // Los indicadores cuentan solo lo filtrado: 1 fila, 2 comprobantes y ninguna planilla incompleta.
+      expect(screen.getByText('Cliente y período con algo pendiente').closest('div')!.textContent).toContain('1');
+      expect(screen.getByText('Comprobantes sin presentar', { selector: 'p' }).closest('div')!.textContent).toContain('2');
+      expect(screen.getByText('Con planilla RG 90 incompleta').closest('div')!.textContent).toContain('0');
+
+      await usuario.selectOptions(screen.getByLabelText('Cliente'), '');
+
+      expect(screen.getByText('COPESA CONSTRUCCIONES SA', { selector: 'td' })).toBeVisible();
+      expect(screen.getByText('DIBEC SOCIEDAD ANONIMA', { selector: 'td' })).toBeVisible();
+      expect(screen.getByText('Con planilla RG 90 incompleta').closest('div')!.textContent).toContain('1');
+    });
+
+    it('un cliente sin nada pendiente lo dice, y no es lo mismo que «no falta nada de nadie»', async () => {
+      await montar([UN_FALTANTE]);
+
+      await usuario.selectOptions(screen.getByLabelText('Cliente'), 'cli-dibec');
+
+      expect(await screen.findByText(/no hay nada pendiente para este cliente/i)).toBeVisible();
+    });
+  });
+
+  describe('Excel (2026-10-02)', () => {
+    it('descarga solo lo que queda a la vista con el cliente elegido, con el filtro escrito', async () => {
+      await montar([
+        UN_FALTANTE,
+        {
+          ...UN_FALTANTE,
+          clienteId: 'cli-dibec',
+          clienteNombre: 'DIBEC SOCIEDAD ANONIMA',
+          periodo: '2026-06',
+          estadoPlanillaRg90: 'COMPLETA',
+          obligaciones: [
+            { ...UN_FALTANTE.obligaciones[0], id: 'venc-eeff', descripcion: 'Estados Financieros — período 2025-12', diasDeAtraso: 10 },
+            { ...UN_FALTANTE.obligaciones[0], id: 'venc-ire', descripcion: 'IRE — período 2025-12', diasDeAtraso: 7 },
+          ],
+        },
+      ], 'auxiliar');
+      await usuario.selectOptions(screen.getByLabelText('Cliente'), 'cli-dibec');
+
+      await usuario.click(screen.getByRole('button', { name: 'Descargar Excel' }));
+
+      await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(1));
+      const [reporte, detalle] = descargarReporte.mock.calls[0] as unknown as [Reporte, string | null];
+      expect(detalle).toBe('DIBEC SOCIEDAD ANONIMA');
+      expect(reporte.titulo).toBe('Faltantes');
+      expect(reporte.filtros).toEqual(['Cliente: DIBEC SOCIEDAD ANONIMA']);
+      expect(reporte.hojas.map((h) => h.nombre)).toEqual(['Lo que falta subir']);
+      const [hoja] = reporte.hojas as [HojaDeReporte];
+      expect(hoja.columnas.map((c) => c.titulo)).toEqual([
+        'Cliente', 'Período', 'Comprobantes sin presentar', 'Planilla RG 90', 'Aclaración',
+      ]);
+      // Las etiquetas que ve el usuario, nunca el código interno (COMPLETA, FALTA_VENTAS…).
+      expect(celdas(hoja)).toEqual([
+        [
+          'DIBEC SOCIEDAD ANONIMA',
+          '2026-06',
+          'Estados Financieros — período 2025-12 (10 día(s) de atraso) | IRE — período 2025-12 (7 día(s) de atraso)',
+          'Completa',
+          null,
+        ],
+      ]);
+    });
+
+    it('sin filtro trae todas las filas, y la aclaración de «Falta ventas» viaja con su fila', async () => {
+      await montar([UN_FALTANTE]);
+
+      await usuario.click(screen.getByRole('button', { name: 'Descargar Excel' }));
+
+      await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(1));
+      const [reporte, detalle] = descargarReporte.mock.calls[0] as unknown as [Reporte, string | null];
+      expect(detalle).toBeNull();
+      expect(reporte.filtros).toEqual(['Cliente: todos']);
+      const [hoja] = reporte.hojas as [HojaDeReporte];
+      expect(celdas(hoja)).toEqual([
+        [
+          'COPESA CONSTRUCCIONES SA',
+          '2026-07',
+          'IVA General — período 2026-07 (42 día(s) de atraso)',
+          'Falta ventas',
+          'Puede ser legítimo si el cliente no facturó ese mes.',
+        ],
+      ]);
+    });
   });
 
   describe('"Actualizar ahora" (tarea 152-bis)', () => {
@@ -196,7 +339,7 @@ describe('Faltantes', () => {
       await usuario.click(screen.getByRole('button', { name: /actualizar ahora/i }));
 
       expect(await screen.findByRole('alert')).toBeInTheDocument();
-      expect(screen.getByText('COPESA CONSTRUCCIONES SA')).toBeInTheDocument();
+      expect(screen.getByText('COPESA CONSTRUCCIONES SA', { selector: 'td' })).toBeInTheDocument();
     });
   });
 });

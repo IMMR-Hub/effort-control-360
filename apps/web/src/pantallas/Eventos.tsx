@@ -16,13 +16,20 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { Search } from 'lucide-react';
 
-import { Boton, CampoSelect, CampoTexto, EncabezadoTarjeta, Tabla, Tarjeta, Td, Th } from '../ui/Primitivos.jsx';
+import { Boton, CampoTexto, EncabezadoTarjeta, Tabla, Tarjeta, Td, Th } from '../ui/Primitivos.jsx';
 import { ErrorDeApi } from '../api/cliente.js';
 import { listarClientes, type Cliente } from '../api/clientes.js';
 import { listarEventos, type Evento } from '../api/eventos.js';
 import { listarUsuarios, type Usuario } from '../api/usuarios.js';
 import { FiltroDeFechasSelector } from '../ui/FiltroDeFechas.js';
-import { hoyEnParaguay, rangoDelFiltro, type FiltroDeFechas } from '@effort/core';
+import {
+  FiltroDeClienteSelector,
+  filtroDeClienteEnPalabras,
+  nombreDelClienteFiltrado,
+} from '../ui/FiltroDeCliente.js';
+import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
+import { hoja, type Reporte } from '../ui/reporteExcel.js';
+import { describirFiltro, hoyEnParaguay, rangoDelFiltro, type FiltroDeFechas } from '@effort/core';
 
 /**
  * Días completos en hora de Paraguay (UTC-3 todo el año desde 2024).
@@ -151,6 +158,33 @@ function camposDelDetalle(valor: unknown): readonly CampoDeDetalle[] {
   }));
 }
 
+/**
+ * Las fechas de la búsqueda aplicada, en palabras. El desde–hasta siempre sale
+ * del selector de fechas, así que vienen los dos o ninguno.
+ */
+function fechasEnPalabras(filtro: Pick<Filtro, 'desde' | 'hasta'>): string {
+  if (!filtro.desde || !filtro.hasta) return describirFiltro({ tipo: 'todo' });
+  return describirFiltro(
+    filtro.desde === filtro.hasta
+      ? { tipo: 'dia', fecha: filtro.desde }
+      : { tipo: 'rango', desde: filtro.desde, hasta: filtro.hasta },
+  );
+}
+
+/**
+ * El detalle de una fila como texto, igual que lo muestra la tabla:
+ * «Antes: … | Después: …», o solo lo que quedó si no hay un «antes». Vacío si no hay nada.
+ */
+function detalleEnTexto(evento: Evento): string | null {
+  const antes = camposDelDetalle(evento.datosAntes);
+  const despues = camposDelDetalle(evento.datosDespues);
+  const enTexto = (campos: readonly CampoDeDetalle[]) => campos.map((c) => `${c.etiqueta}: ${c.valor}`).join(' · ');
+  const partes: string[] = [];
+  if (antes.length > 0) partes.push(`Antes: ${enTexto(antes)}`);
+  if (despues.length > 0) partes.push(antes.length > 0 ? `Después: ${enTexto(despues)}` : enTexto(despues));
+  return partes.length === 0 ? null : partes.join(' | ');
+}
+
 export default function Eventos() {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -185,6 +219,51 @@ export default function Eventos() {
     const mapa = new Map(usuarios.map((u) => [u.id, `${u.nombre} ${u.apellido}`.trim()]));
     return (usuarioId: string | null) => (usuarioId ? mapa.get(usuarioId) ?? usuarioId : 'El sistema');
   }, [usuarios]);
+
+  /**
+   * La bitácora guarda lo que pasó con TODOS los clientes, también los dados de
+   * baja: el filtro los ofrece igual (el selector compartido solo ofrece los
+   * activos).
+   */
+  const clientesDelFiltro = useMemo(() => clientes.map((c) => ({ ...c, activo: true })), [clientes]);
+
+  /**
+   * Lo que muestra el historial, con los filtros YA APLICADOS (los de «Buscar»,
+   * no los que se están escribiendo): mismas filas, mismo texto.
+   */
+  function reporte(): Reporte {
+    const f = filtroAplicado;
+    return {
+      titulo: 'Eventos',
+      filtros: [
+        filtroDeClienteEnPalabras(f.clienteId, clientes),
+        `Fechas: ${fechasEnPalabras(f)}`,
+        ...(f.entidad.trim() ? [`Entidad: ${f.entidad.trim()}`] : []),
+        ...(f.entidadId.trim() ? [`Id de la entidad: ${f.entidadId.trim()}`] : []),
+        ...(f.usuarioId.trim() ? [`Id de usuario: ${f.usuarioId.trim()}`] : []),
+        ...(hayMas ? [`Solo los ${eventos.length} eventos cargados en pantalla; hay más`] : []),
+      ],
+      hojas: [
+        hoja(
+          'Eventos',
+          [
+            {
+              titulo: 'Fecha y hora',
+              valor: (e: Evento) => new Date(e.ocurridoEn).toLocaleString('es-PY'),
+            },
+            { titulo: 'Usuario', valor: (e) => nombreDeUsuario(e.usuarioId) },
+            { titulo: 'Acción', valor: (e) => ETIQUETA_ACCION[e.accion] ?? e.accion },
+            // La pantalla muestra el código debajo de la frase: en una bitácora importa el literal.
+            { titulo: 'Código de la acción', valor: (e) => e.accion },
+            { titulo: 'Entidad', valor: (e) => e.entidad },
+            { titulo: 'Cliente', valor: (e) => (e.clienteId ? nombreDeCliente(e.clienteId) : null) },
+            { titulo: 'Detalle', valor: (e) => detalleEnTexto(e) },
+          ],
+          eventos,
+        ),
+      ],
+    };
+  }
 
   async function buscar(aplicado: Filtro) {
     setCargando(true);
@@ -305,13 +384,11 @@ export default function Eventos() {
             value={filtro.usuarioId}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFiltro({ ...filtro, usuarioId: e.target.value })}
           />
-          <CampoSelect
+          <FiltroDeClienteSelector
             id="filtroCliente"
-            etiqueta="Cliente"
-            placeholder="Todos"
-            opciones={clientes.map((c) => ({ valor: c.id, etiqueta: c.nombre }))}
-            value={filtro.clienteId}
-            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFiltro({ ...filtro, clienteId: e.target.value })}
+            clientes={clientesDelFiltro}
+            valor={filtro.clienteId}
+            onCambiar={(clienteId) => setFiltro({ ...filtro, clienteId })}
           />
           <div className="sm:col-span-2">
             <FiltroDeFechasSelector id="filtroEventos" valor={filtroDeFechas} onCambiar={cambiarFechas} permitirTodo />
@@ -328,7 +405,16 @@ export default function Eventos() {
       </Tarjeta>
 
       <Tarjeta>
-        <EncabezadoTarjeta titulo="Historial" descripcion={`${eventos.length} eventos${hayMas ? ' (hay más)' : ''}`} />
+        <EncabezadoTarjeta
+          titulo="Historial"
+          descripcion={`${eventos.length} eventos${hayMas ? ' (hay más)' : ''}`}
+          acciones={
+            <BotonDescargarExcel
+              reporte={reporte}
+              detalleDelNombre={nombreDelClienteFiltrado(filtroAplicado.clienteId, clientes)}
+            />
+          }
+        />
         <Tabla etiqueta="Historial de eventos">
           <thead>
             <tr>

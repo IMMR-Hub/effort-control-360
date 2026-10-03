@@ -12,6 +12,19 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { crearFetchMock, respuestaJson } from './ayuda-fetch-mock.js';
+import type { HojaDeReporte, Reporte } from '../src/ui/reporteExcel.js';
+
+// La descarga real necesita un navegador; acá se mira QUÉ se iba a descargar.
+const { descargarReporte } = vi.hoisted(() => ({ descargarReporte: vi.fn(async () => {}) }));
+vi.mock('../src/ui/reporteExcel.js', async (original) => ({
+  ...(await original<typeof import('../src/ui/reporteExcel.js')>()),
+  descargarReporte,
+}));
+
+/** Cada fila de la hoja como la vería Excel: los valores de sus columnas. */
+function celdas(hoja: HojaDeReporte): unknown[][] {
+  return hoja.filas.map((fila) => hoja.columnas.map((c) => c.valor(fila as never)));
+}
 
 const GARSO = {
   id: 'cli-garso',
@@ -69,6 +82,7 @@ let mock: ReturnType<typeof crearFetchMock>;
 let usuario: ReturnType<typeof userEvent.setup>;
 
 beforeEach(() => {
+  descargarReporte.mockClear();
   mock = crearFetchMock();
   vi.stubGlobal('fetch', mock.fetchMock);
   usuario = userEvent.setup();
@@ -187,5 +201,61 @@ describe('radar de alertas', () => {
     await usuario.click(screen.getByRole('button', { name: 'Cerrar alerta: Vencimiento sin presentar' }));
 
     expect(mock.llamadasA('POST /api/v1/alertas/alerta-1/cerrar')).toHaveLength(0);
+  });
+
+  describe('Excel (2026-10-02)', () => {
+    const OTRO = { ...GARSO, id: 'cli-otro', nombre: 'OTRO S.A.', ruc: '80000001-1' };
+    const DEL_OTRO = {
+      ...ALERTA_VENCIMIENTO,
+      id: 'alerta-3',
+      clienteId: 'cli-otro',
+      criticidad: 'ALTA',
+      titulo: 'Patente por vencer',
+      detalle: 'La patente vence en 12 días.',
+      origen: 'vencimiento_por_vencer',
+      fechaLimite: '2026-10-20T00:00:00.000Z',
+    };
+
+    it('con un cliente elegido descarga solo sus alertas, con las etiquetas de pantalla y los filtros escritos', async () => {
+      // Lo puede bajar cualquier rol que vea la pantalla: descargar es leer.
+      await montar('solo_lectura', [ALERTA_VENCIMIENTO, ALERTA_SIN_CLIENTE, DEL_OTRO], [GARSO, OTRO]);
+      await usuario.selectOptions(screen.getByLabelText('Cliente'), 'cli-otro');
+
+      await usuario.click(screen.getByRole('button', { name: 'Descargar Excel' }));
+
+      await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(1));
+      const [reporte, detalle] = descargarReporte.mock.calls[0] as unknown as [Reporte, string | null];
+      expect(detalle).toBe('OTRO S.A.');
+      expect(reporte.titulo).toBe('Alertas');
+      expect(reporte.filtros).toContain('Cliente: OTRO S.A.');
+      expect(reporte.filtros).toContain('Fechas (cuando se levantó la alerta): todas las fechas');
+      expect(reporte.hojas.map((h) => h.nombre)).toEqual(['Alertas']);
+      const [alertas] = reporte.hojas as [HojaDeReporte];
+      expect(alertas.columnas.map((c) => c.titulo)).toEqual([
+        'Cliente', 'Criticidad', 'Título', 'Detalle', 'Origen', 'Vence',
+      ]);
+      expect(celdas(alertas)).toEqual([
+        ['OTRO S.A.', 'Alta', 'Patente por vencer', 'La patente vence en 12 días.', 'Vencimiento', '2026-10-20'],
+      ]);
+      expect(alertas.columnas[5]!.formato).toBe('fecha');
+    });
+
+    it('sin filtro trae todas las alertas del radar; una sin cliente ni fecha queda con esas celdas vacías', async () => {
+      const DEL_GARSO = { ...ALERTA_VENCIMIENTO, origen: 'vencimiento_por_vencer' };
+      const SIN_CLIENTE = { ...ALERTA_SIN_CLIENTE, origen: 'libro_con_riesgo_de_multa' };
+      await montar('direccion', [DEL_GARSO, SIN_CLIENTE]);
+
+      await usuario.click(screen.getByRole('button', { name: 'Descargar Excel' }));
+
+      await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(1));
+      const [reporte, detalle] = descargarReporte.mock.calls[0] as unknown as [Reporte, string | null];
+      expect(detalle).toBeNull();
+      expect(reporte.filtros).toContain('Cliente: todos');
+      const [alertas] = reporte.hojas as [HojaDeReporte];
+      expect(celdas(alertas)).toEqual([
+        ['GARSO S.A.', 'Crítica', 'Vencimiento sin presentar', 'Presentación anual ante Abogacía vencida hace 3 días.', 'Vencimiento', '2026-04-28'],
+        [null, 'Informativa', 'Tasa de IVA actualizada', 'Se dio de alta una nueva regla de IVA 10%.', 'Libro RG 90', null],
+      ]);
+    });
   });
 });

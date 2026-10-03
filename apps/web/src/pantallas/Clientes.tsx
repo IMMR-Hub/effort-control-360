@@ -32,6 +32,8 @@ import {
   type TipoPersona,
 } from '../api/clientes.js';
 import { useSesion } from '../contexts/SesionContext.js';
+import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
+import { hoja, type Reporte } from '../ui/reporteExcel.js';
 
 const ETIQUETA_CANAL: Record<CanalRecepcion, string> = {
   WHATSAPP: 'WhatsApp',
@@ -94,6 +96,22 @@ function vacioANulo(valor: string): string | null {
   return valor.trim() === '' ? null : valor.trim();
 }
 
+/**
+ * Minúsculas y sin tildes: «garcía» tiene que encontrar «GARCIA S.A.», porque
+ * quien busca no sabe cómo se cargó el nombre (y la ñ también cuenta como n).
+ */
+function normalizar(texto: string): string {
+  return texto
+    .normalize('NFD')
+    .replace(/[̀-ͯ]/g, '')
+    .toLowerCase();
+}
+
+/** La etiqueta que ve el usuario en la columna «Tipo». */
+function etiquetaDeTipoDePersona(tipoPersona: string): string {
+  return tipoPersona === 'JURIDICA' ? 'Jurídica' : 'Física';
+}
+
 export default function Clientes() {
   const { sesion } = useSesion();
   const puedeEditar = sesion?.rol === 'direccion';
@@ -127,17 +145,52 @@ export default function Clientes() {
     void recargar();
   }, []);
 
-  const clientesFiltrados = useMemo(() => {
-    const termino = busqueda.trim().toLowerCase();
-    return clientes
-      .filter((c) => !soloActivos || c.activo)
-      .filter(
-        (c) => !termino || c.nombre.toLowerCase().includes(termino) || c.ruc.includes(termino),
-      )
-      .sort((a, b) => a.nombre.localeCompare(b.nombre, 'es'));
-  }, [clientes, busqueda, soloActivos]);
+  // `coincidentes` alimenta los indicadores (que cuentan activos e inactivos);
+  // `clientesFiltrados`, la tabla, además aplica «Solo activos». Mismo reparto
+  // que en Vencimientos: lo que se busca recorta todo, el tilde de estado solo la tabla.
+  const coincidentes = useMemo(() => {
+    const termino = normalizar(busqueda.trim());
+    return clientes.filter(
+      (c) => !termino || normalizar(c.nombre).includes(termino) || normalizar(c.ruc).includes(termino),
+    );
+  }, [clientes, busqueda]);
+  const clientesFiltrados = useMemo(
+    () =>
+      coincidentes
+        .filter((c) => !soloActivos || c.activo)
+        .sort((a, b) => a.nombre.localeCompare(b.nombre, 'es')),
+    [coincidentes, soloActivos],
+  );
 
-  const activos = clientes.filter((c) => c.activo).length;
+  const hayBusqueda = busqueda.trim() !== '';
+  const activos = coincidentes.filter((c) => c.activo).length;
+
+  /** Lo mismo que muestra la pantalla, con sus filtros: la cartera tal como queda en la tabla. */
+  function reporte(): Reporte {
+    return {
+      titulo: 'Clientes',
+      filtros: [
+        hayBusqueda ? `Cliente: nombre o RUC con «${busqueda.trim()}»` : 'Cliente: todos',
+        `Estado: ${soloActivos ? 'solo activos' : 'activos e inactivos'}`,
+      ],
+      hojas: [
+        hoja(
+          'Cartera',
+          [
+            { titulo: 'Nombre', valor: (c: Cliente) => c.nombre },
+            { titulo: 'RUC', valor: (c) => c.ruc },
+            { titulo: 'Tipo', valor: (c) => etiquetaDeTipoDePersona(c.tipoPersona) },
+            {
+              titulo: 'Canal preferido',
+              valor: (c) => (c.canalPreferido ? ETIQUETA_CANAL[c.canalPreferido as CanalRecepcion] : ''),
+            },
+            { titulo: 'Estado', valor: (c) => (c.activo ? 'Activo' : 'Inactivo') },
+          ],
+          clientesFiltrados,
+        ),
+      ],
+    };
+  }
 
   function abrirAlta() {
     setEdicion(null);
@@ -224,15 +277,22 @@ export default function Clientes() {
         </div>
 
         <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3" aria-label="Resumen de la cartera">
-          <Indicador etiqueta="Clientes" valor={clientes.length} detalle="en la cartera visible" tono="proceso" />
+          <Indicador
+            etiqueta="Clientes"
+            valor={coincidentes.length}
+            detalle={hayBusqueda ? 'que coinciden con la búsqueda' : 'en la cartera visible'}
+            tono="proceso"
+          />
           <Indicador etiqueta="Activos" valor={activos} tono="completo" />
-          <Indicador etiqueta="Inactivos" valor={clientes.length - activos} tono="pendiente" />
+          <Indicador etiqueta="Inactivos" valor={coincidentes.length - activos} tono="pendiente" />
         </section>
 
         <Tarjeta>
           <EncabezadoTarjeta
             titulo="Cartera"
-            descripcion={`${clientesFiltrados.length} de ${clientes.length} clientes`}
+            descripcion={`${clientesFiltrados.length} de ${clientes.length} clientes${
+              hayBusqueda ? ` · búsqueda: «${busqueda.trim()}»` : ''
+            }`}
             acciones={
               <div className="flex items-center gap-2">
                 <label className="flex items-center gap-1.5 text-xs text-tinta-suave">
@@ -254,10 +314,11 @@ export default function Clientes() {
                     value={busqueda}
                     onChange={(evento) => setBusqueda(evento.target.value)}
                     placeholder="Buscar por nombre o RUC"
-                    aria-label="Buscar cliente por nombre o RUC"
+                    aria-label="Buscar cliente"
                     className="min-h-9 rounded border border-borde-fuerte bg-superficie py-1.5 pl-8 pr-3 text-sm text-tinta focus-visible:outline-none"
                   />
                 </div>
+                <BotonDescargarExcel reporte={reporte} />
               </div>
             }
           />
@@ -277,9 +338,7 @@ export default function Clientes() {
                 <tr key={cliente.id} className="hover:bg-superficie-tenue">
                   <Td className="font-medium">{cliente.nombre}</Td>
                   <Td className="cifra text-tinta-suave">{cliente.ruc}</Td>
-                  <Td className="text-tinta-suave">
-                    {cliente.tipoPersona === 'JURIDICA' ? 'Jurídica' : 'Física'}
-                  </Td>
+                  <Td className="text-tinta-suave">{etiquetaDeTipoDePersona(cliente.tipoPersona)}</Td>
                   <Td className="text-tinta-suave">
                     {cliente.canalPreferido
                       ? ETIQUETA_CANAL[cliente.canalPreferido as CanalRecepcion]

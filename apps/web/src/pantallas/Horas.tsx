@@ -36,6 +36,16 @@ import {
   Th,
 } from '../ui/Primitivos.jsx';
 import { FiltroDeFechasSelector, filtroDelMesActual } from '../ui/FiltroDeFechas.js';
+import {
+  FiltroDeClienteSelector,
+  TODOS_LOS_CLIENTES,
+  coincideConCliente,
+  filtroDeClienteEnPalabras,
+  nombreDelClienteFiltrado,
+  type FiltroDeCliente,
+} from '../ui/FiltroDeCliente.js';
+import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
+import { hoja, type Reporte } from '../ui/reporteExcel.js';
 import { ErrorDeApi } from '../api/cliente.js';
 import { listarClientes, type Cliente } from '../api/clientes.js';
 import { listarUsuarios, type Usuario } from '../api/usuarios.js';
@@ -84,11 +94,17 @@ export default function Horas() {
   const hoy = useMemo(() => hoyEnParaguay(new Date()), []);
 
   const [filtro, setFiltro] = useState<FiltroDeFechas>(filtroDelMesActual());
+  // Recorta «Mis horas» y, para dirección, las tablas del equipo. El tiempo
+  // interno (sin cliente) solo se ve con «Todos los clientes».
+  const [filtroDeCliente, setFiltroDeCliente] = useState<FiltroDeCliente>(TODOS_LOS_CLIENTES);
   // Solo la PRIMERA carga bloquea la pantalla entera. Después (al guardar, al
   // cambiar el período) los datos viejos se quedan a la vista mientras llegan
   // los nuevos: de lo contrario, quien guarda su primer registro veía toda la
   // pantalla —formulario incluido— parpadear a "Cargando…".
   const [cargoAlgunaVez, setCargoAlgunaVez] = useState(false);
+  // Mientras llega lo nuevo, en pantalla queda lo viejo (ver arriba): el Excel
+  // no se arma en ese lapso, o tendría el período nuevo con las filas del viejo.
+  const [recargando, setRecargando] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [clientes, setClientes] = useState<readonly Cliente[]>([]);
   const [misRegistros, setMisRegistros] = useState<readonly RegistroDeHoras[]>([]);
@@ -107,6 +123,7 @@ export default function Horas() {
     if (!rango) return;
 
     setError(null);
+    setRecargando(true);
     try {
       const [{ clientes: listaDeClientes }, { registros }, resumen, personal] = await Promise.all([
         listarClientes(),
@@ -122,6 +139,7 @@ export default function Horas() {
       setError(motivo instanceof ErrorDeApi ? motivo.message : 'No se pudo conectar con el servidor.');
     } finally {
       setCargoAlgunaVez(true);
+      setRecargando(false);
     }
   }
 
@@ -154,9 +172,22 @@ export default function Horas() {
     [clientesActivos],
   );
 
-  const minutosPropios = misRegistros.reduce((suma, r) => suma + r.minutos, 0);
+  // Con un cliente elegido, todo lo que se ve (tablas, indicadores y Excel) es
+  // de ese cliente: el tiempo interno, que no es de ninguno, queda afuera.
+  const misRegistrosVisibles = useMemo(
+    () => misRegistros.filter((r) => coincideConCliente(r.clienteId, filtroDeCliente)),
+    [misRegistros, filtroDeCliente],
+  );
+  const minutosPropios = misRegistrosVisibles.reduce((suma, r) => suma + r.minutos, 0);
 
   /* --- Resumen del equipo: se deriva de `totales`, nunca se calcula aparte --- */
+
+  const totalesVisibles = useMemo(
+    () => totales.filter((t) => coincideConCliente(t.clienteId, filtroDeCliente)),
+    [totales, filtroDeCliente],
+  );
+  const mensajeSinHoras =
+    totales.length === 0 ? 'Nadie cargó horas en este período.' : 'Nadie cargó horas para este cliente en este período.';
 
   /**
    * Agrupa minutos y costo juntos, por la clave que sea (cliente o persona).
@@ -164,11 +195,16 @@ export default function Horas() {
    * miles de guaraníes y JS pierde precisión en la suma de punto flotante.
    * Si NINGUNA fila del grupo tiene costo configurado, el total queda `null`
    * en vez de mostrar "Gs. 0" — que mentiría diciendo que no cuesta nada.
+   *
+   * Parte de `totalesVisibles` (ya recortado por cliente): «Horas por
+   * colaborador» no es un dato aparte que mande el servidor, se suma desde el
+   * detalle por colaborador y cliente, así que con un cliente elegido suma
+   * solo lo de ese cliente.
    */
   function agruparPor<K>(clave: (t: TotalDeHoras) => K) {
     const minutosPorClave = new Map<K, number>();
     const costoPorClave = new Map<K, Gs[]>();
-    for (const t of totales) {
+    for (const t of totalesVisibles) {
       minutosPorClave.set(clave(t), (minutosPorClave.get(clave(t)) ?? 0) + t.minutos);
       const lista = costoPorClave.get(clave(t)) ?? [];
       if (t.costoGs !== null) lista.push(gs(t.costoGs));
@@ -182,22 +218,101 @@ export default function Horas() {
       .sort((a, b) => b[1] - a[1]);
   }
 
-  const porCliente = useMemo(() => agruparPor((t) => t.clienteId), [totales]);
-  const porPersona = useMemo(() => agruparPor((t) => t.usuarioId), [totales]);
+  const porCliente = useMemo(() => agruparPor((t) => t.clienteId), [totalesVisibles]);
+  const porPersona = useMemo(() => agruparPor((t) => t.usuarioId), [totalesVisibles]);
 
   const detalle = useMemo(
     () =>
-      [...totales].sort(
+      [...totalesVisibles].sort(
         (a, b) =>
           nombreDePersona(a.usuarioId).localeCompare(nombreDePersona(b.usuarioId), 'es') ||
           nombreDeCliente(a.clienteId).localeCompare(nombreDeCliente(b.clienteId), 'es'),
       ),
-    [totales, nombreDePersona, nombreDeCliente],
+    [totalesVisibles, nombreDePersona, nombreDeCliente],
   );
 
-  const minutosDelEquipo = totales.reduce((suma, t) => suma + t.minutos, 0);
-  const costosDelEquipo = totales.filter((t) => t.costoGs !== null).map((t) => gs(t.costoGs!));
+  const minutosDelEquipo = totalesVisibles.reduce((suma, t) => suma + t.minutos, 0);
+  const costosDelEquipo = totalesVisibles.filter((t) => t.costoGs !== null).map((t) => gs(t.costoGs!));
   const costoDelEquipo = costosDelEquipo.length > 0 ? sumar(costosDelEquipo) : null;
+
+  /**
+   * Lo mismo que muestra la pantalla con sus filtros. Las tablas del equipo van
+   * solo si la pantalla las muestra (dirección) y son totales, nunca el día a
+   * día de otra persona (regla 10).
+   *
+   * Las horas van de tres formas: el texto de la pantalla («2 h 30 min»), las
+   * horas en decimal (sumables en Excel; 2 decimales, así que 50 min = 0,83) y
+   * los minutos enteros, que son el dato guardado y no pierden nada al sumar.
+   */
+  function reporte(): Reporte {
+    if (recargando) throw new Error('Los datos todavía se están cargando.');
+    const enHoras = (minutos: number) => Math.round((minutos / 60) * 100) / 100;
+    const hojas = [
+      hoja(
+        'Mis horas',
+        [
+          { titulo: 'Día', valor: (r: RegistroDeHoras) => r.fecha.slice(0, 10), formato: 'fecha' },
+          { titulo: 'Cliente', valor: (r) => nombreDeCliente(r.clienteId) },
+          { titulo: 'Tiempo', valor: (r) => formatearMinutos(r.minutos) },
+          { titulo: 'Horas (decimal)', valor: (r) => enHoras(r.minutos) },
+          { titulo: 'Minutos', valor: (r) => r.minutos, formato: 'entero' },
+          { titulo: 'Qué hiciste', valor: (r) => r.tarea },
+        ],
+        misRegistrosVisibles,
+      ),
+    ];
+
+    if (esDireccion) {
+      hojas.push(
+        hoja(
+          'Horas por cliente',
+          [
+            { titulo: 'Cliente', valor: (f: (typeof porCliente)[number]) => nombreDeCliente(f[0]) },
+            { titulo: 'Tiempo', valor: (f) => formatearMinutos(f[1]) },
+            { titulo: 'Horas (decimal)', valor: (f) => enHoras(f[1]) },
+            { titulo: 'Minutos', valor: (f) => f[1], formato: 'entero' },
+            { titulo: 'Costo', valor: (f) => f[2], formato: 'guaranies' },
+          ],
+          porCliente,
+        ),
+        hoja(
+          'Horas por colaborador',
+          [
+            { titulo: 'Colaborador', valor: (f: (typeof porPersona)[number]) => nombreDePersona(f[0]) },
+            { titulo: 'Tiempo', valor: (f) => formatearMinutos(f[1]) },
+            { titulo: 'Horas (decimal)', valor: (f) => enHoras(f[1]) },
+            { titulo: 'Minutos', valor: (f) => f[1], formato: 'entero' },
+            { titulo: 'Costo', valor: (f) => f[2], formato: 'guaranies' },
+          ],
+          porPersona,
+        ),
+        hoja(
+          'Detalle colaborador y cliente',
+          [
+            { titulo: 'Colaborador', valor: (t: TotalDeHoras) => nombreDePersona(t.usuarioId) },
+            { titulo: 'Cliente', valor: (t) => nombreDeCliente(t.clienteId) },
+            { titulo: 'Tiempo', valor: (t) => formatearMinutos(t.minutos) },
+            { titulo: 'Horas (decimal)', valor: (t) => enHoras(t.minutos) },
+            { titulo: 'Minutos', valor: (t) => t.minutos, formato: 'entero' },
+            { titulo: 'Costo', valor: (t) => t.costoGs, formato: 'guaranies' },
+          ],
+          detalle,
+        ),
+      );
+    }
+
+    return {
+      titulo: 'Horas',
+      filtros: [
+        filtroDeClienteEnPalabras(filtroDeCliente, clientes),
+        `Período/Fechas: ${describirFiltro(filtro)}`,
+        ...(esDireccion
+          ? ['Resumen del equipo: horas autoreportadas, solo totales del período (nunca el día a día de una persona)']
+          : []),
+      ],
+      hojas,
+    };
+  }
 
   function corregir(registro: RegistroDeHoras) {
     setFormulario({
@@ -287,7 +402,19 @@ export default function Horas() {
           </p>
           <p className="mt-1 text-xs text-tinta-tenue">Mostrando: {describirFiltro(filtro)}.</p>
         </div>
-        <FiltroDeFechasSelector id="filtroHoras" valor={filtro} onCambiar={setFiltro} />
+        <div className="flex flex-wrap items-end gap-3">
+          <FiltroDeFechasSelector id="filtroHoras" valor={filtro} onCambiar={setFiltro} />
+          <FiltroDeClienteSelector
+            id="filtroDeClienteHoras"
+            clientes={clientes}
+            valor={filtroDeCliente}
+            onCambiar={setFiltroDeCliente}
+          />
+          <BotonDescargarExcel
+            reporte={reporte}
+            detalleDelNombre={nombreDelClienteFiltrado(filtroDeCliente, clientes)}
+          />
+        </div>
       </div>
 
       <Tarjeta>
@@ -373,7 +500,7 @@ export default function Horas() {
         <Indicador etiqueta="Mis horas del período" valor={formatearMinutos(minutosPropios)} tono="proceso" />
         <Indicador
           etiqueta="Días con horas cargadas"
-          valor={new Set(misRegistros.map((r) => r.fecha.slice(0, 10))).size}
+          valor={new Set(misRegistrosVisibles.map((r) => r.fecha.slice(0, 10))).size}
           tono="completo"
         />
       </section>
@@ -381,7 +508,9 @@ export default function Horas() {
       <Tarjeta>
         <EncabezadoTarjeta
           titulo="Mis horas"
-          descripcion={`${misRegistros.length} registros en el período`}
+          descripcion={`${misRegistrosVisibles.length} registros en el período${
+            filtroDeCliente === TODOS_LOS_CLIENTES ? '' : ` · cliente: ${nombreDeCliente(filtroDeCliente)}`
+          }`}
         />
         <Tabla etiqueta="Mis horas del período">
           <thead>
@@ -394,7 +523,7 @@ export default function Horas() {
             </tr>
           </thead>
           <tbody>
-            {misRegistros.map((registro) => (
+            {misRegistrosVisibles.map((registro) => (
               <tr key={registro.id}>
                 <Td className="cifra text-tinta-suave">{registro.fecha.slice(0, 10)}</Td>
                 <Td className="font-medium">{nombreDeCliente(registro.clienteId)}</Td>
@@ -412,10 +541,12 @@ export default function Horas() {
                 </Td>
               </tr>
             ))}
-            {misRegistros.length === 0 && (
+            {misRegistrosVisibles.length === 0 && (
               <tr>
                 <td colSpan={5} className="px-4 py-8 text-center text-sm text-tinta-tenue">
-                  Todavía no cargaste horas en este período.
+                  {misRegistros.length === 0
+                    ? 'Todavía no cargaste horas en este período.'
+                    : 'No cargaste horas para este cliente en este período.'}
                 </td>
               </tr>
             )}
@@ -478,7 +609,7 @@ export default function Horas() {
                   {porCliente.length === 0 && (
                     <tr>
                       <td colSpan={3} className="px-4 py-8 text-center text-sm text-tinta-tenue">
-                        Nadie cargó horas en este período.
+                        {mensajeSinHoras}
                       </td>
                     </tr>
                   )}
@@ -510,7 +641,7 @@ export default function Horas() {
                   {porPersona.length === 0 && (
                     <tr>
                       <td colSpan={3} className="px-4 py-8 text-center text-sm text-tinta-tenue">
-                        Nadie cargó horas en este período.
+                        {mensajeSinHoras}
                       </td>
                     </tr>
                   )}
@@ -545,7 +676,7 @@ export default function Horas() {
                 {detalle.length === 0 && (
                   <tr>
                     <td colSpan={4} className="px-4 py-8 text-center text-sm text-tinta-tenue">
-                      Nadie cargó horas en este período.
+                      {mensajeSinHoras}
                     </td>
                   </tr>
                 )}

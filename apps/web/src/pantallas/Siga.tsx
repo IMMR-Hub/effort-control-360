@@ -12,7 +12,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { FileUp, UploadCloud } from 'lucide-react';
 
-import { formatearGs, gs } from '@effort/core';
+import { describirFiltro, formatearGs, gs } from '@effort/core';
 
 import { Badge, Boton, CampoSelect, EncabezadoTarjeta, Indicador, Tabla, Tarjeta, Td, Th } from '../ui/Primitivos.jsx';
 import { ErrorDeApi } from '../api/cliente.js';
@@ -22,7 +22,9 @@ import {
   importarArchivoSiga,
   listarExportaciones,
   obtenerConciliacion,
+  type ComprobanteSiga,
   type Conciliacion,
+  type DiferenciaDeMonto,
   type ExportacionSiga,
   type FormatoSiga,
   type ReporteDeImportacion,
@@ -32,6 +34,8 @@ import { useSesion } from '../contexts/SesionContext.js';
 import { periodoSchema } from '@effort/schema';
 import { FiltroDeFechasSelector, PeriodosDelRango, filtroDelMesActual, usePeriodoDelFiltro } from '../ui/FiltroDeFechas.js';
 import type { FiltroDeFechas } from '@effort/core';
+import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
+import { hoja, type Reporte } from '../ui/reporteExcel.js';
 
 const ROLES_QUE_IMPORTAN = new Set(['direccion']);
 
@@ -68,6 +72,21 @@ const TONO_ESTADO_REVISION: Record<string, 'proceso' | 'parcial' | 'completo' | 
 
 function mostrarGs(importe: string): string {
   return formatearGs(gs(importe));
+}
+
+/** Día (`AAAA-MM-DD`) y hora de una fecha con hora, en Paraguay: lo que la pantalla muestra junto, separado para que Excel pueda ordenar por día. */
+function diaYHoraEnParaguay(iso: string): { readonly dia: string; readonly hora: string } {
+  const momento = new Date(iso);
+  return {
+    // `en-CA` da exactamente AAAA-MM-DD.
+    dia: new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Asuncion' }).format(momento),
+    hora: new Intl.DateTimeFormat('es-PY', {
+      timeZone: 'America/Asuncion',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+    }).format(momento),
+  };
 }
 
 export default function Siga() {
@@ -158,6 +177,77 @@ export default function Siga() {
   const clientesActivos = useMemo(() => clientes.filter((c) => c.activo), [clientes]);
   const nombreCliente = clientes.find((c) => c.id === clienteId)?.nombre ?? '';
 
+  /** Lo mismo que muestra la pantalla para el cliente y el período elegidos. */
+  function reporteExcel(): Reporte {
+    // Al cambiar de cliente o de período, lo que hay en memoria todavía es de
+    // lo anterior: un Excel armado en ese instante tendría el nombre del
+    // cliente nuevo y las filas del viejo.
+    if (cargandoExportaciones || cargandoConciliacion) {
+      throw new Error('Los datos todavía se están cargando.');
+    }
+    const hojas = [
+      hoja(
+        'Exportaciones',
+        [
+          { titulo: 'Reporte', valor: (e: ExportacionSiga) => ETIQUETA_TIPO_REPORTE[e.tipoReporte] },
+          { titulo: 'Formato', valor: (e) => e.formato },
+          { titulo: 'Filas', valor: (e) => e.filasLeidas, formato: 'entero' },
+          { titulo: 'Estado', valor: (e) => e.estadoRevision },
+          { titulo: 'Importada el', valor: (e) => diaYHoraEnParaguay(e.importadaEn).dia, formato: 'fecha' },
+          { titulo: 'Hora (Paraguay)', valor: (e) => diaYHoraEnParaguay(e.importadaEn).hora },
+        ],
+        exportaciones,
+      ),
+    ];
+
+    // Sin conciliación (todavía sin cliente elegido) la pantalla no muestra
+    // indicadores ni listas: el reporte tampoco.
+    if (conciliacion) {
+      const columnasDeComprobante = [
+        { titulo: 'RUC del emisor', valor: (c: ComprobanteSiga) => c.rucEmisor },
+        { titulo: 'Timbrado', valor: (c: ComprobanteSiga) => c.timbrado },
+        { titulo: 'Comprobante', valor: (c: ComprobanteSiga) => c.numeroComprobante },
+        { titulo: 'Total', valor: (c: ComprobanteSiga) => c.total, formato: 'guaranies' as const },
+      ];
+      hojas.push(
+        hoja(
+          'Resumen de la conciliación',
+          [
+            { titulo: 'Recibidos', valor: (c: Conciliacion) => c.totalRecibidos, formato: 'entero' },
+            { titulo: 'En SIGA', valor: (c) => c.totalEnSiga, formato: 'entero' },
+            { titulo: 'Coincidentes', valor: (c) => c.coincidentes, formato: 'entero' },
+            { titulo: 'Sin identificación', valor: (c) => c.sinIdentificacion, formato: 'entero' },
+            { titulo: 'Conciliado', valor: (c) => (c.sinDatos ? 'Sin datos' : c.conciliado ? 'Sí' : 'No') },
+            { titulo: 'Magnitud de las diferencias', valor: (c) => c.magnitudDeLasDiferencias, formato: 'guaranies' },
+          ],
+          [conciliacion],
+        ),
+        hoja('Falta cargar en SIGA', columnasDeComprobante, conciliacion.faltaCargarEnSiga),
+        hoja('Sin respaldo documental', columnasDeComprobante, conciliacion.sinRespaldoDocumental),
+        hoja(
+          'Diferencias de monto',
+          [
+            { titulo: 'Comprobante', valor: (d: DiferenciaDeMonto) => d.clave },
+            { titulo: 'Recibido', valor: (d) => d.recibido, formato: 'guaranies' },
+            { titulo: 'En SIGA', valor: (d) => d.enSiga, formato: 'guaranies' },
+            { titulo: 'Diferencia', valor: (d) => d.diferencia, formato: 'guaranies' },
+          ],
+          conciliacion.diferenciasDeMonto,
+        ),
+      );
+    }
+
+    return {
+      titulo: 'SIGA / Conciliación',
+      filtros: [
+        `Cliente: ${nombreCliente || 'sin elegir'}`,
+        `Período/Fechas: ${describirFiltro(filtro)}`,
+        `Período fiscal que se muestra: ${periodo}`,
+      ],
+      hojas,
+    };
+  }
+
   function manejarArchivoElegido(evento: React.ChangeEvent<HTMLInputElement>) {
     setArchivo(evento.target.files?.[0] ?? null);
     setReporte(null);
@@ -240,6 +330,9 @@ export default function Siga() {
           <p className="mt-1 max-w-2xl text-sm text-tinta-suave">
             Qué se recibió que todavía no está cargado en SIGA, y qué hay en SIGA sin respaldo documental.
           </p>
+          <div className="mt-3">
+            <BotonDescargarExcel reporte={reporteExcel} detalleDelNombre={nombreCliente || null} />
+          </div>
         </div>
         <div className="flex gap-3">
           <CampoSelect

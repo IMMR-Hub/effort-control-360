@@ -13,7 +13,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { ShieldCheck } from 'lucide-react';
 
-import { formatearGs, gs, hoyEnParaguay, periodoATexto } from '@effort/core';
+import { describirFiltro, formatearGs, gs, hoyEnParaguay, periodoATexto } from '@effort/core';
 
 import { periodoSchema } from '@effort/schema';
 
@@ -33,6 +33,16 @@ import {
 import { useSesion } from '../contexts/SesionContext.js';
 import { FiltroDeFechasSelector, PeriodosDelRango, filtroDelMesActual, usePeriodoDelFiltro } from '../ui/FiltroDeFechas.js';
 import type { FiltroDeFechas } from '@effort/core';
+import {
+  FiltroDeClienteSelector,
+  TODOS_LOS_CLIENTES,
+  coincideConCliente,
+  filtroDeClienteEnPalabras,
+  nombreDelClienteFiltrado,
+  type FiltroDeCliente,
+} from '../ui/FiltroDeCliente.js';
+import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
+import { hoja, type Reporte } from '../ui/reporteExcel.js';
 
 const ROLES_QUE_EDITAN = new Set(['direccion']);
 const ROLES_QUE_APRUEBAN = new Set(['direccion']);
@@ -75,6 +85,12 @@ function mostrarGs(importe: string | null): string {
 
 function contarBloqueantes(inconsistencias: readonly Inconsistencia[] | null): number {
   return (inconsistencias ?? []).filter((i) => i.gravedad === 'BLOQUEANTE').length;
+}
+
+/** Una fila de «Balances por cliente»: el cliente y su balance del período, o `null` si todavía no se inició. */
+interface FilaDeBalance {
+  readonly cliente: Cliente;
+  readonly balance: Balance | null;
 }
 
 interface FormularioBalance {
@@ -146,6 +162,7 @@ export default function Balances() {
   const [clientes, setClientes] = useState<readonly Cliente[]>([]);
   const [balances, setBalances] = useState<readonly Balance[]>([]);
 
+  const [filtroDeCliente, setFiltroDeCliente] = useState<FiltroDeCliente>(TODOS_LOS_CLIENTES);
   const [clienteSeleccionado, setClienteSeleccionado] = useState<string | null>(null);
   const [balanceSeleccionado, setBalanceSeleccionado] = useState<Balance | null>(null);
   const [revisionPrevia, setRevisionPrevia] = useState<RevisionPrevia | null>(null);
@@ -183,21 +200,74 @@ export default function Balances() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [periodo]);
 
-  const filas = useMemo(
+  // Tabla, indicadores y Excel cuentan lo mismo: los clientes activos que deja pasar el filtro.
+  const filas: readonly FilaDeBalance[] = useMemo(
     () =>
       clientes
         .filter((c) => c.activo)
+        .filter((c) => coincideConCliente(c.id, filtroDeCliente))
         .map((cliente) => ({
           cliente,
           balance: balances.find((b) => b.clienteId === cliente.id) ?? null,
         }))
         .sort((a, b) => a.cliente.nombre.localeCompare(b.cliente.nombre, 'es')),
-    [clientes, balances],
+    [clientes, balances, filtroDeCliente],
   );
+
+  // El mismo texto encabeza la tabla y la línea de filtros del Excel.
+  const descripcionDelPeriodo =
+    modoBalance === 'ejercicio'
+      ? `Ejercicio ${ejercicio} — balance al cierre (período ${periodo})`
+      : `Período ${periodo}`;
+
+  /** Lo mismo que muestra «Balances por cliente», con el cliente y el período elegidos. */
+  function reporte(): Reporte {
+    return {
+      titulo: 'Balances',
+      filtros: [
+        filtroDeClienteEnPalabras(filtroDeCliente, clientes),
+        modoBalance === 'ejercicio'
+          ? descripcionDelPeriodo
+          : `${descripcionDelPeriodo}${filtro.tipo === 'mes' ? '' : ` (rango elegido: ${describirFiltro(filtro)})`}`,
+      ],
+      hojas: [
+        hoja(
+          'Balances por cliente',
+          [
+            { titulo: 'Cliente', valor: (f: FilaDeBalance) => f.cliente.nombre },
+            { titulo: 'Estado', valor: (f) => (f.balance ? ETIQUETA_ESTADO[f.balance.estado] : 'Sin iniciar') },
+            { titulo: 'Activo', valor: (f) => f.balance?.activo ?? null, formato: 'guaranies' },
+            { titulo: 'Pasivo', valor: (f) => f.balance?.pasivo ?? null, formato: 'guaranies' },
+            { titulo: 'Patrimonio neto', valor: (f) => f.balance?.patrimonioNeto ?? null, formato: 'guaranies' },
+            { titulo: 'Resultado', valor: (f) => f.balance?.resultadoEjercicio ?? null, formato: 'guaranies' },
+            {
+              titulo: 'Bloqueantes',
+              valor: (f) => (f.balance ? contarBloqueantes(f.balance.inconsistencias) : null),
+              formato: 'entero',
+            },
+          ],
+          filas,
+        ),
+      ],
+    };
+  }
 
   const aprobados = filas.filter((f) => f.balance?.estado === 'APROBADO').length;
   const listosParaRevision = filas.filter((f) => f.balance?.estado === 'LISTO_PARA_REVISION').length;
   const conBloqueantes = filas.filter((f) => contarBloqueantes(f.balance?.inconsistencias ?? null) > 0).length;
+
+  function cambiarFiltroDeCliente(nuevo: FiltroDeCliente) {
+    setFiltroDeCliente(nuevo);
+    // El panel de abajo es del cliente que se tocó en la tabla: si el filtro lo
+    // deja afuera, se cierra, para no seguir editando algo que ya no se ve.
+    if (clienteSeleccionado !== null && !coincideConCliente(clienteSeleccionado, nuevo)) {
+      setClienteSeleccionado(null);
+      setBalanceSeleccionado(null);
+      setRevisionPrevia(null);
+      setFormulario(FORMULARIO_VACIO);
+      setErrorPanel(null);
+    }
+  }
 
   function seleccionarFila(clienteId: string) {
     setClienteSeleccionado(clienteId);
@@ -290,6 +360,15 @@ export default function Balances() {
             El sistema prepara la revisión y arma el checklist. Aprobar es un acto humano: lo hace una
             persona identificada, nunca el sistema.
           </p>
+          <div className="mt-3 flex flex-wrap items-end gap-3">
+            <FiltroDeClienteSelector
+              id="filtroDeClienteBalances"
+              clientes={clientes}
+              valor={filtroDeCliente}
+              onCambiar={cambiarFiltroDeCliente}
+            />
+            <BotonDescargarExcel reporte={reporte} detalleDelNombre={nombreDelClienteFiltrado(filtroDeCliente, clientes)} />
+          </div>
         </div>
 <div className="flex flex-col gap-2">
             <CampoSelect
@@ -333,11 +412,9 @@ export default function Balances() {
       <Tarjeta>
         <EncabezadoTarjeta
           titulo="Balances por cliente"
-          descripcion={
-            modoBalance === 'ejercicio'
-              ? `Ejercicio ${ejercicio} — balance al cierre (período ${periodo})`
-              : `Período ${periodo}`
-          }
+          descripcion={`${descripcionDelPeriodo}${
+            filtroDeCliente === TODOS_LOS_CLIENTES ? '' : ` · cliente: ${nombreDelClienteFiltrado(filtroDeCliente, clientes)}`
+          }`}
         />
         <Tabla etiqueta="Balances por cliente">
           <thead>
@@ -385,7 +462,9 @@ export default function Balances() {
             {filas.length === 0 && (
               <tr>
                 <td colSpan={7} className="px-4 py-8 text-center text-sm text-tinta-tenue">
-                  No hay clientes activos.
+                  {filtroDeCliente === TODOS_LOS_CLIENTES
+                    ? 'No hay clientes activos.'
+                    : 'Este cliente no está entre los clientes activos.'}
                 </td>
               </tr>
             )}

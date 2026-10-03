@@ -18,6 +18,19 @@ import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { crearFetchMock, respuestaJson } from './ayuda-fetch-mock.js';
+import type { HojaDeReporte, Reporte } from '../src/ui/reporteExcel.js';
+
+// La descarga real necesita un navegador; acá se mira QUÉ se iba a descargar.
+const { descargarReporte } = vi.hoisted(() => ({ descargarReporte: vi.fn(async () => {}) }));
+vi.mock('../src/ui/reporteExcel.js', async (original) => ({
+  ...(await original<typeof import('../src/ui/reporteExcel.js')>()),
+  descargarReporte,
+}));
+
+/** Cada fila de la hoja como la vería Excel: los valores de sus columnas. */
+function celdas(hoja: HojaDeReporte): unknown[][] {
+  return hoja.filas.map((fila) => hoja.columnas.map((c) => c.valor(fila as never)));
+}
 
 const FUMIPRO = {
   id: 'cli-fumipro',
@@ -69,6 +82,7 @@ const HALLAZGO = {
 let mock: ReturnType<typeof crearFetchMock>;
 
 beforeEach(() => {
+  descargarReporte.mockClear();
   mock = crearFetchMock();
   vi.stubGlobal('fetch', mock.fetchMock);
 });
@@ -336,6 +350,77 @@ describe('pantalla de IVA', () => {
       expect(screen.getByText('001-001-0003')).toBeVisible();
       expect(screen.queryByText('001-001-0001')).not.toBeInTheDocument();
       expect(screen.getByText(/1 sin autofactura cargada/i)).toBeVisible();
+    });
+  });
+
+  /*
+   * Pedido de EFFORT vía Daniel (2026-10-02): cada pantalla descarga lo que está
+   * mostrando, con los filtros que tenga puestos.
+   */
+  describe('Excel (2026-10-02)', () => {
+    const inconsistencia = (id: string, grupo: string, diferencia: string) => ({
+      ...HALLAZGO, id, tipo: 'PARTES_NO_SUMAN_EL_TOTAL', riesgo: 'INCONSISTENCIA',
+      numeroComprobante: `001-001-000${id}`, grupo, diferencia,
+    });
+
+    it('descarga el IVA por período y los hallazgos del cliente elegido, con los importes como números', async () => {
+      await montar('solo_lectura', [
+        LIQUIDACION,
+        { ...LIQUIDACION, periodo: '2026-05', saldoAPagar: '0', saldoAFavor: '500000', saldoAFavorDeclarado: '480000' },
+        { ...LIQUIDACION, periodo: '2026-04', saldoAPagar: '0', saldoAFavor: '700000', saldoAFavorDeclarado: '700000' },
+      ]);
+
+      await userEvent.click(screen.getByRole('button', { name: 'Descargar Excel' }));
+
+      await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(1));
+      const [reporte, detalle] = descargarReporte.mock.calls[0] as unknown as [Reporte, string | null];
+      expect(detalle).toBe('FUMIPRO S.A.');
+      expect(reporte.titulo).toBe('IVA');
+      expect(reporte.filtros).toContain('Cliente: FUMIPRO S.A.');
+      expect(reporte.filtros).toContain('Período/Fechas: todas las fechas');
+      expect(reporte.filtros).toContain('Hallazgos: solo los de riesgo');
+      expect(reporte.hojas.map((h) => h.nombre)).toEqual(['IVA por período', 'Hallazgos']);
+      const [iva, hallazgos] = reporte.hojas as [HojaDeReporte, HojaDeReporte];
+      expect(celdas(iva)).toEqual([
+        // Período, compras, crédito, ventas, débito, a pagar, a favor, declarado, declarado vs. calculado
+        ['2026-06', 217, '15238603', 156, '20049251', '4810648', '0', 'sin declaración leída', null],
+        ['2026-05', 217, '15238603', 156, '20049251', '0', '500000', '480000', 'Difiere'],
+        ['2026-04', 217, '15238603', 156, '20049251', '0', '700000', '700000', 'Coincide'],
+      ]);
+      expect(celdas(hallazgos)).toEqual([
+        [
+          '2026-03', 'Crédito fiscal de más', null, '001-001-0000028', '10%',
+          'AGROSOL PARAGUAY SOCIEDAD ANONIMA', '12', 'Se estaría tomando crédito fiscal de más.', 'Sin revisar', null,
+        ],
+      ]);
+    });
+
+    it('los hallazgos del Excel son los que quedan a la vista con el grupo elegido', async () => {
+      await montar('direccion', [LIQUIDACION], {
+        hallazgos: [
+          inconsistencia('1', 'SIN_AUTOFACTURA', '-1500000'),
+          inconsistencia('2', 'REDONDEO', '1'),
+          inconsistencia('3', 'A_REVISAR', '250000'),
+        ],
+        resumen: {
+          total: 3, conRiesgoDeMulta: 0, enRevision: 0, aceptados: 0, ivaEnRiesgo: '0',
+          inconsistencias: { sinAutofactura: 1, redondeo: 1, aRevisar: 1 },
+        },
+      });
+      await userEvent.selectOptions(screen.getByLabelText('Comprobantes que no cierran'), 'A_REVISAR');
+
+      await userEvent.click(screen.getByRole('button', { name: 'Descargar Excel' }));
+
+      await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(1));
+      const [reporte] = descargarReporte.mock.calls[0] as unknown as [Reporte, string | null];
+      expect(reporte.filtros).toContain('Comprobantes que no cierran: A revisar');
+      const hallazgos = reporte.hojas[1] as HojaDeReporte;
+      expect(celdas(hallazgos)).toEqual([
+        [
+          '2026-03', 'El comprobante no cierra', 'A revisar', '001-001-0003', '10%',
+          'AGROSOL PARAGUAY SOCIEDAD ANONIMA', '250000', 'Se estaría tomando crédito fiscal de más.', 'Sin revisar', null,
+        ],
+      ]);
     });
   });
 });

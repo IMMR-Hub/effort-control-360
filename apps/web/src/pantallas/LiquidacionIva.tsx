@@ -47,6 +47,8 @@ import {
 } from '../api/liquidacionesIva.js';
 import { useSesion } from '../contexts/SesionContext.js';
 import { FiltroDeFechasSelector } from '../ui/FiltroDeFechas.js';
+import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
+import { hoja, type Reporte } from '../ui/reporteExcel.js';
 
 /** Mismos roles que la matriz de permisos deja calcular. */
 const ROLES_QUE_CALCULAN = new Set(['direccion']);
@@ -226,6 +228,71 @@ export default function LiquidacionIva() {
   }
 
   const cliente = clientes.find((c) => c.id === clienteId);
+  const liquidacionesVisibles = liquidaciones.filter((l) => enFiltro(l.periodo));
+
+  /** Lo mismo que muestra la pantalla para el cliente elegido, con sus filtros. */
+  function reporte(): Reporte {
+    // Al cambiar de cliente, lo que hay en memoria todavía es del anterior: un
+    // Excel armado en ese instante tendría el nombre del cliente nuevo y los
+    // importes del viejo.
+    if (cargando) throw new Error('Los datos todavía se están cargando.');
+    return {
+      titulo: 'IVA',
+      filtros: [
+        `Cliente: ${cliente?.nombre ?? 'sin elegir'}`,
+        `Período/Fechas: ${describirFiltro(filtro)}`,
+        `Hallazgos: ${soloRiesgo ? 'solo los de riesgo' : 'todos'}`,
+        `Comprobantes que no cierran: ${grupo === 'TODOS' ? 'todos' : ETIQUETA_GRUPO[grupo]}`,
+      ],
+      hojas: [
+        hoja(
+          'IVA por período',
+          [
+            { titulo: 'Período', valor: (l: LiquidacionIva) => l.periodo },
+            // En pantalla las columnas «Compras» y «Ventas» son cantidades de comprobantes, no importes.
+            { titulo: 'Compras (comprobantes)', valor: (l) => l.comprobantesCompras, formato: 'entero' },
+            { titulo: 'Crédito fiscal', valor: (l) => l.creditoFiscal, formato: 'guaranies' },
+            { titulo: 'Ventas (comprobantes)', valor: (l) => l.comprobantesVentas, formato: 'entero' },
+            { titulo: 'Débito fiscal', valor: (l) => l.debitoFiscal, formato: 'guaranies' },
+            { titulo: 'A pagar', valor: (l) => l.saldoAPagar, formato: 'guaranies' },
+            { titulo: 'A favor', valor: (l) => l.saldoAFavor, formato: 'guaranies' },
+            {
+              titulo: 'A favor (declarado DNIT)',
+              valor: (l) => l.saldoAFavorDeclarado ?? 'sin declaración leída',
+              formato: 'guaranies',
+            },
+            {
+              // La pantalla lo marca en rojo con un ícono; sin esta columna esa marca se perdería.
+              titulo: 'Declarado vs. calculado',
+              valor: (l) =>
+                l.saldoAFavorDeclarado === null
+                  ? null
+                  : l.saldoAFavorDeclarado === l.saldoAFavor
+                    ? 'Coincide'
+                    : 'Difiere',
+            },
+          ],
+          liquidacionesVisibles,
+        ),
+        hoja(
+          'Hallazgos',
+          [
+            { titulo: 'Período', valor: (h: HallazgoDeLibro) => h.periodo },
+            { titulo: 'Riesgo', valor: (h) => ETIQUETA_RIESGO[h.riesgo] ?? h.riesgo },
+            { titulo: 'Grupo', valor: (h) => (h.grupo ? ETIQUETA_GRUPO[h.grupo] : null) },
+            { titulo: 'Comprobante', valor: (h) => h.numeroComprobante },
+            { titulo: 'Tasa', valor: (h) => h.tasa },
+            { titulo: 'Contraparte', valor: (h) => h.contraparte },
+            { titulo: 'Diferencia', valor: (h) => h.diferencia, formato: 'guaranies' },
+            { titulo: 'Detalle', valor: (h) => h.detalle },
+            { titulo: 'Decisión', valor: (h) => ETIQUETA_ESTADO[h.estado] ?? h.estado },
+            { titulo: 'Motivo de la decisión', valor: (h) => h.notaDecision },
+          ],
+          hallazgosVisibles,
+        ),
+      ],
+    };
+  }
 
   return (
     <div className="space-y-4">
@@ -243,13 +310,16 @@ export default function LiquidacionIva() {
         />
 
         <div className="px-5 py-4">
-          <CampoSelect
-            etiqueta="Cliente"
-            id="cliente-iva"
-            value={clienteId}
-            onChange={(evento: { target: { value: string } }) => setClienteId(evento.target.value)}
-            opciones={clientes.map((c) => ({ valor: c.id, etiqueta: c.nombre }))}
-          />
+          <div className="flex flex-wrap items-end gap-3">
+            <CampoSelect
+              etiqueta="Cliente"
+              id="cliente-iva"
+              value={clienteId}
+              onChange={(evento: { target: { value: string } }) => setClienteId(evento.target.value)}
+              opciones={clientes.map((c) => ({ valor: c.id, etiqueta: c.nombre }))}
+            />
+            <BotonDescargarExcel reporte={reporte} detalleDelNombre={cliente?.nombre ?? null} />
+          </div>
           <div className="mt-3">
             <FiltroDeFechasSelector id="filtroIva" valor={filtro} onCambiar={setFiltro} permitirTodo />
             <p className="mt-1 text-xs text-tinta-tenue">Períodos: {describirFiltro(filtro)}.</p>
@@ -473,7 +543,7 @@ export default function LiquidacionIva() {
           }
         />
 
-        {liquidaciones.filter((l) => enFiltro(l.periodo)).length === 0 ? (
+        {liquidacionesVisibles.length === 0 ? (
           <p className="px-5 py-8 text-center text-sm text-tinta-tenue">
             {cargando
               ? 'Cargando…'
@@ -494,7 +564,7 @@ export default function LiquidacionIva() {
               </tr>
             </thead>
             <tbody>
-              {liquidaciones.filter((l) => enFiltro(l.periodo)).map((l) => {
+              {liquidacionesVisibles.map((l) => {
                 // Coincide si no hay declaración leída (nada que contrastar) o
                 // si los dos números son iguales. Cualquier otra cosa es una
                 // diferencia real entre lo que EFFORT presentó y lo que este
