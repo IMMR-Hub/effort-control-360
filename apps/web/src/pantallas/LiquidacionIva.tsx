@@ -48,7 +48,7 @@ import {
 import { useSesion } from '../contexts/SesionContext.js';
 import { FiltroDeFechasSelector } from '../ui/FiltroDeFechas.js';
 import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
-import { hoja, type Reporte } from '../ui/reporteExcel.js';
+import { hoja, type Reporte, DatosTodaviaCargando } from '../ui/reporteExcel.js';
 
 /** Mismos roles que la matriz de permisos deja calcular. */
 const ROLES_QUE_CALCULAN = new Set(['direccion']);
@@ -235,7 +235,7 @@ export default function LiquidacionIva() {
     // Al cambiar de cliente, lo que hay en memoria todavía es del anterior: un
     // Excel armado en ese instante tendría el nombre del cliente nuevo y los
     // importes del viejo.
-    if (cargando) throw new Error('Los datos todavía se están cargando.');
+    if (cargando) throw new DatosTodaviaCargando();
     return {
       titulo: 'IVA',
       filtros: [

@@ -45,7 +45,7 @@ import {
   type FiltroDeCliente,
 } from '../ui/FiltroDeCliente.js';
 import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
-import { hoja, type Reporte } from '../ui/reporteExcel.js';
+import { hoja, type Reporte, DatosTodaviaCargando } from '../ui/reporteExcel.js';
 import { ErrorDeApi } from '../api/cliente.js';
 import { listarClientes, type Cliente } from '../api/clientes.js';
 import { listarUsuarios, type Usuario } from '../api/usuarios.js';
@@ -245,7 +245,7 @@ export default function Horas() {
    * los minutos enteros, que son el dato guardado y no pierden nada al sumar.
    */
   function reporte(): Reporte {
-    if (recargando) throw new Error('Los datos todavía se están cargando.');
+    if (recargando) throw new DatosTodaviaCargando();
     const enHoras = (minutos: number) => Math.round((minutos / 60) * 100) / 100;
     const hojas = [
       hoja(

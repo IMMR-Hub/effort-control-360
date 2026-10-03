@@ -10,7 +10,7 @@ import { useState } from 'react';
 import { FileSpreadsheet } from 'lucide-react';
 
 import { Boton } from './Primitivos.jsx';
-import { descargarReporte, type Reporte } from './reporteExcel.js';
+import { DatosTodaviaCargando, descargarReporte, type Reporte } from './reporteExcel.js';
 
 export function BotonDescargarExcel({
   reporte,
@@ -28,8 +28,12 @@ export function BotonDescargarExcel({
     setError(null);
     try {
       await descargarReporte(reporte(), detalleDelNombre);
-    } catch {
-      setError('No se pudo armar el Excel. Probá de nuevo.');
+    } catch (motivo) {
+      setError(
+        motivo instanceof DatosTodaviaCargando
+          ? 'La pantalla todavía está cargando: esperá un momento y volvé a apretar.'
+          : 'No se pudo armar el Excel. Probá de nuevo.',
+      );
     } finally {
       setDescargando(false);
     }

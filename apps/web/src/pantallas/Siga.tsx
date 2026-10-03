@@ -35,7 +35,7 @@ import { periodoSchema } from '@effort/schema';
 import { FiltroDeFechasSelector, PeriodosDelRango, filtroDelMesActual, usePeriodoDelFiltro } from '../ui/FiltroDeFechas.js';
 import type { FiltroDeFechas } from '@effort/core';
 import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
-import { hoja, type Reporte } from '../ui/reporteExcel.js';
+import { hoja, type Reporte, DatosTodaviaCargando } from '../ui/reporteExcel.js';
 
 const ROLES_QUE_IMPORTAN = new Set(['direccion']);
 
@@ -183,7 +183,7 @@ export default function Siga() {
     // lo anterior: un Excel armado en ese instante tendría el nombre del
     // cliente nuevo y las filas del viejo.
     if (cargandoExportaciones || cargandoConciliacion) {
-      throw new Error('Los datos todavía se están cargando.');
+      throw new DatosTodaviaCargando();
     }
     const hojas = [
       hoja(

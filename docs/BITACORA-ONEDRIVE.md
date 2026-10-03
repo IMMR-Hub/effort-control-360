@@ -363,3 +363,29 @@ En concreto:
 - **Qué NO se hizo:** no se bajó el contenido de ningún archivo, no se escribió,
   movió, renombró ni borró nada. Los secretos se leyeron del entorno del
   proceso y no se imprimieron.
+
+## 2026-10-03 — Clientes por código (001, 002…) y su peso
+
+- **Qué:** una corrida de **solo lectura** sobre el OneDrive de origen
+  (`lsosa@effort.com.py`): la consulta de cambios de Graph desde cero (41.929
+  elementos, 4 min 53 s), con nombre, tamaño, carpeta, fecha y huella. Script
+  descartable en el scratchpad de la sesión, no versionado.
+- **Por qué:** Daniel pidió saber cuántos clientes hay —cada uno con su código
+  001, 002, 003…— y cuántos GB son, para fijar con Laura y Lili cuándo ordenar el
+  OneDrive y migrar todo al sistema.
+- **Resultado:** `CLIENTES EFFORT E.A.S/CLIENTES` tiene **129 carpetas con código
+  (001 a 132; no existen 045, 070 ni 099), 121 con archivos y 8 vacías: 26.724
+  archivos, 5.120 subcarpetas, 14,02 GB, 1.068 copias idénticas dentro del mismo
+  cliente (0,82 GB)**. Última actividad: 96 desde julio de 2026, 9 en el primer
+  semestre de 2026, 5 en 2025 y 11 antes de 2025. Además hay 10 carpetas sin
+  código que no son clientes (plantillas, presupuestos, procedimientos…; 0,78 GB)
+  y 7 archivos sueltos. Toda la carpeta CLIENTES: 14,80 GB; todo el OneDrive:
+  18,94 GB. Fuera de CLIENTES hay dos copias de un escritorio viejo
+  (`Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/…`) con 26 carpetas de clientes
+  numeradas de otra forma (p. ej. BAIRES como `017_014`): no son clientes aparte.
+  El piloto son 002 FUMIPRO, 021 COPESA, 043 SIPAR, 068 ECOAGRO y DIBEC (falta
+  confirmar si el «DIBEC SOCIEDAD ANONIMA» del sistema es la 023 DIBEC
+  UNIPERSONAL o la 032 DIBEC S.A).
+- **Qué NO se hizo:** no se bajó el contenido de ningún archivo, no se escribió,
+  movió, renombró ni borró nada. Los secretos se leyeron al proceso y no se
+  imprimieron.

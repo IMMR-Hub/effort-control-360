@@ -16,6 +16,18 @@
  * Excel», no al abrir el sistema.
  */
 
+/**
+ * La pantalla todavía está trayendo datos: un Excel armado en ese instante
+ * tendría el cliente nuevo en el título y las filas del anterior. El botón lo
+ * muestra como «esperá», no como una falla.
+ */
+export class DatosTodaviaCargando extends Error {
+  constructor() {
+    super('Los datos todavía se están cargando.');
+    this.name = 'DatosTodaviaCargando';
+  }
+}
+
 /** Lo que puede ir en una celda. `null`/`undefined` = celda vacía. */
 export type ValorDeCelda = string | number | bigint | null | undefined;
 
