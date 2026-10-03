@@ -389,3 +389,24 @@ En concreto:
 - **Qué NO se hizo:** no se bajó el contenido de ningún archivo, no se escribió,
   movió, renombró ni borró nada. Los secretos se leyeron al proceso y no se
   imprimieron.
+
+## 2026-10-03 — Análisis de orden: lectura por dentro de 21.182 archivos
+
+- **Qué:** lectura **de solo lectura** del OneDrive de origen (`lsosa@`): listado completo de
+  CLIENTES (33.178 elementos) y descarga **a memoria** de 16.944 PDF (≤ 5 MB) y 4.238 Excel
+  (≤ 20 MB) para leerlos y descartarlos en el acto. No se guardó ninguna copia, no se escribió,
+  movió, renombró ni borró nada. Tardó unas 4 horas (Microsoft entrega ~4 archivos por segundo).
+  Scripts descartables en el scratchpad de la sesión, no versionados; secretos solo por entorno.
+- **Por qué:** Daniel pidió el tiempo exacto de ordenar el OneDrive (duplicados, mal ubicados,
+  mal nombrados) y de migrar a todos los clientes, sin hacer nada todavía.
+- **Resultado:** 1.068 copias idénticas sobrantes (0,82 GB, en 52 clientes); de 2.366
+  declaraciones de la DNIT leídas, 54 con problema (2,3 %): 12 de otro RUC (11 con su cliente
+  correcto identificado), 10 en mes equivocado, 32 en año equivocado; 858 archivos se pueden
+  renombrar con certeza (son declaraciones leídas); 10.518 tienen un nombre que no dice qué son
+  (3.025 imágenes, 2.853 PDF escaneados sin texto: solo una persona puede saberlo); 3.385 fuera
+  de la estructura PERIODO AAAA, el 81 % en 6 clientes (014, 085, 043, 106, 113, 111); 107 Excel
+  con vínculos a otros archivos (se rompen si se mueven); 487 carpetas vacías; 29 de 121 clientes
+  sin ningún hallazgo; 38 archivos repetidos entre clientes distintos.
+- **Qué NO se hizo:** ninguna modificación. Hacerlas exige que Daniel cambie por escrito las
+  reglas 0 y 5 de `CLAUDE.md` (que prohíben tocar y borrar el original) y una herramienta nueva
+  con registro y reversa.
