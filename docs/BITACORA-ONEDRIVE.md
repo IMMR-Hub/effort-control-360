@@ -385,7 +385,8 @@ En concreto:
   numeradas de otra forma (p. ej. BAIRES como `017_014`): no son clientes aparte.
   El piloto son 002 FUMIPRO, 021 COPESA, 043 SIPAR, 068 ECOAGRO y DIBEC (falta
   confirmar si el «DIBEC SOCIEDAD ANONIMA» del sistema es la 023 DIBEC
-  UNIPERSONAL o la 032 DIBEC S.A).
+  UNIPERSONAL o la 032 DIBEC S.A). **Resuelto el 2026-10-05 (lectura de solo lectura del id de
+  carpeta que usa el sistema): es la 032 DIBEC S.A.**
 - **Qué NO se hizo:** no se bajó el contenido de ningún archivo, no se escribió,
   movió, renombró ni borró nada. Los secretos se leyeron al proceso y no se
   imprimieron.
