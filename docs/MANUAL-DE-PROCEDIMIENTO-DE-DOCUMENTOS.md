@@ -1,6 +1,6 @@
 # Manual de procedimiento de documentos — EFFORT Consultora E.A.S.
 
-**Versión 1.1 · 6 de octubre de 2026 · Vigente para todo documento nuevo.**
+**Versión 1.2 · 6 de octubre de 2026 · Vigente para todo documento nuevo.**
 
 > Fuente del Word que se entrega a Laura y Lili (`Manual de procedimiento de documentos - EFFORT.docx`). Si una regla cambia, se actualiza este archivo, se anota en el control de cambios del final y se vuelve a generar el Word (también está en esta carpeta).
 
@@ -24,17 +24,19 @@ Diez reglas. Si solo se recuerda esto, el 90 % del orden está asegurado.
 ```
 CLIENTES/
 └─ 133 NOMBRE DEL CLIENTE SA/
-   ├─ 00 PERMANENTE/                      lo que no tiene año
-   │   ├─ SOCIETARIO/
-   │   └─ TRIBUTARIO/
-   ├─ PERIODO 2026/                       el año al que corresponden los documentos
+   ├─ 00 LEGAL Y SOCIETARIO/              todo lo legal, de cualquier año:
+   │                                      estatuto, poderes, contratos, actas, SIARA,
+   │                                      y una carpeta ASAMBLEA 2026/ por asamblea
+   ├─ 00 TRIBUTARIO/                      la identidad tributaria del cliente:
+   │                                      constancia de RUC, cédula tributaria, CCT
+   ├─ PERIODO 2026/                       TODO LO DEMÁS, por año
    │   ├─ DOCUMENTOS CONTABLES/
    │   │   ├─ 01 ENERO/ … 12 DICIEMBRE/   documentos de cada mes
    │   │   └─ CIERRE 2026/                impuestos y balances anuales
-   │   ├─ DOCUMENTOS LEGALES Y SOCIETARIOS/
    │   ├─ DOCUMENTOS LABORALES/           IPS y MTESS
-   │   └─ DOCUMENTOS VARIOS/
+   │   └─ DOCUMENTOS VARIOS/              honorarios de EFFORT, bancos, préstamos, notas
    └─ ZZ A CLASIFICAR/                    lo que no se sabe dónde va
+                                          (al lado de 00 y PERIODO: NO dentro de VARIOS)
 
 CLIENTES/ZZ A CLASIFICAR/                 además, una general: para lo que ni siquiera se sabe de qué cliente es
 ```
@@ -75,16 +77,17 @@ Ejemplos:  133 FUMIPRO SA   ·   134 MARIA GOMEZ   ·   135 AGRO DEL ESTE EAS
 
 | Carpeta | Qué va adentro |
 |---|---|
-| 00 PERMANENTE / SOCIETARIO | Lo que no cambia con el año: estatuto y sus modificaciones, poderes, registro de accionistas, contratos vigentes. |
-| 00 PERMANENTE / TRIBUTARIO | Constancia de RUC, cédula tributaria, certificado de cumplimiento tributario (CCT), timbrados y habilitaciones. |
+| 00 LEGAL Y SOCIETARIO | Todo lo legal y societario, **de cualquier año**: estatuto y sus modificaciones, poderes, registro de accionistas, contratos, actas de directorio, presentaciones por SIARA. Cada asamblea tiene su subcarpeta `ASAMBLEA AAAA` (AAAA = el año en que se celebra) con la convocatoria, el acta, la memoria, el informe del síndico y la asistencia. |
+| 00 TRIBUTARIO | La identidad tributaria del cliente: constancia de RUC, cédula tributaria, certificado de cumplimiento tributario (CCT), timbrados y habilitaciones. |
 | PERIODO AAAA | Una carpeta por año. **AAAA es el año al que corresponden los documentos**, no el año en que se guardan. El IVA de diciembre de 2025 presentado en enero de 2026 va en PERIODO 2025. |
 | DOCUMENTOS CONTABLES / 01 ENERO … 12 DICIEMBRE | Todo lo del mes: declaración de IVA, planillas RG 90, libros, boletas de pago, retenciones, extractos, facturas, notas de crédito. Se escribe siempre con dos cifras y el mes: `01 ENERO`, `09 SETIEMBRE`, `12 DICIEMBRE`. |
 | DOCUMENTOS CONTABLES / CIERRE AAAA | Lo anual del ejercicio AAAA: declaración del IRE o del IRP, estados financieros, cálculo del impuesto del cierre, boleta de pago anual. |
-| DOCUMENTOS LEGALES Y SOCIETARIOS | Lo societario del año: la carpeta `ASAMBLEA AAAA` (convocatoria, acta, memoria, informe del síndico, asistencia), actas de directorio, presentaciones por SIARA. |
 | DOCUMENTOS LABORALES | Subcarpetas `IPS` (aportes y estados de cuenta) y `MTESS` (libros laborales y planillas). |
-| DOCUMENTOS VARIOS | Lo que no es contable, legal ni laboral: la subcarpeta `FACTURACION EFFORT` (los honorarios que EFFORT le factura al cliente), pedidos de bancos, préstamos, correspondencia. |
-| ZZ A CLASIFICAR (dentro del cliente) | Es una carpeta más, al final de la lista (por eso empieza con ZZ). Lo único que puede estar fuera de su lugar: documentos de un cliente conocido de los que no se sabe el período o el tipo. Se vacía **una vez por semana** (ver 4.8). |
+| DOCUMENTOS VARIOS | Lo que es del cliente pero no es contable, laboral, legal ni tributario: la subcarpeta `FACTURACION EFFORT` (los honorarios que EFFORT le factura al cliente), pedidos de documentos de bancos, préstamos y financiaciones, presupuestos, correspondencia y notas. **Si hay duda entre CONTABLES y VARIOS:** si el documento afecta un impuesto o un balance, es contable; si no, va a VARIOS. |
+| ZZ A CLASIFICAR (dentro del cliente) | Es una carpeta más, al final de la lista (por eso empieza con ZZ). Va **al lado de `00 …` y de `PERIODO`, nunca dentro de DOCUMENTOS VARIOS**. Lo único que puede estar fuera de su lugar: documentos de un cliente conocido de los que no se sabe el período o el tipo. Se vacía **una vez por semana** (ver 4.8). |
 | CLIENTES / ZZ A CLASIFICAR (general) | Una única carpeta, al lado de las carpetas de los clientes, para documentos de los que **no se sabe ni de qué cliente son**. También se vacía cada semana. |
+
+> **Cómo decidir, en dos preguntas.** 1) ¿Es legal o societario, o es la identificación tributaria del cliente (RUC, CCT)? → va **arriba**, en `00 LEGAL Y SOCIETARIO` o `00 TRIBUTARIO`, sin año. 2) ¿Cualquier otra cosa? → va **dentro del `PERIODO`** del año que corresponde.
 
 ### 2.3 Subcarpetas dentro de un mes: solo en estos tres casos
 
@@ -92,7 +95,7 @@ Ejemplos:  133 FUMIPRO SA   ·   134 MARIA GOMEZ   ·   135 AGRO DEL ESTE EAS
 - `IMPUTACION MASIVA`: los archivos de imputación masiva y los zip del SET, tal como los entrega el sistema. **Estos no se renombran.**
 - No se crean otras subcarpetas dentro de un mes. Si parece hacer falta una, se consulta primero con Laura o Lili.
 
-> Las carpetas se crean cuando hacen falta, no por adelantado. La carpeta `PERIODO AAAA` y sus cuatro carpetas se crean al empezar el año (o al dar de alta al cliente); la carpeta de cada mes, cuando llega el primer documento de ese mes.
+> Las carpetas se crean cuando hacen falta, no por adelantado. La carpeta `PERIODO AAAA` y sus tres carpetas se crean al empezar el año (o al dar de alta al cliente); la carpeta de cada mes, cuando llega el primer documento de ese mes.
 
 ## 3. Cómo se nombra un archivo
 
@@ -168,17 +171,17 @@ Los documentos laborales (IPS, MTESS) y otros que no tienen un tipo propio en el
 | Cálculo del impuesto del cierre | `CALCULO IRE AAAA CLIENTE.xlsx` · `CALCULO IRP AAAA CLIENTE.xlsx` |
 | Boleta de pago del IRE | `BOLETA DE PAGO IRE AAAA CLIENTE.pdf` |
 
-### Documentos legales, laborales y varios
+### Documentos legales, tributarios, laborales y varios
 
 | Documento | Dónde y nombre exacto |
 |---|---|
-| Estatuto social | 00 PERMANENTE / SOCIETARIO → `ESTATUTO SOCIAL CLIENTE.pdf`. Una modificación: `ESTATUTO MODIFICACION AAAA CLIENTE.pdf`. |
-| Poder | 00 PERMANENTE / SOCIETARIO → `PODER APODERADO AAAA CLIENTE.pdf` |
-| Contrato | 00 PERMANENTE / SOCIETARIO → `CONTRATO DETALLE AAAA CLIENTE.pdf` |
-| Constancia de RUC, cédula tributaria | 00 PERMANENTE / TRIBUTARIO → `CONSTANCIA RUC AAAA CLIENTE.pdf` · `CEDULA TRIBUTARIA AAAA CLIENTE.pdf` |
-| Certificado de cumplimiento tributario | 00 PERMANENTE / TRIBUTARIO → `CCT MMAAAA CLIENTE.pdf` (mes y año de emisión). Cada renovación es un archivo nuevo; no se pisa el anterior. |
-| Asamblea | DOCUMENTOS LEGALES Y SOCIETARIOS / ASAMBLEA AAAA → `CONVOCATORIA ASAMBLEA AAAA CLIENTE.pdf` · `ACTA DE ASAMBLEA AAAA CLIENTE.pdf` · `MEMORIA DEL DIRECTORIO AAAA CLIENTE.pdf` · `INFORME DEL SINDICO AAAA CLIENTE.pdf` |
-| Acta de directorio | DOCUMENTOS LEGALES Y SOCIETARIOS → `ACTA DE DIRECTORIO ASUNTO AAAA CLIENTE.pdf` |
+| Estatuto social | 00 LEGAL Y SOCIETARIO → `ESTATUTO SOCIAL CLIENTE.pdf`. Una modificación: `ESTATUTO MODIFICACION AAAA CLIENTE.pdf`. |
+| Poder | 00 LEGAL Y SOCIETARIO → `PODER APODERADO AAAA CLIENTE.pdf` |
+| Contrato | 00 LEGAL Y SOCIETARIO → `CONTRATO DETALLE AAAA CLIENTE.pdf` |
+| Constancia de RUC, cédula tributaria | 00 TRIBUTARIO → `CONSTANCIA RUC AAAA CLIENTE.pdf` · `CEDULA TRIBUTARIA AAAA CLIENTE.pdf` |
+| Certificado de cumplimiento tributario | 00 TRIBUTARIO → `CCT MMAAAA CLIENTE.pdf` (mes y año de emisión). Cada renovación es un archivo nuevo; no se pisa el anterior. |
+| Asamblea | 00 LEGAL Y SOCIETARIO / ASAMBLEA AAAA → `CONVOCATORIA ASAMBLEA AAAA CLIENTE.pdf` · `ACTA DE ASAMBLEA AAAA CLIENTE.pdf` · `MEMORIA DEL DIRECTORIO AAAA CLIENTE.pdf` · `INFORME DEL SINDICO AAAA CLIENTE.pdf` |
+| Acta de directorio | 00 LEGAL Y SOCIETARIO → `ACTA DE DIRECTORIO ASUNTO AAAA CLIENTE.pdf` |
 | IPS | DOCUMENTOS LABORALES / IPS → `IPS APORTES MMAAAA CLIENTE.pdf` · `IPS ESTADO DE CUENTA MMAAAA CLIENTE.pdf` |
 | MTESS | DOCUMENTOS LABORALES / MTESS → `MTESS LIBRO LABORAL AAAA CLIENTE.pdf` · `MTESS LIBRO LABORAL MENSUAL MMAAAA CLIENTE.pdf` |
 | Honorarios que EFFORT factura al cliente | DOCUMENTOS VARIOS / FACTURACION EFFORT → `FACTURA COMPRA EFFORT NRO MMAAAA CLIENTE.pdf` (para el cliente es una compra). |
@@ -225,7 +228,7 @@ Si algo no aparece, no se vuelve a guardar el archivo: se revisa el nombre, la c
 3. Presentar la declaración del IRE (Form. 500) o del IRP y bajar su PDF de Marangatú: `DDJJ IRE AAAA CLIENTE.pdf`.
 4. Presentar los estados financieros ante la DNIT (Form. 158) y guardar la constancia: `EEFF AAAA PRESENTADO FORM 158 CLIENTE.pdf`.
 5. Guardar la boleta de pago: `BOLETA DE PAGO IRE AAAA CLIENTE.pdf`.
-6. Si hay asamblea: todo en `DOCUMENTOS LEGALES Y SOCIETARIOS / ASAMBLEA AAAA`.
+6. Si hay asamblea: todo en `00 LEGAL Y SOCIETARIO / ASAMBLEA AAAA` (AAAA = el año en que se celebra la asamblea, que aprueba el ejercicio anterior).
 7. Comprobar en **Vencimientos** que el IRE y los estados financieros figuran presentados.
 
 > Los estados financieros en Excel con macros (.xlsm) suelen tener vínculos a otros archivos. Antes de mover o renombrar un archivo de un balance, abrir el balance y comprobar que sigue funcionando (4.7).
@@ -234,8 +237,8 @@ Si algo no aparece, no se vuelve a guardar el archivo: se revisa el nombre, la c
 
 1. Asignar el próximo código libre (hoy, **133**) y anotarlo en la lista de clientes.
 2. Crear la carpeta `NNN NOMBRE` dentro de `CLIENTES` (2.1).
-3. Dentro, crear: `00 PERMANENTE` (con `SOCIETARIO` y `TRIBUTARIO`), `PERIODO AAAA` del año en curso (con `DOCUMENTOS CONTABLES`, `DOCUMENTOS LEGALES Y SOCIETARIOS`, `DOCUMENTOS LABORALES` y `DOCUMENTOS VARIOS`) y `ZZ A CLASIFICAR`.
-4. Guardar la constancia de RUC en `00 PERMANENTE / TRIBUTARIO`.
+3. Dentro, crear: `00 LEGAL Y SOCIETARIO`, `00 TRIBUTARIO`, `PERIODO AAAA` del año en curso (con `DOCUMENTOS CONTABLES`, `DOCUMENTOS LABORALES` y `DOCUMENTOS VARIOS`) y `ZZ A CLASIFICAR`.
+4. Guardar la constancia de RUC en `00 TRIBUTARIO`.
 5. Dar de alta al cliente en el sistema: pantalla **Clientes → Nuevo cliente** (nombre, RUC completo con dígito verificador, tipo de persona, régimen tributario).
 6. **Avisar a Daniel** con el código, el RUC, el régimen y las obligaciones del cliente (IVA, RG 90, IRE, estados financieros) para que conecte la carpeta y las obligaciones al sistema. Hoy esto no se puede hacer desde la pantalla.
 
@@ -288,7 +291,7 @@ Algunos Excel (sobre todo los balances `EEFF …xlsm` y las liquidaciones del IR
 
 ### 5.3 Cada año
 
-- En diciembre: crear `PERIODO AAAA` del año siguiente para cada cliente, con sus cuatro carpetas.
+- En diciembre: crear `PERIODO AAAA` del año siguiente para cada cliente, con sus tres carpetas.
 - Cierre del ejercicio: todo en `CIERRE AAAA` (4.4).
 - Revisar que los clientes dados de baja figuran como Inactivos en el sistema.
 
@@ -335,13 +338,14 @@ Propuesta de reparto; Laura y Lili la ajustan a cómo se organiza el equipo.
 
 ```
 133 AGRO DEL ESTE SA/
-├─ 00 PERMANENTE/
-│   ├─ SOCIETARIO/
-│   │   ├─ ESTATUTO SOCIAL AGRO DEL ESTE SA.pdf
-│   │   └─ PODER JUAN PEREZ 2024 AGRO DEL ESTE SA.pdf
-│   └─ TRIBUTARIO/
-│       ├─ CONSTANCIA RUC 2026 AGRO DEL ESTE SA.pdf
-│       └─ CCT 052026 AGRO DEL ESTE SA.pdf
+├─ 00 LEGAL Y SOCIETARIO/
+│   ├─ ESTATUTO SOCIAL AGRO DEL ESTE SA.pdf
+│   ├─ PODER JUAN PEREZ 2024 AGRO DEL ESTE SA.pdf
+│   └─ ASAMBLEA 2026/
+│       └─ ACTA DE ASAMBLEA 2026 AGRO DEL ESTE SA.pdf
+├─ 00 TRIBUTARIO/
+│   ├─ CONSTANCIA RUC 2026 AGRO DEL ESTE SA.pdf
+│   └─ CCT 052026 AGRO DEL ESTE SA.pdf
 ├─ PERIODO 2026/
 │   ├─ DOCUMENTOS CONTABLES/
 │   │   ├─ 03 MARZO/
@@ -356,11 +360,9 @@ Propuesta de reparto; Laura y Lili la ajustan a cómo se organiza el equipo.
 │   │   │       └─ NOTA DE CREDITO 001-001-0000245 AGRO DEL ESTE SA.pdf
 │   │   ├─ 04 ABRIL/ …
 │   │   └─ CIERRE 2026/ …
-│   ├─ DOCUMENTOS LEGALES Y SOCIETARIOS/
-│   │   └─ ASAMBLEA 2026/
-│   │       └─ ACTA DE ASAMBLEA 2026 AGRO DEL ESTE SA.pdf
 │   ├─ DOCUMENTOS LABORALES/
-│   │   ├─ IPS/    └─ MTESS/
+│   │   ├─ IPS/
+│   │   └─ MTESS/
 │   └─ DOCUMENTOS VARIOS/
 │       └─ FACTURACION EFFORT/
 │           └─ FACTURA COMPRA EFFORT 783 032026 AGRO DEL ESTE SA.pdf
@@ -373,5 +375,6 @@ Este manual se actualiza **solo** con la aprobación de Laura, Lili o Daniel. Ca
 
 | Versión | Fecha | Cambio |
 |---|---|---|
+| 1.2 | 6 de octubre de 2026 | Se unifican las dos carpetas societarias: `00 PERMANENTE / SOCIETARIO` y `DOCUMENTOS LEGALES Y SOCIETARIOS` se reemplazan por una sola, `00 LEGAL Y SOCIETARIO`, y `00 PERMANENTE / TRIBUTARIO` pasa a `00 TRIBUTARIO`. Regla única: lo legal y la identidad tributaria van arriba, sin año; todo lo demás, dentro de su período. Se aclara qué va en DOCUMENTOS VARIOS y que ZZ A CLASIFICAR está al lado de `00` y de `PERIODO`, no dentro de VARIOS. |
 | 1.1 | 6 de octubre de 2026 | La carpeta de dudas pasa de «99 A CLASIFICAR» a «ZZ A CLASIFICAR»: «99» se confundía con un código de cliente (el 099). Se agrega la carpeta general `CLIENTES / ZZ A CLASIFICAR` para documentos de los que no se sabe ni de qué cliente son. |
 | 1.0 | 6 de octubre de 2026 | Primera versión. Amplía la «Guía de nombres de archivos y carpetas» del 1 de octubre de 2026, que sigue vigente: este manual agrega la estructura de carpetas, el principio del período y los procedimientos. |
