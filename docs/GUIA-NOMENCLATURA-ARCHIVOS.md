@@ -1,5 +1,7 @@
 # Guía de nombres de archivos y carpetas — VIGENTE
 
+> **Ampliada el 2026-10-06 por `docs/MANUAL-DE-PROCEDIMIENTO-DE-DOCUMENTOS.md`** (estructura de carpetas, principio del período y procedimientos paso a paso). Esta guía sigue vigente; el manual la completa. En un punto el manual es más estricto: el nombre del cliente va **siempre** al final del nombre del archivo, no solo «opcional».
+
 **Estado:** vigente desde el 2026-10-01. Propuesta el 2026-09-14, aprobada por
 Daniel el 2026-09-22 y confirmada como «la que deben usar de ahora en más» el
 2026-10-01. Vale para los archivos **nuevos**: los viejos siguen funcionando
