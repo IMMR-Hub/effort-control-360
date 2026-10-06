@@ -1,6 +1,6 @@
 # Manual de procedimiento de documentos — EFFORT Consultora E.A.S.
 
-**Versión 1.0 · 6 de octubre de 2026 · Vigente para todo documento nuevo.**
+**Versión 1.1 · 6 de octubre de 2026 · Vigente para todo documento nuevo.**
 
 > Fuente del Word que se entrega a Laura y Lili (`Manual de procedimiento de documentos - EFFORT.docx`). Si una regla cambia, se actualiza este archivo, se anota en el control de cambios del final y se vuelve a generar el Word (también está en esta carpeta).
 
@@ -15,7 +15,7 @@ Diez reglas. Si solo se recuerda esto, el 90 % del orden está asegurado.
 5. **Las planillas RG 90 se guardan siempre como .xlsx**, nunca .xls.
 6. **Una planilla corregida empieza con CORRECCION.** Una versión nueva de cualquier otro documento se guarda con el MISMO nombre en el MISMO lugar (OneDrive guarda el historial).
 7. **Prohibido en un nombre:** copia, (1), nuevo, final, ok, IMG, WhatsApp, scan.
-8. **Nada se borra.** Ante una duda, el archivo va a 99 A CLASIFICAR y se avisa.
+8. **Nada se borra.** Si hay una duda, el archivo se guarda en la carpeta `ZZ A CLASIFICAR` del cliente (una carpeta como cualquier otra, dentro de la carpeta de cada cliente) y se avisa.
 9. **Todo se guarda en la carpeta del cliente en OneDrive.** Nada se queda en el escritorio, en Descargas, en el correo ni en un chat.
 10. **Después de guardar, mirar la pantalla Faltantes** del sistema: si algo falta o no tiene comprobante, ahí aparece.
 
@@ -34,7 +34,9 @@ CLIENTES/
    │   ├─ DOCUMENTOS LEGALES Y SOCIETARIOS/
    │   ├─ DOCUMENTOS LABORALES/           IPS y MTESS
    │   └─ DOCUMENTOS VARIOS/
-   └─ 99 A CLASIFICAR/                    lo que no se sabe dónde va
+   └─ ZZ A CLASIFICAR/                    lo que no se sabe dónde va
+
+CLIENTES/ZZ A CLASIFICAR/                 además, una general: para lo que ni siquiera se sabe de qué cliente es
 ```
 
 ## 1. Para qué sirve este manual
@@ -81,7 +83,8 @@ Ejemplos:  133 FUMIPRO SA   ·   134 MARIA GOMEZ   ·   135 AGRO DEL ESTE EAS
 | DOCUMENTOS LEGALES Y SOCIETARIOS | Lo societario del año: la carpeta `ASAMBLEA AAAA` (convocatoria, acta, memoria, informe del síndico, asistencia), actas de directorio, presentaciones por SIARA. |
 | DOCUMENTOS LABORALES | Subcarpetas `IPS` (aportes y estados de cuenta) y `MTESS` (libros laborales y planillas). |
 | DOCUMENTOS VARIOS | Lo que no es contable, legal ni laboral: la subcarpeta `FACTURACION EFFORT` (los honorarios que EFFORT le factura al cliente), pedidos de bancos, préstamos, correspondencia. |
-| 99 A CLASIFICAR | Lo único que puede estar fuera de su lugar: documentos de los que no se sabe a qué cliente, período o tipo pertenecen. Se vacía **una vez por semana** (ver 4.8). |
+| ZZ A CLASIFICAR (dentro del cliente) | Es una carpeta más, al final de la lista (por eso empieza con ZZ). Lo único que puede estar fuera de su lugar: documentos de un cliente conocido de los que no se sabe el período o el tipo. Se vacía **una vez por semana** (ver 4.8). |
+| CLIENTES / ZZ A CLASIFICAR (general) | Una única carpeta, al lado de las carpetas de los clientes, para documentos de los que **no se sabe ni de qué cliente son**. También se vacía cada semana. |
 
 ### 2.3 Subcarpetas dentro de un mes: solo en estos tres casos
 
@@ -179,7 +182,7 @@ Los documentos laborales (IPS, MTESS) y otros que no tienen un tipo propio en el
 | IPS | DOCUMENTOS LABORALES / IPS → `IPS APORTES MMAAAA CLIENTE.pdf` · `IPS ESTADO DE CUENTA MMAAAA CLIENTE.pdf` |
 | MTESS | DOCUMENTOS LABORALES / MTESS → `MTESS LIBRO LABORAL AAAA CLIENTE.pdf` · `MTESS LIBRO LABORAL MENSUAL MMAAAA CLIENTE.pdf` |
 | Honorarios que EFFORT factura al cliente | DOCUMENTOS VARIOS / FACTURACION EFFORT → `FACTURA COMPRA EFFORT NRO MMAAAA CLIENTE.pdf` (para el cliente es una compra). |
-| Cualquier otro documento | Se aplica la fórmula: `QUÉ ES DETALLE PERÍODO CLIENTE`. Si no se sabe dónde va, a 99 A CLASIFICAR. |
+| Cualquier otro documento | Se aplica la fórmula: `QUÉ ES DETALLE PERÍODO CLIENTE`. Si no se sabe dónde va, a ZZ A CLASIFICAR. |
 
 ### 3.4 Fotos, capturas y escaneos
 
@@ -193,7 +196,7 @@ Una foto o una captura de pantalla **no es un documento válido** para guardar: 
 2. Si es una foto, una captura o un escaneo y existe el original, **pedir o bajar el original** (3.4).
 3. Ponerle el nombre correcto **antes de guardarlo**, mientras todavía está en Descargas o en el chat (3.3).
 4. Guardarlo en la carpeta que indica la tabla de 3.3, dentro del cliente y del año correctos. Si falta la carpeta del mes, se crea (con el formato `MM MES`).
-5. Si no se sabe a qué cliente, período o tipo pertenece: guardarlo en `99 A CLASIFICAR` del cliente (o en el que más probable parezca) y avisar al responsable.
+5. Si no se sabe a qué período o tipo pertenece: guardarlo en la carpeta `ZZ A CLASIFICAR` del cliente y avisar al responsable. Si ni siquiera se sabe de qué cliente es: guardarlo en `CLIENTES / ZZ A CLASIFICAR` (la general) y avisar.
 6. Comprobar que no haya ya una copia: abrir la carpeta y mirar. Si la hay y es idéntica, no se guarda otra.
 7. Borrar el archivo del escritorio, de Descargas o del chat. **Solo de ahí, nunca de OneDrive.**
 
@@ -231,7 +234,7 @@ Si algo no aparece, no se vuelve a guardar el archivo: se revisa el nombre, la c
 
 1. Asignar el próximo código libre (hoy, **133**) y anotarlo en la lista de clientes.
 2. Crear la carpeta `NNN NOMBRE` dentro de `CLIENTES` (2.1).
-3. Dentro, crear: `00 PERMANENTE` (con `SOCIETARIO` y `TRIBUTARIO`), `PERIODO AAAA` del año en curso (con `DOCUMENTOS CONTABLES`, `DOCUMENTOS LEGALES Y SOCIETARIOS`, `DOCUMENTOS LABORALES` y `DOCUMENTOS VARIOS`) y `99 A CLASIFICAR`.
+3. Dentro, crear: `00 PERMANENTE` (con `SOCIETARIO` y `TRIBUTARIO`), `PERIODO AAAA` del año en curso (con `DOCUMENTOS CONTABLES`, `DOCUMENTOS LEGALES Y SOCIETARIOS`, `DOCUMENTOS LABORALES` y `DOCUMENTOS VARIOS`) y `ZZ A CLASIFICAR`.
 4. Guardar la constancia de RUC en `00 PERMANENTE / TRIBUTARIO`.
 5. Dar de alta al cliente en el sistema: pantalla **Clientes → Nuevo cliente** (nombre, RUC completo con dígito verificador, tipo de persona, régimen tributario).
 6. **Avisar a Daniel** con el código, el RUC, el régimen y las obligaciones del cliente (IVA, RG 90, IRE, estados financieros) para que conecte la carpeta y las obligaciones al sistema. Hoy esto no se puede hacer desde la pantalla.
@@ -254,12 +257,12 @@ Algunos Excel (sobre todo los balances `EEFF …xlsm` y las liquidaciones del IR
 - Al empezar un ejercicio nuevo, copiar **el libro completo** y revisar los vínculos (Datos → Editar vínculos) antes de usarlo.
 - Guardar siempre el libro y todos sus archivos vinculados en la misma carpeta `CIERRE AAAA`.
 
-### 4.8 Rutina semanal: vaciar 99 A CLASIFICAR
+### 4.8 Rutina semanal: vaciar las carpetas ZZ A CLASIFICAR
 
-1. Una vez por semana (el viernes), la persona responsable abre `99 A CLASIFICAR` de cada cliente que tenga archivos.
+1. Una vez por semana (el viernes), la persona responsable abre la carpeta `ZZ A CLASIFICAR` general y la de cada cliente que tenga archivos.
 2. Para cada archivo: identificar qué es, de qué cliente y de qué período, **moverlo** (no copiarlo) a su lugar con su nombre correcto.
 3. Lo que no se logra identificar se consulta con quien lo guardó. **No se borra.**
-4. El objetivo es que `99 A CLASIFICAR` esté vacía cada fin de semana.
+4. El objetivo es que todas las carpetas `ZZ A CLASIFICAR` estén vacías cada fin de semana.
 
 ### 4.9 Un cliente se da de baja
 
@@ -275,12 +278,12 @@ Algunos Excel (sobre todo los balances `EEFF …xlsm` y las liquidaciones del IR
 - La RG 90 está presentada y el `TALON RG 90` guardado; las planillas en .xlsx.
 - La boleta de pago está guardada en el mes del período que paga.
 - Los extractos bancarios del mes están guardados.
-- No hay nada en `99 A CLASIFICAR`.
+- No hay nada en `ZZ A CLASIFICAR`.
 - En **Faltantes** el cliente no figura con nada pendiente; en **Vencimientos**, todo lo vencido figura presentado.
 
 ### 5.2 Cada semana
 
-- Vaciar `99 A CLASIFICAR` (4.8).
+- Vaciar `ZZ A CLASIFICAR` (4.8).
 - Mirar **Alertas** y **Vencimientos** de los clientes propios.
 
 ### 5.3 Cada año
@@ -312,7 +315,7 @@ Algunos Excel (sobre todo los balances `EEFF …xlsm` y las liquidaciones del IR
 - Nombres con `copia`, `(1)`, `nuevo`, `final`, `ok`, `actualizado`, `IMG`, `WhatsApp`, `scan`, `Documento1`.
 - Guardar una foto, una captura o un escaneo en lugar del original.
 - Mover o renombrar un archivo del que dependen otros Excel sin avisar.
-- **Borrar un archivo de OneDrive.** Ante una duda: `99 A CLASIFICAR` y aviso.
+- **Borrar un archivo de OneDrive.** Ante una duda: `ZZ A CLASIFICAR` y aviso.
 - Cambiar el nombre de la carpeta de un cliente.
 - Compartir por enlace la carpeta entera de un cliente. Se comparte solo el archivo necesario, con permiso de solo lectura.
 - Crear carpetas nuevas que no están en este manual, sin consultar.
@@ -324,7 +327,7 @@ Propuesta de reparto; Laura y Lili la ajustan a cómo se organiza el equipo.
 | Quién | Responsabilidad |
 |---|---|
 | Quien recibe o prepara el documento | Lo nombra y lo guarda en su lugar **en el momento**, siguiendo 4.1. No lo deja «para después». |
-| El responsable del cliente | El cierre mensual y anual del cliente (4.2 y 4.4), el control en el sistema y vaciar `99 A CLASIFICAR` cada semana. |
+| El responsable del cliente | El cierre mensual y anual del cliente (4.2 y 4.4), el control en el sistema y vaciar `ZZ A CLASIFICAR` cada semana. |
 | Laura y Lili | Altas y bajas de clientes, decisiones sobre dudas de este manual y **aprobación de cualquier cambio al manual**. |
 | Daniel | Conectar cada cliente nuevo y sus obligaciones al sistema, y resolver lo que el sistema no encuentra (4.6). |
 
@@ -361,7 +364,7 @@ Propuesta de reparto; Laura y Lili la ajustan a cómo se organiza el equipo.
 │   └─ DOCUMENTOS VARIOS/
 │       └─ FACTURACION EFFORT/
 │           └─ FACTURA COMPRA EFFORT 783 032026 AGRO DEL ESTE SA.pdf
-└─ 99 A CLASIFICAR/                      (vacía)
+└─ ZZ A CLASIFICAR/                      (vacía)
 ```
 
 ## 10. Control de cambios
@@ -370,4 +373,5 @@ Este manual se actualiza **solo** con la aprobación de Laura, Lili o Daniel. Ca
 
 | Versión | Fecha | Cambio |
 |---|---|---|
+| 1.1 | 6 de octubre de 2026 | La carpeta de dudas pasa de «99 A CLASIFICAR» a «ZZ A CLASIFICAR»: «99» se confundía con un código de cliente (el 099). Se agrega la carpeta general `CLIENTES / ZZ A CLASIFICAR` para documentos de los que no se sabe ni de qué cliente son. |
 | 1.0 | 6 de octubre de 2026 | Primera versión. Amplía la «Guía de nombres de archivos y carpetas» del 1 de octubre de 2026, que sigue vigente: este manual agrega la estructura de carpetas, el principio del período y los procedimientos. |
