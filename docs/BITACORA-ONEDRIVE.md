@@ -442,3 +442,11 @@ En concreto:
   GET.
 - **Para deshacerlo:** si Laura, Lili o Daniel quieren sacar el modelo, basta con borrar la carpeta
   `999 CLIENTE MUESTRA`. La borra una persona de EFFORT, no Claude.
+- **Corrección el mismo día (2026-10-07, dentro del mismo alcance autorizado: «lo único que puedes crear y tocar»
+  es el cliente 999):** Daniel vio que las carpetas de primer nivel decían «00 …» y no «999 …». Era un error de
+  diseño del Manual v1.2 (el prefijo «00» se confundía con un código de cliente). Se renombraron las 5 carpetas
+  de primer nivel de `999 CLIENTE MUESTRA`: `00 LEGAL Y SOCIETARIO` → `999 LEGAL Y SOCIETARIO`, `00 TRIBUTARIO` →
+  `999 TRIBUTARIO`, `PERIODO 2025` → `999 PERIODO 2025`, `PERIODO 2026` → `999 PERIODO 2026` y `ZZ A CLASIFICAR` →
+  `999 ZZ A CLASIFICAR`. Script aparte, solo GET y PATCH; solo renombra carpetas que están directamente dentro
+  de `999 CLIENTE MUESTRA` y figuran en una tabla fija; `conflictBehavior=fail`. Verificado: mismo contenido
+  (212 archivos y 31 subcarpetas) y `CLIENTES` sigue con 144 elementos. El manual pasó a la versión 1.3.

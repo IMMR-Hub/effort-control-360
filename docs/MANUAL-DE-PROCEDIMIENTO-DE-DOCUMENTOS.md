@@ -1,6 +1,6 @@
 # Manual de procedimiento de documentos — EFFORT Consultora E.A.S.
 
-**Versión 1.2 · 6 de octubre de 2026 · Vigente para todo documento nuevo.**
+**Versión 1.3 · 7 de octubre de 2026 · Vigente para todo documento nuevo.**
 
 > Fuente del Word que se entrega a Laura y Lili (`Manual de procedimiento de documentos - EFFORT.docx`). Si una regla cambia, se actualiza este archivo, se anota en el control de cambios del final y se vuelve a generar el Word (también está en esta carpeta).
 
@@ -10,12 +10,12 @@ Diez reglas. Si solo se recuerda esto, el 90 % del orden está asegurado.
 
 1. **Un documento, un lugar, un nombre.** Nunca dos copias del mismo archivo.
 2. **La carpeta es el período que el documento declara, no el día en que se guardó.** El IVA de marzo presentado en abril va en 03 MARZO.
-3. **El nombre dice qué es:** `QUÉ ES + PERÍODO + CLIENTE`. Período mensual MMAAAA (032026), anual AAAA (2026). Ejemplo: `DDJJ IVA 032026 FUMIPRO SA.pdf`.
+3. **El nombre dice qué es:** `QUÉ ES + PERÍODO + CLIENTE`. Período mensual MMAAAA (032026), anual AAAA (2026). Ejemplo: `DDJJ IVA 032026 FUMIPRO SA.pdf`. **Las carpetas de primer nivel llevan el código del cliente (`133 PERIODO 2026`); los archivos, no.**
 4. **La prueba de presentación se baja en PDF desde Marangatú.** Nunca una foto, una captura ni un escaneo: el sistema no los puede leer.
 5. **Las planillas RG 90 se guardan siempre como .xlsx**, nunca .xls.
 6. **Una planilla corregida empieza con CORRECCION.** Una versión nueva de cualquier otro documento se guarda con el MISMO nombre en el MISMO lugar (OneDrive guarda el historial).
 7. **Prohibido en un nombre:** copia, (1), nuevo, final, ok, IMG, WhatsApp, scan.
-8. **Nada se borra.** Si hay una duda, el archivo se guarda en la carpeta `ZZ A CLASIFICAR` del cliente (una carpeta como cualquier otra, dentro de la carpeta de cada cliente) y se avisa.
+8. **Nada se borra.** Si hay una duda, el archivo se guarda en la carpeta `NNN ZZ A CLASIFICAR` del cliente (una carpeta como cualquier otra, dentro de la carpeta de cada cliente) y se avisa.
 9. **Todo se guarda en la carpeta del cliente en OneDrive.** Nada se queda en el escritorio, en Descargas, en el correo ni en un chat.
 10. **Después de guardar, mirar la pantalla Faltantes** del sistema: si algo falta o no tiene comprobante, ahí aparece.
 
@@ -24,19 +24,21 @@ Diez reglas. Si solo se recuerda esto, el 90 % del orden está asegurado.
 ```
 CLIENTES/
 └─ 133 NOMBRE DEL CLIENTE SA/
-   ├─ 00 LEGAL Y SOCIETARIO/              todo lo legal, de cualquier año:
+   ├─ 133 LEGAL Y SOCIETARIO/             todo lo legal, de cualquier año:
    │                                      estatuto, poderes, contratos, actas, SIARA,
    │                                      y una carpeta ASAMBLEA 2026/ por asamblea
-   ├─ 00 TRIBUTARIO/                      la identidad tributaria del cliente:
+   ├─ 133 TRIBUTARIO/                     la identidad tributaria del cliente:
    │                                      constancia de RUC, cédula tributaria, CCT
-   ├─ PERIODO 2026/                       TODO LO DEMÁS, por año
+   ├─ 133 PERIODO 2026/                   TODO LO DEMÁS, por año
    │   ├─ DOCUMENTOS CONTABLES/
    │   │   ├─ 01 ENERO/ … 12 DICIEMBRE/   documentos de cada mes
    │   │   └─ CIERRE 2026/                impuestos y balances anuales
    │   ├─ DOCUMENTOS LABORALES/           IPS y MTESS
    │   └─ DOCUMENTOS VARIOS/              honorarios de EFFORT, bancos, préstamos, notas
-   └─ ZZ A CLASIFICAR/                    lo que no se sabe dónde va
-                                          (al lado de 00 y PERIODO: NO dentro de VARIOS)
+   └─ 133 ZZ A CLASIFICAR/                lo que no se sabe dónde va
+                                          (al lado de las otras tres, NO dentro de VARIOS)
+
+Las 4 carpetas de primer nivel llevan el código del cliente (133). Las de adentro, no.
 
 CLIENTES/ZZ A CLASIFICAR/                 además, una general: para lo que ni siquiera se sabe de qué cliente es
 ```
@@ -72,22 +74,25 @@ Ejemplos:  133 FUMIPRO SA   ·   134 MARIA GOMEZ   ·   135 AGRO DEL ESTE EAS
 - **Los códigos no se reutilizan.** Un cliente dado de baja conserva su código para siempre. (Hoy no existen el 045, el 070 ni el 099: se dejan vacíos.)
 - **El nombre** se escribe en mayúsculas, como figura en la constancia de RUC, sin puntos: `SA`, `SRL`, `EAS`, `SAS`.
 - **El nombre de la carpeta no se cambia nunca** una vez creada: el sistema reconoce al cliente por su carpeta.
+- **Las carpetas de primer nivel llevan el código del cliente al principio.** Son las que están directamente dentro de la carpeta del cliente: `NNN LEGAL Y SOCIETARIO`, `NNN TRIBUTARIO`, `NNN PERIODO AAAA` y `NNN ZZ A CLASIFICAR`. Así, una carpeta que se busca, se comparte o se descarga sola sigue diciendo de qué cliente es. **En el resto de este manual, NNN es el código del cliente** (para el cliente 133: `133 PERIODO 2026`).
+- **Las carpetas de adentro no llevan código** (`DOCUMENTOS CONTABLES`, `03 MARZO`, `ASAMBLEA 2026`…): siempre se llega a ellas por una de primer nivel.
+- **Los archivos tampoco llevan el código al principio.** Empiezan con lo que son —el sistema lo necesita: una planilla corregida solo se reconoce si el nombre empieza con `CORRECCION`— y terminan con el nombre del cliente (ver 3.1).
 
 ### 2.2 Qué hay dentro, carpeta por carpeta
 
 | Carpeta | Qué va adentro |
 |---|---|
-| 00 LEGAL Y SOCIETARIO | Todo lo legal y societario, **de cualquier año**: estatuto y sus modificaciones, poderes, registro de accionistas, contratos, actas de directorio, presentaciones por SIARA. Cada asamblea tiene su subcarpeta `ASAMBLEA AAAA` (AAAA = el año en que se celebra) con la convocatoria, el acta, la memoria, el informe del síndico y la asistencia. |
-| 00 TRIBUTARIO | La identidad tributaria del cliente: constancia de RUC, cédula tributaria, certificado de cumplimiento tributario (CCT), timbrados y habilitaciones. |
-| PERIODO AAAA | Una carpeta por año. **AAAA es el año al que corresponden los documentos**, no el año en que se guardan. El IVA de diciembre de 2025 presentado en enero de 2026 va en PERIODO 2025. |
+| NNN LEGAL Y SOCIETARIO | Todo lo legal y societario, **de cualquier año**: estatuto y sus modificaciones, poderes, registro de accionistas, contratos, actas de directorio, presentaciones por SIARA. Cada asamblea tiene su subcarpeta `ASAMBLEA AAAA` (AAAA = el año en que se celebra) con la convocatoria, el acta, la memoria, el informe del síndico y la asistencia. |
+| NNN TRIBUTARIO | La identidad tributaria del cliente: constancia de RUC, cédula tributaria, certificado de cumplimiento tributario (CCT), timbrados y habilitaciones. |
+| NNN PERIODO AAAA | Una carpeta por año. **AAAA es el año al que corresponden los documentos**, no el año en que se guardan. El IVA de diciembre de 2025 presentado en enero de 2026 va en `NNN PERIODO 2025`. |
 | DOCUMENTOS CONTABLES / 01 ENERO … 12 DICIEMBRE | Todo lo del mes: declaración de IVA, planillas RG 90, libros, boletas de pago, retenciones, extractos, facturas, notas de crédito. Se escribe siempre con dos cifras y el mes: `01 ENERO`, `09 SETIEMBRE`, `12 DICIEMBRE`. |
 | DOCUMENTOS CONTABLES / CIERRE AAAA | Lo anual del ejercicio AAAA: declaración del IRE o del IRP, estados financieros, cálculo del impuesto del cierre, boleta de pago anual. |
 | DOCUMENTOS LABORALES | Subcarpetas `IPS` (aportes y estados de cuenta) y `MTESS` (libros laborales y planillas). |
 | DOCUMENTOS VARIOS | Lo que es del cliente pero no es contable, laboral, legal ni tributario: la subcarpeta `FACTURACION EFFORT` (los honorarios que EFFORT le factura al cliente), pedidos de documentos de bancos, préstamos y financiaciones, presupuestos, correspondencia y notas. **Si hay duda entre CONTABLES y VARIOS:** si el documento afecta un impuesto o un balance, es contable; si no, va a VARIOS. |
-| ZZ A CLASIFICAR (dentro del cliente) | Es una carpeta más, al final de la lista (por eso empieza con ZZ). Va **al lado de `00 …` y de `PERIODO`, nunca dentro de DOCUMENTOS VARIOS**. Lo único que puede estar fuera de su lugar: documentos de un cliente conocido de los que no se sabe el período o el tipo. Se vacía **una vez por semana** (ver 4.8). |
+| NNN ZZ A CLASIFICAR (dentro del cliente) | Es una carpeta más, al final de la lista (por eso, después del código, empieza con ZZ). Va **al lado de las otras carpetas de primer nivel, nunca dentro de DOCUMENTOS VARIOS**. Lo único que puede estar fuera de su lugar: documentos de un cliente conocido de los que no se sabe el período o el tipo. Se vacía **una vez por semana** (ver 4.8). |
 | CLIENTES / ZZ A CLASIFICAR (general) | Una única carpeta, al lado de las carpetas de los clientes, para documentos de los que **no se sabe ni de qué cliente son**. También se vacía cada semana. |
 
-> **Cómo decidir, en dos preguntas.** 1) ¿Es legal o societario, o es la identificación tributaria del cliente (RUC, CCT)? → va **arriba**, en `00 LEGAL Y SOCIETARIO` o `00 TRIBUTARIO`, sin año. 2) ¿Cualquier otra cosa? → va **dentro del `PERIODO`** del año que corresponde.
+> **Cómo decidir, en dos preguntas.** 1) ¿Es legal o societario, o es la identificación tributaria del cliente (RUC, CCT)? → va **arriba**, en `NNN LEGAL Y SOCIETARIO` o `NNN TRIBUTARIO`, sin año. 2) ¿Cualquier otra cosa? → va **dentro de `NNN PERIODO AAAA`** del año que corresponde.
 
 ### 2.3 Subcarpetas dentro de un mes: solo en estos tres casos
 
@@ -95,7 +100,7 @@ Ejemplos:  133 FUMIPRO SA   ·   134 MARIA GOMEZ   ·   135 AGRO DEL ESTE EAS
 - `IMPUTACION MASIVA`: los archivos de imputación masiva y los zip del SET, tal como los entrega el sistema. **Estos no se renombran.**
 - No se crean otras subcarpetas dentro de un mes. Si parece hacer falta una, se consulta primero con Laura o Lili.
 
-> Las carpetas se crean cuando hacen falta, no por adelantado. La carpeta `PERIODO AAAA` y sus tres carpetas se crean al empezar el año (o al dar de alta al cliente); la carpeta de cada mes, cuando llega el primer documento de ese mes.
+> Las carpetas se crean cuando hacen falta, no por adelantado. La carpeta `NNN PERIODO AAAA` y sus tres carpetas se crean al empezar el año (o al dar de alta al cliente); la carpeta de cada mes, cuando llega el primer documento de ese mes.
 
 ## 3. Cómo se nombra un archivo
 
@@ -175,17 +180,17 @@ Los documentos laborales (IPS, MTESS) y otros que no tienen un tipo propio en el
 
 | Documento | Dónde y nombre exacto |
 |---|---|
-| Estatuto social | 00 LEGAL Y SOCIETARIO → `ESTATUTO SOCIAL CLIENTE.pdf`. Una modificación: `ESTATUTO MODIFICACION AAAA CLIENTE.pdf`. |
-| Poder | 00 LEGAL Y SOCIETARIO → `PODER APODERADO AAAA CLIENTE.pdf` |
-| Contrato | 00 LEGAL Y SOCIETARIO → `CONTRATO DETALLE AAAA CLIENTE.pdf` |
-| Constancia de RUC, cédula tributaria | 00 TRIBUTARIO → `CONSTANCIA RUC AAAA CLIENTE.pdf` · `CEDULA TRIBUTARIA AAAA CLIENTE.pdf` |
-| Certificado de cumplimiento tributario | 00 TRIBUTARIO → `CCT MMAAAA CLIENTE.pdf` (mes y año de emisión). Cada renovación es un archivo nuevo; no se pisa el anterior. |
-| Asamblea | 00 LEGAL Y SOCIETARIO / ASAMBLEA AAAA → `CONVOCATORIA ASAMBLEA AAAA CLIENTE.pdf` · `ACTA DE ASAMBLEA AAAA CLIENTE.pdf` · `MEMORIA DEL DIRECTORIO AAAA CLIENTE.pdf` · `INFORME DEL SINDICO AAAA CLIENTE.pdf` |
-| Acta de directorio | 00 LEGAL Y SOCIETARIO → `ACTA DE DIRECTORIO ASUNTO AAAA CLIENTE.pdf` |
+| Estatuto social | NNN LEGAL Y SOCIETARIO → `ESTATUTO SOCIAL CLIENTE.pdf`. Una modificación: `ESTATUTO MODIFICACION AAAA CLIENTE.pdf`. |
+| Poder | NNN LEGAL Y SOCIETARIO → `PODER APODERADO AAAA CLIENTE.pdf` |
+| Contrato | NNN LEGAL Y SOCIETARIO → `CONTRATO DETALLE AAAA CLIENTE.pdf` |
+| Constancia de RUC, cédula tributaria | NNN TRIBUTARIO → `CONSTANCIA RUC AAAA CLIENTE.pdf` · `CEDULA TRIBUTARIA AAAA CLIENTE.pdf` |
+| Certificado de cumplimiento tributario | NNN TRIBUTARIO → `CCT MMAAAA CLIENTE.pdf` (mes y año de emisión). Cada renovación es un archivo nuevo; no se pisa el anterior. |
+| Asamblea | NNN LEGAL Y SOCIETARIO / ASAMBLEA AAAA → `CONVOCATORIA ASAMBLEA AAAA CLIENTE.pdf` · `ACTA DE ASAMBLEA AAAA CLIENTE.pdf` · `MEMORIA DEL DIRECTORIO AAAA CLIENTE.pdf` · `INFORME DEL SINDICO AAAA CLIENTE.pdf` |
+| Acta de directorio | NNN LEGAL Y SOCIETARIO → `ACTA DE DIRECTORIO ASUNTO AAAA CLIENTE.pdf` |
 | IPS | DOCUMENTOS LABORALES / IPS → `IPS APORTES MMAAAA CLIENTE.pdf` · `IPS ESTADO DE CUENTA MMAAAA CLIENTE.pdf` |
 | MTESS | DOCUMENTOS LABORALES / MTESS → `MTESS LIBRO LABORAL AAAA CLIENTE.pdf` · `MTESS LIBRO LABORAL MENSUAL MMAAAA CLIENTE.pdf` |
 | Honorarios que EFFORT factura al cliente | DOCUMENTOS VARIOS / FACTURACION EFFORT → `FACTURA COMPRA EFFORT NRO MMAAAA CLIENTE.pdf` (para el cliente es una compra). |
-| Cualquier otro documento | Se aplica la fórmula: `QUÉ ES DETALLE PERÍODO CLIENTE`. Si no se sabe dónde va, a ZZ A CLASIFICAR. |
+| Cualquier otro documento | Se aplica la fórmula: `QUÉ ES DETALLE PERÍODO CLIENTE`. Si no se sabe dónde va, a `NNN ZZ A CLASIFICAR`. |
 
 ### 3.4 Fotos, capturas y escaneos
 
@@ -199,7 +204,7 @@ Una foto o una captura de pantalla **no es un documento válido** para guardar: 
 2. Si es una foto, una captura o un escaneo y existe el original, **pedir o bajar el original** (3.4).
 3. Ponerle el nombre correcto **antes de guardarlo**, mientras todavía está en Descargas o en el chat (3.3).
 4. Guardarlo en la carpeta que indica la tabla de 3.3, dentro del cliente y del año correctos. Si falta la carpeta del mes, se crea (con el formato `MM MES`).
-5. Si no se sabe a qué período o tipo pertenece: guardarlo en la carpeta `ZZ A CLASIFICAR` del cliente y avisar al responsable. Si ni siquiera se sabe de qué cliente es: guardarlo en `CLIENTES / ZZ A CLASIFICAR` (la general) y avisar.
+5. Si no se sabe a qué período o tipo pertenece: guardarlo en la carpeta `NNN ZZ A CLASIFICAR` del cliente y avisar al responsable. Si ni siquiera se sabe de qué cliente es: guardarlo en `CLIENTES / ZZ A CLASIFICAR` (la general) y avisar.
 6. Comprobar que no haya ya una copia: abrir la carpeta y mirar. Si la hay y es idéntica, no se guarda otra.
 7. Borrar el archivo del escritorio, de Descargas o del chat. **Solo de ahí, nunca de OneDrive.**
 
@@ -223,12 +228,12 @@ Si algo no aparece, no se vuelve a guardar el archivo: se revisa el nombre, la c
 
 ### 4.4 Cierre anual de un cliente (ejercicio AAAA)
 
-1. Todo va en `PERIODO AAAA / DOCUMENTOS CONTABLES / CIERRE AAAA`, **aunque se haga en el año siguiente**.
+1. Todo va en `NNN PERIODO AAAA / DOCUMENTOS CONTABLES / CIERRE AAAA`, **aunque se haga en el año siguiente**.
 2. Guardar los estados financieros firmados (`EEFF AAAA CLIENTE.pdf`) y el cálculo del impuesto (`CALCULO IRE AAAA …`).
 3. Presentar la declaración del IRE (Form. 500) o del IRP y bajar su PDF de Marangatú: `DDJJ IRE AAAA CLIENTE.pdf`.
 4. Presentar los estados financieros ante la DNIT (Form. 158) y guardar la constancia: `EEFF AAAA PRESENTADO FORM 158 CLIENTE.pdf`.
 5. Guardar la boleta de pago: `BOLETA DE PAGO IRE AAAA CLIENTE.pdf`.
-6. Si hay asamblea: todo en `00 LEGAL Y SOCIETARIO / ASAMBLEA AAAA` (AAAA = el año en que se celebra la asamblea, que aprueba el ejercicio anterior).
+6. Si hay asamblea: todo en `NNN LEGAL Y SOCIETARIO / ASAMBLEA AAAA` (AAAA = el año en que se celebra la asamblea, que aprueba el ejercicio anterior).
 7. Comprobar en **Vencimientos** que el IRE y los estados financieros figuran presentados.
 
 > Los estados financieros en Excel con macros (.xlsm) suelen tener vínculos a otros archivos. Antes de mover o renombrar un archivo de un balance, abrir el balance y comprobar que sigue funcionando (4.7).
@@ -237,8 +242,8 @@ Si algo no aparece, no se vuelve a guardar el archivo: se revisa el nombre, la c
 
 1. Asignar el próximo código libre (hoy, **133**) y anotarlo en la lista de clientes.
 2. Crear la carpeta `NNN NOMBRE` dentro de `CLIENTES` (2.1).
-3. Dentro, crear: `00 LEGAL Y SOCIETARIO`, `00 TRIBUTARIO`, `PERIODO AAAA` del año en curso (con `DOCUMENTOS CONTABLES`, `DOCUMENTOS LABORALES` y `DOCUMENTOS VARIOS`) y `ZZ A CLASIFICAR`.
-4. Guardar la constancia de RUC en `00 TRIBUTARIO`.
+3. Dentro, crear: `NNN LEGAL Y SOCIETARIO`, `NNN TRIBUTARIO`, `NNN PERIODO AAAA` del año en curso (con `DOCUMENTOS CONTABLES`, `DOCUMENTOS LABORALES` y `DOCUMENTOS VARIOS`) y `NNN ZZ A CLASIFICAR`.
+4. Guardar la constancia de RUC en `NNN TRIBUTARIO`.
 5. Dar de alta al cliente en el sistema: pantalla **Clientes → Nuevo cliente** (nombre, RUC completo con dígito verificador, tipo de persona, régimen tributario).
 6. **Avisar a Daniel** con el código, el RUC, el régimen y las obligaciones del cliente (IVA, RG 90, IRE, estados financieros) para que conecte la carpeta y las obligaciones al sistema. Hoy esto no se puede hacer desde la pantalla.
 
@@ -262,7 +267,7 @@ Algunos Excel (sobre todo los balances `EEFF …xlsm` y las liquidaciones del IR
 
 ### 4.8 Rutina semanal: vaciar las carpetas ZZ A CLASIFICAR
 
-1. Una vez por semana (el viernes), la persona responsable abre la carpeta `ZZ A CLASIFICAR` general y la de cada cliente que tenga archivos.
+1. Una vez por semana (el viernes), la persona responsable abre la carpeta general `CLIENTES / ZZ A CLASIFICAR` y la `NNN ZZ A CLASIFICAR` de cada cliente que tenga archivos.
 2. Para cada archivo: identificar qué es, de qué cliente y de qué período, **moverlo** (no copiarlo) a su lugar con su nombre correcto.
 3. Lo que no se logra identificar se consulta con quien lo guardó. **No se borra.**
 4. El objetivo es que todas las carpetas `ZZ A CLASIFICAR` estén vacías cada fin de semana.
@@ -281,7 +286,7 @@ Algunos Excel (sobre todo los balances `EEFF …xlsm` y las liquidaciones del IR
 - La RG 90 está presentada y el `TALON RG 90` guardado; las planillas en .xlsx.
 - La boleta de pago está guardada en el mes del período que paga.
 - Los extractos bancarios del mes están guardados.
-- No hay nada en `ZZ A CLASIFICAR`.
+- No hay nada en `NNN ZZ A CLASIFICAR`.
 - En **Faltantes** el cliente no figura con nada pendiente; en **Vencimientos**, todo lo vencido figura presentado.
 
 ### 5.2 Cada semana
@@ -291,7 +296,7 @@ Algunos Excel (sobre todo los balances `EEFF …xlsm` y las liquidaciones del IR
 
 ### 5.3 Cada año
 
-- En diciembre: crear `PERIODO AAAA` del año siguiente para cada cliente, con sus tres carpetas.
+- En diciembre: crear `NNN PERIODO AAAA` del año siguiente para cada cliente, con sus tres carpetas.
 - Cierre del ejercicio: todo en `CIERRE AAAA` (4.4).
 - Revisar que los clientes dados de baja figuran como Inactivos en el sistema.
 
@@ -338,15 +343,15 @@ Propuesta de reparto; Laura y Lili la ajustan a cómo se organiza el equipo.
 
 ```
 133 AGRO DEL ESTE SA/
-├─ 00 LEGAL Y SOCIETARIO/
+├─ 133 LEGAL Y SOCIETARIO/
 │   ├─ ESTATUTO SOCIAL AGRO DEL ESTE SA.pdf
 │   ├─ PODER JUAN PEREZ 2024 AGRO DEL ESTE SA.pdf
 │   └─ ASAMBLEA 2026/
 │       └─ ACTA DE ASAMBLEA 2026 AGRO DEL ESTE SA.pdf
-├─ 00 TRIBUTARIO/
+├─ 133 TRIBUTARIO/
 │   ├─ CONSTANCIA RUC 2026 AGRO DEL ESTE SA.pdf
 │   └─ CCT 052026 AGRO DEL ESTE SA.pdf
-├─ PERIODO 2026/
+├─ 133 PERIODO 2026/
 │   ├─ DOCUMENTOS CONTABLES/
 │   │   ├─ 03 MARZO/
 │   │   │   ├─ DDJJ IVA 032026 AGRO DEL ESTE SA.pdf
@@ -366,7 +371,7 @@ Propuesta de reparto; Laura y Lili la ajustan a cómo se organiza el equipo.
 │   └─ DOCUMENTOS VARIOS/
 │       └─ FACTURACION EFFORT/
 │           └─ FACTURA COMPRA EFFORT 783 032026 AGRO DEL ESTE SA.pdf
-└─ ZZ A CLASIFICAR/                      (vacía)
+└─ 133 ZZ A CLASIFICAR/                  (vacía)
 ```
 
 ## 10. Control de cambios
@@ -375,6 +380,7 @@ Este manual se actualiza **solo** con la aprobación de Laura, Lili o Daniel. Ca
 
 | Versión | Fecha | Cambio |
 |---|---|---|
+| 1.3 | 7 de octubre de 2026 | Las cuatro carpetas de primer nivel pasan a llevar el código del cliente (`NNN LEGAL Y SOCIETARIO`, `NNN TRIBUTARIO`, `NNN PERIODO AAAA` y `NNN ZZ A CLASIFICAR`): el prefijo «00» de la versión anterior se confundía con un código de cliente. Se aclara que las carpetas de adentro y los archivos no llevan el código al principio (el sistema exige que `CORRECCION` esté al comienzo del nombre). |
 | 1.2 | 6 de octubre de 2026 | Se unifican las dos carpetas societarias: `00 PERMANENTE / SOCIETARIO` y `DOCUMENTOS LEGALES Y SOCIETARIOS` se reemplazan por una sola, `00 LEGAL Y SOCIETARIO`, y `00 PERMANENTE / TRIBUTARIO` pasa a `00 TRIBUTARIO`. Regla única: lo legal y la identidad tributaria van arriba, sin año; todo lo demás, dentro de su período. Se aclara qué va en DOCUMENTOS VARIOS y que ZZ A CLASIFICAR está al lado de `00` y de `PERIODO`, no dentro de VARIOS. |
 | 1.1 | 6 de octubre de 2026 | La carpeta de dudas pasa de «99 A CLASIFICAR» a «ZZ A CLASIFICAR»: «99» se confundía con un código de cliente (el 099). Se agrega la carpeta general `CLIENTES / ZZ A CLASIFICAR` para documentos de los que no se sabe ni de qué cliente son. |
 | 1.0 | 6 de octubre de 2026 | Primera versión. Amplía la «Guía de nombres de archivos y carpetas» del 1 de octubre de 2026, que sigue vigente: este manual agrega la estructura de carpetas, el principio del período y los procedimientos. |
