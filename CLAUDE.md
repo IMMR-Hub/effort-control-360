@@ -357,6 +357,10 @@ agregá la entrada — el valor está en que siga creciendo.
      siempre la regla vital de NO BORRAR NI MODIFICAR NADA de la carpeta
      original OneDrive de Effort"*. No hay decisión que lo habilite, ni con
      EFFORT presente: es absoluto, sin excepción.
+   - **Única excepción, 2026-10-07 (Daniel, en el chat, para esa operación y ninguna otra):** crear la
+     carpeta `999 CLIENTE MUESTRA` con sus documentos de ejemplo dentro de `CLIENTES`. Se hizo con un script
+     aparte que solo crea y solo escribe dentro de esa carpeta; está en `docs/BITACORA-ONEDRIVE.md`. **No abre
+     ninguna otra escritura**: todo lo demás sigue siendo de solo lectura, sin excepción.
    - Hasta el 2026-09-09 esto era en gran parte teórico: el adaptador real
      (`DriveGraph`) nunca había tocado ningún archivo de producción, solo se
      probaba contra el doble en memoria (`DriveFalso`). La primera lectura

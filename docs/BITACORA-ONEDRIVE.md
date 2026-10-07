@@ -411,3 +411,34 @@ En concreto:
 - **Qué NO se hizo:** ninguna modificación. Hacerlas exige que Daniel cambie por escrito las
   reglas 0 y 5 de `CLAUDE.md` (que prohíben tocar y borrar el original) y una herramienta nueva
   con registro y reversa.
+
+## 2026-10-07 — ÚNICA ESCRITURA AUTORIZADA en el OneDrive de EFFORT: el cliente de muestra «999 CLIENTE MUESTRA»
+
+- **Autorización (Daniel, en el chat, 2026-10-07):** «necesito que me crees en el OneDrive el cliente 999 que
+  se llamará 999 Cliente Muestra. Esto es lo único que puedes crear y tocar. Lo demás en OneDrive NO LO TOCAS,
+  BORRAS, NI MODIFICAS.» Es una excepción puntual a la regla 5 de `CLAUDE.md`, para esta operación y ninguna otra:
+  no se extiende a ningún otro cambio.
+- **Qué se creó:** `CLIENTES EFFORT E.A.S/CLIENTES/999 CLIENTE MUESTRA/` (lsosa@effort.com.py): 31 subcarpetas
+  y 212 archivos (157 PDF, 44 Excel, 5 Word, 3 fotos JPEG, 2 txt y 1 zip; 0,68 MB) que siguen el Manual de
+  procedimiento de documentos v1.2: `00 LEGAL Y SOCIETARIO` (con `ASAMBLEA 2026`), `00 TRIBUTARIO`,
+  `PERIODO 2026` (los 12 meses con el juego base de documentos; marzo con todos los tipos, incluidas las
+  subcarpetas `NC EMITIDAS`, `NC RECIBIDAS` e `IMPUTACION MASIVA`; `CIERRE 2026`; `DOCUMENTOS LABORALES` con `IPS`
+  y `MTESS`; `DOCUMENTOS VARIOS` con `FACTURACION EFFORT`), `PERIODO 2025` (solo `12 DICIEMBRE` y `CIERRE 2025`,
+  para mostrar que el período manda) y `ZZ A CLASIFICAR`, **vacía a propósito** (el manual dice que debe estar
+  vacía). El nombre del cliente va en mayúsculas porque así lo exige el manual (Daniel escribió «Cliente Muestra»).
+  Todo el contenido son documentos de ejemplo, sin RUC ni datos reales, con el texto «DOCUMENTO DE MUESTRA».
+- **Cómo se hizo:** un script aparte, no el del sistema (`DriveDeArchivos` sigue sin tener ninguna forma de
+  escribir en el origen). Solo usa GET, PUT y POST; no tiene ninguna rama de PATCH, DELETE, mover ni copiar; todo
+  PUT/POST se valida contra la ruta `…/999 CLIENTE MUESTRA/` y usa `conflictBehavior=fail` (nunca pisa nada);
+  aborta si ya existe cualquier cosa que empiece con «999». Primero corrió en simulación.
+- **Verificación posterior (solo lectura):** en OneDrive hay exactamente los 212 archivos y las 31 subcarpetas
+  previstos, con el mismo peso; `CLIENTES` pasó de 143 a 144 elementos y lo único nuevo es `999 CLIENTE MUESTRA`;
+  no desapareció ninguno.
+- **Qué NO se hizo:** no se movió, renombró ni borró nada; no se conectó el cliente 999 al sistema (no tiene
+  `carpetaOneDriveId`, así que la sincronización no lo lee). No se creó la carpeta general `CLIENTES/ZZ A CLASIFICAR`.
+- **Observación (no es obra nuestra):** entre el 2026-10-03 y hoy desaparecieron de la raíz de `CLIENTES` tres
+  archivos sueltos (`PHOTO-2026-05-05-12-04-38.jpg`, `…-40.jpg`, `…-42.jpg`; estaban allí al 03/10, la última
+  modificación era del 19/05). Alguien de EFFORT los movió o los borró; todas las lecturas de esta conversación son
+  GET.
+- **Para deshacerlo:** si Laura, Lili o Daniel quieren sacar el modelo, basta con borrar la carpeta
+  `999 CLIENTE MUESTRA`. La borra una persona de EFFORT, no Claude.
