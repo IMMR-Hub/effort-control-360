@@ -1,0 +1,44 @@
+// SOLO LECTURA. Reconstruye la lista de la pantalla «Faltantes» con el MISMO código del sistema
+// (armarListaDeFaltantes, packages/core) leyendo la base de producción con consultas SELECT.
+// Replica GET /api/v1/vencimientos/faltantes (apps/api/src/rutas/vencimientos.ts):
+//   vencimientos no presentados y vencidos, con período, + estado de la planilla RG 90 del mismo período.
+import { execFileSync } from 'node:child_process';
+import { writeFileSync } from 'node:fs';
+import { pathToFileURL } from 'node:url';
+
+const RAIZ = 'C:/Users/Daniel/NexusFlow AI/effort-control-360';
+const SALIDA = 'C:/Users/Daniel/AppData/Local/Temp/claude/C--Users-Daniel-NexusFlow-AI/cdba12b1-63af-4d45-a032-bade731625cb/scratchpad/informe';
+const core = await import(pathToFileURL(`${RAIZ}/packages/core/dist/index.js`).href);
+const { armarListaDeFaltantes, diasRestantes, fechaCivilDesdeIso, nivelAlertaPorDias } = core;
+
+function consultar(sql) {
+  for (let i = 1; i <= 5; i++) {
+    try {
+      const txt = execFileSync('node', ['scripts/consultar-produccion.mjs', sql], { cwd: RAIZ, encoding: 'utf8', maxBuffer: 64 * 1024 * 1024 });
+      return JSON.parse(txt.replace(/"(-?\d+)n"/g, '$1'));
+    } catch (e) {
+      if (i === 5) throw e;
+    }
+  }
+}
+
+const venc = consultar(`SELECT v.id, v.cliente_id, c.nombre AS cliente, v.tipo_documento::text AS tipo, v.descripcion, to_char(v.fecha_vencimiento,'YYYY-MM-DD') AS fv, v.periodo
+  FROM vencimiento v JOIN cliente c ON c.id = v.cliente_id
+  WHERE v.estado::text NOT IN ('PRESENTADO','NO_APLICA') AND v.periodo IS NOT NULL`);
+const liq = consultar(`SELECT cliente_id, periodo, comprobantes_compras, comprobantes_ventas FROM liquidacion_iva_rg90`);
+console.log(`vencimientos no presentados con período: ${venc.length}; liquidaciones RG 90: ${liq.length}`);
+
+function lista(ahora) {
+  const vencidos = venc
+    .map((v) => ({ v, dias: diasRestantes(fechaCivilDesdeIso(v.fv), ahora) }))
+    .filter(({ dias }) => nivelAlertaPorDias(dias) === 'VENCIDO')
+    .map(({ v, dias }) => ({ id: v.id, clienteId: v.cliente_id, clienteNombre: v.cliente, periodo: v.periodo, tipoDocumento: v.tipo, descripcion: v.descripcion, fechaVencimiento: v.fv, diasDeAtraso: -dias }));
+  return armarListaDeFaltantes(vencidos, liq.map((l) => ({ clienteId: l.cliente_id, periodo: l.periodo, comprobantesCompras: Number(l.comprobantes_compras), comprobantesVentas: Number(l.comprobantes_ventas) })));
+}
+const resumen = (l) => ({ filas: l.length, obligaciones: l.reduce((s, f) => s + f.obligaciones.length, 0), incompletas: l.filter((f) => f.estadoPlanillaRg90 !== 'COMPLETA').length });
+
+// Validación: con la fecha del 30/09 (mediodía en Paraguay) tendría que parecerse a la lista de ese día (41 filas / 57 obligaciones / 20 incompletas).
+console.log('al 30/09:', JSON.stringify(resumen(lista(new Date('2026-09-30T15:00:00Z')))), ' (lista del 30/09: 41 / 57 / 20)');
+const hoy = lista(new Date());
+console.log('hoy:', JSON.stringify(resumen(hoy)));
+writeFileSync(`${SALIDA}/faltantes.json`, JSON.stringify({ fecha: new Date().toISOString(), faltantes: hoy }, null, 1));

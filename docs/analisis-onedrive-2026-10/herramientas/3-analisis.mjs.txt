@@ -1,0 +1,108 @@
+// SOLO LECTURA (trabaja sobre listado.json y contenido.jsonl, no toca OneDrive).
+// Paso 3: qué habría que hacer para ordenar cada cliente, contado acción por
+// acción, para estimar el tiempo con números y no con supuestos.
+import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { pathToFileURL } from 'node:url';
+import { DIR, RAIZ } from './comun.mjs';
+
+const { clasificarDocumento } = await import(pathToFileURL(`${RAIZ}/packages/core/dist/index.js`).href);
+const { items } = JSON.parse(readFileSync(`${DIR}/listado.json`, 'utf8'));
+const contenido = new Map();
+if (existsSync(`${DIR}/contenido.jsonl`)) for (const l of readFileSync(`${DIR}/contenido.jsonl`, 'utf8').split('\n')) if (l) { try { const r = JSON.parse(l); if (!(r.error && contenido.has(r.id) && !contenido.get(r.id).error)) contenido.set(r.id, r); } catch {} }
+
+const MESES = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SETIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
+const clienteDe = (ruta) => /^(\d{3})(?!\d)/.exec(ruta)?.[1] ?? null;
+const archivos = items.filter((x) => !x.c && clienteDe(x.ruta));
+const carpetas = items.filter((x) => x.c && clienteDe(x.ruta));
+
+function anioDeCarpeta(ruta) { const m = /\/PERIODO\s*(\d{4})/i.exec(ruta); return m ? Number(m[1]) : null; }
+function mesDeCarpeta(ruta) {
+  const partes = ruta.split('/').slice(0, -1);
+  for (let i = partes.length - 1; i >= 1; i--) {
+    const p = partes[i].toUpperCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace('SEPTIEMBRE', 'SETIEMBRE');
+    const k = MESES.findIndex((m) => p.includes(m));
+    if (k >= 0) return k + 1;
+  }
+  return null;
+}
+
+// RUC principal de cada cliente: el que más se repite en SUS declaraciones.
+const rucsPorCliente = new Map();
+for (const a of archivos) {
+  const d = contenido.get(a.id)?.decl; if (!d) continue;
+  const c = clienteDe(a.ruta); const m = rucsPorCliente.get(c) ?? new Map(); m.set(d.ruc, (m.get(d.ruc) ?? 0) + 1); rucsPorCliente.set(c, m);
+}
+const rucDeCliente = new Map();
+for (const [c, m] of rucsPorCliente) { const [ruc, n] = [...m].sort((a, b) => b[1] - a[1])[0]; rucDeCliente.set(c, { ruc, n, total: [...m.values()].reduce((s, x) => s + x, 0) }); }
+const clientePorRuc = new Map(); for (const [c, { ruc, n, total }] of rucDeCliente) if (n / total >= 0.6) clientePorRuc.set(ruc, c);
+
+// Convención de mes: ¿la declaración de AAAA-MM se guarda en la carpeta del mes MM o del mes siguiente?
+const desfases = new Map();
+for (const a of archivos) {
+  const d = contenido.get(a.id)?.decl; const mes = mesDeCarpeta(a.ruta); const anio = anioDeCarpeta(a.ruta);
+  if (!d || !mes || !anio || d.per.endsWith('-12') && d.f !== '120') continue;
+  const [py, pm] = d.per.split('-').map(Number);
+  const off = (anio * 12 + mes) - (py * 12 + pm);
+  desfases.set(off, (desfases.get(off) ?? 0) + 1);
+}
+const convencion = [...desfases].sort((a, b) => b[1] - a[1])[0]?.[0] ?? 0;
+
+const porCliente = new Map();
+const fila = (c) => { if (!porCliente.has(c)) porCliente.set(c, { codigo: c, nombre: '', archivos: 0, bytes: 0, duplicados: 0, bytesDup: 0, declAjena: 0, declAjenaConDestino: 0, declMesMal: 0, declAnioMal: 0, nombreNoDice: 0, nombreAutomatico: 0, fueraDeEstructura: 0, excelConVinculos: 0, imagenes: 0, comprimidos: 0, carpetasVacias: 0 }); return porCliente.get(c); };
+for (const x of items.filter((x) => x.c && /^\d{3}(?!\d)[^/]*$/.test(x.ruta))) fila(clienteDe(x.ruta)).nombre = x.n.replace(/^\d{3}\s*[-–.]?\s*/, '');
+
+// Duplicados exactos dentro del cliente: se conserva el más antiguo.
+const grupos = new Map();
+for (const a of archivos) { if (!a.h) continue; const k = `${clienteDe(a.ruta)}|${a.h}|${a.s}`; (grupos.get(k) ?? grupos.set(k, []).get(k)).push(a); }
+const duplicadoSobrante = new Set();
+for (const g of grupos.values()) if (g.length > 1) { g.sort((a, b) => (a.cr ?? '').localeCompare(b.cr ?? '')); for (const a of g.slice(1)) duplicadoSobrante.add(a.id); }
+// El mismo archivo en dos clientes distintos.
+const porHash = new Map();
+for (const a of archivos) { if (!a.h || a.s < 2048) continue; const s = porHash.get(a.h) ?? new Set(); s.add(clienteDe(a.ruta)); porHash.set(a.h, s); }
+const entreClientes = [...porHash.values()].filter((s) => s.size > 1).length;
+
+const ejemplos = { declAjena: [], declMesMal: [], excelConVinculos: [] };
+for (const a of archivos) {
+  const c = clienteDe(a.ruta); const f = fila(c); const r = contenido.get(a.id);
+  f.archivos++; f.bytes += a.s;
+  if (duplicadoSobrante.has(a.id)) { f.duplicados++; f.bytesDup += a.s; continue; }
+  const niveles = a.ruta.split('/');
+  if (niveles.length <= 2 || !/^PERIODO\s*\d{4}/i.test(niveles[1] ?? '')) f.fueraDeEstructura++;
+  if (/\.(jpe?g|png|heic|gif)$/i.test(a.n)) f.imagenes++;
+  if (/\.(zip|rar|7z)$/i.test(a.n)) f.comprimidos++;
+  if (r?.externos > 0) { f.excelConVinculos++; if (ejemplos.excelConVinculos.length < 15) ejemplos.excelConVinculos.push(a.ruta); }
+  const d = r?.decl;
+  const propio = rucDeCliente.get(c)?.ruc;
+  if (d && propio && d.ruc !== propio) {
+    f.declAjena++; if (clientePorRuc.has(d.ruc)) f.declAjenaConDestino++;
+    if (ejemplos.declAjena.length < 20) ejemplos.declAjena.push(`${a.ruta}  (RUC ${d.ruc}${clientePorRuc.has(d.ruc) ? ' → cliente ' + clientePorRuc.get(d.ruc) : ''})`);
+  } else if (d) {
+    const anio = anioDeCarpeta(a.ruta); const mes = mesDeCarpeta(a.ruta); const [py, pm] = d.per.split('-').map(Number);
+    if (anio && mes && !(d.per.endsWith('-12') && d.f !== '120')) {
+      if ((anio * 12 + mes) - (py * 12 + pm) !== convencion) { f.declMesMal++; if (ejemplos.declMesMal.length < 15) ejemplos.declMesMal.push(`${a.ruta}  (declara ${d.per})`); }
+    } else if (anio && Math.abs(anio - py) > 1) f.declAnioMal++;
+  }
+  const carpeta = a.ruta.split('/').slice(0, -1).join('/');
+  if (clasificarDocumento(a.n, carpeta) === 'OTRO') { f.nombreNoDice++; if (d) f.nombreAutomatico++; }
+}
+const conHijos = new Set(items.map((x) => x.p));
+for (const x of carpetas) if (!conHijos.has(x.id)) fila(clienteDe(x.ruta)).carpetasVacias++;
+
+const lista = [...porCliente.values()].sort((a, b) => a.codigo.localeCompare(b.codigo));
+const total = lista.reduce((t, f) => { for (const k of Object.keys(f)) if (typeof f[k] === 'number') t[k] = (t[k] ?? 0) + f[k]; return t; }, {});
+const leidos = [...contenido.values()];
+const bajadas = leidos.filter((r) => r.msBajada).map((r) => r.msBajada).sort((a, b) => a - b);
+const res = {
+  fecha: new Date().toISOString(),
+  contenidoLeido: contenido.size,
+  declaracionesReconocidas: leidos.filter((r) => r.decl).length,
+  pdfSinTexto: leidos.filter((r) => r.conTexto === false).length,
+  erroresDeLectura: leidos.filter((r) => r.error).length,
+  msBajadaMediana: bajadas[Math.floor(bajadas.length / 2)] ?? null,
+  convencionDeMes: { desfase: convencion, distribucion: Object.fromEntries(desfases) },
+  clientesConRuc: rucDeCliente.size,
+  archivosRepetidosEntreClientes: entreClientes,
+  total, ejemplos, porCliente: lista,
+};
+writeFileSync(`${DIR}/analisis.json`, JSON.stringify(res, null, 1));
+console.log(JSON.stringify({ ...res, porCliente: undefined, ejemplos: undefined }, null, 1));

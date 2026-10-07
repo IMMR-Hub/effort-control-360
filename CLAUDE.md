@@ -28,7 +28,7 @@ de 2026.
 > `docs/ROADMAP-MAESTRO.md`** (sección "▶ EMPEZAR ACÁ"), nunca este cuadro.
 
 **Este archivo se revisa cada 6 meses**, o cuando una conversación descubra algo
-que la siguiente necesitaría redescubrir. Última revisión: **2026-10-01**. No es
+que la siguiente necesitaría redescubrir. Última revisión: **2026-10-07**. No es
 un documento de arranque: es la memoria del proyecto, y su valor está en lo que
 evita repetir. Se agrega; no se borra.
 
@@ -310,6 +310,15 @@ obedece mal, porque no se sabe qué caso de borde cubre.
     permitido; `npm audit fix` en cambio arrastraba Prisma a 6.12.0. *Lección:
     `npm view <paquete>@<mayor> version`, actualizar solo ese paquete, y revisar que
     el diff del lockfile tenga únicamente eso.*
+
+22. **Una etiqueta de dominio escrita de memoria llega a EFFORT como si fuera un hecho.** El 2026-10-05 la planilla
+    que se mandó a EFFORT para que confirmaran las obligaciones de cada cliente decía «Form. 158 = IRE simple» y
+    «Form. 241 = otro», puestos de memoria; en el sistema el 158 son los estados financieros y el 241 la RG 90.
+    Podía llevar a marcar mal las obligaciones de 129 clientes. Se detectó al ir a escribir el manual y se reenvió
+    corregida. *Lección: todo dato de dominio que va en un entregable se verifica contra el código
+    (`OBLIGACION_POR_FORMULARIO`) o contra un documento real, y lo que no se pudo verificar va **sin etiqueta**. Y
+    lo que un manual promete («este nombre se clasifica como X») se prueba contra el clasificador real: 46 nombres
+    se probaron y evitaron recomendar «liquidación salarial», que el sistema habría tomado por cálculo de impuesto.*
 
 **Cómo se usa esta sección:** antes de escribir algo que lea archivos externos,
 borre datos, o corra solo, buscá acá si ya nos pasó. Y cuando algo salga mal,

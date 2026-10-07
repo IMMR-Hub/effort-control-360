@@ -1,0 +1,99 @@
+// Genera EN LOCAL (carpeta archivos/) los documentos de muestra del plan. No toca OneDrive.
+const fs = require('fs');
+const path = require('path');
+const { execFileSync } = require('child_process');
+const { RAIZ, archivos } = require('./plan.cjs');
+const ExcelJS = require('C:/Users/Daniel/NexusFlow AI/effort-control-360/node_modules/exceljs');
+const JSZip = require('C:/Users/Daniel/NexusFlow AI/effort-control-360/node_modules/jszip');
+const { Document, Packer, Paragraph, TextRun } = require('../node_modules/docx');
+
+const SALIDA = path.join(__dirname, 'archivos');
+fs.rmSync(SALIDA, { recursive: true, force: true });
+
+function lineasDe(a) {
+  return [
+    { t: a.nombre, titulo: true },
+    { t: 'DOCUMENTO DE MUESTRA - sin valor tributario ni legal' },
+    { t: `Cliente: ${RAIZ}` },
+    { t: `Qué es: ${a.que}` },
+    { t: `Dónde va: ${a.dir}` },
+    { t: 'Ejemplo del Manual de procedimiento de documentos, versión 1.2.' },
+  ];
+}
+const envolver = (txt, ancho) => {
+  const out = []; let linea = '';
+  for (const palabra of txt.split(' ')) {
+    if ((linea + ' ' + palabra).trim().length > ancho) { out.push(linea); linea = palabra; } else linea = (linea + ' ' + palabra).trim();
+  }
+  if (linea) out.push(linea);
+  return out;
+};
+
+// ---- PDF mínimo, con texto real seleccionable (Helvetica, WinAnsi)
+function pdf(lineas) {
+  const esc = (s) => s.replace(/[—–]/g, '-').replace(/[^\x20-\xFF]/g, '?').replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)');
+  let y = 780; const ops = [];
+  for (const l of lineas) {
+    for (const parte of envolver(l.t, l.titulo ? 62 : 88)) {
+      ops.push(`BT /F1 ${l.titulo ? 14 : 11} Tf 56 ${y} Td (${esc(parte)}) Tj ET`);
+      y -= l.titulo ? 22 : 17;
+    }
+    y -= l.titulo ? 10 : 4;
+  }
+  const flujo = Buffer.from(ops.join('\n'), 'latin1');
+  const objs = [
+    '<< /Type /Catalog /Pages 2 0 R >>',
+    '<< /Type /Pages /Kids [3 0 R] /Count 1 >>',
+    '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>',
+    '<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>',
+  ];
+  const partes = [Buffer.from('%PDF-1.4\n', 'latin1')]; const offs = []; let pos = partes[0].length;
+  const poner = (b) => { partes.push(b); pos += b.length; };
+  objs.forEach((o, i) => { offs.push(pos); poner(Buffer.from(`${i + 1} 0 obj\n${o}\nendobj\n`, 'latin1')); });
+  offs.push(pos);
+  poner(Buffer.concat([Buffer.from(`5 0 obj\n<< /Length ${flujo.length} >>\nstream\n`, 'latin1'), flujo, Buffer.from('\nendstream\nendobj\n', 'latin1')]));
+  const xref = pos;
+  let t = `xref\n0 6\n0000000000 65535 f \n`;
+  for (const o of offs) t += `${String(o).padStart(10, '0')} 00000 n \n`;
+  t += `trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`;
+  poner(Buffer.from(t, 'latin1'));
+  return Buffer.concat(partes);
+}
+
+async function xlsx(lineas) {
+  const libro = new ExcelJS.Workbook(); libro.creator = 'EFFORT Control 360';
+  const h = libro.addWorksheet('Muestra');
+  h.getColumn(1).width = 110;
+  lineas.forEach((l, i) => { const c = h.getCell(i + 1, 1); c.value = l.t; if (l.titulo) c.font = { bold: true, size: 14 }; });
+  return Buffer.from(await libro.xlsx.writeBuffer());
+}
+async function docx(lineas) {
+  const d = new Document({ creator: 'EFFORT Control 360', sections: [{ children: lineas.map((l) => new Paragraph({ spacing: { after: 160 }, children: [new TextRun({ text: l.t, bold: !!l.titulo, size: l.titulo ? 32 : 24, font: 'Calibri' })] })) }] });
+  return Buffer.from(await Packer.toBuffer(d));
+}
+async function zip(nombreInterno, lineas) {
+  const z = new JSZip(); z.file(nombreInterno, lineas.map((l) => l.t).join('\r\n'));
+  return Buffer.from(await z.generateAsync({ type: 'nodebuffer', compression: 'DEFLATE' }));
+}
+
+(async () => {
+  const jpgs = [];
+  let n = 0;
+  for (const a of archivos) {
+    const destino = path.join(SALIDA, a.dir, a.nombre);
+    fs.mkdirSync(path.dirname(destino), { recursive: true });
+    const ext = path.extname(a.nombre).toLowerCase(); const l = lineasDe(a);
+    if (ext === '.pdf') fs.writeFileSync(destino, pdf(l));
+    else if (ext === '.xlsx') fs.writeFileSync(destino, await xlsx(l));
+    else if (ext === '.docx') fs.writeFileSync(destino, await docx(l));
+    else if (ext === '.txt') fs.writeFileSync(destino, l.map((x) => x.t).join('\r\n'), 'utf8');
+    else if (ext === '.zip') fs.writeFileSync(destino, await zip(a.nombre.replace(/\.zip$/, '.txt'), l));
+    else if (ext === '.jpg') jpgs.push({ ruta: destino, lineas: l.map((x) => x.t), foto: true });
+    else throw new Error('tipo no previsto: ' + a.nombre);
+    n++;
+  }
+  // Fotos: se dibujan con System.Drawing (Windows) y se guardan como JPEG.
+  fs.writeFileSync(path.join(__dirname, 'jpgs.json'), JSON.stringify(jpgs));
+  execFileSync('powershell', ['-NoProfile', '-ExecutionPolicy', 'Bypass', '-File', path.join(__dirname, 'fotos.ps1'), path.join(__dirname, 'jpgs.json')], { stdio: 'inherit' });
+  console.log(`generados ${n} archivos en ${SALIDA}`);
+})();

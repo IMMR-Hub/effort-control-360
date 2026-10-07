@@ -1,0 +1,74 @@
+// SOLO LECTURA. Paso 2: leer por dentro los PDF (≤ 5 MB) y los Excel .xlsx/.xlsm
+// de los clientes con código. Cada archivo se baja a memoria, se lee y se
+// descarta: no se guarda ninguna copia y no se escribe nada en OneDrive.
+// Reanudable: lo ya leído queda en contenido.jsonl y se saltea.
+import { appendFileSync, existsSync, readFileSync } from 'node:fs';
+import { createRequire } from 'node:module';
+import { pathToFileURL } from 'node:url';
+import { DIR, RAIZ, get } from './comun.mjs';
+
+const require = createRequire(`${RAIZ}/package.json`);
+const JSZip = require('jszip');
+const pdfjs = await import(pathToFileURL(`${RAIZ}/node_modules/pdfjs-dist/legacy/build/pdf.mjs`).href);
+const { reconocerDeclaracionDnit } = await import(pathToFileURL(`${RAIZ}/packages/importers/dist/index.js`).href);
+
+const { drive, items } = JSON.parse(readFileSync(`${DIR}/listado.json`, 'utf8'));
+const SALIDA = `${DIR}/contenido.jsonl`;
+const hechos = new Set();
+if (existsSync(SALIDA)) for (const l of readFileSync(SALIDA, 'utf8').split('\n')) if (l) { try { const r = JSON.parse(l); if (!r.error || !/fetch failed|terminated|reintentos|ECONN|socket/i.test(r.error)) hechos.add(r.id); } catch {} }
+
+const pendientes = items.filter((x) => !x.c && /^\d{3}(?!\d)/.test(x.ruta) && !hechos.has(x.id) &&
+  ((/\.pdf$/i.test(x.n) && x.s <= 5e6) || (/\.xls[xm]$/i.test(x.n) && x.s <= 2e7)));
+console.log(`por leer: ${pendientes.length} (ya leídos: ${hechos.size})`);
+
+async function textoDePdf(buf) {
+  const doc = await pdfjs.getDocument({ data: new Uint8Array(buf), isEvalSupported: false, verbosity: 0 }).promise;
+  try {
+    const partes = [];
+    for (let n = 1; n <= Math.min(doc.numPages, 2); n++) {
+      const c = await (await doc.getPage(n)).getTextContent();
+      partes.push(c.items.map((i) => ('str' in i ? String(i.str) : '')).join(' '));
+    }
+    return partes.join('\n');
+  } finally { await doc.destroy(); }
+}
+
+const RUC = /\b(\d{6,8})\s?-\s?(\d)\b/g;
+async function leer(it) {
+  const t0 = Date.now();
+  const buf = await get(`/drives/${drive}/items/${it.id}/content`, { binario: true });
+  const msBajada = Date.now() - t0;
+  const r = { id: it.id, bytes: buf.length, msBajada };
+  if (/\.pdf$/i.test(it.n)) {
+    try {
+      const texto = await textoDePdf(buf);
+      r.conTexto = texto.trim().length > 30;
+      const d = reconocerDeclaracionDnit(texto);
+      if (d) r.decl = { f: d.formulario, ruc: d.ruc, per: d.periodo };
+      r.rucs = [...new Set([...texto.matchAll(RUC)].map((m) => m[1]))].slice(0, 6);
+      r.fe = /factura electr[oó]nica|kude|documento electr[oó]nico/i.test(texto);
+    } catch (e) { r.error = String(e.message ?? e).slice(0, 80); }
+  } else {
+    try {
+      const zip = await JSZip.loadAsync(buf);
+      const nombres = Object.keys(zip.files);
+      r.externos = nombres.filter((n) => n.startsWith('xl/externalLinks/externalLink')).length;
+      r.hojas = nombres.filter((n) => /^xl\/worksheets\/sheet\d+\.xml$/.test(n)).length;
+    } catch (e) { r.error = String(e.message ?? e).slice(0, 80); }
+  }
+  r.ms = Date.now() - t0;
+  return r;
+}
+
+const inicio = Date.now();
+let i = 0, listos = 0, errores = 0;
+async function trabajador() {
+  while (i < pendientes.length) {
+    const it = pendientes[i++];
+    try { appendFileSync(SALIDA, JSON.stringify(await leer(it)) + '\n'); listos++; }
+    catch (e) { errores++; appendFileSync(SALIDA, JSON.stringify({ id: it.id, error: String(e.message ?? e).slice(0, 80) }) + '\n'); }
+    if ((listos + errores) % 500 === 0) console.log(`  ${listos + errores}/${pendientes.length} · ${Math.round((Date.now() - inicio) / 1000)} s · errores ${errores}`);
+  }
+}
+await Promise.all(Array.from({ length: 24 }, trabajador));
+console.log(`listo: ${listos} leídos, ${errores} errores, ${Math.round((Date.now() - inicio) / 1000)} s`);

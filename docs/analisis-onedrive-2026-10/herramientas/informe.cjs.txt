@@ -1,0 +1,183 @@
+// Word: documentos faltantes + archivos repetidos por cliente. Sale de faltantes.json y repetidos.json (solo lectura).
+const fs = require('fs');
+const path = require('path');
+const {
+  Document, Packer, Paragraph, TextRun, Table, TableRow, TableCell, HeadingLevel, AlignmentType, WidthType,
+  ShadingType, BorderStyle, LevelFormat, Footer, PageNumber, PageOrientation, SectionType,
+} = require('../node_modules/docx');
+
+const falt = require('./faltantes.json');
+const rep = require('./repetidos.json');
+const MARCA = '6B1F4E', GRIS = 'F3EEF1', TENUE = '7A6672', F = 'Calibri';
+
+const t = (texto, o = {}) => new TextRun({ text: texto, font: F, size: 21, ...o });
+const p = (hijos, o = {}) => new Paragraph({ spacing: { after: 110, line: 270 }, ...o, children: Array.isArray(hijos) ? hijos : [t(hijos)] });
+const h1 = (x) => new Paragraph({ heading: HeadingLevel.HEADING_1, keepNext: true, spacing: { before: 300, after: 130 }, children: [new TextRun({ text: x, font: F, size: 30, bold: true, color: MARCA })] });
+const h2 = (x) => new Paragraph({ heading: HeadingLevel.HEADING_2, keepNext: true, spacing: { before: 220, after: 90 }, children: [new TextRun({ text: x, font: F, size: 24, bold: true, color: '3F2A36' })] });
+const vineta = (hijos) => new Paragraph({ numbering: { reference: 'vinetas', level: 0 }, spacing: { after: 70, line: 265 }, children: Array.isArray(hijos) ? hijos : [t(hijos)] });
+const nota = (x) => new Paragraph({ spacing: { before: 60, after: 140, line: 265 }, indent: { left: 200, right: 200 }, border: { left: { style: BorderStyle.SINGLE, size: 24, color: MARCA, space: 8 } }, shading: { type: ShadingType.CLEAR, fill: GRIS, color: 'auto' }, children: [t(x, { size: 20 })] });
+
+const borde = { style: BorderStyle.SINGLE, size: 4, color: 'C9B8C2' };
+const bordes = { top: borde, bottom: borde, left: borde, right: borde };
+function celda(ancho, parrafos, o = {}) {
+  return new TableCell({
+    width: { size: ancho, type: WidthType.DXA }, borders: bordes,
+    shading: o.fondo ? { fill: o.fondo, type: ShadingType.CLEAR, color: 'auto' } : undefined,
+    margins: { top: 50, bottom: 50, left: 90, right: 90 }, children: parrafos,
+  });
+}
+const par = (texto, o = {}) => new Paragraph({ spacing: { after: 0, line: 245 }, alignment: o.centro ? AlignmentType.CENTER : AlignmentType.LEFT, children: [new TextRun({ text: texto, font: F, size: o.size ?? 19, bold: o.negrita, color: o.color })] });
+function tabla(anchos, enc, filas) {
+  return new Table({
+    width: { size: anchos.reduce((a, b) => a + b, 0), type: WidthType.DXA }, columnWidths: anchos,
+    rows: [
+      new TableRow({ tableHeader: true, children: enc.map((e, i) => celda(anchos[i], [par(e, { negrita: true, color: 'FFFFFF' })], { fondo: MARCA })) }),
+      ...filas.map((f) => new TableRow({ cantSplit: true, children: f.map((c, i) => celda(anchos[i], Array.isArray(c) ? c : [par(String(c))], { fondo: i === 0 ? GRIS : undefined })) })),
+    ],
+  });
+}
+const espacio = () => new Paragraph({ spacing: { after: 100 }, children: [] });
+
+const mb = (b) => (b >= 1048576 ? `${(b / 1048576).toFixed(1)} MB` : `${Math.max(1, Math.round(b / 1024))} KB`);
+const fecha = (iso) => iso.split('-').reverse().join('/');
+const mes = (per) => `${per.slice(5)}/${per.slice(0, 4)}`;
+const partirRuta = (r) => { const i = r.lastIndexOf('/'); return i < 0 ? { carpeta: '(carpeta del cliente)', archivo: r } : { carpeta: r.slice(0, i), archivo: r.slice(i + 1) }; };
+const celdaArchivo = (r, extra) => { const { carpeta, archivo } = partirRuta(r); return [par(archivo, { negrita: true }), par(extra ? `${carpeta}  ·  ${extra}` : carpeta, { size: 16, color: TENUE })]; };
+
+// ------------------------------------------------------------------ datos de faltantes
+const OBLIGACION = {
+  IVA_GENERAL: 'Declaración de IVA (formulario 120) presentada',
+  PLANILLA_RG90: 'Talón / comprobante de presentación de la RG 90',
+  IRE: 'Declaración de IRE presentada',
+  EEFF: 'Estados financieros presentados',
+};
+const PLANILLA = {
+  COMPLETA: 'Completa',
+  SIN_LIQUIDACION: 'No hay NINGUNA planilla RG 90 (ni compras ni ventas)',
+  FALTA_VENTAS: 'Falta la planilla de VENTAS (si ese mes no hubo ventas, avisar)',
+  FALTA_COMPRAS: 'Falta la planilla de COMPRAS',
+  FALTAN_AMBAS: 'Faltan las planillas de compras y de ventas',
+};
+const corto = (n) => n.replace(/\s*\(.*\)/, '').trim();
+const filasFalt = falt.faltantes;
+const clientesFalt = [...new Set(filasFalt.map((f) => f.clienteNombre))].sort();
+const totOblig = filasFalt.reduce((s, f) => s + f.obligaciones.length, 0);
+const totIncompl = filasFalt.filter((f) => f.estadoPlanillaRg90 !== 'COMPLETA').length;
+const fechaFalt = new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Asuncion' }).format(new Date(falt.fecha)).split('-').reverse().join('/');
+
+// ------------------------------------------------------------------ sección 1 (vertical)
+const s1 = [];
+s1.push(new Paragraph({ spacing: { after: 40 }, children: [new TextRun({ text: 'EFFORT Consultora E.A.S.', font: F, size: 22, color: TENUE })] }));
+s1.push(new Paragraph({ spacing: { after: 80 }, children: [new TextRun({ text: 'Documentos faltantes y archivos repetidos', font: F, size: 46, bold: true, color: MARCA })] }));
+s1.push(new Paragraph({ spacing: { after: 220 }, border: { bottom: { style: BorderStyle.SINGLE, size: 12, color: MARCA, space: 4 } }, children: [t(`Faltantes: datos del sistema al ${fechaFalt}  ·  Repetidos: lectura del OneDrive del 03/10/2026`, { color: '5A4852' })] }));
+
+s1.push(h1('Qué es este documento'));
+s1.push(p('Dos listas para que el equipo las trabaje cliente por cliente:'));
+s1.push(vineta([t('Lo que falta subir ', { bold: true }), t('a la carpeta del cliente en OneDrive: declaraciones, comprobantes de presentación y planillas RG 90 que el sistema no encuentra.')]));
+s1.push(vineta([t('Los archivos repetidos ', { bold: true }), t('de cada cliente: el mismo documento guardado más de una vez, con la carpeta de cada copia.')]));
+s1.push(nota('Nada se borró, movió ni renombró en el OneDrive. Esto es solo una lista: qué se hace con cada cosa lo deciden Laura y Lili.'));
+
+s1.push(h1('Resumen'));
+s1.push(tabla([4100, 1800, 1900, 1838], ['', 'Períodos con algo pendiente', 'Comprobantes por subir', 'Planillas RG 90 incompletas'], [
+  ['Faltantes (5 clientes en el sistema)', String(filasFalt.length), String(totOblig), String(totIncompl)],
+]));
+s1.push(espacio());
+s1.push(tabla([4100, 1800, 1900, 1838], ['', 'Clientes con repetidos', 'Archivos repetidos (copias sobrantes)', 'Peso de las copias'], [
+  ['Repetidos (129 clientes revisados)', String(rep.total.clientes), String(rep.total.copias), mb(rep.total.bytes)],
+]));
+s1.push(espacio());
+s1.push(p([t('Por qué los faltantes son solo de 5 clientes: ', { bold: true }), t('el sistema controla hoy a los 5 clientes del piloto (COPESA, DIBEC, ECOAGRO, FUMIPRO y SIPAR). Cuando se carguen los demás, esta lista se arma igual para todos. Los repetidos, en cambio, se revisaron en los 129 clientes con carpeta en el OneDrive.')]));
+
+// ---- faltantes
+s1.push(h1('1. Lo que falta subir'));
+s1.push(nota('«Falta» significa que el sistema no encontró el archivo en la carpeta del cliente en OneDrive. No significa que no se haya presentado: puede estar presentado y guardado en otro lugar. En ese caso hay que guardarlo en la carpeta del cliente, con el nombre correcto.'));
+s1.push(h2('Cómo se llama el archivo que hay que subir'));
+s1.push(p('Guardar el PDF original bajado de Marangatú (nunca una foto ni una captura), en la carpeta del mes del período, con estos nombres (Manual de procedimiento de documentos, sección 3.3):'));
+s1.push(tabla([3600, 6038], ['Qué falta', 'Nombre del archivo'], [
+  ['Declaración de IVA (formulario 120)', 'DDJJ IVA MMAAAA CLIENTE.pdf   →   DDJJ IVA 082026 COPESA.pdf'],
+  ['Comprobante de la RG 90 (formulario 241)', 'TALON RG 90 MMAAAA CLIENTE.pdf   →   TALON RG 90 082026 COPESA.pdf'],
+  ['Declaración de IRE (formulario 500)', 'DDJJ IRE AAAA CLIENTE.pdf   →   DDJJ IRE 2025 DIBEC.pdf'],
+  ['Estados financieros presentados (formulario 158)', 'EEFF AAAA PRESENTADO FORM 158 CLIENTE.pdf   →   EEFF 2025 PRESENTADO FORM 158 COPESA.pdf'],
+  ['Planilla RG 90 de compras o de ventas', 'RG COMPRAS MMAAAA CLIENTE.xlsx   ·   RG VENTAS MMAAAA CLIENTE.xlsx   (siempre .xlsx)'],
+]));
+s1.push(espacio());
+
+s1.push(h2('Resumen por cliente'));
+s1.push(tabla([3700, 1900, 2200, 1838], ['Cliente', 'Períodos con algo pendiente', 'Planillas RG 90 incompletas', 'Período más viejo'], clientesFalt.map((c) => {
+  const mias = filasFalt.filter((f) => f.clienteNombre === c);
+  const viejo = mias.map((f) => f.periodo).sort()[0];
+  return [corto(c), String(mias.length), String(mias.filter((f) => f.estadoPlanillaRg90 !== 'COMPLETA').length), mes(viejo)];
+})));
+s1.push(espacio());
+
+for (const c of clientesFalt) {
+  const mias = filasFalt.filter((f) => f.clienteNombre === c).sort((a, b) => b.periodo.localeCompare(a.periodo));
+  s1.push(h2(`${c}`));
+  s1.push(tabla([1100, 4300, 2300, 1938], ['Período', 'Qué hay que subir', 'Venció / atraso', 'Planilla RG 90'], mias.map((f) => [
+    mes(f.periodo),
+    f.obligaciones.map((o) => par(`•  ${OBLIGACION[o.tipoDocumento] ?? o.tipoDocumento}`)),
+    f.obligaciones.map((o) => par(`${fecha(o.fechaVencimiento)}  ·  ${o.diasDeAtraso} días`)),
+    [par(PLANILLA[f.estadoPlanillaRg90] ?? f.estadoPlanillaRg90, { color: f.estadoPlanillaRg90 === 'COMPLETA' ? '2E7D32' : 'B00020' })],
+  ])));
+  s1.push(espacio());
+}
+
+// ---- resumen de repetidos
+s1.push(h1('2. Archivos repetidos, por cliente'));
+s1.push(p('Son archivos **idénticos**: mismo contenido y mismo peso (se comparan con la huella que calcula Microsoft), guardados más de una vez dentro del mismo cliente. Puede tener nombres o carpetas distintas.'.replace(/\*\*/g, '')));
+s1.push(h2('Cómo leer el detalle'));
+s1.push(vineta('**Se conserva** el archivo más antiguo (por fecha de creación en OneDrive), porque suele ser el original. Si prefieren conservar otro, lo deciden ustedes.'.replace(/\*\*/g, '')));
+s1.push(vineta('**Copias sobrantes**: las demás. Una fila puede tener varias copias.'.replace(/\*\*/g, '')));
+s1.push(vineta('Antes de borrar una copia: comprobar que ninguna planilla de Excel (sobre todo los balances «EEFF… .xlsm») tenga un vínculo que apunte a esa copia. Hay 107 Excel con vínculos en total; borrar el archivo al que apuntan rompe la planilla sin avisar.'));
+s1.push(vineta('Lo que se borra de OneDrive va a la papelera y se puede recuperar durante un tiempo, pero no hay que confiar en eso: ante la duda, no borrar.'));
+s1.push(nota('El sistema no borra nada de EFFORT, y no tiene forma de hacerlo. Estas copias las decide y las borra una persona del equipo, si así lo decide.'));
+s1.push(h2('Resumen por cliente'));
+const orden = [...rep.clientes].sort((a, b) => b.copias - a.copias);
+s1.push(tabla([900, 4300, 1500, 1500, 1438], ['Código', 'Cliente', 'Grupos repetidos', 'Copias sobrantes', 'Peso de las copias'], [
+  ...orden.map((c) => [c.codigo, c.nombre, String(c.grupos.length), String(c.copias), mb(c.bytesSobrantes)]),
+  [[par('')], [par('TOTAL', { negrita: true })], [par(String(rep.total.grupos), { negrita: true })], [par(String(rep.total.copias), { negrita: true })], [par(mb(rep.total.bytes), { negrita: true })]],
+]));
+
+// ------------------------------------------------------------------ sección 2 (apaisada): detalle por cliente
+const s2 = [];
+s2.push(h1('3. Detalle de repetidos por cliente'));
+s2.push(p('Ordenado por código de cliente. Las rutas son relativas a la carpeta del cliente. Debajo del nombre de cada archivo se ve su carpeta y la fecha en que se creó.'));
+const ANCHOS = [6350, 6350, 1870];
+for (const c of rep.clientes) {
+  s2.push(h2(`${c.codigo} ${c.nombre}  —  ${c.copias} copia${c.copias === 1 ? '' : 's'} en ${c.grupos.length} grupo${c.grupos.length === 1 ? '' : 's'}  ·  ${mb(c.bytesSobrantes)}`));
+  s2.push(tabla(ANCHOS, ['Se conserva (el más antiguo)', 'Copias sobrantes', 'Peso de cada una'], c.grupos.map((g) => [
+    celdaArchivo(g.conservar.ruta, `creado ${fecha(g.conservar.creado)}`),
+    g.copias.flatMap((x) => celdaArchivo(x.ruta, `creado ${fecha(x.creado)}`)),
+    [par(mb(g.bytes))],
+  ])));
+  s2.push(espacio());
+}
+
+s2.push(h1('4. El mismo archivo en clientes distintos'));
+s2.push(p('Son archivos idénticos que aparecen en la carpeta de más de un cliente. **No son «sobrantes»**: puede ser un documento que de verdad corresponde a los dos (un aviso de la DNIT, por ejemplo) o un archivo guardado en el cliente equivocado. Hay que mirarlos de a uno.'.replace(/\*\*/g, '')));
+s2.push(tabla([4300, 1100, 9170], ['Archivo', 'Peso', 'Dónde está'], rep.entre.map((e) => [
+  [par(e.nombre, { negrita: true })], [par(mb(e.bytes))], e.en.map((r) => par(r, { size: 17 })),
+])));
+
+// ------------------------------------------------------------------ armado
+const pie = () => new Footer({ children: [new Paragraph({ alignment: AlignmentType.CENTER, children: [
+  new TextRun({ text: 'EFFORT · Documentos faltantes y archivos repetidos · Página ', font: F, size: 17, color: TENUE }),
+  new TextRun({ children: [PageNumber.CURRENT], font: F, size: 17, color: TENUE }),
+] })] });
+
+const doc = new Document({
+  creator: 'EFFORT Control 360', title: 'Documentos faltantes y archivos repetidos',
+  styles: { default: { document: { run: { font: F, size: 21 } } } },
+  numbering: { config: [{ reference: 'vinetas', levels: [{ level: 0, format: LevelFormat.BULLET, text: '•', alignment: AlignmentType.LEFT, style: { paragraph: { indent: { left: 540, hanging: 270 } } } }] }] },
+  sections: [
+    { properties: { page: { size: { width: 11906, height: 16838 }, margin: { top: 1134, bottom: 1134, left: 1134, right: 1134 } } }, footers: { default: pie() }, children: s1 },
+    { properties: { type: SectionType.NEXT_PAGE, page: { size: { width: 11906, height: 16838, orientation: PageOrientation.LANDSCAPE }, margin: { top: 1000, bottom: 1000, left: 1134, right: 1134 } } }, footers: { default: pie() }, children: s2 },
+  ],
+});
+
+(async () => {
+  const buf = await Packer.toBuffer(doc);
+  const salida = path.join(__dirname, 'Documentos faltantes y archivos repetidos - EFFORT.docx');
+  fs.writeFileSync(salida, buf);
+  console.log('ok', buf.length, 'bytes');
+})();

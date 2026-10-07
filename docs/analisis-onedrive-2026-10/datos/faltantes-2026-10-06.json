@@ -1,0 +1,883 @@
+{
+ "fecha": "2026-10-06T18:59:26.773Z",
+ "faltantes": [
+  {
+   "clienteId": "c9ab4f11-e0f2-4ac4-ad89-dd7e58690781",
+   "clienteNombre": "COPESA CONSTRUCCIONES SA",
+   "periodo": "2026-08",
+   "obligaciones": [
+    {
+     "id": "d6ce26b0-3c0d-4f19-ad86-183e34165344",
+     "clienteId": "c9ab4f11-e0f2-4ac4-ad89-dd7e58690781",
+     "clienteNombre": "COPESA CONSTRUCCIONES SA",
+     "periodo": "2026-08",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-08",
+     "fechaVencimiento": "2026-09-14",
+     "diasDeAtraso": 22
+    }
+   ],
+   "estadoPlanillaRg90": "COMPLETA"
+  },
+  {
+   "clienteId": "c9ab4f11-e0f2-4ac4-ad89-dd7e58690781",
+   "clienteNombre": "COPESA CONSTRUCCIONES SA",
+   "periodo": "2026-07",
+   "obligaciones": [
+    {
+     "id": "98aa596b-5e32-4824-9d9a-4e59f6b713c8",
+     "clienteId": "c9ab4f11-e0f2-4ac4-ad89-dd7e58690781",
+     "clienteNombre": "COPESA CONSTRUCCIONES SA",
+     "periodo": "2026-07",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-07",
+     "fechaVencimiento": "2026-08-12",
+     "diasDeAtraso": 55
+    }
+   ],
+   "estadoPlanillaRg90": "COMPLETA"
+  },
+  {
+   "clienteId": "c9ab4f11-e0f2-4ac4-ad89-dd7e58690781",
+   "clienteNombre": "COPESA CONSTRUCCIONES SA",
+   "periodo": "2026-06",
+   "obligaciones": [
+    {
+     "id": "b91ca22d-93f9-4848-9187-abf4cc0845da",
+     "clienteId": "c9ab4f11-e0f2-4ac4-ad89-dd7e58690781",
+     "clienteNombre": "COPESA CONSTRUCCIONES SA",
+     "periodo": "2026-06",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-06",
+     "fechaVencimiento": "2026-07-13",
+     "diasDeAtraso": 85
+    }
+   ],
+   "estadoPlanillaRg90": "COMPLETA"
+  },
+  {
+   "clienteId": "c9ab4f11-e0f2-4ac4-ad89-dd7e58690781",
+   "clienteNombre": "COPESA CONSTRUCCIONES SA",
+   "periodo": "2026-02",
+   "obligaciones": [
+    {
+     "id": "40a2f8a6-d86b-4b33-afb6-fe56fe3fa5dd",
+     "clienteId": "c9ab4f11-e0f2-4ac4-ad89-dd7e58690781",
+     "clienteNombre": "COPESA CONSTRUCCIONES SA",
+     "periodo": "2026-02",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-02",
+     "fechaVencimiento": "2026-03-12",
+     "diasDeAtraso": 208
+    }
+   ],
+   "estadoPlanillaRg90": "COMPLETA"
+  },
+  {
+   "clienteId": "c9ab4f11-e0f2-4ac4-ad89-dd7e58690781",
+   "clienteNombre": "COPESA CONSTRUCCIONES SA",
+   "periodo": "2025-12",
+   "obligaciones": [
+    {
+     "id": "c21be18e-5cb4-4d80-b981-50a914f8ffc3",
+     "clienteId": "c9ab4f11-e0f2-4ac4-ad89-dd7e58690781",
+     "clienteNombre": "COPESA CONSTRUCCIONES SA",
+     "periodo": "2025-12",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2025-12",
+     "fechaVencimiento": "2026-01-12",
+     "diasDeAtraso": 267
+    },
+    {
+     "id": "72bbc0b5-39b4-4d19-a041-db2ab3790f52",
+     "clienteId": "c9ab4f11-e0f2-4ac4-ad89-dd7e58690781",
+     "clienteNombre": "COPESA CONSTRUCCIONES SA",
+     "periodo": "2025-12",
+     "tipoDocumento": "EEFF",
+     "descripcion": "Estados Financieros — período 2025-12",
+     "fechaVencimiento": "2026-06-30",
+     "diasDeAtraso": 98
+    }
+   ],
+   "estadoPlanillaRg90": "COMPLETA"
+  },
+  {
+   "clienteId": "8c5661ea-ac60-41dc-ad0d-197ad29d0d56",
+   "clienteNombre": "DIBEC SOCIEDAD ANONIMA",
+   "periodo": "2026-08",
+   "obligaciones": [
+    {
+     "id": "ddabfaa8-d30a-4d62-8884-88f330fe510b",
+     "clienteId": "8c5661ea-ac60-41dc-ad0d-197ad29d0d56",
+     "clienteNombre": "DIBEC SOCIEDAD ANONIMA",
+     "periodo": "2026-08",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-08",
+     "fechaVencimiento": "2026-09-21",
+     "diasDeAtraso": 15
+    }
+   ],
+   "estadoPlanillaRg90": "FALTA_VENTAS"
+  },
+  {
+   "clienteId": "8c5661ea-ac60-41dc-ad0d-197ad29d0d56",
+   "clienteNombre": "DIBEC SOCIEDAD ANONIMA",
+   "periodo": "2026-07",
+   "obligaciones": [
+    {
+     "id": "b4cdee7a-89cd-4a08-b81d-2604f5e3a02c",
+     "clienteId": "8c5661ea-ac60-41dc-ad0d-197ad29d0d56",
+     "clienteNombre": "DIBEC SOCIEDAD ANONIMA",
+     "periodo": "2026-07",
+     "tipoDocumento": "IVA_GENERAL",
+     "descripcion": "IVA General — período 2026-07",
+     "fechaVencimiento": "2026-08-19",
+     "diasDeAtraso": 48
+    },
+    {
+     "id": "4e5a19d0-5824-4b37-9085-29c4f0ecffe6",
+     "clienteId": "8c5661ea-ac60-41dc-ad0d-197ad29d0d56",
+     "clienteNombre": "DIBEC SOCIEDAD ANONIMA",
+     "periodo": "2026-07",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-07",
+     "fechaVencimiento": "2026-08-20",
+     "diasDeAtraso": 47
+    }
+   ],
+   "estadoPlanillaRg90": "COMPLETA"
+  },
+  {
+   "clienteId": "8c5661ea-ac60-41dc-ad0d-197ad29d0d56",
+   "clienteNombre": "DIBEC SOCIEDAD ANONIMA",
+   "periodo": "2026-06",
+   "obligaciones": [
+    {
+     "id": "1795ccce-59ec-427b-b44e-7ee3f5dae6ec",
+     "clienteId": "8c5661ea-ac60-41dc-ad0d-197ad29d0d56",
+     "clienteNombre": "DIBEC SOCIEDAD ANONIMA",
+     "periodo": "2026-06",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-06",
+     "fechaVencimiento": "2026-07-20",
+     "diasDeAtraso": 78
+    }
+   ],
+   "estadoPlanillaRg90": "COMPLETA"
+  },
+  {
+   "clienteId": "8c5661ea-ac60-41dc-ad0d-197ad29d0d56",
+   "clienteNombre": "DIBEC SOCIEDAD ANONIMA",
+   "periodo": "2026-05",
+   "obligaciones": [
+    {
+     "id": "b460d3c7-85df-45a4-ba26-4cb893eca760",
+     "clienteId": "8c5661ea-ac60-41dc-ad0d-197ad29d0d56",
+     "clienteNombre": "DIBEC SOCIEDAD ANONIMA",
+     "periodo": "2026-05",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-05",
+     "fechaVencimiento": "2026-06-23",
+     "diasDeAtraso": 105
+    }
+   ],
+   "estadoPlanillaRg90": "FALTA_VENTAS"
+  },
+  {
+   "clienteId": "8c5661ea-ac60-41dc-ad0d-197ad29d0d56",
+   "clienteNombre": "DIBEC SOCIEDAD ANONIMA",
+   "periodo": "2026-04",
+   "obligaciones": [
+    {
+     "id": "0e2dfe6a-2191-4b11-9bed-284532f257ac",
+     "clienteId": "8c5661ea-ac60-41dc-ad0d-197ad29d0d56",
+     "clienteNombre": "DIBEC SOCIEDAD ANONIMA",
+     "periodo": "2026-04",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-04",
+     "fechaVencimiento": "2026-05-20",
+     "diasDeAtraso": 139
+    }
+   ],
+   "estadoPlanillaRg90": "FALTA_VENTAS"
+  },
+  {
+   "clienteId": "8c5661ea-ac60-41dc-ad0d-197ad29d0d56",
+   "clienteNombre": "DIBEC SOCIEDAD ANONIMA",
+   "periodo": "2026-03",
+   "obligaciones": [
+    {
+     "id": "d82bf9d3-ef53-45af-8dee-f8063a4eb0e7",
+     "clienteId": "8c5661ea-ac60-41dc-ad0d-197ad29d0d56",
+     "clienteNombre": "DIBEC SOCIEDAD ANONIMA",
+     "periodo": "2026-03",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-03",
+     "fechaVencimiento": "2026-04-20",
+     "diasDeAtraso": 169
+    }
+   ],
+   "estadoPlanillaRg90": "COMPLETA"
+  },
+  {
+   "clienteId": "8c5661ea-ac60-41dc-ad0d-197ad29d0d56",
+   "clienteNombre": "DIBEC SOCIEDAD ANONIMA",
+   "periodo": "2026-02",
+   "obligaciones": [
+    {
+     "id": "70f8b937-68f8-4dd9-89df-2d06ddf5157b",
+     "clienteId": "8c5661ea-ac60-41dc-ad0d-197ad29d0d56",
+     "clienteNombre": "DIBEC SOCIEDAD ANONIMA",
+     "periodo": "2026-02",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-02",
+     "fechaVencimiento": "2026-03-20",
+     "diasDeAtraso": 200
+    }
+   ],
+   "estadoPlanillaRg90": "FALTA_VENTAS"
+  },
+  {
+   "clienteId": "8c5661ea-ac60-41dc-ad0d-197ad29d0d56",
+   "clienteNombre": "DIBEC SOCIEDAD ANONIMA",
+   "periodo": "2026-01",
+   "obligaciones": [
+    {
+     "id": "7aa0a4a9-6221-4a7b-8249-7aa315947de5",
+     "clienteId": "8c5661ea-ac60-41dc-ad0d-197ad29d0d56",
+     "clienteNombre": "DIBEC SOCIEDAD ANONIMA",
+     "periodo": "2026-01",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-01",
+     "fechaVencimiento": "2026-02-20",
+     "diasDeAtraso": 228
+    }
+   ],
+   "estadoPlanillaRg90": "SIN_LIQUIDACION"
+  },
+  {
+   "clienteId": "8c5661ea-ac60-41dc-ad0d-197ad29d0d56",
+   "clienteNombre": "DIBEC SOCIEDAD ANONIMA",
+   "periodo": "2025-12",
+   "obligaciones": [
+    {
+     "id": "771939a9-35fa-4da0-a683-84ffd0121d46",
+     "clienteId": "8c5661ea-ac60-41dc-ad0d-197ad29d0d56",
+     "clienteNombre": "DIBEC SOCIEDAD ANONIMA",
+     "periodo": "2025-12",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2025-12",
+     "fechaVencimiento": "2026-01-20",
+     "diasDeAtraso": 259
+    },
+    {
+     "id": "f3ee1469-c56d-4d15-87b0-bffd4bb821f1",
+     "clienteId": "8c5661ea-ac60-41dc-ad0d-197ad29d0d56",
+     "clienteNombre": "DIBEC SOCIEDAD ANONIMA",
+     "periodo": "2025-12",
+     "tipoDocumento": "IRE",
+     "descripcion": "IRE — Impuesto a la Renta Empresarial — período 2025-12",
+     "fechaVencimiento": "2026-04-20",
+     "diasDeAtraso": 169
+    }
+   ],
+   "estadoPlanillaRg90": "FALTA_VENTAS"
+  },
+  {
+   "clienteId": "95816dc2-cc7a-46b9-b979-2ceeea1c4254",
+   "clienteNombre": "ECOAGRO SA",
+   "periodo": "2026-08",
+   "obligaciones": [
+    {
+     "id": "675c5332-9e02-43ca-8349-adca8fd75518",
+     "clienteId": "95816dc2-cc7a-46b9-b979-2ceeea1c4254",
+     "clienteNombre": "ECOAGRO SA",
+     "periodo": "2026-08",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-08",
+     "fechaVencimiento": "2026-09-29",
+     "diasDeAtraso": 7
+    }
+   ],
+   "estadoPlanillaRg90": "COMPLETA"
+  },
+  {
+   "clienteId": "95816dc2-cc7a-46b9-b979-2ceeea1c4254",
+   "clienteNombre": "ECOAGRO SA",
+   "periodo": "2026-07",
+   "obligaciones": [
+    {
+     "id": "b2ea1fea-afd7-45f1-8067-7a152e0fdaf1",
+     "clienteId": "95816dc2-cc7a-46b9-b979-2ceeea1c4254",
+     "clienteNombre": "ECOAGRO SA",
+     "periodo": "2026-07",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-07",
+     "fechaVencimiento": "2026-08-26",
+     "diasDeAtraso": 41
+    }
+   ],
+   "estadoPlanillaRg90": "COMPLETA"
+  },
+  {
+   "clienteId": "95816dc2-cc7a-46b9-b979-2ceeea1c4254",
+   "clienteNombre": "ECOAGRO SA",
+   "periodo": "2026-06",
+   "obligaciones": [
+    {
+     "id": "46b10d77-9793-48dc-b2a7-8b2052a2d96e",
+     "clienteId": "95816dc2-cc7a-46b9-b979-2ceeea1c4254",
+     "clienteNombre": "ECOAGRO SA",
+     "periodo": "2026-06",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-06",
+     "fechaVencimiento": "2026-07-27",
+     "diasDeAtraso": 71
+    }
+   ],
+   "estadoPlanillaRg90": "COMPLETA"
+  },
+  {
+   "clienteId": "95816dc2-cc7a-46b9-b979-2ceeea1c4254",
+   "clienteNombre": "ECOAGRO SA",
+   "periodo": "2026-05",
+   "obligaciones": [
+    {
+     "id": "0e130bbf-c548-48e8-ad1d-7c44efbc9c06",
+     "clienteId": "95816dc2-cc7a-46b9-b979-2ceeea1c4254",
+     "clienteNombre": "ECOAGRO SA",
+     "periodo": "2026-05",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-05",
+     "fechaVencimiento": "2026-06-26",
+     "diasDeAtraso": 102
+    }
+   ],
+   "estadoPlanillaRg90": "FALTA_VENTAS"
+  },
+  {
+   "clienteId": "95816dc2-cc7a-46b9-b979-2ceeea1c4254",
+   "clienteNombre": "ECOAGRO SA",
+   "periodo": "2026-04",
+   "obligaciones": [
+    {
+     "id": "2e2b8119-bcfc-4685-8fea-fc2092a0c9dd",
+     "clienteId": "95816dc2-cc7a-46b9-b979-2ceeea1c4254",
+     "clienteNombre": "ECOAGRO SA",
+     "periodo": "2026-04",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-04",
+     "fechaVencimiento": "2026-05-26",
+     "diasDeAtraso": 133
+    }
+   ],
+   "estadoPlanillaRg90": "COMPLETA"
+  },
+  {
+   "clienteId": "95816dc2-cc7a-46b9-b979-2ceeea1c4254",
+   "clienteNombre": "ECOAGRO SA",
+   "periodo": "2026-03",
+   "obligaciones": [
+    {
+     "id": "e3952a99-ac0f-4f8f-8cd5-7ccfe295f125",
+     "clienteId": "95816dc2-cc7a-46b9-b979-2ceeea1c4254",
+     "clienteNombre": "ECOAGRO SA",
+     "periodo": "2026-03",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-03",
+     "fechaVencimiento": "2026-04-27",
+     "diasDeAtraso": 162
+    }
+   ],
+   "estadoPlanillaRg90": "COMPLETA"
+  },
+  {
+   "clienteId": "95816dc2-cc7a-46b9-b979-2ceeea1c4254",
+   "clienteNombre": "ECOAGRO SA",
+   "periodo": "2026-02",
+   "obligaciones": [
+    {
+     "id": "1f07047d-5e82-40c7-8995-154fc9b9b02c",
+     "clienteId": "95816dc2-cc7a-46b9-b979-2ceeea1c4254",
+     "clienteNombre": "ECOAGRO SA",
+     "periodo": "2026-02",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-02",
+     "fechaVencimiento": "2026-03-26",
+     "diasDeAtraso": 194
+    }
+   ],
+   "estadoPlanillaRg90": "FALTA_VENTAS"
+  },
+  {
+   "clienteId": "95816dc2-cc7a-46b9-b979-2ceeea1c4254",
+   "clienteNombre": "ECOAGRO SA",
+   "periodo": "2026-01",
+   "obligaciones": [
+    {
+     "id": "2c81341a-df27-423e-9b6c-3072b0d8a5fd",
+     "clienteId": "95816dc2-cc7a-46b9-b979-2ceeea1c4254",
+     "clienteNombre": "ECOAGRO SA",
+     "periodo": "2026-01",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-01",
+     "fechaVencimiento": "2026-02-26",
+     "diasDeAtraso": 222
+    }
+   ],
+   "estadoPlanillaRg90": "COMPLETA"
+  },
+  {
+   "clienteId": "95816dc2-cc7a-46b9-b979-2ceeea1c4254",
+   "clienteNombre": "ECOAGRO SA",
+   "periodo": "2025-12",
+   "obligaciones": [
+    {
+     "id": "f428a0d6-5687-47e7-a40b-924405c64fbb",
+     "clienteId": "95816dc2-cc7a-46b9-b979-2ceeea1c4254",
+     "clienteNombre": "ECOAGRO SA",
+     "periodo": "2025-12",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2025-12",
+     "fechaVencimiento": "2026-01-26",
+     "diasDeAtraso": 253
+    }
+   ],
+   "estadoPlanillaRg90": "COMPLETA"
+  },
+  {
+   "clienteId": "94c5c9c8-5522-47c6-9d98-fc3f333ab715",
+   "clienteNombre": "FUMIPRO S.A.",
+   "periodo": "2026-08",
+   "obligaciones": [
+    {
+     "id": "cf60f0a6-8a3a-47f5-b56e-042fdecf9bf2",
+     "clienteId": "94c5c9c8-5522-47c6-9d98-fc3f333ab715",
+     "clienteNombre": "FUMIPRO S.A.",
+     "periodo": "2026-08",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-08",
+     "fechaVencimiento": "2026-09-10",
+     "diasDeAtraso": 26
+    }
+   ],
+   "estadoPlanillaRg90": "COMPLETA"
+  },
+  {
+   "clienteId": "94c5c9c8-5522-47c6-9d98-fc3f333ab715",
+   "clienteNombre": "FUMIPRO S.A.",
+   "periodo": "2026-07",
+   "obligaciones": [
+    {
+     "id": "36efe578-5b5a-4248-92b1-14e9d49fc55e",
+     "clienteId": "94c5c9c8-5522-47c6-9d98-fc3f333ab715",
+     "clienteNombre": "FUMIPRO S.A.",
+     "periodo": "2026-07",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-07",
+     "fechaVencimiento": "2026-08-10",
+     "diasDeAtraso": 57
+    }
+   ],
+   "estadoPlanillaRg90": "COMPLETA"
+  },
+  {
+   "clienteId": "94c5c9c8-5522-47c6-9d98-fc3f333ab715",
+   "clienteNombre": "FUMIPRO S.A.",
+   "periodo": "2026-06",
+   "obligaciones": [
+    {
+     "id": "743dacce-7ca7-4889-ae81-e82e6f95ec92",
+     "clienteId": "94c5c9c8-5522-47c6-9d98-fc3f333ab715",
+     "clienteNombre": "FUMIPRO S.A.",
+     "periodo": "2026-06",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-06",
+     "fechaVencimiento": "2026-07-10",
+     "diasDeAtraso": 88
+    }
+   ],
+   "estadoPlanillaRg90": "COMPLETA"
+  },
+  {
+   "clienteId": "94c5c9c8-5522-47c6-9d98-fc3f333ab715",
+   "clienteNombre": "FUMIPRO S.A.",
+   "periodo": "2026-05",
+   "obligaciones": [
+    {
+     "id": "2810816a-9664-4871-b183-4d66e7510e33",
+     "clienteId": "94c5c9c8-5522-47c6-9d98-fc3f333ab715",
+     "clienteNombre": "FUMIPRO S.A.",
+     "periodo": "2026-05",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-05",
+     "fechaVencimiento": "2026-06-10",
+     "diasDeAtraso": 118
+    }
+   ],
+   "estadoPlanillaRg90": "COMPLETA"
+  },
+  {
+   "clienteId": "94c5c9c8-5522-47c6-9d98-fc3f333ab715",
+   "clienteNombre": "FUMIPRO S.A.",
+   "periodo": "2026-04",
+   "obligaciones": [
+    {
+     "id": "672c4033-e724-4349-9cde-af4c13e9807e",
+     "clienteId": "94c5c9c8-5522-47c6-9d98-fc3f333ab715",
+     "clienteNombre": "FUMIPRO S.A.",
+     "periodo": "2026-04",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-04",
+     "fechaVencimiento": "2026-05-11",
+     "diasDeAtraso": 148
+    }
+   ],
+   "estadoPlanillaRg90": "COMPLETA"
+  },
+  {
+   "clienteId": "94c5c9c8-5522-47c6-9d98-fc3f333ab715",
+   "clienteNombre": "FUMIPRO S.A.",
+   "periodo": "2026-03",
+   "obligaciones": [
+    {
+     "id": "1de1773d-6078-4dec-9424-06444b470f90",
+     "clienteId": "94c5c9c8-5522-47c6-9d98-fc3f333ab715",
+     "clienteNombre": "FUMIPRO S.A.",
+     "periodo": "2026-03",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-03",
+     "fechaVencimiento": "2026-04-10",
+     "diasDeAtraso": 179
+    }
+   ],
+   "estadoPlanillaRg90": "COMPLETA"
+  },
+  {
+   "clienteId": "94c5c9c8-5522-47c6-9d98-fc3f333ab715",
+   "clienteNombre": "FUMIPRO S.A.",
+   "periodo": "2026-02",
+   "obligaciones": [
+    {
+     "id": "7d942a0b-bb05-4ea4-9ad7-8e26e9457dc9",
+     "clienteId": "94c5c9c8-5522-47c6-9d98-fc3f333ab715",
+     "clienteNombre": "FUMIPRO S.A.",
+     "periodo": "2026-02",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-02",
+     "fechaVencimiento": "2026-03-10",
+     "diasDeAtraso": 210
+    }
+   ],
+   "estadoPlanillaRg90": "COMPLETA"
+  },
+  {
+   "clienteId": "94c5c9c8-5522-47c6-9d98-fc3f333ab715",
+   "clienteNombre": "FUMIPRO S.A.",
+   "periodo": "2026-01",
+   "obligaciones": [
+    {
+     "id": "af33f951-5ade-4c7b-b974-c1f7c4359ea4",
+     "clienteId": "94c5c9c8-5522-47c6-9d98-fc3f333ab715",
+     "clienteNombre": "FUMIPRO S.A.",
+     "periodo": "2026-01",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-01",
+     "fechaVencimiento": "2026-02-10",
+     "diasDeAtraso": 238
+    }
+   ],
+   "estadoPlanillaRg90": "SIN_LIQUIDACION"
+  },
+  {
+   "clienteId": "94c5c9c8-5522-47c6-9d98-fc3f333ab715",
+   "clienteNombre": "FUMIPRO S.A.",
+   "periodo": "2025-12",
+   "obligaciones": [
+    {
+     "id": "fb32e374-e63d-48cd-b43e-461b6419a46d",
+     "clienteId": "94c5c9c8-5522-47c6-9d98-fc3f333ab715",
+     "clienteNombre": "FUMIPRO S.A.",
+     "periodo": "2025-12",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2025-12",
+     "fechaVencimiento": "2026-01-12",
+     "diasDeAtraso": 267
+    }
+   ],
+   "estadoPlanillaRg90": "SIN_LIQUIDACION"
+  },
+  {
+   "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+   "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+   "periodo": "2026-08",
+   "obligaciones": [
+    {
+     "id": "ee7899d6-f783-46be-834b-f76eebf49438",
+     "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+     "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+     "periodo": "2026-08",
+     "tipoDocumento": "IVA_GENERAL",
+     "descripcion": "IVA General — período 2026-08",
+     "fechaVencimiento": "2026-09-11",
+     "diasDeAtraso": 25
+    },
+    {
+     "id": "62dc2b3c-9c37-4c0c-a555-788db8dbb0ff",
+     "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+     "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+     "periodo": "2026-08",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-08",
+     "fechaVencimiento": "2026-09-14",
+     "diasDeAtraso": 22
+    }
+   ],
+   "estadoPlanillaRg90": "SIN_LIQUIDACION"
+  },
+  {
+   "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+   "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+   "periodo": "2026-07",
+   "obligaciones": [
+    {
+     "id": "8c539279-e96d-43cf-8937-8fb524ab69d3",
+     "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+     "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+     "periodo": "2026-07",
+     "tipoDocumento": "IVA_GENERAL",
+     "descripcion": "IVA General — período 2026-07",
+     "fechaVencimiento": "2026-08-11",
+     "diasDeAtraso": 56
+    },
+    {
+     "id": "01c1fcfe-f2da-487c-bb02-a59bd6e3f884",
+     "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+     "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+     "periodo": "2026-07",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-07",
+     "fechaVencimiento": "2026-08-12",
+     "diasDeAtraso": 55
+    }
+   ],
+   "estadoPlanillaRg90": "SIN_LIQUIDACION"
+  },
+  {
+   "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+   "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+   "periodo": "2026-06",
+   "obligaciones": [
+    {
+     "id": "62d1e5ef-d591-4f2f-b802-00901b08fd13",
+     "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+     "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+     "periodo": "2026-06",
+     "tipoDocumento": "IVA_GENERAL",
+     "descripcion": "IVA General — período 2026-06",
+     "fechaVencimiento": "2026-07-13",
+     "diasDeAtraso": 85
+    },
+    {
+     "id": "55a7781e-9e9d-44d2-8933-d4744776247f",
+     "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+     "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+     "periodo": "2026-06",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-06",
+     "fechaVencimiento": "2026-07-13",
+     "diasDeAtraso": 85
+    }
+   ],
+   "estadoPlanillaRg90": "SIN_LIQUIDACION"
+  },
+  {
+   "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+   "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+   "periodo": "2026-05",
+   "obligaciones": [
+    {
+     "id": "54879410-1496-454e-9b06-4040a7045b9a",
+     "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+     "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+     "periodo": "2026-05",
+     "tipoDocumento": "IVA_GENERAL",
+     "descripcion": "IVA General — período 2026-05",
+     "fechaVencimiento": "2026-06-11",
+     "diasDeAtraso": 117
+    },
+    {
+     "id": "1225e1ba-30b2-4ea6-b750-601d510100fa",
+     "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+     "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+     "periodo": "2026-05",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-05",
+     "fechaVencimiento": "2026-06-15",
+     "diasDeAtraso": 113
+    }
+   ],
+   "estadoPlanillaRg90": "SIN_LIQUIDACION"
+  },
+  {
+   "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+   "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+   "periodo": "2026-04",
+   "obligaciones": [
+    {
+     "id": "4907f300-8665-4876-a192-a924f2c182a7",
+     "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+     "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+     "periodo": "2026-04",
+     "tipoDocumento": "IVA_GENERAL",
+     "descripcion": "IVA General — período 2026-04",
+     "fechaVencimiento": "2026-05-11",
+     "diasDeAtraso": 148
+    },
+    {
+     "id": "38a48a31-7d6a-4b12-944b-027384b047c4",
+     "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+     "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+     "periodo": "2026-04",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-04",
+     "fechaVencimiento": "2026-05-12",
+     "diasDeAtraso": 147
+    }
+   ],
+   "estadoPlanillaRg90": "SIN_LIQUIDACION"
+  },
+  {
+   "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+   "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+   "periodo": "2026-03",
+   "obligaciones": [
+    {
+     "id": "77d7847d-c9e7-4a89-a2a5-70306e822aa2",
+     "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+     "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+     "periodo": "2026-03",
+     "tipoDocumento": "IVA_GENERAL",
+     "descripcion": "IVA General — período 2026-03",
+     "fechaVencimiento": "2026-04-13",
+     "diasDeAtraso": 176
+    },
+    {
+     "id": "79efcad5-aafd-4c1d-b098-3b0354723bc8",
+     "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+     "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+     "periodo": "2026-03",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-03",
+     "fechaVencimiento": "2026-04-13",
+     "diasDeAtraso": 176
+    }
+   ],
+   "estadoPlanillaRg90": "SIN_LIQUIDACION"
+  },
+  {
+   "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+   "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+   "periodo": "2026-02",
+   "obligaciones": [
+    {
+     "id": "1333debd-920d-445c-8186-a44fee33d0eb",
+     "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+     "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+     "periodo": "2026-02",
+     "tipoDocumento": "IVA_GENERAL",
+     "descripcion": "IVA General — período 2026-02",
+     "fechaVencimiento": "2026-03-11",
+     "diasDeAtraso": 209
+    },
+    {
+     "id": "bbfec544-8489-4288-b0fb-69dc2c549daa",
+     "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+     "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+     "periodo": "2026-02",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-02",
+     "fechaVencimiento": "2026-03-12",
+     "diasDeAtraso": 208
+    }
+   ],
+   "estadoPlanillaRg90": "SIN_LIQUIDACION"
+  },
+  {
+   "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+   "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+   "periodo": "2026-01",
+   "obligaciones": [
+    {
+     "id": "b6fb71fd-a312-4bcb-99ae-c1f48acf5ccf",
+     "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+     "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+     "periodo": "2026-01",
+     "tipoDocumento": "IVA_GENERAL",
+     "descripcion": "IVA General — período 2026-01",
+     "fechaVencimiento": "2026-02-11",
+     "diasDeAtraso": 237
+    },
+    {
+     "id": "66a388af-a42e-4830-9ce3-70ed24daf00a",
+     "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+     "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+     "periodo": "2026-01",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2026-01",
+     "fechaVencimiento": "2026-02-12",
+     "diasDeAtraso": 236
+    }
+   ],
+   "estadoPlanillaRg90": "SIN_LIQUIDACION"
+  },
+  {
+   "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+   "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+   "periodo": "2025-12",
+   "obligaciones": [
+    {
+     "id": "84b3cf54-35f4-43bb-90d9-a404f9d69092",
+     "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+     "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+     "periodo": "2025-12",
+     "tipoDocumento": "IVA_GENERAL",
+     "descripcion": "IVA General — período 2025-12",
+     "fechaVencimiento": "2026-01-12",
+     "diasDeAtraso": 267
+    },
+    {
+     "id": "b04bb820-2253-4d67-ac03-ab071af0b77f",
+     "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+     "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+     "periodo": "2025-12",
+     "tipoDocumento": "PLANILLA_RG90",
+     "descripcion": "Planilla RG 90 — libro de compras y ventas — período 2025-12",
+     "fechaVencimiento": "2026-01-12",
+     "diasDeAtraso": 267
+    },
+    {
+     "id": "0f87c817-32f4-4b76-87db-898b239cddd6",
+     "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+     "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+     "periodo": "2025-12",
+     "tipoDocumento": "IRE",
+     "descripcion": "IRE — Impuesto a la Renta Empresarial — período 2025-12",
+     "fechaVencimiento": "2026-04-13",
+     "diasDeAtraso": 176
+    },
+    {
+     "id": "9ded7905-1837-4038-ae3b-f3a20e6d8a6b",
+     "clienteId": "b07545c5-0e23-4bc6-b2f4-c529e236a11c",
+     "clienteNombre": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+     "periodo": "2025-12",
+     "tipoDocumento": "EEFF",
+     "descripcion": "Estados Financieros — período 2025-12",
+     "fechaVencimiento": "2026-06-30",
+     "diasDeAtraso": 98
+    }
+   ],
+   "estadoPlanillaRg90": "SIN_LIQUIDACION"
+  }
+ ]
+}

@@ -1,0 +1,64 @@
+// SOLO LECTURA. Acceso a Microsoft Graph para el análisis del OneDrive de
+// origen de EFFORT (2026-10-03). Solo GET: nunca PATCH, PUT, POST de escritura
+// ni DELETE. Los secretos van del .env al proceso y de ahí al cuerpo de un
+// fetch; nunca se imprimen ni van como argumento de un subproceso.
+import { readFileSync } from 'node:fs';
+
+export const RAIZ = 'C:/Users/Daniel/NexusFlow AI/effort-control-360';
+export const DIR = 'C:/Users/Daniel/AppData/Local/Temp/claude/C--Users-Daniel-NexusFlow-AI/cdba12b1-63af-4d45-a032-bade731625cb/scratchpad/analisis';
+
+for (const linea of readFileSync(`${RAIZ}/.env`, 'utf8').split('\n')) {
+  const m = linea.match(/^([A-Z_][A-Z0-9_]*)=(.*)$/);
+  if (m && !process.env[m[1]]) process.env[m[1]] = m[2].trim().replace(/^["']|["']$/g, '');
+}
+
+let token = null;
+let tokenVence = 0;
+async function obtenerToken() {
+  if (token && Date.now() < tokenVence) return token;
+  const r = await fetch(`https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}/oauth2/v2.0/token`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      client_id: process.env.AZURE_CLIENT_ID,
+      client_secret: process.env.AZURE_CLIENT_SECRET,
+      scope: 'https://graph.microsoft.com/.default',
+      grant_type: 'client_credentials',
+    }),
+  });
+  if (!r.ok) throw new Error(`token: ${r.status}`);
+  const j = await r.json();
+  token = j.access_token;
+  tokenVence = Date.now() + (j.expires_in - 300) * 1000;
+  return token;
+}
+
+/** GET con reintentos. `binario` devuelve un Buffer (contenido del archivo). */
+export async function get(ruta, { binario = false } = {}) {
+  for (let intento = 1; intento <= 6; intento++) {
+    let r;
+    try {
+      r = await fetch(ruta.startsWith('http') ? ruta : `https://graph.microsoft.com/v1.0${ruta}`, {
+      method: 'GET',
+      headers: { authorization: `Bearer ${await obtenerToken()}` },
+      });
+      if (r.ok) return binario ? Buffer.from(await r.arrayBuffer()) : await r.json();
+    } catch (e) {
+      // Corte de red ("fetch failed", "terminated"): se reintenta con espera.
+      await new Promise((s) => setTimeout(s, 3000 * intento));
+      continue;
+    }
+    if (r.status === 429 || r.status >= 500) {
+      const espera = Number(r.headers.get('retry-after') ?? 0) * 1000 || 2000 * intento;
+      await new Promise((s) => setTimeout(s, espera));
+      continue;
+    }
+    throw new Error(`GET ${ruta.slice(0, 100)} → ${r.status}`);
+  }
+  throw new Error('demasiados reintentos');
+}
+
+export async function idDelDrive() {
+  const usuario = process.env.ONEDRIVE_USUARIO_ORIGEN ?? 'lsosa@effort.com.py';
+  return process.env.AZURE_DRIVE_ID_ORIGEN ?? (await get(`/users/${encodeURIComponent(usuario)}/drive?$select=id`)).id;
+}

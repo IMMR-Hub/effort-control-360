@@ -1,0 +1,109 @@
+// Plan del cliente de muestra «999 CLIENTE MUESTRA», según el Manual de procedimiento de documentos v1.2.
+// Cada archivo: carpeta (relativa a la raíz del cliente), nombre (con la fórmula del manual) y qué es.
+const C = 'CLIENTE MUESTRA';
+const RAIZ = '999 CLIENTE MUESTRA';
+const MES = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SETIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
+const mm = (n) => String(n).padStart(2, '0');
+
+const archivos = [];
+const carpetasVacias = [];
+const add = (dir, nombre, que) => archivos.push({ dir, nombre, que });
+
+// ---------------------------------------------------------------- 00 LEGAL Y SOCIETARIO
+const LEG = '00 LEGAL Y SOCIETARIO';
+add(LEG, `ESTATUTO SOCIAL ${C}.pdf`, 'Estatuto social de la sociedad');
+add(LEG, `ESTATUTO MODIFICACION 2024 ${C}.pdf`, 'Modificación del estatuto (año 2024)');
+add(LEG, `PODER JUAN PEREZ 2024 ${C}.pdf`, 'Poder otorgado a un apoderado (año 2024)');
+add(LEG, `CONTRATO ALQUILER 2025 ${C}.docx`, 'Contrato de alquiler (año 2025)');
+add(LEG, `ACTA DE DIRECTORIO COMPRA VEHICULO 2026 ${C}.docx`, 'Acta de directorio sobre la compra de un vehículo (año 2026)');
+add(`${LEG}/ASAMBLEA 2026`, `CONVOCATORIA ASAMBLEA 2026 ${C}.docx`, 'Convocatoria a la asamblea de 2026');
+add(`${LEG}/ASAMBLEA 2026`, `ACTA DE ASAMBLEA 2026 ${C}.pdf`, 'Acta de la asamblea de 2026');
+add(`${LEG}/ASAMBLEA 2026`, `MEMORIA DEL DIRECTORIO 2026 ${C}.pdf`, 'Memoria del directorio presentada en la asamblea');
+add(`${LEG}/ASAMBLEA 2026`, `INFORME DEL SINDICO 2026 ${C}.pdf`, 'Informe del síndico presentado en la asamblea');
+add(`${LEG}/ASAMBLEA 2026`, `ASISTENCIA ASAMBLEA 2026 ${C}.jpg`, 'Foto de la planilla de asistencia de los accionistas');
+
+// ---------------------------------------------------------------- 00 TRIBUTARIO
+const TRI = '00 TRIBUTARIO';
+add(TRI, `CONSTANCIA RUC 2026 ${C}.pdf`, 'Constancia de inscripción en el RUC');
+add(TRI, `CEDULA TRIBUTARIA 2026 ${C}.pdf`, 'Cédula tributaria');
+add(TRI, `CCT 052026 ${C}.pdf`, 'Certificado de cumplimiento tributario emitido en mayo de 2026');
+
+// ---------------------------------------------------------------- mensual (documentos base de cada mes)
+function mes(anio, n) {
+  const dir = `PERIODO ${anio}/DOCUMENTOS CONTABLES/${mm(n)} ${MES[n - 1]}`;
+  const p = `${mm(n)}${anio}`;
+  const m = `${MES[n - 1].toLowerCase()} de ${anio}`;
+  add(dir, `DDJJ IVA ${p} ${C}.pdf`, `Declaración jurada de IVA presentada, formulario 120 (${m})`);
+  add(dir, `TALON RG 90 ${p} ${C}.pdf`, `Comprobante de presentación de la RG 90, formulario 241 (${m})`);
+  add(dir, `RG COMPRAS ${p} ${C}.xlsx`, `Planilla RG 90 de compras (${m})`);
+  add(dir, `RG VENTAS ${p} ${C}.xlsx`, `Planilla RG 90 de ventas (${m})`);
+  add(dir, `CALCULO IVA ${p} ${C}.xlsx`, `Cálculo del IVA (${m})`);
+  add(dir, `LIBRO COMPRAS ${p} ${C}.pdf`, `Libro de compras del SIGA (${m})`);
+  add(dir, `LIBRO VENTAS ${p} ${C}.pdf`, `Libro de ventas del SIGA (${m})`);
+  add(dir, `BOLETA DE PAGO IVA ${p} ${C}.pdf`, `Boleta de pago del IVA (${m})`);
+  add(dir, `EXTRACTO ITAU ${p} ${C}.pdf`, `Extracto bancario del Itaú (${m})`);
+  return { dir, p };
+}
+for (let n = 1; n <= 12; n++) mes(2026, n);
+
+// ---------------------------------------------------------------- marzo de 2026: el mes con TODOS los tipos
+{
+  const { dir, p } = { dir: `PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO`, p: '032026' };
+  add(dir, `CORRECCION RG COMPRAS ${p} ${C}.xlsx`, 'Planilla RG 90 de compras CORREGIDA (la anterior se deja donde está)');
+  add(dir, `DDJJ IVA ${p} RECTIFICATIVA ${C}.pdf`, 'Declaración rectificativa del IVA, formulario 145');
+  add(dir, `RETENCION IVA FORM 122 ${p} ${C}.pdf`, 'Retención de IVA, formulario 122');
+  add(dir, `RETENCION RENTA FORM 525 ${p} ${C}.pdf`, 'Retención de renta, formulario 525');
+  add(dir, `RETENCION IDU FORM 526 ${p} ${C}.pdf`, 'Retención del IDU, formulario 526');
+  add(dir, `BOLETA DE PAGO ANTICIPO IRE CUOTA 1 DE 4 ${p} ${C}.pdf`, 'Boleta de pago de la cuota 1 de 4 del anticipo del IRE');
+  add(dir, `EXTRACTO ITAU USD ${p} ${C}.pdf`, 'Extracto bancario del Itaú en dólares');
+  add(dir, `EXTRACTO TC ITAU ${p} ${C}.pdf`, 'Extracto de la tarjeta de crédito del Itaú');
+  add(dir, `FACTURA COMPRA 001-001-0000245 PROVEEDOR SA ${p} ${C}.pdf`, 'Factura de compra en PDF (el original del proveedor)');
+  add(dir, `FACTURA COMPRA PROVEEDOR SA ${p} ${C}.jpg`, 'Foto de una factura de compra (solo cuando no existe el original: ver 3.4 del manual)');
+  add(dir, `FACTURA VENTA 001-001-0000100 ${p} ${C}.pdf`, 'Factura de venta');
+  add(dir, `RECIBO 123 ALQUILER ${p} ${C}.pdf`, 'Recibo de alquiler');
+  for (let i = 0; i < 6; i++) add(`${dir}/NC EMITIDAS ${p}`, `NOTA DE CREDITO 001-001-${String(245 + i).padStart(7, '0')} ${C}.pdf`, 'Nota de crédito emitida (se usa la subcarpeta porque son más de cinco)');
+  for (let i = 0; i < 6; i++) add(`${dir}/NC RECIBIDAS ${p}`, `NOTA DE CREDITO 001-002-${String(101 + i).padStart(7, '0')} ${C}.pdf`, 'Nota de crédito recibida (se usa la subcarpeta porque son más de cinco)');
+  // Imputación masiva: los archivos del SET se guardan tal como los entrega el sistema; NO se renombran.
+  add(`${dir}/IMPUTACION MASIVA`, '00000000_202603_VENTAS_000001_1.txt', 'Archivo de imputación masiva de ventas, tal como lo entrega el SET (no se renombra)');
+  add(`${dir}/IMPUTACION MASIVA`, '00000000_202603_COMPRAS_000002_1.txt', 'Archivo de imputación masiva de compras, tal como lo entrega el SET (no se renombra)');
+  add(`${dir}/IMPUTACION MASIVA`, '00000000_202603_VENTAS_000001_1.zip', 'Comprimido de la imputación masiva, tal como lo entrega el SET (no se renombra)');
+}
+
+// ---------------------------------------------------------------- cierre anual
+function cierre(anio) {
+  const dir = `PERIODO ${anio}/DOCUMENTOS CONTABLES/CIERRE ${anio}`;
+  add(dir, `DDJJ IRE ${anio} ${C}.pdf`, `Declaración jurada del IRE presentada, formulario 500 (ejercicio ${anio})`);
+  add(dir, `EEFF ${anio} ${C}.pdf`, `Estados financieros firmados (ejercicio ${anio})`);
+  add(dir, `EEFF ${anio} PRESENTADO FORM 158 ${C}.pdf`, `Constancia de presentación de los estados financieros ante la DNIT, formulario 158 (ejercicio ${anio})`);
+  add(dir, `CALCULO IRE ${anio} ${C}.xlsx`, `Cálculo del IRE del cierre (ejercicio ${anio})`);
+  add(dir, `BOLETA DE PAGO IRE ${anio} ${C}.pdf`, `Boleta de pago del IRE (ejercicio ${anio})`);
+}
+cierre(2026);
+
+// ---------------------------------------------------------------- el principio del período: diciembre de 2025 y su cierre viven en PERIODO 2025
+mes(2025, 12);
+cierre(2025);
+
+// ---------------------------------------------------------------- laborales
+const LAB = 'PERIODO 2026/DOCUMENTOS LABORALES';
+for (let n = 1; n <= 12; n++) {
+  const p = `${mm(n)}2026`;
+  add(`${LAB}/IPS`, `IPS APORTES ${p} ${C}.pdf`, `Aportes al IPS de ${MES[n - 1].toLowerCase()} de 2026`);
+  add(`${LAB}/IPS`, `IPS ESTADO DE CUENTA ${p} ${C}.pdf`, `Estado de cuenta del IPS de ${MES[n - 1].toLowerCase()} de 2026`);
+  add(`${LAB}/MTESS`, `MTESS LIBRO LABORAL MENSUAL ${p} ${C}.pdf`, `Libro laboral mensual del MTESS de ${MES[n - 1].toLowerCase()} de 2026`);
+}
+add(`${LAB}/MTESS`, `MTESS LIBRO LABORAL 2025 ${C}.pdf`, 'Libro laboral anual del MTESS (año 2025)');
+add(`${LAB}/MTESS`, `SUELDOS 2026 ${C}.xlsx`, 'Planilla de sueldos del año (se llama SUELDOS, no «planilla»: ver 3.2 del manual)');
+
+// ---------------------------------------------------------------- varios
+const VAR = 'PERIODO 2026/DOCUMENTOS VARIOS';
+for (let n = 1; n <= 3; n++) add(`${VAR}/FACTURACION EFFORT`, `FACTURA COMPRA EFFORT ${782 + n} ${mm(n)}2026 ${C}.pdf`, `Honorarios que EFFORT le factura al cliente (${MES[n - 1].toLowerCase()} de 2026); para el cliente es una compra`);
+add(VAR, `PEDIDO BANCO CONTINENTAL 2026 ${C}.docx`, 'Pedido de documentos de un banco');
+add(VAR, `PRESTAMO ITAU 2026 ${C}.xlsx`, 'Detalle de un préstamo');
+add(VAR, `PRESUPUESTO HONORARIOS 2026 ${C}.docx`, 'Presupuesto de honorarios');
+add(VAR, `CARTA DEL CLIENTE 2026 ${C}.jpg`, 'Foto de una carta recibida del cliente');
+
+// ---------------------------------------------------------------- carpeta que por diseño está VACÍA
+carpetasVacias.push('ZZ A CLASIFICAR');
+
+module.exports = { RAIZ, C, archivos, carpetasVacias };

@@ -1,0 +1,86 @@
+// RENOMBRA las 5 carpetas de PRIMER nivel de «999 CLIENTE MUESTRA» para que lleven el código del cliente.
+// Dentro del alcance autorizado por Daniel (2026-10-07): «lo único que puedes crear y tocar» es el cliente 999.
+//
+// Protecciones por construcción:
+//   · Solo GET y PATCH. No hay DELETE, PUT, POST, mover ni copiar.
+//   · Solo se renombran carpetas que (a) están DIRECTAMENTE dentro de «999 CLIENTE MUESTRA» y (b) figuran en la
+//     tabla de abajo. El cuerpo del PATCH es solo el nombre nuevo, con conflictBehavior=fail (nunca pisa).
+//   · Un PATCH al cliente 999 o a cualquier otro elemento queda bloqueado.
+//   · Sin --aplicar solo simula.
+import { readFileSync } from 'node:fs';
+
+const APLICAR = process.argv.includes('--aplicar');
+for (const linea of readFileSync('C:/Users/Daniel/NexusFlow AI/effort-control-360/.env', 'utf8').split('\n')) {
+  const m = linea.match(/^([A-Z_][A-Z0-9_]*)=(.*)$/);
+  if (m && !process.env[m[1]]) process.env[m[1]] = m[2].trim().replace(/^["']|["']$/g, '');
+}
+const PADRE = 'CLIENTES EFFORT E.A.S/CLIENTES';
+const RAIZ = '999 CLIENTE MUESTRA';
+const BASE = `${PADRE}/${RAIZ}`;
+const TABLA = new Map([
+  ['00 LEGAL Y SOCIETARIO', '999 LEGAL Y SOCIETARIO'],
+  ['00 TRIBUTARIO', '999 TRIBUTARIO'],
+  ['PERIODO 2025', '999 PERIODO 2025'],
+  ['PERIODO 2026', '999 PERIODO 2026'],
+  ['ZZ A CLASIFICAR', '999 ZZ A CLASIFICAR'],
+]);
+const enc = (r) => r.split('/').map(encodeURIComponent).join('/');
+
+let token = null, vence = 0;
+async function obtenerToken() {
+  if (token && Date.now() < vence) return token;
+  const r = await fetch(`https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}/oauth2/v2.0/token`, {
+    method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ client_id: process.env.AZURE_CLIENT_ID, client_secret: process.env.AZURE_CLIENT_SECRET, scope: 'https://graph.microsoft.com/.default', grant_type: 'client_credentials' }),
+  });
+  if (!r.ok) throw new Error(`token: ${r.status}`);
+  const j = await r.json(); token = j.access_token; vence = Date.now() + (j.expires_in - 300) * 1000; return token;
+}
+async function llamar(metodo, ruta, cuerpo) {
+  if (metodo !== 'GET' && metodo !== 'PATCH') throw new Error(`Método no permitido: ${metodo}`);
+  const r = await fetch(`https://graph.microsoft.com/v1.0${ruta}`, {
+    method: metodo,
+    headers: { authorization: `Bearer ${await obtenerToken()}`, ...(cuerpo ? { 'content-type': 'application/json' } : {}) },
+    body: cuerpo ? JSON.stringify(cuerpo) : undefined,
+  });
+  return r;
+}
+
+const usuario = process.env.ONEDRIVE_USUARIO_ORIGEN ?? 'lsosa@effort.com.py';
+const drive = process.env.AZURE_DRIVE_ID_ORIGEN ?? (await (await llamar('GET', `/users/${encodeURIComponent(usuario)}/drive?$select=id`)).json()).id;
+const raiz = await (await llamar('GET', `/drives/${drive}/root:/${enc(BASE)}?$select=id,name`)).json();
+if (raiz.name !== RAIZ) throw new Error('No se encontró el cliente de muestra');
+
+async function hijos(id) {
+  const out = []; let url = `/drives/${drive}/items/${id}/children?$select=id,name,folder,parentReference&$top=200`;
+  while (url) { const r = await llamar('GET', url.replace('https://graph.microsoft.com/v1.0', '')); const j = await r.json(); out.push(...j.value); url = j['@odata.nextLink'] ?? null; }
+  return out;
+}
+async function contar(id) { let f = 0, d = 0; for (const x of await hijos(id)) { if (x.folder) { d++; const c = await contar(x.id); f += c.f; d += c.d; } else f++; } return { f, d }; }
+
+const nivel1 = await hijos(raiz.id);
+const antes = await contar(raiz.id);
+console.log('primer nivel hoy:', nivel1.map((x) => x.name).join(' | '));
+console.log('contenido antes:', JSON.stringify(antes));
+
+const plan = [];
+for (const x of nivel1) {
+  if (!x.folder) throw new Error(`ABORTADO: hay un archivo suelto en el primer nivel: ${x.name}`);
+  if (TABLA.has(x.name)) plan.push({ id: x.id, de: x.name, a: TABLA.get(x.name), padre: x.parentReference?.id });
+  else if ([...TABLA.values()].includes(x.name)) console.log(`ya renombrada: ${x.name}`);
+  else throw new Error(`ABORTADO: carpeta inesperada en el primer nivel: ${x.name}`);
+}
+console.log(plan.map((p) => `  ${p.de}  →  ${p.a}`).join('\n') || '  (nada para renombrar)');
+if (!APLICAR) { console.log('SIMULACIÓN: no se escribió nada.'); process.exit(0); }
+
+for (const p of plan) {
+  if (p.padre !== raiz.id) throw new Error(`BLOQUEADO: «${p.de}» no está directamente dentro de ${RAIZ}`);
+  const r = await llamar('PATCH', `/drives/${drive}/items/${p.id}`, { name: p.a, '@microsoft.graph.conflictBehavior': 'fail' });
+  if (!r.ok) throw new Error(`No se pudo renombrar «${p.de}»: ${r.status} ${await r.text()}`);
+  console.log(`  renombrada: ${p.de} → ${(await r.json()).name}`);
+}
+const despues = await contar(raiz.id);
+console.log('primer nivel ahora:', (await hijos(raiz.id)).map((x) => x.name).sort().join(' | '));
+console.log('contenido después:', JSON.stringify(despues), despues.f === antes.f && despues.d === antes.d ? '(igual que antes)' : 'DISTINTO');
+const clientes = await (await llamar('GET', `/drives/${drive}/root:/${enc(PADRE)}:/children?$select=name&$top=200`)).json();
+console.log('CLIENTES tiene', clientes.value.length, 'elementos; con 999:', clientes.value.filter((x) => x.name.startsWith('999')).map((x) => x.name).join(', '));

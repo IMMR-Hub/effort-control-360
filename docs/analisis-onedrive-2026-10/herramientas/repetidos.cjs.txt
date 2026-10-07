@@ -1,0 +1,45 @@
+// SOLO LECTURA (trabaja sobre listado.json, leído del OneDrive el 2026-10-03). Arma los grupos de archivos
+// idénticos (mismo contenido y tamaño) dentro de cada cliente, y los archivos idénticos entre clientes distintos.
+const fs = require('fs');
+const { items } = require('../analisis/listado.json');
+const codigoDe = (ruta) => /^(\d{3})(?!\d)/.exec(ruta)?.[1] ?? null;
+const archivos = items.filter((x) => !x.c && codigoDe(x.ruta));
+const nombreCliente = {};
+for (const x of items) if (x.c && /^\d{3}(?!\d)[^/]*$/.test(x.ruta)) nombreCliente[x.ruta.slice(0, 3)] = x.ruta;
+
+const grupos = new Map();
+for (const a of archivos) {
+  if (!a.h) continue;
+  const k = `${codigoDe(a.ruta)}|${a.h}|${a.s}`;
+  if (!grupos.has(k)) grupos.set(k, []);
+  grupos.get(k).push(a);
+}
+const porCliente = new Map();
+for (const g of grupos.values()) {
+  if (g.length < 2) continue;
+  g.sort((a, b) => (a.cr ?? '').localeCompare(b.cr ?? '') || a.ruta.localeCompare(b.ruta));
+  const cod = codigoDe(g[0].ruta);
+  const rel = (a) => a.ruta.slice(nombreCliente[cod].length + 1);
+  const grupo = {
+    bytes: g[0].s,
+    conservar: { ruta: rel(g[0]), creado: (g[0].cr ?? '').slice(0, 10) },
+    copias: g.slice(1).map((a) => ({ ruta: rel(a), creado: (a.cr ?? '').slice(0, 10) })),
+  };
+  if (!porCliente.has(cod)) porCliente.set(cod, []);
+  porCliente.get(cod).push(grupo);
+}
+const clientes = [...porCliente.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([cod, gs]) => {
+  gs.sort((a, b) => a.conservar.ruta.localeCompare(b.conservar.ruta));
+  return { codigo: cod, carpeta: nombreCliente[cod], nombre: nombreCliente[cod].replace(/^\d{3}\s*/, ''), grupos: gs, copias: gs.reduce((s, g) => s + g.copias.length, 0), bytesSobrantes: gs.reduce((s, g) => s + g.bytes * g.copias.length, 0) };
+});
+
+// Mismo archivo en clientes distintos (solo a revisar, no se sobrescribe nada)
+const porHash = new Map();
+for (const a of archivos) { if (!a.h || a.s < 2048) continue; const k = `${a.h}|${a.s}`; if (!porHash.has(k)) porHash.set(k, []); porHash.get(k).push(a); }
+const entre = [...porHash.values()].filter((g) => new Set(g.map((a) => codigoDe(a.ruta))).size > 1)
+  .map((g) => ({ nombre: g[0].n, bytes: g[0].s, en: g.map((a) => a.ruta) })).sort((a, b) => a.nombre.localeCompare(b.nombre));
+
+const total = { clientes: clientes.length, grupos: clientes.reduce((s, c) => s + c.grupos.length, 0), copias: clientes.reduce((s, c) => s + c.copias, 0), bytes: clientes.reduce((s, c) => s + c.bytesSobrantes, 0), entreClientes: entre.length };
+fs.writeFileSync(`${__dirname}/repetidos.json`, JSON.stringify({ fecha: '2026-10-03', total, clientes, entre }, null, 1));
+console.log(JSON.stringify(total), 'líneas de detalle ≈', total.grupos + total.copias);
+console.log('top:', [...clientes].sort((a, b) => b.copias - a.copias).slice(0, 6).map((c) => `${c.codigo} ${c.nombre}: ${c.copias} copias en ${c.grupos.length} grupos`).join(' | '));

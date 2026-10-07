@@ -1,0 +1,49 @@
+// SOLO LECTURA. Paso 1: listado completo de la carpeta CLIENTES con todo lo que
+// el análisis necesita (ruta, tamaño, huella, fechas, si está compartido).
+import { writeFileSync } from 'node:fs';
+import { DIR, get, idDelDrive } from './comun.mjs';
+
+const inicio = Date.now();
+const drive = await idDelDrive();
+const clientes = await get(`/drives/${drive}/root:/${encodeURI('CLIENTES EFFORT E.A.S/CLIENTES')}?$select=id,name`);
+
+const items = new Map();
+let url = `/drives/${drive}/root/delta?$select=id,name,size,file,folder,parentReference,deleted,lastModifiedDateTime,createdDateTime,shared,package`;
+let paginas = 0;
+while (url) {
+  const p = await get(url);
+  for (const it of p.value) {
+    if (it.deleted) continue;
+    items.set(it.id, {
+      id: it.id,
+      p: it.parentReference?.id ?? null,
+      n: it.name,
+      c: !!it.folder,
+      s: it.size ?? 0,
+      h: it.file?.hashes?.quickXorHash ?? null,
+      mime: it.file?.mimeType ?? null,
+      m: it.lastModifiedDateTime ?? null,
+      cr: it.createdDateTime ?? null,
+      comp: it.shared ? (it.shared.scope ?? 'si') : null,
+    });
+  }
+  paginas++;
+  url = p['@odata.nextLink'] ?? null;
+}
+
+// Solo lo que cuelga de CLIENTES, con su ruta relativa.
+const hijos = new Map();
+for (const it of items.values()) { if (!hijos.has(it.p)) hijos.set(it.p, []); hijos.get(it.p).push(it.id); }
+const salida = [];
+const pila = [[clientes.id, '']];
+while (pila.length) {
+  const [id, ruta] = pila.pop();
+  for (const h of hijos.get(id) ?? []) {
+    const it = items.get(h);
+    const r = ruta ? `${ruta}/${it.n}` : it.n;
+    salida.push({ ...it, ruta: r });
+    if (it.c) pila.push([h, r]);
+  }
+}
+writeFileSync(`${DIR}/listado.json`, JSON.stringify({ fecha: new Date().toISOString(), drive, idClientes: clientes.id, items: salida }));
+console.log(`listo: ${paginas} páginas, ${salida.length} elementos bajo CLIENTES, ${salida.filter((x) => !x.c).length} archivos, ${salida.filter((x) => x.comp).length} compartidos, ${Math.round((Date.now() - inicio) / 1000)} s`);

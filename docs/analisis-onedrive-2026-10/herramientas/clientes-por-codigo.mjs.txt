@@ -1,0 +1,124 @@
+// SOLO LECTURA. Clientes del OneDrive de origen de EFFORT (lsosa@) por código
+// (001, 002…): cuántos hay, cuánto pesa cada uno y cuándo fue su último
+// movimiento. Solo GET a Microsoft Graph (nombres, tamaños, fechas, huellas);
+// no baja contenido, no escribe, no mueve, no renombra, no borra. Los secretos
+// van del .env al proceso y de ahí al cuerpo de un fetch: nunca se imprimen ni
+// van como argumento de un subproceso.
+import { readFileSync, writeFileSync } from 'node:fs';
+
+const RAIZ = 'C:/Users/Daniel/NexusFlow AI/effort-control-360';
+const SALIDA = 'C:/Users/Daniel/AppData/Local/Temp/claude/C--Users-Daniel-NexusFlow-AI/cdba12b1-63af-4d45-a032-bade731625cb/scratchpad/clientes-por-codigo.json';
+for (const linea of readFileSync(`${RAIZ}/.env`, 'utf8').split('\n')) {
+  const m = linea.match(/^([A-Z_][A-Z0-9_]*)=(.*)$/);
+  if (m && !process.env[m[1]]) process.env[m[1]] = m[2].trim().replace(/^["']|["']$/g, '');
+}
+const inicio = Date.now();
+const tk = await fetch(`https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}/oauth2/v2.0/token`, {
+  method: 'POST',
+  headers: { 'content-type': 'application/x-www-form-urlencoded' },
+  body: new URLSearchParams({
+    client_id: process.env.AZURE_CLIENT_ID,
+    client_secret: process.env.AZURE_CLIENT_SECRET,
+    scope: 'https://graph.microsoft.com/.default',
+    grant_type: 'client_credentials',
+  }),
+});
+if (!tk.ok) throw new Error(`token: ${tk.status}`);
+const { access_token: token } = await tk.json();
+
+async function get(ruta) {
+  for (let intento = 1; intento <= 5; intento++) {
+    const r = await fetch(ruta.startsWith('http') ? ruta : `https://graph.microsoft.com/v1.0${ruta}`, { headers: { authorization: `Bearer ${token}` } });
+    if (r.ok) return r.json();
+    if (r.status === 429 || r.status >= 500) { await new Promise((s) => setTimeout(s, 2000 * intento)); continue; }
+    throw new Error(`GET ${ruta.slice(0, 120)} → ${r.status}`);
+  }
+  throw new Error('demasiados reintentos');
+}
+
+const usuario = process.env.ONEDRIVE_USUARIO_ORIGEN ?? 'lsosa@effort.com.py';
+const drive = process.env.AZURE_DRIVE_ID_ORIGEN ?? (await get(`/users/${encodeURIComponent(usuario)}/drive?$select=id`)).id;
+const raiz = await get(`/drives/${drive}/root?$select=id,name,size`);
+const carpetaClientes = await get(`/drives/${drive}/root:/${encodeURI('CLIENTES EFFORT E.A.S/CLIENTES')}?$select=id,name,size,folder`);
+
+const items = new Map();
+let url = `/drives/${drive}/root/delta?$select=id,name,size,file,folder,parentReference,deleted,lastModifiedDateTime`;
+while (url) {
+  const p = await get(url);
+  for (const it of p.value) {
+    if (it.deleted) continue;
+    items.set(it.id, { p: it.parentReference?.id ?? null, n: it.name, c: !!it.folder, s: it.size ?? 0, h: it.file?.hashes?.quickXorHash ?? null, m: it.lastModifiedDateTime ?? null });
+  }
+  url = p['@odata.nextLink'] ?? null;
+}
+const hijos = new Map();
+for (const [id, it] of items) { if (!hijos.has(it.p)) hijos.set(it.p, []); hijos.get(it.p).push(id); }
+
+function ruta(id) {
+  const partes = [];
+  for (let actual = items.get(id); actual; actual = items.get(actual.p)) partes.unshift(actual.n);
+  return partes.slice(1).join('/');
+}
+
+function medir(idCarpeta) {
+  const pila = [idCarpeta];
+  let archivos = 0, carpetas = 0, bytes = 0, ultimo = null, duplicados = 0, bytesDup = 0;
+  const vistos = new Set();
+  while (pila.length) {
+    for (const h of hijos.get(pila.pop()) ?? []) {
+      const it = items.get(h);
+      if (it.c) { carpetas++; pila.push(h); continue; }
+      archivos++; bytes += it.s;
+      if (it.m && (!ultimo || it.m > ultimo)) ultimo = it.m;
+      if (it.h) { if (vistos.has(it.h)) { duplicados++; bytesDup += it.s; } else vistos.add(it.h); }
+    }
+  }
+  return { archivos, carpetas, bytes, ultimo: ultimo?.slice(0, 10) ?? null, duplicados, bytesDup };
+}
+
+const CODIGO = /^(\d{3})(?!\d)\s*[-–.]?\s*(.*)$/;
+const dentro = [];
+const sueltos = [];
+for (const id of hijos.get(carpetaClientes.id) ?? []) {
+  const it = items.get(id);
+  if (!it.c) { sueltos.push({ nombre: it.n, bytes: it.s }); continue; }
+  const m = CODIGO.exec(it.n.trim());
+  dentro.push({ codigo: m ? m[1] : null, nombre: m ? m[2] : it.n, carpeta: it.n, ...medir(id) });
+}
+
+// ¿Hay carpetas con código de cliente FUERA de CLIENTES? (otro lugar del drive)
+const fuera = [];
+for (const [id, it] of items) {
+  if (!it.c || it.p === carpetaClientes.id) continue;
+  const m = CODIGO.exec(it.n.trim());
+  if (!m || !/[A-Za-z]/.test(m[2])) continue;
+  const r = ruta(id);
+  if (r.startsWith('CLIENTES EFFORT E.A.S/CLIENTES/')) continue;
+  fuera.push({ ruta: r, ...medir(id) });
+}
+
+const conCodigo = dentro.filter((d) => d.codigo).sort((a, b) => a.codigo.localeCompare(b.codigo));
+const sinCodigo = dentro.filter((d) => !d.codigo);
+const codigos = conCodigo.map((d) => Number(d.codigo));
+const repetidos = [...new Set(codigos.filter((c, i) => codigos.indexOf(c) !== i))];
+const faltan = [];
+for (let c = Math.min(...codigos); c <= Math.max(...codigos); c++) if (!codigos.includes(c)) faltan.push(String(c).padStart(3, '0'));
+const sumar = (l) => l.reduce((a, x) => ({ archivos: a.archivos + x.archivos, carpetas: a.carpetas + x.carpetas, bytes: a.bytes + x.bytes, duplicados: a.duplicados + x.duplicados, bytesDup: a.bytesDup + x.bytesDup }), { archivos: 0, carpetas: 0, bytes: 0, duplicados: 0, bytesDup: 0 });
+
+const resultado = {
+  fecha: new Date().toISOString(),
+  segundos: Math.round((Date.now() - inicio) / 1000),
+  elementosDelDrive: items.size,
+  pesoDelDriveBytes: raiz.size,
+  pesoCarpetaClientesBytes: carpetaClientes.size,
+  conCodigo: { cantidad: conCodigo.length, vacios: conCodigo.filter((d) => d.archivos === 0).length, ...sumar(conCodigo), primero: conCodigo[0]?.codigo, ultimo: conCodigo.at(-1)?.codigo, faltan, repetidos },
+  sinCodigo: { cantidad: sinCodigo.length, ...sumar(sinCodigo), carpetas: sinCodigo.map((d) => ({ carpeta: d.carpeta, archivos: d.archivos, bytes: d.bytes })) },
+  archivosSueltosEnClientes: sueltos,
+  carpetasConCodigoFueraDeClientes: fuera,
+  clientes: conCodigo,
+};
+writeFileSync(SALIDA, JSON.stringify(resultado, null, 1));
+const gb = (b) => (b / 1024 ** 3).toFixed(2);
+console.log(`listo en ${resultado.segundos} s · ${items.size} elementos en el drive (${gb(raiz.size)} GB) · CLIENTES ${gb(carpetaClientes.size)} GB`);
+console.log(`con código: ${conCodigo.length} (${resultado.conCodigo.primero}–${resultado.conCodigo.ultimo}), faltan ${faltan.join(',') || 'ninguno'}, repetidos ${repetidos.join(',') || 'ninguno'}, vacíos ${resultado.conCodigo.vacios}, ${resultado.conCodigo.archivos} archivos, ${gb(resultado.conCodigo.bytes)} GB`);
+console.log(`sin código: ${sinCodigo.length} carpetas, ${gb(resultado.sinCodigo.bytes)} GB · sueltos: ${sueltos.length} · con código fuera de CLIENTES: ${fuera.length}`);

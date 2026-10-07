@@ -1,0 +1,2004 @@
+{
+ "fecha": "2026-10-03T10:57:34.692Z",
+ "segundos": 293,
+ "elementosDelDrive": 41929,
+ "pesoDelDriveBytes": 20335651036,
+ "pesoCarpetaClientesBytes": 15895207157,
+ "conCodigo": {
+  "cantidad": 129,
+  "vacios": 8,
+  "archivos": 26724,
+  "carpetas": 5120,
+  "bytes": 15052893184,
+  "duplicados": 1068,
+  "bytesDup": 876795550,
+  "primero": "001",
+  "ultimo": "132",
+  "faltan": [
+   "045",
+   "070",
+   "099"
+  ],
+  "repetidos": []
+ },
+ "sinCodigo": {
+  "cantidad": 10,
+  "archivos": 1095,
+  "carpetas": [
+   {
+    "carpeta": "PLANTILLAS, WORD, EXCEL",
+    "archivos": 176,
+    "bytes": 29269980
+   },
+   {
+    "carpeta": "materiales EFFORT",
+    "archivos": 48,
+    "bytes": 56194797
+   },
+   {
+    "carpeta": "PRESUPUESTOS EFFORT",
+    "archivos": 148,
+    "bytes": 21835131
+   },
+   {
+    "carpeta": "Rubrica de libros",
+    "archivos": 2,
+    "bytes": 1230098
+   },
+   {
+    "carpeta": "CLIENTES A CONFIRMAR",
+    "archivos": 44,
+    "bytes": 33378065
+   },
+   {
+    "carpeta": "INFORMACION SOBRE EAS",
+    "archivos": 11,
+    "bytes": 15812179
+   },
+   {
+    "carpeta": "MTESS - LIBROS ANUALES",
+    "archivos": 69,
+    "bytes": 12844122
+   },
+   {
+    "carpeta": "ADMINISTRACION RUBRICAM S.A",
+    "archivos": 89,
+    "bytes": 47602049
+   },
+   {
+    "carpeta": "PROCEDIMIENTOS TRIBUTARIOS, RUBRICA LIBROS, MODELOS",
+    "archivos": 498,
+    "bytes": 537603137
+   },
+   {
+    "carpeta": "CONTRATOS NATANIA",
+    "archivos": 10,
+    "bytes": 85955609
+   }
+  ],
+  "bytes": 841725167,
+  "duplicados": 120,
+  "bytesDup": 19060823
+ },
+ "archivosSueltosEnClientes": [
+  {
+   "nombre": "Inscripcion en el RUC EMILSE.pdf",
+   "bytes": 82191
+  },
+  {
+   "nombre": "Inscripcion en el RUC Gaston.pdf",
+   "bytes": 81996
+  },
+  {
+   "nombre": "CONSTANCIA DE TRABAJO.docx",
+   "bytes": 361936
+  },
+  {
+   "nombre": "PHOTO-2026-05-05-12-04-38.jpg",
+   "bytes": 0
+  },
+  {
+   "nombre": "PHOTO-2026-05-05-12-04-40.jpg",
+   "bytes": 0
+  },
+  {
+   "nombre": "PHOTO-2026-05-05-12-04-42.jpg",
+   "bytes": 0
+  },
+  {
+   "nombre": "Modelo de permiso laboral.pdf",
+   "bytes": 62682
+  }
+ ],
+ "carpetasConCodigoFueraDeClientes": [
+  {
+   "ruta": "CURSO GLORIA AYALA PERSON/NOTEBOKK ACER1080/Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/004 HUMO EAS",
+   "archivos": 10,
+   "carpetas": 0,
+   "bytes": 29773814,
+   "ultimo": "2023-02-16",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "CURSO GLORIA AYALA PERSON/NOTEBOKK ACER1080/Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/010 GANADERA DON KUKI",
+   "archivos": 9,
+   "carpetas": 0,
+   "bytes": 8891163,
+   "ultimo": "2023-10-04",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "CURSO GLORIA AYALA PERSON/NOTEBOKK ACER1080/Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/011_003 GRETTA AL KHOURY",
+   "archivos": 38,
+   "carpetas": 10,
+   "bytes": 7227175,
+   "ultimo": "2023-10-10",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "CURSO GLORIA AYALA PERSON/NOTEBOKK ACER1080/Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/011_005 NATALIA APONTE",
+   "archivos": 5,
+   "carpetas": 3,
+   "bytes": 1563121,
+   "ultimo": "2023-06-02",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "CURSO GLORIA AYALA PERSON/NOTEBOKK ACER1080/Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/011_008 RAMIRO GARCIA VARESINI",
+   "archivos": 37,
+   "carpetas": 8,
+   "bytes": 9104535,
+   "ultimo": "2023-10-18",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "CURSO GLORIA AYALA PERSON/NOTEBOKK ACER1080/Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/011_009 RAMIRO GARCIA MUÑOZ",
+   "archivos": 20,
+   "carpetas": 12,
+   "bytes": 11128756,
+   "ultimo": "2023-10-19",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "CURSO GLORIA AYALA PERSON/NOTEBOKK ACER1080/Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/013_012 LAURA SOSA ARGAÑA",
+   "archivos": 22,
+   "carpetas": 3,
+   "bytes": 8706605,
+   "ultimo": "2023-08-22",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "CURSO GLORIA AYALA PERSON/NOTEBOKK ACER1080/Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/013_018 RITA GONZALEZ PRETTE",
+   "archivos": 6,
+   "carpetas": 3,
+   "bytes": 1044641,
+   "ultimo": "2023-06-02",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "CURSO GLORIA AYALA PERSON/NOTEBOKK ACER1080/Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/013_022 COPESA",
+   "archivos": 1,
+   "carpetas": 0,
+   "bytes": 98791,
+   "ultimo": "2023-08-11",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "CURSO GLORIA AYALA PERSON/NOTEBOKK ACER1080/Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/015 NEO HOLDING GROUP S.A",
+   "archivos": 4,
+   "carpetas": 3,
+   "bytes": 1397133,
+   "ultimo": "2023-06-02",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "CURSO GLORIA AYALA PERSON/NOTEBOKK ACER1080/Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/016 SOMOS PIRI EAS",
+   "archivos": 0,
+   "carpetas": 0,
+   "bytes": 0,
+   "ultimo": null,
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "CURSO GLORIA AYALA PERSON/NOTEBOKK ACER1080/Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/017 VETERINARIA",
+   "archivos": 0,
+   "carpetas": 0,
+   "bytes": 0,
+   "ultimo": null,
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "CURSO GLORIA AYALA PERSON/NOTEBOKK ACER1080/Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/017_001 ELIAS EL KHOURY",
+   "archivos": 56,
+   "carpetas": 12,
+   "bytes": 9742578,
+   "ultimo": "2023-11-07",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "CURSO GLORIA AYALA PERSON/NOTEBOKK ACER1080/Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/017_006 ORGANIC GROUP EAS",
+   "archivos": 14,
+   "carpetas": 3,
+   "bytes": 12538998,
+   "ultimo": "2023-06-02",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "CURSO GLORIA AYALA PERSON/NOTEBOKK ACER1080/Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/017_014 BAIRES EAS",
+   "archivos": 937,
+   "carpetas": 10,
+   "bytes": 306509850,
+   "ultimo": "2023-11-02",
+   "duplicados": 2,
+   "bytesDup": 248114
+  },
+  {
+   "ruta": "CURSO GLORIA AYALA PERSON/NOTEBOKK ACER1080/Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/019 SAFARI RANCH S.A",
+   "archivos": 5,
+   "carpetas": 0,
+   "bytes": 1201747,
+   "ultimo": "2023-08-04",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "CURSO GLORIA AYALA PERSON/NOTEBOKK ACER1080/Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/019_024 DIBEC",
+   "archivos": 100,
+   "carpetas": 14,
+   "bytes": 24720421,
+   "ultimo": "2023-11-08",
+   "duplicados": 5,
+   "bytesDup": 1739604
+  },
+  {
+   "ruta": "CURSO GLORIA AYALA PERSON/NOTEBOKK ACER1080/Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/020 AGROGRANJA KOE JU EAS",
+   "archivos": 0,
+   "carpetas": 0,
+   "bytes": 0,
+   "ultimo": null,
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "CURSO GLORIA AYALA PERSON/NOTEBOKK ACER1080/Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/021 ECOSUR EAS",
+   "archivos": 27,
+   "carpetas": 3,
+   "bytes": 5332760,
+   "ultimo": "2024-03-05",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "CURSO GLORIA AYALA PERSON/NOTEBOKK ACER1080/Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/023 EFFORT E.A.S",
+   "archivos": 9,
+   "carpetas": 0,
+   "bytes": 6342586,
+   "ultimo": "2023-08-22",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "CURSO GLORIA AYALA PERSON/NOTEBOKK ACER1080/Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/025 MUNDO MOVIL S.A",
+   "archivos": 8,
+   "carpetas": 0,
+   "bytes": 26095304,
+   "ultimo": "2023-12-05",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "CURSO GLORIA AYALA PERSON/NOTEBOKK ACER1080/Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/026 ALUSAN E.A.S",
+   "archivos": 8,
+   "carpetas": 0,
+   "bytes": 7782979,
+   "ultimo": "2023-10-26",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "CURSO GLORIA AYALA PERSON/NOTEBOKK ACER1080/Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/027 ORL COMERCIAL E.A.S",
+   "archivos": 5,
+   "carpetas": 0,
+   "bytes": 3174952,
+   "ultimo": "2023-10-18",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "CURSO GLORIA AYALA PERSON/NOTEBOKK ACER1080/Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/028 CUBICO METALURGICA EAS",
+   "archivos": 0,
+   "carpetas": 0,
+   "bytes": 0,
+   "ultimo": null,
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "CURSO GLORIA AYALA PERSON/NOTEBOKK ACER1080/Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/030 NEUMATICOS ASUNCION",
+   "archivos": 1,
+   "carpetas": 0,
+   "bytes": 402170,
+   "ultimo": "2023-10-25",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "CURSO GLORIA AYALA PERSON/NOTEBOKK ACER1080/Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/031 EZEQUIEL AVEIRO",
+   "archivos": 5,
+   "carpetas": 0,
+   "bytes": 1778845,
+   "ultimo": "2023-11-23",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/004 HUMO EAS",
+   "archivos": 10,
+   "carpetas": 0,
+   "bytes": 29773814,
+   "ultimo": "2023-02-16",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/010 GANADERA DON KUKI",
+   "archivos": 9,
+   "carpetas": 0,
+   "bytes": 8891163,
+   "ultimo": "2023-10-04",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/011_003 GRETTA AL KHOURY",
+   "archivos": 38,
+   "carpetas": 10,
+   "bytes": 7227175,
+   "ultimo": "2023-10-10",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/011_005 NATALIA APONTE",
+   "archivos": 5,
+   "carpetas": 3,
+   "bytes": 1563121,
+   "ultimo": "2023-06-02",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/011_008 RAMIRO GARCIA VARESINI",
+   "archivos": 37,
+   "carpetas": 8,
+   "bytes": 9104535,
+   "ultimo": "2023-10-18",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/011_009 RAMIRO GARCIA MUÑOZ",
+   "archivos": 20,
+   "carpetas": 12,
+   "bytes": 11128756,
+   "ultimo": "2023-10-19",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/013_012 LAURA SOSA ARGAÑA",
+   "archivos": 22,
+   "carpetas": 3,
+   "bytes": 8706605,
+   "ultimo": "2023-08-22",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/013_018 RITA GONZALEZ PRETTE",
+   "archivos": 6,
+   "carpetas": 3,
+   "bytes": 1044641,
+   "ultimo": "2023-06-02",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/013_022 COPESA",
+   "archivos": 1,
+   "carpetas": 0,
+   "bytes": 98791,
+   "ultimo": "2023-08-11",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/015 NEO HOLDING GROUP S.A",
+   "archivos": 4,
+   "carpetas": 3,
+   "bytes": 1397133,
+   "ultimo": "2023-06-02",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/016 SOMOS PIRI EAS",
+   "archivos": 0,
+   "carpetas": 0,
+   "bytes": 0,
+   "ultimo": null,
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/017 VETERINARIA",
+   "archivos": 0,
+   "carpetas": 0,
+   "bytes": 0,
+   "ultimo": null,
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/017_001 ELIAS EL KHOURY",
+   "archivos": 56,
+   "carpetas": 12,
+   "bytes": 9742578,
+   "ultimo": "2023-11-07",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/017_006 ORGANIC GROUP EAS",
+   "archivos": 14,
+   "carpetas": 3,
+   "bytes": 12538998,
+   "ultimo": "2023-06-02",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/017_014 BAIRES EAS",
+   "archivos": 937,
+   "carpetas": 10,
+   "bytes": 306509850,
+   "ultimo": "2023-11-02",
+   "duplicados": 2,
+   "bytesDup": 248114
+  },
+  {
+   "ruta": "Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/019 SAFARI RANCH S.A",
+   "archivos": 5,
+   "carpetas": 0,
+   "bytes": 1201747,
+   "ultimo": "2023-08-04",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/019_024 DIBEC",
+   "archivos": 100,
+   "carpetas": 14,
+   "bytes": 24720421,
+   "ultimo": "2023-11-08",
+   "duplicados": 5,
+   "bytesDup": 1739604
+  },
+  {
+   "ruta": "Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/020 AGROGRANJA KOE JU EAS",
+   "archivos": 0,
+   "carpetas": 0,
+   "bytes": 0,
+   "ultimo": null,
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/021 ECOSUR EAS",
+   "archivos": 27,
+   "carpetas": 3,
+   "bytes": 5332760,
+   "ultimo": "2024-03-05",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/023 EFFORT E.A.S",
+   "archivos": 9,
+   "carpetas": 0,
+   "bytes": 6342586,
+   "ultimo": "2023-08-22",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/025 MUNDO MOVIL S.A",
+   "archivos": 8,
+   "carpetas": 0,
+   "bytes": 26095304,
+   "ultimo": "2023-12-05",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/026 ALUSAN E.A.S",
+   "archivos": 8,
+   "carpetas": 0,
+   "bytes": 7782979,
+   "ultimo": "2023-10-26",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/027 ORL COMERCIAL E.A.S",
+   "archivos": 5,
+   "carpetas": 0,
+   "bytes": 3174952,
+   "ultimo": "2023-10-18",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/028 CUBICO METALURGICA EAS",
+   "archivos": 0,
+   "carpetas": 0,
+   "bytes": 0,
+   "ultimo": null,
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/030 NEUMATICOS ASUNCION",
+   "archivos": 1,
+   "carpetas": 0,
+   "bytes": 402170,
+   "ultimo": "2023-10-25",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "ruta": "Escritorio/S.A.C ESTUDIO CONTABLE/EFFORT/031 EZEQUIEL AVEIRO",
+   "archivos": 5,
+   "carpetas": 0,
+   "bytes": 1778845,
+   "ultimo": "2023-11-23",
+   "duplicados": 0,
+   "bytesDup": 0
+  }
+ ],
+ "clientes": [
+  {
+   "codigo": "001",
+   "nombre": "ELIAS EL KHOURY",
+   "carpeta": "001 ELIAS EL KHOURY",
+   "archivos": 97,
+   "carpetas": 38,
+   "bytes": 17941938,
+   "ultimo": "2026-03-11",
+   "duplicados": 3,
+   "bytesDup": 97886
+  },
+  {
+   "codigo": "002",
+   "nombre": "FUMIPRO S.A",
+   "carpeta": "002 FUMIPRO S.A",
+   "archivos": 812,
+   "carpetas": 104,
+   "bytes": 297233147,
+   "ultimo": "2026-10-02",
+   "duplicados": 46,
+   "bytesDup": 20127876
+  },
+  {
+   "codigo": "003",
+   "nombre": "GRETTA AL KHOURY",
+   "carpeta": "003 GRETTA AL KHOURY",
+   "archivos": 161,
+   "carpetas": 49,
+   "bytes": 29398217,
+   "ultimo": "2026-09-10",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "004",
+   "nombre": "HUMO EAS",
+   "carpeta": "004 HUMO EAS",
+   "archivos": 10,
+   "carpetas": 3,
+   "bytes": 29773814,
+   "ultimo": "2023-02-16",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "005",
+   "nombre": "ORGANIC GROUP EAS",
+   "carpeta": "005 ORGANIC GROUP EAS",
+   "archivos": 75,
+   "carpetas": 22,
+   "bytes": 38206111,
+   "ultimo": "2026-06-16",
+   "duplicados": 6,
+   "bytesDup": 2065089
+  },
+  {
+   "codigo": "006",
+   "nombre": "RAYVAN EL KHOURY",
+   "carpeta": "006 RAYVAN EL KHOURY",
+   "archivos": 391,
+   "carpetas": 113,
+   "bytes": 93900945,
+   "ultimo": "2026-09-24",
+   "duplicados": 72,
+   "bytesDup": 31133548
+  },
+  {
+   "codigo": "007",
+   "nombre": "RAMIRO GARCIA VARESINI",
+   "carpeta": "007 RAMIRO GARCIA VARESINI",
+   "archivos": 218,
+   "carpetas": 78,
+   "bytes": 53615534,
+   "ultimo": "2024-12-09",
+   "duplicados": 11,
+   "bytesDup": 2689498
+  },
+  {
+   "codigo": "008",
+   "nombre": "RAMIRO GARCIA MUÑOZ",
+   "carpeta": "008 RAMIRO GARCIA MUÑOZ",
+   "archivos": 321,
+   "carpetas": 80,
+   "bytes": 125504535,
+   "ultimo": "2026-09-16",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "009",
+   "nombre": "GANADERA DON KUKI EAS",
+   "carpeta": "009 GANADERA DON KUKI EAS",
+   "archivos": 54,
+   "carpetas": 22,
+   "bytes": 16320759,
+   "ultimo": "2024-12-10",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "010",
+   "nombre": "ALEJANDRA PICCHIONI",
+   "carpeta": "010 ALEJANDRA PICCHIONI",
+   "archivos": 167,
+   "carpetas": 76,
+   "bytes": 53977711,
+   "ultimo": "2026-09-22",
+   "duplicados": 2,
+   "bytesDup": 232627
+  },
+  {
+   "codigo": "011",
+   "nombre": "LAURA SOSA ARGAÑA",
+   "carpeta": "011 LAURA SOSA ARGAÑA",
+   "archivos": 369,
+   "carpetas": 87,
+   "bytes": 154045846,
+   "ultimo": "2026-10-02",
+   "duplicados": 2,
+   "bytesDup": 1098844
+  },
+  {
+   "codigo": "012",
+   "nombre": "GARSO S.A",
+   "carpeta": "012 GARSO S.A",
+   "archivos": 351,
+   "carpetas": 100,
+   "bytes": 135817317,
+   "ultimo": "2026-10-01",
+   "duplicados": 19,
+   "bytesDup": 7286252
+  },
+  {
+   "codigo": "013",
+   "nombre": "BAIRES EAS",
+   "carpeta": "013 BAIRES EAS",
+   "archivos": 2234,
+   "carpetas": 78,
+   "bytes": 748120561,
+   "ultimo": "2026-09-21",
+   "duplicados": 36,
+   "bytesDup": 8239698
+  },
+  {
+   "codigo": "014",
+   "nombre": "NEO HOLDING GROUP S.A",
+   "carpeta": "014 NEO HOLDING GROUP S.A",
+   "archivos": 1731,
+   "carpetas": 152,
+   "bytes": 1679464568,
+   "ultimo": "2026-10-02",
+   "duplicados": 134,
+   "bytesDup": 218271142
+  },
+  {
+   "codigo": "015",
+   "nombre": "SOMOS PIRI EAS",
+   "carpeta": "015 SOMOS PIRI EAS",
+   "archivos": 219,
+   "carpetas": 40,
+   "bytes": 45868837,
+   "ultimo": "2026-09-29",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "016",
+   "nombre": "VETERINARIA",
+   "carpeta": "016 VETERINARIA",
+   "archivos": 0,
+   "carpetas": 0,
+   "bytes": 0,
+   "ultimo": null,
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "017",
+   "nombre": "RITA GONZALEZ PRANTTE",
+   "carpeta": "017 RITA GONZALEZ PRANTTE",
+   "archivos": 296,
+   "carpetas": 68,
+   "bytes": 50611072,
+   "ultimo": "2026-10-02",
+   "duplicados": 3,
+   "bytesDup": 659859
+  },
+  {
+   "codigo": "018",
+   "nombre": "AGROGRANJA KOE JU EAS",
+   "carpeta": "018 AGROGRANJA KOE JU EAS",
+   "archivos": 279,
+   "carpetas": 60,
+   "bytes": 58101509,
+   "ultimo": "2026-09-23",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "019",
+   "nombre": "ECOSUR EAS",
+   "carpeta": "019 ECOSUR EAS",
+   "archivos": 226,
+   "carpetas": 48,
+   "bytes": 41273518,
+   "ultimo": "2026-06-29",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "020",
+   "nombre": "LILIAN LACONICH",
+   "carpeta": "020 LILIAN LACONICH",
+   "archivos": 185,
+   "carpetas": 52,
+   "bytes": 48229868,
+   "ultimo": "2026-09-17",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "021",
+   "nombre": "COPESA",
+   "carpeta": "021 COPESA",
+   "archivos": 2154,
+   "carpetas": 241,
+   "bytes": 1590675322,
+   "ultimo": "2026-10-02",
+   "duplicados": 267,
+   "bytesDup": 25985447
+  },
+  {
+   "codigo": "022",
+   "nombre": "EFFORT E.A.S",
+   "carpeta": "022 EFFORT E.A.S",
+   "archivos": 551,
+   "carpetas": 64,
+   "bytes": 137412978,
+   "ultimo": "2026-09-25",
+   "duplicados": 26,
+   "bytesDup": 16988950
+  },
+  {
+   "codigo": "023",
+   "nombre": "DIBEC UNIPERSONAL",
+   "carpeta": "023 DIBEC UNIPERSONAL",
+   "archivos": 1477,
+   "carpetas": 207,
+   "bytes": 864971842,
+   "ultimo": "2026-10-02",
+   "duplicados": 100,
+   "bytesDup": 50023400
+  },
+  {
+   "codigo": "024",
+   "nombre": "ALUSAN E.A.S",
+   "carpeta": "024 ALUSAN E.A.S",
+   "archivos": 346,
+   "carpetas": 75,
+   "bytes": 86464690,
+   "ultimo": "2026-09-14",
+   "duplicados": 17,
+   "bytesDup": 5651363
+  },
+  {
+   "codigo": "025",
+   "nombre": "MUNDO MOVIL S.A",
+   "carpeta": "025 MUNDO MOVIL S.A",
+   "archivos": 427,
+   "carpetas": 75,
+   "bytes": 176096086,
+   "ultimo": "2026-10-02",
+   "duplicados": 5,
+   "bytesDup": 1805488
+  },
+  {
+   "codigo": "026",
+   "nombre": "CUBICO METALURGICA EAS",
+   "carpeta": "026 CUBICO METALURGICA EAS",
+   "archivos": 473,
+   "carpetas": 111,
+   "bytes": 100131762,
+   "ultimo": "2026-10-01",
+   "duplicados": 33,
+   "bytesDup": 12549154
+  },
+  {
+   "codigo": "027",
+   "nombre": "MARIEL RODRIGUEZ",
+   "carpeta": "027 MARIEL RODRIGUEZ",
+   "archivos": 235,
+   "carpetas": 55,
+   "bytes": 119344698,
+   "ultimo": "2026-06-09",
+   "duplicados": 4,
+   "bytesDup": 203542
+  },
+  {
+   "codigo": "028",
+   "nombre": "NEUMATICOS ASUNCION",
+   "carpeta": "028 NEUMATICOS ASUNCION",
+   "archivos": 1,
+   "carpetas": 0,
+   "bytes": 402170,
+   "ultimo": "2023-10-25",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "029",
+   "nombre": "ORL COMERCIAL E.A.S",
+   "carpeta": "029 ORL COMERCIAL E.A.S",
+   "archivos": 199,
+   "carpetas": 54,
+   "bytes": 37805849,
+   "ultimo": "2026-09-25",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "030",
+   "nombre": "AQUILA ENERGY E.A.S",
+   "carpeta": "030 AQUILA ENERGY E.A.S",
+   "archivos": 85,
+   "carpetas": 26,
+   "bytes": 22894775,
+   "ultimo": "2025-12-04",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "031",
+   "nombre": "EVA MACIEL",
+   "carpeta": "031 EVA MACIEL",
+   "archivos": 442,
+   "carpetas": 84,
+   "bytes": 1490535897,
+   "ultimo": "2026-09-29",
+   "duplicados": 18,
+   "bytesDup": 46124066
+  },
+  {
+   "codigo": "032",
+   "nombre": "DIBEC S.A",
+   "carpeta": "032 DIBEC S.A",
+   "archivos": 390,
+   "carpetas": 80,
+   "bytes": 158665564,
+   "ultimo": "2026-09-22",
+   "duplicados": 15,
+   "bytesDup": 11871838
+  },
+  {
+   "codigo": "033",
+   "nombre": "SAFARI RANCH S.A",
+   "carpeta": "033 SAFARI RANCH S.A",
+   "archivos": 10,
+   "carpetas": 3,
+   "bytes": 2403494,
+   "ultimo": "2023-08-04",
+   "duplicados": 5,
+   "bytesDup": 1201747
+  },
+  {
+   "codigo": "034",
+   "nombre": "SIRACUA E.A.S",
+   "carpeta": "034 SIRACUA E.A.S",
+   "archivos": 2,
+   "carpetas": 1,
+   "bytes": 1134592,
+   "ultimo": "2023-12-05",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "035",
+   "nombre": "MA. ANGELICA PETTERS",
+   "carpeta": "035 MA. ANGELICA PETTERS",
+   "archivos": 256,
+   "carpetas": 57,
+   "bytes": 63439093,
+   "ultimo": "2026-10-02",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "036",
+   "nombre": "FERNANDO HERREROS",
+   "carpeta": "036 FERNANDO HERREROS",
+   "archivos": 214,
+   "carpetas": 59,
+   "bytes": 60689217,
+   "ultimo": "2026-09-25",
+   "duplicados": 1,
+   "bytesDup": 54282
+  },
+  {
+   "codigo": "037",
+   "nombre": "BICLOPE S.A",
+   "carpeta": "037 BICLOPE S.A",
+   "archivos": 175,
+   "carpetas": 70,
+   "bytes": 779343169,
+   "ultimo": "2026-10-02",
+   "duplicados": 6,
+   "bytesDup": 171530933
+  },
+  {
+   "codigo": "038",
+   "nombre": "LUIS GONZALEZ",
+   "carpeta": "038 LUIS GONZALEZ",
+   "archivos": 227,
+   "carpetas": 55,
+   "bytes": 34278129,
+   "ultimo": "2026-09-17",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "039",
+   "nombre": "VERO EAS",
+   "carpeta": "039 VERO EAS",
+   "archivos": 8,
+   "carpetas": 1,
+   "bytes": 4940040,
+   "ultimo": "2024-01-17",
+   "duplicados": 4,
+   "bytesDup": 2470020
+  },
+  {
+   "codigo": "040",
+   "nombre": "GISSELLE FARIAS",
+   "carpeta": "040 GISSELLE FARIAS",
+   "archivos": 256,
+   "carpetas": 64,
+   "bytes": 60306380,
+   "ultimo": "2026-09-24",
+   "duplicados": 9,
+   "bytesDup": 2074993
+  },
+  {
+   "codigo": "041",
+   "nombre": "GABRIELA GOSSEN",
+   "carpeta": "041 GABRIELA GOSSEN",
+   "archivos": 123,
+   "carpetas": 29,
+   "bytes": 22730842,
+   "ultimo": "2026-08-18",
+   "duplicados": 3,
+   "bytesDup": 272351
+  },
+  {
+   "codigo": "042",
+   "nombre": "JAZMIN VILLAGRA",
+   "carpeta": "042 JAZMIN VILLAGRA",
+   "archivos": 260,
+   "carpetas": 61,
+   "bytes": 107953785,
+   "ultimo": "2026-10-02",
+   "duplicados": 2,
+   "bytesDup": 566862
+  },
+  {
+   "codigo": "043",
+   "nombre": "SIPAR S.A",
+   "carpeta": "043 SIPAR S.A",
+   "archivos": 250,
+   "carpetas": 33,
+   "bytes": 431180090,
+   "ultimo": "2026-09-30",
+   "duplicados": 11,
+   "bytesDup": 52389043
+  },
+  {
+   "codigo": "044",
+   "nombre": "MARCO PENONI",
+   "carpeta": "044 MARCO PENONI",
+   "archivos": 155,
+   "carpetas": 51,
+   "bytes": 60880891,
+   "ultimo": "2026-09-10",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "046",
+   "nombre": "MARGARITA RUIZ DIAZ",
+   "carpeta": "046 MARGARITA RUIZ DIAZ",
+   "archivos": 134,
+   "carpetas": 44,
+   "bytes": 23970526,
+   "ultimo": "2026-09-14",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "047",
+   "nombre": "CARLOS PENONI",
+   "carpeta": "047 CARLOS PENONI",
+   "archivos": 190,
+   "carpetas": 66,
+   "bytes": 30319495,
+   "ultimo": "2026-09-30",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "048",
+   "nombre": "JULIO VIZCONTI",
+   "carpeta": "048 JULIO VIZCONTI",
+   "archivos": 217,
+   "carpetas": 79,
+   "bytes": 34897628,
+   "ultimo": "2026-09-18",
+   "duplicados": 13,
+   "bytesDup": 209190
+  },
+  {
+   "codigo": "049",
+   "nombre": "JOSE PENONI",
+   "carpeta": "049 JOSE PENONI",
+   "archivos": 267,
+   "carpetas": 87,
+   "bytes": 51936160,
+   "ultimo": "2026-09-23",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "050",
+   "nombre": "MONICA LESME",
+   "carpeta": "050 MONICA LESME",
+   "archivos": 31,
+   "carpetas": 21,
+   "bytes": 5938257,
+   "ultimo": "2026-09-21",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "051",
+   "nombre": "ISAAC WU",
+   "carpeta": "051 ISAAC WU",
+   "archivos": 208,
+   "carpetas": 53,
+   "bytes": 65464551,
+   "ultimo": "2026-10-02",
+   "duplicados": 12,
+   "bytesDup": 3134268
+  },
+  {
+   "codigo": "052",
+   "nombre": "JUANA RAFAELA TORRES",
+   "carpeta": "052 JUANA RAFAELA TORRES",
+   "archivos": 218,
+   "carpetas": 55,
+   "bytes": 174966996,
+   "ultimo": "2026-09-24",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "053",
+   "nombre": "DIANA HIDALGO",
+   "carpeta": "053 DIANA HIDALGO",
+   "archivos": 238,
+   "carpetas": 50,
+   "bytes": 59567559,
+   "ultimo": "2026-09-23",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "054",
+   "nombre": "FATIMA PEÑA",
+   "carpeta": "054 FATIMA PEÑA",
+   "archivos": 94,
+   "carpetas": 49,
+   "bytes": 49613518,
+   "ultimo": "2026-09-24",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "055",
+   "nombre": "PAOLA MEZA",
+   "carpeta": "055 PAOLA MEZA",
+   "archivos": 30,
+   "carpetas": 11,
+   "bytes": 5482709,
+   "ultimo": "2026-05-29",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "056",
+   "nombre": "FACUNDO CARRASCOSA",
+   "carpeta": "056 FACUNDO CARRASCOSA",
+   "archivos": 3,
+   "carpetas": 5,
+   "bytes": 448733,
+   "ultimo": "2024-04-16",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "057",
+   "nombre": "MARCELO JAVIER GALVAN",
+   "carpeta": "057 MARCELO JAVIER GALVAN",
+   "archivos": 6,
+   "carpetas": 4,
+   "bytes": 1536884,
+   "ultimo": "2024-06-25",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "058",
+   "nombre": "MATIAS FLORES",
+   "carpeta": "058 MATIAS FLORES",
+   "archivos": 1,
+   "carpetas": 0,
+   "bytes": 77996,
+   "ultimo": "2026-08-31",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "059",
+   "nombre": "MIRTA LACONICH",
+   "carpeta": "059 MIRTA LACONICH",
+   "archivos": 0,
+   "carpetas": 0,
+   "bytes": 0,
+   "ultimo": null,
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "060",
+   "nombre": "ALFADOC S.A",
+   "carpeta": "060 ALFADOC S.A",
+   "archivos": 0,
+   "carpetas": 0,
+   "bytes": 0,
+   "ultimo": null,
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "061",
+   "nombre": "MARIA EUGENIA ESCOBAR",
+   "carpeta": "061 MARIA EUGENIA ESCOBAR",
+   "archivos": 0,
+   "carpetas": 0,
+   "bytes": 0,
+   "ultimo": null,
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "062",
+   "nombre": "EMPRENDIMIENTOS INMOBILIARIOS S.A",
+   "carpeta": "062 EMPRENDIMIENTOS INMOBILIARIOS S.A",
+   "archivos": 0,
+   "carpetas": 0,
+   "bytes": 0,
+   "ultimo": null,
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "063",
+   "nombre": "ADRIANO BALBUENA",
+   "carpeta": "063 ADRIANO BALBUENA",
+   "archivos": 0,
+   "carpetas": 0,
+   "bytes": 0,
+   "ultimo": null,
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "064",
+   "nombre": "ANGELA MIGUELA FLORES",
+   "carpeta": "064 ANGELA MIGUELA FLORES",
+   "archivos": 11,
+   "carpetas": 0,
+   "bytes": 3649212,
+   "ultimo": "2026-08-04",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "065",
+   "nombre": "HECTOR MARTINEZ ROJAS",
+   "carpeta": "065 HECTOR MARTINEZ ROJAS",
+   "archivos": 161,
+   "carpetas": 44,
+   "bytes": 26927924,
+   "ultimo": "2026-09-21",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "066",
+   "nombre": "SOCIEDAD PARAGUAYA DE RADIOLOGIA",
+   "carpeta": "066 SOCIEDAD PARAGUAYA DE RADIOLOGIA",
+   "archivos": 0,
+   "carpetas": 0,
+   "bytes": 0,
+   "ultimo": null,
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "067",
+   "nombre": "LILCY S.A",
+   "carpeta": "067 LILCY S.A",
+   "archivos": 236,
+   "carpetas": 51,
+   "bytes": 209127312,
+   "ultimo": "2026-09-25",
+   "duplicados": 1,
+   "bytesDup": 6281580
+  },
+  {
+   "codigo": "068",
+   "nombre": "ECOAGRO S.A",
+   "carpeta": "068 ECOAGRO S.A",
+   "archivos": 944,
+   "carpetas": 191,
+   "bytes": 495823564,
+   "ultimo": "2026-09-30",
+   "duplicados": 84,
+   "bytesDup": 19632005
+  },
+  {
+   "codigo": "069",
+   "nombre": "EDWIN SETRINI",
+   "carpeta": "069 EDWIN SETRINI",
+   "archivos": 18,
+   "carpetas": 9,
+   "bytes": 3036668,
+   "ultimo": "2026-07-28",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "071",
+   "nombre": "NATALIA APONTE",
+   "carpeta": "071 NATALIA APONTE",
+   "archivos": 116,
+   "carpetas": 29,
+   "bytes": 11204171,
+   "ultimo": "2026-09-14",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "072",
+   "nombre": "HUAWEI",
+   "carpeta": "072 HUAWEI",
+   "archivos": 54,
+   "carpetas": 29,
+   "bytes": 31579032,
+   "ultimo": "2026-09-29",
+   "duplicados": 7,
+   "bytesDup": 8001052
+  },
+  {
+   "codigo": "073",
+   "nombre": "E-SOLUTIONS S.A",
+   "carpeta": "073 E-SOLUTIONS S.A",
+   "archivos": 688,
+   "carpetas": 112,
+   "bytes": 310414151,
+   "ultimo": "2026-09-23",
+   "duplicados": 11,
+   "bytesDup": 16924204
+  },
+  {
+   "codigo": "074",
+   "nombre": "PULIRE E.A.S",
+   "carpeta": "074 PULIRE E.A.S",
+   "archivos": 37,
+   "carpetas": 12,
+   "bytes": 12968282,
+   "ultimo": "2024-10-11",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "075",
+   "nombre": "ANA CAMPUZANO",
+   "carpeta": "075 ANA CAMPUZANO",
+   "archivos": 400,
+   "carpetas": 62,
+   "bytes": 77528541,
+   "ultimo": "2026-09-29",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "076",
+   "nombre": "ESTRELLA IBEROAMERICANA S.A",
+   "carpeta": "076 ESTRELLA IBEROAMERICANA S.A",
+   "archivos": 0,
+   "carpetas": 0,
+   "bytes": 0,
+   "ultimo": null,
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "077",
+   "nombre": "COLO E.A.S",
+   "carpeta": "077 COLO E.A.S",
+   "archivos": 8,
+   "carpetas": 3,
+   "bytes": 7919895,
+   "ultimo": "2024-06-05",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "078",
+   "nombre": "MMG PARAGUAY E.A.S. UNIPERSONAL",
+   "carpeta": "078 MMG PARAGUAY E.A.S. UNIPERSONAL",
+   "archivos": 145,
+   "carpetas": 39,
+   "bytes": 38635233,
+   "ultimo": "2026-09-23",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "079",
+   "nombre": "MARIA VANESSA ACUÑA",
+   "carpeta": "079 MARIA VANESSA ACUÑA",
+   "archivos": 289,
+   "carpetas": 49,
+   "bytes": 472643489,
+   "ultimo": "2026-09-24",
+   "duplicados": 4,
+   "bytesDup": 1180750
+  },
+  {
+   "codigo": "080",
+   "nombre": "QUALIA SRL",
+   "carpeta": "080 QUALIA SRL",
+   "archivos": 470,
+   "carpetas": 89,
+   "bytes": 101924637,
+   "ultimo": "2026-09-29",
+   "duplicados": 4,
+   "bytesDup": 9057218
+  },
+  {
+   "codigo": "081",
+   "nombre": "MARKELIER EAS UNIP",
+   "carpeta": "081 MARKELIER EAS UNIP",
+   "archivos": 207,
+   "carpetas": 49,
+   "bytes": 67805708,
+   "ultimo": "2026-09-07",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "082",
+   "nombre": "FFV E.A.S",
+   "carpeta": "082 FFV E.A.S",
+   "archivos": 23,
+   "carpetas": 3,
+   "bytes": 46323320,
+   "ultimo": "2026-08-31",
+   "duplicados": 1,
+   "bytesDup": 312317
+  },
+  {
+   "codigo": "083",
+   "nombre": "NG EAS UNIPERSONAL",
+   "carpeta": "083 NG EAS UNIPERSONAL",
+   "archivos": 286,
+   "carpetas": 76,
+   "bytes": 55126639,
+   "ultimo": "2026-09-11",
+   "duplicados": 1,
+   "bytesDup": 204563
+  },
+  {
+   "codigo": "084",
+   "nombre": "R3J E.A.S",
+   "carpeta": "084 R3J E.A.S",
+   "archivos": 220,
+   "carpetas": 45,
+   "bytes": 142821485,
+   "ultimo": "2026-09-18",
+   "duplicados": 1,
+   "bytesDup": 656671
+  },
+  {
+   "codigo": "085",
+   "nombre": "GESTION AGROPECUARIA SRL",
+   "carpeta": "085 GESTION AGROPECUARIA SRL",
+   "archivos": 648,
+   "carpetas": 106,
+   "bytes": 151232138,
+   "ultimo": "2026-09-17",
+   "duplicados": 5,
+   "bytesDup": 3699182
+  },
+  {
+   "codigo": "086",
+   "nombre": "BOU ASSI NAJI BAHIJ",
+   "carpeta": "086 BOU ASSI NAJI BAHIJ",
+   "archivos": 169,
+   "carpetas": 53,
+   "bytes": 251385516,
+   "ultimo": "2026-09-21",
+   "duplicados": 4,
+   "bytesDup": 32980698
+  },
+  {
+   "codigo": "087",
+   "nombre": "NICODEMUS RUÍZ ORTÍZ",
+   "carpeta": "087 NICODEMUS RUÍZ ORTÍZ",
+   "archivos": 110,
+   "carpetas": 52,
+   "bytes": 65259188,
+   "ultimo": "2026-09-24",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "088",
+   "nombre": "NR REGISTROS GANADEROS EAS UNIPERSONAL",
+   "carpeta": "088 NR REGISTROS GANADEROS EAS UNIPERSONAL",
+   "archivos": 195,
+   "carpetas": 33,
+   "bytes": 47053766,
+   "ultimo": "2026-10-01",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "089",
+   "nombre": "CRISTAL S.A",
+   "carpeta": "089 CRISTAL S.A",
+   "archivos": 682,
+   "carpetas": 77,
+   "bytes": 779980626,
+   "ultimo": "2026-09-23",
+   "duplicados": 34,
+   "bytesDup": 9052167
+  },
+  {
+   "codigo": "090",
+   "nombre": "RAPIGAS EAS",
+   "carpeta": "090 RAPIGAS EAS",
+   "archivos": 170,
+   "carpetas": 36,
+   "bytes": 40988169,
+   "ultimo": "2026-10-02",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "091",
+   "nombre": "OSMAR MANUEL LOPEZ LESME",
+   "carpeta": "091 OSMAR MANUEL LOPEZ LESME",
+   "archivos": 278,
+   "carpetas": 63,
+   "bytes": 46486485,
+   "ultimo": "2026-10-02",
+   "duplicados": 3,
+   "bytesDup": 297735
+  },
+  {
+   "codigo": "092",
+   "nombre": "ANABELLA PINO",
+   "carpeta": "092 ANABELLA PINO",
+   "archivos": 6,
+   "carpetas": 1,
+   "bytes": 3176515,
+   "ultimo": "2025-04-01",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "093",
+   "nombre": "MERCEDES PETERS",
+   "carpeta": "093 MERCEDES PETERS",
+   "archivos": 16,
+   "carpetas": 5,
+   "bytes": 4694755,
+   "ultimo": "2026-01-29",
+   "duplicados": 1,
+   "bytesDup": 183714
+  },
+  {
+   "codigo": "094",
+   "nombre": "LARA ESTEFANIA BARRETO MEDINA",
+   "carpeta": "094 LARA ESTEFANIA BARRETO MEDINA",
+   "archivos": 27,
+   "carpetas": 4,
+   "bytes": 2068981,
+   "ultimo": "2025-02-28",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "095",
+   "nombre": "MACOMA SUCURSAL",
+   "carpeta": "095 MACOMA SUCURSAL",
+   "archivos": 140,
+   "carpetas": 48,
+   "bytes": 112872651,
+   "ultimo": "2026-09-30",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "096",
+   "nombre": "DIEGO CAMPUZANO",
+   "carpeta": "096 DIEGO CAMPUZANO",
+   "archivos": 47,
+   "carpetas": 24,
+   "bytes": 24943342,
+   "ultimo": "2026-09-21",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "097",
+   "nombre": "DOMINI INMOBILIARIA E.A.S",
+   "carpeta": "097 DOMINI INMOBILIARIA E.A.S",
+   "archivos": 3,
+   "carpetas": 4,
+   "bytes": 12045629,
+   "ultimo": "2025-04-11",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "098",
+   "nombre": "MARIA JOSE AGUAYO",
+   "carpeta": "098 MARIA JOSE AGUAYO",
+   "archivos": 13,
+   "carpetas": 4,
+   "bytes": 54752607,
+   "ultimo": "2025-06-12",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "100",
+   "nombre": "CONSORCIO GUASU",
+   "carpeta": "100 CONSORCIO GUASU",
+   "archivos": 94,
+   "carpetas": 18,
+   "bytes": 28403471,
+   "ultimo": "2026-10-01",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "101",
+   "nombre": "GANADERA ALBORADA S.A",
+   "carpeta": "101 GANADERA ALBORADA S.A",
+   "archivos": 93,
+   "carpetas": 14,
+   "bytes": 105567855,
+   "ultimo": "2026-09-18",
+   "duplicados": 2,
+   "bytesDup": 3745257
+  },
+  {
+   "codigo": "102",
+   "nombre": "HERREBAEZ EAS",
+   "carpeta": "102 HERREBAEZ EAS",
+   "archivos": 59,
+   "carpetas": 15,
+   "bytes": 31684003,
+   "ultimo": "2026-09-07",
+   "duplicados": 6,
+   "bytesDup": 3874291
+  },
+  {
+   "codigo": "103",
+   "nombre": "MJA E.A.S",
+   "carpeta": "103 MJA E.A.S",
+   "archivos": 55,
+   "carpetas": 23,
+   "bytes": 13297295,
+   "ultimo": "2026-09-10",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "104",
+   "nombre": "ANALIA BAEZ JOHANNSEN",
+   "carpeta": "104 ANALIA BAEZ JOHANNSEN",
+   "archivos": 7,
+   "carpetas": 12,
+   "bytes": 1711049,
+   "ultimo": "2026-09-04",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "105",
+   "nombre": "ALMA BENITEZ OVIEDO",
+   "carpeta": "105 ALMA BENITEZ OVIEDO",
+   "archivos": 87,
+   "carpetas": 23,
+   "bytes": 21167156,
+   "ultimo": "2026-09-14",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "106",
+   "nombre": "GANADERA INDIANA",
+   "carpeta": "106 GANADERA INDIANA",
+   "archivos": 194,
+   "carpetas": 31,
+   "bytes": 47661965,
+   "ultimo": "2026-09-30",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "107",
+   "nombre": "AM Y ASOCIADOS EAS",
+   "carpeta": "107 AM Y ASOCIADOS EAS",
+   "archivos": 71,
+   "carpetas": 21,
+   "bytes": 41818604,
+   "ultimo": "2026-09-17",
+   "duplicados": 2,
+   "bytesDup": 292352
+  },
+  {
+   "codigo": "108",
+   "nombre": "ANA CAMPUZANO-MTESS",
+   "carpeta": "108 ANA CAMPUZANO-MTESS",
+   "archivos": 17,
+   "carpetas": 10,
+   "bytes": 1367720,
+   "ultimo": "2026-10-02",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "109",
+   "nombre": "GABRIEL CUBAS",
+   "carpeta": "109 GABRIEL CUBAS",
+   "archivos": 27,
+   "carpetas": 5,
+   "bytes": 2569082,
+   "ultimo": "2026-10-02",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "110",
+   "nombre": "SOLEDAD JURE",
+   "carpeta": "110 SOLEDAD JURE",
+   "archivos": 20,
+   "carpetas": 9,
+   "bytes": 1585498,
+   "ultimo": "2026-10-02",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "111",
+   "nombre": "ESTHER VIGNEAUX",
+   "carpeta": "111 ESTHER VIGNEAUX",
+   "archivos": 60,
+   "carpetas": 11,
+   "bytes": 152613314,
+   "ultimo": "2026-09-24",
+   "duplicados": 2,
+   "bytesDup": 60014056
+  },
+  {
+   "codigo": "112",
+   "nombre": "DE ISAAK EAS",
+   "carpeta": "112 DE ISAAK EAS",
+   "archivos": 8,
+   "carpetas": 8,
+   "bytes": 1067898,
+   "ultimo": "2026-06-24",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "113",
+   "nombre": "CASA VIVA",
+   "carpeta": "113 CASA VIVA",
+   "archivos": 111,
+   "carpetas": 9,
+   "bytes": 55237012,
+   "ultimo": "2026-03-25",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "114",
+   "nombre": "GERARDO SOSA",
+   "carpeta": "114  GERARDO SOSA",
+   "archivos": 24,
+   "carpetas": 7,
+   "bytes": 3002081,
+   "ultimo": "2026-09-03",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "115",
+   "nombre": "GONZALO GIMENEZ",
+   "carpeta": "115 GONZALO GIMENEZ",
+   "archivos": 49,
+   "carpetas": 14,
+   "bytes": 7654344,
+   "ultimo": "2026-09-30",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "116",
+   "nombre": "QUIMECO E.A.S",
+   "carpeta": "116 QUIMECO E.A.S",
+   "archivos": 12,
+   "carpetas": 11,
+   "bytes": 6473976,
+   "ultimo": "2026-09-03",
+   "duplicados": 1,
+   "bytesDup": 312434
+  },
+  {
+   "codigo": "117",
+   "nombre": "DIEGO NICOLAS VELAZQUEZ",
+   "carpeta": "117 DIEGO NICOLAS VELAZQUEZ",
+   "archivos": 101,
+   "carpetas": 28,
+   "bytes": 16432202,
+   "ultimo": "2026-10-02",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "118",
+   "nombre": "MVB EAS",
+   "carpeta": "118 MVB EAS",
+   "archivos": 47,
+   "carpetas": 18,
+   "bytes": 10490979,
+   "ultimo": "2026-09-16",
+   "duplicados": 6,
+   "bytesDup": 2695588
+  },
+  {
+   "codigo": "119",
+   "nombre": "ALISON BETTINA RAMIREZ",
+   "carpeta": "119 ALISON BETTINA RAMIREZ",
+   "archivos": 26,
+   "carpetas": 13,
+   "bytes": 4275685,
+   "ultimo": "2026-09-21",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "120",
+   "nombre": "CAMILO ACOSTA",
+   "carpeta": "120  CAMILO ACOSTA",
+   "archivos": 6,
+   "carpetas": 3,
+   "bytes": 1539688,
+   "ultimo": "2026-09-17",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "121",
+   "nombre": "AF Y RM ASOCIADOS",
+   "carpeta": "121 AF Y RM ASOCIADOS",
+   "archivos": 11,
+   "carpetas": 10,
+   "bytes": 1214471,
+   "ultimo": "2026-09-07",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "122",
+   "nombre": "ALT 240 S.A",
+   "carpeta": "122 ALT 240 S.A",
+   "archivos": 40,
+   "carpetas": 5,
+   "bytes": 27955406,
+   "ultimo": "2026-06-09",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "123",
+   "nombre": "AGRICOLA GANADERA LA FLORIDA S.A",
+   "carpeta": "123 AGRICOLA GANADERA LA FLORIDA S.A",
+   "archivos": 5,
+   "carpetas": 0,
+   "bytes": 46770074,
+   "ultimo": "2026-07-24",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "124",
+   "nombre": "GESTION INTEGRAL DE CAMPOS EAS",
+   "carpeta": "124 GESTION INTEGRAL DE CAMPOS EAS",
+   "archivos": 30,
+   "carpetas": 7,
+   "bytes": 10781292,
+   "ultimo": "2026-09-14",
+   "duplicados": 2,
+   "bytesDup": 284590
+  },
+  {
+   "codigo": "125",
+   "nombre": "SOCIEDAD PARAGUAYA DE ENDODONCIA",
+   "carpeta": "125 SOCIEDAD PARAGUAYA DE ENDODONCIA",
+   "archivos": 20,
+   "carpetas": 11,
+   "bytes": 16240612,
+   "ultimo": "2026-09-08",
+   "duplicados": 1,
+   "bytesDup": 103870
+  },
+  {
+   "codigo": "126",
+   "nombre": "RRHH EFFORT",
+   "carpeta": "126 RRHH EFFORT",
+   "archivos": 8,
+   "carpetas": 4,
+   "bytes": 481135,
+   "ultimo": "2026-10-02",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "127",
+   "nombre": "OPEN SISTEMAS SRL",
+   "carpeta": "127 OPEN SISTEMAS SRL",
+   "archivos": 8,
+   "carpetas": 3,
+   "bytes": 6709133,
+   "ultimo": "2026-09-21",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "128",
+   "nombre": "ASOCIACION PARAGUAYA DE CRIADORES DE PAMPA CHAQUEÑO",
+   "carpeta": "128 ASOCIACION PARAGUAYA DE CRIADORES DE PAMPA CHAQUEÑO",
+   "archivos": 1,
+   "carpetas": 5,
+   "bytes": 22985,
+   "ultimo": "2026-08-24",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "129",
+   "nombre": "LILIAN CORTESE",
+   "carpeta": "129 LILIAN CORTESE",
+   "archivos": 12,
+   "carpetas": 6,
+   "bytes": 1956495,
+   "ultimo": "2026-09-17",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "130",
+   "nombre": "BV SOLUTIONS EAS-",
+   "carpeta": "130 BV SOLUTIONS EAS-",
+   "archivos": 24,
+   "carpetas": 7,
+   "bytes": 21622978,
+   "ultimo": "2026-09-10",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "131",
+   "nombre": "COMPAÑIA 2B S.A",
+   "carpeta": "131 COMPAÑIA 2B S.A",
+   "archivos": 26,
+   "carpetas": 7,
+   "bytes": 6467536,
+   "ultimo": "2026-09-29",
+   "duplicados": 0,
+   "bytesDup": 0
+  },
+  {
+   "codigo": "132",
+   "nombre": "MAISON ELIXIR EAS",
+   "carpeta": "132 MAISON ELIXIR EAS",
+   "archivos": 5,
+   "carpetas": 0,
+   "bytes": 8342385,
+   "ultimo": "2026-09-23",
+   "duplicados": 0,
+   "bytesDup": 0
+  }
+ ]
+}
