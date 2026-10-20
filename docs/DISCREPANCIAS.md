@@ -4,7 +4,7 @@ Toda regla que el sistema aplica sobre dinero, plazos o estados y que todavía n
 fue contrastada contra un documento real de EFFORT se anota acá. Ninguna se
 resuelve por criterio propio: se confirma con Laura o Lili, o se deja marcada.
 
-## ▶ Índice de estado — actualizado el 2026-10-01
+## ▶ Índice de estado — actualizado el 2026-10-20
 
 **Esta tabla manda sobre los títulos de cada punto.** Si un título de más abajo
 dice otra cosa, vale lo que dice esta tabla (algunos títulos son históricos).
@@ -52,6 +52,11 @@ de Lili o Laura), **Daniel** (decisión o acción en una cuenta), **Claude**
 | 36 | Avisos de 7 días en el Dashboard de Laura y Lili | **Cerrado 2026-09-23 — ya funcionaba, sin código nuevo** | nadie | El Panel ya muestra las alertas ALTA (≤7 días) y CRÍTICA (≤2) juntas en "Alertas más urgentes"; Laura y Lili son `direccion`, ven toda la cartera. Ver `motorDeAlertas.ts`, `CRITICIDAD_POR_NIVEL` |
 | 37 | Umbrales de los indicadores del Panel | **Cerrado 2026-09-24** | nadie | Daniel: «Vencimientos próximos» = los que vencen en **15 días o menos** (antes 7) y «Alertas críticas» = las que vencen en **7 días o menos, más lo vencido** (antes solo CRÍTICA, ≤2 días). Cambia SOLO lo que muestra el indicador: el motor de alertas y los umbrales 30/15/7/2 no se tocaron. Ver el punto 37 |
 | 38 | Cada versión guardada de un archivo es un documento nuevo | **Abierto 2026-09-30** | Daniel | La pantalla ya agrupa (tarea 162). Falta decidir el arreglo de fondo: reemplazar la versión anterior en vez de sumar, y si se limpian los duplicados que ya hay (eso es borrar: REGLA 0) |
+| 39 | Manual de procedimiento de documentos v1.3: decisiones que EFFORT no validó | **Abierto 2026-10-07** | EFFORT (Laura y Lili) | Aprobar el manual y decidir quién lo aplica (sección 8 del manual). Ver el punto |
+| 40 | Planilla de clientes para el alta masiva: supuestos no validados | **Abierto 2026-10-05** | EFFORT | Completar la planilla de 132 filas (régimen, obligaciones, RUC) y contestar sobre 045, 070, 099. Ver el punto |
+| 41 | Criterio para los archivos repetidos (1.068 copias en 52 clientes) | **Abierto 2026-10-06** | Daniel y EFFORT | Confirmar «se conserva el más antiguo» y decidir qué hacer con las copias (borrar es REGLA 0). Ver el punto |
+| 42 | Copia de seguridad del OneDrive de EFFORT en disco externo | **EN CURSO 2026-10-19** | Claude (terminar) y Daniel (decidir) | Que termine y se verifique; segunda copia en otro lugar; cifrado del disco. Ver el punto |
+| 43 | Plan de infraestructura y precio para 132 clientes | **Abierto 2026-10-06** | Daniel | Decidir y pagar DigitalOcean 2 GB + Supabase Pro antes de la carga masiva; región de la base; precio de mantenimiento. Ver el punto |
 
 ---
 
@@ -1920,3 +1925,74 @@ reciente, con «N versiones» y la opción de ver las anteriores. No se tocó la
 actualice su documento en vez de crear otro — la evidencia vieja se conserva, que
 es la prueba de qué había antes; (2) si se limpian los documentos repetidos que ya
 existen. Lo segundo es borrar filas: lo autoriza Daniel, para esa operación.
+
+---
+
+## 39. Manual de procedimiento de documentos v1.3 — decisiones que EFFORT no validó — ABIERTO 2026-10-07
+
+`docs/MANUAL-DE-PROCEDIMIENTO-DE-DOCUMENTOS.md` (y su Word) se diseñó como norma, no copiando lo que se hace hoy. Estas son las decisiones que **nadie de
+EFFORT confirmó todavía**; ninguna se resuelve por criterio propio:
+
+1. **El nombre del cliente va siempre al final** de cada archivo (la guía del 2026-10-01 decía «opcional»).
+2. **Las 4 carpetas de primer nivel llevan el código del cliente** (`NNN LEGAL Y SOCIETARIO`, `NNN TRIBUTARIO`, `NNN PERIODO AAAA`, `NNN ZZ A CLASIFICAR`);
+   las de adentro y los archivos no (el sistema exige que `CORRECCION` esté al principio del nombre).
+3. **La carpeta es el período que el documento declara**, no el día en que se guardó. Hoy lo cumplen 1.041 de 1.050 declaraciones de la DNIT leídas.
+4. **Lo legal y la identidad tributaria van arriba, sin año** (`LEGAL Y SOCIETARIO` unificada con lo societario del año; `ASAMBLEA AAAA` = el año en que se celebra).
+5. **Los anticipos del IRE** van en el mes del vencimiento de la cuota.
+6. **`ZZ A CLASIFICAR`** (una por cliente y una general) con vaciado semanal.
+7. **Quién lo aplica** (propuesta de la sección 8: quien recibe guarda, el responsable cierra y controla, Laura y Lili aprueban cambios, Daniel conecta clientes al sistema).
+
+Rige solo para documentos nuevos. Ordenar lo ya guardado es la tarea 164 (punto 41). **Quién:** Laura y Lili.
+
+## 40. Planilla de clientes para el alta masiva — supuestos no validados — ABIERTO 2026-10-05
+
+La planilla (`docs/analisis-onedrive-2026-10/Planilla de clientes - EFFORT Control 360.xlsx`, 132 filas del 001 al 132) trae propuestas **deducidas, no
+confirmadas**:
+
+- **RUC** de 91 clientes, deducido de las declaraciones de su carpeta (el dígito verificador se comprobó solo con 3 RUC reales del piloto). Faltan 41.
+- **Tipo de persona:** «RUC de 80.000.000 o más = jurídica», un supuesto; si no hay RUC, por el nombre (S.A., S.R.L., E.A.S.…).
+- **Lista de regímenes** (IRE General, IRE Simple, RESIMPLE, IRP, Solo IVA, Otro): los nombres no los confirmó EFFORT. El régimen y las obligaciones se dejaron **vacíos a propósito**.
+- El sistema solo controla 4 obligaciones (IVA, RG 90, IRE, estados financieros); IRP, IPS, MTESS, anticipos quedan anotados en «Otras» y **no se controlan todavía**.
+
+**Preguntas para EFFORT:** ¿qué fueron los códigos **045** (hay una carpeta «045 DAVID ROMERO» dentro de la del cliente 056), **070** y **099** (sin rastro en el
+OneDrive)? ¿Siguen siendo clientes los 16 sin movimiento desde 2025 y las 8 carpetas vacías? ¿Qué hacer con las 10 carpetas sin código (`CLIENTES A CONFIRMAR`,
+`ADMINISTRACION RUBRICAM S.A`…) y con «001 ELIAS EL KHOURY» metida dentro de «007 RAMIRO GARCIA VARESINI»? El DIBEC del sistema es la **032 DIBEC S.A** (resuelto
+2026-10-05). **Quién:** EFFORT.
+
+## 41. Criterio para los archivos repetidos — ABIERTO 2026-10-06
+
+Hay **1.068 copias idénticas** (mismo contenido y peso) dentro de un mismo cliente, en 52 clientes (0,82 GB), y 38 archivos iguales en clientes distintos
+(`docs/analisis-onedrive-2026-10/datos/repetidos-por-cliente.json`; Word «Documentos faltantes y archivos repetidos»). Supuestos sin confirmar:
+
+- **Se conserva el más antiguo** (por fecha de creación en OneDrive), porque suele ser el original.
+- Las copias van a una carpeta de cuarentena («Duplicados para revisar»); **no se borran**. Borrar originales de EFFORT está prohibido (REGLA 0, punto 2) y
+  borrar cualquier cosa exige autorización expresa; lo borra una persona del equipo, si decide hacerlo.
+- Antes de tocar una copia hay que comprobar que ningún Excel con vínculos (107, sobre todo balances `EEFF…xlsm`) apunte a ella.
+- Los 38 archivos iguales entre clientes **no son sobrantes**: pueden corresponder a los dos o estar en el cliente equivocado.
+
+Relacionado con el punto 38 (versiones del mismo archivo) y con la tarea 164. **Quién:** Daniel y EFFORT.
+
+## 42. Copia de seguridad del OneDrive de EFFORT en disco externo — EN CURSO 2026-10-19
+
+EFFORT **no tiene copia de seguridad de sus propios archivos** (es la razón de la REGLA 5). El 2026-10-19 Daniel pidió copiar todo el OneDrive al disco externo
+(Toshiba Canvio Ready 2 TB, `D:`): tarea 169 del roadmap, que tiene el estado y los pasos exactos. Lo que hay que decidir o saber, además de terminarla:
+
+1. **Una sola copia en un solo disco no alcanza:** si el disco se rompe o se pierde, no queda nada. Falta una **segunda copia en otro lugar**. **Daniel decide dónde.**
+2. **Cifrado:** el disco tiene datos de 129 clientes y Windows 11 Home no permite BitLocker en discos externos; opción gratuita: VeraCrypt (si se cifra después de
+   copiar, la copia hay que rehacerla dentro del volumen cifrado). Mientras tanto: desconectado y bajo llave.
+3. **Es una foto del 2026-10-19:** hay que repetirla (pasada incremental) antes de cualquier cambio masivo en el OneDrive, y periódicamente. Una pasada nueva pisa en
+   la copia la versión vieja de un archivo que cambió.
+4. **Rutas de hasta 294 caracteres** en el disco: el Explorador de Windows trabaja hasta 260; esos archivos existen pero pueden no abrirse desde el Explorador.
+5. **El disco falló una vez** (2026-10-19 15:19, errores NTFS 50/140/98; reparado, sin sectores defectuosos, los 14.543 archivos de ese momento se
+   re-verificaron bien). Si vuelve a fallar: cable corto, puerto directo, sin hub; si persiste, cambiar el disco.
+
+**Quién:** Claude termina y verifica; Daniel decide la segunda copia y el cifrado.
+
+## 43. Plan de infraestructura y precio para 132 clientes — ABIERTO 2026-10-06
+
+Medido: con 5 clientes el servidor de DigitalOcean (512 MB) ya llega a ~320 MB (hasta 62 % de la memoria) y la base de Supabase usa 120 de 500 MB; con 129
+clientes y 11 usuarios la memoria es el riesgo (el 2026-09-12 el sistema ya cayó por memoria). **Recomendación dada a Daniel:** DigitalOcean 2 GB (`apps-s-1vcpu-2gb`,
+US$25/mes) y Supabase Pro (US$25/mes: 8 GB, copias diarias, 250 GB de transferencia, tope de gasto activado) = ~US$50/mes (hoy ~US$5), **antes** de la carga
+masiva. Pendiente de Daniel: pagar, la **región de la base** (Virginia bajaría la latencia de ~300 ms a ~10 ms, pero los datos contables saldrían de Sudamérica: es
+una decisión de EFFORT, ver el punto 18), y el **precio de mantenimiento** (se sugirió US$650/mes hasta 150 clientes y US$4 por cliente extra). La memoria de
+150 clientes **no se midió todavía con datos reales**: se mide en las primeras tandas de la carga. **Quién:** Daniel.

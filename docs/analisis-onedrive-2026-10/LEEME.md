@@ -39,6 +39,18 @@ Leen los secretos de Azure del `.env` hacia el proceso (nunca como argumento ni 
 | `faltantes.mjs`, `repetidos.cjs`, `informe.cjs` | Reconstruyen los faltantes, agrupan los repetidos y arman el Word «Documentos faltantes y archivos repetidos». |
 | `plan.cjs`, `generar.cjs`, `fotos.ps1`, `subir.mjs`, `renombrar.mjs` | Crearon el cliente de muestra `999 CLIENTE MUESTRA` (única escritura autorizada en el origen, 2026-10-07). `subir.mjs` y `renombrar.mjs` son el modelo de cómo escribir en el origen **solo cuando Daniel lo autoriza**: puerta única de salida, sin DELETE, `conflictBehavior=fail`, simulación por defecto. |
 
+## Copia de seguridad al disco externo (2026-10-19)
+
+`copiar-onedrive-al-disco.mjs.txt` copia **todo** el OneDrive de origen a un disco (`D:\COPIA ONEDRIVE EFFORT 2026-10-19\`). Solo lee de
+OneDrive (la única puerta de salida rechaza todo lo que no sea GET) y solo escribe dentro de la carpeta de destino. Baja cada archivo a
+`<nombre>.parte`, lo verifica (peso y huella `quickXorHash` de Microsoft, implementada en el propio script y probada contra 6 archivos reales) y recién
+entonces lo renombra. Modos: `--probar` (inventario + espacio + autoprueba, no copia), `--copiar` (copia y retoma lo que falte) y `--verificar`
+(relee del disco lo ya copiado y descarta lo dañado). `correr-copia.ps1.txt` lo lanza sin que la computadora se duerma (no cambia ninguna configuración).
+`reforzar-copia.py.txt` es el parche que lo volvió resistente a cortes del disco USB. Registro en el propio disco, en `_registro\`: `copiados.jsonl`
+(un renglón por archivo verificado, con su huella), `fallos.jsonl`, `omitidos.json`, `verificacion.json` y `resumen.json` (lo escribe al terminar).
+Las rutas del script (`D:`, el `.env`) hay que ajustarlas si se usa de nuevo. **Para reintentar fallos o hacer una pasada incremental, basta volver a correr
+`--copiar`**: saltea lo que ya está verificado y baja solo lo nuevo, lo que cambió y lo que falló.
+
 ## Lo que mostró el análisis (resumen)
 
 - **129 clientes con código** (001–132), 121 con archivos y 8 vacías; 26.724 archivos, **14,02 GB**; 105 con movimiento en 2026.

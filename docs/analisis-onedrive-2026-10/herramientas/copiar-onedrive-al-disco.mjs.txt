@@ -1,0 +1,269 @@
+// COPIA el OneDrive de EFFORT (lsosa@effort.com.py) al disco externo. SOLO LECTURA sobre OneDrive.
+// Pedido de Daniel (2026-10-19): «Copia todos los archivos al disco externo sin tocar ni modificar nada».
+//
+// Garantías por construcción:
+//   · Hacia Microsoft Graph SOLO sale GET (`llamar` rechaza cualquier otro método). No se crea, modifica, mueve ni borra
+//     nada en OneDrive.
+//   · Se escribe SOLO dentro de DESTINO (`dentroDelDestino` lo comprueba antes de cada escritura). Nada en el repositorio.
+//   · Cada archivo se baja a «<nombre>.parte», se verifica (peso y huella quickXorHash de Microsoft) y recién ahí
+//     pasa a su nombre final: no quedan archivos a medias con el nombre real.
+//   · Se puede cortar y retomar: lo ya copiado y verificado se saltea.
+//   · Los secretos van del .env al proceso y de ahí al cuerpo de un fetch: nunca se imprimen.
+//
+// Uso:  node copiar.mjs --probar    (lista, cuenta y prueba la verificación con 5 archivos; no copia)
+//       node copiar.mjs --copiar    (copia todo)
+import fs from 'node:fs';
+import path from 'node:path';
+import { Transform } from 'node:stream';
+import { pipeline } from 'node:stream/promises';
+import { Readable } from 'node:stream';
+
+const MODO = process.argv.includes('--copiar') ? 'copiar' : process.argv.includes('--verificar') ? 'verificar' : 'probar';
+const DESTINO = path.resolve('D:/COPIA ONEDRIVE EFFORT 2026-10-19');
+const REGISTRO = path.join(DESTINO, '_registro');
+const CONCURRENCIA = 16;
+
+for (const linea of fs.readFileSync('C:/Users/Daniel/NexusFlow AI/effort-control-360/.env', 'utf8').split('\n')) {
+  const m = linea.match(/^([A-Z_][A-Z0-9_]*)=(.*)$/);
+  if (m && !process.env[m[1]]) process.env[m[1]] = m[2].trim().replace(/^["']|["']$/g, '');
+}
+
+// ------------------------------------------------------------------ escritura: solo dentro de DESTINO
+function dentroDelDestino(p) {
+  const r = path.resolve(p);
+  if (r !== DESTINO && !r.startsWith(DESTINO + path.sep)) throw new Error(`BLOQUEADO: escritura fuera del destino: ${r}`);
+  return r;
+}
+
+// ------------------------------------------------------------------ el disco puede desaparecer un instante (USB): esperar, no caerse
+const ERRORES_DE_DISCO = /^(ENOENT|EIO|EBUSY|ENODEV|EPERM|UNKNOWN|EINVAL|ENXIO|ENOTCONN)$/;
+async function esperarDisco() {
+  const limite = Date.now() + 30 * 60_000;
+  while (Date.now() < limite) {
+    try { if (fs.existsSync(DESTINO) && fs.existsSync('D:/')) { fs.accessSync(DESTINO, fs.constants.W_OK); return true; } } catch { /* sigue esperando */ }
+    await new Promise((s) => setTimeout(s, 5000));
+  }
+  throw new Error('El disco D: no volvió en 30 minutos');
+}
+async function anotar(archivo, objeto) {
+  for (let i = 1; i <= 8; i++) {
+    try { fs.mkdirSync(dentroDelDestino(path.dirname(archivo)), { recursive: true }); fs.appendFileSync(dentroDelDestino(archivo), JSON.stringify(objeto) + '\n'); return; }
+    catch (e) { if (i === 8) throw e; await esperarDisco(); await new Promise((s) => setTimeout(s, 2000)); }
+  }
+}
+
+// ------------------------------------------------------------------ quickXorHash (el que calcula OneDrive para Business)
+class QuickXor {
+  constructor() { this.acc = new Uint8Array(160); this.pos = 0; this.largo = 0; }
+  update(buf) {
+    let p = this.pos; const acc = this.acc;
+    for (let i = 0; i < buf.length; i++) { acc[p] ^= buf[i]; if (++p === 160) p = 0; }
+    this.pos = p; this.largo += buf.length;
+  }
+  digest() {
+    const rgb = new Uint8Array(20);
+    for (let r = 0; r < 160; r++) {
+      const v = this.acc[r]; if (!v) continue;
+      const desde = (11 * r) % 160;
+      for (let k = 0; k < 8; k++) if ((v >> k) & 1) { const b = (desde + k) % 160; rgb[b >> 3] ^= 1 << (b & 7); }
+    }
+    let L = BigInt(this.largo);
+    for (let i = 0; i < 8; i++) { rgb[12 + i] ^= Number(L & 0xffn); L >>= 8n; }
+    return Buffer.from(rgb).toString('base64');
+  }
+}
+
+// ------------------------------------------------------------------ Microsoft Graph: SOLO GET
+let token = null, vence = 0;
+async function obtenerToken() {
+  if (token && Date.now() < vence) return token;
+  const r = await fetch(`https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}/oauth2/v2.0/token`, {
+    method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ client_id: process.env.AZURE_CLIENT_ID, client_secret: process.env.AZURE_CLIENT_SECRET, scope: 'https://graph.microsoft.com/.default', grant_type: 'client_credentials' }),
+  });
+  if (!r.ok) throw new Error(`token: ${r.status}`);
+  const j = await r.json(); token = j.access_token; vence = Date.now() + (j.expires_in - 300) * 1000; return token;
+}
+async function llamar(metodo, ruta, opciones = {}) {
+  if (metodo !== 'GET') throw new Error(`BLOQUEADO: solo se permite GET hacia OneDrive (pidió ${metodo})`);
+  for (let intento = 1; intento <= 6; intento++) {
+    try {
+      const r = await fetch(ruta.startsWith('http') ? ruta : `https://graph.microsoft.com/v1.0${ruta}`, {
+        method: 'GET', headers: { authorization: `Bearer ${await obtenerToken()}` }, signal: AbortSignal.timeout(opciones.timeout ?? 120_000),
+      });
+      if (r.status === 429 || r.status >= 500) { const espera = Number(r.headers.get('retry-after') ?? 0) * 1000 || 2500 * intento; await new Promise((s) => setTimeout(s, espera)); continue; }
+      return r;
+    } catch (e) { if (intento === 6) throw e; await new Promise((s) => setTimeout(s, 3000 * intento)); }
+  }
+  throw new Error('demasiados reintentos');
+}
+async function json(ruta) { const r = await llamar('GET', ruta); if (!r.ok) throw new Error(`GET ${ruta.slice(0, 90)} → ${r.status}`); return r.json(); }
+
+const usuario = process.env.ONEDRIVE_USUARIO_ORIGEN ?? 'lsosa@effort.com.py';
+const driveId = process.env.AZURE_DRIVE_ID_ORIGEN ?? (await json(`/users/${encodeURIComponent(usuario)}/drive?$select=id`)).id;
+
+// ------------------------------------------------------------------ inventario completo (consulta de cambios desde cero)
+console.log('Leyendo el inventario del OneDrive…');
+const items = new Map(); let url = `/drives/${driveId}/root/delta?$select=id,name,size,file,folder,package,remoteItem,parentReference,deleted,lastModifiedDateTime,root`;
+let paginas = 0, idRaiz = null;
+while (url) {
+  const p = await json(url);
+  for (const it of p.value) {
+    if (it.deleted) continue;
+    if (it.root) idRaiz = it.id;
+    items.set(it.id, { id: it.id, padre: it.parentReference?.id ?? null, nombre: it.name, carpeta: !!it.folder, paquete: !!it.package, atajo: !!it.remoteItem, tam: it.size ?? 0, hash: it.file?.hashes?.quickXorHash ?? null, mod: it.lastModifiedDateTime ?? null });
+  }
+  if (++paginas % 40 === 0) console.log(`  ${paginas} páginas, ${items.size} elementos`);
+  url = p['@odata.nextLink'] ?? null;
+}
+if (!idRaiz) for (const it of items.values()) if (!items.has(it.padre)) idRaiz = it.padre;
+const RESERVADOS = /^(con|prn|aux|nul|com[1-9]|lpt[1-9])(\.|$)/i;
+const renombradosPorWindows = [];
+function nombreLocal(n) {
+  let s = n.replace(/[<>:"/\\|?*\x00-\x1f]/g, '_');
+  if (/[ .]$/.test(s)) s += '_';
+  if (RESERVADOS.test(s)) s = '_' + s;
+  if (s !== n) renombradosPorWindows.push(n);
+  return s;
+}
+const rutaDe = new Map();
+function ruta(id) {
+  if (rutaDe.has(id)) return rutaDe.get(id);
+  const it = items.get(id);
+  const r = it.padre === idRaiz || !items.has(it.padre) ? nombreLocal(it.nombre) : `${ruta(it.padre)}/${nombreLocal(it.nombre)}`;
+  rutaDe.set(id, r); return r;
+}
+const carpetas = [], archivos = [], omitidos = [];
+for (const it of items.values()) {
+  if (it.id === idRaiz) continue;
+  it.rel = ruta(it.id);
+  if (it.paquete || it.atajo) omitidos.push({ ruta: it.rel, motivo: it.paquete ? 'cuaderno de OneNote (no se puede bajar como archivo)' : 'acceso directo a algo compartido' });
+  else if (it.carpeta) carpetas.push(it); else archivos.push(it);
+}
+const totalBytes = archivos.reduce((s, a) => s + a.tam, 0);
+const gb = (b) => (b / 1024 ** 3).toFixed(2);
+console.log(`Inventario: ${archivos.length} archivos (${gb(totalBytes)} GB), ${carpetas.length} carpetas, ${omitidos.length} omitidos. Nombres ajustados por Windows: ${renombradosPorWindows.length}.`);
+const largoMax = Math.max(...archivos.map((a) => DESTINO.length + 1 + a.rel.length));
+console.log(`Ruta más larga en el disco: ${largoMax} caracteres.`);
+
+// ------------------------------------------------------------------ descarga de un archivo, con verificación
+async function bajar(a, destinoFinal) {
+  const parte = dentroDelDestino(destinoFinal + '.parte');
+  let esperasDeDisco = 0;
+  for (let intento = 1; intento <= 4; intento++) {
+    try {
+      fs.mkdirSync(path.dirname(parte), { recursive: true });
+      const r = await llamar('GET', `/drives/${driveId}/items/${a.id}/content`, { timeout: 30 * 60_000 });
+      if (!r.ok) throw new Error(`HTTP ${r.status}`);
+      const qx = new QuickXor(); let n = 0;
+      const medir = new Transform({ transform(trozo, _e, cb) { qx.update(trozo); n += trozo.length; cb(null, trozo); } });
+      if (r.body) await pipeline(Readable.fromWeb(r.body), medir, fs.createWriteStream(parte)); else fs.writeFileSync(parte, Buffer.alloc(0));
+      const h = qx.digest();
+      if (n !== a.tam) throw new Error(`peso distinto: bajó ${n}, OneDrive dice ${a.tam}`);
+      if (a.hash && h !== a.hash) throw new Error('la huella no coincide con la de Microsoft');
+      fs.renameSync(parte, dentroDelDestino(destinoFinal));
+      if (a.mod) { const t = new Date(a.mod); fs.utimesSync(destinoFinal, t, t); }
+      return { ok: true, hash: h, sinHashDeOrigen: !a.hash };
+    } catch (e) {
+      try { fs.rmSync(parte, { force: true }); } catch { /* nada */ }
+      if (e && typeof e.code === 'string' && ERRORES_DE_DISCO.test(e.code) && esperasDeDisco < 20) {
+        // Falló el DISCO, no el archivo ni la red: se espera a que vuelva y se reintenta sin gastar un intento.
+        esperasDeDisco++; intento--; await esperarDisco(); continue;
+      }
+      if (intento === 4) return { ok: false, error: String(e.message ?? e).slice(0, 160) };
+      await new Promise((s) => setTimeout(s, 2500 * intento));
+    }
+  }
+}
+
+// ------------------------------------------------------------------ prueba: la verificación tiene que funcionar ANTES de copiar nada
+if (MODO === 'probar') {
+  const libre = fs.statfsSync('D:/'); const libreBytes = Number(libre.bavail) * Number(libre.bsize);
+  console.log(`Espacio libre en D: ${gb(libreBytes)} GB (hacen falta ${gb(totalBytes)} GB).`);
+  fs.mkdirSync(dentroDelDestino(path.join(DESTINO, '_prueba')), { recursive: true });
+  const muestra = archivos.filter((a) => a.hash && a.tam > 2000 && a.tam < 3_000_000).slice(0, 5).concat(archivos.filter((a) => a.hash && a.tam > 50_000_000).slice(0, 1));
+  let bien = 0;
+  for (const a of muestra) {
+    const dest = path.join(DESTINO, '_prueba', `${a.id}.bin`);
+    const r = await bajar(a, dest);
+    console.log(`  ${r.ok ? 'OK ' : 'MAL'} ${(a.tam / 1048576).toFixed(1)} MB  ${a.nombre.slice(0, 50)} ${r.ok ? '' : r.error}`);
+    if (r.ok) bien++;
+  }
+  console.log(`Prueba de verificación: ${bien}/${muestra.length} archivos coinciden con la huella de Microsoft.`);
+  for (const f of fs.readdirSync(path.join(DESTINO, '_prueba'))) fs.rmSync(dentroDelDestino(path.join(DESTINO, '_prueba', f)), { force: true });
+  fs.rmdirSync(dentroDelDestino(path.join(DESTINO, '_prueba')));
+  process.exit(bien === muestra.length ? 0 : 2);
+}
+
+// ------------------------------------------------------------------ verificar lo ya copiado, leyendo del disco
+if (MODO === 'verificar') {
+  const mPath = path.join(REGISTRO, 'copiados.jsonl');
+  const filas = new Map();
+  for (const l of fs.readFileSync(mPath, 'utf8').split('\n')) { if (!l) continue; try { const r = JSON.parse(l); filas.set(r.id, r); } catch { /* línea cortada */ } }
+  const lista = [...filas.values()]; let bien = 0, mal = []; let k = 0; const t0 = Date.now();
+  async function leer() {
+    while (k < lista.length) {
+      const f = lista[k++]; const p = path.join(DESTINO, f.ruta);
+      try {
+        const st = fs.statSync(p); if (st.size !== f.tam) throw new Error(`peso ${st.size} en vez de ${f.tam}`);
+        const qx = new QuickXor(); await pipeline(fs.createReadStream(p), new Transform({ transform(c, _e, cb) { qx.update(c); cb(null, c); } }).on('data', () => {}));
+        if (qx.digest() !== f.hash) throw new Error('el contenido no coincide con lo verificado al copiar');
+        bien++;
+      } catch (e) { mal.push({ ...f, motivo: String(e.message ?? e).slice(0, 120) }); }
+      if (k % 1000 === 0) console.log(`  verificados ${k}/${lista.length} · dañados ${mal.length} · ${Math.round((Date.now() - t0) / 1000)} s`);
+    }
+  }
+  await Promise.all(Array.from({ length: 4 }, leer));
+  // Lo dañado se borra DEL DISCO DE COPIA (nunca de OneDrive) y sale del registro: la próxima corrida lo vuelve a bajar.
+  for (const f of mal) { try { fs.rmSync(dentroDelDestino(path.join(DESTINO, f.ruta)), { force: true }); } catch { /* nada */ } filas.delete(f.id); }
+  const tmp = dentroDelDestino(mPath + '.nuevo');
+  fs.writeFileSync(tmp, [...filas.values()].map((r) => JSON.stringify(r)).join('\n') + (filas.size ? '\n' : ''));
+  fs.renameSync(tmp, dentroDelDestino(mPath));
+  // Restos de descargas a medias de nuestra propia corrida.
+  let partes = 0; const limpiar = (d) => { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const q = path.join(d, e.name); if (e.isDirectory()) limpiar(q); else if (e.name.endsWith('.parte')) { fs.rmSync(dentroDelDestino(q), { force: true }); partes++; } } };
+  limpiar(DESTINO);
+  fs.writeFileSync(dentroDelDestino(path.join(REGISTRO, 'verificacion.json')), JSON.stringify({ fecha: new Date().toISOString(), revisados: lista.length, bien, danados: mal, restosBorrados: partes }, null, 1));
+  console.log('VERIFICACION ' + JSON.stringify({ revisados: lista.length, bien, danados: mal.length, restosBorrados: partes, segundos: Math.round((Date.now() - t0) / 1000) }));
+  process.exit(0);
+}
+
+// ------------------------------------------------------------------ copia
+fs.mkdirSync(dentroDelDestino(REGISTRO), { recursive: true });
+const copiadosPath = path.join(REGISTRO, 'copiados.jsonl'), fallosPath = path.join(REGISTRO, 'fallos.jsonl');
+const yaCopiados = new Map();
+if (fs.existsSync(copiadosPath)) for (const l of fs.readFileSync(copiadosPath, 'utf8').split('\n')) { if (!l) continue; try { const r = JSON.parse(l); yaCopiados.set(r.id, r); } catch { /* línea cortada */ } }
+fs.writeFileSync(dentroDelDestino(path.join(REGISTRO, 'omitidos.json')), JSON.stringify(omitidos, null, 1));
+fs.writeFileSync(dentroDelDestino(path.join(REGISTRO, 'nombres-ajustados-por-windows.json')), JSON.stringify(renombradosPorWindows, null, 1));
+for (const c of carpetas) fs.mkdirSync(dentroDelDestino(path.join(DESTINO, c.rel)), { recursive: true });
+console.log(`Carpetas creadas: ${carpetas.length}. Ya copiados de una corrida anterior: ${yaCopiados.size}.`);
+
+const pendientes = archivos.filter((a) => {
+  const dest = path.join(DESTINO, a.rel); const y = yaCopiados.get(a.id);
+  if (y && y.hash === (a.hash ?? y.hash) && y.ruta === a.rel) { try { if (fs.statSync(dest).size === a.tam) return false; } catch { /* falta: se baja */ } }
+  return true;
+});
+console.log(`Por copiar: ${pendientes.length} archivos (${gb(pendientes.reduce((s, a) => s + a.tam, 0))} GB).`);
+
+const inicio = Date.now(); let i = 0, hechos = 0, bytes = 0, fallos = 0;
+async function trabajador() {
+  while (i < pendientes.length) {
+    const a = pendientes[i++]; const dest = path.join(DESTINO, a.rel);
+    const r = await bajar(a, dest);
+    if (r.ok) { await anotar(copiadosPath, { id: a.id, ruta: a.rel, tam: a.tam, hash: r.hash, sinHashDeOrigen: r.sinHashDeOrigen || undefined }); bytes += a.tam; }
+    else { fallos++; await anotar(fallosPath, { id: a.id, ruta: a.rel, tam: a.tam, error: r.error }); }
+    if (++hechos % 250 === 0) {
+      const seg = (Date.now() - inicio) / 1000; const resta = pendientes.length - hechos;
+      console.log(`  ${hechos}/${pendientes.length} · ${gb(bytes)} GB · ${(hechos / seg).toFixed(1)} arch/s · quedan ~${Math.round((resta / (hechos / seg)) / 60)} min · fallos ${fallos}`);
+    }
+  }
+}
+await Promise.all(Array.from({ length: CONCURRENCIA }, trabajador));
+
+// ------------------------------------------------------------------ comprobación final contra el inventario
+let ok = 0, faltan = 0, pesoMal = 0;
+for (const a of archivos) {
+  try { const s = fs.statSync(path.join(DESTINO, a.rel)); if (s.size === a.tam) ok++; else pesoMal++; } catch { faltan++; }
+}
+const resumen = { fin: new Date().toISOString(), minutos: Math.round((Date.now() - inicio) / 60000), archivosEnOneDrive: archivos.length, pesoOneDriveGB: gb(totalBytes), copiadosYVerificados: ok, faltan, pesoDistinto: pesoMal, fallosEstaCorrida: fallos, carpetas: carpetas.length, omitidos: omitidos.length };
+fs.writeFileSync(dentroDelDestino(path.join(REGISTRO, 'resumen.json')), JSON.stringify(resumen, null, 1));
+console.log('RESUMEN ' + JSON.stringify(resumen));

@@ -1,0 +1,11 @@
+# 1) Verifica lo ya copiado leyéndolo del disco; 2) retoma la copia. Sin dormirse mientras dure; log en UTF-8, línea por línea.
+Add-Type -Namespace Energia -Name Windows -MemberDefinition '[System.Runtime.InteropServices.DllImport("kernel32.dll")] public static extern uint SetThreadExecutionState(uint flags);'
+[Energia.Windows]::SetThreadExecutionState(0x80000001) | Out-Null   # ES_CONTINUOUS | ES_SYSTEM_REQUIRED
+$aqui = 'C:\Users\Daniel\AppData\Local\Temp\claude\C--Users-Daniel-NexusFlow-AI\cdba12b1-63af-4d45-a032-bade731625cb\scratchpad\copia'
+$log = "$aqui\corrida2.log"
+function Anotar($t) { Add-Content -Path $log -Value $t -Encoding utf8 }
+Anotar "INICIO $(Get-Date -Format s)"
+& node "$aqui\copiar.mjs" --verificar 2>&1 | ForEach-Object { Anotar ([string]$_) }
+Anotar "VERIFICACION-TERMINADA $(Get-Date -Format s)"
+& node "$aqui\copiar.mjs" --copiar 2>&1 | ForEach-Object { Anotar ([string]$_) }
+Anotar "TERMINADO $(Get-Date -Format s)"

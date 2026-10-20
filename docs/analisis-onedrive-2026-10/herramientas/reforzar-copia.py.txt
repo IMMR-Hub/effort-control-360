@@ -1,0 +1,96 @@
+import os
+os.chdir('C:/Users/Daniel/AppData/Local/Temp/claude/C--Users-Daniel-NexusFlow-AI/cdba12b1-63af-4d45-a032-bade731625cb/scratchpad/copia')
+s = open('copiar.mjs', encoding='utf-8').read()
+
+def rep(a, b):
+    global s
+    assert s.count(a) == 1, (a[:80], s.count(a))
+    s = s.replace(a, b)
+
+# --- modos
+rep("const MODO = process.argv.includes('--copiar') ? 'copiar' : 'probar';",
+    "const MODO = process.argv.includes('--copiar') ? 'copiar' : process.argv.includes('--verificar') ? 'verificar' : 'probar';")
+
+# --- ayudas: esperar al disco y anotar sin romper
+rep("// ------------------------------------------------------------------ quickXorHash",
+"""// ------------------------------------------------------------------ el disco puede desaparecer un instante (USB): esperar, no caerse
+const ERRORES_DE_DISCO = /^(ENOENT|EIO|EBUSY|ENODEV|EPERM|UNKNOWN|EINVAL|ENXIO|ENOTCONN)$/;
+async function esperarDisco() {
+  const limite = Date.now() + 30 * 60_000;
+  while (Date.now() < limite) {
+    try { if (fs.existsSync(DESTINO) && fs.existsSync('D:/')) { fs.accessSync(DESTINO, fs.constants.W_OK); return true; } } catch { /* sigue esperando */ }
+    await new Promise((s) => setTimeout(s, 5000));
+  }
+  throw new Error('El disco D: no volvió en 30 minutos');
+}
+async function anotar(archivo, objeto) {
+  for (let i = 1; i <= 8; i++) {
+    try { fs.mkdirSync(dentroDelDestino(path.dirname(archivo)), { recursive: true }); fs.appendFileSync(dentroDelDestino(archivo), JSON.stringify(objeto) + '\\n'); return; }
+    catch (e) { if (i === 8) throw e; await esperarDisco(); await new Promise((s) => setTimeout(s, 2000)); }
+  }
+}
+
+// ------------------------------------------------------------------ quickXorHash""")
+
+# --- bajar(): crear la carpeta antes, y distinguir error de disco de error de red
+rep("""  const parte = dentroDelDestino(destinoFinal + '.parte');
+  for (let intento = 1; intento <= 4; intento++) {
+    try {
+      const r = await llamar""", """  const parte = dentroDelDestino(destinoFinal + '.parte');
+  let esperasDeDisco = 0;
+  for (let intento = 1; intento <= 4; intento++) {
+    try {
+      fs.mkdirSync(path.dirname(parte), { recursive: true });
+      const r = await llamar""")
+rep("""      try { fs.rmSync(parte, { force: true }); } catch { /* nada */ }
+      if (intento === 4) return""", """      try { fs.rmSync(parte, { force: true }); } catch { /* nada */ }
+      if (e && typeof e.code === 'string' && ERRORES_DE_DISCO.test(e.code) && esperasDeDisco < 20) {
+        // Falló el DISCO, no el archivo ni la red: se espera a que vuelva y se reintenta sin gastar un intento.
+        esperasDeDisco++; intento--; await esperarDisco(); continue;
+      }
+      if (intento === 4) return""")
+
+# --- anotar con la función segura
+rep("fs.appendFileSync(copiadosPath, JSON.stringify({ id: a.id, ruta: a.rel, tam: a.tam, hash: r.hash, sinHashDeOrigen: r.sinHashDeOrigen || undefined }) + '\\n');",
+    "await anotar(copiadosPath, { id: a.id, ruta: a.rel, tam: a.tam, hash: r.hash, sinHashDeOrigen: r.sinHashDeOrigen || undefined });")
+rep("fs.appendFileSync(fallosPath, JSON.stringify({ id: a.id, ruta: a.rel, tam: a.tam, error: r.error }) + '\\n');",
+    "await anotar(fallosPath, { id: a.id, ruta: a.rel, tam: a.tam, error: r.error });")
+
+# --- modo verificar: relee del DISCO lo ya copiado y descarta lo dañado
+rep("// ------------------------------------------------------------------ copia\n",
+"""// ------------------------------------------------------------------ verificar lo ya copiado, leyendo del disco
+if (MODO === 'verificar') {
+  const mPath = path.join(REGISTRO, 'copiados.jsonl');
+  const filas = new Map();
+  for (const l of fs.readFileSync(mPath, 'utf8').split('\\n')) { if (!l) continue; try { const r = JSON.parse(l); filas.set(r.id, r); } catch { /* línea cortada */ } }
+  const lista = [...filas.values()]; let bien = 0, mal = []; let k = 0; const t0 = Date.now();
+  async function leer() {
+    while (k < lista.length) {
+      const f = lista[k++]; const p = path.join(DESTINO, f.ruta);
+      try {
+        const st = fs.statSync(p); if (st.size !== f.tam) throw new Error(`peso ${st.size} en vez de ${f.tam}`);
+        const qx = new QuickXor(); await pipeline(fs.createReadStream(p), new Transform({ transform(c, _e, cb) { qx.update(c); cb(null, c); } }).on('data', () => {}));
+        if (qx.digest() !== f.hash) throw new Error('el contenido no coincide con lo verificado al copiar');
+        bien++;
+      } catch (e) { mal.push({ ...f, motivo: String(e.message ?? e).slice(0, 120) }); }
+      if (k % 1000 === 0) console.log(`  verificados ${k}/${lista.length} · dañados ${mal.length} · ${Math.round((Date.now() - t0) / 1000)} s`);
+    }
+  }
+  await Promise.all(Array.from({ length: 4 }, leer));
+  // Lo dañado se borra DEL DISCO DE COPIA (nunca de OneDrive) y sale del registro: la próxima corrida lo vuelve a bajar.
+  for (const f of mal) { try { fs.rmSync(dentroDelDestino(path.join(DESTINO, f.ruta)), { force: true }); } catch { /* nada */ } filas.delete(f.id); }
+  const tmp = dentroDelDestino(mPath + '.nuevo');
+  fs.writeFileSync(tmp, [...filas.values()].map((r) => JSON.stringify(r)).join('\\n') + (filas.size ? '\\n' : ''));
+  fs.renameSync(tmp, dentroDelDestino(mPath));
+  // Restos de descargas a medias de nuestra propia corrida.
+  let partes = 0; const limpiar = (d) => { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const q = path.join(d, e.name); if (e.isDirectory()) limpiar(q); else if (e.name.endsWith('.parte')) { fs.rmSync(dentroDelDestino(q), { force: true }); partes++; } } };
+  limpiar(DESTINO);
+  fs.writeFileSync(dentroDelDestino(path.join(REGISTRO, 'verificacion.json')), JSON.stringify({ fecha: new Date().toISOString(), revisados: lista.length, bien, danados: mal, restosBorrados: partes }, null, 1));
+  console.log('VERIFICACION ' + JSON.stringify({ revisados: lista.length, bien, danados: mal.length, restosBorrados: partes, segundos: Math.round((Date.now() - t0) / 1000) }));
+  process.exit(0);
+}
+
+// ------------------------------------------------------------------ copia
+""")
+open('copiar.mjs', 'w', encoding='utf-8').write(s)
+print('ok')

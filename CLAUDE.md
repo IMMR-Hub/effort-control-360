@@ -320,6 +320,13 @@ obedece mal, porque no se sabe qué caso de borde cubre.
     lo que un manual promete («este nombre se clasifica como X») se prueba contra el clasificador real: 46 nombres
     se probaron y evitaron recomendar «liquidación salarial», que el sistema habría tomado por cálculo de impuesto.*
 
+23. **Un trabajo largo contra un disco externo se cae si no sabe esperar al disco.** El 2026-10-19 la copia del OneDrive al disco USB cayó
+    a las 15:19: el disco dejó de responder un instante (Windows: ntfs 50 «error en la escritura demorada», 140 y 98 «el volumen requiere Chkdsk») y el
+    script murió con `ENOENT` al anotar un fallo en su propio registro; costó unos 30 minutos y dejó dudas sobre lo escrito en ese instante. *Lección: todo script que escriba en un disco
+    externo (a) espera a que el disco vuelva y reintenta, sin contar eso como fallo del archivo; (b) anota con reintentos, nunca con una escritura que, si
+    falla, tira todo el proceso; (c) al recuperarse, **vuelve a verificar leyendo del disco** lo escrito alrededor de la falla (se hizo: 14.543 de 14.543 bien); (d) se
+    lanza desacoplado y se **mira el registro directamente**, porque un aviso automático con un `tr` en el medio retiene las líneas y no llega.*
+
 **Cómo se usa esta sección:** antes de escribir algo que lea archivos externos,
 borre datos, o corra solo, buscá acá si ya nos pasó. Y cuando algo salga mal,
 agregá la entrada — el valor está en que siga creciendo.
