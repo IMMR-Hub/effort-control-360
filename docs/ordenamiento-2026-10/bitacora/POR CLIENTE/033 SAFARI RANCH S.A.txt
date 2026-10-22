@@ -1,5 +1,5 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 033 SAFARI RANCH S.A
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
   Archivos: 10 · Peso: 2.4 MB · Subcarpetas con archivos: 2
@@ -59,4 +59,8 @@ A «033 ZZ A CLASIFICAR» (para que lo ubique una persona) (3)
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (3)
+--------------------------------------------------
+  DOCUMENTOS CONTABLES
+  DOCUMENTOS LEGALES Y SOCIETARIOS
+  DOCUMENTOS VARIOS

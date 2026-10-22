@@ -1,5 +1,5 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 131 COMPAÑIA 2B S.A
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
   Archivos: 36 · Peso: 10.5 MB · Subcarpetas con archivos: 6
@@ -137,4 +137,13 @@ A «131 ZZ A CLASIFICAR» (para que lo ubique una persona) (6)
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (8)
+--------------------------------------------------
+  DOCUMENTOS CONTABLES/MES/06 JUNIO
+  DOCUMENTOS CONTABLES/MES/07 JULIO
+  DOCUMENTOS CONTABLES/MES/08 AGOSTO
+  DOCUMENTOS CONTABLES/MES/09 SETIEMBRE
+  DOCUMENTOS CONTABLES/MES
+  DOCUMENTOS CONTABLES
+  DOCUMENTOS LEGALES Y SOCIETARIOS
+  DOCUMENTOS VARIOS

@@ -1,5 +1,5 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 113 CASA VIVA
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
   Archivos: 111 · Peso: 55.2 MB · Subcarpetas con archivos: 8
@@ -195,4 +195,14 @@ A «113 ZZ A CLASIFICAR» (para que lo ubique una persona) (73)
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (9)
+--------------------------------------------------
+  DDJJ IVA 2025
+  EXTRACTOS BANCARIOS/BASA
+  EXTRACTOS BANCARIOS/CONTINENTAL
+  EXTRACTOS BANCARIOS/ITAU
+  EXTRACTOS BANCARIOS/SUDAMERIS
+  EXTRACTOS BANCARIOS
+  INVERSIONES
+  IPS
+  PRESTAMOS

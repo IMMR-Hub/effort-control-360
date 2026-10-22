@@ -1,5 +1,5 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 108 ANA CAMPUZANO-MTESS
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
   Archivos: 17 · Peso: 1.4 MB · Subcarpetas con archivos: 7
@@ -74,4 +74,15 @@ A «108 ZZ A CLASIFICAR» (para que lo ubique una persona) (5)
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (10)
+--------------------------------------------------
+  PERIODO 2025/EXTRACTO IPS
+  PERIODO 2025/FACTURACION EFFORT
+  PERIODO 2025
+  PERIODO 2026/ABRIL 2026
+  PERIODO 2026/EXTRACTOS DE IPS
+  PERIODO 2026/FACTURACION EFFORT
+  PERIODO 2026/LIQUIDACIONES/CAMILA GIMENEZ - RENUNCIA VOLUNTARIA
+  PERIODO 2026/LIQUIDACIONES
+  PERIODO 2026/RECIBOS DE SALARIO MTESS
+  PERIODO 2026

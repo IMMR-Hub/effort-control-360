@@ -1,5 +1,5 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 109 GABRIEL CUBAS
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
   Archivos: 27 · Peso: 2.6 MB · Subcarpetas con archivos: 4
@@ -80,4 +80,10 @@ A «109 ZZ A CLASIFICAR» (para que lo ubique una persona) (18)
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (5)
+--------------------------------------------------
+  DOCUMENTOS LEGALES
+  DOCUMENTOS VARIOS/IPS
+  DOCUMENTOS VARIOS/MTESS
+  DOCUMENTOS VARIOS
+  FACTURACION EFFORT

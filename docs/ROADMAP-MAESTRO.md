@@ -32,6 +32,8 @@ skill global **`backend-datos-sensibles`**, reutilizable en otros proyectos.
 
 ## ▶ HANDOFF — 2026-10-22 (manda sobre el del 2026-10-20, que sigue abajo)
 
+> **Actualización 2026-10-22 18:40:** disco reconectado, chkdsk sin problemas, **foto reverificada 36.488/36.488**; reversa del v1 terminada (0 diferencias con la foto) y **plan v2 aplicado y verificado en `D:\ORDENADO`** (27.288/27.288). Los pasos 1 a 5 de abajo ya están hechos. **Lo que sigue es el paso 6:** mostrárselo a Laura y Lili (bitácora en `docs/ordenamiento-2026-10/bitacora/` y en el disco). Pendiente de Daniel: corregir el RUC del 056 en la planilla (DISCREPANCIAS 44), y decidir la segunda copia y el cambio de cable/disco (DISCREPANCIAS 42).
+
 **Primera tarea sin marcar: la 164 (ordenamiento), EN PAUSA porque el disco externo falló otra vez.** Todo el detalle,
 las reglas y los números están en **`docs/ordenamiento-2026-10/LEEME.md`**. Datos de trabajo (plan, diario,
 contenido leído): `C:\Users\Daniel\DATOS ORDENAMIENTO EFFORT 2026-10\` (los scripts se corren desde ahí).

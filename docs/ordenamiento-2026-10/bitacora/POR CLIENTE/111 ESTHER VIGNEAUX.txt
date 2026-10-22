@@ -1,5 +1,5 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 111 ESTHER VIGNEAUX
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
   Archivos: 70 · Peso: 154.4 MB · Subcarpetas con archivos: 11
@@ -242,4 +242,17 @@ A «111 ZZ A CLASIFICAR» (para que lo ubique una persona) (17)
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (12)
+--------------------------------------------------
+  Documentos Contables/MES/ABRIL
+  Documentos Contables/MES/AGOSTO
+  Documentos Contables/MES/JULIO
+  Documentos Contables/MES/JUNIO
+  Documentos Contables/MES/MARZO
+  Documentos Contables/MES/MAYO
+  Documentos Contables/MES/Nueva carpeta
+  Documentos Contables/MES/SETIEMBRE
+  Documentos Contables/MES
+  Documentos Contables
+  DOCUMENTOS SOCIETARIOS Y LEGALES
+  DOCUMENTOS VARIOS

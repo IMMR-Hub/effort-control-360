@@ -1,5 +1,5 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 074 PULIRE E.A.S
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
   Archivos: 37 · Peso: 13.0 MB · Subcarpetas con archivos: 7
@@ -119,4 +119,17 @@ A «074 ZZ A CLASIFICAR» (para que lo ubique una persona) (2)
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (12)
+--------------------------------------------------
+  DOCUMENTOS LEGALES
+  IPS
+  PERIODO 2024/ABRIL
+  PERIODO 2024/DOCUMENTOS CONTABLES
+  PERIODO 2024/DOCUMENTOS LEGALES Y SOCIETARIOS
+  PERIODO 2024/DOCUMENTOS VARIOS
+  PERIODO 2024/ENERO
+  PERIODO 2024/FEBRERO
+  PERIODO 2024/JUNIO
+  PERIODO 2024/MARZO
+  PERIODO 2024/MAYO
+  PERIODO 2024

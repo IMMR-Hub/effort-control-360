@@ -1,5 +1,5 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 130 BV SOLUTIONS EAS-
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
   Archivos: 33 · Peso: 22.6 MB · Subcarpetas con archivos: 7
@@ -119,4 +119,13 @@ A «130 ZZ A CLASIFICAR» (para que lo ubique una persona) (8)
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (8)
+--------------------------------------------------
+  DOCUMENTOS CONTABLES/MES/06 JUNIO
+  DOCUMENTOS CONTABLES/MES/07 JULIO
+  DOCUMENTOS CONTABLES/MES/08 AGOSTO
+  DOCUMENTOS CONTABLES/MES/09 SEPTIEMBRE
+  DOCUMENTOS CONTABLES/MES
+  DOCUMENTOS CONTABLES
+  DOCUMENTOS LEGALES Y SOCITARIOS
+  DOCUMENTOS VARIOS

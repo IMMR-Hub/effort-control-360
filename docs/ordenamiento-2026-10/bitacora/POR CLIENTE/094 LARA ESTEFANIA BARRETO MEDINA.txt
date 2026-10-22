@@ -1,5 +1,5 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 094 LARA ESTEFANIA BARRETO MEDINA
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
   Archivos: 27 · Peso: 2.1 MB · Subcarpetas con archivos: 3
@@ -125,4 +125,9 @@ EXCEL CON VÍNCULOS (se movieron sin renombrar) (15)
   PERIODO 2024/DOCUMENTOS CONTABLES/rg ventas 2024/ventas octubre.xlsx  →  094 PERIODO 2024/DOCUMENTOS CONTABLES/10 OCTUBRE/ventas octubre.xlsx  [Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)]
   PERIODO 2024/DOCUMENTOS CONTABLES/rg ventas 2024/ventas setiembre.xlsx  →  094 PERIODO 2024/DOCUMENTOS CONTABLES/09 SETIEMBRE/ventas setiembre.xlsx  [Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)]
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (4)
+--------------------------------------------------
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg compras 2024
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg ventas 2024
+  PERIODO 2024/DOCUMENTOS CONTABLES
+  PERIODO 2024

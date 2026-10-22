@@ -1,5 +1,5 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 093 MERCEDES PETERS
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
   Archivos: 16 · Peso: 4.7 MB · Subcarpetas con archivos: 4
@@ -66,4 +66,10 @@ A «093 ZZ A CLASIFICAR» (para que lo ubique una persona) (8)
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (5)
+--------------------------------------------------
+  DOCUMENTOS CONTABLES/INSCRIPCION AL RUC
+  DOCUMENTOS CONTABLES/IRP 2025
+  DOCUMENTOS CONTABLES/MES/RG COMPRAS
+  DOCUMENTOS CONTABLES/MES
+  DOCUMENTOS CONTABLES

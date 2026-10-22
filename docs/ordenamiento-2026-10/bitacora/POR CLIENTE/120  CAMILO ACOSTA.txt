@@ -1,5 +1,5 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 120  CAMILO ACOSTA
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
   Archivos: 14 · Peso: 10.0 MB · Subcarpetas con archivos: 2
@@ -70,4 +70,9 @@ A «120 ZZ A CLASIFICAR» (para que lo ubique una persona): ninguno
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (4)
+--------------------------------------------------
+  PERIODO 2026/DOCUMENTOS CONTABLES/AGOSTO
+  PERIODO 2026/DOCUMENTOS CONTABLES/Setiembre
+  PERIODO 2026/DOCUMENTOS CONTABLES
+  PERIODO 2026

@@ -1,5 +1,5 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 127 OPEN SISTEMAS SRL
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
   Archivos: 8 · Peso: 6.7 MB · Subcarpetas con archivos: 1
@@ -56,4 +56,8 @@ A «127 ZZ A CLASIFICAR» (para que lo ubique una persona): ninguno
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (3)
+--------------------------------------------------
+  DOCUMENTOS CONTABLES
+  DOCUMENTOS LEGALES Y SOCIETARIOS
+  DOCUMENTOS VARIOS

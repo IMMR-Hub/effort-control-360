@@ -1,5 +1,5 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 039 VERO EAS
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
   Archivos: 8 · Peso: 4.9 MB · Subcarpetas con archivos: 1
@@ -53,4 +53,6 @@ A «039 ZZ A CLASIFICAR» (para que lo ubique una persona) (4)
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (1)
+--------------------------------------------------
+  DOCUMENTOS LEGALES Y SOCIETARIOS

@@ -57,7 +57,15 @@ no dicen qué documento son; 182 cuyo nombre o ubicación contradice lo que dice
 `5-bitacora <salida>`. `6-deshacer` vuelve todo atrás leyendo el diario; `comparar-con-foto` comprueba que quedó igual
 a la foto; `rucs` compara el RUC de la planilla con el nombre de las declaraciones.
 
-## Estado al 2026-10-22 — EN PAUSA POR EL DISCO
+## Estado al 2026-10-22 18:40 — PLAN v2 APLICADO Y VERIFICADO EN `D:\ORDENADO`
+
+- Disco reconectado: `chkdsk D:` solo análisis sin problemas (0 KB en sectores defectuosos). **Foto reverificada: 36.488 de 36.488 bien, 0 dañados.**
+- Reversa del v1 terminada: 846 restantes devueltos. 2 audios de DIBEC (`PTT-20231018-WA0044/45.opus`) figuraban devueltos en el diario pero el disco no guardó el cambio al fallar: se comprobó que eran idénticos a la foto (huella) y se devolvieron a mano. `comparar-con-foto` → **0 diferencias** (36.488 archivos, 6.310 carpetas).
+- **Plan v2 aplicado:** 27.288 movimientos, 0 problemas; `7-verificar` → 27.288/27.288 en su destino con su peso; los 120 clientes solo con las carpetas de primer nivel del manual. Bitácora v2 en el disco (`D:\ORDENADO\_BITACORA ORDENAMIENTO\`) y acá en `bitacora/`. La del 20-10 quedó renombrada «v1 DESCARTADA».
+- El 056 FACUNDO CARRASCOSA tenía solo 3 archivos, los tres de David Romero (045): con el v2 quedan en `056 ZZ A CLASIFICAR`.
+- **Lo que sigue:** mostrárselo a Laura y Lili (bitácora + el disco). Con su visto bueno, la aplicación en el OneDrive real es otra tarea y exige que Daniel levante las reglas 0 y 5 por escrito para esa operación.
+
+## Historia: la falla del disco del 2026-10-22
 
 - 2026-10-20: segunda copia `D:\ORDENADO` hecha y comprobada (36.488 archivos, 19,195 GB, robocopy 0 errores). Plan v1 aplicado: 27.288 movimientos, 0 problemas; verificado (27.288/27.288 en su lugar con su peso; 36.488 archivos en total; todos los clientes solo con las carpetas de primer nivel del manual).
 - Al revisar apareció el error del 045 (arriba) → plan v2. Para aplicarlo se empezó a **deshacer** el v1.

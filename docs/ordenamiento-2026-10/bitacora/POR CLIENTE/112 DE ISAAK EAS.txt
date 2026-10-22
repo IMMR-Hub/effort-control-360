@@ -1,5 +1,5 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 112 DE ISAAK EAS
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
   Archivos: 8 · Peso: 1.1 MB · Subcarpetas con archivos: 3
@@ -53,4 +53,13 @@ A «112 ZZ A CLASIFICAR» (para que lo ubique una persona) (3)
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (8)
+--------------------------------------------------
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS
+  PERIODO 2025/EE.FF 2025
+  PERIODO 2025
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/ENERO
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/FEBRERO
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES
+  PERIODO 2026/DOCUMENTOS CONTABLES
+  PERIODO 2026

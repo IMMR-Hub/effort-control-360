@@ -1,5 +1,5 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 114  GERARDO SOSA
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
   Archivos: 24 · Peso: 3.0 MB · Subcarpetas con archivos: 5
@@ -96,4 +96,12 @@ A «114 ZZ A CLASIFICAR» (para que lo ubique una persona) (1)
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (7)
+--------------------------------------------------
+  PERIODO 2026/DOCUMENTOS CONTABLES/IRP 2026/rg compras
+  PERIODO 2026/DOCUMENTOS CONTABLES/IRP 2026
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/ENERO
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/FEBRERO
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES
+  PERIODO 2026/DOCUMENTOS CONTABLES
+  PERIODO 2026

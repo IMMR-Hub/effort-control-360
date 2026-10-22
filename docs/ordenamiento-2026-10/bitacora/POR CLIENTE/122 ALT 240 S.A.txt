@@ -1,5 +1,5 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 122 ALT 240 S.A
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
   Archivos: 40 · Peso: 28.0 MB · Subcarpetas con archivos: 5
@@ -121,4 +121,10 @@ A «122 ZZ A CLASIFICAR» (para que lo ubique una persona) (1)
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (5)
+--------------------------------------------------
+  DOC CONTABLES
+  DOC LEGALES/ASAMBLEAS
+  DOC LEGALES/CI SOCIOS
+  DOC LEGALES/CONTANCIAS ABOGACIA
+  DOC LEGALES

@@ -1,5 +1,5 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 057 MARCELO JAVIER GALVAN
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
   Archivos: 6 · Peso: 1.5 MB · Subcarpetas con archivos: 1
@@ -52,4 +52,9 @@ A «057 ZZ A CLASIFICAR» (para que lo ubique una persona): ninguno
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (4)
+--------------------------------------------------
+  PERIODO 2023/DOCUMENTOS CONTABLES
+  PERIODO 2023
+  PERIODO 2024/DOCUMENTOS CONTABLES
+  PERIODO 2024
