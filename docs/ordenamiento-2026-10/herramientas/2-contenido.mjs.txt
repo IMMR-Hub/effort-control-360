@@ -1,0 +1,93 @@
+// SOLO LECTURA. Lee por dentro los PDF y Excel de los clientes, desde la FOTO del disco (no toca OneDrive
+// ni escribe en la foto). Uso: node 2-contenido.mjs <parte> <partes>  → contenido-<parte>.jsonl (reanudable).
+import fs from 'node:fs';
+import path from 'node:path';
+import { createRequire } from 'node:module';
+import { pathToFileURL } from 'node:url';
+
+const RAIZ = 'C:/Users/Daniel/NexusFlow AI/effort-control-360';
+const FOTO = 'D:/COPIA ONEDRIVE EFFORT 2026-10-19/CLIENTES EFFORT E.A.S/CLIENTES';
+const [parte, partes] = process.argv.slice(2).map(Number);
+const require = createRequire(`${RAIZ}/package.json`);
+const JSZip = require('jszip');
+const pdfjs = await import(pathToFileURL(`${RAIZ}/node_modules/pdfjs-dist/legacy/build/pdf.mjs`).href);
+const { reconocerDeclaracionDnit, importarLibroRg90 } = await import(pathToFileURL(`${RAIZ}/packages/importers/dist/index.js`).href);
+
+const SALIDA = `contenido-${parte}.jsonl`;
+const hechos = new Set();
+if (fs.existsSync(SALIDA)) for (const l of fs.readFileSync(SALIDA, 'utf8').split('\n')) if (l) try { hechos.add(JSON.parse(l).id); } catch {}
+
+// Si la corrida anterior murió leyendo un archivo (memoria), ese archivo se anota como fallido y se saltea.
+const ACTUAL = `actual-${parte}.txt`;
+if (fs.existsSync(ACTUAL)) {
+  const id = fs.readFileSync(ACTUAL, 'utf8').trim();
+  if (id && !hechos.has(id)) { fs.appendFileSync(SALIDA, JSON.stringify({ id, error: 'el proceso murió leyéndolo (memoria)' }) + '\n'); hechos.add(id); }
+}
+const items = JSON.parse(fs.readFileSync('inventario.json', 'utf8'))
+  .filter((x, i) => i % partes === parte && x.cod !== '999' && !hechos.has(x.id))
+  .filter((x) => (/\.pdf$/i.test(x.rel) && x.tam <= 20e6) || (/\.xls[xm]$/i.test(x.rel) && x.tam <= 20e6));
+console.log(`parte ${parte}: por leer ${items.length}`);
+
+async function textoDePdf(buf) {
+  const doc = await pdfjs.getDocument({ data: new Uint8Array(buf), isEvalSupported: false, verbosity: 0 }).promise;
+  try {
+    const partesTxt = [];
+    for (let n = 1; n <= Math.min(doc.numPages, 3); n++) {
+      const c = await (await doc.getPage(n)).getTextContent();
+      partesTxt.push(c.items.map((i) => ('str' in i ? String(i.str) : '')).join(' '));
+    }
+    return { texto: partesTxt.join('\n'), paginas: doc.numPages };
+  } finally { await doc.destroy(); }
+}
+
+const RUC = /\b(\d{6,8})\s?-\s?(\d)\b/g;
+async function leer(it) {
+  const buf = fs.readFileSync(path.join(FOTO, it.rel));
+  const r = { id: it.id };
+  if (/\.pdf$/i.test(it.rel)) {
+    try {
+      const { texto, paginas } = await textoDePdf(buf);
+      const plano = texto.replace(/\s+/g, ' ').trim();
+      r.pag = paginas;
+      r.conTexto = plano.length > 30;
+      const d = reconocerDeclaracionDnit(texto);
+      if (d) r.decl = { f: d.formulario, ruc: d.ruc, per: d.periodo };
+      r.rucs = [...new Set([...plano.matchAll(RUC)].map((m) => `${m[1]}-${m[2]}`))].slice(0, 8);
+      r.txt = plano.slice(0, 1500);
+    } catch (e) { r.error = String(e.message ?? e).slice(0, 80); }
+  } else {
+    try {
+      const zip = await JSZip.loadAsync(buf);
+      const nombres = Object.keys(zip.files);
+      const rels = nombres.filter((n) => /^xl\/externalLinks\/_rels\/externalLink\d+\.xml\.rels$/.test(n));
+      r.externos = nombres.filter((n) => /^xl\/externalLinks\/externalLink\d+\.xml$/.test(n)).length;
+      if (rels.length) {
+        r.destinos = [];
+        for (const n of rels) {
+          const x = await zip.file(n).async('string');
+          for (const m of x.matchAll(/Target="([^"]+)"/g)) r.destinos.push(decodeURIComponent(m[1].replace(/&amp;/g, '&')));
+        }
+      }
+      if (/\.xlsx$/i.test(it.rel) && it.tam <= 5e6) {
+        try {
+          const rep = await importarLibroRg90(buf, path.basename(it.rel));
+          const filas = rep.filas ?? rep.aceptadas ?? [];
+          const tipos = {}; const pers = {};
+          for (const f of filas) { tipos[f.tipoRegistro] = (tipos[f.tipoRegistro] ?? 0) + 1; pers[f.periodo] = (pers[f.periodo] ?? 0) + 1; }
+          r.rg90 = { filas: filas.length, tipos, pers };
+        } catch (e) { if (!/NoEsPlanillaRg90|no es una planilla|No es una planilla/i.test(`${e.name} ${e.message}`)) r.rg90err = String(e.message ?? e).slice(0, 80); }
+      }
+    } catch (e) { r.error = String(e.message ?? e).slice(0, 80); }
+  }
+  return r;
+}
+
+const t0 = Date.now(); let n = 0;
+for (const it of items) {
+  let r;
+  fs.writeFileSync(ACTUAL, it.id);
+  try { r = await leer(it); } catch (e) { r = { id: it.id, error: String(e.message ?? e).slice(0, 80) }; }
+  fs.appendFileSync(SALIDA, JSON.stringify(r) + '\n');
+  if (++n % 500 === 0) console.log(`  parte ${parte}: ${n}/${items.length} · ${Math.round((Date.now() - t0) / 1000)} s`);
+}
+console.log(`parte ${parte}: listo ${n} en ${Math.round((Date.now() - t0) / 1000)} s`);

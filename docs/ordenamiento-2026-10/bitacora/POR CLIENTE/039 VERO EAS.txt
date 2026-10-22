@@ -1,0 +1,56 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 039 VERO EAS
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+
+AL INICIO
+  Archivos: 8 · Peso: 4.9 MB · Subcarpetas con archivos: 1
+
+RESUMEN
+  Duplicados apartados (cuarentena): 4
+  Movidos y renombrados según el manual: 0
+  Movidos conservando su nombre: 0
+  Sin cambios: 0
+  A «039 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 4
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 2
+  Nombres originales que no dicen qué documento son: 8
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  039 ZZ A CLASIFICAR: 4
+
+DUPLICADOS APARTADOS (4)
+----------------------------
+  DOCUMENTOS LEGALES Y SOCIETARIOS/CI Rodolfo.pdf
+      igual a: CI Rodolfo.pdf  (Copia idéntica (mismo contenido byte por byte))
+  DOCUMENTOS LEGALES Y SOCIETARIOS/CI SOCIOS.pdf
+      igual a: CI SOCIOS.pdf  (Copia idéntica (mismo contenido byte por byte))
+  DOCUMENTOS LEGALES Y SOCIETARIOS/ci Veronica.pdf
+      igual a: ci Veronica.pdf  (Copia idéntica (mismo contenido byte por byte))
+  DOCUMENTOS LEGALES Y SOCIETARIOS/proforma (5).pdf
+      igual a: proforma (5).pdf  (Copia idéntica (mismo contenido byte por byte))
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (1)
+---------------------------------------------------------
+  proforma (5).pdf  →  (a ZZ A CLASIFICAR, sin renombrar)
+
+MOVIDOS Y RENOMBRADOS: ninguno
+
+MOVIDOS CONSERVANDO SU NOMBRE: ninguno
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «039 ZZ A CLASIFICAR» (para que lo ubique una persona) (4)
+----------------------------------------------------------------
+  CI Rodolfo.pdf
+  CI SOCIOS.pdf
+  ci Veronica.pdf
+  proforma (5).pdf
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno

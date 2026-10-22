@@ -1,0 +1,62 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 033 SAFARI RANCH S.A
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+
+AL INICIO
+  Archivos: 10 · Peso: 2.4 MB · Subcarpetas con archivos: 2
+
+RESUMEN
+  Duplicados apartados (cuarentena): 5
+  Movidos y renombrados según el manual: 1
+  Movidos conservando su nombre: 1
+  Sin cambios: 0
+  A «033 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 3
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 0
+  Nombres originales que no dicen qué documento son: 6
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  033 TRIBUTARIO: 2
+  033 ZZ A CLASIFICAR: 3
+
+DUPLICADOS APARTADOS (5)
+----------------------------
+  DOCUMENTOS CONTABLES/CEDULA TRIBUTARIA.pdf
+      igual a: CEDULA TRIBUTARIA.pdf  (Copia idéntica (mismo contenido byte por byte))
+  DOCUMENTOS CONTABLES/CONSTANCIA DE RUC.pdf
+      igual a: CONSTANCIA DE RUC.pdf  (Copia idéntica (mismo contenido byte por byte))
+  DOCUMENTOS VARIOS/MEMORANDUM.docx
+      igual a: MEMORANDUM.docx  (Copia idéntica (mismo contenido byte por byte))
+  DOCUMENTOS VARIOS/NOTA DE PRESCRIPCION.doc
+      igual a: NOTA DE PRESCRIPCION.doc  (Copia idéntica (mismo contenido byte por byte))
+  DOCUMENTOS VARIOS/PRESUPUESTO SAFARI RANCH.pdf
+      igual a: PRESUPUESTO SAFARI RANCH.pdf  (Copia idéntica (mismo contenido byte por byte))
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron): ninguno
+
+MOVIDOS Y RENOMBRADOS (1)
+-----------------------------
+  CONSTANCIA DE RUC.pdf
+      → 033 TRIBUTARIO/CONSTANCIA RUC SAFARI RANCH SA.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+
+MOVIDOS CONSERVANDO SU NOMBRE (1)
+-------------------------------------
+  CEDULA TRIBUTARIA.pdf
+      → 033 TRIBUTARIO/CEDULA TRIBUTARIA.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «033 ZZ A CLASIFICAR» (para que lo ubique una persona) (3)
+----------------------------------------------------------------
+  MEMORANDUM.docx
+  NOTA DE PRESCRIPCION.doc
+  PRESUPUESTO SAFARI RANCH.pdf
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno

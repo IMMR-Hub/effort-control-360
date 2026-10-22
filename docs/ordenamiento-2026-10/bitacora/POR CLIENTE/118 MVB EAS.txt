@@ -1,0 +1,149 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 118 MVB EAS
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+
+AL INICIO
+  Archivos: 52 · Peso: 11.1 MB · Subcarpetas con archivos: 13
+
+RESUMEN
+  Duplicados apartados (cuarentena): 6
+  Movidos y renombrados según el manual: 23
+  Movidos conservando su nombre: 20
+  Sin cambios: 0
+  A «118 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 3
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 0
+  Nombres originales que no dicen qué documento son: 29
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  118 LEGAL Y SOCIETARIO: 5
+  118 PERIODO 2026: 27
+  118 TRIBUTARIO: 11
+  118 ZZ A CLASIFICAR: 3
+
+DUPLICADOS APARTADOS (6)
+----------------------------
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 SETIEMBRE/PAGO POR ESCRITURA.pdf
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/PAGO POR ESCRITURA FE.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS LEGALES/SOLICITUD APERTURA BANCO/Beneficiarios Finales MVB EAS 2026.pdf
+      igual a: PERIODO 2026/DOCUMENTOS LEGALES/Beneficiarios Finales MVB EAS 2026.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS LEGALES/SOLICITUD APERTURA BANCO/Constancia _ MARANGATU.pdf
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/Constancia _ MARANGATU.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS LEGALES/SOLICITUD APERTURA BANCO/CONSTANCIA DE CONSTITUCION MVB EAS.pdf
+      igual a: PERIODO 2026/DOCUMENTOS LEGALES/CONSTANCIA DE CONSTITUCION MVB EAS.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS LEGALES/SOLICITUD APERTURA BANCO/ESTRUCTURA JURIDICA MVB EAS 2026.pdf
+      igual a: PERIODO 2026/DOCUMENTOS LEGALES/ESTRUCTURA JURIDICA MVB EAS 2026.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS LEGALES/SOLICITUD APERTURA BANCO/PROFORMA ESTATUTO.pdf
+      igual a: PERIODO 2026/DOCUMENTOS LEGALES/PROFORMA ESTATUTO.pdf  (Copia idéntica (mismo contenido byte por byte))
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron): ninguno
+
+MOVIDOS Y RENOMBRADOS (23)
+-----------------------------
+  PERIODO 2026/DOCUMENTOS CONTABLES/CCT/JULIO.pdf
+      → 118 TRIBUTARIO/CCT JULIO.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+      nota: Al nombre, que solo decía «JULIO», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/CCT MAYO.pdf
+      → 118 TRIBUTARIO/CCT MAYO - DOCUMENTOS DNIT.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORM 120/120-04-2026.pdf
+      → 118 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/DDJJ IVA 042026 MVB EAS.pdf   [Declaración leída por dentro: formulario 120, período 04/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORM 120/120-05-2026.pdf
+      → 118 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/DDJJ IVA 052026 MVB EAS.pdf   [Declaración leída por dentro: formulario 120, período 05/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORM 120/120-06-2026.pdf
+      → 118 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/DDJJ IVA 062026 MVB EAS.pdf   [Declaración leída por dentro: formulario 120, período 06/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORM 120/120-07-2026.pdf
+      → 118 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/DDJJ IVA 072026 MVB EAS.pdf   [Declaración leída por dentro: formulario 120, período 07/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORM 120/120-08-2026.pdf
+      → 118 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/DDJJ IVA 082026 MVB EAS.pdf   [Declaración leída por dentro: formulario 120, período 08/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORM 120/120-09-2026.pdf
+      → 118 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DDJJ IVA 092026 MVB EAS.pdf   [Declaración leída por dentro: formulario 120, período 09/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/07 JULIO/L.C  2026.pdf
+      → 118 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/L.C 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 SETIEMBRE/MVB EAS - FC. 446 - 09-09-2026.pdf
+      → 118 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/FACTURA COMPRA 446 092026 MVB EAS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 SETIEMBRE/MVB EAS - FC. 447 - 09-09-2026.pdf
+      → 118 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/FACTURA COMPRA 447 092026 MVB EAS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 COMPRAS/04ABRIL.xlsx
+      → 118 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/RG COMPRAS 042026 MVB EAS.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 04/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 COMPRAS/05 MAYO.xlsx
+      → 118 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/RG COMPRAS 052026 MVB EAS.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 05/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 COMPRAS/06 JUNIO.xlsx
+      → 118 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/RG COMPRAS 062026 MVB EAS.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 06/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 COMPRAS/07 JULIO.xlsx
+      → 118 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/RG COMPRAS 072026 MVB EAS.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 07/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 COMPRAS/08 AGOSTO.xlsx
+      → 118 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG COMPRAS 082026 MVB EAS.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 08/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 COMPRAS/09 SETIEMBRE.xlsx
+      → 118 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092026 MVB EAS.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/AGOSTO.pdf
+      → 118 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/TALON RG 90 082026 MVB EAS.pdf   [Declaración leída por dentro: formulario 241, período 08/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/JULIO.pdf
+      → 118 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/TALON RG 90 072026 MVB EAS.pdf   [Declaración leída por dentro: formulario 241, período 07/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/JUNIO.pdf
+      → 118 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/TALON RG 90 062026 MVB EAS.pdf   [Declaración leída por dentro: formulario 241, período 06/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/MAYO.pdf
+      → 118 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/TALON RG 90 052026 MVB EAS.pdf   [Declaración leída por dentro: formulario 241, período 05/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/SETIEMBRE.pdf
+      → 118 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/TALON RG 90 092026 MVB EAS.pdf   [Declaración leída por dentro: formulario 241, período 09/2026]
+  PERIODO 2026/DOCUMENTOS LEGALES/CONSTANCIA DE RUC MVB EAS.pdf
+      → 118 TRIBUTARIO/CONSTANCIA RUC MVB EAS.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+
+MOVIDOS CONSERVANDO SU NOMBRE (20)
+-------------------------------------
+  PERIODO 2026/DOCUMENTOS CONTABLES/CCT/CCT ABRIL.pdf
+      → 118 TRIBUTARIO/CCT ABRIL.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/CCT/CCT AGOSTO 08.pdf
+      → 118 TRIBUTARIO/CCT AGOSTO 08.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/CCT/CCT JUNIO.pdf
+      → 118 TRIBUTARIO/CCT JUNIO.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/CCT/CCT MAYO.pdf
+      → 118 TRIBUTARIO/CCT MAYO.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/CCT/CCT SETIEMBRE 09.pdf
+      → 118 TRIBUTARIO/CCT SETIEMBRE 09.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/Cédula Tributaria _ MARANGATU.pdf
+      → 118 TRIBUTARIO/Cédula Tributaria _ MARANGATU.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/04 ABRIL/L.C 2026.xlsx
+      → 118 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/L.C 2026.xlsx   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/05 MAYO/L.C 2026.pdf
+      → 118 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/L.C 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/06 JUNIO/L.C 2026.pdf
+      → 118 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/L.C 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/L.C 2026.pdf
+      → 118 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/L.C 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/PAGO POR ESCRITURA FE.pdf
+      → 118 LEGAL Y SOCIETARIO/PAGO POR ESCRITURA FE.pdf   [Documento legal o societario]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 SETIEMBRE/L.C 2026.pdf
+      → 118 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/L.C 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS LEGALES/Beneficiarios Finales MVB EAS 2026.pdf
+      → 118 LEGAL Y SOCIETARIO/Beneficiarios Finales MVB EAS 2026.pdf   [Documento legal o societario]
+  PERIODO 2026/DOCUMENTOS LEGALES/CCT MVB EAS.pdf
+      → 118 TRIBUTARIO/CCT MVB EAS.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2026/DOCUMENTOS LEGALES/CEDULA TRIBUTARIA MVB EAS.pdf
+      → 118 TRIBUTARIO/CEDULA TRIBUTARIA MVB EAS.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2026/DOCUMENTOS LEGALES/CONSTANCIA DE CONSTITUCION MVB EAS.pdf
+      → 118 LEGAL Y SOCIETARIO/CONSTANCIA DE CONSTITUCION MVB EAS.pdf   [Documento legal o societario]
+  PERIODO 2026/DOCUMENTOS LEGALES/ESTRUCTURA JURIDICA MVB EAS 2026.pdf
+      → 118 LEGAL Y SOCIETARIO/ESTRUCTURA JURIDICA MVB EAS 2026.pdf   [Documento legal o societario]
+  PERIODO 2026/DOCUMENTOS LEGALES/PROFORMA ESTATUTO.pdf
+      → 118 LEGAL Y SOCIETARIO/PROFORMA ESTATUTO.pdf   [Documento legal o societario]
+  PERIODO 2026/DOCUMENTOS LEGALES/SOLICITUD APERTURA BANCO/BALANCE APERTURA.pdf
+      → 118 PERIODO 2026/DOCUMENTOS VARIOS/SOLICITUD APERTURA BANCO/BALANCE APERTURA.pdf   [Parte de un pedido o paquete de documentos («SOLICITUD APERTURA BANCO»): se conserva junto en DOCUMENTOS VARIOS]
+  PERIODO 2026/DOCUMENTOS LEGALES/SOLICITUD APERTURA BANCO/Cedula del Representante Legal.pdf
+      → 118 PERIODO 2026/DOCUMENTOS VARIOS/SOLICITUD APERTURA BANCO/Cedula del Representante Legal.pdf   [Parte de un pedido o paquete de documentos («SOLICITUD APERTURA BANCO»): se conserva junto en DOCUMENTOS VARIOS]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «118 ZZ A CLASIFICAR» (para que lo ubique una persona) (3)
+----------------------------------------------------------------
+  PERIODO 2026/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/Constancia _ MARANGATU.pdf
+  SELLO MBV EAS -.xlsx
+  SELLO MVB EAS.pdf
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno

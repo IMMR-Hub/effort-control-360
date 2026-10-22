@@ -1,0 +1,410 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 037 BICLOPE S.A
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+
+AL INICIO
+  Archivos: 175 · Peso: 779.3 MB · Subcarpetas con archivos: 50
+
+RESUMEN
+  Duplicados apartados (cuarentena): 6
+  Movidos y renombrados según el manual: 35
+  Movidos conservando su nombre: 132
+  Sin cambios: 0
+  A «037 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 2
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 2
+  Nombres originales que no dicen qué documento son: 71
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 1
+  Excel con vínculos (no se renombraron): 1
+
+AL FINAL (archivos por carpeta de primer nivel)
+  037 LEGAL Y SOCIETARIO: 45
+  037 PERIODO 2019: 11
+  037 PERIODO 2020: 5
+  037 PERIODO 2021: 2
+  037 PERIODO 2022: 3
+  037 PERIODO 2023: 25
+  037 PERIODO 2024: 46
+  037 PERIODO 2025: 20
+  037 PERIODO 2026: 10
+  037 ZZ A CLASIFICAR: 2
+
+DUPLICADOS APARTADOS (6)
+----------------------------
+  Acta De Asamblea extraordinaria 01- Biclope.pdf
+      igual a: SIARA/Acta De Asamblea 01- Biclope.pdf  (Copia idéntica (mismo contenido byte por byte))
+  Acta De Asamblea ordinaria 02- Biclope.pdf
+      igual a: SIARA/Acta De Asamblea 02- Biclope.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/Constitucion Biclope.pdf
+      igual a: SIARA/Constitucion Biclope.pdf  (Copia idéntica (mismo contenido byte por byte))
+  SIARA/drfs-002---comunicacion-en-el-registro-administrativo-de-personas-y-estructuras-juridicas-7342620.pdf
+      igual a: PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/drfs-002---comunicacion-en-el-registro-administrativo-de-personas-y-estructuras-juridicas-7342620.pdf  (Copia idéntica (mismo contenido byte por byte))
+  SIARA/drfs-003---comunicacion-en-el-registro-administrativo-de-beneficiarios-finales-7342771.pdf
+      igual a: PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/drfs-003---comunicacion-en-el-registro-administrativo-de-beneficiarios-finales-7342771.pdf  (Copia idéntica (mismo contenido byte por byte))
+  SIARA/Estatutos- Biclope.pdf
+      igual a: PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/Estatutos- Biclope.pdf  (Copia idéntica (mismo contenido byte por byte))
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO (1)
+------------------------------------------------------
+  PERIODO 2026/DOCUEMNTOS CONTABLES/MES/JULIO/LIBRO COMPRAS JUNIO 2026 BICLOPE.pdf  →  El nombre dice 06/2026 y la carpeta 07/2026: se respetó la carpeta
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (2)
+---------------------------------------------------------
+  drfs-006---comunicacion-asamblearia--8024139 (1).pdf extraordinaria.pdf  →  drfs-006---comunicacion-asamblearia--8024139 (1).pdf extraordinaria.pdf
+  Libro registro de accionistas actualizado .pdf  →  Libro registro de accionistas actualizado.pdf
+
+MOVIDOS Y RENOMBRADOS (35)
+-----------------------------
+  Asistencia asamblea extraordinaria .pdf
+      → 037 LEGAL Y SOCIETARIO/Asistencia asamblea extraordinaria.pdf   [Documento de asamblea]
+  asistencia asamblea ordinaria .pdf
+      → 037 LEGAL Y SOCIETARIO/asistencia asamblea ordinaria.pdf   [Documento de asamblea]
+  PERIODO 2019/DOCUMENTOS CONTABLES/LIBRO VENTAS 112019 - BICLOPE S.A..pdf
+      → 037 PERIODO 2019/DOCUMENTOS CONTABLES/11 NOVIEMBRE/LIBRO VENTAS 112019 BICLOPE SA.pdf   [Período tomado del nombre del archivo]
+  PERIODO 2019/DOCUMENTOS VARIOS/80069996_REC_202001.xlsx
+      → 037 PERIODO 2020/DOCUMENTOS CONTABLES/01 ENERO/80069996_REC_202001 03.xlsx   [Archivo de sustento de una rectificativa, tal como lo genera el SET (no se renombra)]
+  PERIODO 2021/IRE GENERAL 2021.pdf
+      → 037 PERIODO 2021/DOCUMENTOS CONTABLES/CIERRE 2021/DDJJ IRE 2021 BICLOPE SA.pdf   [Declaración leída por dentro: formulario 500, ejercicio 2021]
+  PERIODO 2022/DOCUMENTOS VARIOS/IRE GENERAL 2022.pdf
+      → 037 PERIODO 2022/DOCUMENTOS CONTABLES/CIERRE 2022/DDJJ IRE 2022 BICLOPE SA.pdf   [Declaración leída por dentro: formulario 500, ejercicio 2022]
+  PERIODO 2023/DOCUMENTOS CONTABLES/3 MARZO 2023/RG COMPRAS 032023.xlsx
+      → 037 PERIODO 2023/DOCUMENTOS CONTABLES/03 MARZO/RG COMPRAS 032023 BICLOPE SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 03/2023]
+  PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/CALCULO IRE GENERAL CIERRE 2023.xlsx
+      → 037 PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/CALCULO IRE 2023 BICLOPE SA.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/FORM 158 PRESENTACION EEFF 2023 BICLOPE.pdf
+      → 037 PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/EEFF 2023 PRESENTADO FORM 158 BICLOPE SA.pdf   [Declaración leída por dentro: formulario 158, ejercicio 2023]
+  PERIODO 2023/DOCUMENTOS CONTABLES/DICIEMBRE 2023/LIBRO COMPRAS DICIEMBRE 2023.pdf
+      → 037 PERIODO 2023/DOCUMENTOS CONTABLES/12 DICIEMBRE/LIBRO COMPRAS 122023 BICLOPE SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2023/DOCUMENTOS CONTABLES/DICIEMBRE 2023/LIBRO VENTAS DICIEMBRE 2023.pdf
+      → 037 PERIODO 2023/DOCUMENTOS CONTABLES/12 DICIEMBRE/LIBRO VENTAS 122023 BICLOPE SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2023/DOCUMENTOS VARIOS/80069996_REC_202312.zip
+      → 037 PERIODO 2023/DOCUMENTOS CONTABLES/12 DICIEMBRE/80069996_REC_202312 02.zip   [Archivo de sustento de una rectificativa, tal como lo genera el SET (no se renombra)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/CALCULO IRE GENERAL CIERRE 2024.xlsx
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/CALCULO IRE 2024 BICLOPE SA.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/FORM 158 PRESENTACION EEFF 2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/EEFF 2024 PRESENTADO FORM 158 BICLOPE SA.pdf   [Declaración leída por dentro: formulario 158, ejercicio 2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/ABRIL 2024/DDJJ ABRIL 2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/DDJJ IVA 042024 BICLOPE SA.pdf   [Declaración leída por dentro: formulario 120, período 04/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/ABRIL 2024/LIBRO COMPRAS 2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/LIBRO COMPRAS 042024 BICLOPE SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/DICIEMBRE 2024/LIBRO COMPRAS DICIEMBRE 2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/12 DICIEMBRE/LIBRO COMPRAS 122024 BICLOPE SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/ENERO 2024/DDJJ ENERO2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/01 ENERO/DDJJ IVA 012024 BICLOPE SA.pdf   [Declaración leída por dentro: formulario 120, período 01/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/FEBRERO 2024/DDJJ FEBRERO 2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/02 FEBRERO/DDJJ IVA 022024 BICLOPE SA.pdf   [Declaración leída por dentro: formulario 120, período 02/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/MARZO2024/DDJJ MARZO 2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/DDJJ IVA 032024 BICLOPE SA.pdf   [Declaración leída por dentro: formulario 120, período 03/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/MAYO 2024/LIBRO COMPRAS MAYO 2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO/LIBRO COMPRAS 052024 BICLOPE SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/OCTUBRE 2024/LIBRO COMPRAS OCTUBRE 2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/10 OCTUBRE/LIBRO COMPRAS 102024 BICLOPE SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/SETIEMBRE 2024/LIBRO COMPRAS SET 2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO COMPRAS 092024 BICLOPE SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/PERIODO 2025/FEBRERO/LIBRO COMPRAS FEBRERO 2025.pdf
+      → 037 PERIODO 2025/DOCUMENTOS CONTABLES/02 FEBRERO/LIBRO COMPRAS 022025 BICLOPE SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/PERIODO 2025/JUNIO/LIBRO COMPRAS JUNIO BLICLOPE 2025.pdf
+      → 037 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/LIBRO COMPRAS 062025 BICLOPE SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/PERIODO 2025/SETIEMBRE 2025/LIBRO COMPRAS SETIEMBRE 2025 BICLOPE SA.pdf
+      → 037 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO COMPRAS 092025 BICLOPE SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/Beneficiarios finales .pdf
+      → 037 LEGAL Y SOCIETARIO/Beneficiarios finales.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/Libro registro de accionistas actualizado .pdf
+      → 037 LEGAL Y SOCIETARIO/Libro registro de accionistas actualizado.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS VARIOS/80069996_REC_202001.xlsx
+      → 037 PERIODO 2020/DOCUMENTOS CONTABLES/01 ENERO/80069996_REC_202001 02.xlsx   [Archivo de sustento de una rectificativa, tal como lo genera el SET (no se renombra)]
+  PERIODO 2026/DOCUEMNTOS CONTABLES/MES/ABRIL/LIBRO COMPRAS 2026 BICLOPE.pdf
+      → 037 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/LIBRO COMPRAS 042026 BICLOPE SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUEMNTOS CONTABLES/MES/JULIO/LIBRO COMPRAS JUNIO 2026 BICLOPE.pdf
+      → 037 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/LIBRO COMPRAS 072026 BICLOPE SA.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 06/2026 y la carpeta 07/2026: se respetó la carpeta
+  PERIODO 2026/DOCUEMNTOS CONTABLES/MES/JUNIO/LIBRO COMPRAS JUNIO 2026.pdf
+      → 037 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/LIBRO COMPRAS 062026 BICLOPE SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUEMNTOS CONTABLES/MES/MAYO/LIBRO COMPRAS MAYO 2026 BICLOPE.pdf
+      → 037 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/LIBRO COMPRAS 052026 BICLOPE SA.pdf   [Período tomado de la carpeta donde estaba]
+  SIARA/Acta De Asamblea 02- Biclope_compressed (firmado).pdf ultima version .pdf
+      → 037 LEGAL Y SOCIETARIO/Acta De Asamblea 02- Biclope_compressed (firmado).pdf ultima version.pdf   [Documento de asamblea]
+  SIARA/FACHADA DE BICLOPE .png
+      → 037 LEGAL Y SOCIETARIO/FACHADA DE BICLOPE.png   [Documento legal o societario]
+
+MOVIDOS CONSERVANDO SU NOMBRE (132)
+-------------------------------------
+  BALANCE 2022 BICLOPE_FIRMADO.pdf
+      → 037 PERIODO 2022/DOCUMENTOS CONTABLES/CIERRE 2022/BALANCE 2022 BICLOPE_FIRMADO.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  CARTA PODER DE REPRESENTACIÓN.pdf
+      → 037 LEGAL Y SOCIETARIO/CARTA PODER DE REPRESENTACIÓN.pdf   [Documento legal o societario]
+  drfs-006---comunicacion-asamblearia--8024139 (1).pdf extraordinaria.pdf
+      → 037 LEGAL Y SOCIETARIO/drfs-006---comunicacion-asamblearia--8024139 (1).pdf extraordinaria.pdf   [Documento de asamblea]
+  drfs-006---comunicacion-asamblearia--8128102.pdf asamblea ordinaria.pdf
+      → 037 LEGAL Y SOCIETARIO/drfs-006---comunicacion-asamblearia--8128102.pdf asamblea ordinaria.pdf   [Documento de asamblea]
+  Factura electrónica 001-003-0084340.pdf ASAMBLEA EXTRAORD..pdf
+      → 037 LEGAL Y SOCIETARIO/Factura electrónica 001-003-0084340.pdf ASAMBLEA EXTRAORD..pdf   [Documento de asamblea]
+  Factura electrónica 001-003-0084341.pdf Asamblea Ordinaria.pdf
+      → 037 LEGAL Y SOCIETARIO/Factura electrónica 001-003-0084341.pdf Asamblea Ordinaria.pdf   [Documento de asamblea]
+  PERIODO 2019/DOCUMENTOS VARIOS/DDJJ DICIEMBRE 2019 BICLOPE.pdf
+      → 037 PERIODO 2019/DOCUMENTOS CONTABLES/12 DICIEMBRE/DDJJ DICIEMBRE 2019 BICLOPE.pdf   [Documento contable que dice su mes y estaba en DOCUMENTOS VARIOS]
+  PERIODO 2019/DOCUMENTOS VARIOS/DDJJ enero 2020 rec.pdf
+      → 037 PERIODO 2020/DOCUMENTOS CONTABLES/01 ENERO/DDJJ enero 2020 rec.pdf   [Documento contable que dice su mes y estaba en DOCUMENTOS VARIOS]
+  PERIODO 2019/DOCUMENTOS VARIOS/DDJJ NOVIEMBRE 2019 BICLOPE.pdf
+      → 037 PERIODO 2019/DOCUMENTOS CONTABLES/11 NOVIEMBRE/DDJJ NOVIEMBRE 2019 BICLOPE.pdf   [Documento contable que dice su mes y estaba en DOCUMENTOS VARIOS]
+  PERIODO 2019/DOCUMENTOS VARIOS/DDJJ OCTUBRE 2019 BICLOPE.pdf
+      → 037 PERIODO 2019/DOCUMENTOS CONTABLES/10 OCTUBRE/DDJJ OCTUBRE 2019 BICLOPE.pdf   [Documento contable que dice su mes y estaba en DOCUMENTOS VARIOS]
+  PERIODO 2019/DOCUMENTOS VARIOS/DDJJ RECTIFICATIVA HECHAUKA NOV 2019 BICLOPE.pdf
+      → 037 PERIODO 2019/DOCUMENTOS CONTABLES/11 NOVIEMBRE/DDJJ RECTIFICATIVA HECHAUKA NOV 2019 BICLOPE.pdf   [Documento contable que dice su mes y estaba en DOCUMENTOS VARIOS]
+  PERIODO 2019/DOCUMENTOS VARIOS/DDJJ SETIEMBRE 2019 BICLOPE.pdf
+      → 037 PERIODO 2019/DOCUMENTOS CONTABLES/09 SETIEMBRE/DDJJ SETIEMBRE 2019 BICLOPE.pdf   [Documento contable que dice su mes y estaba en DOCUMENTOS VARIOS]
+  PERIODO 2019/DOCUMENTOS VARIOS/DJI201911_7f6407d7_80069996_921.zip
+      → 037 PERIODO 2019/DOCUMENTOS VARIOS/DJI201911_7f6407d7_80069996_921.zip   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2019/DOCUMENTOS VARIOS/DJI202001_87e9086d_80069996_911.zip
+      → 037 PERIODO 2019/DOCUMENTOS VARIOS/DJI202001_87e9086d_80069996_911.zip   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2019/DOCUMENTOS VARIOS/PLANIILLA DE FACTURAS 2019.xlsx
+      → 037 PERIODO 2019/DOCUMENTOS VARIOS/PLANIILLA DE FACTURAS 2019.xlsx   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2019/DOCUMENTOS VARIOS/VENTA.TXT
+      → 037 PERIODO 2019/DOCUMENTOS VARIOS/VENTA.TXT   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2019/DOCUMENTOS VARIOS/Ventas de setiembre a diciembre 2019 Biclope.xlsx
+      → 037 PERIODO 2019/DOCUMENTOS CONTABLES/09 SETIEMBRE/Ventas de setiembre a diciembre 2019 Biclope.xlsx   [Documento contable que dice su mes y estaba en DOCUMENTOS VARIOS]
+  PERIODO 2022/DOCUMENTOS VARIOS/EEFF 2021 BICLOPE SA.pdf
+      → 037 PERIODO 2021/DOCUMENTOS CONTABLES/CIERRE 2021/EEFF 2021 BICLOPE SA.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2022/DOCUMENTOS VARIOS/EEFF 2022 BICLOPE SA.pdf
+      → 037 PERIODO 2022/DOCUMENTOS CONTABLES/CIERRE 2022/EEFF 2022 BICLOPE SA.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/1 BALANCE GENERAL 2022-2023.pdf
+      → 037 PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/1 BALANCE GENERAL 2022-2023.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/2 ESTADO DE RESULTADOS 2022-2023.pdf
+      → 037 PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/2 ESTADO DE RESULTADOS 2022-2023.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/3 ESTADOS DE FLUJO DE EFECTIVO 2022-2023.pdf
+      → 037 PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/3 ESTADOS DE FLUJO DE EFECTIVO 2022-2023.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/4 ESTADOS DE CAMBIOS EN EL PN 2022-202.pdf
+      → 037 PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/4 ESTADOS DE CAMBIOS EN EL PN 2022-202.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/80069996_REC_2023.xlsx
+      → 037 PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/80069996_REC_2023.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/80069996_REC_2023.zip
+      → 037 PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/80069996_REC_2023.zip   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/80069996NE2023.pdf
+      → 037 PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/80069996NE2023.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/80069996NE2023.zip
+      → 037 PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/80069996NE2023.zip   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/DDJJ IRE 2023 BICLOPE SA.pdf
+      → 037 PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/DDJJ IRE 2023 BICLOPE SA.pdf   [Declaración leída por dentro: formulario 500, ejercicio 2023]
+  PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/EF2023_91100888_80069996_948.zip
+      → 037 PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/EF2023_91100888_80069996_948.zip   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/ne.docx
+      → 037 PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/ne.docx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/PROFORMA DDJJ IRE 2023 BICLOPE SA.pdf
+      → 037 PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/PROFORMA DDJJ IRE 2023 BICLOPE SA.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2023/DOCUMENTOS CONTABLES/DICIEMBRE 2023/DDJJ REC DICIEMBRE 2023.pdf
+      → 037 PERIODO 2023/DOCUMENTOS CONTABLES/12 DICIEMBRE/DDJJ REC DICIEMBRE 2023.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2023/DOCUMENTOS CONTABLES/NOVIEMBRE 2023/Ver Declaración _ MARANGATU.pdf
+      → 037 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Ver Declaración _ MARANGATU.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2023/DOCUMENTOS CONTABLES/OCTUBRE 2023/Ver Declaración _ MARANGATU.pdf
+      → 037 PERIODO 2023/DOCUMENTOS CONTABLES/10 OCTUBRE/Ver Declaración _ MARANGATU.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2023/DOCUMENTOS CONTABLES/SEPTIEMBRE 2023/Ver Declaración _ MARANGATU.pdf
+      → 037 PERIODO 2023/DOCUMENTOS CONTABLES/09 SETIEMBRE/Ver Declaración _ MARANGATU.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2023/DOCUMENTOS VARIOS/80069996_REC_202001.xlsx
+      → 037 PERIODO 2020/DOCUMENTOS CONTABLES/01 ENERO/80069996_REC_202001.xlsx   [Archivo de sustento de una rectificativa, tal como lo genera el SET (no se renombra)]
+  PERIODO 2023/DOCUMENTOS VARIOS/80069996_REC_202001.zip
+      → 037 PERIODO 2020/DOCUMENTOS CONTABLES/01 ENERO/80069996_REC_202001.zip   [Archivo de sustento de una rectificativa, tal como lo genera el SET (no se renombra)]
+  PERIODO 2023/DOCUMENTOS VARIOS/80069996_REC_202312.xlsx
+      → 037 PERIODO 2023/DOCUMENTOS CONTABLES/12 DICIEMBRE/80069996_REC_202312.xlsx   [Archivo de sustento de una rectificativa, tal como lo genera el SET (no se renombra)]
+  PERIODO 2023/DOCUMENTOS VARIOS/Cuadro Comparativo de Enero a Diciembre 2023.xlsx
+      → 037 PERIODO 2023/DOCUMENTOS VARIOS/Cuadro Comparativo de Enero a Diciembre 2023.xlsx   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/1 BALANCE GENERAL.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/1 BALANCE GENERAL.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/2 ESTADO DE RESULTADO 2023-2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/2 ESTADO DE RESULTADO 2023-2024.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/3 DLUJO DE EFECTIVO 2023-2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/3 DLUJO DE EFECTIVO 2023-2024.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/3 FLUJO DE EFECTIVO 2023-2024.xlsx
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/3 FLUJO DE EFECTIVO 2023-2024.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/4 ESTADOS DE CAMBIO EN EL PN 2023-2024.csv
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/4 ESTADOS DE CAMBIO EN EL PN 2023-2024.csv   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/4 ESTADOS DE CAMBIO EN EL PN 2023-2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/4 ESTADOS DE CAMBIO EN EL PN 2023-2024.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/80069996NE2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/80069996NE2024.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/80069996NE2024.zip
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/80069996NE2024.zip   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/DDJJ IRE 2024 BICLOPE SA.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/DDJJ IRE 2024 BICLOPE SA.pdf   [Declaración leída por dentro: formulario 500, ejercicio 2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/EF2024_95af08f5_80069996_948.zip
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/EF2024_95af08f5_80069996_948.zip   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/ne.docx
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/ne.docx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/PROFORMA DDJJ IRE 2024 BICLOPE.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/PROFORMA DDJJ IRE 2024 BICLOPE.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/EEFF 2024 BICLOPE.xlsm
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/EEFF 2024 BICLOPE.xlsm   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+      nota: Excel con 17 vínculo(s) a otros archivos
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/AGOSTO 2024/CONSTANCIA DE PRESENTACIÓN AGOSTO 2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/08 AGOSTO/CONSTANCIA DE PRESENTACIÓN AGOSTO 2024.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/AGOSTO 2024/DDJJ AGOSTO 2024 B.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/08 AGOSTO/DDJJ AGOSTO 2024 B.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/DICIEMBRE 2024/Constancia de presentación diciembre2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/12 DICIEMBRE/Constancia de presentación diciembre2024.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/DICIEMBRE 2024/DDJJ DICIEMBRE 2024 BICLOPE.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/12 DICIEMBRE/DDJJ DICIEMBRE 2024 BICLOPE.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/ENERO 2024/LIBRO COMPRA ENERO 2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/01 ENERO/LIBRO COMPRA ENERO 2024.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/FEBRERO 2024/LIBRO COMPRA FEBRERO 2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/02 FEBRERO/LIBRO COMPRA FEBRERO 2024.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/JULIO 2024/DDJJ JULIO 2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/07 JULIO/DDJJ JULIO 2024.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/JULIO 2024/RG90 COMPRAS JULIO 2024.xlsx
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/07 JULIO/RG90 COMPRAS JULIO 2024.xlsx   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/JUNIO 2024/CONSTANCIA DE PRESENTACION JUNIO 2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/CONSTANCIA DE PRESENTACION JUNIO 2024.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/JUNIO 2024/DDJJ JUNIO 2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/DDJJ JUNIO 2024.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/MARZO2024/LIBRO COMPRA MARZO 2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/LIBRO COMPRA MARZO 2024.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/MAYO 2024/Constancia de presentación mayo 2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO/Constancia de presentación mayo 2024.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/MAYO 2024/DDJJ MAYO 2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO/DDJJ MAYO 2024.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/MAYO 2024/RG90 COMPRAS MAYO 2024.xlsx
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO/RG90 COMPRAS MAYO 2024.xlsx   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/NOVIEMBRE 2024/DDJJ NOVIEMBRE 2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/11 NOVIEMBRE/DDJJ NOVIEMBRE 2024.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/OCTUBRE 2024/constancia de presentación biclopr octubre2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/10 OCTUBRE/constancia de presentación biclopr octubre2024.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/OCTUBRE 2024/DDJJ OCTUBRE 2024 BICLOPE.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/10 OCTUBRE/DDJJ OCTUBRE 2024 BICLOPE.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/SETIEMBRE 2024/DDJJ SET 2024 BICLOPE.pdf
+      → 037 PERIODO 2024/DOCUMENTOS CONTABLES/09 SETIEMBRE/DDJJ SET 2024 BICLOPE.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS VARIOS/80069996_REC_202312.zip
+      → 037 PERIODO 2023/DOCUMENTOS CONTABLES/12 DICIEMBRE/80069996_REC_202312.zip   [Archivo de sustento de una rectificativa, tal como lo genera el SET (no se renombra)]
+  PERIODO 2024/DOCUMENTOS VARIOS/documento dado de baja 2024.pdf
+      → 037 PERIODO 2024/DOCUMENTOS VARIOS/documento dado de baja 2024.pdf   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2024/DOCUMENTOS VARIOS/drfs--comunicacion-en-el-registro-administrativo-de-beneficiarios-finales-5843409.pdf
+      → 037 PERIODO 2024/DOCUMENTOS VARIOS/drfs--comunicacion-en-el-registro-administrativo-de-beneficiarios-finales-5843409.pdf   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2024/DOCUMENTOS VARIOS/drfs-comunicacion-en-el-registro-administrativo-de-personas-y-estructuras-juridicas-5843800.pdf
+      → 037 PERIODO 2024/DOCUMENTOS VARIOS/drfs-comunicacion-en-el-registro-administrativo-de-personas-y-estructuras-juridicas-5843800.pdf   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2024/DOCUMENTOS VARIOS/RECTIFICATIVA - RUC_REC_AÑO 12.xlsx
+      → 037 PERIODO 2024/DOCUMENTOS VARIOS/RECTIFICATIVA - RUC_REC_AÑO 12.xlsx   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2025/DOCUMENTOS CONTABLES/EE FF/80069996NE2025.pdf
+      → 037 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/80069996NE2025.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/EE FF/80069996NE2025.xlsx
+      → 037 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/80069996NE2025.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/EE FF/80069996NE2025.zip
+      → 037 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/80069996NE2025.zip   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/EE FF/EF2025_8b27087a_80069996_948.zip
+      → 037 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/EF2025_8b27087a_80069996_948.zip   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/PERIODO 2025/ABRIL/DDJJ ABRIL 2025 BICLOPE.pdf
+      → 037 PERIODO 2025/DOCUMENTOS CONTABLES/04 ABRIL/DDJJ ABRIL 2025 BICLOPE.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/PERIODO 2025/AGOSTO/DDJJ AGOSTO 2025 BICLOPE.pdf
+      → 037 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/DDJJ AGOSTO 2025 BICLOPE.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/PERIODO 2025/DICIEMBRE/DDJJ DICIEMBRE 2025 BICLOPE.pdf
+      → 037 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/DDJJ DICIEMBRE 2025 BICLOPE.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/PERIODO 2025/JULIO/DDJJ JULIO 2025 BICLOPE.pdf
+      → 037 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/DDJJ JULIO 2025 BICLOPE.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/PERIODO 2025/JUNIO/DDJJ JUNIO 2025 BICLOPE.pdf
+      → 037 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/DDJJ JUNIO 2025 BICLOPE.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/PERIODO 2025/MAYO/DDJJ MAYO 2025 BICLOPE.pdf
+      → 037 PERIODO 2025/DOCUMENTOS CONTABLES/05 MAYO/DDJJ MAYO 2025 BICLOPE.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/PERIODO 2025/MAYO/LIBRO COMPRA MAYO 2025.pdf
+      → 037 PERIODO 2025/DOCUMENTOS CONTABLES/05 MAYO/LIBRO COMPRA MAYO 2025.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/PERIODO 2025/NOVIEMBRE/DDJJ NOVIEMBRE 2025 BICLOPE.pdf
+      → 037 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/DDJJ NOVIEMBRE 2025 BICLOPE.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/PERIODO 2025/OCTUBRE/DDJJ OCTUBRE BICLOPE 2025.pdf
+      → 037 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/DDJJ OCTUBRE BICLOPE 2025.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/PERIODO 2025/SETIEMBRE/DDJJ SETEIMBRE 2025 BICLOPE.pdf
+      → 037 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/DDJJ SETEIMBRE 2025 BICLOPE.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/Acta De Directorio.pdf
+      → 037 LEGAL Y SOCIETARIO/Acta De Directorio.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/ASAMBLEAS/Acta de Asamblea ExtraOrdinaria N° 1.doc
+      → 037 LEGAL Y SOCIETARIO/Acta de Asamblea ExtraOrdinaria N° 1.doc   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/ASAMBLEAS/ACTA DE ASAMBLEA GENERAL ORDINARIA DE ACCIONISTAS.docx
+      → 037 LEGAL Y SOCIETARIO/ACTA DE ASAMBLEA GENERAL ORDINARIA DE ACCIONISTAS.docx   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/ASAMBLEAS/ACTA DE ASAMBLEA GENERAL ORDINARIA DE ACCIONISTAS.pdf
+      → 037 LEGAL Y SOCIETARIO/ACTA DE ASAMBLEA GENERAL ORDINARIA DE ACCIONISTAS.pdf   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/ASAMBLEAS/Acta de Asamblea Ordinaria N° 1.doc
+      → 037 LEGAL Y SOCIETARIO/Acta de Asamblea Ordinaria N° 1.doc   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/ASAMBLEAS/Acta de Asamblea Ordinaria N° 1.pdf
+      → 037 LEGAL Y SOCIETARIO/Acta de Asamblea Ordinaria N° 1.pdf   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/ASAMBLEAS/Convocatoria de asamblea 2025.doc
+      → 037 LEGAL Y SOCIETARIO/ASAMBLEA 2025/Convocatoria de asamblea 2025.doc   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/ASAMBLEAS/Convocatoria de asamblea extraordinaria 2025.doc
+      → 037 LEGAL Y SOCIETARIO/ASAMBLEA 2025/Convocatoria de asamblea extraordinaria 2025.doc   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/ASAMBLEAS/drfs-006---comunicacion-asamblearia--7673036.pdf
+      → 037 LEGAL Y SOCIETARIO/drfs-006---comunicacion-asamblearia--7673036.pdf   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/CESION DE DERECHOS BICLOPE EMILIO A MAURICIO_FINAL.docx
+      → 037 LEGAL Y SOCIETARIO/CESION DE DERECHOS BICLOPE EMILIO A MAURICIO_FINAL.docx   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/CESION DE DERECHOS BICLOPE EMILIO A MAURICIO.docx
+      → 037 LEGAL Y SOCIETARIO/CESION DE DERECHOS BICLOPE EMILIO A MAURICIO.docx   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/CESION DE DERECHOS BICLOPE ultima version.docx
+      → 037 LEGAL Y SOCIETARIO/CESION DE DERECHOS BICLOPE ultima version.docx   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/Constancia BICLOPE SA drfs-007---comunicacion-de-transferencia-de-acciones.-7338636.pdf
+      → 037 LEGAL Y SOCIETARIO/Constancia BICLOPE SA drfs-007---comunicacion-de-transferencia-de-acciones.-7338636.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/documento por bloqueo biclope.pdf
+      → 037 LEGAL Y SOCIETARIO/documento por bloqueo biclope.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/DOCUMENTOS BICLOPE.zip
+      → 037 LEGAL Y SOCIETARIO/DOCUMENTOS BICLOPE.zip   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/drfs-002---comunicacion-en-el-registro-administrativo-de-personas-y-estructuras-juridicas-6959403.pdf
+      → 037 LEGAL Y SOCIETARIO/drfs-002---comunicacion-en-el-registro-administrativo-de-personas-y-estructuras-juridicas-6959403.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/drfs-002---comunicacion-en-el-registro-administrativo-de-personas-y-estructuras-juridicas-7342620.pdf
+      → 037 LEGAL Y SOCIETARIO/drfs-002---comunicacion-en-el-registro-administrativo-de-personas-y-estructuras-juridicas-7342620.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/drfs-003---comunicacion-en-el-registro-administrativo-de-beneficiarios-finales-6960177.pdf
+      → 037 LEGAL Y SOCIETARIO/drfs-003---comunicacion-en-el-registro-administrativo-de-beneficiarios-finales-6960177.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/drfs-003---comunicacion-en-el-registro-administrativo-de-beneficiarios-finales-7342771.pdf
+      → 037 LEGAL Y SOCIETARIO/drfs-003---comunicacion-en-el-registro-administrativo-de-beneficiarios-finales-7342771.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/drfs-007---comunicacion-de-transferencia-de-acciones.-7336957.pdf
+      → 037 LEGAL Y SOCIETARIO/drfs-007---comunicacion-de-transferencia-de-acciones.-7336957.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/Estatutos- Biclope.pdf
+      → 037 LEGAL Y SOCIETARIO/Estatutos- Biclope.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/estructuras juridicas.pdf
+      → 037 LEGAL Y SOCIETARIO/estructuras juridicas.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/Informe Del Sindico- Biclope SA.pdf
+      → 037 LEGAL Y SOCIETARIO/Informe Del Sindico- Biclope SA.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/DOCUMENTOS LEGALES/Memoria Del Directorio-Biclope SA.pdf
+      → 037 LEGAL Y SOCIETARIO/Memoria Del Directorio-Biclope SA.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS VARIOS/Contestación a Requerimiento Tributario.docx
+      → 037 PERIODO 2025/DOCUMENTOS VARIOS/Contestación a Requerimiento Tributario.docx   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2025/DOCUMENTOS VARIOS/CONTROL DE TALONARIO.xlsx
+      → 037 PERIODO 2025/DOCUMENTOS VARIOS/CONTROL DE TALONARIO.xlsx   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2025/DOCUMENTOS VARIOS/hechauka 012020.pdf
+      → 037 PERIODO 2025/DOCUMENTOS VARIOS/hechauka 012020.pdf   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2026/ACTA DE ASAMBLEA EXTRAORDINARIA DE ACCIONISTAS Nº 03..pdf
+      → 037 LEGAL Y SOCIETARIO/ACTA DE ASAMBLEA EXTRAORDINARIA DE ACCIONISTAS Nº 03..pdf   [Documento de asamblea]
+  PERIODO 2026/DOCUEMNTOS CONTABLES/MES/ABRIL/DDJJ ABRIL 2026 BICLOPE.pdf
+      → 037 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/DDJJ ABRIL 2026 BICLOPE.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUEMNTOS CONTABLES/MES/ENERO/DDJJ ENERO 2026 BICLOPE.pdf
+      → 037 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/DDJJ ENERO 2026 BICLOPE.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUEMNTOS CONTABLES/MES/FEBRERO/DDJJ FEBRERO 2026 BICLOPE.pdf
+      → 037 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/DDJJ FEBRERO 2026 BICLOPE.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUEMNTOS CONTABLES/MES/JULIO/DDJJ JULIO 2026 BICLOPE.pdf
+      → 037 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/DDJJ JULIO 2026 BICLOPE.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUEMNTOS CONTABLES/MES/MARZO/DDJJ MARZO 2026 BICLOPE.pdf
+      → 037 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/DDJJ MARZO 2026 BICLOPE.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUEMNTOS CONTABLES/MES/MAYO/DDJJ MAYO 2026 BICLOPE.pdf
+      → 037 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/DDJJ MAYO 2026 BICLOPE.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/MEMORIA DEL DIRECTORIO.pdf
+      → 037 LEGAL Y SOCIETARIO/MEMORIA DEL DIRECTORIO.pdf   [Documento legal o societario]
+  SIARA/Acta De Asamblea 01- Biclope (signed 1).pdf
+      → 037 LEGAL Y SOCIETARIO/Acta De Asamblea 01- Biclope (signed 1).pdf   [Documento de asamblea]
+  SIARA/Acta De Asamblea 01- Biclope.pdf
+      → 037 LEGAL Y SOCIETARIO/Acta De Asamblea 01- Biclope.pdf   [Documento de asamblea]
+  SIARA/Acta De Asamblea 02- Biclope (signed 1).pdf
+      → 037 LEGAL Y SOCIETARIO/Acta De Asamblea 02- Biclope (signed 1).pdf   [Documento de asamblea]
+  SIARA/Acta De Asamblea 02- Biclope.pdf
+      → 037 LEGAL Y SOCIETARIO/Acta De Asamblea 02- Biclope.pdf   [Documento de asamblea]
+  SIARA/Constitucion Biclope - (signed 1).pdf
+      → 037 LEGAL Y SOCIETARIO/Constitucion Biclope - (signed 1).pdf   [Documento legal o societario]
+  SIARA/Constitucion Biclope.pdf
+      → 037 LEGAL Y SOCIETARIO/Constitucion Biclope.pdf   [Documento legal o societario]
+  SIARA/Constitucion Biclope.pdf comp.pdf
+      → 037 LEGAL Y SOCIETARIO/Constitucion Biclope.pdf comp.pdf   [Documento legal o societario]
+  SIARA/Registro de accionistas Biclope.pdf
+      → 037 LEGAL Y SOCIETARIO/Registro de accionistas Biclope.pdf   [Documento legal o societario]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «037 ZZ A CLASIFICAR» (para que lo ubique una persona) (2)
+----------------------------------------------------------------
+  PERIODO 2026/Informe del Sindico.doc
+  PERIODO 2026/INFORME DEL SÍNDICO.pdf
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar) (1)
+------------------------------------------------------
+  PERIODO 2024/DOCUMENTOS CONTABLES/EEFF 2024 BICLOPE.xlsm  →  037 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/EEFF 2024 BICLOPE.xlsm  [Excel con 17 vínculo(s) a otros archivos]
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno

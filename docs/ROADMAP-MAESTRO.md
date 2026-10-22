@@ -30,6 +30,24 @@ skill global **`backend-datos-sensibles`**, reutilizable en otros proyectos.
 
 ---
 
+## ▶ HANDOFF — 2026-10-22 (manda sobre el del 2026-10-20, que sigue abajo)
+
+**Primera tarea sin marcar: la 164 (ordenamiento), EN PAUSA porque el disco externo falló otra vez.** Todo el detalle,
+las reglas y los números están en **`docs/ordenamiento-2026-10/LEEME.md`**. Datos de trabajo (plan, diario,
+contenido leído): `C:\Users\Daniel\DATOS ORDENAMIENTO EFFORT 2026-10\` (los scripts se corren desde ahí).
+
+- **Hecho (2026-10-20):** 169 terminada y verificada (ver abajo). Segunda copia `D:\ORDENADO` (36.488 archivos, 19,195 GB, 0 errores). Ordenamiento de prueba v1 aplicado y verificado en `D:\ORDENADO` (27.288 movimientos, 0 problemas). Bitácora por cliente.
+- **Error encontrado en la revisión → plan v2:** la carpeta «045 DAVID ROMERO» (dentro del 056) se había ordenado como del 056 y renombrado «FACUNDO CARRASCOSA». Además, **la planilla de clientes que se mandó a EFFORT propone para el 056 el RUC 1300663-0, que es de DAVID TADEO FRANCISCO ROMERO CABALLERO** (lo dice su declaración): hay que avisarle a EFFORT/Daniel. El 113 CASA VIVA declara como «PAVISA SOCIEDAD ANONIMA»: confirmar. Ver DISCREPANCIAS 44. El plan v2 ya está calculado y validado (0 errores) y su bitácora está en `docs/ordenamiento-2026-10/bitacora/`.
+- **Incidente 2026-10-22 15:45:** el disco Toshiba falló durante la reversa del v1 (disk 51, ntfs 140, ntfs 50) y desapareció. Iban devueltos 26.442 de 27.288. Segunda falla en 3 días (DISCREPANCIAS 42).
+
+**Qué hacer, en orden, cuando el disco vuelva** (Sonnet, esfuerzo alto):
+1. Conectarlo **directo a la computadora, sin hub, con otro cable** si hay. Ver en qué letra aparece (los scripts usan `D:`).
+2. `chkdsk <letra>:` **solo análisis** (sin /f) y mirar el Visor de eventos. Si hay sectores defectuosos o el disco vuelve a caerse: **cambiar el disco** y no seguir sobre este.
+3. **Verificar la foto** con `copiar.mjs --verificar` (relee y compara la huella de los 36.488 archivos, ~27 min; ver `docs/analisis-onedrive-2026-10/LEEME.md`). Es la única copia de seguridad de EFFORT: lo primero es saber si sigue sana.
+4. Terminar la reversa: `node 6-deshacer.mjs --aplicar` (retoma: saltea lo ya devuelto) y `node comparar-con-foto.mjs` → tiene que dar 0 diferencias. Si da diferencias por la falla, rehacer `D:\ORDENADO` con robocopy desde la foto (1 hora) en vez de remendarlo.
+5. Aplicar el plan v2: `node 4-aplicar.mjs` (simula) → `--aplicar` → `node 7-verificar.mjs` → `node 5-bitacora.mjs "D:/ORDENADO/_BITACORA ORDENAMIENTO"`.
+6. Mostrarlo a Laura y Lili (la bitácora y el disco). Con su visto bueno, la aplicación en el OneDrive real es otra tarea y **exige que Daniel levante las reglas 0 y 5 por escrito para esa operación** (mover y renombrar con Graph, duplicados a cuarentena, nada se borra).
+
 ## ▶ HANDOFF — 2026-10-20 (para la próxima conversación)
 
 > Frase de arranque: *«Leé `docs/ROADMAP-MAESTRO.md` y `docs/DISCREPANCIAS.md` en el repo `effort-control-360`, y seguí desde la primera tarea sin marcar.»*
@@ -42,6 +60,7 @@ skill global **`backend-datos-sensibles`**, reutilizable en otros proyectos.
 - **Qué:** copia de **todo** el OneDrive de `lsosa@effort.com.py`: 36.467 archivos, 19,19 GB, 6.308 carpetas (0 omitidos) → `D:\COPIA ONEDRIVE EFFORT 2026-10-19\` (Toshiba Canvio Ready 2 TB, NTFS, saludable). Pedido de Daniel: «copia todos los archivos al disco externo sin tocar ni modificar nada».
 - **Cómo:** `docs/analisis-onedrive-2026-10/herramientas/copiar-onedrive-al-disco.mjs.txt` (ver el `LEEME.md`). Solo GET hacia OneDrive; cada archivo se verifica por peso y huella `quickXorHash` de Microsoft antes de tomarse por bueno. Se lanza con `correr-copia.ps1.txt` (sin que la computadora se duerma). Registro dentro del disco, en `_registro\`.
 - **Estado al 2026-10-20 06:59:** 31.205 de 36.467 archivos copiados y verificados (**85 %**), a ~1,4 archivos por segundo; faltaban ~5.300 y ~1 hora (el proceso seguía vivo). Durante la noche hubo un tramo con muy poca velocidad (el promedio bajó de 1,9 a 0,3 archivos por segundo); la causa no se confirmó, lo más probable es internet. Hay **50 fallos** en `_registro\fallos.jsonl` (48 «fetch failed» —cortes de red, casi todos archivos grandes de 58 a 252 MB— y 2 de «peso distinto»); **no se pierde nada: un `--copiar` nuevo los reintenta**.
+- **TERMINADA Y VERIFICADA 2026-10-20 (11:13 hora de Paraguay):** la copia terminó sola a las 07:35 con 53 fallos (red); se volvió a correr `--copiar` (23 min): **36.488 de 36.488 archivos, 19,20 GB, 6.310 carpetas, 0 omitidos, 0 fallos** (el OneDrive creció 21 archivos durante la copia: los trajo la pasada nueva). Luego `--verificar` releyendo del disco: **36.488 revisados, 36.488 bien, 0 dañados** (27 min). Recuento independiente en D: 36.488 archivos, 19,20 GB. **Falta:** que Daniel expulse el disco y lo guarde, segunda copia en otro lugar, cifrado (DISCREPANCIAS 42), y anotar la lectura en `docs/BITACORA-ONEDRIVE.md`.
 - **Incidente del 2026-10-19 15:19:** el disco D tuvo una falla momentánea (Windows registró ntfs 50 «error en la escritura demorada», ntfs 140 y ntfs 98 «volumen requiere Chkdsk») y el script cayó con `ENOENT` al anotar un fallo. **Qué se hizo:** `chkdsk D:` de solo análisis (sin errores, 0 KB de sectores defectuosos), `Repair-Volume -OfflineScanAndFix` (sin errores; limpió la marca de «volumen con errores»), el script se reforzó (espera al disco si desaparece, crea la carpeta antes de escribir, anota con reintentos) y se corrió `--verificar`: **se releyeron del disco los 14.543 archivos ya copiados y los 14.543 coinciden con la huella de Microsoft, 0 dañados** (también se borraron 11 restos `.parte`). Si el disco vuelve a fallar, lo más probable es el cable o el puerto (conectarlo directo, sin hub, con el cable más corto); si sigue, hay que cambiar el disco.
 - **Qué falta, en orden:**
   1. **Ver si terminó:** leer `D:\COPIA ONEDRIVE EFFORT 2026-10-19\_registro\resumen.json` (lo escribe al terminar; mira `copiadosYVerificados`, `faltan`, `pesoDistinto`) y `fallos.jsonl`. Si el proceso `node copiar.mjs` ya no está y `resumen.json` no existe, o `faltan` > 0 o hay fallos: **volver a correr `--copiar`** (retoma solo).

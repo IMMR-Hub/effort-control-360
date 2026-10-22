@@ -1,0 +1,70 @@
+// APLICA el plan sobre la COPIA DE PRUEBA D:\ORDENADO. No toca OneDrive ni la foto del 19-oct.
+// Uso: node 4-aplicar.mjs            → simula (no mueve nada) y dice qué haría
+//      node 4-aplicar.mjs --aplicar  → mueve y renombra
+//
+// Protecciones por construcción:
+//   · Toda ruta se resuelve y se rechaza si no está dentro de D:\ORDENADO\CLIENTES EFFORT E.A.S\CLIENTES.
+//   · No existe ninguna llamada que borre un archivo. Solo fs.renameSync (mover dentro del mismo disco).
+//   · Nunca pisa: si el destino ya existe, ese archivo no se mueve y queda anotado.
+//   · Antes de mover, comprueba que el origen existe y pesa lo que dice el plan.
+//   · Cada movimiento queda en diario.jsonl (de → a) para poder deshacerlo con 6-deshacer.mjs.
+//   · Solo se borran CARPETAS que quedaron VACÍAS (fs.rmdirSync falla si tienen algo adentro).
+import fs from 'node:fs';
+import path from 'node:path';
+
+const APLICAR = process.argv.includes('--aplicar');
+const BASE = path.resolve('D:/ORDENADO/CLIENTES EFFORT E.A.S/CLIENTES');
+const DIARIO = 'diario.jsonl';
+const dentro = (rel) => {
+  const abs = path.resolve(BASE, rel);
+  if (!abs.startsWith(BASE + path.sep)) throw new Error(`BLOQUEADO: ruta fuera de la copia de prueba: ${abs}`);
+  return abs;
+};
+const plan = JSON.parse(fs.readFileSync('plan.json', 'utf8'));
+const movs = plan.filter((f) => f.cambia).map((f) => ({ f, de: dentro(f.origen), a: dentro(f.destinoRel) }));
+// Si un destino es el origen de otro archivo que también se mueve, ese otro va primero.
+const yaHecho = new Set();
+if (fs.existsSync(DIARIO)) for (const l of fs.readFileSync(DIARIO, 'utf8').split('\n')) if (l) { const r = JSON.parse(l); if (r.ok) yaHecho.add(r.id); if (r.deshecho) yaHecho.delete(r.id); }
+
+let movidos = 0, saltados = 0, problemas = [];
+const anotar = (r) => { if (APLICAR) fs.appendFileSync(DIARIO, JSON.stringify({ ...r, ts: new Date().toISOString() }) + '\n'); };
+let pendientes = movs.filter((m) => !yaHecho.has(m.f.id));
+console.log(`${APLICAR ? 'APLICANDO' : 'SIMULANDO'}: ${pendientes.length} movimientos (ya hechos antes: ${yaHecho.size})`);
+for (let pasada = 1; pasada <= 5 && pendientes.length; pasada++) {
+  const sigue = [];
+  for (const m of pendientes) {
+    if (!fs.existsSync(m.de)) { problemas.push({ id: m.f.id, motivo: 'el origen no existe', de: m.f.origen }); continue; }
+    const st = fs.statSync(m.de);
+    if (st.size !== m.f.tam) { problemas.push({ id: m.f.id, motivo: `pesa ${st.size}, el plan dice ${m.f.tam}`, de: m.f.origen }); continue; }
+    const mismoArchivo = m.de.toLowerCase() === m.a.toLowerCase(); // solo cambia mayúsculas/minúsculas
+    if (fs.existsSync(m.a) && !mismoArchivo) { sigue.push(m); continue; }
+    if (!APLICAR) { movidos++; continue; }
+    fs.mkdirSync(path.dirname(m.a), { recursive: true });
+    if (mismoArchivo) { const tmp = `${m.a}.renombrando`; fs.renameSync(m.de, tmp); fs.renameSync(tmp, m.a); }
+    else fs.renameSync(m.de, m.a);
+    anotar({ id: m.f.id, ok: true, de: m.f.origen, a: m.f.destinoRel });
+    movidos++;
+  }
+  if (sigue.length === pendientes.length) { for (const m of sigue) problemas.push({ id: m.f.id, motivo: 'el destino ya existe (no se pisa)', de: m.f.origen, a: m.f.destinoRel }); break; }
+  pendientes = sigue;
+  if (!APLICAR) break;
+}
+
+// Carpetas que quedaron vacías dentro de los clientes (de abajo hacia arriba). Solo vacías: rmdir falla si hay algo.
+let carpetasVacias = 0;
+if (APLICAR) {
+  const clientes = fs.readdirSync(BASE, { withFileTypes: true }).filter((d) => d.isDirectory() && /^\d{3}(?!\d)/.test(d.name) && !d.name.startsWith('999'));
+  const vaciar = (dir) => {
+    for (const d of fs.readdirSync(dir, { withFileTypes: true })) if (d.isDirectory()) vaciar(path.join(dir, d.name));
+    if (dir !== BASE && fs.readdirSync(dir).length === 0) {
+      fs.rmdirSync(dir);
+      fs.appendFileSync('carpetas-vacias-quitadas.txt', path.relative(BASE, dir) + '\n');
+      carpetasVacias++;
+    }
+  };
+  for (const c of clientes) vaciar(path.join(BASE, c.name));
+  for (const g of ['ZZ DUPLICADOS PARA REVISAR', 'ZZ A CLASIFICAR']) if (fs.existsSync(path.join(BASE, g))) vaciar(path.join(BASE, g));
+}
+fs.writeFileSync('problemas-aplicar.json', JSON.stringify(problemas, null, 1));
+console.log(`${APLICAR ? 'movidos' : 'se moverían'}: ${movidos} · problemas: ${problemas.length} · carpetas vacías quitadas: ${carpetasVacias}`);
+if (problemas.length) console.log(problemas.slice(0, 10));

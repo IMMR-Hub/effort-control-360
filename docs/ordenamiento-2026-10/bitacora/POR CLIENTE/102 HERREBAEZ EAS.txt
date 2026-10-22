@@ -1,0 +1,184 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 102 HERREBAEZ EAS
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+
+AL INICIO
+  Archivos: 60 · Peso: 31.7 MB · Subcarpetas con archivos: 10
+
+RESUMEN
+  Duplicados apartados (cuarentena): 6
+  Movidos y renombrados según el manual: 32
+  Movidos conservando su nombre: 18
+  Sin cambios: 0
+  A «102 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 4
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 3
+  Nombres originales que no dicen qué documento son: 48
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  102 LEGAL Y SOCIETARIO: 14
+  102 PERIODO 2025: 15
+  102 PERIODO 2026: 11
+  102 TRIBUTARIO: 10
+  102 ZZ A CLASIFICAR: 4
+
+DUPLICADOS APARTADOS (6)
+----------------------------
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/Estatutos_de_la_EAS.pdf
+      igual a: PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/PROFORMA 1 HERRE BAEZ (1)_compressed.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS LEGALES/Cédula_de_Identidad_Socios_o_autoridades.pdf
+      igual a: PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/CI SOCIOS_CON REGISTRO DE FIRMAS_compressed.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS LEGALES/Constancia_de_Beneficiarios_Finales.pdf
+      igual a: PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/Constancia_de_Beneficiarios_Finales.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS LEGALES/Constancia_de_Constitución.pdf
+      igual a: PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/Constancia_de_Constitución.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS LEGALES/Constancia_de_Personas_y_Estructuras_Jurídicas.pdf
+      igual a: PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/Constancia_de_Personas_y_Estructuras_Jurídicas.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS LEGALES/Estatutos_de_la_EAS.pdf
+      igual a: PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/PROFORMA 1 HERRE BAEZ (1)_compressed.pdf  (Copia idéntica (mismo contenido byte por byte))
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (3)
+---------------------------------------------------------
+  CI FERNANDO HERREROS (1).pdf  →  CI FERNANDO HERREROS.pdf
+  PROFORMA 1 HERRE BAEZ (1)_compressed.pdf  →  PROFORMA 1 HERRE BAEZ (1)_compressed.pdf
+  PROFORMA 1 HERRE BAEZ (1).pdf  →  PROFORMA 1 HERRE BAEZ.pdf
+
+MOVIDOS Y RENOMBRADOS (32)
+-----------------------------
+  PERIODO 2025/DOCUMENTOS CONTABLES/CCT/CCT SEPTIEMBRE 2025.pdf
+      → 102 TRIBUTARIO/CCT 092025 HERREBAEZ EAS.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/CCT/DICIEMBRE.pdf
+      → 102 TRIBUTARIO/CCT DICIEMBRE.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+      nota: Al nombre, que solo decía «DICIEMBRE», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS CONTABLES/CCT/NOVIEMBRE.pdf
+      → 102 TRIBUTARIO/CCT NOVIEMBRE.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+      nota: Al nombre, que solo decía «NOVIEMBRE», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS CONTABLES/CCT/OCTUBRE.pdf
+      → 102 TRIBUTARIO/CCT OCTUBRE.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+      nota: Al nombre, que solo decía «OCTUBRE», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS CONTABLES/EE.FF 2025/FORMULARIO 158-2025.pdf
+      → 102 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/EEFF 2025 PRESENTADO FORM 158 HERREBAEZ EAS.pdf   [Declaración leída por dentro: formulario 158, ejercicio 2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/FORMULARIO 120/120-08-2025.pdf
+      → 102 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/DDJJ IVA 082025 HERREBAEZ EAS.pdf   [Declaración leída por dentro: formulario 120, período 08/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/FORMULARIO 120/120-09-2025.pdf
+      → 102 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/FORMULARIO 120 120-09-2025.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «120-09-2025», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS CONTABLES/FORMULARIO 120/120-10-2025.pdf
+      → 102 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/FORMULARIO 120 120-10-2025.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «120-10-2025», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS CONTABLES/FORMULARIO 120/120-11-2025.pdf
+      → 102 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/FORMULARIO 120 120-11-2025.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «120-11-2025», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS CONTABLES/FORMULARIO 120/120-12-2025.pdf
+      → 102 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/FORMULARIO 120 120-12-2025.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «120-12-2025», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS CONTABLES/TALON DE CONFIRMACION/AGOSTO.pdf
+      → 102 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/TALON RG 90 082025 HERREBAEZ EAS.pdf   [Declaración leída por dentro: formulario 241, período 08/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/TALON DE CONFIRMACION/NOVIEMBRE.pdf
+      → 102 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/TALON DE CONFIRMACION NOVIEMBRE.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «NOVIEMBRE», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS CONTABLES/TALON DE CONFIRMACION/OCTUBRE.pdf
+      → 102 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/TALON DE CONFIRMACION OCTUBRE.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «OCTUBRE», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS CONTABLES/TALON DE CONFIRMACION/SEPTIEMBRE.pdf
+      → 102 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/TALON DE CONFIRMACION SEPTIEMBRE.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «SEPTIEMBRE», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/CI FERNANDO HERREROS (1).pdf
+      → 102 LEGAL Y SOCIETARIO/CI FERNANDO HERREROS.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/PROFORMA 1 HERRE BAEZ (1).pdf
+      → 102 LEGAL Y SOCIETARIO/PROFORMA 1 HERRE BAEZ.pdf   [Documento legal o societario]
+  PERIODO 2026/DOCUMENTOS CONTABLES/CCT/ABRIL.pdf
+      → 102 TRIBUTARIO/CCT ABRIL.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+      nota: Al nombre, que solo decía «ABRIL», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/CCT/AGOSTO.pdf
+      → 102 TRIBUTARIO/CCT AGOSTO.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+      nota: Al nombre, que solo decía «AGOSTO», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/CCT/ENERO.pdf
+      → 102 TRIBUTARIO/CCT ENERO.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+      nota: Al nombre, que solo decía «ENERO», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/CCT/Febrero.pdf
+      → 102 TRIBUTARIO/CCT Febrero.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+      nota: Al nombre, que solo decía «Febrero», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/CCT/Marzo.pdf
+      → 102 TRIBUTARIO/CCT Marzo.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+      nota: Al nombre, que solo decía «Marzo», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-02-26.pdf
+      → 102 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/DDJJ IVA 022026 HERREBAEZ EAS.pdf   [Declaración leída por dentro: formulario 120, período 02/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-03-2026.pdf
+      → 102 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/DDJJ IVA 032026 HERREBAEZ EAS.pdf   [Declaración leída por dentro: formulario 120, período 03/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-04-2026.pdf
+      → 102 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/DDJJ IVA 042026 HERREBAEZ EAS.pdf   [Declaración leída por dentro: formulario 120, período 04/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-05-2026.pdf
+      → 102 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/DDJJ IVA 052026 HERREBAEZ EAS.pdf   [Declaración leída por dentro: formulario 120, período 05/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-08-2026.pdf
+      → 102 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/DDJJ IVA 082026 HERREBAEZ EAS.pdf   [Declaración leída por dentro: formulario 120, período 08/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/ABRIL.pdf
+      → 102 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/TALON RG 90 042026 HERREBAEZ EAS.pdf   [Declaración leída por dentro: formulario 241, período 04/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/AGOSTO.pdf
+      → 102 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/TALON RG 90 082026 HERREBAEZ EAS.pdf   [Declaración leída por dentro: formulario 241, período 08/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/ENERO.pdf
+      → 102 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/TALON DE PRESENTACION ENERO.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «ENERO», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/FEBRERO.pdf
+      → 102 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/TALON RG 90 022026 HERREBAEZ EAS.pdf   [Declaración leída por dentro: formulario 241, período 02/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/MARZO.pdf
+      → 102 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/TALON RG 90 032026 HERREBAEZ EAS.pdf   [Declaración leída por dentro: formulario 241, período 03/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/MAYO.pdf
+      → 102 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/TALON RG 90 052026 HERREBAEZ EAS.pdf   [Declaración leída por dentro: formulario 241, período 05/2026]
+
+MOVIDOS CONSERVANDO SU NOMBRE (18)
+-------------------------------------
+  PERIODO 2025/DOCUMENTOS CONTABLES/EE.FF 2025/80160530NE2025.pdf
+      → 102 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/80160530NE2025.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/EE.FF 2025/80160530NE2025.xlsx
+      → 102 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/80160530NE2025.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/EE.FF 2025/80160530NE2025.zip
+      → 102 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/80160530NE2025.zip   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/EE.FF 2025/DECLARACION IDU 2025.pdf
+      → 102 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/DECLARACION IDU 2025.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/EE.FF 2025/EF2025_a92809b0_80160530_948.zip
+      → 102 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/EF2025_a92809b0_80160530_948.zip   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASIENTO DE APERTURA HERREBAEZ.pdf
+      → 102 LEGAL Y SOCIETARIO/ASIENTO DE APERTURA HERREBAEZ.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/CI ANALIA BAEZ CON REGISTRO DE FIRMAS.pdf
+      → 102 LEGAL Y SOCIETARIO/CI ANALIA BAEZ CON REGISTRO DE FIRMAS.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/CI FERNANDO HERREROS CON REGISTRO DE FIRMAS.pdf
+      → 102 LEGAL Y SOCIETARIO/CI FERNANDO HERREROS CON REGISTRO DE FIRMAS.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/CI SOCIOS_CON REGISTRO DE FIRMAS_compressed.pdf
+      → 102 LEGAL Y SOCIETARIO/CI SOCIOS_CON REGISTRO DE FIRMAS_compressed.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/CI SOCIOS_CON REGISTRO DE FIRMAS.pdf
+      → 102 LEGAL Y SOCIETARIO/CI SOCIOS_CON REGISTRO DE FIRMAS.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/CI SOCIOS.pdf
+      → 102 LEGAL Y SOCIETARIO/CI SOCIOS.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/Constancia_de_Beneficiarios_Finales.pdf
+      → 102 LEGAL Y SOCIETARIO/Constancia_de_Beneficiarios_Finales.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/Constancia_de_Constitución.pdf
+      → 102 LEGAL Y SOCIETARIO/Constancia_de_Constitución.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/Constancia_de_Personas_y_Estructuras_Jurídicas.pdf
+      → 102 LEGAL Y SOCIETARIO/Constancia_de_Personas_y_Estructuras_Jurídicas.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/PROFORMA 1 HERRE BAEZ (1)_compressed.pdf
+      → 102 LEGAL Y SOCIETARIO/PROFORMA 1 HERRE BAEZ (1)_compressed.pdf   [Documento legal o societario]
+  PERIODO 2026/DOCUMENTOS CONTABLES/CCT/CCTOCTUBRE.pdf
+      → 102 TRIBUTARIO/CCTOCTUBRE.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2026/DOCUMENTOS LEGALES/CAPITALIZACION UNIPERSONAL.docx
+      → 102 LEGAL Y SOCIETARIO/CAPITALIZACION UNIPERSONAL.docx   [Documento legal o societario]
+  PERIODO 2026/DOCUMENTOS LEGALES/CONSTANCIA DE CAPITALIZACION DE RESULTADOS.pdf
+      → 102 LEGAL Y SOCIETARIO/CONSTANCIA DE CAPITALIZACION DE RESULTADOS.pdf   [Documento legal o societario]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «102 ZZ A CLASIFICAR» (para que lo ubique una persona) (4)
+----------------------------------------------------------------
+  PERIODO 2025/DOCUMENTOS CONTABLES/DNIT/Constancia _ MARANGATU.pdf
+  PERIODO 2025/DOCUMENTOS CONTABLES/DNIT/imprimirDetalleEstadoCuenta.pdf
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-01-26.pdf
+  Sin confirmar 779062.crdownload
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno

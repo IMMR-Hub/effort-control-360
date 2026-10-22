@@ -1,0 +1,207 @@
+// Arma la BITÁCORA del ordenamiento: un Excel (resumen por cliente + todas las acciones) y un .txt por cliente.
+// Uso: node 5-bitacora.mjs <carpeta de salida>
+import fs from 'node:fs';
+import path from 'node:path';
+import { createRequire } from 'node:module';
+import { pathToFileURL } from 'node:url';
+
+const RAIZ_REPO = 'C:/Users/Daniel/NexusFlow AI/effort-control-360';
+const require = createRequire(`${RAIZ_REPO}/package.json`);
+const ExcelJS = require('exceljs');
+const { clasificarPorNombre } = await import(pathToFileURL(`${RAIZ_REPO}/packages/core/dist/index.js`).href);
+
+const SALIDA = process.argv[2];
+fs.mkdirSync(SALIDA, { recursive: true });
+const plan = JSON.parse(fs.readFileSync('plan.json', 'utf8'));
+const diario = fs.existsSync('diario.jsonl') ? fs.readFileSync('diario.jsonl', 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l)) : [];
+const hechos = new Set(diario.filter((r) => r.ok).map((r) => r.id));
+for (const r of diario) if (r.deshecho) hechos.delete(r.id);
+const problemas = fs.existsSync('problemas-aplicar.json') ? JSON.parse(fs.readFileSync('problemas-aplicar.json', 'utf8')) : [];
+const conProblema = new Map(problemas.map((p) => [p.id, p.motivo]));
+const vacias = fs.existsSync('carpetas-vacias-quitadas.txt') ? fs.readFileSync('carpetas-vacias-quitadas.txt', 'utf8').split('\n').filter(Boolean) : [];
+const aplicado = diario.length > 0;
+const FECHA = new Date().toLocaleDateString('es-PY', { timeZone: 'America/Asuncion', day: '2-digit', month: '2-digit', year: 'numeric' });
+
+const PROHIBIDAS = /\bcopia\b|\(\d+\)|\bnuevo\b|\bfinal\b|\bok\b|^img|\bimg[-_ ]|whats\s*app|\bscan|camscanner|^documento\s*\d|\bactualizad|^photo[-_]/i;
+const nombre = (r) => r.split('/').pop();
+const accionDe = (f) => {
+  if (f.accion === 'DUPLICADO') return 'DUPLICADO A CUARENTENA';
+  if (f.zona === 'ZZ') return 'A ZZ A CLASIFICAR';
+  if (f.zona === 'GENERAL_ZZ') return 'A ZZ GENERAL (otro contribuyente)';
+  if (f.otroCliente) return 'A OTRO CLIENTE';
+  if (!f.cambia) return 'SIN CAMBIOS';
+  return f.renombrado ? 'MOVIDO Y RENOMBRADO' : 'MOVIDO';
+};
+const prohibida = (f) => PROHIBIDAS.test(nombre(f.origen));
+const noDice = (f) => clasificarPorNombre(nombre(f.origen)) === 'OTRO';
+const contradice = (f) => f.notas.some((nota) => /no corresponde al período|RUC .* que no es|El nombre dice|va en el mes que paga/.test(nota));
+function problemaDelNombre(f) {
+  const n = nombre(f.origen);
+  const p = [];
+  if (PROHIBIDAS.test(n)) p.push('palabra prohibida por el manual (copia, (1), final, IMG, WhatsApp, scan…)');
+  if (clasificarPorNombre(n) === 'OTRO') p.push('el nombre no dice qué documento es');
+  for (const nota of f.notas) if (/no corresponde al período|RUC .* que no es|El nombre dice|va en el mes que paga/.test(nota)) p.push(nota);
+  return p.join(' · ');
+}
+
+const porCliente = new Map();
+for (const f of plan) (porCliente.get(f.cod) ?? porCliente.set(f.cod, []).get(f.cod)).push(f);
+const recibidos = new Map();
+for (const f of plan) if (f.otroCliente && f.accion !== 'DUPLICADO') (recibidos.get(f.codDestino) ?? recibidos.set(f.codDestino, []).get(f.codDestino)).push(f);
+
+// ------------------------------------------------------------------ Excel
+const wb = new ExcelJS.Workbook();
+wb.creator = 'EFFORT Control 360';
+const cab = (ws, cols) => {
+  ws.columns = cols;
+  ws.getRow(1).font = { bold: true, color: { argb: 'FFFFFFFF' } };
+  ws.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1F3864' } };
+  ws.getRow(1).alignment = { vertical: 'middle', wrapText: true };
+  ws.views = [{ state: 'frozen', ySplit: 1 }];
+  ws.autoFilter = { from: { row: 1, column: 1 }, to: { row: 1, column: cols.length } };
+};
+
+const leer = wb.addWorksheet('Cómo leer');
+leer.getColumn(1).width = 120;
+[
+  `BITÁCORA DEL ORDENAMIENTO DE PRUEBA — ${FECHA}`,
+  '',
+  'Qué es: el resultado de ordenar una COPIA del OneDrive de EFFORT (la del disco externo, del 19/10/2026) siguiendo el Manual de procedimiento de documentos v1.3 y el cliente modelo 999.',
+  'El OneDrive real NO se tocó. Esta prueba sirve para que Laura y Lili vean cómo quedaría y lo aprueben (o pidan cambios) antes de hacerlo en el OneDrive.',
+  '',
+  'Hojas:',
+  '  · Resumen por cliente: una fila por cliente, con lo que había al principio y lo que se hizo.',
+  '  · Acciones: una fila por archivo, con su ruta antes y después, y por qué. Se puede filtrar por cliente o por acción.',
+  '  · Duplicados: las copias que se apartaron, y cuál se conservó.',
+  '  · A clasificar: lo que no se pudo ubicar con certeza; queda en «NNN ZZ A CLASIFICAR» con su ruta original para que lo ubique una persona.',
+  '',
+  'Las acciones posibles:',
+  '  · MOVIDO Y RENOMBRADO: se supo con certeza qué es y de qué período (por lo general, leyéndolo por dentro): va a su carpeta con el nombre del manual.',
+  '  · MOVIDO: se supo dónde va, pero no lo suficiente para ponerle el nombre del manual; conserva su nombre (solo se le quitó «(1)», «copia», espacios dobles).',
+  '  · DUPLICADO A CUARENTENA: era una copia idéntica de otro archivo del mismo cliente, o la misma declaración (mismo número de orden de la DNIT) bajada otra vez. NO se borró: está en «CLIENTES / ZZ DUPLICADOS PARA REVISAR», con su ruta original. Se conservó el más antiguo.',
+  '  · A ZZ A CLASIFICAR: no se pudo saber con certeza el período o el tipo.',
+  '  · A OTRO CLIENTE: era una declaración de otro contribuyente guardada en este cliente (lo dice su RUC, leído por dentro del PDF).',
+  '',
+  'Reglas que se aplicaron (todas del manual v1.3):',
+  '  · Carpetas de primer nivel con el código del cliente: NNN LEGAL Y SOCIETARIO, NNN TRIBUTARIO, NNN PERIODO AAAA, NNN ZZ A CLASIFICAR.',
+  '  · Dentro de NNN PERIODO AAAA: DOCUMENTOS CONTABLES (01 ENERO … 12 DICIEMBRE y CIERRE AAAA), DOCUMENTOS LABORALES (IPS, MTESS) y DOCUMENTOS VARIOS (FACTURACION EFFORT y lo demás).',
+  '  · El período manda: una declaración va en el mes que DECLARA, no en el que se guardó. Una boleta de pago va en el mes que paga.',
+  '  · Nombre: QUÉ ES + PERÍODO + CLIENTE (por ejemplo «DDJJ IVA 032026 FUMIPRO SA.pdf»).',
+  '  · Las notas de crédito van en una subcarpeta NC EMITIDAS / NC RECIBIDAS solo si son más de cinco en el mes.',
+  '  · Los Excel con vínculos a otros archivos (y los archivos que usan) NO se renombran: la fórmula se rompería.',
+  '  · Los pedidos o paquetes de documentos para terceros (auditorías, bancos) se conservan juntos dentro de DOCUMENTOS VARIOS.',
+  '  · Cuando hay varias versiones del mismo documento, la más reciente queda con el nombre limpio y las anteriores dicen «VERSION ANTERIOR 1, 2…».',
+  '  · Nada se inventó: si un cliente no tiene un documento, no se creó; solo se crearon las carpetas que hacían falta para lo que sí hay.',
+  '',
+  aplicado ? `Estado: APLICADO sobre la copia de prueba D:\\ORDENADO.` : 'Estado: SOLO PLAN (todavía no se aplicó sobre la copia de prueba).',
+].forEach((t, i) => { const c = leer.getCell(i + 1, 1); c.value = t; c.alignment = { wrapText: true }; if (i === 0) c.font = { bold: true, size: 14 }; });
+
+const res = wb.addWorksheet('Resumen por cliente');
+cab(res, [
+  { header: 'Código', key: 'cod', width: 8 }, { header: 'Cliente (carpeta)', key: 'cliente', width: 34 },
+  { header: 'Archivos al inicio', key: 'ini', width: 11 }, { header: 'Peso (MB)', key: 'mb', width: 10 },
+  { header: 'Duplicados a cuarentena', key: 'dup', width: 12 }, { header: 'Movidos y renombrados', key: 'ren', width: 12 },
+  { header: 'Movidos (con su nombre)', key: 'mov', width: 12 }, { header: 'A ZZ A CLASIFICAR', key: 'zz', width: 11 },
+  { header: 'Enviados a otro cliente', key: 'sal', width: 11 }, { header: 'Recibidos de otro cliente', key: 'ent', width: 11 },
+  { header: 'Nombres con palabra prohibida', key: 'pro', width: 11 }, { header: 'Nombres que no dicen qué son', key: 'nod', width: 11 }, { header: 'Nombre o lugar contradice el contenido', key: 'con', width: 12 }, { header: 'Versiones anteriores', key: 'ver', width: 11 },
+  { header: 'Excel con vínculos (sin renombrar)', key: 'vin', width: 12 }, { header: 'Archivos al final', key: 'fin', width: 10 },
+]);
+const acc = wb.addWorksheet('Acciones');
+cab(acc, [
+  { header: 'Código', key: 'cod', width: 8 }, { header: 'Cliente', key: 'cliente', width: 26 }, { header: 'Acción', key: 'accion', width: 22 },
+  { header: 'Nombre original', key: 'no', width: 40 }, { header: 'Nombre nuevo', key: 'nn', width: 46 },
+  { header: 'Ruta original (dentro de CLIENTES)', key: 'ro', width: 70 }, { header: 'Ruta nueva (dentro de CLIENTES)', key: 'rn', width: 70 },
+  { header: 'Por qué', key: 'motivo', width: 50 }, { header: 'Problema del nombre original', key: 'mal', width: 45 }, { header: 'Notas', key: 'notas', width: 60 },
+  { header: 'Copia que se conservó (duplicados)', key: 'cons', width: 70 }, { header: 'Aplicado', key: 'apl', width: 9 },
+]);
+const dup = wb.addWorksheet('Duplicados');
+cab(dup, [{ header: 'Código', key: 'cod', width: 8 }, { header: 'Cliente', key: 'cliente', width: 26 }, { header: 'Copia apartada (ruta original)', key: 'ro', width: 80 }, { header: 'Se conservó', key: 'cons', width: 80 }, { header: 'Motivo', key: 'motivo', width: 50 }]);
+const zzs = wb.addWorksheet('A clasificar');
+cab(zzs, [{ header: 'Código', key: 'cod', width: 8 }, { header: 'Cliente', key: 'cliente', width: 26 }, { header: 'Ruta original', key: 'ro', width: 90 }, { header: 'Problema del nombre', key: 'mal', width: 50 }]);
+
+const totales = { ini: 0, mb: 0, dup: 0, ren: 0, mov: 0, zz: 0, sal: 0, ent: 0, pro: 0, nod: 0, con: 0, ver: 0, vin: 0, fin: 0 };
+for (const cod of [...porCliente.keys()].sort()) {
+  const fs_ = porCliente.get(cod);
+  const fila = { cod, cliente: fs_[0].cliente, ini: fs_.length, mb: Math.round(fs_.reduce((s, f) => s + f.tam, 0) / 1e5) / 10 };
+  fila.dup = fs_.filter((f) => f.accion === 'DUPLICADO').length;
+  fila.ren = fs_.filter((f) => accionDe(f) === 'MOVIDO Y RENOMBRADO').length;
+  fila.mov = fs_.filter((f) => accionDe(f) === 'MOVIDO' || accionDe(f) === 'SIN CAMBIOS').length;
+  fila.zz = fs_.filter((f) => f.zona === 'ZZ').length;
+  fila.sal = fs_.filter((f) => (f.otroCliente || f.zona === 'GENERAL_ZZ') && f.accion !== 'DUPLICADO').length;
+  fila.ent = (recibidos.get(cod) ?? []).length;
+  fila.pro = fs_.filter(prohibida).length; fila.nod = fs_.filter(noDice).length; fila.con = fs_.filter(contradice).length;
+  fila.ver = fs_.filter((f) => /VERSION ANTERIOR/.test(f.nombreFinal ?? '')).length;
+  fila.vin = fs_.filter((f) => f.congelado).length;
+  fila.fin = fila.ini - fila.dup - fila.sal + fila.ent;
+  for (const k of Object.keys(totales)) totales[k] += fila[k];
+  res.addRow(fila);
+}
+const filaTotal = res.addRow({ cod: '', cliente: 'TOTAL', ...totales, mb: Math.round(totales.mb * 10) / 10 });
+filaTotal.font = { bold: true };
+
+for (const f of [...plan].sort((x, y) => x.cod.localeCompare(y.cod) || x.origen.localeCompare(y.origen))) {
+  const a = accionDe(f);
+  acc.addRow({
+    cod: f.cod, cliente: f.cliente, accion: a, no: nombre(f.origen), nn: a === 'DUPLICADO A CUARENTENA' ? '' : f.nombreFinal,
+    ro: f.origen, rn: f.destinoRel, motivo: f.motivo ?? '', mal: problemaDelNombre(f), notas: [...f.notas, conProblema.get(f.id) ? `NO SE PUDO APLICAR: ${conProblema.get(f.id)}` : ''].filter(Boolean).join(' · '),
+    cons: f.conservado ?? '', apl: !aplicado ? 'plan' : !f.cambia ? 'sí' : hechos.has(f.id) ? 'sí' : 'NO',
+  });
+  if (f.accion === 'DUPLICADO') dup.addRow({ cod: f.cod, cliente: f.cliente, ro: f.origen, cons: f.conservado, motivo: f.motivo });
+  if (f.zona === 'ZZ') zzs.addRow({ cod: f.cod, cliente: f.cliente, ro: f.origen, mal: problemaDelNombre(f) });
+}
+if (vacias.length) {
+  const vs = wb.addWorksheet('Carpetas vacías quitadas');
+  cab(vs, [{ header: 'Carpeta (dentro de CLIENTES) que quedó vacía después de mover, y se quitó en la copia de prueba', key: 'c', width: 120 }]);
+  for (const v of vacias) vs.addRow({ c: v.replace(/\\/g, '/') });
+}
+const XLSX = path.join(SALIDA, `BITACORA DEL ORDENAMIENTO - ${FECHA.replace(/\//g, '-')}.xlsx`);
+await wb.xlsx.writeFile(XLSX);
+
+// ------------------------------------------------------------------ un .txt por cliente
+const DIR_TXT = path.join(SALIDA, 'POR CLIENTE');
+fs.mkdirSync(DIR_TXT, { recursive: true });
+const lista = (titulo, filas, fmt) => filas.length ? [`\n${titulo} (${filas.length})`, '-'.repeat(Math.min(100, titulo.length + 8)), ...filas.map(fmt)] : [`\n${titulo}: ninguno`];
+for (const cod of [...porCliente.keys()].sort()) {
+  const fs_ = porCliente.get(cod).sort((x, y) => x.origen.localeCompare(y.origen));
+  const cli = fs_[0].cliente;
+  const sin = (r) => r.replace(/^\d{3} [^/]+\//, '');
+  const carpetasIni = new Set(fs_.map((f) => f.origen.split('/').slice(1, -1).join('/')).filter(Boolean));
+  const L = [];
+  L.push(`BITÁCORA DEL ORDENAMIENTO — CLIENTE ${cli}`);
+  L.push(`Fecha: ${FECHA} · Sobre la copia de prueba (D:\\ORDENADO), no sobre el OneDrive real. ${aplicado ? 'Aplicado.' : 'Solo plan.'}`);
+  L.push('');
+  L.push('AL INICIO');
+  L.push(`  Archivos: ${fs_.length} · Peso: ${(fs_.reduce((s, f) => s + f.tam, 0) / 1e6).toFixed(1)} MB · Subcarpetas con archivos: ${carpetasIni.size}`);
+  const cuenta = (pred) => fs_.filter(pred).length;
+  L.push('');
+  L.push('RESUMEN');
+  L.push(`  Duplicados apartados (cuarentena): ${cuenta((f) => f.accion === 'DUPLICADO')}`);
+  L.push(`  Movidos y renombrados según el manual: ${cuenta((f) => accionDe(f) === 'MOVIDO Y RENOMBRADO')}`);
+  L.push(`  Movidos conservando su nombre: ${cuenta((f) => accionDe(f) === 'MOVIDO')}`);
+  L.push(`  Sin cambios: ${cuenta((f) => accionDe(f) === 'SIN CAMBIOS')}`);
+  L.push(`  A «${cod} ZZ A CLASIFICAR» (no se pudo ubicar con certeza): ${cuenta((f) => f.zona === 'ZZ')}`);
+  L.push(`  Enviados a otro cliente: ${cuenta((f) => f.otroCliente && f.accion !== 'DUPLICADO')} · Recibidos de otro cliente: ${(recibidos.get(cod) ?? []).length}`);
+  L.push(`  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): ${cuenta(prohibida)}`);
+  L.push(`  Nombres originales que no dicen qué documento son: ${cuenta(noDice)}`);
+  L.push(`  Nombre o ubicación que contradice lo que dice el documento por dentro: ${cuenta(contradice)}`);
+  L.push(`  Excel con vínculos (no se renombraron): ${cuenta((f) => f.congelado)}`);
+  const finales = new Map();
+  for (const f of fs_.filter((f) => f.accion !== 'DUPLICADO' && !f.otroCliente && f.zona !== 'GENERAL_ZZ')) { const k = sin(f.destinoRel).split('/')[0]; finales.set(k, (finales.get(k) ?? 0) + 1); }
+  for (const f of recibidos.get(cod) ?? []) { const k = sin(f.destinoRel).split('/')[0]; finales.set(k, (finales.get(k) ?? 0) + 1); }
+  L.push('');
+  L.push('AL FINAL (archivos por carpeta de primer nivel)');
+  for (const [k, n] of [...finales].sort()) L.push(`  ${k}: ${n}`);
+  L.push(...lista('DUPLICADOS APARTADOS', fs_.filter((f) => f.accion === 'DUPLICADO'), (f) => `  ${sin(f.origen)}\n      igual a: ${sin(f.conservado)}  (${f.motivo})`));
+  L.push(...lista('NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO', fs_.filter((f) => contradice(f) && f.accion !== 'DUPLICADO'), (f) => `  ${sin(f.origen)}  →  ${f.notas.join(' · ')}`));
+  L.push(...lista('NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron)', fs_.filter((f) => prohibida(f) && f.accion !== 'DUPLICADO'), (f) => `  ${nombre(f.origen)}  →  ${f.zona === 'ZZ' ? '(a ZZ A CLASIFICAR, sin renombrar)' : f.nombreFinal}`));
+  L.push(...lista('MOVIDOS Y RENOMBRADOS', fs_.filter((f) => accionDe(f) === 'MOVIDO Y RENOMBRADO'), (f) => `  ${sin(f.origen)}\n      → ${sin(f.destinoRel)}   [${f.motivo}]${f.notas.length ? '\n      nota: ' + f.notas.join(' · ') : ''}`));
+  L.push(...lista('MOVIDOS CONSERVANDO SU NOMBRE', fs_.filter((f) => accionDe(f) === 'MOVIDO'), (f) => `  ${sin(f.origen)}\n      → ${sin(f.destinoRel)}   [${f.motivo}]${f.notas.length ? '\n      nota: ' + f.notas.join(' · ') : ''}`));
+  L.push(...lista('ENVIADOS A OTRO CLIENTE', fs_.filter((f) => (f.otroCliente || f.zona === 'GENERAL_ZZ') && f.accion !== 'DUPLICADO'), (f) => `  ${sin(f.origen)}\n      → ${f.destinoRel}   [${f.notas.join(' · ')}]`));
+  L.push(...lista('RECIBIDOS DE OTRO CLIENTE', recibidos.get(cod) ?? [], (f) => `  de ${f.origen}\n      → ${sin(f.destinoRel)}`));
+  L.push(...lista(`A «${cod} ZZ A CLASIFICAR» (para que lo ubique una persona)`, fs_.filter((f) => f.zona === 'ZZ'), (f) => `  ${sin(f.origen)}`));
+  L.push(...lista('EXCEL CON VÍNCULOS (se movieron sin renombrar)', fs_.filter((f) => f.congelado), (f) => `  ${sin(f.origen)}  →  ${sin(f.destinoRel)}  [${f.notas.find((n) => /vínculo/.test(n)) ?? ''}]`));
+  const vc = vacias.filter((v) => v.replace(/\\/g, '/').startsWith(cli + '/'));
+  L.push(...lista('CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON', vc, (v) => `  ${sin(v.replace(/\\/g, '/'))}`));
+  fs.writeFileSync(path.join(DIR_TXT, `${cli.replace(/[\\/:*?"<>|]/g, ' ').trim()}.txt`), '\ufeff' + L.join('\r\n') + '\r\n');
+}
+console.log('bitácora:', XLSX, '· clientes:', porCliente.size, '· totales:', JSON.stringify(totales));

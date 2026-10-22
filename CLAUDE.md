@@ -326,6 +326,11 @@ obedece mal, porque no se sabe qué caso de borde cubre.
     externo (a) espera a que el disco vuelva y reintenta, sin contar eso como fallo del archivo; (b) anota con reintentos, nunca con una escritura que, si
     falla, tira todo el proceso; (c) al recuperarse, **vuelve a verificar leyendo del disco** lo escrito alrededor de la falla (se hizo: 14.543 de 14.543 bien); (d) se
     lanza desacoplado y se **mira el registro directamente**, porque un aviso automático con un `tr` en el medio retiene las líneas y no llega.*
+    **Volvió a pasar el 2026-10-22 15:45** (disk 51, ntfs 140 y 50), en medio de la reversa del ordenamiento de prueba, y el disco desapareció de Windows.
+    No se perdió el hilo porque cada movimiento quedaba en un diario (`diario.jsonl`) y la reversa retoma sola. *Lección: (e) todo trabajo que mueve
+    miles de archivos lleva un diario de cada paso y un script que retoma; (f) los datos de trabajo no viven solo en la carpeta temporal de la sesión ni solo
+    en el disco que puede fallar: se copian a C:; (g) un disco que falla dos veces en tres días no es una copia de seguridad: se reverifica la foto y se cambia
+    cable, puerto o disco antes de seguir.*
 
 **Cómo se usa esta sección:** antes de escribir algo que lea archivos externos,
 borre datos, o corra solo, buscá acá si ya nos pasó. Y cuando algo salga mal,

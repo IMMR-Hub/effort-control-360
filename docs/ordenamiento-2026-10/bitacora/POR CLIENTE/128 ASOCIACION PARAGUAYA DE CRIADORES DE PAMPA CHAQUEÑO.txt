@@ -1,0 +1,43 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 128 ASOCIACION PARAGUAYA DE CRIADORES DE PAMPA CHAQUEÑO
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+
+AL INICIO
+  Archivos: 1 · Peso: 0.0 MB · Subcarpetas con archivos: 1
+
+RESUMEN
+  Duplicados apartados (cuarentena): 0
+  Movidos y renombrados según el manual: 1
+  Movidos conservando su nombre: 0
+  Sin cambios: 0
+  A «128 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 0
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 0
+  Nombres originales que no dicen qué documento son: 0
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  128 LEGAL Y SOCIETARIO: 1
+
+DUPLICADOS APARTADOS: ninguno
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron): ninguno
+
+MOVIDOS Y RENOMBRADOS (1)
+-----------------------------
+  DOCUMENTOS LEGALES Y SOCIETARIOS/CONTRATO DE PRESTACIOìN DE SERVICIOS .docx
+      → 128 LEGAL Y SOCIETARIO/CONTRATO DE PRESTACIOìN DE SERVICIOS.docx   [Documento legal o societario]
+
+MOVIDOS CONSERVANDO SU NOMBRE: ninguno
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «128 ZZ A CLASIFICAR» (para que lo ubique una persona): ninguno
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno

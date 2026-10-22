@@ -1,0 +1,1158 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 031 EVA MACIEL
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+
+AL INICIO
+  Archivos: 449 · Peso: 1491.3 MB · Subcarpetas con archivos: 67
+
+RESUMEN
+  Duplicados apartados (cuarentena): 18
+  Movidos y renombrados según el manual: 189
+  Movidos conservando su nombre: 240
+  Sin cambios: 0
+  A «031 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 2
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 127
+  Nombres originales que no dicen qué documento son: 273
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 1
+  Excel con vínculos (no se renombraron): 1
+
+AL FINAL (archivos por carpeta de primer nivel)
+  031 PERIODO 2023: 69
+  031 PERIODO 2024: 225
+  031 PERIODO 2025: 66
+  031 PERIODO 2026: 49
+  031 TRIBUTARIO: 20
+  031 ZZ A CLASIFICAR: 2
+
+DUPLICADOS APARTADOS (18)
+----------------------------
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702243571594.jpg
+      igual a: PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702244077359.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702243571611.jpg
+      igual a: PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702244077380.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702244077317.jpg
+      igual a: PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702243571558.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702244077340.jpg
+      igual a: PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702243571575.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2024/DOCUMENTOS VARIOS/FACTURAS VENTAS  FOTOS/WhatsApp Image 2024-11-11 at 11.43.46 (1).jpeg
+      igual a: PERIODO 2024/DOCUMENTOS VARIOS/FACTURAS VENTAS  FOTOS/WhatsApp Image 2024-11-11 at 11.43.46.jpeg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2025/DOCUMENTOS VARIOS/MINISTERIO SUELDO/a4a1eb-CONTRATOENERO20255189 (1).pdf
+      igual a: PERIODO 2025/DOCUMENTOS VARIOS/MINISTERIO SUELDO/a4a1eb-CONTRATOENERO20255189.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2025/DOCUMENTOS VARIOS/MINISTERIO SUELDO/b1eed1-PERMANENTEFEBRERO2025 (1).pdf
+      igual a: PERIODO 2025/DOCUMENTOS VARIOS/MINISTERIO SUELDO/b1eed1-PERMANENTEFEBRERO2025.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/DDJJ ABRIL 2026 EVA MACIEL.pdf
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MES/04 ABRIL/DDJJ ABRIL 2026 EVA MACIEL.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/DDJJ JULIO 2026 EVA MACIEL.pdf
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MES/07 JULIO/DDJJ JULIO 2026 EVA MACIEL.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/DDJJ MARZO 2026 EVA MACIEL.pdf
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MES/03 MARZO/DDJJ MARZO 2026 EVA MACIEL.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/DDJJ MAYO 2026 EVA MACIEL.pdf
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MES/05 MAYO/DDJJ MAYO 2026 EVA MACIEL.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/01 ENERO 2026/DDJJ ENERO 2026 - EVA MACIEL.pdf
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/DDJJ ENERO 2026 - EVA MACIEL.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/01 ENERO 2026/RG COMPRAS ENERO 2026 - EVA MACIEL.xlsx
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/RG COMPRAS/RG COMPRAS ENERO 2026 - EVA MACIEL.xlsx  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/01 FEBRERO/DDJJ FEBRERO 2026 EVA MACIEL.pdf
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/DDJJ FEBRERO 2026 EVA MACIEL.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/04 ABRIL/RG COMPRAS ABRIL 2026 EVA.xlsx
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/RG COMPRAS/RG COMPRAS ABRIL 2026 EVA.xlsx  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/04 ABRIL/RG VENTAS ABRIL 2026 EVA.xlsx
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/RG VENTAS/RG VENTAS ABRIL 2026 EVA.xlsx  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/06 JUNIO 2026/DDJJ 062026 EVA MACIEL.pdf
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/DDJJ 062026 EVA MACIEL.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/07 JULIO/RG COMPRAS EVA MACIEL 2026 JULIO.xlsx
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/RG COMPRAS/RG COMPRAS EVA MACIEL 2026 JULIO.xlsx  (Copia idéntica (mismo contenido byte por byte))
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO (1)
+------------------------------------------------------
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/ABRIL 2025/DDJJ MARZO EVA MACIEL 2025.pdf  →  El nombre dice 03/2025 y la carpeta 04/2025: se respetó la carpeta
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (124)
+---------------------------------------------------------
+  determinacion del irp a seteimbre ok 2024 eva maciel.pdf  →  determinacion del irp a seteimbre ok 2024 eva maciel.pdf
+  01800173694010001001055822024022511333756177 (1).pdf  →  Compra 01800173694010001001055822024022511333756177.pdf
+  IMG_3056.HEIC  →  IMG_3056.HEIC
+  IMG_3057.HEIC  →  IMG_3057.HEIC
+  IMG_3058.HEIC  →  IMG_3058.HEIC
+  IMG_3059.HEIC  →  IMG_3059.HEIC
+  IMG_3060.HEIC  →  IMG_3060.HEIC
+  IMG_3061.HEIC  →  IMG_3061.HEIC
+  IMG_3062.HEIC  →  IMG_3062.HEIC
+  IMG_3063.HEIC  →  IMG_3063.HEIC
+  IMG_3064.HEIC  →  IMG_3064.HEIC
+  IMG_3066.HEIC  →  IMG_3066.HEIC
+  IMG_3067.HEIC  →  IMG_3067.HEIC
+  IMG_3068.HEIC  →  IMG_3068.HEIC
+  IMG_3069.HEIC  →  IMG_3069.HEIC
+  IMG_3070.heic  →  IMG_3070.heic
+  IMG_3071.HEIC  →  IMG_3071.HEIC
+  IMG_3072.HEIC  →  IMG_3072.HEIC
+  IMG_3073.HEIC  →  IMG_3073.HEIC
+  IMG_3074.HEIC  →  IMG_3074.HEIC
+  IMG_3075.HEIC  →  IMG_3075.HEIC
+  IMG_3076.HEIC  →  IMG_3076.HEIC
+  IMG_3077.HEIC  →  IMG_3077.HEIC
+  IMG_3078.HEIC  →  IMG_3078.HEIC
+  IMG_3079.HEIC  →  IMG_3079.HEIC
+  IMG_3080.HEIC  →  IMG_3080.HEIC
+  IMG_3081.HEIC  →  IMG_3081.HEIC
+  IMG_3082.HEIC  →  IMG_3082.HEIC
+  IMG_3083.HEIC  →  IMG_3083.HEIC
+  IMG_3084.HEIC  →  IMG_3084.HEIC
+  IMG_3085.HEIC  →  IMG_3085.HEIC
+  IMG_3086.HEIC  →  IMG_3086.HEIC
+  IMG_3087.HEIC  →  IMG_3087.HEIC
+  IMG_3088.HEIC  →  IMG_3088.HEIC
+  IMG_3089.HEIC  →  IMG_3089.HEIC
+  IMG_3090.HEIC  →  IMG_3090.HEIC
+  IMG_3091.HEIC  →  IMG_3091.HEIC
+  IMG_3092.HEIC  →  IMG_3092.HEIC
+  IMG_3093.HEIC  →  IMG_3093.HEIC
+  IMG_3094.HEIC  →  IMG_3094.HEIC
+  IMG_3095.HEIC  →  IMG_3095.HEIC
+  IMG_3096.HEIC  →  IMG_3096.HEIC
+  IMG_3097.HEIC  →  IMG_3097.HEIC
+  IMG_3098.HEIC  →  IMG_3098.HEIC
+  IMG_3099.HEIC  →  IMG_3099.HEIC
+  IMG_3100.HEIC  →  IMG_3100.HEIC
+  IMG_3101.HEIC  →  IMG_3101.HEIC
+  IMG_3102.HEIC  →  IMG_3102.HEIC
+  IMG_3103.HEIC  →  IMG_3103.HEIC
+  IMG_3104.HEIC  →  IMG_3104.HEIC
+  IMG_3105.HEIC  →  IMG_3105.HEIC
+  IMG_3106.HEIC  →  IMG_3106.HEIC
+  IMG_3107.HEIC  →  IMG_3107.HEIC
+  IMG_3958.HEIC  →  IMG_3958.HEIC
+  IMG_3959.HEIC  →  IMG_3959.HEIC
+  IMG_3960.HEIC  →  IMG_3960.HEIC
+  IMG_3961.HEIC  →  IMG_3961.HEIC
+  IMG_3962.HEIC  →  IMG_3962.HEIC
+  IMG_3963.HEIC  →  IMG_3963.HEIC
+  IMG_3964.HEIC  →  IMG_3964.HEIC
+  IMG_3965.HEIC  →  IMG_3965.HEIC
+  IMG_3966.HEIC  →  IMG_3966.HEIC
+  IMG_3967.HEIC  →  IMG_3967.HEIC
+  IMG_3968.HEIC  →  IMG_3968.HEIC
+  IMG_3969.HEIC  →  IMG_3969.HEIC
+  IMG_3970.HEIC  →  IMG_3970.HEIC
+  IMG_3971.HEIC  →  IMG_3971.HEIC
+  IMG_3972.HEIC  →  IMG_3972.HEIC
+  IMG_3973.HEIC  →  IMG_3973.HEIC
+  IMG_3974.HEIC  →  IMG_3974.HEIC
+  IMG_3975.HEIC  →  IMG_3975.HEIC
+  IMG_3976.HEIC  →  IMG_3976.HEIC
+  IMG_3977.HEIC  →  IMG_3977.HEIC
+  IMG_3978.HEIC  →  IMG_3978.HEIC
+  IMG_3979.HEIC  →  IMG_3979.HEIC
+  IMG_3980.HEIC  →  IMG_3980.HEIC
+  IMG_3981.HEIC  →  IMG_3981.HEIC
+  IMG_3982.HEIC  →  IMG_3982.HEIC
+  IMG_3983.HEIC  →  IMG_3983.HEIC
+  IMG_3984.HEIC  →  IMG_3984.HEIC
+  IMG_3985.HEIC  →  IMG_3985.HEIC
+  IMG_3986.HEIC  →  IMG_3986.HEIC
+  IMG_3987.HEIC  →  IMG_3987.HEIC
+  IMG_3988.HEIC  →  IMG_3988.HEIC
+  IMG_3989.HEIC  →  IMG_3989.HEIC
+  IMG_3990.HEIC  →  IMG_3990.HEIC
+  IMG_3991.HEIC  →  IMG_3991.HEIC
+  IMG_3992.HEIC  →  IMG_3992.HEIC
+  IMG_3993.HEIC  →  IMG_3993.HEIC
+  IMG_3994.HEIC  →  IMG_3994.HEIC
+  IMG_3995.HEIC  →  IMG_3995.HEIC
+  IMG_3996.HEIC  →  IMG_3996.HEIC
+  IMG_3997.HEIC  →  IMG_3997.HEIC
+  IMG_3998.HEIC  →  IMG_3998.HEIC
+  IMG_3999.HEIC  →  IMG_3999.HEIC
+  IMG_4001.HEIC  →  IMG_4001.HEIC
+  IMG_4002.HEIC  →  IMG_4002.HEIC
+  IMG_4003.HEIC  →  IMG_4003.HEIC
+  IMG_4004.HEIC  →  IMG_4004.HEIC
+  IMG_4005.HEIC  →  IMG_4005.HEIC
+  IMG_4006.HEIC  →  IMG_4006.HEIC
+  IMG_4007.HEIC  →  IMG_4007.HEIC
+  IMG_4008.HEIC  →  IMG_4008.HEIC
+  IMG_4009.HEIC  →  IMG_4009.HEIC
+  IMG_4010.HEIC  →  IMG_4010.HEIC
+  IMG_4011.HEIC  →  IMG_4011.HEIC
+  IMG_4012.HEIC  →  IMG_4012.HEIC
+  IMG_4013.HEIC  →  IMG_4013.HEIC
+  IMG_4014.heic  →  IMG_4014.heic
+  IMG_4015.heic  →  IMG_4015.heic
+  PHOTO-2024-04-25-11-03-37.jpg  →  PHOTO-2024-04-25-11-03-37.jpg
+  WhatsApp Image 2024-09-05 at 14.51.51 (1).jpeg  →  WhatsApp Image 2024-09-05 at 14.51.51 - SETIEMBRE 2024.jpeg
+  WhatsApp Image 2024-09-05 at 14.51.51.jpeg  →  WhatsApp Image 2024-09-05 at 14.51.51.jpeg
+  WhatsApp Image 2024-11-11 at 11.34.20.jpeg  →  WhatsApp Image 2024-11-11 at 11.34.20.jpeg
+  WhatsApp Image 2024-11-11 at 11.43.46.jpeg  →  WhatsApp Image 2024-11-11 at 11.43.46.jpeg
+  WhatsApp Image 2024-12-09 at 15.23.52.jpeg  →  WhatsApp Image 2024-12-09 at 15.23.52.jpeg
+  WhatsApp Image 2025-01-22 at 11.40.52.jpeg  →  WhatsApp Image 2025-01-22 at 11.40.52.jpeg
+  WhatsApp Image 2025-01-30 at 07.50.51 (1).jpeg  →  WhatsApp Image 2025-01-30 at 07.50.51 - SALARIO FOTOS.jpeg
+  WhatsApp Image 2025-01-30 at 07.50.51.jpeg  →  WhatsApp Image 2025-01-30 at 07.50.51.jpeg
+  WhatsApp Image 2025-02-07 at 10.28.12.jpeg  →  WhatsApp Image 2025-02-07 at 10.28.12.jpeg
+  WhatsApp Image 2025-02-07 at 10.28.26.jpeg  →  WhatsApp Image 2025-02-07 at 10.28.26.jpeg
+  WhatsApp Image 2025-02-07 at 11.36.05.jpeg  →  WhatsApp Image 2025-02-07 at 11.36.05.jpeg
+  WhatsApp Image 2025-09-10 at 09.57.07.jpeg  →  WhatsApp Image 2025-09-10 at 09.57.07.jpeg
+  WhatsApp Image 2026-08-11 at 14.31.37.jpeg  →  WhatsApp Image 2026-08-11 at 14.31.37.jpeg
+
+MOVIDOS Y RENOMBRADOS (189)
+-----------------------------
+  PERIODO 2023/NOVIEMBRE 2023/LIBRO COMPRAS NOV-23.pdf
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/LIBRO COMPRAS 112023 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2023/NOVIEMBRE 2023/LIBRO VENTAS NOV-23.pdf
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/LIBRO VENTAS 112023 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/001-005-0008606_25-11-2023.pdf
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 001-005-0008606_25-11-2023.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «001-005-0008606_25-11-2023», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239383089.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239383089.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239383089», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239383160.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239383160.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239383160», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239383205.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239383205.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239383205», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239383246.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239383246.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239383246», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239383286.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239383286.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239383286», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239383325.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239383325.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239383325», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239383360.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239383360.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239383360», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239383396.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239383396.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239383396», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239383430.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239383430.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239383430», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239383463.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239383463.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239383463», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239383495.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239383495.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239383495», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239383523.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239383523.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239383523», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239383552.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239383552.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239383552», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239383591.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239383591.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239383591», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239383631.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239383631.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239383631», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239383658.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239383658.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239383658», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239383694.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239383694.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239383694», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239383731.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239383731.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239383731», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239383773.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239383773.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239383773», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239383862.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239383862.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239383862», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239383906.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239383906.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239383906», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239383946.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239383946.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239383946», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239383983.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239383983.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239383983», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239384017.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239384017.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239384017», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239384048.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239384048.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239384048», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239384079.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239384079.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239384079», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239384110.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239384110.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239384110», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239384139.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239384139.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239384139», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239384167.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239384167.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239384167», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239384193.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239384193.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239384193», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239384227.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239384227.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239384227», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239384258.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239384258.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239384258», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239384295.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239384295.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239384295», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239384335.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239384335.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239384335», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239384381.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239384381.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239384381», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239384423.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239384423.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239384423», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239384462.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239384462.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239384462», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239384496.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239384496.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239384496», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239384530.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239384530.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239384530», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239384597.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239384597.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239384597», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239384661.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239384661.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239384661», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702239384782.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702239384782.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702239384782», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702241093094.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702241093094.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702241093094», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702241093142.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702241093142.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702241093142», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702241093187.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702241093187.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702241093187», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702241093233.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702241093233.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702241093233», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702241093280.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702241093280.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702241093280», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702241093327.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702241093327.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702241093327», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702241093374.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702241093374.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702241093374», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702241093420.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702241093420.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702241093420», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702241093467.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702241093467.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702241093467», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702241093515.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702241093515.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702241093515», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702241093562.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702241093562.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702241093562», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702243571558.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702243571558.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702243571558», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702243571575.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702243571575.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702243571575», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702244077359.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702244077359.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702244077359», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702244077380.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702244077380.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702244077380», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702244077401.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702244077401.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702244077401», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702244077422.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702244077422.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702244077422», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/1702244077445.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 1702244077445.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1702244077445», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/20231127142351373_0002.pdf
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras 20231127142351373_0002.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «20231127142351373_0002», se le agregó la carpeta de donde venía
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Compras/fact psi.jpg
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/FACTURA COMPRA 112023 EVA MACIEL.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/irp 2024/CUADRO DE LIQ. IRP A JUNIO 2024 EVA MACIEL.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/CUADRO DE LIQ. IRP A JUNIO 2024 EVA MACIEL - irp 2024.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/rg 2024/ABRIL COMPRA.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/RG COMPRAS 042024 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 04/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/rg 2024/AGOSTO COMPRA.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/08 AGOSTO/RG COMPRAS 082024 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 08/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/rg 2024/DICIEMBRE 2024.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/12 DICIEMBRE/RG COMPRAS 122024 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 12/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/rg 2024/ENERO COMPRA.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/01 ENERO/RG COMPRAS 012024 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 01/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/rg 2024/FEBRERO COMPRA.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/02 FEBRERO/RG COMPRAS 022024 EVA MACIEL VERSION ANTERIOR 1.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 02/2024]
+      nota: Hay una versión más reciente del mismo documento (MARZO COMPRA.xlsx): esta queda como versión anterior
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/rg 2024/JULIO COMPRA.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/07 JULIO/RG COMPRAS 072024 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 07/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/rg 2024/JUNIO COMPRAS.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/RG COMPRAS 062024 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 06/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/rg 2024/MARZO COMPRA.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/02 FEBRERO/RG COMPRAS 022024 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 02/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/rg 2024/MAYO COMPRAS.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO/RG COMPRAS 052024 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 05/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/rg 2024/NOVIEMBRE COMPRA.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/11 NOVIEMBRE/RG COMPRAS 112024 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 11/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/rg 2024/OCTUBRE COMPRA.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/10 OCTUBRE/RG COMPRAS 102024 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 10/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/rg 2024/SETIEMBRE 2024.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092024 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/1 ENERO 2024/Ver Declaración _ MARANGATU.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/01 ENERO/DDJJ IVA 012024 EVA MACIEL.pdf   [Declaración leída por dentro: formulario 120, período 01/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/2 FEBRERO 2024/Febrero 2024/Compra/01800173694010001001055822024022511333756177 (1).pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/02 FEBRERO/Compra 01800173694010001001055822024022511333756177.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «01800173694010001001055822024022511333756177 (1)», se le agregó la carpeta de donde venía
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/2 FEBRERO 2024/Febrero 2024/Compra/FACTURA_001-001-0669419.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/02 FEBRERO/FACTURA COMPRA 022024 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/2 FEBRERO 2024/LIBRO_VENTAS_02-24.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/02 FEBRERO/LIBRO VENTAS 022024 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/2 FEBRERO 2024/Ver Declaración _ MARANGATU.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/02 FEBRERO/DDJJ IVA 022024 EVA MACIEL.pdf   [Declaración leída por dentro: formulario 120, período 02/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/FACTURA_001-001-0704770.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/FACTURA COMPRA 032024 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/Ver Declaración _ MARANGATU MARZO 2024.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/DDJJ IVA 032024 EVA MACIEL.pdf   [Declaración leída por dentro: formulario 120, período 03/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/001-005-0000193_04-04-2024.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/COMPRAS 001-005-0000193_04-04-2024.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «001-005-0000193_04-04-2024», se le agregó la carpeta de donde venía
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/Factura electrónica 003-001-0239711.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA COMPRA 003-001-0239711 042024 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/factura_1712231261181.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA COMPRA 042024 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/VENTAS/1712182128304.jpeg
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/VENTAS 1712182128304.jpeg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1712182128304», se le agregó la carpeta de donde venía
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/VENTAS/1712182128344.jpeg
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/VENTAS 1712182128344.jpeg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1712182128344», se le agregó la carpeta de donde venía
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/5 MAYO 2024/DDJJ MAYO 2024 EVA M.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO/DDJJ IVA 052024 EVA MACIEL.pdf   [Declaración leída por dentro: formulario 120, período 05/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/5 MAYO 2024/FACTURAS FOTOS/Compra Eva Maciel-20240614T225427Z-001.zip
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO/FACTURA COMPRA 052024 EVA MACIEL.zip   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/5 MAYO 2024/FACTURAS FOTOS/Venta Eva Maciel -20240614T225428Z-001.zip
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO/FACTURA VENTA 052024 EVA MACIEL.zip   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/5 MAYO 2024/LIBRO COMPRAS MAYO 2024.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO/LIBRO COMPRAS 052024 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/5 MAYO 2024/LIBRO VENTAS MAYO 2024.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO/LIBRO VENTAS 052024 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/6 JUNIO 2024/CCT  07.pdf
+      → 031 TRIBUTARIO/CCT 07.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/6 JUNIO 2024/DETERMINACION IVA JUNIO 2024 EVA MACIEL.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/DETERMINACION IVA JUNIO 2024 EVA MACIEL 02.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/6 JUNIO 2024/DETERMINACIÓN IVA JUNIO 2024 EVA MACIEL.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/DETERMINACION IVA JUNIO 2024 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/7 JULIO 2024/LIBRO COMPRAS JULIO 2024.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/07 JULIO/LIBRO COMPRAS 072024 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/8 AGOSTO/LIBRO VENTAS AGOSTO 2024 EM.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/08 AGOSTO/LIBRO VENTAS 082024 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/9 SETIEMBRE/LIBRO COMPRAS  SET 2024 EVA.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO COMPRAS 092024 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/9 SETIEMBRE/LIBRO VENTAS SET 2024 EVA.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO VENTAS 092024 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/9 SETIEMBRE/rg90 compras iva e irp septiembre 2024.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092024 EVA MACIEL VERSION ANTERIOR 1.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2024]
+      nota: Hay una versión más reciente del mismo documento (SETIEMBRE 2024.xlsx): esta queda como versión anterior
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/9 SETIEMBRE/rg90 ventas setiembre 2024 eva.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG VENTAS 092024 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 09/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/9 SETIEMBRE/WhatsApp Image 2024-09-05 at 14.51.51 (1).jpeg
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/09 SETIEMBRE/WhatsApp Image 2024-09-05 at 14.51.51 - SETIEMBRE 2024.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/DICIEMBRE 2024/LIBRO COMPRAS DICIEMBRE 2024.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/12 DICIEMBRE/LIBRO COMPRAS 122024 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/DICIEMBRE 2024/LIBRO VENTAS DICIEMBRE 2024 EVA.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/12 DICIEMBRE/LIBRO VENTAS 122024 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/DICIEMBRE 2024/RG90 COMPRAS DICIEMBRE 2024 EVA.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/12 DICIEMBRE/RG COMPRAS 122024 EVA MACIEL VERSION ANTERIOR 1.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 12/2024]
+      nota: Hay una versión más reciente del mismo documento (DICIEMBRE 2024.xlsx): esta queda como versión anterior
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/NOVIEMBRE 2024/LIBRO COMPRAS NOVIEMBRE 2024 EVA.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/11 NOVIEMBRE/LIBRO COMPRAS 112024 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/NOVIEMBRE 2024/LIBRO VENTAS NOVIEMBRE 2024 EVA.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/11 NOVIEMBRE/LIBRO VENTAS 112024 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS VARIOS/LAQUIDACION DE SALARIO 2024/ABRIL 2024.jpg
+      → 031 PERIODO 2024/DOCUMENTOS LABORALES/MTESS/LAQUIDACION DE SALARIO 2024 ABRIL 2024.jpg   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+      nota: Al nombre, que solo decía «ABRIL 2024», se le agregó la carpeta de donde venía
+  PERIODO 2024/DOCUMENTOS VARIOS/LAQUIDACION DE SALARIO 2024/ENERO 2024.jpg
+      → 031 PERIODO 2024/DOCUMENTOS LABORALES/MTESS/LAQUIDACION DE SALARIO 2024 ENERO 2024.jpg   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+      nota: Al nombre, que solo decía «ENERO 2024», se le agregó la carpeta de donde venía
+  PERIODO 2024/DOCUMENTOS VARIOS/LAQUIDACION DE SALARIO 2024/ENERO A JUNIO LIQ EVA MACIEL .pdf
+      → 031 PERIODO 2024/DOCUMENTOS LABORALES/MTESS/ENERO A JUNIO LIQ EVA MACIEL.pdf   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+  PERIODO 2024/DOCUMENTOS VARIOS/LAQUIDACION DE SALARIO 2024/FEBRERO 2024.jpg
+      → 031 PERIODO 2024/DOCUMENTOS LABORALES/MTESS/LAQUIDACION DE SALARIO 2024 FEBRERO 2024.jpg   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+      nota: Al nombre, que solo decía «FEBRERO 2024», se le agregó la carpeta de donde venía
+  PERIODO 2024/DOCUMENTOS VARIOS/LAQUIDACION DE SALARIO 2024/JUNIO 2024.jpg
+      → 031 PERIODO 2024/DOCUMENTOS LABORALES/MTESS/LAQUIDACION DE SALARIO 2024 JUNIO 2024.jpg   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+      nota: Al nombre, que solo decía «JUNIO 2024», se le agregó la carpeta de donde venía
+  PERIODO 2024/DOCUMENTOS VARIOS/LAQUIDACION DE SALARIO 2024/MARZO 2024.jpg
+      → 031 PERIODO 2024/DOCUMENTOS LABORALES/MTESS/LAQUIDACION DE SALARIO 2024 MARZO 2024.jpg   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+      nota: Al nombre, que solo decía «MARZO 2024», se le agregó la carpeta de donde venía
+  PERIODO 2024/DOCUMENTOS VARIOS/LAQUIDACION DE SALARIO 2024/MAYO 2024.jpg
+      → 031 PERIODO 2024/DOCUMENTOS LABORALES/MTESS/LAQUIDACION DE SALARIO 2024 MAYO 2024.jpg   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+      nota: Al nombre, que solo decía «MAYO 2024», se le agregó la carpeta de donde venía
+  PERIODO 2024/DOCUMENTOS VARIOS/SALARIO FOTOS/WhatsApp Image 2025-01-30 at 07.50.51 (1).jpeg
+      → 031 PERIODO 2024/DOCUMENTOS LABORALES/MTESS/WhatsApp Image 2025-01-30 at 07.50.51 - SALARIO FOTOS.jpeg   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/IRP/CALCULO PARA IRP 2025/DETERMINACIÓN DEL IRP 2025 - EVA MACIEL.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/DETERMINACIÓN DEL IRP 2025 - EVA MACIEL - CALCULO PARA IRP 2025.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/IRP/PARA PRESENTACION IRP 2025/DETERMINACIÓN DEL IRP 2025 - EVA MACIEL.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/DETERMINACIÓN DEL IRP 2025 - EVA MACIEL - PARA PRESENTACION IRP 2025.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/6 JUNIO/LIBRO COMPRAS 2025 JUNIO EVA.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/LIBRO COMPRAS 062025 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/6 JUNIO/LIBRO VENTAS JUNIO EVA MACIEL 2025.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/LIBRO VENTAS 062025 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/7 JULIO/LIBRO COMPRAS JULIO 2025.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/LIBRO COMPRAS 072025 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/7 JULIO/LIBRO VENTAS JULIO 2025.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/LIBRO VENTAS 072025 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/7 JULIO/rg compras solo iva 2025 julio.xlsx
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/RG COMPRAS 072025 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 07/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/ABRIL 2025/LIBRO COMPRAS ABRIL 2025 EVA.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/04 ABRIL/LIBRO COMPRAS 042025 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/ABRIL 2025/rg compras abril eva 2025.xlsx
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/04 ABRIL/RG COMPRAS 042025 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 04/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/AGOSTO 2025/LIBRO COMPRAS AGOSTO 2025.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/LIBRO COMPRAS 082025 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/AGOSTO 2025/LIBRO VENTAS AGOSTO 2025.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/LIBRO VENTAS 082025 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/AGOSTO 2025/RG COMPRAS AGOSTO SOLO IVA EVA.xlsx
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/RG COMPRAS 082025 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 08/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/DICIEMBRE 2025/CCT VIGENTE - EVA MACIEL.pdf
+      → 031 TRIBUTARIO/CCT VIGENTE - EVA MACIEL - DICIEMBRE 2025.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/DICIEMBRE 2025/LIBRO COMPRAS DICIEMBRE 2025 - EVA MACIEL.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/LIBRO COMPRAS 122025 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/DICIEMBRE 2025/LIBRO VENTAS DICIEMBRE 2025 - EVA MACIEL.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/LIBRO VENTAS 122025 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/ENERO 2025/Libro compras enero 2025.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/01 ENERO/LIBRO COMPRAS 012025 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/ENERO 2025/rg compras solo iva eva maciel 202501.xlsx
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/01 ENERO/RG COMPRAS 012025 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 01/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/FEBRERO 2025/libro compras febrero 2025.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/02 FEBRERO/LIBRO COMPRAS 022025 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/FEBRERO 2025/rg compras febrero 2025.xlsx
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/02 FEBRERO/RG COMPRAS 022025 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 02/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/MAYO 2025/LIBRO COMPRAS MAYO 2025 EVA.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/05 MAYO/LIBRO COMPRAS 052025 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/MAYO 2025/LIBRO VENTAS MAYO 2025 EVA.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/05 MAYO/LIBRO VENTAS 052025 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/NOVIEMBRE 2025/DDJJ NOVIEMBRE 2025 - EVA MACIEL.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/DDJJ IVA 112025 EVA MACIEL.pdf   [Declaración leída por dentro: formulario 120, período 11/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/NOVIEMBRE 2025/LIBRO COMPRAS NOVIEMBRE 2025 - EVA MACIEL.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/LIBRO COMPRAS 112025 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/NOVIEMBRE 2025/LIBRO VENTAS NOVIEMBRE 2025 - EVA MACIEL.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/LIBRO VENTAS 112025 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/OCTUBRE 2025/CCT VIGENTE - EVA MACIEL.pdf
+      → 031 TRIBUTARIO/CCT VIGENTE - EVA MACIEL - OCTUBRE 2025.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/OCTUBRE 2025/DDJJ OCTUBRE 2025 - EVA MACIEL.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/DDJJ IVA 102025 EVA MACIEL.pdf   [Declaración leída por dentro: formulario 120, período 10/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/OCTUBRE 2025/LIBRO COMPRAS OCTUBRE 2025 - EVA MACIEL.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/LIBRO COMPRAS 102025 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/OCTUBRE 2025/LIBRO VENTAS OCTUBRE 2025 - EVA MACIEL.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/LIBRO VENTAS 102025 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/OCTUBRE 2025/RG COMPRAS SOLO IVA OCT 2025 - EVA MACIEL.xlsx
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/RG COMPRAS 102025 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 10/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/SETIEMBRE 2025/CCT VIGENTE - EVA MACIEL.pdf
+      → 031 TRIBUTARIO/CCT VIGENTE - EVA MACIEL - SETIEMBRE 2025.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/SETIEMBRE 2025/DDJJ SETIEMBRE 2025 - EVA MACIEL.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/DDJJ IVA 092025 EVA MACIEL.pdf   [Declaración leída por dentro: formulario 120, período 09/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/SETIEMBRE 2025/LIBRO COMPRAS SETIEMBRE 2025 - EVA MACIEL.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO COMPRAS 092025 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/SETIEMBRE 2025/LIBRO VENTAS SETIEMBRE 2025 - EVA MACIEL.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO VENTAS 092025 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/SETIEMBRE 2025/RG COMPRAS SETIEMBRE 2025 - EVA MACIEL .xlsx
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092025 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2025]
+  PERIODO 2025/DOCUMENTOS VARIOS/cct vigente eva032025.pdf
+      → 031 TRIBUTARIO/CCT 032025 EVA MACIEL.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/DDJJ 062026 EVA MACIEL.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/DDJJ IVA 062026 EVA MACIEL.pdf   [Declaración leída por dentro: formulario 120, período 06/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/DDJJ AGOSTO 2026 EVA MACIEL.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/DDJJ IVA 082026 EVA MACIEL.pdf   [Declaración leída por dentro: formulario 120, período 08/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/DDJJ ENERO 2026 - EVA MACIEL.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/DDJJ IVA 012026 EVA MACIEL.pdf   [Declaración leída por dentro: formulario 120, período 01/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/DDJJ SETIEMBRE 2026 EVA MACIEL.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DDJJ IVA 092026 EVA MACIEL.pdf   [Declaración leída por dentro: formulario 120, período 09/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/IRP/RG COMPRAS/DetalleComprobantesRegistrados - 2026-08-25T110300.053.xlsx
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/RG COMPRAS 012026 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 01/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/IRP/RG COMPRAS/DetalleComprobantesRegistrados - 2026-08-25T131230.582.xlsx
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/RG COMPRAS 022026 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 02/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/IRP/RG COMPRAS/DetalleComprobantesRegistrados - 2026-08-25T141747.869.xlsx
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/RG COMPRAS 032026 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 03/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/IRP/RG COMPRAS/DetalleComprobantesRegistrados - 2026-08-25T144451.803.xlsx
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/RG COMPRAS 042026 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 04/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/IRP/RG COMPRAS/DetalleComprobantesRegistrados - 2026-08-25T154453.583.xlsx
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/RG COMPRAS 072026 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 07/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/IRP/RG COMPRAS/DetalleComprobantesRegistrados - 2026-08-26T091812.790.xlsx
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/RG COMPRAS 062026 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 06/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/IRP/RG COMPRAS/DetalleComprobantesRegistrados - 2026-08-26T094128.991.xlsx
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/RG COMPRAS 072026 EVA MACIEL VERSION ANTERIOR 1.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 07/2026]
+      nota: Hay una versión más reciente del mismo documento (DetalleComprobantesRegistrados - 2026-08-25T154453.583.xlsx): esta queda como versión anterior
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/01 ENERO 2026/LIBRO COMPRAS ENERO 2026 - EVA MACIEL.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/LIBRO COMPRAS 012026 EVA MACIEL VERSION ANTERIOR 1.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Hay una versión más reciente del mismo documento (LIBRO COMPRAS ENERO 2026 - EVA NADIA MACIEL.pdf): esta queda como versión anterior
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/01 ENERO 2026/LIBRO COMPRAS ENERO 2026 - EVA NADIA MACIEL.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/LIBRO COMPRAS 012026 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/01 ENERO 2026/LIBRO VENTAS ENERO 2026 - EVA MACIEL.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/LIBRO VENTAS 012026 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/01 FEBRERO/LIBRO VENTAS FEBRERO 2026.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/LIBRO VENTAS 022026 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/03 MARZO/LIBRO VENTAS MARZO 2026.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/LIBRO VENTAS 032026 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/04 ABRIL/CCT VIGENTE EVA MACIEL.pdf
+      → 031 TRIBUTARIO/CCT VIGENTE EVA MACIEL - ABRIL 2026.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/04 ABRIL/LIBRO COMPRAS ABRIL 2026 EVA MACIEL.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/LIBRO COMPRAS 042026 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/04 ABRIL/LIBRO VENTAS ABRIL 2026 EVA MACIEL.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/LIBRO VENTAS 042026 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/05 MAYO/LIBRO COMPRAS MAYO 2026 EVA MACIEL.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/LIBRO COMPRAS 052026 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/05 MAYO/LIBRO VENTAS MAYO 2026 EVA.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/LIBRO VENTAS 052026 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/06 JUNIO 2026/LIBRO COMPRAS 062026.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/LIBRO COMPRAS 062026 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/06 JUNIO 2026/LIBRO VENTAS 062026.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/LIBRO VENTAS 062026 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/07 JULIO/LIBRO COMPRAS JULIO 2026 EVA MACIEL.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/LIBRO COMPRAS 072026 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/07 JULIO/LIBRO VENTAS JULIO 2026 EVA MACIEL.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/LIBRO VENTAS 072026 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/DetalleComprobantesRegistrados - 2026-08-25T141448.134.xlsx
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/RG COMPRAS 032026 EVA MACIEL VERSION ANTERIOR 1.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 03/2026]
+      nota: Hay una versión más reciente del mismo documento (DetalleComprobantesRegistrados - 2026-08-25T141747.869.xlsx): esta queda como versión anterior
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG COMPRAS/RG COMPRAS ABRIL 2026 EVA.xlsx
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/RG COMPRAS 042026 EVA MACIEL VERSION ANTERIOR 1.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 04/2026]
+      nota: Hay una versión más reciente del mismo documento (DetalleComprobantesRegistrados - 2026-08-25T144451.803.xlsx): esta queda como versión anterior
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG COMPRAS/RG COMPRAS ENERO 2026 - EVA MACIEL.xlsx
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/RG COMPRAS 012026 EVA MACIEL VERSION ANTERIOR 1.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 01/2026]
+      nota: Hay una versión más reciente del mismo documento (DetalleComprobantesRegistrados - 2026-08-25T110300.053.xlsx): esta queda como versión anterior
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG COMPRAS/RG COMPRAS EVA MACIEL 2026 AGOSTO.xlsx
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG COMPRAS 082026 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 08/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG COMPRAS/RG COMPRAS EVA MACIEL 2026 JULIO.xlsx
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/RG COMPRAS 072026 EVA MACIEL VERSION ANTERIOR 2.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 07/2026]
+      nota: Hay una versión más reciente del mismo documento (DetalleComprobantesRegistrados - 2026-08-25T154453.583.xlsx): esta queda como versión anterior
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG COMPRAS/RG COMPRAS EVA MACIEL 2026 SETIEMBRE.xlsx
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092026 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG VENTAS/09 setiembre.xlsx
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG VENTAS 092026 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 09/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG VENTAS/RG VENTAS ABRIL 2026 EVA.xlsx
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/RG VENTAS 042026 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 04/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG VENTAS/RG VENTAS AGOSTO 2026 EVA.xlsx
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG VENTAS 082026 EVA MACIEL.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 08/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/08 AGOSTO.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/TALON RG 90 082026 EVA MACIEL.pdf   [Declaración leída por dentro: formulario 241, período 08/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/09 SETIEMBRE.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/TALON DE PRESENTACION 09 SETIEMBRE.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «09 SETIEMBRE», se le agregó la carpeta de donde venía
+
+MOVIDOS CONSERVANDO SU NOMBRE (240)
+-------------------------------------
+  PERIODO 2023/DICIEMBRE 2023/Diciembre 2023-20240119T114615Z-001.zip
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/12 DICIEMBRE/Diciembre 2023-20240119T114615Z-001.zip   [Período tomado de la carpeta donde estaba]
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Ventas/Escaneado_20231206-1109.pdf
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Escaneado_20231206-1109.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2023/NOVIEMBRE 2023/Noviembre 2023/Ver Declaración _ MARANGATU.pdf
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Ver Declaración _ MARANGATU.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2023/OCTUBRE 2023/OCTUBRE 2023 EVA MACIEL.zip
+      → 031 PERIODO 2023/DOCUMENTOS CONTABLES/10 OCTUBRE/OCTUBRE 2023 EVA MACIEL.zip   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/boleta de pago.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/boleta de pago.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/CUADRO DE LIQ. IRP A JUNIO 2024 EVA MACIEL.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/CUADRO DE LIQ. IRP A JUNIO 2024 EVA MACIEL.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/DETERMINACION DEL IRP-RGC 2024 EVA MACIEL.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/DETERMINACION DEL IRP-RGC 2024 EVA MACIEL.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/irp 2024/determinacion del irp a seteimbre ok 2024 eva maciel.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/determinacion del irp a seteimbre ok 2024 eva maciel.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/irp 2024/DETERMINACIÓN DEL IRP EVA MACIEL 2024.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/DETERMINACIÓN DEL IRP EVA MACIEL 2024.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/irp 2024/INSCRIPCIÓN AL IRP GC.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/INSCRIPCIÓN AL IRP GC.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/irp 2024/IRP RPS 2023 EVA MACIEL.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/IRP RPS 2023 EVA MACIEL.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/irp 2024/LIQ IRP A DIC 2024 EVA MACIEL.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/LIQ IRP A DIC 2024 EVA MACIEL.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/irp 2024/LIQ IRP DE ENERO A JUNIO 2024 EVA MACIEL.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/LIQ IRP DE ENERO A JUNIO 2024 EVA MACIEL.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+      nota: Excel con 1 vínculo(s) a otros archivos
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/irp 2024/LIR IRP A SETIEMBRE 2024 EVA MACIEL.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/LIR IRP A SETIEMBRE 2024 EVA MACIEL.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/irp 2024/solicitud de preimpresos eva maciel.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/solicitud de preimpresos eva maciel.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/LIBRO VENTASLIQ 2024 EVA MACIEL.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/LIBRO VENTASLIQ 2024 EVA MACIEL.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/rg 2024/EGRESO RG90 2024 EVA MACIEL.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/EGRESO RG90 2024 EVA MACIEL.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/rg 2024/RG COMPRAS ENERO A JUNIO EVA MACIEL.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/01 ENERO/RG COMPRAS ENERO A JUNIO EVA MACIEL.xlsx   [Documento mensual (el nombre dice el mes) guardado en una carpeta anual]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/rg 2024/RG INGRESOS DE ENENRO A JUNIO.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/RG INGRESOS DE ENENRO A JUNIO.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/rg 2024/RG VENTAS 2024 EVA.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/RG VENTAS 2024 EVA.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/1 ENERO 2024/Compra-20240219T120211Z-001.zip
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/01 ENERO/Compra-20240219T120211Z-001.zip   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/1 ENERO 2024/LIBROCOMPRAS-01-24.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/01 ENERO/LIBROCOMPRAS-01-24.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/2 FEBRERO 2024/Febrero 2024/Compra/recibo_001-020-0148430.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/02 FEBRERO/recibo_001-020-0148430.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/2 FEBRERO 2024/LIBREO_COMPRAS_02-24.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/02 FEBRERO/LIBREO_COMPRAS_02-24.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/2 FEBRERO 2024/PLANILLA EVA MACIEL.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/02 FEBRERO/PLANILLA EVA MACIEL.xlsx   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3056.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3056.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3057.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3057.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3058.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3058.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3059.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3059.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3060.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3060.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3061.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3061.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3062.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3062.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3063.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3063.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3064.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3064.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3066.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3066.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3067.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3067.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3068.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3068.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3069.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3069.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3070.heic
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3070.heic   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3071.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3071.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3072.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3072.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3073.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3073.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3074.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3074.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3075.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3075.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3076.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3076.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3077.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3077.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3078.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3078.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3079.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3079.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3080.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3080.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3081.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3081.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3082.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3082.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3083.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3083.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3084.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3084.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3085.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3085.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3086.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3086.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3087.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3087.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3088.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3088.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3089.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3089.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3090.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3090.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3091.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3091.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3092.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3092.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3093.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3093.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3094.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3094.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3095.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3095.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3096.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3096.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3097.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3097.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3098.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3098.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3099.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3099.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3100.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3100.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3101.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3101.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3102.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3102.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3103.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3103.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3104.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3104.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3105.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3105.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3106.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3106.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/IMG_3107.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/IMG_3107.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/3 MARZO 2024/COMPRAS/Ver Documento _ MARANGATU.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/Ver Documento _ MARANGATU.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/Factura Venta SRA EVA.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/Factura Venta SRA EVA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/Gmail - Emision de comprobante virtual.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/Gmail - Emision de comprobante virtual.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3958.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3958.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3959.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3959.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3960.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3960.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3961.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3961.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3962.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3962.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3963.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3963.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3964.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3964.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3965.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3965.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3966.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3966.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3967.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3967.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3968.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3968.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3969.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3969.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3970.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3970.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3971.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3971.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3972.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3972.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3973.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3973.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3974.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3974.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3975.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3975.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3976.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3976.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3977.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3977.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3978.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3978.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3979.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3979.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3980.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3980.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3981.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3981.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3982.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3982.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3983.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3983.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3984.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3984.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3985.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3985.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3986.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3986.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3987.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3987.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3988.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3988.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3989.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3989.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3990.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3990.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3991.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3991.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3992.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3992.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3993.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3993.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3994.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3994.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3995.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3995.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3996.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3996.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3997.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3997.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3998.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3998.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_3999.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_3999.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_4001.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_4001.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_4002.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_4002.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_4003.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_4003.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_4004.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_4004.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_4005.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_4005.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_4006.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_4006.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_4007.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_4007.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_4008.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_4008.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_4009.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_4009.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_4010.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_4010.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_4011.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_4011.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_4012.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_4012.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_4013.HEIC
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_4013.HEIC   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_4014.heic
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_4014.heic   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/IMG_4015.heic
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/IMG_4015.heic   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/PHOTO-2024-04-25-11-03-37.jpg
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/PHOTO-2024-04-25-11-03-37.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/COMPRAS/recibo_001-020-0174164.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/recibo_001-020-0174164.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/4 ABRIL 2024/constancia de presentación abril 2024.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/constancia de presentación abril 2024.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/5 MAYO 2024/CCT.pdf
+      → 031 TRIBUTARIO/CCT.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/5 MAYO 2024/constancia de presentación mayo 2024.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO/constancia de presentación mayo 2024.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/5 MAYO 2024/DETERMINACIÓN DEL IVA MES DE MAYO.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO/DETERMINACIÓN DEL IVA MES DE MAYO.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/5 MAYO 2024/RG90 COMPRAS MAYO 2024.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO/RG90 COMPRAS MAYO 2024.xlsx   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/5 MAYO 2024/RG90 VENTAS MAYO 2024.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO/RG90 VENTAS MAYO 2024.xlsx   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/6 JUNIO 2024/Compras-20240716T141645Z-001.zip
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/Compras-20240716T141645Z-001.zip   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/6 JUNIO 2024/CONSTANCIA DE PRESENTACIÓN JUNIO 2024.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/CONSTANCIA DE PRESENTACIÓN JUNIO 2024.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/6 JUNIO 2024/DDJJ JUNIO 2024 EVA M.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/DDJJ JUNIO 2024 EVA M.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/6 JUNIO 2024/LIBRO COMPRA JUNIO 2024.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/LIBRO COMPRA JUNIO 2024.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/6 JUNIO 2024/LIBRO VENTA JUNIO 2024.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/LIBRO VENTA JUNIO 2024.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/6 JUNIO 2024/RG90 COMPRAS JUNIO 2024.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/RG90 COMPRAS JUNIO 2024.xlsx   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/6 JUNIO 2024/rg90 VENTAS JUNIO 2024.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/rg90 VENTAS JUNIO 2024.xlsx   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/6 JUNIO 2024/Venta-20240716T141648Z-001.zip
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/Venta-20240716T141648Z-001.zip   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/7 JULIO 2024/CCT VIGENTE 08 EM.pdf
+      → 031 TRIBUTARIO/CCT VIGENTE 08 EM.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/7 JULIO 2024/Constancia de presentación iva julio 2024.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/07 JULIO/Constancia de presentación iva julio 2024.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/7 JULIO 2024/DDJJ JULIO 2024 EVA M.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/07 JULIO/DDJJ JULIO 2024 EVA M.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/7 JULIO 2024/RG90 COMPRAS IVA JULIO 2024.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/07 JULIO/RG90 COMPRAS IVA JULIO 2024.xlsx   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/8 AGOSTO/CCT VIGENTE 09.pdf
+      → 031 TRIBUTARIO/CCT VIGENTE 09.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/8 AGOSTO/Constancia de presentación agosto eva maciel 2024.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/08 AGOSTO/Constancia de presentación agosto eva maciel 2024.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/8 AGOSTO/DDJJ AGOSTO 2024 EM.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/08 AGOSTO/DDJJ AGOSTO 2024 EM.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/8 AGOSTO/factura ventas agosto.jpeg
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/08 AGOSTO/factura ventas agosto.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/8 AGOSTO/LIBRO COMPRA AGOSTO 2024 EM.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/08 AGOSTO/LIBRO COMPRA AGOSTO 2024 EM.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/8 AGOSTO/rg 90 ventas agosto 2024.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/08 AGOSTO/rg 90 ventas agosto 2024.xlsx   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/8 AGOSTO/rg90 compras agosto 2024.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/08 AGOSTO/rg90 compras agosto 2024.xlsx   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/9 SETIEMBRE/CCT VIGENTE 10 EVA.pdf
+      → 031 TRIBUTARIO/CCT VIGENTE 10 EVA.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/9 SETIEMBRE/Constancia de presentación setiembre 2024 eva.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/09 SETIEMBRE/Constancia de presentación setiembre 2024 eva.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/9 SETIEMBRE/DDJJ SET IEMBRE 2024 EVA M.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/09 SETIEMBRE/DDJJ SET IEMBRE 2024 EVA M.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/9 SETIEMBRE/de baja de preimpresos por caducidad.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/09 SETIEMBRE/de baja de preimpresos por caducidad.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/9 SETIEMBRE/RG90 COMPRAS SET2024 EVA.xlsx
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG90 COMPRAS SET2024 EVA.xlsx   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/9 SETIEMBRE/WhatsApp Image 2024-09-05 at 14.51.51.jpeg
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/09 SETIEMBRE/WhatsApp Image 2024-09-05 at 14.51.51.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/DICIEMBRE 2024/CCT VIGENTE 01 25 EVA.pdf
+      → 031 TRIBUTARIO/CCT VIGENTE 01 25 EVA.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/DICIEMBRE 2024/Constancia de presentación diciembre 2024.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/12 DICIEMBRE/Constancia de presentación diciembre 2024.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/DICIEMBRE 2024/DDJJ DICIEMBRE 2024 EVA MACIEL.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/12 DICIEMBRE/DDJJ DICIEMBRE 2024 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/NOVIEMBRE 2024/CCT VIGENTE EVA 12.pdf
+      → 031 TRIBUTARIO/CCT VIGENTE EVA 12.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/NOVIEMBRE 2024/DDJJ NOVIEMBRE 2024 EVA M.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/11 NOVIEMBRE/DDJJ NOVIEMBRE 2024 EVA M.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/OCTUBRE 2024/CCT VIGENTE EVA 11.pdf
+      → 031 TRIBUTARIO/CCT VIGENTE EVA 11.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/OCTUBRE 2024/Constancia de presentación octubre 2024.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/10 OCTUBRE/Constancia de presentación octubre 2024.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/OCTUBRE 2024/DDJJ OCTUBRE 2024 EVA.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/10 OCTUBRE/DDJJ OCTUBRE 2024 EVA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS VARIOS/CONTRATACIONES/887155-CONTRATOFEBRERO2024.pdf
+      → 031 PERIODO 2024/DOCUMENTOS VARIOS/CONTRATACIONES/887155-CONTRATOFEBRERO2024.pdf   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2024/DOCUMENTOS VARIOS/FACTURAS VENTAS  FOTOS/WhatsApp Image 2024-11-11 at 11.34.20.jpeg
+      → 031 PERIODO 2024/DOCUMENTOS VARIOS/FACTURAS VENTAS  FOTOS/WhatsApp Image 2024-11-11 at 11.34.20.jpeg   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2024/DOCUMENTOS VARIOS/FACTURAS VENTAS  FOTOS/WhatsApp Image 2024-11-11 at 11.43.46.jpeg
+      → 031 PERIODO 2024/DOCUMENTOS VARIOS/FACTURAS VENTAS  FOTOS/WhatsApp Image 2024-11-11 at 11.43.46.jpeg   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2024/DOCUMENTOS VARIOS/FACTURAS VENTAS  FOTOS/WhatsApp Image 2024-12-09 at 15.23.52.jpeg
+      → 031 PERIODO 2024/DOCUMENTOS VARIOS/FACTURAS VENTAS  FOTOS/WhatsApp Image 2024-12-09 at 15.23.52.jpeg   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2024/DOCUMENTOS VARIOS/SALARIO FOTOS/WhatsApp Image 2025-01-22 at 11.40.52.jpeg
+      → 031 PERIODO 2024/DOCUMENTOS LABORALES/MTESS/WhatsApp Image 2025-01-22 at 11.40.52.jpeg   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+  PERIODO 2024/DOCUMENTOS VARIOS/SALARIO FOTOS/WhatsApp Image 2025-01-30 at 07.50.51.jpeg
+      → 031 PERIODO 2024/DOCUMENTOS LABORALES/MTESS/WhatsApp Image 2025-01-30 at 07.50.51.jpeg   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/IRP/CALCULO PARA IRP 2025/DETERMINACIÓN DEL IRP 2025 - EVA NADIA SOLEDAD MACIEL.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/DETERMINACIÓN DEL IRP 2025 - EVA NADIA SOLEDAD MACIEL.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/IRP/CALCULO PARA IRP 2025/DETERMINACIÓN DEL IRP 2025 EVA MACIEL.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/DETERMINACIÓN DEL IRP 2025 EVA MACIEL.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/IRP/CALCULO PARA IRP 2025/LIQ IRP 2025 EVA MACIEL HASTA SETIEMBRE 2025.xlsx
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/LIQ IRP 2025 EVA MACIEL HASTA SETIEMBRE 2025.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/IRP/CALCULO PARA IRP 2025/LIQ IRP 2025 EVA MACIEL.xlsx
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/LIQ IRP 2025 EVA MACIEL.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/IRP/DDJJ IRP 2025 - EVA MACIEL.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/DDJJ IRP 2025 - EVA MACIEL.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/IRP/PARA PRESENTACION IRP 2025/LIQ IRP 2025 EVA MACIEL DE ENERO A DICIEMBRE.xlsx
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/LIQ IRP 2025 EVA MACIEL DE ENERO A DICIEMBRE.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/6 JUNIO/DDJJ JUNIO 2025 EVA MACIEL.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/DDJJ JUNIO 2025 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/6 JUNIO/FACTURA 459-JUNIO.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/FACTURA 459-JUNIO.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/7 JULIO/CCT VIGENTE EVA MACIEL 19082025.pdf
+      → 031 TRIBUTARIO/CCT VIGENTE EVA MACIEL 19082025.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/7 JULIO/DDJJ JULIO 2025 EVA MACIEL.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/DDJJ JULIO 2025 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/7 JULIO/Factura 500- Julio.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/Factura 500- Julio.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/ABRIL 2025/DDJJ ABRIL 2025 EVA MACIEL.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/04 ABRIL/DDJJ ABRIL 2025 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/ABRIL 2025/DDJJ MARZO EVA MACIEL 2025.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/04 ABRIL/DDJJ MARZO EVA MACIEL 2025.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 03/2025 y la carpeta 04/2025: se respetó la carpeta
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/ABRIL 2025/IRP RSP 2024 EVA MACIEL.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/IRP RSP 2024 EVA MACIEL.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/AGOSTO 2025/CCT VIGENTE EVA MACIEL 17092025.pdf
+      → 031 TRIBUTARIO/CCT VIGENTE EVA MACIEL 17092025.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/AGOSTO 2025/DDJJ AGOSTO 2025 EVA MACIEL.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/DDJJ AGOSTO 2025 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/DICIEMBRE 2025/DDJJ DICIEMBRE 2025 - EVA MACIEL.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/DDJJ DICIEMBRE 2025 - EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/ENERO 2025/CCT VIGENTE EVA 1902.pdf
+      → 031 TRIBUTARIO/CCT VIGENTE EVA 1902.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/ENERO 2025/constancia de presentación 202501 eva.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/01 ENERO/constancia de presentación 202501 eva.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/ENERO 2025/DDJJ ENERO 2025 EVA M.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/01 ENERO/DDJJ ENERO 2025 EVA M.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/FEBRERO 2025/DDJJ EVA MACIEL2025 FEBRERO.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/02 FEBRERO/DDJJ EVA MACIEL2025 FEBRERO.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/FEBRERO 2025/FOTOS DE VENTAS/WhatsApp Image 2025-02-07 at 10.28.12.jpeg
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/02 FEBRERO/WhatsApp Image 2025-02-07 at 10.28.12.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/FEBRERO 2025/FOTOS DE VENTAS/WhatsApp Image 2025-02-07 at 10.28.26.jpeg
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/02 FEBRERO/WhatsApp Image 2025-02-07 at 10.28.26.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/FEBRERO 2025/FOTOS DE VENTAS/WhatsApp Image 2025-02-07 at 11.36.05.jpeg
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/02 FEBRERO/WhatsApp Image 2025-02-07 at 11.36.05.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/MAYO 2025/DDJJ MAYO 2025 EVA MACIEL.pdf
+      → 031 PERIODO 2025/DOCUMENTOS CONTABLES/05 MAYO/DDJJ MAYO 2025 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS VARIOS/CCT VIGENTE EVA MACIEL.pdf
+      → 031 TRIBUTARIO/CCT VIGENTE EVA MACIEL.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA 668.pdf
+      → 031 PERIODO 2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA 668.pdf   [Honorarios que EFFORT le factura al cliente]
+  PERIODO 2025/DOCUMENTOS VARIOS/MINISTERIO SUELDO/246f3e-CONTRATOMAYO2025.pdf
+      → 031 PERIODO 2025/DOCUMENTOS LABORALES/MTESS/246f3e-CONTRATOMAYO2025.pdf   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+  PERIODO 2025/DOCUMENTOS VARIOS/MINISTERIO SUELDO/297618-CONTRATOABRIL2025.pdf
+      → 031 PERIODO 2025/DOCUMENTOS LABORALES/MTESS/297618-CONTRATOABRIL2025.pdf   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+  PERIODO 2025/DOCUMENTOS VARIOS/MINISTERIO SUELDO/334da2-PERMANENTEMAYO2025.pdf
+      → 031 PERIODO 2025/DOCUMENTOS LABORALES/MTESS/334da2-PERMANENTEMAYO2025.pdf   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+  PERIODO 2025/DOCUMENTOS VARIOS/MINISTERIO SUELDO/5e08d7-CONTRATOFEBRERO2025.pdf
+      → 031 PERIODO 2025/DOCUMENTOS LABORALES/MTESS/5e08d7-CONTRATOFEBRERO2025.pdf   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+  PERIODO 2025/DOCUMENTOS VARIOS/MINISTERIO SUELDO/8c46b5-PERMANENTEENERO202551892.pdf
+      → 031 PERIODO 2025/DOCUMENTOS LABORALES/MTESS/8c46b5-PERMANENTEENERO202551892.pdf   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+  PERIODO 2025/DOCUMENTOS VARIOS/MINISTERIO SUELDO/a09b88-PERMANENTEABRIL2025.pdf
+      → 031 PERIODO 2025/DOCUMENTOS LABORALES/MTESS/a09b88-PERMANENTEABRIL2025.pdf   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+  PERIODO 2025/DOCUMENTOS VARIOS/MINISTERIO SUELDO/a4a1eb-CONTRATOENERO20255189.pdf
+      → 031 PERIODO 2025/DOCUMENTOS LABORALES/MTESS/a4a1eb-CONTRATOENERO20255189.pdf   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+  PERIODO 2025/DOCUMENTOS VARIOS/MINISTERIO SUELDO/b1eed1-PERMANENTEFEBRERO2025.pdf
+      → 031 PERIODO 2025/DOCUMENTOS LABORALES/MTESS/b1eed1-PERMANENTEFEBRERO2025.pdf   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+  PERIODO 2025/DOCUMENTOS VARIOS/MINISTERIO SUELDO/df89ad-CONTRATOMARZO2025.pdf
+      → 031 PERIODO 2025/DOCUMENTOS LABORALES/MTESS/df89ad-CONTRATOMARZO2025.pdf   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+  PERIODO 2025/DOCUMENTOS VARIOS/MINISTERIO SUELDO/eba825-PERMANENTEMARZO2025.pdf
+      → 031 PERIODO 2025/DOCUMENTOS LABORALES/MTESS/eba825-PERMANENTEMARZO2025.pdf   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+  PERIODO 2025/DOCUMENTOS VARIOS/solicitud de preimpresos eva maciel.pdf
+      → 031 PERIODO 2025/DOCUMENTOS VARIOS/solicitud de preimpresos eva maciel.pdf   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2025/DOCUMENTOS VARIOS/SOLICITUD PREIMPRESOS EVA MACIEL.pdf
+      → 031 PERIODO 2025/DOCUMENTOS VARIOS/SOLICITUD PREIMPRESOS EVA MACIEL.pdf   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2025/DOCUMENTOS VARIOS/WhatsApp Image 2025-09-10 at 09.57.07.jpeg
+      → 031 PERIODO 2025/DOCUMENTOS VARIOS/WhatsApp Image 2025-09-10 at 09.57.07.jpeg   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2026/DOCUMENTOS CONTABLES/CCT/CCT 08-AGOSTO.pdf
+      → 031 TRIBUTARIO/CCT 08-AGOSTO.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/CCT/CCT 09-SETIEMBRE.pdf
+      → 031 TRIBUTARIO/CCT 09-SETIEMBRE.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/DDJJ FEBRERO 2026 EVA MACIEL.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/DDJJ FEBRERO 2026 EVA MACIEL.pdf   [Período tomado del nombre del archivo]
+  PERIODO 2026/DOCUMENTOS CONTABLES/IRP/DETERMINACIÓN DEL IRP RSP A JULIO 2026 EVA MACIEL.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/CIERRE 2026/DETERMINACIÓN DEL IRP RSP A JULIO 2026 EVA MACIEL.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/IRP/LIQ IRP A JULIO 2026 EVA MACIEL.xlsx
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/CIERRE 2026/LIQ IRP A JULIO 2026 EVA MACIEL.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/03 MARZO/DDJJ MARZO 2026 EVA MACIEL.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/DDJJ MARZO 2026 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/04 ABRIL/DDJJ ABRIL 2026 EVA MACIEL.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/DDJJ ABRIL 2026 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/05 MAYO/DDJJ MAYO 2026 EVA MACIEL.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/DDJJ MAYO 2026 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/07 JULIO/CCT VIEGNTE EVA MACIEL 2026GOST.pdf
+      → 031 TRIBUTARIO/CCT VIEGNTE EVA MACIEL 2026GOST.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/07 JULIO/DDJJ JULIO 2026 EVA MACIEL.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/DDJJ JULIO 2026 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/08 AGOSTO/FACT.oxps
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/FACT.oxps   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/08 AGOSTO/L.C 2026.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/L.C 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/08 AGOSTO/L.V 2026.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/L.V 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/08 AGOSTO/WhatsApp Image 2026-08-11 at 14.31.37.jpeg
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/WhatsApp Image 2026-08-11 at 14.31.37.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/09 SETIEMBRE/L.C 2026.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/L.C 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/09 SETIEMBRE/L.V 2026.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/L.V 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS VARIOS/FACTURA 9776 - EVA MACIEL.pdf
+      → 031 PERIODO 2026/DOCUMENTOS VARIOS/FACTURA 9776 - EVA MACIEL.pdf   [Estaba en DOCUMENTOS VARIOS]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «031 ZZ A CLASIFICAR» (para que lo ubique una persona) (2)
+----------------------------------------------------------------
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/factura electronica tang hung pin 27042026.pdf
+  PERIODO 2026/patente.pdf
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar) (1)
+------------------------------------------------------
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP/irp 2024/LIQ IRP DE ENERO A JUNIO 2024 EVA MACIEL.xlsx  →  031 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/LIQ IRP DE ENERO A JUNIO 2024 EVA MACIEL.xlsx  [Excel con 1 vínculo(s) a otros archivos]
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno

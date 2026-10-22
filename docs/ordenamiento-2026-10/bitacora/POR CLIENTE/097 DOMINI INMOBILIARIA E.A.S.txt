@@ -1,0 +1,50 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 097 DOMINI INMOBILIARIA E.A.S
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+
+AL INICIO
+  Archivos: 3 · Peso: 12.0 MB · Subcarpetas con archivos: 2
+
+RESUMEN
+  Duplicados apartados (cuarentena): 0
+  Movidos y renombrados según el manual: 1
+  Movidos conservando su nombre: 1
+  Sin cambios: 0
+  A «097 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 1
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 0
+  Nombres originales que no dicen qué documento son: 0
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  097 LEGAL Y SOCIETARIO: 1
+  097 TRIBUTARIO: 1
+  097 ZZ A CLASIFICAR: 1
+
+DUPLICADOS APARTADOS: ninguno
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron): ninguno
+
+MOVIDOS Y RENOMBRADOS (1)
+-----------------------------
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ESTATUTO PROFORMA DOMINIC EAS .pdf
+      → 097 LEGAL Y SOCIETARIO/ESTATUTO PROFORMA DOMINIC EAS.pdf   [Documento legal o societario]
+
+MOVIDOS CONSERVANDO SU NOMBRE (1)
+-------------------------------------
+  PERIODO 2025/DOCUMENTOS CONTABLES/Cédula Tributaria _ MARANGATU.pdf
+      → 097 TRIBUTARIO/Cédula Tributaria _ MARANGATU.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «097 ZZ A CLASIFICAR» (para que lo ubique una persona) (1)
+----------------------------------------------------------------
+  PERIODO 2025/DOCUMENTOS CONTABLES/Constancia _ MARANGATU.pdf
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno

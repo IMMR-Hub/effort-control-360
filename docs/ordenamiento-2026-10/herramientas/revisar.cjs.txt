@@ -1,0 +1,13 @@
+const fs = require('fs');
+const p = JSON.parse(fs.readFileSync('plan.json', 'utf8'));
+let s = Number(process.argv[2] ?? 11);
+const r = () => { s = (s * 1103515245 + 12345) % 2147483648; return s / 2147483648; };
+const muestra = (arr, n) => { const out = []; for (let k = 0; k < Math.min(n, arr.length); k++) out.push(arr[Math.floor(r() * arr.length)]); return out; };
+const corto = (x) => x.replace(/^\d{3} [^/]+\//, '');
+const ver = (t, arr, n) => { console.log(`\n== ${t} (${arr.length})`); for (const f of muestra(arr, n)) console.log(`${f.origen}\n    -> ${corto(f.destinoRel)}${f.notas.length ? '   [' + f.notas.join(' | ') + ']' : ''}`); };
+const numerados = p.filter((f) => f.dir && / \d\d\.[^.]+$/.test(f.nombreFinal) && !/ \d\d\.[^.]+$/.test(f.origen));
+console.log('con número de choque:', numerados.length, ' renombrados con choque:', numerados.filter((f) => f.nuevoBase).length);
+for (const z of (process.argv[3] ?? 'CIERRE,VARIOS,LEGAL,TRIBUTARIO,IPS,MTESS,FACT_EFFORT').split(',')) ver(z, p.filter((f) => f.zona === z && f.cambia), 12);
+ver('DUPLICADO por declaración', p.filter((f) => f.accion === 'DUPLICADO' && /declaración/.test(f.motivo)), 6);
+ver('CHOQUES renombrados', numerados.filter((f) => f.nuevoBase), 15);
+ver('OTRO CLIENTE', p.filter((f) => f.otroCliente && f.accion !== 'DUPLICADO'), 10);

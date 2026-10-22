@@ -1,0 +1,26 @@
+// Comprueba el plan antes de aplicarlo. No toca ningún archivo.
+const fs = require('fs');
+const p = JSON.parse(fs.readFileSync('plan.json', 'utf8'));
+const errores = [];
+const may = (s) => s.normalize('NFC').toUpperCase();
+// 1. destinos únicos
+const dest = new Map();
+for (const f of p) { const k = may(f.destinoRel); if (dest.has(k)) errores.push(['DESTINO REPETIDO', f.origen, dest.get(k).origen, f.destinoRel]); else dest.set(k, f); }
+// 2. un destino no puede ser la ruta de un archivo que se queda donde está (salvo él mismo)
+const quietos = new Map(p.filter((f) => !f.cambia).map((f) => [may(f.origen), f]));
+for (const f of p) if (f.cambia && quietos.has(may(f.destinoRel))) errores.push(['PISARÍA UN ARCHIVO QUE NO SE MUEVE', f.origen, f.destinoRel]);
+// 3. destinos dentro del propio cliente, de otro cliente con plan, de la cuarentena o de la ZZ general
+for (const f of p) {
+  const ok = f.destinoRel.startsWith(`${f.cliente}/`) || f.destinoRel.startsWith('ZZ DUPLICADOS PARA REVISAR/') || f.destinoRel.startsWith('ZZ A CLASIFICAR/') || (f.otroCliente && f.destinoRel.startsWith(`${f.otroCliente}/`));
+  if (!ok) errores.push(['DESTINO FUERA DE LUGAR', f.origen, f.destinoRel]);
+}
+// 4. nombres válidos en Windows y OneDrive
+for (const f of p) for (const seg of f.destinoRel.split('/')) {
+  if (/[\\:*?"<>|]/.test(seg) || /[ .]$/.test(seg) || /^\s/.test(seg) || seg.length === 0 || seg.length > 255) { errores.push(['NOMBRE INVÁLIDO', f.origen, f.destinoRel, JSON.stringify(seg)]); break; }
+}
+// 5. cuenta
+const porAccion = {};
+for (const f of p) porAccion[f.accion] = (porAccion[f.accion] ?? 0) + 1;
+console.log('archivos en el plan:', p.length, porAccion, '· errores:', errores.length);
+const tipos = {}; for (const e of errores) tipos[e[0]] = (tipos[e[0]] ?? 0) + 1; console.log(tipos);
+for (const e of errores.slice(0, 15)) console.log(e.join(' | '));

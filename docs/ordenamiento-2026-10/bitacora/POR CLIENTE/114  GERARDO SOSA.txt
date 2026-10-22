@@ -1,0 +1,99 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 114  GERARDO SOSA
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+
+AL INICIO
+  Archivos: 24 · Peso: 3.0 MB · Subcarpetas con archivos: 5
+
+RESUMEN
+  Duplicados apartados (cuarentena): 0
+  Movidos y renombrados según el manual: 15
+  Movidos conservando su nombre: 8
+  Sin cambios: 0
+  A «114 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 1
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 0
+  Nombres originales que no dicen qué documento son: 21
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  114 PERIODO 2026: 23
+  114 ZZ A CLASIFICAR: 1
+
+DUPLICADOS APARTADOS: ninguno
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron): ninguno
+
+MOVIDOS Y RENOMBRADOS (15)
+-----------------------------
+  PERIODO 2026/DetalleComprobantesRegistrados - 2026-09-02T093220.763.xlsx
+      → 114 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/RG COMPRAS 032026 GERARDO SOSA VERSION ANTERIOR 1.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 03/2026]
+      nota: Hay una versión más reciente del mismo documento (marzo.xlsx): esta queda como versión anterior
+  PERIODO 2026/DetalleComprobantesRegistrados - 2026-09-02T093315.660.xlsx
+      → 114 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/RG COMPRAS 042026 GERARDO SOSA VERSION ANTERIOR 1.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 04/2026]
+      nota: Hay una versión más reciente del mismo documento (abril.xlsx): esta queda como versión anterior
+  PERIODO 2026/DetalleComprobantesRegistrados - 2026-09-02T094836.087.xlsx
+      → 114 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/RG COMPRAS 052026 GERARDO SOSA VERSION ANTERIOR 1.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 05/2026]
+      nota: Hay una versión más reciente del mismo documento (mayo.xlsx): esta queda como versión anterior
+  PERIODO 2026/DetalleComprobantesRegistrados - 2026-09-02T095507.626.xlsx
+      → 114 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/RG COMPRAS 062026 GERARDO SOSA VERSION ANTERIOR 2.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 06/2026]
+      nota: Hay una versión más reciente del mismo documento (junio.xlsx): esta queda como versión anterior
+  PERIODO 2026/DetalleComprobantesRegistrados - 2026-09-02T104932.795.xlsx
+      → 114 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/RG COMPRAS 012026 GERARDO SOSA VERSION ANTERIOR 1.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 01/2026]
+      nota: Hay una versión más reciente del mismo documento (enero.xlsx): esta queda como versión anterior
+  PERIODO 2026/DetalleComprobantesRegistrados - 2026-09-03T084014.097.xlsx
+      → 114 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/RG COMPRAS 062026 GERARDO SOSA VERSION ANTERIOR 1.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 06/2026]
+      nota: Hay una versión más reciente del mismo documento (junio.xlsx): esta queda como versión anterior
+  PERIODO 2026/DOCUMENTOS CONTABLES/IRP 2026/LIQUIDACIÓN IRP 2026 GERARDO SOSA.xlsx
+      → 114 PERIODO 2026/DOCUMENTOS CONTABLES/CIERRE 2026/CALCULO IRP 2026 GERARDO SOSA.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/IRP 2026/rg compras/abril.xlsx
+      → 114 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/RG COMPRAS 042026 GERARDO SOSA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 04/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/IRP 2026/rg compras/enero.xlsx
+      → 114 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/RG COMPRAS 012026 GERARDO SOSA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 01/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/IRP 2026/rg compras/febrero.xlsx
+      → 114 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/RG COMPRAS 022026 GERARDO SOSA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 02/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/IRP 2026/rg compras/junio.xlsx
+      → 114 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/RG COMPRAS 062026 GERARDO SOSA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 06/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/IRP 2026/rg compras/marzo.xlsx
+      → 114 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/RG COMPRAS 032026 GERARDO SOSA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 03/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/IRP 2026/rg compras/mayo.xlsx
+      → 114 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/RG COMPRAS 052026 GERARDO SOSA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 05/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/ENERO/DetalleComprobantesRegistrados - 2026-04-30T111032.222.xlsx
+      → 114 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/RG COMPRAS 012026 GERARDO SOSA VERSION ANTERIOR 2.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 01/2026]
+      nota: Hay una versión más reciente del mismo documento (enero.xlsx): esta queda como versión anterior
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/FEBRERO/DetalleComprobantesRegistrados - 2026-04-30T111231.552.xlsx
+      → 114 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/RG COMPRAS 022026 GERARDO SOSA VERSION ANTERIOR 1.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 02/2026]
+      nota: Hay una versión más reciente del mismo documento (febrero.xlsx): esta queda como versión anterior
+
+MOVIDOS CONSERVANDO SU NOMBRE (8)
+-------------------------------------
+  PERIODO 2026/DOCUMENTOS CONTABLES/IRP 2026/COMPRAS A JUNIO.xlsx
+      → 114 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/COMPRAS A JUNIO.xlsx   [Documento mensual (el nombre dice el mes) guardado en una carpeta anual]
+  PERIODO 2026/DOCUMENTOS CONTABLES/IRP 2026/DETERMINACIÓN DEL IRP RSP A JUNIO 2026 GERARDO SOSA.pdf
+      → 114 PERIODO 2026/DOCUMENTOS CONTABLES/CIERRE 2026/DETERMINACIÓN DEL IRP RSP A JUNIO 2026 GERARDO SOSA.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/IRP 2026/fact electronia coop universitaria.pdf
+      → 114 PERIODO 2026/DOCUMENTOS CONTABLES/CIERRE 2026/fact electronia coop universitaria.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/IRP 2026/INGRESO A JUNIO 2026.pdf
+      → 114 PERIODO 2026/DOCUMENTOS CONTABLES/CIERRE 2026/INGRESO A JUNIO 2026.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/ENERO/LIBRO COMPRA EGRESOS ENERO 2026 GERARDO SOSA.xlsx
+      → 114 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/LIBRO COMPRA EGRESOS ENERO 2026 GERARDO SOSA.xlsx   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/ENERO/LIBRO INGRESO ENERO 2026 GERARDO SOSA.xlsx
+      → 114 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/LIBRO INGRESO ENERO 2026 GERARDO SOSA.xlsx   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/FEBRERO/LIBRO COMPRA EGRESO FEBRERO 2026 GERARDO SOSA.xlsx
+      → 114 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/LIBRO COMPRA EGRESO FEBRERO 2026 GERARDO SOSA.xlsx   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/FEBRERO/LIBRO INGRESO FEBRERO 2026 GERARDO SOSA.xlsx
+      → 114 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/LIBRO INGRESO FEBRERO 2026 GERARDO SOSA.xlsx   [Período tomado de la carpeta donde estaba]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «114 ZZ A CLASIFICAR» (para que lo ubique una persona) (1)
+----------------------------------------------------------------
+  PERIODO 2026/RG55_COMPRASEGRESOS.xlsx
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno

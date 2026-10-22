@@ -1,0 +1,54 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 123 AGRICOLA GANADERA LA FLORIDA S.A
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+
+AL INICIO
+  Archivos: 5 · Peso: 46.8 MB · Subcarpetas con archivos: 0
+
+RESUMEN
+  Duplicados apartados (cuarentena): 0
+  Movidos y renombrados según el manual: 1
+  Movidos conservando su nombre: 4
+  Sin cambios: 0
+  A «123 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 0
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 1
+  Nombres originales que no dicen qué documento son: 1
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  123 LEGAL Y SOCIETARIO: 5
+
+DUPLICADOS APARTADOS: ninguno
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (1)
+---------------------------------------------------------
+  Estatutos AGLF SA_compressed (1).pdf  →  Estatutos AGLF SA_compressed.pdf
+
+MOVIDOS Y RENOMBRADOS (1)
+-----------------------------
+  Estatutos AGLF SA_compressed (1).pdf
+      → 123 LEGAL Y SOCIETARIO/Estatutos AGLF SA_compressed.pdf   [Documento legal o societario]
+
+MOVIDOS CONSERVANDO SU NOMBRE (4)
+-------------------------------------
+  Acta Asamblea 24.pdf
+      → 123 LEGAL Y SOCIETARIO/Acta Asamblea 24.pdf   [Documento de asamblea]
+  Estatutos AGLF SA.pdf
+      → 123 LEGAL Y SOCIETARIO/Estatutos AGLF SA.pdf   [Documento legal o societario]
+  Modific_estatutos sociales AGLF.pdf
+      → 123 LEGAL Y SOCIETARIO/Modific_estatutos sociales AGLF.pdf   [Documento legal o societario]
+  Registro de Accionistas AGLF SA.pdf
+      → 123 LEGAL Y SOCIETARIO/Registro de Accionistas AGLF SA.pdf   [Documento legal o societario]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «123 ZZ A CLASIFICAR» (para que lo ubique una persona): ninguno
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno

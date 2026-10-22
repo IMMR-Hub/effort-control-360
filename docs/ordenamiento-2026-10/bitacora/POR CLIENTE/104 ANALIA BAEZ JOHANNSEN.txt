@@ -1,0 +1,58 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 104 ANALIA BAEZ JOHANNSEN
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+
+AL INICIO
+  Archivos: 7 · Peso: 1.7 MB · Subcarpetas con archivos: 6
+
+RESUMEN
+  Duplicados apartados (cuarentena): 0
+  Movidos y renombrados según el manual: 4
+  Movidos conservando su nombre: 3
+  Sin cambios: 0
+  A «104 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 0
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 0
+  Nombres originales que no dicen qué documento son: 0
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  104 PERIODO 2025: 5
+  104 PERIODO 2026: 1
+  104 TRIBUTARIO: 1
+
+DUPLICADOS APARTADOS: ninguno
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron): ninguno
+
+MOVIDOS Y RENOMBRADOS (4)
+-----------------------------
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/10 OCTUBRE/DDJJ IVA 102025 SM.pdf
+      → 104 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/DDJJ IVA 102025 ANALIA BAEZ JOHANNSEN.pdf   [Declaración leída por dentro: formulario 120, período 10/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/11 NOVIEMBRE/DDJJ IVA 112025 ANALIA BAEZ.pdf
+      → 104 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/DDJJ IVA 112025 ANALIA BAEZ JOHANNSEN.pdf   [Declaración leída por dentro: formulario 120, período 11/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/8 AGOSTO/DDJJ IVA 082025 - SM.pdf
+      → 104 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/DDJJ IVA 082025 ANALIA BAEZ JOHANNSEN.pdf   [Declaración leída por dentro: formulario 120, período 08/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/9 SETIEMBRE/DDJJ IVA 092025 SIN MOVIMIENTO.pdf
+      → 104 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/DDJJ IVA 092025 ANALIA BAEZ JOHANNSEN.pdf   [Declaración leída por dentro: formulario 120, período 09/2025]
+
+MOVIDOS CONSERVANDO SU NOMBRE (3)
+-------------------------------------
+  PERIODO 2025/DOCUMENTOS CONTABLES/MES/7 JULIO/Boleta de Pago 072025 ANALIA BAEZ.pdf
+      → 104 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/Boleta de Pago 072025 ANALIA BAEZ.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS VARIOS/Boleta de Pago Analia Baez.pdf
+      → 104 PERIODO 2026/DOCUMENTOS VARIOS/Boleta de Pago Analia Baez.pdf   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2026/DOCUMENTOS VARIOS/CCT ANALIA BAEZ.pdf
+      → 104 TRIBUTARIO/CCT ANALIA BAEZ.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «104 ZZ A CLASIFICAR» (para que lo ubique una persona): ninguno
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno

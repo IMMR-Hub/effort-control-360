@@ -1,0 +1,40 @@
+// DESHACE lo aplicado por 4-aplicar.mjs en D:\ORDENADO, leyendo diario.jsonl de atrás para adelante, y deja el árbol
+// de carpetas como estaba (vuelve a crear las carpetas vacías que el aplicador había quitado).
+// Uso: node 6-deshacer.mjs (simula) · node 6-deshacer.mjs --aplicar
+// Nunca pisa un archivo ni borra uno: si la ruta original está ocupada, ese archivo queda donde está y se anota.
+// Solo quita CARPETAS VACÍAS (las que creó el ordenamiento y quedaron sin nada).
+import fs from 'node:fs';
+import path from 'node:path';
+
+const APLICAR = process.argv.includes('--aplicar');
+const BASE = path.resolve('D:/ORDENADO/CLIENTES EFFORT E.A.S/CLIENTES');
+const dentro = (rel) => { const abs = path.resolve(BASE, rel); if (!abs.startsWith(BASE + path.sep)) throw new Error(`BLOQUEADO: ${abs}`); return abs; };
+const lineas = fs.readFileSync('diario.jsonl', 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
+const deshechos = new Set(lineas.filter((r) => r.deshecho).map((r) => r.id));
+const filas = lineas.filter((r) => r.ok && !deshechos.has(r.id)).reverse();
+let n = 0; const problemas = [];
+for (const r of filas) {
+  const a = dentro(r.a), de = dentro(r.de);
+  if (!fs.existsSync(a)) { problemas.push({ ...r, motivo: 'ya no está en el destino' }); continue; }
+  if (fs.existsSync(de) && a.toLowerCase() !== de.toLowerCase()) { problemas.push({ ...r, motivo: 'la ruta original está ocupada' }); continue; }
+  if (APLICAR) {
+    fs.mkdirSync(path.dirname(de), { recursive: true });
+    if (a.toLowerCase() === de.toLowerCase()) { fs.renameSync(a, `${de}.deshaciendo`); fs.renameSync(`${de}.deshaciendo`, de); } else fs.renameSync(a, de);
+    fs.appendFileSync('diario.jsonl', JSON.stringify({ id: r.id, deshecho: true, de: r.a, a: r.de, ts: new Date().toISOString() }) + '\n');
+  }
+  n++;
+}
+let quitadas = 0, recreadas = 0;
+if (APLICAR) {
+  const vaciar = (dir) => {
+    for (const d of fs.readdirSync(dir, { withFileTypes: true })) if (d.isDirectory()) vaciar(path.join(dir, d.name));
+    if (dir !== BASE && fs.readdirSync(dir).length === 0) { fs.rmdirSync(dir); quitadas++; }
+  };
+  for (const d of fs.readdirSync(BASE, { withFileTypes: true })) if (d.isDirectory() && (/^\d{3}(?!\d)/.test(d.name) && !d.name.startsWith('999') || /^ZZ (DUPLICADOS PARA REVISAR|A CLASIFICAR)$/.test(d.name))) vaciar(path.join(BASE, d.name));
+  if (fs.existsSync('carpetas-vacias-quitadas.txt')) {
+    for (const rel of fs.readFileSync('carpetas-vacias-quitadas.txt', 'utf8').split('\n').filter(Boolean)) { const abs = dentro(rel.trim()); if (!fs.existsSync(abs)) { fs.mkdirSync(abs, { recursive: true }); recreadas++; } }
+    fs.renameSync('carpetas-vacias-quitadas.txt', `carpetas-vacias-quitadas.deshecho-${Date.now()}.txt`);
+  }
+}
+console.log(`${APLICAR ? 'devueltos' : 'se devolverían'}: ${n} · problemas: ${problemas.length} · carpetas vacías quitadas: ${quitadas} · carpetas originales vueltas a crear: ${recreadas}`);
+if (problemas.length) console.log(problemas.slice(0, 10));

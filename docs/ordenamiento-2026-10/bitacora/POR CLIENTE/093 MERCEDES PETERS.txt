@@ -1,0 +1,69 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 093 MERCEDES PETERS
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+
+AL INICIO
+  Archivos: 16 · Peso: 4.7 MB · Subcarpetas con archivos: 4
+
+RESUMEN
+  Duplicados apartados (cuarentena): 1
+  Movidos y renombrados según el manual: 2
+  Movidos conservando su nombre: 5
+  Sin cambios: 0
+  A «093 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 8
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 1
+  Nombres originales que no dicen qué documento son: 10
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  093 PERIODO 2025: 7
+  093 ZZ A CLASIFICAR: 8
+
+DUPLICADOS APARTADOS (1)
+----------------------------
+  DOCUMENTOS CONTABLES/INSCRIPCION AL RUC/9b862dbd-450b-47e8-b576-33e17d601f31 (1).jpeg
+      igual a: DOCUMENTOS CONTABLES/INSCRIPCION AL RUC/9b862dbd-450b-47e8-b576-33e17d601f31.jpeg  (Copia idéntica (mismo contenido byte por byte))
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron): ninguno
+
+MOVIDOS Y RENOMBRADOS (2)
+-----------------------------
+  DOCUMENTOS CONTABLES/IRP 2025/RG COMPRAS 2025.xlsx
+      → 093 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/RG COMPRAS 112025 MERCEDES PETERS.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 11/2025]
+  DOCUMENTOS CONTABLES/MES/RG COMPRAS/3 COMPRAS MARZO .xlsx
+      → 093 PERIODO 2025/DOCUMENTOS CONTABLES/03 MARZO/RG COMPRAS 032025 MERCEDES PETERS.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 03/2025]
+
+MOVIDOS CONSERVANDO SU NOMBRE (5)
+-------------------------------------
+  DOCUMENTOS CONTABLES/IRP 2025/DDJJ IRP 2025.pdf
+      → 093 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/DDJJ IRP 2025.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  DOCUMENTOS CONTABLES/IRP 2025/DETERMINACION IRP 2025 MERCEDES PETERS.pdf
+      → 093 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/DETERMINACION IRP 2025 MERCEDES PETERS.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  DOCUMENTOS CONTABLES/IRP 2025/LIBRO COMPRAS IRP 2025.xlsx
+      → 093 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/LIBRO COMPRAS IRP 2025.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  DOCUMENTOS CONTABLES/IRP 2025/LIBROINGRVENIRPIRE_RES55.xlsx
+      → 093 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/LIBROINGRVENIRPIRE_RES55.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  DOCUMENTOS CONTABLES/IRP 2025/RG INGRESOS 2025.xlsx
+      → 093 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/RG INGRESOS 2025.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «093 ZZ A CLASIFICAR» (para que lo ubique una persona) (8)
+----------------------------------------------------------------
+  DOCUMENTOS CONTABLES/INSCRIPCION AL RUC/9b862dbd-450b-47e8-b576-33e17d601f31.jpeg
+  DOCUMENTOS CONTABLES/INSCRIPCION AL RUC/9b862dbd-450b-47e8-b576-33e17d601f31.pdf
+  DOCUMENTOS CONTABLES/INSCRIPCION AL RUC/ANDE.docx
+  DOCUMENTOS CONTABLES/INSCRIPCION AL RUC/ANDE.pdf
+  DOCUMENTOS CONTABLES/INSCRIPCION AL RUC/CEDULA DE IDENTIDAD .pdf
+  DOCUMENTOS CONTABLES/INSCRIPCION AL RUC/FOTO CON CI .jpg
+  DOCUMENTOS CONTABLES/INSCRIPCION AL RUC/SOLICITUD RUC.pdf
+  DOCUMENTOS CONTABLES/MES/PLANILLA DETERMINACION IMPUESTOS.xls
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno

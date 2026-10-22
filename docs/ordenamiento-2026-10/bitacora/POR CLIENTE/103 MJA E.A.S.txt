@@ -1,0 +1,187 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 103 MJA E.A.S
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+
+AL INICIO
+  Archivos: 64 · Peso: 14.1 MB · Subcarpetas con archivos: 19
+
+RESUMEN
+  Duplicados apartados (cuarentena): 0
+  Movidos y renombrados según el manual: 39
+  Movidos conservando su nombre: 20
+  Sin cambios: 0
+  A «103 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 5
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 1
+  Nombres originales que no dicen qué documento son: 42
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 1
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  103 LEGAL Y SOCIETARIO: 3
+  103 PERIODO 2025: 13
+  103 PERIODO 2026: 38
+  103 TRIBUTARIO: 5
+  103 ZZ A CLASIFICAR: 5
+
+DUPLICADOS APARTADOS: ninguno
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO (1)
+------------------------------------------------------
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/MAYO/Boleta de Pago IVA GENERAL 032026 MJA E.A.S  →  Boleta guardada en 05/2026: va en el mes que paga (03/2026), según su nombre
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (1)
+---------------------------------------------------------
+  Constancia_de_Beneficiarios_Finales (3) MJA.pdf  →  Constancia_de_Beneficiarios_Finales (3) MJA.pdf
+
+MOVIDOS Y RENOMBRADOS (39)
+-----------------------------
+  PERIODO 2025/DOCUMENTOS CONTABLES/CCT/11-2025.pdf
+      → 103 TRIBUTARIO/CCT 11-2025.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+      nota: Al nombre, que solo decía «11-2025», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS CONTABLES/CCT/12-2025.pdf
+      → 103 TRIBUTARIO/CCT 12-2025.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+      nota: Al nombre, que solo decía «12-2025», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS CONTABLES/FORMULARIO 120/120-08-2025.pdf
+      → 103 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/DDJJ IVA 082025 MJA EAS.pdf   [Declaración leída por dentro: formulario 120, período 08/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/FORMULARIO 120/120-09-2025.pdf
+      → 103 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/FORMULARIO 120 120-09-2025.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «120-09-2025», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS CONTABLES/FORMULARIO 120/120-11-2025.pdf
+      → 103 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/FORMULARIO 120 120-11-2025.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «120-11-2025», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS CONTABLES/FORMULARIO 120/120-12-2025.pdf
+      → 103 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/FORMULARIO 120 120-12-2025.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «120-12-2025», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/09-2025.pdf
+      → 103 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/TALON DE PRESENTACION 09-2025.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «09-2025», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/10-2025.pdf
+      → 103 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/TALON DE PRESENTACION 10-2025.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «10-2025», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/11-2025.pdf
+      → 103 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/TALON DE PRESENTACION 11-2025.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «11-2025», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/12-2025.pdf
+      → 103 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/TALON DE PRESENTACION 12-2025.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «12-2025», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/CCT/ENERO.pdf
+      → 103 TRIBUTARIO/CCT ENERO.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+      nota: Al nombre, que solo decía «ENERO», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/CCT/FEBRERO.pdf
+      → 103 TRIBUTARIO/CCT FEBRERO.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+      nota: Al nombre, que solo decía «FEBRERO», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-01-2026.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/DDJJ IVA 012026 MJA EAS.pdf   [Declaración leída por dentro: formulario 120, período 01/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-02-2026.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/DDJJ IVA 022026 MJA EAS.pdf   [Declaración leída por dentro: formulario 120, período 02/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-03-2026.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/DDJJ IVA 032026 MJA EAS.pdf   [Declaración leída por dentro: formulario 120, período 03/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-04-2026.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/DDJJ IVA 042026 MJA EAS.pdf   [Declaración leída por dentro: formulario 120, período 04/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-05-2026.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/DDJJ IVA 052026 MJA EAS.pdf   [Declaración leída por dentro: formulario 120, período 05/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-06-2026.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/DDJJ IVA 062026 MJA EAS.pdf   [Declaración leída por dentro: formulario 120, período 06/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-07-2026.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/DDJJ IVA 072026 MJA EAS.pdf   [Declaración leída por dentro: formulario 120, período 07/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-08-2026.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/DDJJ IVA 082026 MJA EAS.pdf   [Declaración leída por dentro: formulario 120, período 08/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/03 MARZO/FAC DE VENTA 032026.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/FACTURA VENTA 032026 032026 MJA EAS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 SETIEMBRE/Boleta de Pago IVA GENERAL.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/BOLETA DE PAGO IVA 092026 MJA EAS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 SETIEMBRE/FACTURA DE VENTA 001-001-0000004.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/FACTURA VENTA 001-001-0000004 092026 MJA EAS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/Boleta de Pago IVA GENERAL 032026 MJA.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/BOLETA DE PAGO IVA 032026 MJA EAS.pdf   [Período tomado del nombre del archivo]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/MAYO/Boleta de Pago IVA GENERAL 032026 MJA E.A.S
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/BOLETA DE PAGO IVA 032026 MJA EAS.s   [Período tomado de la carpeta donde estaba]
+      nota: Boleta guardada en 05/2026: va en el mes que paga (03/2026), según su nombre
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG COMPRAS/09 SETIEMBRE.xlsx
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092026 MJA EAS.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG COMPRAS/AGOSTO.xlsx
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG COMPRAS 082026 MJA EAS.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 08/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG VENTAS/08 AGOSTO.xlsx
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG VENTAS 082026 MJA EAS.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 08/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG VENTAS/09 SETIEMBRE.xlsx
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG VENTAS 092026 MJA EAS.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 09/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG VENTAS/3MARZO.xlsx
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/RG VENTAS 032026 MJA EAS.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 03/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/ABRIL.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/TALON RG 90 042026 MJA EAS.pdf   [Declaración leída por dentro: formulario 241, período 04/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/AGOSTO.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/TALON RG 90 082026 MJA EAS.pdf   [Declaración leída por dentro: formulario 241, período 08/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/ENERO.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/TALON RG 90 012026 MJA EAS.pdf   [Declaración leída por dentro: formulario 241, período 01/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/FEBRERO.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/TALON RG 90 022026 MJA EAS.pdf   [Declaración leída por dentro: formulario 241, período 02/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/JULIO.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/TALON RG 90 072026 MJA EAS.pdf   [Declaración leída por dentro: formulario 241, período 07/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/JUNIO.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/TALON RG 90 062026 MJA EAS.pdf   [Declaración leída por dentro: formulario 241, período 06/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/MARZO.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/TALON RG 90 032026 MJA EAS.pdf   [Declaración leída por dentro: formulario 241, período 03/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/MAYO.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/TALON RG 90 052026 MJA EAS.pdf   [Declaración leída por dentro: formulario 241, período 05/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/SETIEMBRE.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/TALON DE PRESENTACION SETIEMBRE.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «SETIEMBRE», se le agregó la carpeta de donde venía
+
+MOVIDOS CONSERVANDO SU NOMBRE (20)
+-------------------------------------
+  PERIODO 2025/DOCUMENTOS CONTABLES/CCT/CCT.pdf
+      → 103 TRIBUTARIO/CCT.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/EE.FF 2025/80158159NE2025.pdf
+      → 103 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/80158159NE2025.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/EE.FF 2025/80158159NE2025.xlsx
+      → 103 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/80158159NE2025.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/EE.FF 2025/80158159NE2025.zip
+      → 103 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/80158159NE2025.zip   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/EE.FF 2025/EF2025_a0e00941_80158159_948.zip
+      → 103 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/EF2025_a0e00941_80158159_948.zip   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/EE.FF 2025/FORMULARIO 158-2025.pdf
+      → 103 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/FORMULARIO 158-2025.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ACTA DE ASAMBLEA.pdf
+      → 103 LEGAL Y SOCIETARIO/ACTA DE ASAMBLEA.pdf   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/CAPITALIZACION UNIPERSONAL.pdf
+      → 103 LEGAL Y SOCIETARIO/CAPITALIZACION UNIPERSONAL.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/Constancia_de_Beneficiarios_Finales (3) MJA.pdf
+      → 103 LEGAL Y SOCIETARIO/Constancia_de_Beneficiarios_Finales (3) MJA.pdf   [Documento legal o societario]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/03 MARZO/Boleta de Pago _ MARANGATU 032026 MJA.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/Boleta de Pago _ MARANGATU 032026 MJA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/03 MARZO/DETERMINACION IVA 032026 M.J.A E.A.S
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/DETERMINACION IVA 032026 M.J.A E.A.S   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/03 MARZO/L.V 2026.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/L.V 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/DETERMINACION DE IVA 082026 MJA E.A.S..pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/DETERMINACION DE IVA 082026 MJA E.A.S..pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/L.C 2026.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/L.C 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/L.V 2026.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/L.V 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 SETIEMBRE/Boleta de Pago _ MARANGATU.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/Boleta de Pago _ MARANGATU.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 SETIEMBRE/DETERMINACION DEL IVA 092026 MJA E.A.S
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DETERMINACION DEL IVA 092026 MJA E.A.S   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 SETIEMBRE/L.C 2026.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/L.C 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 SETIEMBRE/L.V 2026.pdf
+      → 103 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/L.V 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS VARIOS/SOLICITUD FACTURACION ELECTONICA.pdf
+      → 103 PERIODO 2026/DOCUMENTOS VARIOS/SOLICITUD FACTURACION ELECTONICA.pdf   [Estaba en DOCUMENTOS VARIOS]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «103 ZZ A CLASIFICAR» (para que lo ubique una persona) (5)
+----------------------------------------------------------------
+  PERIODO 2025/DOCUMENTOS CONTABLES/BOLETAS DE PAGOS/Boleta de Pago _ MARANGATU.pdf
+  PERIODO 2025/DOCUMENTOS CONTABLES/FORMULARIO 120/120-10-25.pdf
+  PERIODO 2026/Constancia de constitucion.pdf
+  PERIODO 2026/Constitucion.pdf
+  PERIODO 2026/DOCUMENTOS CONTABLES/DETERMINACION IVA.xlsx
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno

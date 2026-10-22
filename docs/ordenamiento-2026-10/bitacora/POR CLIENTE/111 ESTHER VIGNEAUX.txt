@@ -1,0 +1,245 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 111 ESTHER VIGNEAUX
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+
+AL INICIO
+  Archivos: 70 · Peso: 154.4 MB · Subcarpetas con archivos: 11
+
+RESUMEN
+  Duplicados apartados (cuarentena): 2
+  Movidos y renombrados según el manual: 27
+  Movidos conservando su nombre: 24
+  Sin cambios: 0
+  A «111 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 17
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 13
+  Nombres originales que no dicen qué documento son: 22
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 29
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  111 LEGAL Y SOCIETARIO: 1
+  111 PERIODO 2026: 47
+  111 TRIBUTARIO: 3
+  111 ZZ A CLASIFICAR: 17
+
+DUPLICADOS APARTADOS (2)
+----------------------------
+  e387ce-PERMANENTEENERO2026 (4).pdf
+      igual a: e387ce-PERMANENTEENERO2026.pdf  (Copia idéntica (mismo contenido byte por byte))
+  e387ce-PERMANENTEENERO2026 (6).pdf
+      igual a: e387ce-PERMANENTEENERO2026.pdf  (Copia idéntica (mismo contenido byte por byte))
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO (29)
+------------------------------------------------------
+  Documentos Contables/MES/ABRIL/DDJJ ABRIL 2026 ESTHER V.pdf  →  El nombre dice 04/2026 y la carpeta 04/?: se respetó la carpeta
+  Documentos Contables/MES/ABRIL/DDJJ IVA 042026.pdf  →  El nombre dice 04/2026 y la carpeta 04/?: se respetó la carpeta
+  Documentos Contables/MES/ABRIL/LIBRO COMPRAS ABRIL 2026 ESTHER.pdf  →  El nombre dice 04/2026 y la carpeta 04/?: se respetó la carpeta
+  Documentos Contables/MES/AGOSTO/DETERMINACIÓN DEL IVA  AGOSTO 2026 ESTHER V..pdf  →  El nombre dice 08/2026 y la carpeta 08/?: se respetó la carpeta
+  Documentos Contables/MES/AGOSTO/LIBRO COMPRAS AGOSTO  2026 ESTHER.pdf  →  El nombre dice 08/2026 y la carpeta 08/?: se respetó la carpeta
+  Documentos Contables/MES/AGOSTO/LIBRO VENTAS AGOSTO 2026 ESTHER.pdf  →  El nombre dice 08/2026 y la carpeta 08/?: se respetó la carpeta
+  Documentos Contables/MES/JULIO/DDJJ JULIO 2026 ESTHER V.pdf  →  El nombre dice 07/2026 y la carpeta 07/?: se respetó la carpeta
+  Documentos Contables/MES/JULIO/Determinación del IVA MES DE JULIO 2026 ESTHER V.pdf  →  El nombre dice 07/2026 y la carpeta 07/?: se respetó la carpeta
+  Documentos Contables/MES/JULIO/Libro compras julio 2026 Esther.pdf  →  El nombre dice 07/2026 y la carpeta 07/?: se respetó la carpeta
+  Documentos Contables/MES/JULIO/Libro ventas julio 2026 Esther.pdf  →  El nombre dice 07/2026 y la carpeta 07/?: se respetó la carpeta
+  Documentos Contables/MES/JULIO/TOTAL INGRESOS A JULIO 2026 ESTHER.pdf  →  El nombre dice 07/2026 y la carpeta 07/?: se respetó la carpeta
+  Documentos Contables/MES/JUNIO/DDJJ JUNIO2026 ESTHER.pdf  →  El nombre dice 06/2026 y la carpeta 06/?: se respetó la carpeta
+  Documentos Contables/MES/JUNIO/LIBRO COMPRAS JUNIO 2026 ESTHER.pdf  →  El nombre dice 06/2026 y la carpeta 06/?: se respetó la carpeta
+  Documentos Contables/MES/MARZO/DDJJ IVA 032026.pdf  →  El nombre dice 03/2026 y la carpeta 03/?: se respetó la carpeta
+  Documentos Contables/MES/MARZO/DDJJ MARZO 2026 ESTHER.pdf  →  El nombre dice 03/2026 y la carpeta 03/?: se respetó la carpeta
+  Documentos Contables/MES/MARZO/LIBR COMPRAS MARZO 2026 ESTHER.pdf  →  El nombre dice 03/2026 y la carpeta 03/?: se respetó la carpeta
+  Documentos Contables/MES/MARZO/LIBRO COMPRAS ABRIL 2026 ESTHER.pdf  →  El nombre dice 04/2026 y la carpeta 03/?: se respetó la carpeta
+  Documentos Contables/MES/MAYO/DDJJ IVA 052026.pdf  →  El nombre dice 05/2026 y la carpeta 05/?: se respetó la carpeta
+  Documentos Contables/MES/MAYO/DETERMINACIÓN DEL IVA 2026 MAYO ESTHER V ACTUALIZADO.pdf  →  El nombre dice 05/2026 y la carpeta 05/?: se respetó la carpeta
+  Documentos Contables/MES/MAYO/DETERMINACIÓN DEL IVA 2026 MAYO ESTHER V.pdf  →  El nombre dice 05/2026 y la carpeta 05/?: se respetó la carpeta
+  Documentos Contables/MES/MAYO/LIBRO COMPRAS MAYO 2026 ESTHER V.pdf  →  El nombre dice 05/2026 y la carpeta 05/?: se respetó la carpeta · Hay una versión más reciente del mismo documento (LIBRO COMPRAS MAYO 2026 ESTHER.pdf): esta queda como versión anterior
+  Documentos Contables/MES/MAYO/LIBRO COMPRAS MAYO 2026 ESTHER.pdf  →  El nombre dice 05/2026 y la carpeta 05/?: se respetó la carpeta
+  Documentos Contables/MES/MAYO/LIBRO VENTAS MAYO 2026.pdf  →  El nombre dice 05/2026 y la carpeta 05/?: se respetó la carpeta · Hay una versión más reciente del mismo documento (LIBRO VENTAS MAYO2026 ESTHER.pdf): esta queda como versión anterior
+  Documentos Contables/MES/MAYO/LIBRO VENTAS MAYO2026 ESTHER.pdf  →  El nombre dice 05/2026 y la carpeta 05/?: se respetó la carpeta
+  Documentos Contables/MES/SETIEMBRE/DDJJ SETIEMBRE 2026 ESTHER V.pdf  →  El nombre dice 09/2026 y la carpeta 09/?: se respetó la carpeta
+  Documentos Contables/MES/SETIEMBRE/DETERMINACIÓN DEL IVA SETIEMBRE 2026 ESTHER.pdf  →  El nombre dice 09/2026 y la carpeta 09/?: se respetó la carpeta
+  Documentos Contables/MES/SETIEMBRE/LIBRO COMPRAS SETIEMBRE 2026 ESTHER actualizado.pdf  →  El nombre dice 09/2026 y la carpeta 09/?: se respetó la carpeta
+  Documentos Contables/MES/SETIEMBRE/LIBRO COMPRAS SETIEMBRE 2026 ESTHER.pdf  →  El nombre dice 09/2026 y la carpeta 09/?: se respetó la carpeta · Hay una versión más reciente del mismo documento (LIBRO COMPRAS SETIEMBRE 2026 ESTHER actualizado.pdf): esta queda como versión anterior
+  Documentos Contables/MES/SETIEMBRE/LIBRO VENTAS SETEIMBRE 2026 ESTHER.pdf  →  El nombre dice 09/2026 y la carpeta 09/?: se respetó la carpeta
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (11)
+---------------------------------------------------------
+  WhatsApp Image 2026-09-02 at 10.58.13 (1).jpeg  →  (a ZZ A CLASIFICAR, sin renombrar)
+  WhatsApp Image 2026-09-02 at 10.58.13 (2).jpeg  →  (a ZZ A CLASIFICAR, sin renombrar)
+  WhatsApp Image 2026-09-02 at 10.58.13.jpeg  →  (a ZZ A CLASIFICAR, sin renombrar)
+  DETERMINACIÓN DEL IVA 2026 MAYO ESTHER V ACTUALIZADO.pdf  →  DETERMINACIÓN DEL IVA 2026 MAYO ESTHER V ACTUALIZADO.pdf
+  WhatsApp Image 2026-06-15 at 13.00.15 (1).jpeg  →  (a ZZ A CLASIFICAR, sin renombrar)
+  WhatsApp Image 2026-06-15 at 13.00.15 (2).jpeg  →  (a ZZ A CLASIFICAR, sin renombrar)
+  WhatsApp Image 2026-06-15 at 13.00.15.jpeg  →  (a ZZ A CLASIFICAR, sin renombrar)
+  LIBRO COMPRAS SETIEMBRE 2026 ESTHER actualizado.pdf  →  LIBRO COMPRAS 092026 ESTHER VIGNEAUX.pdf
+  rg setiembre compras actualizado setiembre2026.xlsx  →  RG COMPRAS 092026 ESTHER VIGNEAUX.xlsx
+  WhatsApp Image 2026-02-16 at 12.34.46 PM.jpeg  →  (a ZZ A CLASIFICAR, sin renombrar)
+  WhatsApp Image 2026-02-16 at 12.34.46 PM.jpg  →  (a ZZ A CLASIFICAR, sin renombrar)
+
+MOVIDOS Y RENOMBRADOS (27)
+-----------------------------
+  Documentos Contables/MES/ABRIL/LIBRO COMPRAS ABRIL 2026 ESTHER.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/LIBRO COMPRAS 042026 ESTHER VIGNEAUX.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 04/2026 y la carpeta 04/?: se respetó la carpeta
+  Documentos Contables/MES/ABRIL/RG COMPRAS ESTHER 2026 ABRIL.xlsx
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/RG COMPRAS 042026 ESTHER VIGNEAUX VERSION ANTERIOR 1.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 04/2026]
+      nota: Hay una versión más reciente del mismo documento (RG COMPRAS ESTHER ABRIL 2026.xlsx): esta queda como versión anterior
+  Documentos Contables/MES/ABRIL/RG COMPRAS ESTHER ABRIL 2026.xlsx
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/RG COMPRAS 042026 ESTHER VIGNEAUX.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 04/2026]
+  Documentos Contables/MES/AGOSTO/DDJJ IVA AGOSTO 2026.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/DDJJ IVA 082026 ESTHER VIGNEAUX.pdf   [Declaración leída por dentro: formulario 120, período 08/2026]
+  Documentos Contables/MES/AGOSTO/DETERMINACIÓN DEL IVA  AGOSTO 2026 ESTHER V..pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/DETERMINACIÓN DEL IVA AGOSTO 2026 ESTHER V..pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 08/2026 y la carpeta 08/?: se respetó la carpeta
+  Documentos Contables/MES/AGOSTO/LIBRO COMPRAS AGOSTO  2026 ESTHER.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/LIBRO COMPRAS 082026 ESTHER VIGNEAUX.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 08/2026 y la carpeta 08/?: se respetó la carpeta
+  Documentos Contables/MES/AGOSTO/LIBRO VENTAS AGOSTO 2026 ESTHER.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/LIBRO VENTAS 082026 ESTHER VIGNEAUX.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 08/2026 y la carpeta 08/?: se respetó la carpeta
+  Documentos Contables/MES/AGOSTO/rg compras 2026 agosto esther.xlsx
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG COMPRAS 082026 ESTHER VIGNEAUX.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 08/2026]
+  Documentos Contables/MES/JULIO/Libro compras julio 2026 Esther.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/LIBRO COMPRAS 072026 ESTHER VIGNEAUX.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 07/2026 y la carpeta 07/?: se respetó la carpeta
+  Documentos Contables/MES/JULIO/Libro ventas julio 2026 Esther.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/LIBRO VENTAS 072026 ESTHER VIGNEAUX.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 07/2026 y la carpeta 07/?: se respetó la carpeta
+  Documentos Contables/MES/JUNIO/LIBRO COMPRAS JUNIO 2026 ESTHER.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/LIBRO COMPRAS 062026 ESTHER VIGNEAUX.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 06/2026 y la carpeta 06/?: se respetó la carpeta
+  Documentos Contables/MES/JUNIO/RG COMPRAS JUNIO 2026 ESTHER.xlsx
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/RG COMPRAS 062026 ESTHER VIGNEAUX.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 06/2026]
+  Documentos Contables/MES/MARZO/LIBRO COMPRAS ABRIL 2026 ESTHER.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/LIBRO COMPRAS 032026 ESTHER VIGNEAUX.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 04/2026 y la carpeta 03/?: se respetó la carpeta
+  Documentos Contables/MES/MAYO/DDJJ MAYO ESTHER V.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/DDJJ IVA 052026 ESTHER VIGNEAUX.pdf   [Declaración leída por dentro: formulario 120, período 05/2026]
+  Documentos Contables/MES/MAYO/LIBRO COMPRAS MAYO 2026 ESTHER V.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/LIBRO COMPRAS 052026 ESTHER VIGNEAUX VERSION ANTERIOR 1.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 05/2026 y la carpeta 05/?: se respetó la carpeta · Hay una versión más reciente del mismo documento (LIBRO COMPRAS MAYO 2026 ESTHER.pdf): esta queda como versión anterior
+  Documentos Contables/MES/MAYO/LIBRO COMPRAS MAYO 2026 ESTHER.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/LIBRO COMPRAS 052026 ESTHER VIGNEAUX.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 05/2026 y la carpeta 05/?: se respetó la carpeta
+  Documentos Contables/MES/MAYO/LIBRO VENTAS MAYO 2026.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/LIBRO VENTAS 052026 ESTHER VIGNEAUX VERSION ANTERIOR 1.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 05/2026 y la carpeta 05/?: se respetó la carpeta · Hay una versión más reciente del mismo documento (LIBRO VENTAS MAYO2026 ESTHER.pdf): esta queda como versión anterior
+  Documentos Contables/MES/MAYO/LIBRO VENTAS MAYO2026 ESTHER.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/LIBRO VENTAS 052026 ESTHER VIGNEAUX.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 05/2026 y la carpeta 05/?: se respetó la carpeta
+  Documentos Contables/MES/MAYO/RG COMPRAS MAYO 2026 ESTHER.xlsx
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/RG COMPRAS 052026 ESTHER VIGNEAUX VERSION ANTERIOR 1.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 05/2026]
+      nota: Hay una versión más reciente del mismo documento (RG MAYO 2026 COMPRAS ESTHER.xlsx): esta queda como versión anterior
+  Documentos Contables/MES/MAYO/RG MAYO 2026 COMPRAS ESTHER.xlsx
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/RG COMPRAS 052026 ESTHER VIGNEAUX.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 05/2026]
+  Documentos Contables/MES/SETIEMBRE/DetalleComprobantesRegistrados - 2026-10-07T110952.867.xlsx
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092026 ESTHER VIGNEAUX VERSION ANTERIOR 2.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2026]
+      nota: Hay una versión más reciente del mismo documento (rg setiembre compras actualizado setiembre2026.xlsx): esta queda como versión anterior
+  Documentos Contables/MES/SETIEMBRE/LIBRO COMPRAS SETIEMBRE 2026 ESTHER actualizado.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO COMPRAS 092026 ESTHER VIGNEAUX.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 09/2026 y la carpeta 09/?: se respetó la carpeta
+  Documentos Contables/MES/SETIEMBRE/LIBRO COMPRAS SETIEMBRE 2026 ESTHER.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO COMPRAS 092026 ESTHER VIGNEAUX VERSION ANTERIOR 1.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 09/2026 y la carpeta 09/?: se respetó la carpeta · Hay una versión más reciente del mismo documento (LIBRO COMPRAS SETIEMBRE 2026 ESTHER actualizado.pdf): esta queda como versión anterior
+  Documentos Contables/MES/SETIEMBRE/LIBRO VENTAS SETEIMBRE 2026 ESTHER.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO VENTAS 092026 ESTHER VIGNEAUX.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 09/2026 y la carpeta 09/?: se respetó la carpeta
+  Documentos Contables/MES/SETIEMBRE/RG COMPRAS ESTHER SETIEMBRE 2026.xlsx
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092026 ESTHER VIGNEAUX VERSION ANTERIOR 1.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2026]
+      nota: Hay una versión más reciente del mismo documento (rg setiembre compras actualizado setiembre2026.xlsx): esta queda como versión anterior
+  Documentos Contables/MES/SETIEMBRE/rg setiembre compras actualizado setiembre2026.xlsx
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092026 ESTHER VIGNEAUX.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2026]
+  Documentos Contables/MES/SETIEMBRE/RG VENTAS ESTHER SETIEMBRE 2026.xlsx
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG VENTAS 092026 ESTHER VIGNEAUX.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 09/2026]
+
+MOVIDOS CONSERVANDO SU NOMBRE (24)
+-------------------------------------
+  Documentos Contables/DDJJ IVA 022026.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/DDJJ IVA 022026.pdf   [Período tomado del nombre del archivo]
+  Documentos Contables/MES/ABRIL/DDJJ ABRIL 2026 ESTHER V.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/DDJJ ABRIL 2026 ESTHER V.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 04/2026 y la carpeta 04/?: se respetó la carpeta
+  Documentos Contables/MES/ABRIL/DDJJ IVA 042026.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/DDJJ IVA 042026.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 04/2026 y la carpeta 04/?: se respetó la carpeta
+  Documentos Contables/MES/DDJJ IVA FEB 2026.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/DDJJ IVA FEB 2026.pdf   [Período tomado del nombre del archivo]
+  Documentos Contables/MES/DDJJ IVA MARZO 2026.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/DDJJ IVA MARZO 2026.pdf   [Período tomado del nombre del archivo]
+  Documentos Contables/MES/JULIO/DDJJ JULIO 2026 ESTHER V.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/DDJJ JULIO 2026 ESTHER V.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 07/2026 y la carpeta 07/?: se respetó la carpeta
+  Documentos Contables/MES/JULIO/Determinación del IVA MES DE JULIO 2026 ESTHER V.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/Determinación del IVA MES DE JULIO 2026 ESTHER V.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 07/2026 y la carpeta 07/?: se respetó la carpeta
+  Documentos Contables/MES/JULIO/TOTAL INGRESOS A JULIO 2026 ESTHER.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/TOTAL INGRESOS A JULIO 2026 ESTHER.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 07/2026 y la carpeta 07/?: se respetó la carpeta
+  Documentos Contables/MES/JULIO/VENTAS 2026 ESTHER.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/VENTAS 2026 ESTHER.pdf   [Período tomado de la carpeta donde estaba]
+  Documentos Contables/MES/JUNIO/CCT VIGENTE ESTHER V.pdf
+      → 111 TRIBUTARIO/CCT VIGENTE ESTHER V.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  Documentos Contables/MES/JUNIO/DDJJ JUNIO2026 ESTHER.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/DDJJ JUNIO2026 ESTHER.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 06/2026 y la carpeta 06/?: se respetó la carpeta
+  Documentos Contables/MES/MARZO/DDJJ IVA 032026.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/DDJJ IVA 032026.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 03/2026 y la carpeta 03/?: se respetó la carpeta
+  Documentos Contables/MES/MARZO/DDJJ MARZO 2026 ESTHER.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/DDJJ MARZO 2026 ESTHER.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 03/2026 y la carpeta 03/?: se respetó la carpeta
+  Documentos Contables/MES/MARZO/LIBR COMPRAS MARZO 2026 ESTHER.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/LIBR COMPRAS MARZO 2026 ESTHER.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 03/2026 y la carpeta 03/?: se respetó la carpeta
+  Documentos Contables/MES/MAYO/4832652_REC_202605.xls
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/4832652_REC_202605.xls   [Archivo de sustento de una rectificativa, tal como lo genera el SET (no se renombra)]
+  Documentos Contables/MES/MAYO/4832652_REC_202605.zip
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/4832652_REC_202605.zip   [Archivo de sustento de una rectificativa, tal como lo genera el SET (no se renombra)]
+  Documentos Contables/MES/MAYO/CCT VIGENTE ESTHER 10062026.pdf
+      → 111 TRIBUTARIO/CCT VIGENTE ESTHER 10062026.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  Documentos Contables/MES/MAYO/DDJJ IVA 052026.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/DDJJ IVA 052026.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 05/2026 y la carpeta 05/?: se respetó la carpeta
+  Documentos Contables/MES/MAYO/DETERMINACIÓN DEL IVA 2026 MAYO ESTHER V ACTUALIZADO.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/DETERMINACIÓN DEL IVA 2026 MAYO ESTHER V ACTUALIZADO.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 05/2026 y la carpeta 05/?: se respetó la carpeta
+  Documentos Contables/MES/MAYO/DETERMINACIÓN DEL IVA 2026 MAYO ESTHER V.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/DETERMINACIÓN DEL IVA 2026 MAYO ESTHER V.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 05/2026 y la carpeta 05/?: se respetó la carpeta
+  Documentos Contables/MES/SETIEMBRE/DDJJ SETIEMBRE 2026 ESTHER V.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DDJJ SETIEMBRE 2026 ESTHER V.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 09/2026 y la carpeta 09/?: se respetó la carpeta
+  Documentos Contables/MES/SETIEMBRE/DETERMINACIÓN DEL IVA SETIEMBRE 2026 ESTHER.pdf
+      → 111 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DETERMINACIÓN DEL IVA SETIEMBRE 2026 ESTHER.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 09/2026 y la carpeta 09/?: se respetó la carpeta
+  DOCUMENTOS SOCIETARIOS Y LEGALES/CI ESTHER VIGNEAUX.pdf
+      → 111 LEGAL Y SOCIETARIO/CI ESTHER VIGNEAUX.pdf   [Documento legal o societario]
+  DOCUMENTOS SOCIETARIOS Y LEGALES/Solicitud de inscripcion en el RUC.pdf
+      → 111 TRIBUTARIO/Solicitud de inscripcion en el RUC.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «111 ZZ A CLASIFICAR» (para que lo ubique una persona) (17)
+----------------------------------------------------------------
+  25ccbb-EMPLEADOSPUBLICOSJUNIO2026.pdf
+  be0938-CONTRATOENERO2026.pdf
+  da413e-CONTRATOFEBRERO2026.pdf
+  Documentos Contables/MES/AGOSTO/boleta de pago ESTHER.pdf
+  Documentos Contables/MES/AGOSTO/WhatsApp Image 2026-09-02 at 10.58.13 (1).jpeg
+  Documentos Contables/MES/AGOSTO/WhatsApp Image 2026-09-02 at 10.58.13 (2).jpeg
+  Documentos Contables/MES/AGOSTO/WhatsApp Image 2026-09-02 at 10.58.13.jpeg
+  Documentos Contables/MES/JULIO/Boleta de pago Esther.pdf
+  Documentos Contables/MES/MAYO/FAC VENTA NRO 2.pdf
+  Documentos Contables/MES/MAYO/FAC VENTA NRO 3.pdf
+  Documentos Contables/MES/MAYO/WhatsApp Image 2026-06-15 at 13.00.15 (1).jpeg
+  Documentos Contables/MES/MAYO/WhatsApp Image 2026-06-15 at 13.00.15 (2).jpeg
+  Documentos Contables/MES/MAYO/WhatsApp Image 2026-06-15 at 13.00.15.jpeg
+  Documentos Contables/MES/SETIEMBRE/BOLETA DE PAGO ESTHER V.pdf
+  DOCUMENTOS VARIOS/WhatsApp Image 2026-02-16 at 12.34.46 PM.jpeg
+  DOCUMENTOS VARIOS/WhatsApp Image 2026-02-16 at 12.34.46 PM.jpg
+  e387ce-PERMANENTEENERO2026.pdf
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno

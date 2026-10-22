@@ -1,0 +1,30 @@
+// SOLO LECTURA. Inventario de los archivos de clientes de la foto del disco.
+// Fuente: _registro/copiados.jsonl (id de OneDrive, ruta, peso, huella) + fecha del archivo en el disco
+// (la copia le puso la fecha de última modificación de OneDrive).
+import fs from 'node:fs';
+import path from 'node:path';
+
+const FOTO = 'D:/COPIA ONEDRIVE EFFORT 2026-10-19';
+const CLIENTES = 'CLIENTES EFFORT E.A.S/CLIENTES/';
+const SALIDA = process.argv[2];
+
+const filas = new Map();
+for (const l of fs.readFileSync(`${FOTO}/_registro/copiados.jsonl`, 'utf8').split('\n')) {
+  if (!l) continue;
+  const r = JSON.parse(l);
+  filas.set(r.id, r); // la última línea de un id manda (una pasada nueva pisa la vieja)
+}
+const items = [];
+for (const r of filas.values()) {
+  if (!r.ruta.startsWith(CLIENTES)) continue;
+  const rel = r.ruta.slice(CLIENTES.length);
+  const m = /^(\d{3})(?!\d)[^/]*\//.exec(rel);
+  if (!m) continue;
+  let st;
+  try { st = fs.statSync(path.join(FOTO, r.ruta)); } catch { continue; } // ya no está en OneDrive (pisado por una pasada nueva)
+  items.push({ id: r.id, cod: m[1], rel, tam: r.tam, hash: r.hash, mod: st.mtime.toISOString() });
+}
+fs.writeFileSync(SALIDA, JSON.stringify(items));
+const porCod = {};
+for (const i of items) porCod[i.cod] = (porCod[i.cod] ?? 0) + 1;
+console.log(`archivos de clientes: ${items.length}, clientes: ${Object.keys(porCod).length}`);

@@ -1,0 +1,86 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 125 SOCIEDAD PARAGUAYA DE ENDODONCIA
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+
+AL INICIO
+  Archivos: 20 · Peso: 16.2 MB · Subcarpetas con archivos: 4
+
+RESUMEN
+  Duplicados apartados (cuarentena): 1
+  Movidos y renombrados según el manual: 4
+  Movidos conservando su nombre: 14
+  Sin cambios: 0
+  A «125 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 1
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 1
+  Nombres originales que no dicen qué documento son: 11
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  125 LEGAL Y SOCIETARIO: 15
+  125 PERIODO 2026: 2
+  125 TRIBUTARIO: 1
+  125 ZZ A CLASIFICAR: 1
+
+DUPLICADOS APARTADOS (1)
+----------------------------
+  DOCUMENTOS LEGALES Y SOCIETARIOS/CEDULA DE IDENTIDAD (1).docx
+      igual a: DOCUMENTOS LEGALES Y SOCIETARIOS/CEDULA DE IDENTIDAD.docx  (Copia idéntica (mismo contenido byte por byte))
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron): ninguno
+
+MOVIDOS Y RENOMBRADOS (4)
+-----------------------------
+  DOCUMENTOS CONTABLES/PERIODO 2026/MES/07 JULIO/DDJJ 072026.pdf
+      → 125 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/DDJJ IVA 072026 SOCIEDAD PARAGUAYA DE ENDODONCIA.pdf   [Declaración leída por dentro: formulario 120, período 07/2026]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/ACTA 2026 .jpeg
+      → 125 LEGAL Y SOCIETARIO/ACTA 2026.jpeg   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/ACTA DE ELECCION DE AUTORIDADES 2026 .pdf
+      → 125 LEGAL Y SOCIETARIO/ACTA DE ELECCION DE AUTORIDADES 2026.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/CI DRA PATRICIA .pdf
+      → 125 LEGAL Y SOCIETARIO/CI DRA PATRICIA.pdf   [Documento legal o societario]
+
+MOVIDOS CONSERVANDO SU NOMBRE (14)
+-------------------------------------
+  DOCUMENTOS LEGALES Y SOCIETARIOS/ACTA 2026.1.jpeg
+      → 125 LEGAL Y SOCIETARIO/ACTA 2026.1.jpeg   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/ACTA 2026.2.jpeg
+      → 125 LEGAL Y SOCIETARIO/ACTA 2026.2.jpeg   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/Cedula de Identidad - Vicente Fretes Representante Legal.pdf
+      → 125 LEGAL Y SOCIETARIO/Cedula de Identidad - Vicente Fretes Representante Legal.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/CEDULA DE IDENTIDAD.docx
+      → 125 LEGAL Y SOCIETARIO/CEDULA DE IDENTIDAD.docx   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/CEDULA TRIBUTARIA SPE.pdf
+      → 125 TRIBUTARIO/CEDULA TRIBUTARIA SPE.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/CEDULA_2432259.pdf
+      → 125 LEGAL Y SOCIETARIO/CEDULA_2432259.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/CEDULA_2432259.zip
+      → 125 LEGAL Y SOCIETARIO/CEDULA_2432259.zip   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/Ci Patricia Escobar.pdf
+      → 125 LEGAL Y SOCIETARIO/Ci Patricia Escobar.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/CONSTANCIA BF Y EJ SIARA SPE 2026.pdf
+      → 125 LEGAL Y SOCIETARIO/CONSTANCIA BF Y EJ SIARA SPE 2026.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/Estatuto Social - Comprimido SPE.pdf
+      → 125 LEGAL Y SOCIETARIO/Estatuto Social - Comprimido SPE.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/Siara actualizacion por cambio de autoridades.pdf
+      → 125 LEGAL Y SOCIETARIO/Siara actualizacion por cambio de autoridades.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/Solicitud de actualizacion de Rep Legal.pdf
+      → 125 LEGAL Y SOCIETARIO/Solicitud de actualizacion de Rep Legal.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/Solicitud de actualizacion R.Legal.pdf
+      → 125 LEGAL Y SOCIETARIO/Solicitud de actualizacion R.Legal.pdf   [Documento legal o societario]
+  DOCUMENTOS VARIOS/MEMORAMDUM/MEMO SPE_2026.pdf
+      → 125 PERIODO 2026/DOCUMENTOS VARIOS/MEMORAMDUM/MEMO SPE_2026.pdf   [Estaba en DOCUMENTOS VARIOS]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «125 ZZ A CLASIFICAR» (para que lo ubique una persona) (1)
+----------------------------------------------------------------
+  DOCUMENTOS VARIOS/BOLETA DE PAGO/Boleta de Pago SPE.pdf
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno

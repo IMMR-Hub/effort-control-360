@@ -1,0 +1,511 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 043 SIPAR S.A
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+
+AL INICIO
+  Archivos: 250 · Peso: 431.2 MB · Subcarpetas con archivos: 25
+
+RESUMEN
+  Duplicados apartados (cuarentena): 11
+  Movidos y renombrados según el manual: 68
+  Movidos conservando su nombre: 117
+  Sin cambios: 0
+  A «043 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 54
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 7
+  Nombres originales que no dicen qué documento son: 90
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 3
+
+AL FINAL (archivos por carpeta de primer nivel)
+  043 LEGAL Y SOCIETARIO: 103
+  043 PERIODO 2023: 2
+  043 PERIODO 2024: 8
+  043 PERIODO 2025: 40
+  043 PERIODO 2026: 31
+  043 TRIBUTARIO: 1
+  043 ZZ A CLASIFICAR: 54
+
+DUPLICADOS APARTADOS (11)
+----------------------------
+  2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA ORDINARIA 2025/ESTATUTO MODIFICADO NRO 26.pdf
+      igual a: 2026/DOCUMENTOS LEGALES/ESTATUTO MODIFICADO NRO 26.pdf  (Copia idéntica (mismo contenido byte por byte))
+  2026/DOCUMENTOS CONTABLES/CALCULO IRE SIPAR S.A. 2025.xlsx
+      igual a: 2025/DOCUMENTOS CONTABLES/CALCULO IRE SIPAR S.A. 2025.xlsx  (Copia idéntica (mismo contenido byte por byte))
+  2026/DOCUMENTOS LEGALES/ACTA DE DIRECTORIO DESIGNACION DE NUEVO PRESIDENTE .jpeg
+      igual a: 2026/DOCUMENTOS LEGALES/ACTA DE DIRECTORIO 2026.jpeg  (Copia idéntica (mismo contenido byte por byte))
+  2026/DOCUMENTOS LEGALES/ASAMBLEA 2026/ESTATUTO MODIFICADO NRO 26.pdf
+      igual a: 2026/DOCUMENTOS LEGALES/ESTATUTO MODIFICADO NRO 26.pdf  (Copia idéntica (mismo contenido byte por byte))
+  2026/DOCUMENTOS LEGALES/DOC PARA FAC ELECTRONICA/ACTA DE ASAMBLEA N° 34.pdf
+      igual a: 2024/ASAMBLEA 2024/ACTA DE ASAMBLEA N° 34.pdf  (Copia idéntica (mismo contenido byte por byte))
+  2026/DOCUMENTOS LEGALES/DOC PARA FAC ELECTRONICA/CEDULA ERNESTO M.pdf
+      igual a: 2026/DOCUMENTOS LEGALES/CEDULA ERNESTO M.pdf  (Copia idéntica (mismo contenido byte por byte))
+  2026/DOCUMENTOS LEGALES/DOC PARA FAC ELECTRONICA/Cédula Tributaria _ MARANGATU.pdf
+      igual a: 2026/DOCUMENTOS LEGALES/Cédula Tributaria _ MARANGATU.pdf  (Copia idéntica (mismo contenido byte por byte))
+  2026/DOCUMENTOS LEGALES/DOC PARA FAC ELECTRONICA/Escritura_de_Modificación acciones al portador a nominativas 117.pdf
+      igual a: 2026/DOCUMENTOS LEGALES/Escritura_de_Modificación acciones al portador a nominativas 117.pdf  (Copia idéntica (mismo contenido byte por byte))
+  2026/DOCUMENTOS LEGALES/Modificacion de estatutos 32.pdf
+      igual a: 2026/DOCUMENTOS LEGALES/DOC PARA FAC ELECTRONICA/Modificacion de estatutos 32.pdf  (Copia idéntica (mismo contenido byte por byte))
+  2026/DOCUMENTOS LEGALES/registro de accionistas Diego Beconi.pdf
+      igual a: 2024/VENTA DE ACCIONES/registro de accionistas Diego Beconi.pdf  (Copia idéntica (mismo contenido byte por byte))
+  2026/DOCUMENTOS LEGALES/SIARA/ACTA DE DIRECTORIO 2026.pdf
+      igual a: 2026/DOCUMENTOS LEGALES/ACTA DE DIRECTORIO 2026.pdf  (Copia idéntica (mismo contenido byte por byte))
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (6)
+---------------------------------------------------------
+  ACTA DE DIRECTORIO DESIGNACION DE NUEVO PRESIDENTE.docx  →  ACTA DE DIRECTORIO DESIGNACION DE NUEVO PRESIDENTE.docx
+  ACTA DE DIRECTORIO DESIGNACION DE NUEVO PRESIDENTE.pdf  →  ACTA DE DIRECTORIO DESIGNACION DE NUEVO PRESIDENTE.pdf
+  ACTA DE DIRECTORIO N° 26 SILICATOS PARAGUAYOS S.A. otorgar Poder  (1).docx  →  ACTA DE DIRECTORIO N° 26 SILICATOS PARAGUAYOS S.A. otorgar Poder.docx
+  Acta N° 37_compressed (2).pdf  →  Acta N° 37_compressed.pdf
+  ESTATUTO MODIFICADO NRO 26_compressed (3).pdf  →  ESTATUTO MODIFICADO NRO 26_compressed.pdf
+  CEDULA DIEGO ACTUALIZADA .pdf  →  CEDULA DIEGO ACTUALIZADA.pdf
+
+MOVIDOS Y RENOMBRADOS (68)
+-----------------------------
+  2024/ASAMBLEA 2024/ACTA DE ASAMBLEA  EXTRAORDINARIA N° AÑO 2024.docx
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2024/ACTA DE ASAMBLEA EXTRAORDINARIA N° AÑO 2024.docx   [Documento de asamblea]
+  2024/ASAMBLEA 2024/ASISTENCIA DE ACCIONISTAS .pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2024/ASISTENCIA DE ACCIONISTAS - ASAMBLEA 2024.pdf   [Documento de asamblea]
+  2024/ASAMBLEA 2024/BALANCE 2023 .pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2024/BALANCE 2023.pdf   [Documento de asamblea]
+  2024/ASAMBLEA 2024/FAC ABC .pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2024/FAC ABC.pdf   [Documento de asamblea]
+  2024/ASAMBLEA 2024/INFORME DEL SINDICO .pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2024/INFORME DEL SINDICO.pdf   [Documento de asamblea]
+  2024/ASAMBLEA EXTRAORDINARIA 2024/ASISTENCIA DE ACCIONISTAS.pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2024/ASISTENCIA DE ACCIONISTAS - ASAMBLEA EXTRAORDINARIA 2024.pdf   [Documento de asamblea]
+  2024/BALANCE 2024-2023   SILICATOS .pdf
+      → 043 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/BALANCE 2024-2023 SILICATOS.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  2024/Factura modificacion de estatuto escritura N°11 .pdf
+      → 043 LEGAL Y SOCIETARIO/Factura modificacion de estatuto escritura N°11.pdf   [Documento legal o societario]
+  2024/VENTA DE ACCIONES/CONTRATOS CORREGIDOS/ACTA DE DIRECTORIO division de acciones.docx
+      → 043 LEGAL Y SOCIETARIO/ACTA DE DIRECTORIO division de acciones - CONTRATOS CORREGIDOS.docx   [Documento legal o societario]
+  2025/DOCUMENTOS CONTABLES/BALANCE 2025-2024   SILICATOS .pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/BALANCE 2025-2024 SILICATOS.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA ORDINARIA 2025/ACTA DE ASAMBLEA 2025.pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2025/ACTA DE ASAMBLEA 2025 - ASAMBLEA ORDINARIA 2025.pdf   [Documento de asamblea]
+  2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA ORDINARIA 2025/CONSTANCIA DE COMUNICACION ASAMBLEARIA 2025 SIPAR SA.pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2025/CONSTANCIA DE COMUNICACION ASAMBLEARIA 2025 SIPAR SA - ASAMBLEA ORDINARIA 2025.pdf   [Documento de asamblea]
+  2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA ORDINARIA 2025/informe del sindico .pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2025/informe del sindico.pdf   [Documento de asamblea]
+  2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA 630-SIPAR SA-OCTUBRE.pdf
+      → 043 PERIODO 2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA COMPRA EFFORT 630 102025 SIPAR SA.pdf   [Honorarios que EFFORT le factura al cliente]
+  2025/EXTRACTOS BANCARIOS/Extracto basa agosto 2025 gs.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/EXTRACTO BASA 082025 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2025/EXTRACTOS BANCARIOS/Extracto basa diciembre 2025 gs.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/EXTRACTO BASA 122025 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2025/EXTRACTOS BANCARIOS/Extracto basa dolares agosto 2025.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/EXTRACTO BASA USD 082025 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2025/EXTRACTOS BANCARIOS/Extracto basa dolares diciembre 2025.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/EXTRACTO BASA USD 122025 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2025/EXTRACTOS BANCARIOS/Extracto basa dolares julio 2025.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/EXTRACTO BASA USD 072025 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2025/EXTRACTOS BANCARIOS/Extracto basa dolares octubre 2025.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/EXTRACTO BASA USD 102025 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2025/EXTRACTOS BANCARIOS/Extracto basa dolares setiembre 2025.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/EXTRACTO BASA USD 092025 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2025/EXTRACTOS BANCARIOS/Extracto basa dolars noviembre 2025.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/EXTRACTO BASA USD 112025 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2025/EXTRACTOS BANCARIOS/Extracto basa julio 2025 gs.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/EXTRACTO BASA 072025 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2025/EXTRACTOS BANCARIOS/Extracto basa octubre 2025 gs.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/EXTRACTO BASA 102025 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2025/EXTRACTOS BANCARIOS/EXTRACTO SILICATOS BASA 01 2025.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/01 ENERO/EXTRACTO BASA 012025 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2025/EXTRACTOS BANCARIOS/Extracto SILICATOS BASA 02 2025.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/02 FEBRERO/EXTRACTO BASA 022025 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2025/EXTRACTOS BANCARIOS/Extracto SILICATOS BASA 06 2025.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/EXTRACTO BASA 062025 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2025/EXTRACTOS BANCARIOS/Extracto SILICATOS BASA DOLARES 02 2025.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/02 FEBRERO/EXTRACTO BASA USD 022025 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2025/EXTRACTOS BANCARIOS/Extracto SILICATOS SUDAME 01 2025.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/01 ENERO/EXTRACTO SUDAMERIS 012025 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2025/EXTRACTOS BANCARIOS/SUDAMERIS DICIEMBRE 2025 GS.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/EXTRACTO SUDAMERIS 122025 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2025/EXTRACTOS BANCARIOS/SUDAMERIS DOLARES OCTUBRE 2025.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/EXTRACTO SUDAMERIS USD 102025 SIPAR SA 01.pdf   [Período tomado del nombre del archivo]
+  2025/EXTRACTOS BANCARIOS/SUDAMERIS JULIO 2025 GS.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/EXTRACTO SUDAMERIS 072025 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2025/EXTRACTOS BANCARIOS/SUDAMERIS OCTUBRE 2025 GS.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/EXTRACTO SUDAMERIS 102025 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2025/EXTRACTOS BANCARIOS/SUDAMERIS OCTUBRE DOLARES 2025.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/EXTRACTO SUDAMERIS USD 102025 SIPAR SA 02.pdf   [Período tomado del nombre del archivo]
+  2025/EXTRACTOS BANCARIOS/SUDAMERIS SETIEMBRE 2025 GS.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/EXTRACTO SUDAMERIS 092025 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2025/EXTRACTOS BANCARIOS/SUDAMERIS SETIEMBRE DOLARE 2025.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/EXTRACTO SUDAMERIS USD 092025 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2026/DOCUMENTOS CONTABLES/EXTRACTOS DE CUENTA/BASA GS/Extracto basa guaranies agosto 2026.pdf
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/EXTRACTO BASA 082026 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2026/DOCUMENTOS CONTABLES/EXTRACTOS DE CUENTA/BASA GS/Extracto basa guaranies Julio 2026.pdf
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/EXTRACTO BASA 072026 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2026/DOCUMENTOS CONTABLES/EXTRACTOS DE CUENTA/BASA USD/Extracto basa Dolares agosto 2026.pdf
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/EXTRACTO BASA USD 082026 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2026/DOCUMENTOS CONTABLES/EXTRACTOS DE CUENTA/BASA USD/Extracto-usd basa abril-2026.pdf
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/EXTRACTO BASA USD 042026 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2026/DOCUMENTOS CONTABLES/EXTRACTOS DE CUENTA/BASA USD/Extracto-usd basa enero 2026.pdf
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/EXTRACTO BASA USD 012026 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2026/DOCUMENTOS CONTABLES/EXTRACTOS DE CUENTA/BASA USD/Extracto-usd basa febrero-2026.pdf
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/EXTRACTO BASA USD 022026 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2026/DOCUMENTOS CONTABLES/EXTRACTOS DE CUENTA/BASA USD/Extracto-usd basa julio-2026.pdf
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/EXTRACTO BASA USD 072026 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2026/DOCUMENTOS CONTABLES/EXTRACTOS DE CUENTA/BASA USD/Extracto-usd basa junio-2026.pdf
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/EXTRACTO BASA USD 062026 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2026/DOCUMENTOS CONTABLES/EXTRACTOS DE CUENTA/BASA USD/Extracto-usd basa marzo-2026.pdf
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/EXTRACTO BASA USD 032026 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2026/DOCUMENTOS CONTABLES/EXTRACTOS DE CUENTA/BASA USD/Extracto-usd basa mayo-2026.pdf
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/EXTRACTO BASA USD 052026 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2026/DOCUMENTOS CONTABLES/EXTRACTOS DE CUENTA/Sudameris GS/EXTRACTO MARZO 2026 SUDAMERIS GUARANIES.pdf
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/EXTRACTO SUDAMERIS 032026 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2026/DOCUMENTOS CONTABLES/EXTRACTOS DE CUENTA/Sudameris GS/Extracto Sudameris GUARANIES agosto 2026.pdf
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/EXTRACTO SUDAMERIS 082026 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2026/DOCUMENTOS CONTABLES/EXTRACTOS DE CUENTA/Sudameris GS/EXTRACTO SUDAMERIS GUARANIES ENERO 2026.pdf
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/EXTRACTO SUDAMERIS 012026 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2026/DOCUMENTOS CONTABLES/EXTRACTOS DE CUENTA/Sudameris GS/EXTRACTO SUDAMERIS GUARANIES FEBRERO 2026.pdf
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/EXTRACTO SUDAMERIS 022026 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2026/DOCUMENTOS CONTABLES/EXTRACTOS DE CUENTA/Sudameris USD/EXTRACTO SUDAMERIS DOLARES ENERO 2026.pdf
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/EXTRACTO SUDAMERIS USD 012026 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2026/DOCUMENTOS CONTABLES/EXTRACTOS DE CUENTA/Sudameris USD/EXTRACTO SUDAMERIS DOLARES MARZO 2026.pdf
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/EXTRACTO SUDAMERIS USD 032026 SIPAR SA.pdf   [Período tomado del nombre del archivo]
+  2026/DOCUMENTOS LEGALES/ACTA DE DIRECTORIO division de acciones.docx
+      → 043 LEGAL Y SOCIETARIO/ACTA DE DIRECTORIO division de acciones - DOCUMENTOS LEGALES.docx   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/ACTA DE DIRECTORIO N° 26 SILICATOS PARAGUAYOS S.A. otorgar Poder  (1).docx
+      → 043 LEGAL Y SOCIETARIO/ACTA DE DIRECTORIO N° 26 SILICATOS PARAGUAYOS S.A. otorgar Poder.docx   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/ACTA DE DIRECTORIO N° 26 SILICATOS PARAGUAYOS S.A. otorgar Poder.docx
+      → 043 LEGAL Y SOCIETARIO/ACTA DE DIRECTORIO N° 26 SILICATOS PARAGUAYOS S.A. otorgar Poder - DOCUMENTOS LEGALES.docx   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/ACTA DE DIRECTORIO SILICATOS PARAGUAYOS S.A. otorgar Poder .docx
+      → 043 LEGAL Y SOCIETARIO/ACTA DE DIRECTORIO SILICATOS PARAGUAYOS S.A. otorgar Poder.docx   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/ASAMBLEA 2026/Acta N° 37_compressed (2).pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2026/Acta N° 37_compressed.pdf   [Documento de asamblea]
+  2026/DOCUMENTOS LEGALES/ASAMBLEA 2026/Balance General .pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2026/Balance General.pdf   [Documento de asamblea]
+  2026/DOCUMENTOS LEGALES/ASAMBLEA 2026/ESTATUTO MODIFICADO NRO 26_compressed (3).pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2026/ESTATUTO MODIFICADO NRO 26_compressed.pdf   [Documento de asamblea]
+  2026/DOCUMENTOS LEGALES/ASAMBLEA 2026/Informe del sindico .pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2026/Informe del sindico.pdf   [Documento de asamblea]
+  2026/DOCUMENTOS LEGALES/CEDULA DIEGO ACTUALIZADA .pdf
+      → 043 LEGAL Y SOCIETARIO/CEDULA DIEGO ACTUALIZADA.pdf   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/CONSTANCIA DE COMUNICACION ASAMBLEARIA 2025 SIPAR SA.pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2025/CONSTANCIA DE COMUNICACION ASAMBLEARIA 2025 SIPAR SA - DOCUMENTOS LEGALES.pdf   [Documento de asamblea]
+  2026/DOCUMENTOS LEGALES/Constitucion de la firma silicatos paraguayos sa.pdf
+      → 043 LEGAL Y SOCIETARIO/Constitucion de la firma silicatos paraguayos sa - DOCUMENTOS LEGALES.pdf   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/Convocatoria de asamblea 2026.doc
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2026/Convocatoria de asamblea 2026 - DOCUMENTOS LEGALES.doc   [Documento de asamblea]
+  2026/DOCUMENTOS LEGALES/REGISTRO DE FIRMA DNIT .docx
+      → 043 LEGAL Y SOCIETARIO/REGISTRO DE FIRMA DNIT.docx   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/SIARA/ACTA DE ASAMBLEA 2025.pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2025/ACTA DE ASAMBLEA 2025 - SIARA.pdf   [Documento de asamblea]
+  2026/DOCUMENTOS LEGALES/SIARA/Constitucion de la firma silicatos paraguayos sa.pdf
+      → 043 LEGAL Y SOCIETARIO/Constitucion de la firma silicatos paraguayos sa - SIARA.pdf   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/SIARA/registro de accionistas sipar .pdf
+      → 043 LEGAL Y SOCIETARIO/registro de accionistas sipar.pdf   [Documento legal o societario]
+
+MOVIDOS CONSERVANDO SU NOMBRE (117)
+-------------------------------------
+  2024/80012742_REC_202402.xlsx
+      → 043 PERIODO 2024/DOCUMENTOS CONTABLES/02 FEBRERO/80012742_REC_202402.xlsx   [Archivo de sustento de una rectificativa, tal como lo genera el SET (no se renombra)]
+  2024/ASAMBLEA 2024/ACTA DE ASAMBLEA N° 34 AÑO 2024.docx
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2024/ACTA DE ASAMBLEA N° 34 AÑO 2024.docx   [Documento de asamblea]
+  2024/ASAMBLEA 2024/ACTA DE ASAMBLEA N° 34.pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2024/ACTA DE ASAMBLEA N° 34.pdf   [Documento de asamblea]
+  2024/ASAMBLEA 2024/ACTA DE DIRECTORIO division de acciones (Recuperado automáticamente).docx
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2024/ACTA DE DIRECTORIO division de acciones (Recuperado automáticamente).docx   [Documento de asamblea]
+  2024/ASAMBLEA 2024/Acta de Directorio SIPAR extravío y reimpresión de acciones (Recuperado automáticamente).docx
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2024/Acta de Directorio SIPAR extravío y reimpresión de acciones (Recuperado automáticamente).docx   [Documento de asamblea]
+  2024/ASAMBLEA 2024/Convocatoria de asamblea 2024.doc
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2024/Convocatoria de asamblea 2024.doc   [Documento de asamblea]
+  2024/ASAMBLEA 2024/Convocatoria de asamblea 2025.doc
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2024/Convocatoria de asamblea 2025.doc   [Documento de asamblea]
+  2024/ASAMBLEA 2024/Convocatoria de asamblea extraordinaria 2024.doc
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2024/Convocatoria de asamblea extraordinaria 2024.doc   [Documento de asamblea]
+  2024/ASAMBLEA 2024/drfs-comunicacion-asamblearia--5513903.pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2024/drfs-comunicacion-asamblearia--5513903.pdf   [Documento de asamblea]
+  2024/ASAMBLEA 2024/drfs-comunicacion-asamblearia--6035804.pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2024/drfs-comunicacion-asamblearia--6035804.pdf   [Documento de asamblea]
+  2024/ASAMBLEA 2024/Informe del Sindico.docx
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2024/Informe del Sindico.docx   [Documento de asamblea]
+  2024/ASAMBLEA 2024/MEMORIA DEL DIRECTORIO 2023.pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2024/MEMORIA DEL DIRECTORIO 2023.pdf   [Documento de asamblea]
+  2024/ASAMBLEA 2024/Memoria del Ejercicio 2023.docx
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2024/Memoria del Ejercicio 2023.docx   [Documento de asamblea]
+  2024/ASAMBLEA EXTRAORDINARIA 2024/ACTA DE ASAMBLEA EXTRAORDINARIA.pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2024/ACTA DE ASAMBLEA EXTRAORDINARIA.pdf   [Documento de asamblea]
+  2024/ASAMBLEA EXTRAORDINARIA 2024/ASISTENCIA DE ACCIONISTAS2.pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2024/ASISTENCIA DE ACCIONISTAS2.pdf   [Documento de asamblea]
+  2024/ASAMBLEA EXTRAORDINARIA 2024/Constancia de comunicacion Asamblea Extraordinaria 2024 SIPAR S.A..pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2024/Constancia de comunicacion Asamblea Extraordinaria 2024 SIPAR S.A..pdf   [Documento de asamblea]
+  2024/ASAMBLEA EXTRAORDINARIA 2024/Doc1.docx
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2024/Doc1.docx   [Documento de asamblea]
+  2024/ASAMBLEA EXTRAORDINARIA 2024/Doc1.pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2024/Doc1.pdf   [Documento de asamblea]
+  2024/ASAMBLEA EXTRAORDINARIA 2024/FACTURA DE CONVOCATORIA.pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2024/FACTURA DE CONVOCATORIA.pdf   [Documento de asamblea]
+  2024/BALANCE 2023-2022.pdf
+      → 043 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/BALANCE 2023-2022.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  2024/BALANCE 2024-2023   SILICATOS .xlsx
+      → 043 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/BALANCE 2024-2023   SILICATOS .xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+      nota: Excel con 2 vínculo(s) a otros archivos
+  2024/Factura NOV 2024 SILICATOS.pdf
+      → 043 PERIODO 2024/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Factura NOV 2024 SILICATOS.pdf   [Período tomado del nombre del archivo]
+  2024/MODIFICACION DE ESTATUTO N°11 DE LA FIRMA SILICATOS PARAGUAYOS S.A..docx
+      → 043 LEGAL Y SOCIETARIO/MODIFICACION DE ESTATUTO N°11 DE LA FIRMA SILICATOS PARAGUAYOS S.A..docx   [Documento legal o societario]
+  2024/MTESS/2023/CONSTANCIA DE PRESENTACION DE PLANILLAS LABORALES 2023.pdf
+      → 043 PERIODO 2023/DOCUMENTOS LABORALES/MTESS/CONSTANCIA DE PRESENTACION DE PLANILLAS LABORALES 2023.pdf   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+  2024/MTESS/2023/CONSTANCIA DE PRESENTACION PLANILLA LABORALES 2023.pdf
+      → 043 PERIODO 2023/DOCUMENTOS LABORALES/MTESS/CONSTANCIA DE PRESENTACION PLANILLA LABORALES 2023.pdf   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+  2024/silicatos julio 2024 compras -venta.xlsx
+      → 043 PERIODO 2024/DOCUMENTOS CONTABLES/07 JULIO/silicatos julio 2024 compras -venta.xlsx   [Período tomado del nombre del archivo]
+  2024/VENTA DE ACCIONES/CONTRATOS CORREGIDOS/Acta de Directorio SIPAR extravío y reimpresión de acciones.docx
+      → 043 LEGAL Y SOCIETARIO/Acta de Directorio SIPAR extravío y reimpresión de acciones.docx   [Documento legal o societario]
+  2024/VENTA DE ACCIONES/CONTRATOS CORREGIDOS/Contrato de Mutuo V3.docx
+      → 043 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/Contrato de Mutuo V3.docx   [Período tomado del nombre del archivo]
+      nota: Mes tomado del número del nombre dentro de una carpeta de serie mensual
+  2024/VENTA DE ACCIONES/registro de accionistas Diego Beconi.pdf
+      → 043 LEGAL Y SOCIETARIO/registro de accionistas Diego Beconi.pdf   [Documento legal o societario]
+  2025/ACTA DE DIRECTORIO 2025.pdf
+      → 043 LEGAL Y SOCIETARIO/ACTA DE DIRECTORIO 2025.pdf   [Documento legal o societario]
+  2025/BOLETA DE PAGO IRE GENERAL 2024.pdf
+      → 043 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/BOLETA DE PAGO IRE GENERAL 2024.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  2025/Comunicacion mod de estatuto por disminucion de capital/fac de publicacion ..pdf
+      → 043 LEGAL Y SOCIETARIO/fac de publicacion ..pdf   [Documento legal o societario]
+  2025/DOCUMENTOS CONTABLES/6 JUNIO/FACTURA 461-JUNIO.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/FACTURA 461-JUNIO.pdf   [Período tomado de la carpeta donde estaba]
+  2025/DOCUMENTOS CONTABLES/7 JULIO/Factura 502- Julio.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/Factura 502- Julio.pdf   [Período tomado de la carpeta donde estaba]
+  2025/DOCUMENTOS CONTABLES/7 JULIO/Retenciones julio 2025.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/Retenciones julio 2025.pdf   [Período tomado de la carpeta donde estaba]
+  2025/DOCUMENTOS CONTABLES/80012742_REC_202511.xls
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/80012742_REC_202511.xls   [Archivo de sustento de una rectificativa, tal como lo genera el SET (no se renombra)]
+  2025/DOCUMENTOS CONTABLES/80012742_REC_202511.zip
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/80012742_REC_202511.zip   [Archivo de sustento de una rectificativa, tal como lo genera el SET (no se renombra)]
+  2025/DOCUMENTOS CONTABLES/80012742_REC_202512.xls
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/80012742_REC_202512.xls   [Archivo de sustento de una rectificativa, tal como lo genera el SET (no se renombra)]
+  2025/DOCUMENTOS CONTABLES/80012742_REC_202512.zip
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/80012742_REC_202512.zip   [Archivo de sustento de una rectificativa, tal como lo genera el SET (no se renombra)]
+  2025/DOCUMENTOS CONTABLES/BALANCE 2025-2024   SILICATOS .xlsx
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/BALANCE 2025-2024   SILICATOS .xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+      nota: Excel con 2 vínculo(s) a otros archivos
+  2025/DOCUMENTOS CONTABLES/Balance Analítico.pdf 2025 SIPAR.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/Balance Analítico.pdf 2025 SIPAR.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA ORDINARIA 2025/ACTA DE ASAMBLEA N° 34 AÑO 2025.docx
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2025/ACTA DE ASAMBLEA N° 34 AÑO 2025.docx   [Documento de asamblea]
+  2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA ORDINARIA 2025/ACTA DE DIRECTORIO SILICATOS PARAGUAYOS S.A..docx
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2025/ACTA DE DIRECTORIO SILICATOS PARAGUAYOS S.A..docx   [Documento de asamblea]
+  2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA ORDINARIA 2025/ASISTENCIA.pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2025/ASISTENCIA.pdf   [Documento de asamblea]
+  2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA ORDINARIA 2025/Balance 2024.pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2025/Balance 2024.pdf   [Documento de asamblea]
+  2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA ORDINARIA 2025/fac de publicacion ..pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2025/fac de publicacion ..pdf   [Documento de asamblea]
+  2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA ORDINARIA 2025/Informe del Sindico.docx
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2025/Informe del Sindico.docx   [Documento de asamblea]
+  2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA ORDINARIA 2025/Memoria del Directorio 2025.pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2025/Memoria del Directorio 2025.pdf   [Documento de asamblea]
+  2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA ORDINARIA 2025/Memoria del Ejercicio 2023.docx
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2025/Memoria del Ejercicio 2023.docx   [Documento de asamblea]
+  2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA ORDINARIA 2025/Memoria del Ejercicio 2024.docx
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2025/Memoria del Ejercicio 2024.docx   [Documento de asamblea]
+  2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA 670.pdf
+      → 043 PERIODO 2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA 670.pdf   [Honorarios que EFFORT le factura al cliente]
+  2025/EXTRACTOS BANCARIOS/Extracto SILICATOS SUDAM DOLAR 02 2025.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/02 FEBRERO/Extracto SILICATOS SUDAM DOLAR 02 2025.pdf   [Período tomado del nombre del archivo]
+  2025/EXTRACTOS BANCARIOS/Extracto SILICATOS SUDAM DOLAR 03 2025.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/03 MARZO/Extracto SILICATOS SUDAM DOLAR 03 2025.pdf   [Período tomado del nombre del archivo]
+  2025/EXTRACTOS BANCARIOS/SUDAMERI DOLAR JULIO 2025.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/SUDAMERI DOLAR JULIO 2025.pdf   [Período tomado del nombre del archivo]
+  2025/EXTRACTOS BANCARIOS/SUDMERIS AGOSTO 2025 GS.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/SUDMERIS AGOSTO 2025 GS.pdf   [Período tomado del nombre del archivo]
+  2025/EXTRACTOS BANCARIOS/SUDMERIS DOLARES AGOSTO 2025.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/SUDMERIS DOLARES AGOSTO 2025.pdf   [Período tomado del nombre del archivo]
+  2026/DOCUMENTOS CONTABLES/BALANCE 2026-2025   SILICATOS .xlsx
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/CIERRE 2026/BALANCE 2026-2025   SILICATOS .xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+      nota: Excel con 2 vínculo(s) a otros archivos
+  2026/DOCUMENTOS CONTABLES/EXTRACTOS DE CUENTA/Sudameris GS/Banco Sudameris Guaranies julio 2026.pdf
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/Banco Sudameris Guaranies julio 2026.pdf   [Período tomado del nombre del archivo]
+  2026/DOCUMENTOS CONTABLES/EXTRACTOS DE CUENTA/Sudameris USD/ESTRACTO SUDAMERIS DOLARES FEBRERO 2026.pdf
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/ESTRACTO SUDAMERIS DOLARES FEBRERO 2026.pdf   [Período tomado del nombre del archivo]
+  2026/DOCUMENTOS CONTABLES/RG 90/80012742_202603_COMPRAS_304254_1.txt
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/IMPUTACION MASIVA/80012742_202603_COMPRAS_304254_1.txt   [Archivo de imputación masiva del SET (no se renombra)]
+  2026/DOCUMENTOS CONTABLES/RG 90/80012742_202603_COMPRAS_304254_1.zip
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/IMPUTACION MASIVA/80012742_202603_COMPRAS_304254_1.zip   [Archivo de imputación masiva del SET (no se renombra)]
+  2026/DOCUMENTOS CONTABLES/RG 90/80012742_202605_COMPRAS_401182_1.txt
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/IMPUTACION MASIVA/80012742_202605_COMPRAS_401182_1.txt   [Archivo de imputación masiva del SET (no se renombra)]
+  2026/DOCUMENTOS CONTABLES/RG 90/80012742_202605_COMPRAS_401182_1.zip
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/IMPUTACION MASIVA/80012742_202605_COMPRAS_401182_1.zip   [Archivo de imputación masiva del SET (no se renombra)]
+  2026/DOCUMENTOS CONTABLES/RG 90/80012742_202606_COMPRAS_438206_1.txt
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/IMPUTACION MASIVA/80012742_202606_COMPRAS_438206_1.txt   [Archivo de imputación masiva del SET (no se renombra)]
+  2026/DOCUMENTOS CONTABLES/RG 90/80012742_202606_COMPRAS_438206_1.zip
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/IMPUTACION MASIVA/80012742_202606_COMPRAS_438206_1.zip   [Archivo de imputación masiva del SET (no se renombra)]
+  2026/DOCUMENTOS CONTABLES/RG 90/80012742_202606_VENTAS_438202_1.txt
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/IMPUTACION MASIVA/80012742_202606_VENTAS_438202_1.txt   [Archivo de imputación masiva del SET (no se renombra)]
+  2026/DOCUMENTOS CONTABLES/RG 90/80012742_202606_VENTAS_438202_1.zip
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/IMPUTACION MASIVA/80012742_202606_VENTAS_438202_1.zip   [Archivo de imputación masiva del SET (no se renombra)]
+  2026/DOCUMENTOS CONTABLES/RG 90/80012742_202607_COMPRAS_476797_1.txt
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/IMPUTACION MASIVA/80012742_202607_COMPRAS_476797_1.txt   [Archivo de imputación masiva del SET (no se renombra)]
+  2026/DOCUMENTOS CONTABLES/RG 90/80012742_202607_COMPRAS_476797_1.zip
+      → 043 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/IMPUTACION MASIVA/80012742_202607_COMPRAS_476797_1.zip   [Archivo de imputación masiva del SET (no se renombra)]
+  2026/DOCUMENTOS LEGALES/2026 drfs-002---comunicacion-en-el-registro-administrativo-de-personas-y-estructuras-juridicas-7614523.pdf
+      → 043 LEGAL Y SOCIETARIO/2026 drfs-002---comunicacion-en-el-registro-administrativo-de-personas-y-estructuras-juridicas-7614523.pdf   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/2464976_REG.FIRMA.zip
+      → 043 LEGAL Y SOCIETARIO/2464976_REG.FIRMA.zip   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/Acta de Asamblea Nº 33.pdf
+      → 043 LEGAL Y SOCIETARIO/Acta de Asamblea Nº 33.pdf   [Documento de asamblea]
+  2026/DOCUMENTOS LEGALES/ACTA DE DIRECTORIO 2026.docx
+      → 043 LEGAL Y SOCIETARIO/ACTA DE DIRECTORIO 2026.docx   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/ACTA DE DIRECTORIO 2026.jpeg
+      → 043 LEGAL Y SOCIETARIO/ACTA DE DIRECTORIO 2026.jpeg   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/ACTA DE DIRECTORIO 2026.pdf
+      → 043 LEGAL Y SOCIETARIO/ACTA DE DIRECTORIO 2026.pdf   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/ACTA DE DIRECTORIO DESIGNACION DE NUEVO PRESIDENTE.docx
+      → 043 LEGAL Y SOCIETARIO/ACTA DE DIRECTORIO DESIGNACION DE NUEVO PRESIDENTE.docx   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/ACTA DE DIRECTORIO DESIGNACION DE NUEVO PRESIDENTE.pdf
+      → 043 LEGAL Y SOCIETARIO/ACTA DE DIRECTORIO DESIGNACION DE NUEVO PRESIDENTE.pdf   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/ACTA DE DIRECTORIO Nº.docx
+      → 043 LEGAL Y SOCIETARIO/ACTA DE DIRECTORIO Nº.docx   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/ACTA DE DIRECTORIO SILICATOS PARAGUAYOS S.A..docx
+      → 043 LEGAL Y SOCIETARIO/ACTA DE DIRECTORIO SILICATOS PARAGUAYOS S.A..docx   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/Antecedentes para venta de acciones.pdf
+      → 043 LEGAL Y SOCIETARIO/Antecedentes para venta de acciones.pdf   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/ASAMBLEA 2026/Acta N° 37.pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2026/Acta N° 37.pdf   [Documento de asamblea]
+  2026/DOCUMENTOS LEGALES/ASAMBLEA 2026/ASAMBLEA ORDINARIA CARATULA.docx
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2026/ASAMBLEA ORDINARIA CARATULA.docx   [Documento de asamblea]
+  2026/DOCUMENTOS LEGALES/ASAMBLEA 2026/Asistencia de accionistas.pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2026/Asistencia de accionistas.pdf   [Documento de asamblea]
+  2026/DOCUMENTOS LEGALES/ASAMBLEA 2026/borrador asamblea SIPAR 2026.docx
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2026/borrador asamblea SIPAR 2026.docx   [Documento de asamblea]
+  2026/DOCUMENTOS LEGALES/ASAMBLEA 2026/Convocatoria de asamblea 2026.doc
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2026/Convocatoria de asamblea 2026.doc   [Documento de asamblea]
+  2026/DOCUMENTOS LEGALES/ASAMBLEA 2026/Factura electrónica 001-003-0102249.pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2026/Factura electrónica 001-003-0102249.pdf   [Documento de asamblea]
+  2026/DOCUMENTOS LEGALES/ASAMBLEA 2026/Memoria del Ejercicio 2025.docx
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2026/Memoria del Ejercicio 2025.docx   [Documento de asamblea]
+  2026/DOCUMENTOS LEGALES/ASAMBLEA 2026/Memoria del ejercicio 2025.pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2026/Memoria del ejercicio 2025.pdf   [Documento de asamblea]
+  2026/DOCUMENTOS LEGALES/ASAMBLEA 2026/registro de accionistas sipar _compressed.pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2026/registro de accionistas sipar _compressed.pdf   [Documento de asamblea]
+  2026/DOCUMENTOS LEGALES/BALANCE 2025.pdf
+      → 043 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/BALANCE 2025.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  2026/DOCUMENTOS LEGALES/Basa.pdf
+      → 043 LEGAL Y SOCIETARIO/Basa.pdf   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/CEDULA ERNESTO M.pdf
+      → 043 LEGAL Y SOCIETARIO/CEDULA ERNESTO M.pdf   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/Cédula Tributaria _ MARANGATU.pdf
+      → 043 TRIBUTARIO/Cédula Tributaria _ MARANGATU.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  2026/DOCUMENTOS LEGALES/CEDULA_2464976.pdf
+      → 043 LEGAL Y SOCIETARIO/CEDULA_2464976.pdf   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/CEDULA_2464976.zip
+      → 043 LEGAL Y SOCIETARIO/CEDULA_2464976.zip   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/Certificado del acta de defunción.pdf
+      → 043 LEGAL Y SOCIETARIO/Certificado del acta de defunción.pdf   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/Comunciacion en abogacion modif de estatuto N°26.pdf
+      → 043 LEGAL Y SOCIETARIO/Comunciacion en abogacion modif de estatuto N°26.pdf   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/Constancia _ MARANGATU.pdf
+      → 043 LEGAL Y SOCIETARIO/Constancia _ MARANGATU.pdf   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/CONSTANCIA DE INSCRIPCION DE SILICATOS PARAGUAYOS.pdf
+      → 043 LEGAL Y SOCIETARIO/CONSTANCIA DE INSCRIPCION DE SILICATOS PARAGUAYOS.pdf   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/CONTRATO DE PRESTACIOìN DE SERVICIOS PROFESIONALES DE CONSULTORIA Y CONTABILIDAD SIPAR SA.docx
+      → 043 LEGAL Y SOCIETARIO/CONTRATO DE PRESTACIOìN DE SERVICIOS PROFESIONALES DE CONSULTORIA Y CONTABILIDAD SIPAR SA.docx   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/DOC PARA FAC ELECTRONICA.zip
+      → 043 LEGAL Y SOCIETARIO/DOC PARA FAC ELECTRONICA.zip   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/DOC PARA FAC ELECTRONICA/Constitucion de la firma silicatos paraguayos sa.pdf
+      → 043 PERIODO 2026/DOCUMENTOS VARIOS/DOC PARA FAC ELECTRONICA/Constitucion de la firma silicatos paraguayos sa.pdf   [Parte de un pedido o paquete de documentos («DOC PARA FAC ELECTRONICA»): se conserva junto en DOCUMENTOS VARIOS]
+  2026/DOCUMENTOS LEGALES/DOC PARA FAC ELECTRONICA/Modificacion de estatutos 32.pdf
+      → 043 PERIODO 2026/DOCUMENTOS VARIOS/DOC PARA FAC ELECTRONICA/Modificacion de estatutos 32.pdf   [Parte de un pedido o paquete de documentos («DOC PARA FAC ELECTRONICA»): se conserva junto en DOCUMENTOS VARIOS]
+  2026/DOCUMENTOS LEGALES/drfs--comunicacion-en-el-registro-administrativo-de-beneficiarios-finales-5755139 ACTUALIZACION SIPAR 2024.pdf
+      → 043 LEGAL Y SOCIETARIO/drfs--comunicacion-en-el-registro-administrativo-de-beneficiarios-finales-5755139 ACTUALIZACION SIPAR 2024.pdf   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/drfs-comunicacion-en-el-registro-administrativo-de-personas-y-estructuras-juridicas-5755302 ACTUALIZACION 2024.pdf
+      → 043 LEGAL Y SOCIETARIO/drfs-comunicacion-en-el-registro-administrativo-de-personas-y-estructuras-juridicas-5755302 ACTUALIZACION 2024.pdf   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/Escritura_de_Modificación acciones al portador a nominativas 117.pdf
+      → 043 LEGAL Y SOCIETARIO/Escritura_de_Modificación acciones al portador a nominativas 117.pdf   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/estatuto mas modificacion n°26.pdf
+      → 043 LEGAL Y SOCIETARIO/estatuto mas modificacion n°26.pdf   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/ESTATUTO MODIFICADO NRO 26.pdf
+      → 043 LEGAL Y SOCIETARIO/ESTATUTO MODIFICADO NRO 26.pdf   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/INFORME DEL SINDICO 2025.pdf
+      → 043 LEGAL Y SOCIETARIO/INFORME DEL SINDICO 2025.pdf   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/Informe del Sindico.docx
+      → 043 LEGAL Y SOCIETARIO/Informe del Sindico.docx   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/MEMORIA DEL DIRECTORIO 2025.pdf
+      → 043 LEGAL Y SOCIETARIO/MEMORIA DEL DIRECTORIO 2025.pdf   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/Modificación Estatutos 11.pdf
+      → 043 LEGAL Y SOCIETARIO/Modificación Estatutos 11.pdf   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/SIARA/Captura.PNG
+      → 043 LEGAL Y SOCIETARIO/Captura.PNG   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/SIARA/Constitucion de la firma silicatos paraguayos sa_compressed.pdf
+      → 043 LEGAL Y SOCIETARIO/Constitucion de la firma silicatos paraguayos sa_compressed.pdf   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/SIARA/optimized_acta_de_asamblea_2025_4_.pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2025/optimized_acta_de_asamblea_2025_4_.pdf   [Documento de asamblea]
+  2026/DOCUMENTOS LEGALES/Solicitud R.LEGAL 2.0.pdf
+      → 043 LEGAL Y SOCIETARIO/Solicitud R.LEGAL 2.0.pdf   [Documento legal o societario]
+  2026/DOCUMENTOS LEGALES/SOLICITUD R.LEGAL DIEGO BECONI.pdf
+      → 043 LEGAL Y SOCIETARIO/SOLICITUD R.LEGAL DIEGO BECONI.pdf   [Documento legal o societario]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «043 ZZ A CLASIFICAR» (para que lo ubique una persona) (54)
+----------------------------------------------------------------
+  2024/80012742_IRP_2024.xlsx
+  2024/80012742_IRP_2024.zip
+  2024/80012742_REC_2024.xlsx
+  2024/80012742_REC_2024.zip
+  2024/80012742NE2024.docx
+  2024/80012742NE2024.pdf
+  2024/80012742NE2024.zip
+  2024/beneficiarios finales 2024 sipar_240613_111058.pdf
+  2024/CALCULO IRE SIPAR S.A. 2024.xlsx
+  2024/CUADRO DE DEPRECIACION SIN REVALUO DE BIENES 2023.xls
+  2024/DJI IDU 2023.pdf
+  2024/EF2024_89c90896_80012742_948.zip
+  2024/estructura juridica 2024 sipar_240613_112239.pdf
+  2024/MEMORANDUM SR. ERNESTO MARKULJAK POR VENTA DE ACCIONES .docx
+  2024/MEMORANDUM SR. ERNESTO MARKULJAK REUNION 04_07_2024.docx
+  2024/RETIRO DE ACTIVOS POR DISMINUCION DE CAPITAL.xlsx
+  2024/VENTA DE ACCIONES/CONTRATO DE CESION Y VENTA DE ACCIONES.pdf
+  2024/VENTA DE ACCIONES/CONTRATOS CORREGIDOS/CESION DE DERECHOS ACTIVOS SIPAR.doc
+  2024/VENTA DE ACCIONES/CONTRATOS CORREGIDOS/Contrato de transferencia de acciones SIPAR.docx
+  2024/VENTA DE ACCIONES/CONTRATOS/CESION DE DERECHOS ACTIVOS SIPAR.doc
+  2024/VENTA DE ACCIONES/CONTRATOS/Contrato de transferencia de acciones SIPAR.docx
+  2024/VENTA DE ACCIONES/CONTRATOS/Contrato_de_Mútuo_SIPAR_(versión_3.2)1.docx
+  2024/VENTA DE ACCIONES/drfs-decreto-nro.-9043_2018,-art.-9-_-comunicacion-de-transferencia-de-acciones.-6035801.pdf
+  2025/Boleta de Pago RETENCION IDU DIEGO BECONI.pdf
+  2025/DOCUMENTOS CONTABLES/CALCULO IRE SIPAR S.A. 2025.pdf
+  2025/DOCUMENTOS CONTABLES/CALCULO IRE SIPAR S.A. 2025.xlsx
+  2025/DOCUMENTOS CONTABLES/costo 2025.xlsx
+  2025/DOCUMENTOS CONTABLES/FAC ANDE SIPAR 2025.pdf
+  2025/drfs-002---comunicacion-en-el-registro-administrativo-de-personas-y-estructuras-juridicas-6973185.pdf
+  2025/drfs-003---comunicacion-en-el-registro-administrativo-de-beneficiarios-finales-6973490.pdf
+  2025/EXTRACTOS BANCARIOS/Extracto basa novimbre 2025 gs.pdf
+  2025/EXTRACTOS BANCARIOS/Extracto basa setiembr 2025 gs.pdf
+  2025/EXTRACTOS BANCARIOS/Extracto SILICATOS BASA 03  2025.pdf
+  2025/EXTRACTOS BANCARIOS/Extracto SILICATOS BASA 04  2025.pdf
+  2025/EXTRACTOS BANCARIOS/Extracto SILICATOS BASA 05  2025.pdf
+  2025/EXTRACTOS BANCARIOS/Extracto SILICATOS BASA DOLARE 06  2025.pdf
+  2025/EXTRACTOS BANCARIOS/Extracto SILICATOS BASA DOLARES 01  2025.pdf
+  2025/EXTRACTOS BANCARIOS/Extracto SILICATOS BASA DOLARES 03   2025.pdf
+  2025/EXTRACTOS BANCARIOS/Extracto SILICATOS BASA DOLARES 04  2025.pdf
+  2025/EXTRACTOS BANCARIOS/Extracto SILICATOS BASA DOLARES 05  2025.pdf
+  2025/EXTRACTOS BANCARIOS/Extracto SILICATOS SUDAM 02  2025.pdf
+  2025/EXTRACTOS BANCARIOS/Extracto SILICATOS SUDAM 03  2025.pdf
+  2025/EXTRACTOS BANCARIOS/Extracto SILICATOS SUDAM 04  2025.pdf
+  2025/EXTRACTOS BANCARIOS/Extracto SILICATOS SUDAM 05  2025.pdf
+  2025/EXTRACTOS BANCARIOS/Extracto SILICATOS SUDAM 06  205.pdf
+  2025/EXTRACTOS BANCARIOS/Extracto SILICATOS SUDAM DOLAR 01  2025.pdf
+  2025/EXTRACTOS BANCARIOS/Extracto SILICATOS SUDAM DOLAR 04  2025.pdf
+  2025/EXTRACTOS BANCARIOS/Extracto SILICATOS SUDAM DOLAR 05  2025.pdf
+  2025/EXTRACTOS BANCARIOS/Extracto SILICATOS SUDAM DOLAR 06  2025.pdf
+  2025/EXTRACTOS BANCARIOS/SUDAMERIS DICIEMBR DOLARES 2025.pdf
+  2025/EXTRACTOS BANCARIOS/SUDAMERIS NOVIEMBR 2025 GS.pdf
+  2025/RETENCION IDU 2025 ERNESTO MARKULJAK.pdf
+  2025/RETENCION IDU 2025 MARTHA POLETTI.pdf
+  2026/DOCUMENTOS CONTABLES/PATENTE 1ER PERIODO SILICATOS 2026_260519_091342.pdf
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar) (3)
+------------------------------------------------------
+  2024/BALANCE 2024-2023   SILICATOS .xlsx  →  043 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/BALANCE 2024-2023   SILICATOS .xlsx  [Excel con 2 vínculo(s) a otros archivos]
+  2025/DOCUMENTOS CONTABLES/BALANCE 2025-2024   SILICATOS .xlsx  →  043 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/BALANCE 2025-2024   SILICATOS .xlsx  [Excel con 2 vínculo(s) a otros archivos]
+  2026/DOCUMENTOS CONTABLES/BALANCE 2026-2025   SILICATOS .xlsx  →  043 PERIODO 2026/DOCUMENTOS CONTABLES/CIERRE 2026/BALANCE 2026-2025   SILICATOS .xlsx  [Excel con 2 vínculo(s) a otros archivos]
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno

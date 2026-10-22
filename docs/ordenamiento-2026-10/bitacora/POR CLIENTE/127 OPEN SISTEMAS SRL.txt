@@ -1,0 +1,59 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 127 OPEN SISTEMAS SRL
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+
+AL INICIO
+  Archivos: 8 · Peso: 6.7 MB · Subcarpetas con archivos: 1
+
+RESUMEN
+  Duplicados apartados (cuarentena): 0
+  Movidos y renombrados según el manual: 6
+  Movidos conservando su nombre: 2
+  Sin cambios: 0
+  A «127 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 0
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 0
+  Nombres originales que no dicen qué documento son: 4
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  127 LEGAL Y SOCIETARIO: 7
+  127 TRIBUTARIO: 1
+
+DUPLICADOS APARTADOS: ninguno
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron): ninguno
+
+MOVIDOS Y RENOMBRADOS (6)
+-----------------------------
+  DOCUMENTOS LEGALES Y SOCIETARIOS/Comunicacion de ofrecimiento de cuotas OPEN SISTEMAS  SRL Terminus Vision S.L.U.docx
+      → 127 LEGAL Y SOCIETARIO/Comunicacion de ofrecimiento de cuotas OPEN SISTEMAS SRL Terminus Vision S.L.U.docx   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/Comunicacion de ofrecimiento de cuotas OPEN SISTEMAS  SRL.docx
+      → 127 LEGAL Y SOCIETARIO/Comunicacion de ofrecimiento de cuotas OPEN SISTEMAS SRL.docx   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/CONSTANCIA DE RUC OPEN SISTEMAS.pdf
+      → 127 TRIBUTARIO/CONSTANCIA RUC OPEN SISTEMAS SRL.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/CONSTITUCION  Open Sistemas de Información Paraguay S.R.L..PDF
+      → 127 LEGAL Y SOCIETARIO/CONSTITUCION Open Sistemas de Información Paraguay S.R.L..PDF   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/Contrato de compraventa de cuotas LFP74 S.L a Laura Sosa  .docx
+      → 127 LEGAL Y SOCIETARIO/Contrato de compraventa de cuotas LFP74 S.L a Laura Sosa.docx   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/Contrato de compraventa de cuotas Terminus a Lilian Laconich .docx
+      → 127 LEGAL Y SOCIETARIO/Contrato de compraventa de cuotas Terminus a Lilian Laconich.docx   [Documento legal o societario]
+
+MOVIDOS CONSERVANDO SU NOMBRE (2)
+-------------------------------------
+  DOCUMENTOS LEGALES Y SOCIETARIOS/CONTRATO DE PRESTACION DE SERVICIOS.docx
+      → 127 LEGAL Y SOCIETARIO/CONTRATO DE PRESTACION DE SERVICIOS.docx   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/MEMO OPEN SISTEMAS DE INFORMACION SRL.pdf
+      → 127 LEGAL Y SOCIETARIO/MEMO OPEN SISTEMAS DE INFORMACION SRL.pdf   [Documento legal o societario]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «127 ZZ A CLASIFICAR» (para que lo ubique una persona): ninguno
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno

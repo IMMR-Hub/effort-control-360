@@ -1,0 +1,28 @@
+// SOLO LECTURA. ¿El RUC que la planilla propone para cada cliente es de ese cliente? Se compara el nombre de la
+// carpeta con el nombre del contribuyente que dicen las declaraciones de ese RUC.
+const fs = require('fs');
+const inv = JSON.parse(fs.readFileSync('inventario.json', 'utf8'));
+const cont = new Map(fs.readdirSync('.').filter((x) => /^contenido-\d+\.jsonl$/.test(x)).flatMap((x) => fs.readFileSync(x, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l))).map((r) => [r.id, r]));
+const cli = require('./clientes.json');
+const may = (s) => (s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toUpperCase();
+const palabras = (s) => may(s).replace(/[^A-Z0-9 ]/g, ' ').split(/\s+/).filter((w) => w.length > 1 && !['SOCIEDAD', 'ANONIMA', 'EAS', 'UNIPERSONAL', 'SRL', 'LIMITADA', 'RESPONSABILIDAD', 'DEL', 'LOS', 'LAS'].includes(w));
+const nombrePorRuc = new Map();
+for (const i of inv) {
+  const r = cont.get(i.id); if (!r?.decl) continue;
+  const t = r.txt;
+  const m = /Raz[oó]n Social\/Primer Apellido\s+(.{0,80}?)\s+Segundo Apellido\s*(.{0,30}?)\s*Nombres\s*(.{0,40}?)\s*0?1 Declaraci/i.exec(t) ?? /NOMBRE O RAZ[OÓ]N SOCIAL:\s*(.{0,80}?)\s+(?:2-|DIRECCI|$)/i.exec(t);
+  if (m) { const k = r.decl.ruc; const n = m.slice(1).filter(Boolean).join(' ').trim(); const s = nombrePorRuc.get(k) ?? new Map(); s.set(n, (s.get(n) ?? 0) + 1); nombrePorRuc.set(k, s); }
+}
+const dudosos = [];
+for (const [cod, c] of Object.entries(cli)) {
+  if (!c.ruc || !c.carpeta) continue;
+  const ruc = c.ruc.split('-')[0];
+  const nombres = nombrePorRuc.get(ruc);
+  if (!nombres) { dudosos.push([cod, c.carpeta, c.ruc, '(no hay declaración con ese RUC para leer el nombre)']); continue; }
+  const [nombre] = [...nombres].sort((a, b) => b[1] - a[1])[0];
+  const comunes = palabras(c.carpeta).filter((w) => palabras(nombre).includes(w));
+  if (comunes.length === 0) dudosos.push([cod, c.carpeta, c.ruc, nombre]);
+}
+console.log('clientes con RUC en la planilla:', Object.values(cli).filter((c) => c.ruc).length, '· el nombre no coincide:', dudosos.length);
+for (const d of dudosos) console.log(d.join(' | '));
+fs.writeFileSync('rucs-dudosos.json', JSON.stringify(dudosos, null, 1));

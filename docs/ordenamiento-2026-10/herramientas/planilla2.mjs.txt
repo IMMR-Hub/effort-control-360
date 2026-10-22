@@ -1,0 +1,10 @@
+import fs from 'node:fs';
+import { createRequire } from 'node:module';
+const require = createRequire('C:/Users/Daniel/NexusFlow AI/effort-control-360/package.json');
+const ExcelJS = require('exceljs');
+const wb = new ExcelJS.Workbook();
+await wb.xlsx.readFile('C:/Users/Daniel/NexusFlow AI/effort-control-360/docs/analisis-onedrive-2026-10/Planilla de clientes - EFFORT Control 360.xlsx');
+const ws = wb.getWorksheet('Clientes'); const out = {};
+for (let r=3;r<=ws.rowCount;r++){ const v=ws.getRow(r).values; if(!v[1]) continue; out[String(v[1])]={carpeta:v[2]??null, ruc: (typeof v[6]==="string"? v[6]: (v[6]?.richText? v[6].richText.map(t=>t.text).join(""):null)), persona:v[8]??null}; }
+fs.writeFileSync('clientes.json', JSON.stringify(out,null,1));
+console.log(Object.keys(out).length, Object.values(out).filter(c=>c.ruc).length);

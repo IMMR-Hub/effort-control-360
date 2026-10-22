@@ -1,0 +1,79 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 069 EDWIN SETRINI
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+
+AL INICIO
+  Archivos: 18 · Peso: 3.0 MB · Subcarpetas con archivos: 7
+
+RESUMEN
+  Duplicados apartados (cuarentena): 0
+  Movidos y renombrados según el manual: 14
+  Movidos conservando su nombre: 2
+  Sin cambios: 0
+  A «069 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 2
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 0
+  Nombres originales que no dicen qué documento son: 1
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  069 PERIODO 2025: 15
+  069 TRIBUTARIO: 1
+  069 ZZ A CLASIFICAR: 2
+
+DUPLICADOS APARTADOS: ninguno
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron): ninguno
+
+MOVIDOS Y RENOMBRADOS (14)
+-----------------------------
+  2025/DOCUMENTOS CONTABLES/07 JULIO 2025/DDJJ IVA 072025.pdf
+      → 069 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/DDJJ IVA 072025 EDWIN SETRINI.pdf   [Declaración leída por dentro: formulario 120, período 07/2025]
+  2025/DOCUMENTOS CONTABLES/07 JULIO 2025/LIBRO COMPRAS 072025.pdf
+      → 069 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/LIBRO COMPRAS 072025 EDWIN SETRINI.pdf   [Período tomado de la carpeta donde estaba]
+  2025/DOCUMENTOS CONTABLES/07 JULIO 2025/LIBRO VENTAS 072025.pdf
+      → 069 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/LIBRO VENTAS 072025 EDWIN SETRINI.pdf   [Período tomado de la carpeta donde estaba]
+  2025/DOCUMENTOS CONTABLES/07 JULIO 2025/RG COMPRAS 072025.xlsx
+      → 069 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/RG COMPRAS 072025 EDWIN SETRINI.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 07/2025]
+  2025/DOCUMENTOS CONTABLES/07 JULIO 2025/RG VENTAS 072025.xlsx
+      → 069 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/RG VENTAS 072025 EDWIN SETRINI.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 07/2025]
+  2025/DOCUMENTOS CONTABLES/08 AGOSTO 2025/DDJJ IVA 082025.pdf
+      → 069 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/DDJJ IVA 082025 EDWIN SETRINI.pdf   [Declaración leída por dentro: formulario 120, período 08/2025]
+  2025/DOCUMENTOS CONTABLES/08 AGOSTO 2025/LIBRO COMPRAS 082025.pdf
+      → 069 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/LIBRO COMPRAS 082025 EDWIN SETRINI.pdf   [Período tomado de la carpeta donde estaba]
+  2025/DOCUMENTOS CONTABLES/08 AGOSTO 2025/RG COMPRAS 082025.xlsx
+      → 069 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/RG COMPRAS 082025 EDWIN SETRINI.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 08/2025]
+  2025/DOCUMENTOS CONTABLES/09 SEPTIEMBRE/DDJJ IVA 092025.pdf
+      → 069 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/DDJJ IVA 092025 EDWIN SETRINI.pdf   [Declaración leída por dentro: formulario 120, período 09/2025]
+  2025/DOCUMENTOS CONTABLES/09 SEPTIEMBRE/LIBRO COMPRAS 092025.pdf
+      → 069 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO COMPRAS 092025 EDWIN SETRINI.pdf   [Período tomado de la carpeta donde estaba]
+  2025/DOCUMENTOS CONTABLES/09 SEPTIEMBRE/RG COMPRAS 092025.xlsx
+      → 069 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092025 EDWIN SETRINI.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2025]
+  2025/DOCUMENTOS CONTABLES/10 OCTUBRE/DDJJ IVA 102025.pdf
+      → 069 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/DDJJ IVA 102025 EDWIN SETRINI.pdf   [Declaración leída por dentro: formulario 120, período 10/2025]
+  2025/DOCUMENTOS CONTABLES/10 OCTUBRE/LIBRO COMPRAS 102025.pdf
+      → 069 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/LIBRO COMPRAS 102025 EDWIN SETRINI.pdf   [Período tomado de la carpeta donde estaba]
+  2025/DOCUMENTOS CONTABLES/10 OCTUBRE/RG COMPRAS 102025.xlsx
+      → 069 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/RG COMPRAS 102025 EDWIN SETRINI.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 10/2025]
+
+MOVIDOS CONSERVANDO SU NOMBRE (2)
+-------------------------------------
+  2025/DOCUMENTOS CONTABLES/07 JULIO 2025/CCT VALIDO HASTA 21092025.pdf
+      → 069 TRIBUTARIO/CCT VALIDO HASTA 21092025.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/DDJJ IVA 112025 EDWIN SETRINI.pdf
+      → 069 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/DDJJ IVA 112025 EDWIN SETRINI.pdf   [Declaración leída por dentro: formulario 120, período 11/2025]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «069 ZZ A CLASIFICAR» (para que lo ubique una persona) (2)
+----------------------------------------------------------------
+  2025/PLANILLA DETERMINACION IMPUESTOS.xls
+  2026/AUTORIZACION BAJA DE DOCUMENTOS.pdf
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno

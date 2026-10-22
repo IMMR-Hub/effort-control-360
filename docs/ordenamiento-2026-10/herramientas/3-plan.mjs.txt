@@ -1,0 +1,636 @@
+// SOLO CALCULA. Arma el plan de ordenamiento de cada cliente según el Manual v1.3 y el cliente modelo 999.
+// No mueve ni renombra nada: escribe plan.json (una fila por archivo) y resumen-plan.json.
+// Entradas: inventario.json (1-inventario), contenido-*.jsonl (2-contenido), clientes.json (planilla de clientes).
+//
+// Criterio general: se mueve y se renombra SOLO lo que se sabe con certeza. Lo que no se puede ubicar va a
+// «NNN ZZ A CLASIFICAR» conservando su ruta original (para que una persona lo resuelva con el contexto a mano).
+// Un nombre que no se puede deducir con certeza se conserva (solo se limpia «(1)», «copia», espacios dobles).
+import fs from 'node:fs';
+import { pathToFileURL } from 'node:url';
+
+const RAIZ_REPO = 'C:/Users/Daniel/NexusFlow AI/effort-control-360';
+const { clasificarDocumento } = await import(pathToFileURL(`${RAIZ_REPO}/packages/core/dist/index.js`).href);
+
+const inventario = JSON.parse(fs.readFileSync('inventario.json', 'utf8')).filter((i) => i.cod !== '999');
+const contenido = new Map();
+for (const f of fs.readdirSync('.').filter((f) => /^contenido-\d+\.jsonl$/.test(f)))
+  for (const l of fs.readFileSync(f, 'utf8').split('\n')) if (l) { try { const r = JSON.parse(l); contenido.set(r.id, r); } catch {} }
+const planilla = JSON.parse(fs.readFileSync('clientes.json', 'utf8'));
+
+// ------------------------------------------------------------------ utilidades de texto
+const MESES = ['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SETIEMBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE'];
+const sinTildes = (s) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').normalize('NFC');
+const mayus = (s) => sinTildes(s).toUpperCase();
+const mm = (n) => String(n).padStart(2, '0');
+// Palabras de mes (completas o abreviadas) → número. Las abreviadas solo valen como palabra entera.
+const MES_PALABRA = new Map([
+  ['ENERO', 1], ['ENE', 1], ['FEBRERO', 2], ['FEB', 2], ['MARZO', 3], ['MAR', 3], ['ABRIL', 4], ['ABR', 4], ['MAYO', 5], ['MAY', 5],
+  ['JUNIO', 6], ['JUN', 6], ['JULIO', 7], ['JUL', 7], ['AGOSTO', 8], ['AGO', 8], ['SETIEMBRE', 9], ['SEPTIEMBRE', 9], ['SETEIMBRE', 9],
+  ['SETIEMRE', 9], ['SEPTIMEBRE', 9], ['SET', 9], ['SEP', 9], ['SEPT', 9], ['OCTUBRE', 10], ['OCT', 10], ['NOVIEMBRE', 11], ['NOV', 11],
+  ['DICIEMBRE', 12], ['DIC', 12],
+]);
+const MES_COMPLETO = new Set(['ENERO', 'FEBRERO', 'MARZO', 'ABRIL', 'MAYO', 'JUNIO', 'JULIO', 'AGOSTO', 'SETIEMBRE', 'SEPTIEMBRE', 'SETEIMBRE', 'SETIEMRE', 'SEPTIMEBRE', 'OCTUBRE', 'NOVIEMBRE', 'DICIEMBRE']);
+// Separa palabras y también dígitos pegados a letras («4ABRIL», «FEBRERO2025»).
+const tokens = (s) => mayus(s).replace(/([A-Z])(\d)/g, '$1 $2').replace(/(\d)([A-Z])/g, '$1 $2').split(/[^A-Z0-9]+/).filter(Boolean);
+const anioValido = (a) => a >= 2000 && a <= 2035;
+
+/** Mes y año que dice el nombre de una CARPETA («06 JUNIO», «AGOSTO 2025», «4ABRIL», «PERIODO 2025»). */
+function leerCarpeta(seg) {
+  const t = tokens(seg);
+  let mes = null, anio = null;
+  for (const x of t) {
+    if (MES_PALABRA.has(x) && mes === null) mes = MES_PALABRA.get(x);
+    if (/^\d{4}$/.test(x) && anioValido(+x)) anio = +x;
+  }
+  return { mes, anio };
+}
+
+// Nombres que son fotos, capturas o escaneos: su fecha es la de la captura, no la del período.
+const NOMBRE_DE_CAPTURA = /whats\s*app|^img[-_ ]|^img\d|^photo[-_ ]|camscanner|screenshot|captura|^scan|^escaneo|^\d{8}_\d{6}|^pxl_|^dsc|^document[-_ ]?\d/i;
+
+/** Mes y año que dice el NOMBRE de un archivo, con cuidado de no tomar fechas de captura ni de emisión. */
+function leerNombre(nombre) {
+  if (NOMBRE_DE_CAPTURA.test(nombre)) return { mes: null, anio: null };
+  let s = mayus(nombre.replace(/\.[A-Za-z0-9]{1,5}$/, ''));
+  // Fechas completas (día-mes-año o año-mes-día): son de emisión o captura, no del período. Se quitan.
+  s = s.replace(/(?<!\d)\d{1,2}[-/._]\d{1,2}[-/._](\d{4}|\d{2})(?!\d)/g, ' ').replace(/(?<!\d)\d{4}[-/._]\d{1,2}[-/._]\d{1,2}(?!\d)/g, ' ');
+  let mes = null, anio = null;
+  let m = /(?<!\d)(0[1-9]|1[0-2])[-_./ ]?(20[0-3]\d)(?!\d)/.exec(s); // 032026, 03-2026, 03_2026, 03 2026
+  if (m) return { mes: +m[1], anio: +m[2] };
+  m = /(?<!\d)(20[0-3]\d)[-_.](0[1-9]|1[0-2])(?!\d)/.exec(s); // 2026-03
+  if (m) return { mes: +m[2], anio: +m[1] };
+  const t = tokens(s);
+  for (let i = 0; i < t.length; i++) {
+    const x = t[i];
+    if (MES_PALABRA.has(x)) {
+      const vecinoAnio = [t[i + 1], t[i - 1], t[i + 2]].find((y) => y && /^\d{4}$/.test(y) && anioValido(+y));
+      if (MES_COMPLETO.has(x) || vecinoAnio) { if (mes === null) mes = MES_PALABRA.get(x); }
+    }
+  }
+  const anios = [...new Set(t.filter((x) => /^\d{4}$/.test(x) && anioValido(+x)).map(Number))];
+  if (anios.length === 1) anio = anios[0];
+  return { mes, anio, variosAnios: anios.length > 1 };
+}
+
+// ------------------------------------------------------------------ clientes
+function nombreParaArchivo(carpeta) {
+  return mayus(carpeta.replace(/^\d{3}\s*/, '')).replace(/\./g, ' ').replace(/[^A-Z0-9Ñ&\- ]/g, ' ').replace(/\s*-\s*$/, '').replace(/\s+/g, ' ').trim()
+    // Se conservan la Ñ y las tildes del nombre original donde no hay ambigüedad.
+    ;
+}
+function nombreConEnes(carpeta) {
+  // Igual que arriba pero respetando Ñ y tildes (el manual las permite).
+  return carpeta.replace(/^\d{3}\s*/, '').toUpperCase().replace(/\.\s*/g, (m) => (m.length > 1 ? ' ' : '')).replace(/[\\/:*?"<>|#%~]/g, ' ').replace(/\s*-\s*$/, '').replace(/\s+/g, ' ').trim();
+}
+const clientes = new Map();
+for (const i of inventario) {
+  if (clientes.has(i.cod)) continue;
+  const carpeta = i.rel.split('/')[0];
+  const ruc = planilla[i.cod]?.ruc ?? null;
+  clientes.set(i.cod, { cod: i.cod, carpeta, nombreArchivo: nombreConEnes(carpeta), ruc: ruc ? ruc.split('-')[0].replace(/\D/g, '') : null });
+}
+// RUC de la planilla que resultaron NO ser del cliente (verificado leyendo el nombre del contribuyente en la declaración).
+const RUC_INCORRECTOS = { '056': 'el 1300663 de la planilla es de DAVID TADEO FRANCISCO ROMERO CABALLERO (cliente 045), según su propia declaración' };
+for (const [cod, motivo] of Object.entries(RUC_INCORRECTOS)) if (clientes.has(cod)) { clientes.get(cod).ruc = null; clientes.get(cod).rucDescartado = motivo; }
+// Sin RUC en la planilla: el que más se repite en las declaraciones de su carpeta (60 % o más).
+const rucsVistos = new Map();
+for (const a of inventario) {
+  const d = contenido.get(a.id)?.decl; if (!d) continue;
+  const m = rucsVistos.get(a.cod) ?? new Map(); m.set(d.ruc, (m.get(d.ruc) ?? 0) + 1); rucsVistos.set(a.cod, m);
+}
+for (const c of clientes.values()) {
+  if (c.ruc || c.rucDescartado) continue;
+  const m = rucsVistos.get(c.cod); if (!m) continue;
+  const [ruc, n] = [...m].sort((x, y) => y[1] - x[1])[0]; const total = [...m.values()].reduce((s, x) => s + x, 0);
+  if (n / total >= 0.6) { c.ruc = ruc; c.rucDeducido = true; }
+}
+const clientePorRuc = new Map();
+for (const c of clientes.values()) if (c.ruc && !clientePorRuc.has(c.ruc)) clientePorRuc.set(c.ruc, c.cod);
+
+// ------------------------------------------------------------------ duplicados
+// (a) archivos idénticos (huella + peso) dentro del mismo cliente;
+// (b) la MISMA declaración presentada (mismo número de orden de la DNIT) bajada más de una vez: el PDF difiere
+//     por la fecha de impresión, pero es el mismo documento. El número de orden es único en toda la DNIT.
+const ordenDeDeclaracion = (r) => {
+  if (!r?.decl) return null;
+  const t = mayus(r.txt ?? '');
+  return /NUMERO DE ORDEN\s+(\d{8,15})/.exec(t)?.[1] ?? /NUMERO\s+(\d{8,15})/.exec(t)?.[1] ?? /ORDEN\s+N[°º]?\s*(\d{8,15})/.exec(t)?.[1] ?? null;
+};
+const padre = new Map();
+const raiz = (x) => { while (padre.get(x) !== x) { padre.set(x, padre.get(padre.get(x))); x = padre.get(x); } return x; };
+const unir = (a, b) => { padre.set(raiz(a), raiz(b)); };
+for (const a of inventario) padre.set(a.id, a.id);
+const primeroPor = new Map();
+for (const a of inventario) {
+  if (a.hash && a.tam > 0) { const k = `h|${a.cod}|${a.hash}|${a.tam}`; if (primeroPor.has(k)) unir(a.id, primeroPor.get(k)); else primeroPor.set(k, a.id); }
+  const o = ordenDeDeclaracion(contenido.get(a.id));
+  if (o) { const k = `o|${contenido.get(a.id).decl.f}|${o}`; if (primeroPor.has(k)) unir(a.id, primeroPor.get(k)); else primeroPor.set(k, a.id); }
+}
+const grupos = new Map();
+for (const a of inventario) { const k = raiz(a.id); (grupos.get(k) ?? grupos.set(k, []).get(k)).push(a); }
+const grupoDe = (a) => grupos.get(raiz(a.id));
+
+// ------------------------------------------------------------------ vínculos de Excel
+// Un Excel con vínculos y los archivos a los que apunta no se renombran (la fórmula se rompe).
+const congelado = new Map(); // id → motivo
+const viajaCon = new Map(); // id del archivo usado → id del Excel que lo usa
+const porClienteYNombre = new Map();
+for (const a of inventario) { const k = `${a.cod}|${mayus(a.rel.split('/').pop())}`; (porClienteYNombre.get(k) ?? porClienteYNombre.set(k, []).get(k)).push(a); }
+for (const a of inventario) {
+  const r = contenido.get(a.id);
+  if (!r?.externos) continue;
+  congelado.set(a.id, `Excel con ${r.externos} vínculo(s) a otros archivos`);
+  for (const d of r.destinos ?? []) {
+    const base = mayus(d.split(/[\\/]/).pop() ?? '');
+    for (const t of porClienteYNombre.get(`${a.cod}|${base}`) ?? []) {
+      if (!congelado.has(t.id)) congelado.set(t.id, `Otro Excel lo usa por vínculo (${a.rel.split('/').pop()})`);
+      // Si están en la misma carpeta, el archivo usado viaja con el Excel que lo usa (el vínculo relativo sigue andando).
+      if (t.rel.split('/').slice(0, -1).join('/') === a.rel.split('/').slice(0, -1).join('/') && t.id !== a.id) viajaCon.set(t.id, a.id);
+    }
+  }
+}
+
+// ------------------------------------------------------------------ reglas de zona
+const R = {
+  legal: /\bLEGAL|SOCIETAR|SOCITARI|\bSIARA\b|ESTATUTO|ASAMBLEA|\bACTAS?\b|\bPODER(ES)?\b|ACCIONISTA|CONSTITUCION|ESCRITURA|PROTOCOLIZ/,
+  asamblea: /ASAMBLEA/,
+  tributario: /\bCCT\b|CUMPLIMIENTO TRIBUTARIO|CONSTANCIA (DE )?(INSCRIPCION )?(EN EL )?RUC|CONSTANCIA RUC|INSCRIPCION (EN EL )?RUC|CEDULA TRIBUTARIA|\bTIMBRADO\b/,
+  ips: /\bIPS\b/,
+  mtess: /MTESS|\bRRHH\b|LABORAL|SUELDO|SALARI|CONTRATOS? DE TRABAJO|FUNCIONARIO|AGUINALDO|VACACION|PLANILLA DE PERSONAL/,
+  factEffort: /FACTURACION EFFORT|\bFAC(T|TURA)?\.? EFFORT\b|HONORARIOS EFFORT/,
+  // Carpetas que son un PEDIDO o un PAQUETE de documentos para un tercero: se conservan enteras en VARIOS.
+  // «CREDITO» solo como pedido de crédito: «NOTAS DE CREDITO» es otra cosa.
+  // (Un nombre de banco solo, como INTERFISA o BNF, NO es un paquete: suele ser la carpeta de sus extractos.)
+  paquete: /PEDIDO|AUDITORI|REQUERIMIENTO|SOLICITUD|BANCO MUNDIAL|PLAN DE NEGOCIO|INVERSIONES|\bDOC(UMENTOS)? PARA\b|(LINEA|CARPETA) DE CREDITO|PRESTAMO|PRESUPUESTO|ENVIADO/,
+  varios: /^DOCUMENTOS VARIOS$|^VARIOS$/,
+  cierre: /CIERR+E|\bBALANCE|\bEE\.? ?FF\b|ESTADOS? FINANCIERO|\bIRP\b|\bIRE\b|INVENTARIO|DICTAMEN|\bANUAL\b|\bRENTA\b/,
+  nc: /NOTAS? DE CREDITO|^NC\b|\bNC (EMITIDAS|RECIBIDAS)/,
+  imputacion: /IMPUTACION/,
+};
+const IMPUTACION_NOMBRE = /^\d{6,9}_(\d{4})(\d{2})_(COMPRAS|VENTAS|[A-Z]+)_/i;
+
+const BANCOS = [['ITAU', /\bITA[UÚ]\b/], ['CONTINENTAL', /CONTINENTAL/], ['SUDAMERIS', /SUDAMERIS|SUDAME\b/], ['BASA', /\bBASA\b/], ['GNB', /\bGNB\b/], ['FAMILIAR', /FAMILIAR/], ['VISION', /VISION/], ['ATLAS', /\bATLAS\b/], ['INTERFISA', /INTERFISA/], ['BNF', /\bBNF\b|NACIONAL DE FOMENTO/], ['UENO', /\bUENO\b/], ['ZETA', /\bZETA\b/], ['BANCOP', /BANCOP/], ['RIO', /\bRIO\b/], ['SOLAR', /\bSOLAR\b/], ['FIC', /\bFIC\b/], ['TU FINANCIERA', /TU FINANCIERA/], ['CITIBANK', /CITI/]];
+
+// ------------------------------------------------------------------ el plan
+const plan = [];
+const sumar = (o, k) => { o[k] = (o[k] ?? 0) + 1; };
+
+for (const a of inventario) {
+  const c = clientes.get(a.cod);
+  const partes = a.rel.split('/');
+  const original = partes.pop();
+  const carpetas = partes.slice(1); // dentro del cliente
+  const ext = (/\.([A-Za-z0-9]{1,5})$/.exec(original)?.[1] ?? '').toLowerCase();
+  const base = original.replace(/\.[A-Za-z0-9]{1,5}$/, '');
+  const r = contenido.get(a.id) ?? {};
+  const fila = { id: a.id, cod: a.cod, cliente: c.carpeta, origen: a.rel, tam: a.tam, hash: a.hash, mod: a.mod, notas: [], ext: (/\.([A-Za-z0-9]{1,5})$/.exec(original)?.[1] ?? ''), baseOriginal: original.replace(/\.[A-Za-z0-9]{1,5}$/, ''), congelado: congelado.has(a.id) };
+  plan.push(fila);
+
+  // ---- 1. duplicado: se conserva el más antiguo (por fecha de modificación); a igual fecha, el mejor ubicado
+  const g = grupoDe(a);
+  if (g && g.length > 1) {
+    // Primero el que está en el cliente correcto (para una declaración: el del RUC que declara).
+    const enSuCliente = (x) => { const dd = contenido.get(x.id)?.decl; const rc = clientes.get(x.cod).ruc; return !dd || !rc || dd.ruc === rc ? 0 : 1; };
+    const orden = [...g].sort((x, y) => {
+      const cx = congelado.has(x.id) ? 0 : 1, cy = congelado.has(y.id) ? 0 : 1;
+      if (cx !== cy) return cx - cy;
+      if (enSuCliente(x) !== enSuCliente(y)) return enSuCliente(x) - enSuCliente(y);
+      if (x.mod !== y.mod) return x.mod.localeCompare(y.mod);
+      const px = /PERIODO/i.test(x.rel) && !R.paquete.test(mayus(x.rel)) ? 0 : 1, py = /PERIODO/i.test(y.rel) && !R.paquete.test(mayus(y.rel)) ? 0 : 1;
+      if (px !== py) return px - py;
+      return x.rel.length - y.rel.length || x.rel.localeCompare(y.rel);
+    });
+    if (orden[0].id !== a.id && !congelado.has(a.id)) {
+      fila.accion = 'DUPLICADO';
+      fila.destinoRel = `ZZ DUPLICADOS PARA REVISAR/${a.rel}`;
+      fila.conservado = orden[0].rel;
+      fila.idConservado = orden[0].id;
+      fila.motivo = a.hash === orden[0].hash ? 'Copia idéntica (mismo contenido byte por byte)' : `La misma declaración presentada (mismo número de orden ${ordenDeDeclaracion(contenido.get(a.id))}), bajada otra vez`;
+      continue;
+    }
+  }
+
+  // ---- 2. contexto de las carpetas
+  let anioCarpeta = null, mesCarpeta = null, idxMes = -1, cierreCarpeta = null;
+  const segsMay = carpetas.map(mayus);
+  carpetas.forEach((s, i) => {
+    const l = leerCarpeta(s);
+    if (l.anio) anioCarpeta = l.anio;
+    if (l.mes) { mesCarpeta = l.mes; idxMes = i; }
+    if (R.cierre.test(segsMay[i]) && !R.paquete.test(segsMay[i])) cierreCarpeta = l.anio ?? cierreCarpeta ?? true;
+  });
+  const enRuta = (re) => segsMay.some((s) => re.test(s));
+  const idxPaquete = segsMay.findIndex((s) => R.paquete.test(s));
+  const idxVarios = segsMay.findIndex((s) => R.varios.test(s));
+  const nom = leerNombre(original);
+  const nomMay = mayus(base);
+  const tipo = clasificarDocumento(original, partes.join('/'));
+  const texto = mayus(r.txt ?? '');
+
+  // ---- 3. ¿de quién es? (una declaración de la DNIT con el RUC de otro contribuyente)
+  let codDestino = a.cod;
+  const d = r.decl;
+  // Una carpeta de OTRO cliente metida dentro de este («045 DAVID ROMERO» dentro del 056): no se mezcla con este
+  // cliente. Va entera a ZZ A CLASIFICAR, salvo las declaraciones cuyo RUC es de un cliente con carpeta propia.
+  const palabrasDe = (s) => mayus(s).replace(/[^A-Z0-9 ]/g, ' ').split(/\s+/).filter((w) => w.length > 2);
+  const segOtro = carpetas.find((s) => {
+    const m = /^(\d{3})\s+(.+)$/.exec(s.trim());
+    if (!m || m[1] === a.cod) return false;
+    const pc = planilla[m[1]]?.carpeta;
+    return pc && palabrasDe(m[2]).some((w) => palabrasDe(pc).includes(w));
+  });
+  if (segOtro && !(d && clientePorRuc.has(d.ruc) && clientePorRuc.get(d.ruc) !== a.cod)) {
+    fila.accion = 'MOVER'; fila.zona = 'ZZ';
+    fila.destinoRel = `${c.carpeta}/${c.cod} ZZ A CLASIFICAR/${carpetas.join('/')}/${original}`;
+    fila.motivo = `Está dentro de «${segOtro}», que parece la carpeta de otro cliente: no se mezcla con este; queda para que EFFORT diga de quién es`;
+    fila.nuevoNombre = original;
+    continue;
+  }
+  if (d && c.ruc && d.ruc !== c.ruc) {
+    const otro = clientePorRuc.get(d.ruc);
+    fila.notas.push(`Declaración con RUC ${d.ruc}, que no es el del cliente (${c.ruc})`);
+    if (otro) { codDestino = otro; fila.otroCliente = clientes.get(otro).carpeta; }
+    else { fila.accion = 'MOVER'; fila.zona = 'GENERAL_ZZ'; fila.destinoRel = `ZZ A CLASIFICAR/${a.rel}`; fila.motivo = `Declaración de un RUC (${d.ruc}) que no es de ningún cliente con carpeta`; continue; }
+  }
+  const cd = clientes.get(codDestino);
+
+  // ---- 4. período y zona
+  let zona = null, anio = null, mes = null, sub = null, nuevo = null, motivo = '', noRenombrar = false;
+  const per = (y, m) => `${mm(m)}${y}`;
+
+  if (congelado.has(a.id)) {
+    // Se ubica igual que el resto, pero sin renombrar (ver 6).
+    fila.notas.push(congelado.get(a.id));
+  }
+
+  if (d && codDestino) {
+    const [y, m] = d.per.split('-').map(Number);
+    const rectificaAnual = d.f === '145' && /FORMULARIO QUE RECTIFICA\s+10\s+(500|158)\b/.test(texto);
+    if (d.f === '500' || d.f === '158' || rectificaAnual) { zona = 'CIERRE'; anio = y; motivo = `Declaración leída por dentro: formulario ${d.f}, ejercicio ${y}`; }
+    else { zona = 'MES'; anio = y; mes = m; motivo = `Declaración leída por dentro: formulario ${d.f}, período ${mm(m)}/${y}`; }
+    const cf = anioCarpeta;
+    if ((mesCarpeta && cf && (cf !== anio || mesCarpeta !== mes) && zona === 'MES') || (zona === 'CIERRE' && cf && cf !== anio && cf !== anio + 1))
+      fila.notas.push(`Estaba guardada en la carpeta de ${mesCarpeta ? MESES[mesCarpeta - 1] + ' ' : ''}${cf ?? ''}: no corresponde al período que declara`);
+  } else if (r.rg90?.filas > 0 && Object.keys(r.rg90.tipos).length === 1) {
+    const [pp] = Object.entries(r.rg90.pers).sort((x, y) => y[1] - x[1] || x[0].localeCompare(y[0]));
+    const [y, m] = pp[0].split('-').map(Number);
+    if (anioValido(y)) { zona = 'MES'; anio = y; mes = m; motivo = `Planilla RG 90 leída por dentro: ${Object.keys(r.rg90.tipos)[0]}, período ${mm(m)}/${y}`; }
+  }
+
+  const rutaYNombre = mayus([...carpetas, base].join(' / '));
+  if (!zona) {
+    const imp = IMPUTACION_NOMBRE.exec(original);
+    const rec = /^\d{6,9}_REC_(\d{4})(\d{2})\b/i.exec(original);
+    if (imp && anioValido(+imp[1])) { zona = 'MES'; anio = +imp[1]; mes = +imp[2]; sub = 'IMPUTACION MASIVA'; motivo = 'Archivo de imputación masiva del SET (no se renombra)'; }
+    else if (rec && anioValido(+rec[1]) && +rec[2] >= 1 && +rec[2] <= 12) { zona = 'MES'; anio = +rec[1]; mes = +rec[2]; noRenombrar = true; motivo = 'Archivo de sustento de una rectificativa, tal como lo genera el SET (no se renombra)'; }
+  }
+
+  // Documentos de naturaleza mensual: si el nombre dice el mes, van al mes aunque estén en una carpeta anual.
+  const mensualPorTipo = ['LIBRO_COMPRAS', 'LIBRO_VENTAS', 'FACTURA_COMPRA', 'FACTURA_VENTA', 'EXTRACTO_BANCARIO', 'RETENCION', 'NOTA_CREDITO', 'NOTA_DEBITO', 'RECIBO'].includes(tipo);
+  const esEffort = a.cod === '022'; // EFFORT como cliente: sus facturas son ventas propias, no «facturación de EFFORT»
+  const limpiarSub = (segs) => segs.filter((s) => !/^(\d{3} )?PERIODO \d{4}$|^DOCUMENTOS (VARIOS|CONTABLES)$|^VARIOS$|^\d{4}$/.test(mayus(s).trim())).join('/') || null;
+
+  // (a) un PEDIDO o PAQUETE para un tercero (auditoría, banco): se conserva junto, en DOCUMENTOS VARIOS.
+  const idxPaq = segsMay.findIndex((s) => R.paquete.test(s));
+  // (b) lo que dice el NOMBRE, cuando es claro
+  const N = nomMay;
+  const porNombre = (() => {
+    if (!esEffort && (/FACTURACION EFFORT|HONORARIOS EFFORT/.test(N) || (/\bEFFORT\b/.test(N) && /\bFAC(T|TURA)?\b/.test(N)))) return 'FACT_EFFORT';
+    if (R.tributario.test(N) || (/CONSTANCIA/.test(N) && /\bRUC\b/.test(N))) return 'TRIBUTARIO';
+    if (R.asamblea.test(N)) return 'ASAMBLEA';
+    if (/\bIPS\b/.test(N)) return 'IPS';
+    if (/MTESS|SUELDO|SALARI|AGUINALDO|CONTRATO (LABORAL|DE TRABAJO)|LIQUIDACION DE HABERES|PLANILLA DE PERSONAL/.test(N)) return 'MTESS';
+    if (['ESTATUTO', 'ACTA', 'PODER'].includes(tipo) || /ESTATUTO|ACCIONISTA|CONSTITUCION (DE (LA )?)?SOCIEDAD|ESCRITURA/.test(N)) return 'LEGAL';
+    if (/\bEE ?FF\b|ESTADOS? FINANCIERO|\bBALANCE\b|INVENTARIO|DICTAMEN|\bIRP\b|\bIRE\b.*\b(ANUAL|CIERRE|GENERAL|SIMPLE)\b/.test(N) && !(nom.mes && mensualPorTipo)) return 'CIERRE';
+    return null;
+  })();
+  // (c) lo que dice la CARPETA más profunda que dice algo
+  const porCarpeta = (() => {
+    for (let i = segsMay.length - 1; i >= 0; i--) {
+      const s = segsMay[i];
+      if (!esEffort && R.factEffort.test(s)) return { z: 'FACT_EFFORT', i };
+      if (R.asamblea.test(s)) return { z: 'ASAMBLEA', i };
+      if (R.tributario.test(s)) return { z: 'TRIBUTARIO', i };
+      if (R.ips.test(s)) return { z: 'IPS', i };
+      if (R.mtess.test(s)) return { z: 'MTESS', i };
+      if (R.legal.test(s)) return { z: 'LEGAL', i };
+      if (R.cierre.test(s)) return { z: 'CIERRE', i };
+      if (R.varios.test(s)) return { z: 'VARIOS', i };
+      if (leerCarpeta(s).mes) return { z: 'MES', i };
+    }
+    return null;
+  })();
+
+  if (!zona) {
+    // Los documentos de una asamblea quedan juntos en ASAMBLEA AAAA (salvo la identidad tributaria y la facturación de EFFORT).
+    const asambleaEnCarpeta = segsMay.some((s) => R.asamblea.test(s));
+    const z = idxPaq >= 0 ? 'PAQUETE'
+      : ['FACT_EFFORT', 'TRIBUTARIO'].includes(porNombre) ? porNombre
+      : asambleaEnCarpeta ? 'ASAMBLEA'
+      : porNombre ?? porCarpeta?.z ?? null;
+    const anioNombreOCarpeta = nom.mes && nom.anio ? nom.anio : anioCarpeta ?? nom.anio;
+    switch (z) {
+      case 'PAQUETE':
+        zona = 'VARIOS'; anio = anioCarpeta ?? nom.anio; sub = limpiarSub(carpetas.slice(idxPaq));
+        motivo = `Parte de un pedido o paquete de documentos («${carpetas[idxPaq]}»): se conserva junto en DOCUMENTOS VARIOS`; break;
+      case 'FACT_EFFORT':
+        zona = 'FACT_EFFORT'; anio = anioNombreOCarpeta; motivo = 'Honorarios que EFFORT le factura al cliente'; break;
+      case 'ASAMBLEA': {
+        zona = 'LEGAL';
+        const segA = carpetas.find((s) => /ASAMBLEA/.test(mayus(s)));
+        const y = (segA && leerCarpeta(segA).anio) ?? nom.anio;
+        sub = y ? `ASAMBLEA ${y}` : null; motivo = 'Documento de asamblea'; break;
+      }
+      case 'TRIBUTARIO': zona = 'TRIBUTARIO'; motivo = 'Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)'; break;
+      case 'LEGAL': zona = 'LEGAL'; motivo = 'Documento legal o societario'; break;
+      case 'IPS': zona = 'IPS'; anio = anioNombreOCarpeta; motivo = 'Documento del IPS'; break;
+      case 'MTESS':
+        zona = 'MTESS'; anio = anioNombreOCarpeta; motivo = 'Documento laboral (MTESS, sueldos, contratos de trabajo)';
+        // Un contrato de trabajo sin año es un contrato: va con los contratos, en LEGAL Y SOCIETARIO (que no lleva año).
+        if (!anioValido(anio) && /CONTRATO/.test(rutaYNombre)) { zona = 'LEGAL'; motivo = 'Contrato de trabajo (sin año: va con los contratos)'; }
+        break;
+      case 'CIERRE': {
+        if (mensualPorTipo && nom.mes && (nom.anio ?? anioCarpeta)) { zona = 'MES'; anio = nom.anio ?? anioCarpeta; mes = nom.mes; motivo = 'Documento mensual (el nombre dice el mes) guardado en una carpeta anual'; break; }
+        zona = 'CIERRE';
+        const segC = porCarpeta?.z === 'CIERRE' ? leerCarpeta(carpetas[porCarpeta.i]).anio : null;
+        anio = segC ?? (nom.anio && !nom.variosAnios ? nom.anio : anioCarpeta);
+        motivo = 'Documento anual del cierre (IRE, IRP, estados financieros, balance)'; break;
+      }
+      case 'VARIOS': {
+        // Un documento contable que dice su mes (un extracto, una planilla, una DDJJ) va a su mes aunque estuviera en VARIOS.
+        const debajo = carpetas.slice(porCarpeta.i + 1);
+        const mesDebajo = debajo.map(leerCarpeta).reverse().find((l) => l.mes);
+        const m2 = nom.mes ?? mesDebajo?.mes; const y2 = nom.mes && nom.anio ? nom.anio : anioCarpeta ?? nom.anio;
+        if (m2 && anioValido(y2) && (mensualPorTipo || /EXTRACTO|\bRG\b|LIBRO|COMPRA|VENTA|FACTURA|BOLETA|RETENC|\bIVA\b|\bDDJJ\b/.test(mayus(debajo.join(' ') + ' ' + base)))) {
+          zona = 'MES'; anio = y2; mes = m2; motivo = 'Documento contable que dice su mes y estaba en DOCUMENTOS VARIOS'; break;
+        }
+      }
+        zona = 'VARIOS'; anio = anioCarpeta ?? nom.anio; sub = limpiarSub(carpetas.slice(porCarpeta.i + 1));
+        motivo = 'Estaba en DOCUMENTOS VARIOS'; break;
+      default: break; // MES o nada: se resuelve abajo
+    }
+    if (!zona) {
+      // Mensual: el período de la carpeta manda; el nombre completa lo que la carpeta no dice.
+      let y = anioCarpeta, m = mesCarpeta;
+      if (!m && nom.mes) { m = nom.mes; if (nom.anio) y = nom.anio; }
+      // Una boleta de pago va en el mes del período que paga (manual 3.3), que es el que dice su nombre.
+      if (tipo === 'COMPROBANTE_PAGO' && nom.mes && nom.anio && (nom.mes !== m || nom.anio !== y)) {
+        if (m) fila.notas.push(`Boleta guardada en ${mm(m)}/${y}: va en el mes que paga (${mm(nom.mes)}/${nom.anio}), según su nombre`);
+        m = nom.mes; y = nom.anio;
+      }
+      if (m && !y && nom.anio) y = nom.anio;
+      // Series mensuales con el mes en dos cifras y nada más («RG 90 COMPRAS 2024/COMPRAS 07.xlsx»).
+      if (!m && y && /\bRG\b|COMPRA|VENTA|EXTRACTO|FORM|TALON|LIBRO|\bIVA\b/.test(segsMay.join(' ')) && !NOMBRE_DE_CAPTURA.test(original) && !/CUOTA|NRO|\bN\b|\bNO\b|FAC|RECIBO|RETENC|ORDEN|NOTA/.test(nomMay)) {
+        const nums = tokens(base).filter((x) => /^\d+$/.test(x));
+        if (nums.length === 1 && /^(0?[1-9]|1[0-2])$/.test(nums[0])) { m = +nums[0]; fila.notas.push('Mes tomado del número del nombre dentro de una carpeta de serie mensual'); }
+      }
+      // Comprobante (factura, nota de crédito, retención, recibo) sin mes: su período es el mes de emisión que dice
+      // el propio documento («Fecha emisión: 22-01-2024» en los documentos electrónicos). No vale para boletas de pago:
+      // su fecha es la de la boleta, no la del período que pagan.
+      let porEmision = false;
+      if (!m && tipo !== 'COMPROBANTE_PAGO' && (['FACTURA_COMPRA', 'FACTURA_VENTA', 'NOTA_CREDITO', 'NOTA_DEBITO', 'RETENCION', 'RECIBO'].includes(tipo) || /DOCUMENTO ELECTRONICO|KUDE/.test(texto))) {
+        const fe = /FECHA (DE )?EMISION:?\s*(\d{1,2})[-/.](\d{1,2})[-/.](\d{4}|\d{2})\b/.exec(texto);
+        if (fe) {
+          const ye = fe[4].length === 2 ? 2000 + +fe[4] : +fe[4], me = +fe[3];
+          if (me >= 1 && me <= 12 && anioValido(ye) && (!y || y === ye)) { m = me; y = ye; porEmision = true; }
+        }
+      }
+      if (m && y) {
+        zona = 'MES'; anio = y; mes = m; motivo = porEmision ? 'Mes tomado de la fecha de emisión que dice el propio documento' : mesCarpeta ? 'Período tomado de la carpeta donde estaba' : 'Período tomado del nombre del archivo';
+        if (tipo !== 'COMPROBANTE_PAGO' && nom.mes && nom.anio && mesCarpeta && (nom.mes !== mesCarpeta || nom.anio !== anioCarpeta)) fila.notas.push(`El nombre dice ${mm(nom.mes)}/${nom.anio} y la carpeta ${mm(mesCarpeta)}/${anioCarpeta ?? '?'}: se respetó la carpeta`);
+      }
+    }
+  }
+  // Las notas de crédito sueltas, IPS o MTESS sin año, CIERRE sin año: no se puede ubicar.
+  const necesitaAnio = ['MES', 'CIERRE', 'IPS', 'MTESS', 'VARIOS', 'FACT_EFFORT'];
+  if (zona && necesitaAnio.includes(zona) && !anioValido(anio)) { zona = null; motivo = ''; }
+  if (!zona) {
+    fila.accion = 'MOVER'; fila.zona = 'ZZ';
+    fila.destinoRel = `${cd.carpeta}/${cd.cod} ZZ A CLASIFICAR/${carpetas.join('/')}${carpetas.length ? '/' : ''}${original}`;
+    fila.motivo = 'No se pudo saber con certeza el período o el tipo: queda para que lo ubique una persona (con su ruta original)';
+    fila.nuevoNombre = original;
+    continue;
+  }
+
+  // ---- 5. carpeta de destino según el manual
+  const P = `${cd.cod} PERIODO ${anio}`;
+  let dir;
+  switch (zona) {
+    case 'LEGAL': dir = `${cd.cod} LEGAL Y SOCIETARIO${sub ? '/' + sub : ''}`; break;
+    case 'TRIBUTARIO': dir = `${cd.cod} TRIBUTARIO`; break;
+    case 'MES': dir = `${P}/DOCUMENTOS CONTABLES/${mm(mes)} ${MESES[mes - 1]}${sub ? '/' + sub : ''}`; break;
+    case 'CIERRE': dir = `${P}/DOCUMENTOS CONTABLES/CIERRE ${anio}`; break;
+    case 'IPS': dir = `${P}/DOCUMENTOS LABORALES/IPS`; break;
+    case 'MTESS': dir = `${P}/DOCUMENTOS LABORALES/MTESS`; break;
+    case 'FACT_EFFORT': dir = `${P}/DOCUMENTOS VARIOS/FACTURACION EFFORT`; break;
+    case 'VARIOS': dir = `${P}/DOCUMENTOS VARIOS${sub ? '/' + sub : ''}`; break;
+  }
+
+  // ---- 6. nombre nuevo (solo con certeza)
+  const C = cd.nombreArchivo;
+  const pM = mes ? per(anio, mes) : null;
+  const banco = () => BANCOS.find(([, re]) => re.test(rutaYNombre))?.[0] ?? null;
+  const usd = /\bUSD\b|\bUSS\b|DOLAR|U\$S|\bUS\$/.test(rutaYNombre) ? ' USD' : '';
+  const corr = /CORREC/.test(nomMay) ? 'CORRECCION ' : '';
+  if (sub === 'IMPUTACION MASIVA' || noRenombrar || congelado.has(a.id)) nuevo = null;
+  else if (d && codDestino) {
+    const p = zona === 'CIERRE' ? String(anio) : pM;
+    // Los títulos salen del propio formulario (verificados contra PDF reales el 2026-10-20):
+    // 120 IVA · 145 rectificativa («Formulario que rectifica 10 120») · 122/525/526 liquidación de retenciones
+    // de IVA / rentas / IDU · 500 IRE general · 158 estados financieros · 241 talón de la RG 90.
+    const rectifica = d.f === '145' ? /FORMULARIO QUE RECTIFICA\s+10\s+(\d{3})/.exec(texto)?.[1] : null;
+    // En el 120, «Rectificativa 03 <número de orden>» = rectifica esa declaración; «03 0» = original (197 de 1.801 PDF reales).
+    if (d.f === '120') nuevo = `DDJJ IVA ${p}${/RECTIFICATIVA\s+03\s+\d{8,15}/.test(texto) ? ' RECTIFICATIVA' : ''} ${C}`;
+    else if (d.f === '145') nuevo = rectifica === '120' ? `DDJJ IVA ${p} RECTIFICATIVA ${C}` : `DDJJ RECTIFICATIVA${rectifica ? ' FORM ' + rectifica : ''} ${p} ${C}`;
+    else if (d.f === '500') nuevo = `DDJJ IRE ${anio}${/RECTIFICATIVA\s+03\s+\d{8,15}/.test(texto) ? ' RECTIFICATIVA' : ''} ${C}`;
+    else if (d.f === '158') nuevo = `EEFF ${anio} PRESENTADO FORM 158${/RECTIFICATIVA\s+03\s+\d{8,15}/.test(texto) ? ' RECTIFICATIVA' : ''} ${C}`;
+    else if (d.f === '241') nuevo = `TALON RG 90 ${p} ${C}`;
+    else if (d.f === '122') nuevo = `RETENCION IVA FORM 122 ${p} ${C}`;
+    else if (d.f === '525') nuevo = `RETENCION RENTA FORM 525 ${p} ${C}`;
+    else if (d.f === '526') nuevo = `RETENCION IDU FORM 526 ${p} ${C}`;
+    else nuevo = `DDJJ FORM ${d.f} ${p} ${C}`;
+  } else if (zona === 'MES' && r.rg90?.filas > 0 && motivo.startsWith('Planilla RG 90')) {
+    nuevo = `${corr}RG ${Object.keys(r.rg90.tipos)[0]} ${pM} ${C}`;
+  } else if (zona === 'MES' && pM) {
+    if (tipo === 'COMPROBANTE_PAGO' && !NOMBRE_DE_CAPTURA.test(original)) {
+      const cuota = /CUOTA\s*(\d+)(\s*DE\s*(\d+))?/.exec(nomMay);
+      const impuesto = /ANTICIP/.test(nomMay) && /\bIRE\b/.test(nomMay) ? 'ANTICIPO IRE' : (/\bIVA\b/.exec(nomMay)?.[0] ?? /\bIRE\b/.exec(nomMay)?.[0] ?? /\bIRP\b/.exec(nomMay)?.[0] ?? /\bIDU\b/.exec(nomMay)?.[0] ?? null);
+      if (impuesto) nuevo = `BOLETA DE PAGO ${impuesto}${cuota ? ` CUOTA ${cuota[1]}${cuota[3] ? ' DE ' + cuota[3] : ''}` : ''} ${pM} ${C}`;
+    } else if (tipo === 'EXTRACTO_BANCARIO' && !/\bIPS\b/.test(rutaYNombre)) {
+      const b = banco();
+      if (b) nuevo = `EXTRACTO ${/\bTC\b|TARJETA/.test(nomMay) ? 'TC ' : ''}${b}${usd} ${pM} ${C}`;
+    } else if (tipo === 'RETENCION') {
+      const f = /\b(122|525|526)\b/.exec(nomMay)?.[1];
+      const imp = f === '122' ? 'IVA' : f === '525' ? 'RENTA' : f === '526' ? 'IDU' : /\bIVA\b/.test(nomMay) ? 'IVA' : /RENTA/.test(nomMay) ? 'RENTA' : null;
+      if (imp) nuevo = `RETENCION ${imp}${f ? ' FORM ' + f : ''} ${pM} ${C}`;
+    } else if ((tipo === 'LIBRO_COMPRAS' || tipo === 'LIBRO_VENTAS') && ext === 'pdf' && /\bLIBRO|^L ?[CV]\b/.test(nomMay)) {
+      nuevo = `LIBRO ${tipo === 'LIBRO_COMPRAS' ? 'COMPRAS' : 'VENTAS'} ${pM} ${C}`;
+    } else if (tipo === 'LIQUIDACION') {
+      const imp = /\bIVA\b/.exec(nomMay)?.[0];
+      if (imp) nuevo = `CALCULO ${imp} ${pM} ${C}`;
+    } else if (tipo === 'NOTA_CREDITO') {
+      const nro = /\b(\d{3})[- ]?(\d{3})[- ]?(\d{5,7})\b/.exec(nomMay);
+      if (nro) nuevo = `NOTA DE CREDITO ${nro[1]}-${nro[2]}-${nro[3].padStart(7, '0')} ${C}`;
+    } else {
+      // Factura: compra o venta SOLO si el nombre o la carpeta lo dicen explícitamente.
+      const desdeMes = [...segsMay.slice(idxMes >= 0 ? idxMes : 0), nomMay].join(' / ');
+      const esFactura = tipo.startsWith('FACTURA') || /\bFACT?(URA)?S?\b|\bFC\b|\bFV\b/.test(desdeMes);
+      const lado = /\bVENTAS?\b|\bFV\b/.test(desdeMes) && !/COMPRA/.test(desdeMes) ? 'VENTA'
+        : /\bCOMPRAS?\b|\bFC\b(?! DECLARADO)/.test(desdeMes) && !/VENTA/.test(desdeMes) ? 'COMPRA' : null;
+      if (esFactura && lado && !/\bNC\d*\b|NOTA/.test(nomMay) && !['RECIBO', 'NOTA_CREDITO', 'NOTA_DEBITO', 'LIBRO_COMPRAS', 'LIBRO_VENTAS', 'DECLARACION_JURADA', 'LIQUIDACION'].includes(tipo)) {
+        const largo = /\b(\d{3})[- ]?(\d{3})[- ]?(\d{5,7})\b/.exec(nomMay);
+        const corto = !largo && !NOMBRE_DE_CAPTURA.test(original) ? /\b(?:FACT?(?:URA)?|FC|FV|NRO|N|NO|NUMERO)[.°º]?\s*(?:DE\s+)?(?:VENTAS?|COMPRAS?)?\s*(?:NRO\.?\s*)?(\d{1,7})\b/.exec(nomMay)?.[1] : null;
+        const nro = largo ? `${largo[1]}-${largo[2]}-${largo[3].padStart(7, '0')}` : corto && !(+corto >= 2000 && +corto <= 2035) ? corto : null;
+        nuevo = `FACTURA ${lado}${nro ? ' ' + nro : ''} ${pM} ${C}`;
+      }
+    }
+  } else if (zona === 'CIERRE' && tipo === 'LIQUIDACION') {
+    const imp = /\bIRE\b|\bIRP\b/.exec(nomMay)?.[0];
+    if (imp) nuevo = `CALCULO ${imp} ${anio} ${C}`;
+  } else if (zona === 'TRIBUTARIO') {
+    if (/\bCCT\b|CUMPLIMIENTO/.test(nomMay)) { const n2 = leerNombre(original); nuevo = n2.mes && n2.anio ? `CCT ${per(n2.anio, n2.mes)} ${C}` : null; }
+    else if (/CONSTANCIA/.test(nomMay) && /RUC/.test(nomMay)) { const n2 = leerNombre(original); nuevo = `CONSTANCIA RUC${n2.anio ? ' ' + n2.anio : ''} ${C}`; }
+  } else if (zona === 'FACT_EFFORT' && /\bFAC/.test(nomMay) && pM) {
+    const nro = /\b(\d{3,5})\b/.exec(nomMay.replace(/20\d\d/g, ''));
+    nuevo = `FACTURA COMPRA EFFORT${nro ? ' ' + nro[1] : ''} ${pM} ${C}`;
+  }
+  if (zona === 'FACT_EFFORT' && !nuevo && (nom.mes || mesCarpeta)) {
+    const m2 = nom.mes ?? mesCarpeta; const nro = /\b(\d{3,5})\b/.exec(nomMay.replace(/20\d\d/g, ''));
+    if (/\bFAC/.test(nomMay)) nuevo = `FACTURA COMPRA EFFORT${nro ? ' ' + nro[1] : ''} ${per(anio, m2)} ${C}`;
+  }
+
+  fila.accion = 'MOVER';
+  fila.zona = zona; fila.anio = anio; fila.mes = mes; fila.tipo = tipo;
+  fila.codDestino = cd.cod;
+  fila.motivo = motivo;
+  fila.dir = `${cd.carpeta}/${dir}`;
+  fila.nuevoBase = nuevo; // sin extensión; null = se conserva el nombre (limpio)
+  fila.limpio = limpiarNombre(base);
+  if (tipo === 'NOTA_CREDITO' && zona === 'MES') {
+    // ¿Emitida o recibida? En el documento electrónico el primer RUC es el del emisor.
+    const rucs = (r.rucs ?? []).map((x) => x.split('-')[0]);
+    fila.ladoNC = /EMITID/.test(rutaYNombre) ? 'EMITIDAS' : /RECIBID/.test(rutaYNombre) ? 'RECIBIDAS'
+      : cd.ruc && rucs[0] === cd.ruc ? 'EMITIDAS' : cd.ruc && rucs.slice(1).includes(cd.ruc) ? 'RECIBIDAS' : null;
+  }
+}
+
+function limpiarNombre(b) {
+  const s = b.replace(/\s*\(\d{1,2}\)\s*$/, '').replace(/\s*-\s*copia(\s*\(\d+\))?\s*$/i, '').replace(/^copia de\s+/i, '').replace(/\s+/g, ' ').trim();
+  return s || b;
+}
+
+// ------------------------------------------------------------------ notas de crédito: subcarpeta solo si son más de cinco en el mes
+// (no se sabe con certeza si son emitidas o recibidas: se dejan sueltas en el mes y se anota)
+
+// ------------------------------------------------------------------ los archivos usados por vínculo van con su Excel
+const porId = new Map(plan.map((f) => [f.id, f]));
+for (const [t, w] of viajaCon) {
+  const ft = porId.get(t), fw = porId.get(w);
+  if (!ft || !fw || ft.accion !== 'MOVER' || !fw.dir) continue;
+  if (ft.dir !== fw.dir) { ft.notas.push(`Va a la misma carpeta que el Excel que lo usa por vínculo (${fw.origen.split('/').pop()})`); ft.dir = fw.dir; ft.zona = fw.zona; ft.anio = fw.anio; ft.mes = fw.mes; }
+  if (!ft.dir) { ft.dir = fw.dir; }
+}
+
+// ------------------------------------------------------------------ notas de crédito: subcarpeta solo si son más de cinco (manual 2.3)
+const ncPorMes = new Map();
+for (const f of plan) if (f.accion === 'MOVER' && f.dir && f.zona === 'MES' && f.ladoNC) { const k = `${f.dir}|${f.ladoNC}`; (ncPorMes.get(k) ?? ncPorMes.set(k, []).get(k)).push(f); }
+for (const g of ncPorMes.values()) {
+  if (g.length <= 5) continue;
+  for (const f of g) { f.dir = `${f.dir}/NC ${f.ladoNC} ${mm(f.mes)}${f.anio}`; }
+}
+
+// ------------------------------------------------------------------ nombres finales, sin choques
+// Cuando varios archivos DISTINTOS terminan con el mismo nombre en la misma carpeta:
+//  · versiones de un mismo documento (RG, libro, cálculo, DDJJ, talón, EEFF, CCT): el más reciente queda con el
+//    nombre limpio y los anteriores llevan «VERSION ANTERIOR 1, 2…» (1 = el anterior más reciente). El manual dice que
+//    una versión nueva se guarda con el mismo nombre; acá no se pueden fundir en un solo archivo con historial.
+//  · documentos de una serie (facturas, extractos, boletas, recibos…): se numeran todos, 01, 02… por fecha.
+//  · nombres originales que chocan al juntar subcarpetas: se les agrega la subcarpeta de donde venían.
+const GENERICA = /^(\d{3} )?(PERIODO \d{4}|DOCUMENTOS? CONTABLES|DOCUMENTOS CONTALES|DOC CONTABLES|DOCUMENTOS|MES|MESES|DOCUMENTOS VARIOS|VARIOS|\d{4}|AÑO \d{4}|ANO \d{4})$/;
+function detalleDeCarpeta(f) {
+  const segs = f.origen.split('/').slice(1, -1);
+  for (let i = segs.length - 1; i >= 0; i--) {
+    const s = segs[i].trim(); const m = mayus(s);
+    if (GENERICA.test(m) || (leerCarpeta(s).mes && tokens(s).every((t) => MES_PALABRA.has(t) || /^\d+$/.test(t)))) continue;
+    return s.replace(/[\\/:*?"<>|#%~]/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 40).trim();
+  }
+  return null;
+}
+/** Mes y año de la carpeta donde estaba («DICIEMBRE 2025»), para distinguir nombres repetidos como «CCT.pdf». */
+function periodoOriginal(f) {
+  const segs = f.origen.split('/').slice(1, -1);
+  let m = null, y = null;
+  for (const s of segs) { const l = leerCarpeta(s); if (l.mes) m = l.mes; if (l.anio) y = l.anio; }
+  return m ? `${MESES[m - 1]}${y ? ' ' + y : ''}` : null;
+}
+// Un nombre que solo dice un mes o un número («OCTUBRE.pdf», «03.xlsx») pierde su sentido al salir de su carpeta.
+const soloMesONumero = (b) => { const t = tokens(b); return t.length > 0 && t.every((x) => MES_PALABRA.has(x) || /^\d+$/.test(x)); };
+const VERSIONABLE = /^(CORRECCION )?RG (COMPRAS|VENTAS) |^LIBRO (COMPRAS|VENTAS) |^CALCULO |^DDJJ |^TALON |^EEFF |^CCT |^CONSTANCIA RUC|^RETENCION (IVA|RENTA|IDU) FORM /;
+
+const filasConDir = plan.filter((f) => f.accion === 'MOVER' && f.dir);
+for (const f of filasConDir) {
+  f.extFinal = f.ext ? `.${f.nuevoBase ? f.ext.toLowerCase() : f.ext}` : '';
+  let base = f.nuevoBase ?? (f.congelado ? f.baseOriginal : (f.limpio ?? f.baseOriginal));
+  const saleDeSuCarpeta = f.dir !== f.origen.split('/').slice(0, -1).join('/');
+  if (!f.nuevoBase && !f.congelado && f.zona !== 'ZZ' && saleDeSuCarpeta && soloMesONumero(base)) {
+    const det = detalleDeCarpeta(f);
+    if (det) { base = `${det} ${base}`; f.notas.push(`Al nombre, que solo decía «${f.baseOriginal}», se le agregó la carpeta de donde venía`); }
+  }
+  f.baseDeseada = base.length > 120 ? base.slice(0, 120).trim() : base;
+}
+const porClave = new Map();
+for (const f of filasConDir) { const k = mayus(`${f.dir}/${f.baseDeseada}${f.extFinal}`); (porClave.get(k) ?? porClave.set(k, []).get(k)).push(f); }
+for (const g of porClave.values()) {
+  if (g.length === 1) { g[0].baseFinal = g[0].baseDeseada; continue; }
+  const b = g[0].baseDeseada;
+  if (g.every((f) => f.nuevoBase) && VERSIONABLE.test(b)) {
+    g.sort((x, y) => y.mod.localeCompare(x.mod) || x.origen.localeCompare(y.origen));
+    g.forEach((f, k) => { f.baseFinal = k === 0 ? b : `${b} VERSION ANTERIOR ${k}`; if (k > 0) f.notas.push(`Hay una versión más reciente del mismo documento (${g[0].origen.split('/').pop()}): esta queda como versión anterior`); });
+  } else if (g.every((f) => f.nuevoBase)) {
+    g.sort((x, y) => x.mod.localeCompare(y.mod) || x.origen.localeCompare(y.origen));
+    const ancho = g.length > 99 ? 3 : 2;
+    g.forEach((f, k) => { f.baseFinal = `${b} ${String(k + 1).padStart(ancho, '0')}`; });
+  } else {
+    // Nombres originales: se distinguen por la subcarpeta (o el mes) de donde venían; si ni así, se numeran.
+    const usados = new Set();
+    g.sort((x, y) => x.mod.localeCompare(y.mod) || x.origen.localeCompare(y.origen));
+    const dets = g.map((f) => detalleDeCarpeta(f) ?? periodoOriginal(f));
+    const todosDistintos = dets.every((x) => x) && new Set(dets.map(mayus)).size === dets.length;
+    for (const [k, f] of g.entries()) {
+      const det = todosDistintos ? dets[k] : k === 0 ? null : dets[k];
+      let cand = det && !mayus(b).includes(mayus(det)) ? `${b} - ${det}` : b;
+      let n = 1;
+      while (usados.has(mayus(cand))) { n++; cand = `${b} ${String(n).padStart(2, '0')}`; }
+      usados.add(mayus(cand)); f.baseFinal = cand;
+    }
+  }
+}
+// Última pasada: un nombre numerado podría coincidir con otro que ya se llamaba así.
+const ocupados = new Set();
+for (const f of filasConDir.sort((x, y) => x.mod.localeCompare(y.mod) || x.origen.localeCompare(y.origen))) {
+  let cand = `${f.baseFinal}${f.extFinal}`; let n = 1;
+  while (ocupados.has(mayus(`${f.dir}/${cand}`))) { n++; cand = `${f.baseFinal} ${String(n).padStart(2, '0')}${f.extFinal}`; }
+  ocupados.add(mayus(`${f.dir}/${cand}`));
+  f.nombreFinal = cand;
+}
+for (const f of plan.filter((x) => x.accion !== 'MOVER' || !x.dir)) f.nombreFinal = f.nombreFinal ?? f.origen.split('/').pop();
+for (const f of plan) {
+  if (f.dir) f.destinoRel = `${f.dir}/${f.nombreFinal}`;
+  f.renombrado = !!f.dir && f.nombreFinal !== f.origen.split('/').pop();
+  f.cambia = f.destinoRel !== f.origen;
+}
+
+// ------------------------------------------------------------------ resumen
+const res = { porCliente: {}, total: {} };
+for (const f of plan) {
+  const k = f.cod; const o = res.porCliente[k] ?? (res.porCliente[k] = { cliente: f.cliente, archivos: 0 });
+  o.archivos++; sumar(res.total, 'archivos');
+  const clave = f.accion === 'DUPLICADO' ? 'duplicados' : f.zona === 'ZZ' ? 'aClasificar' : f.zona === 'GENERAL_ZZ' ? 'aZZGeneral' : f.otroCliente ? 'aOtroCliente' : !f.cambia ? 'sinCambio' : f.renombrado ? 'movidosYRenombrados' : 'movidosSinRenombrar';
+  sumar(o, clave); sumar(res.total, clave);
+  if (f.zona && f.zona !== 'ZZ') { sumar(res.total, `zona_${f.zona}`); }
+  if (congelado.has(f.id)) { sumar(o, 'vinculados'); sumar(res.total, 'vinculados'); }
+}
+fs.writeFileSync('plan.json', JSON.stringify(plan));
+fs.writeFileSync('resumen-plan.json', JSON.stringify(res, null, 1));
+console.log(JSON.stringify(res.total, null, 1));
+console.log('contenido leído:', contenido.size, '· declaraciones:', [...contenido.values()].filter((r) => r.decl).length, '· RG90:', [...contenido.values()].filter((r) => r.rg90?.filas).length);

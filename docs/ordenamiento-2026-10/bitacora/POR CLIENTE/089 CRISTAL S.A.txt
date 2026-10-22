@@ -1,0 +1,1683 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 089 CRISTAL S.A
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+
+AL INICIO
+  Archivos: 713 · Peso: 787.6 MB · Subcarpetas con archivos: 69
+
+RESUMEN
+  Duplicados apartados (cuarentena): 34
+  Movidos y renombrados según el manual: 262
+  Movidos conservando su nombre: 381
+  Sin cambios: 0
+  A «089 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 36
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 195
+  Nombres originales que no dicen qué documento son: 543
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 2
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  089 LEGAL Y SOCIETARIO: 53
+  089 PERIODO 2024: 9
+  089 PERIODO 2025: 182
+  089 PERIODO 2026: 381
+  089 TRIBUTARIO: 18
+  089 ZZ A CLASIFICAR: 36
+
+DUPLICADOS APARTADOS (34)
+----------------------------
+  NOTA DE CREDITO 0005.jpeg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/NOTA DE CREDITO 0005.jpeg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2024/DOCUMENTOS CONTABLES/IVA ENERO 2025.pdf
+      igual a: PERIODO 2025/DOCUMENTOS CONTABLES/DDJJ IVA/01-2025 IVA.pdf  (La misma declaración presentada (mismo número de orden 12078248624), bajada otra vez)
+  PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE DE BALANCES/ESTADO DE RESULTADOS CRISTAL S.A 2025 (1).xlsx
+      igual a: PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE DE BALANCES/ESTADO DE RESULTADOS CRISTAL S.A 2025.xlsx  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/PHOTO-2026-03-18-08-45-04 3.jpg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/PHOTO-2026-03-18-08-45-04 2.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/PHOTO-2026-03-18-08-45-04 5.jpg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/PHOTO-2026-03-18-08-45-04.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/PHOTO-2026-03-18-08-45-05 3.jpg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/PHOTO-2026-03-18-08-45-05.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/PHOTO-2026-03-18-08-45-05 4.jpg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/PHOTO-2026-03-18-08-45-05 1.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/PHOTO-2026-03-18-08-45-05 5.jpg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/PHOTO-2026-03-18-08-45-05 2.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/factura # 824.pdf
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/factura # 824.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/Factura # 827 Walter Benegas.pdf
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/Factura # 827 Walter Benegas.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/WhatsApp Image 2026-05-19 at 9.12.11 AM (1).jpeg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/PHOTO-2026-05-05-12-04-44 1.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/WhatsApp Image 2026-05-19 at 9.12.15 AM (4).jpeg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/WhatsApp Image 2026-05-19 at 9.12.15 AM (2).jpeg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/WhatsApp Image 2026-05-19 at 9.12.15 AM (5).jpeg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/WhatsApp Image 2026-05-19 at 9.12.15 AM (3).jpeg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.04 AM (1).jpeg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-35.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.04 AM (2).jpeg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-35 1.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.04 AM (3).jpeg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-36 2.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.05 AM (1).jpeg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-36.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.05 AM (2).jpeg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-37.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.05 AM (3).jpeg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-37 1.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.05 AM.jpeg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-36 1.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.06 AM (2).jpeg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-38.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.07 AM (2).jpeg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-39 2.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.07 AM (3).jpeg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-39.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.08 AM.jpeg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-39 1.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.09 AM (1).jpeg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-41 1.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.09 AM (2).jpeg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-41.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.16 AM (1).jpeg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-35.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.16 AM (2).jpeg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-35 1.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.16 AM (3).jpeg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-36 2.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.17 AM (1).jpeg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-36.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.17 AM (2).jpeg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-37.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.17 AM (3).jpeg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-37 1.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.17 AM.jpeg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-36 1.jpg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.18 AM.jpeg
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.06 AM.jpeg  (Copia idéntica (mismo contenido byte por byte))
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO (2)
+------------------------------------------------------
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/Boleta de Pago IVA GENERAL 042026 CRISTAL S.A  →  Boleta guardada en 05/2026: va en el mes que paga (04/2026), según su nombre
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/Boleta de Pago IVA GENERAL ABRIL-MAYO 2026 CRISTAL S.A  →  Boleta guardada en 05/2026: va en el mes que paga (04/2026), según su nombre
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (165)
+---------------------------------------------------------
+  CamScanner 13-1-26 10.14.pdf  →  CamScanner 13-1-26 10.14.pdf
+  Scan 006 dic 2025.pdf  →  Scan 006 dic 2025.pdf
+  Scan 21 nov 2025.pdf  →  Scan 21 nov 2025.pdf
+  factura CRISTAL SA FEBRERO (1).pdf  →  factura CRISTAL SA FEBRERO.pdf
+  F.E 0925(74).xlsx  →  RG COMPRAS 092025 CRISTAL SA VERSION ANTERIOR 1.xlsx
+  drfs-003---comunicacion-en-el-registro-administrativo-de-beneficiarios-finales-6370171 (1).pdf  →  drfs-003---comunicacion-en-el-registro-administrativo-de-beneficiarios-finales-6370171.pdf
+  drfs-006---comunicacion-asamblearia--7353997 (1).pdf  →  drfs-006---comunicacion-asamblearia--7353997.pdf
+  ESTATUTO CRISTAL S.A. _compressed (3).pdf  →  ESTATUTO CRISTAL S.A. _compressed.pdf
+  SOLICITUD Y CONTRATO DE PRESTACION DE SERVICIOS_220822 (2).pdf  →  SOLICITUD Y CONTRATO DE PRESTACION DE SERVICIOS_220822.pdf
+  CamScanner 13-2-26 14.56.pdf  →  CamScanner 13-2-26 14.56.pdf
+  CamScanner 18-3-26 08.45.pdf  →  CamScanner 18-3-26 08.45.pdf
+  PHOTO-2026-03-18-08-45-04 2.jpg  →  PHOTO-2026-03-18-08-45-04 2.jpg
+  PHOTO-2026-03-18-08-45-04 4.jpg  →  PHOTO-2026-03-18-08-45-04 4.jpg
+  PHOTO-2026-03-18-08-45-04.jpg  →  PHOTO-2026-03-18-08-45-04.jpg
+  PHOTO-2026-03-18-08-45-05 1.jpg  →  PHOTO-2026-03-18-08-45-05 1.jpg
+  PHOTO-2026-03-18-08-45-05 2.jpg  →  PHOTO-2026-03-18-08-45-05 2.jpg
+  PHOTO-2026-03-18-08-45-05.jpg  →  PHOTO-2026-03-18-08-45-05.jpg
+  WhatsApp Image 2026-04-20 at 10.59.29 (1).jpeg  →  WhatsApp Image 2026-04-20 at 10.59.29.jpeg
+  WhatsApp Image 2026-04-20 at 10.59.29.jpeg  →  WhatsApp Image 2026-04-20 at 10.59.29 - MARZO 2026.jpeg
+  WhatsApp Image 2026-04-20 at 10.59.30 (1).jpeg  →  WhatsApp Image 2026-04-20 at 10.59.30.jpeg
+  WhatsApp Image 2026-04-20 at 10.59.30 (2).jpeg  →  WhatsApp Image 2026-04-20 at 10.59.30 - MARZO 2026.jpeg
+  WhatsApp Image 2026-04-20 at 10.59.30.jpeg  →  WhatsApp Image 2026-04-20 at 10.59.30 02.jpeg
+  WhatsApp Image 2026-04-20 at 11.00.11.jpeg  →  WhatsApp Image 2026-04-20 at 11.00.11.jpeg
+  WhatsApp Image 2026-04-20 at 12.01.11 (1).jpeg  →  WhatsApp Image 2026-04-20 at 12.01.11.jpeg
+  WhatsApp Image 2026-04-20 at 12.01.11 (2).jpeg  →  WhatsApp Image 2026-04-20 at 12.01.11 02.jpeg
+  WhatsApp Image 2026-04-20 at 12.01.11.jpeg  →  WhatsApp Image 2026-04-20 at 12.01.11 - MARZO 2026.jpeg
+  WhatsApp Image 2026-04-20 at 12.01.12 (1).jpeg  →  WhatsApp Image 2026-04-20 at 12.01.12.jpeg
+  WhatsApp Image 2026-04-20 at 12.01.12 (2).jpeg  →  WhatsApp Image 2026-04-20 at 12.01.12 - MARZO 2026.jpeg
+  WhatsApp Image 2026-04-20 at 12.01.12 (3).jpeg  →  WhatsApp Image 2026-04-20 at 12.01.12 02.jpeg
+  WhatsApp Image 2026-04-20 at 12.01.12.jpeg  →  WhatsApp Image 2026-04-20 at 12.01.12 03.jpeg
+  WhatsApp Image 2026-04-20 at 12.01.13 (1).jpeg  →  WhatsApp Image 2026-04-20 at 12.01.13.jpeg
+  WhatsApp Image 2026-04-20 at 12.01.13 (2).jpeg  →  WhatsApp Image 2026-04-20 at 12.01.13 - MARZO 2026.jpeg
+  WhatsApp Image 2026-04-20 at 12.01.13 (3).jpeg  →  WhatsApp Image 2026-04-20 at 12.01.13 02.jpeg
+  WhatsApp Image 2026-04-20 at 12.01.13.jpeg  →  WhatsApp Image 2026-04-20 at 12.01.13 03.jpeg
+  WhatsApp Image 2026-04-20 at 12.01.14 (1).jpeg  →  WhatsApp Image 2026-04-20 at 12.01.14.jpeg
+  WhatsApp Image 2026-04-20 at 12.01.14 (2).jpeg  →  WhatsApp Image 2026-04-20 at 12.01.14 - MARZO 2026.jpeg
+  WhatsApp Image 2026-04-20 at 12.01.14 (3).jpeg  →  WhatsApp Image 2026-04-20 at 12.01.14 02.jpeg
+  WhatsApp Image 2026-04-20 at 12.01.14.jpeg  →  WhatsApp Image 2026-04-20 at 12.01.14 03.jpeg
+  WhatsApp Image 2026-04-20 at 12.01.15 (1).jpeg  →  WhatsApp Image 2026-04-20 at 12.01.15.jpeg
+  WhatsApp Image 2026-04-20 at 12.01.15.jpeg  →  WhatsApp Image 2026-04-20 at 12.01.15 - MARZO 2026.jpeg
+  PHOTO-2026-05-05-12-04-44 1.jpg  →  FACTURA COMPRA 042026 CRISTAL SA.jpg
+  WhatsApp Image 2026-05-19 at 9.12.09 AM (3).jpeg  →  FACTURA COMPRA 042026 CRISTAL SA 01.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.10 AM (1).jpeg  →  FACTURA COMPRA 042026 CRISTAL SA 03.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.10 AM (2).jpeg  →  FACTURA COMPRA 042026 CRISTAL SA 04.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.10 AM (3).jpeg  →  FACTURA COMPRA 042026 CRISTAL SA 05.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.10 AM.jpeg  →  FACTURA COMPRA 042026 CRISTAL SA 02.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.11 AM (2).jpeg  →  FACTURA COMPRA 042026 CRISTAL SA 07.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.11 AM (3).jpeg  →  FACTURA COMPRA 042026 CRISTAL SA 08.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.11 AM.jpeg  →  FACTURA COMPRA 042026 CRISTAL SA 06.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.12 AM (1).jpeg  →  FACTURA COMPRA 042026 CRISTAL SA 10.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.12 AM.jpeg  →  FACTURA COMPRA 042026 CRISTAL SA 09.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.13 AM (1).jpeg  →  FACTURA COMPRA 042026 CRISTAL SA 12.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.13 AM.jpeg  →  FACTURA COMPRA 042026 CRISTAL SA 11.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.14 AM (1).jpeg  →  FACTURA COMPRA 042026 CRISTAL SA 14.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.14 AM (2).jpeg  →  FACTURA COMPRA 042026 CRISTAL SA 15.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.14 AM.jpeg  →  FACTURA COMPRA 042026 CRISTAL SA 13.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.15 AM (1).jpeg  →  FACTURA COMPRA 042026 CRISTAL SA 17.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.15 AM (2).jpeg  →  FACTURA COMPRA 042026 CRISTAL SA 18.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.15 AM (3).jpeg  →  FACTURA COMPRA 042026 CRISTAL SA 19.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.15 AM.jpeg  →  FACTURA COMPRA 042026 CRISTAL SA 16.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.16 AM.jpeg  →  FACTURA COMPRA 042026 CRISTAL SA 20.jpeg
+  PHOTO-2026-05-05-12-04-35 1.jpg  →  FACTURA VENTA 042026 CRISTAL SA 03.jpg
+  PHOTO-2026-05-05-12-04-35.jpg  →  FACTURA VENTA 042026 CRISTAL SA 01.jpg
+  PHOTO-2026-05-05-12-04-36 1.jpg  →  FACTURA VENTA 042026 CRISTAL SA 04.jpg
+  PHOTO-2026-05-05-12-04-36 2.jpg  →  FACTURA VENTA 042026 CRISTAL SA 05.jpg
+  PHOTO-2026-05-05-12-04-36.jpg  →  FACTURA VENTA 042026 CRISTAL SA 02.jpg
+  PHOTO-2026-05-05-12-04-37 1.jpg  →  FACTURA VENTA 042026 CRISTAL SA 06.jpg
+  PHOTO-2026-05-05-12-04-37.jpg  →  FACTURA VENTA 042026 CRISTAL SA 07.jpg
+  PHOTO-2026-05-05-12-04-38.jpg  →  FACTURA VENTA 042026 CRISTAL SA 08.jpg
+  PHOTO-2026-05-05-12-04-39 1.jpg  →  FACTURA VENTA 042026 CRISTAL SA 10.jpg
+  PHOTO-2026-05-05-12-04-39 2.jpg  →  FACTURA VENTA 042026 CRISTAL SA 11.jpg
+  PHOTO-2026-05-05-12-04-39.jpg  →  FACTURA VENTA 042026 CRISTAL SA 09.jpg
+  PHOTO-2026-05-05-12-04-41 1.jpg  →  FACTURA VENTA 042026 CRISTAL SA 13.jpg
+  PHOTO-2026-05-05-12-04-41.jpg  →  FACTURA VENTA 042026 CRISTAL SA 12.jpg
+  WhatsApp Image 2026-05-19 at 9.12.03 AM (1).jpeg  →  FACTURA VENTA 042026 CRISTAL SA 01.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.04 AM.jpeg  →  FACTURA VENTA 042026 CRISTAL SA 02.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.06 AM (1).jpeg  →  FACTURA VENTA 042026 CRISTAL SA 04.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.06 AM (3).jpeg  →  FACTURA VENTA 042026 CRISTAL SA 05.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.06 AM.jpeg  →  FACTURA VENTA 042026 CRISTAL SA 03.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.07 AM (1).jpeg  →  FACTURA VENTA 042026 CRISTAL SA 07.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.07 AM.jpeg  →  FACTURA VENTA 042026 CRISTAL SA 06.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.08 AM (1).jpeg  →  FACTURA VENTA 042026 CRISTAL SA 08.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.08 AM (2).jpeg  →  FACTURA VENTA 042026 CRISTAL SA 09.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.08 AM (3).jpeg  →  FACTURA VENTA 042026 CRISTAL SA 10.jpeg
+  WhatsApp Image 2026-05-19 at 9.12.09 AM.jpeg  →  FACTURA VENTA 042026 CRISTAL SA 11.jpeg
+  PHOTO-2026-05-05-12-04-40.jpg  →  PHOTO-2026-05-05-12-04-40.jpg
+  PHOTO-2026-05-05-12-04-49.jpg  →  PHOTO-2026-05-05-12-04-49.jpg
+  CamScanner 01-06-2026 08.58.pdf  →  CamScanner 01-06-2026 08.58.pdf
+  CamScanner 01-06-2026 08.59.pdf  →  CamScanner 01-06-2026 08.59.pdf
+  CamScanner 01-06-2026 09.01.pdf  →  CamScanner 01-06-2026 09.01.pdf
+  CamScanner 01-06-2026 09.02 (1).pdf  →  CamScanner 01-06-2026 09.02 - MAYO 2026.pdf
+  CamScanner 01-06-2026 09.02.pdf  →  CamScanner 01-06-2026 09.02.pdf
+  CamScanner 01-06-2026 09.03.pdf  →  CamScanner 01-06-2026 09.03.pdf
+  CamScanner 01-06-2026 09.05.pdf  →  CamScanner 01-06-2026 09.05.pdf
+  CamScanner 01-06-2026 09.06.pdf  →  CamScanner 01-06-2026 09.06.pdf
+  CamScanner 01-06-2026 09.08.pdf  →  CamScanner 01-06-2026 09.08.pdf
+  CamScanner 01-06-2026 09.09.pdf  →  CamScanner 01-06-2026 09.09.pdf
+  CamScanner 01-06-2026 09.11.pdf  →  CamScanner 01-06-2026 09.11.pdf
+  CamScanner 01-06-2026 09.12.pdf  →  CamScanner 01-06-2026 09.12.pdf
+  CamScanner 01-06-2026 09.13.pdf  →  CamScanner 01-06-2026 09.13.pdf
+  CamScanner 01-06-2026 09.14.pdf  →  CamScanner 01-06-2026 09.14.pdf
+  CamScanner 01-06-2026 09.16.pdf  →  CamScanner 01-06-2026 09.16.pdf
+  CamScanner 01-06-2026 09.17.pdf  →  CamScanner 01-06-2026 09.17.pdf
+  CamScanner 01-06-2026 09.18.pdf  →  CamScanner 01-06-2026 09.18.pdf
+  CamScanner 01-06-2026 09.19.pdf  →  CamScanner 01-06-2026 09.19.pdf
+  CamScanner 01-06-2026 09.20.pdf  →  CamScanner 01-06-2026 09.20.pdf
+  CamScanner 01-06-2026 09.21.pdf  →  CamScanner 01-06-2026 09.21.pdf
+  CamScanner 01-06-2026 09.22.pdf  →  CamScanner 01-06-2026 09.22.pdf
+  CamScanner 01-06-2026 10.13.pdf  →  CamScanner 01-06-2026 10.13.pdf
+  CamScanner 01-06-2026 10.14.pdf  →  CamScanner 01-06-2026 10.14.pdf
+  CamScanner 01-06-2026 10.15.pdf  →  CamScanner 01-06-2026 10.15.pdf
+  CamScanner 01-06-2026 10.16.pdf  →  CamScanner 01-06-2026 10.16.pdf
+  CamScanner 01-06-2026 10.20.pdf  →  CamScanner 01-06-2026 10.20.pdf
+  CamScanner 01-06-2026 10.27.pdf  →  CamScanner 01-06-2026 10.27.pdf
+  CamScanner 01-06-2026 10.29.pdf  →  CamScanner 01-06-2026 10.29.pdf
+  CamScanner 01-06-2026 10.44.pdf  →  CamScanner 01-06-2026 10.44.pdf
+  CamScanner 01-06-2026 10.45.pdf  →  CamScanner 01-06-2026 10.45.pdf
+  CamScanner 01-06-2026 10.46.pdf  →  CamScanner 01-06-2026 10.46.pdf
+  CamScanner 01-06-2026 10.47.pdf  →  CamScanner 01-06-2026 10.47.pdf
+  CamScanner 01-06-2026 10.48.pdf  →  CamScanner 01-06-2026 10.48.pdf
+  CamScanner 01-06-2026 10.52.pdf  →  CamScanner 01-06-2026 10.52.pdf
+  CamScanner 01-06-2026 10.54.pdf  →  CamScanner 01-06-2026 10.54.pdf
+  CamScanner 01-06-2026 10.55.pdf  →  CamScanner 01-06-2026 10.55.pdf
+  CamScanner 01-06-2026 10.56.pdf  →  CamScanner 01-06-2026 10.56.pdf
+  CamScanner 01-06-2026 10.58.pdf  →  CamScanner 01-06-2026 10.58.pdf
+  CamScanner 01-06-2026 10.59.pdf  →  CamScanner 01-06-2026 10.59.pdf
+  CamScanner 01-06-2026 11.00.pdf  →  CamScanner 01-06-2026 11.00.pdf
+  CamScanner 01-06-2026 11.01.pdf  →  CamScanner 01-06-2026 11.01.pdf
+  CamScanner 01-06-2026 11.02.pdf  →  CamScanner 01-06-2026 11.02.pdf
+  CamScanner 01-06-2026 11.03.pdf  →  CamScanner 01-06-2026 11.03.pdf
+  CamScanner 01-06-2026 11.04.pdf  →  CamScanner 01-06-2026 11.04.pdf
+  CamScanner 01-06-2026 11.05.pdf  →  CamScanner 01-06-2026 11.05.pdf
+  CamScanner 01-06-2026 11.06.pdf  →  CamScanner 01-06-2026 11.06.pdf
+  PHOTO-2026-06-09-08-16-22.jpg  →  PHOTO-2026-06-09-08-16-22.jpg
+  WhatsApp Image 2026-05-29 at 11.20.00.jpeg  →  WhatsApp Image 2026-05-29 at 11.20.00.jpeg
+  CamScanner 03-08-2026 14.31.pdf  →  CamScanner 03-08-2026 14.31.pdf
+  CamScanner 03-08-2026 14.36.pdf  →  CamScanner 03-08-2026 14.36.pdf
+  CamScanner 03-08-2026 14.44.pdf  →  CamScanner 03-08-2026 14.44.pdf
+  CamScanner 03-08-2026 15.36.pdf  →  CamScanner 03-08-2026 15.36.pdf
+  CamScanner 03-08-2026 15.39.pdf  →  CamScanner 03-08-2026 15.39.pdf
+  CamScanner 03-08-2026 15.45.pdf  →  CamScanner 03-08-2026 15.45.pdf
+  CamScanner 03-08-2026 15.51.pdf  →  CamScanner 03-08-2026 15.51.pdf
+  CamScanner 03-08-2026 16.04.pdf  →  CamScanner 03-08-2026 16.04.pdf
+  CamScanner 03-08-2026 16.17.pdf  →  CamScanner 03-08-2026 16.17.pdf
+  CamScanner 03-08-2026 16.18.pdf  →  CamScanner 03-08-2026 16.18.pdf
+  CamScanner 03-08-2026 16.20.pdf  →  CamScanner 03-08-2026 16.20.pdf
+  CamScanner 03-08-2026 16.22.pdf  →  CamScanner 03-08-2026 16.22.pdf
+  CamScanner 03-08-2026 16.23.pdf  →  CamScanner 03-08-2026 16.23.pdf
+  CamScanner 03-08-2026 16.25.pdf  →  CamScanner 03-08-2026 16.25.pdf
+  CamScanner 03-08-2026 16.41.pdf  →  CamScanner 03-08-2026 16.41.pdf
+  CamScanner 03-08-2026 16.44.pdf  →  CamScanner 03-08-2026 16.44.pdf
+  CamScanner 04-08-2026 07.31.pdf  →  CamScanner 04-08-2026 07.31.pdf
+  CamScanner 04-08-2026 07.37.pdf  →  CamScanner 04-08-2026 07.37.pdf
+  CamScanner 04-08-2026 07.40.pdf  →  CamScanner 04-08-2026 07.40.pdf
+  CamScanner 04-08-2026 07.43.pdf  →  CamScanner 04-08-2026 07.43.pdf
+  CamScanner 04-08-2026 07.45.pdf  →  CamScanner 04-08-2026 07.45.pdf
+  CamScanner 04-08-2026 07.46.pdf  →  CamScanner 04-08-2026 07.46.pdf
+  CamScanner 04-08-2026 07.56.pdf  →  CamScanner 04-08-2026 07.56.pdf
+  CamScanner 04-08-2026 07.58.pdf  →  CamScanner 04-08-2026 07.58.pdf
+  CamScanner 04-08-2026 08.00.pdf  →  CamScanner 04-08-2026 08.00.pdf
+  CamScanner 04-08-2026 08.01.pdf  →  CamScanner 04-08-2026 08.01.pdf
+  CamScanner 04-08-2026 08.03.pdf  →  CamScanner 04-08-2026 08.03.pdf
+  CamScanner 04-08-2026 08.05.pdf  →  CamScanner 04-08-2026 08.05.pdf
+  CamScanner 04-08-2026 08.06.pdf  →  CamScanner 04-08-2026 08.06.pdf
+  CamScanner 04-08-2026 08.37.pdf  →  CamScanner 04-08-2026 08.37.pdf
+
+MOVIDOS Y RENOMBRADOS (262)
+-----------------------------
+  PERIODO 2024/DOCUMENTOS CONTABLES/ESTADOS FINANCIEROS 2024/FORMULARIO 158-2024.pdf
+      → 089 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/EEFF 2024 PRESENTADO FORM 158 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 158, ejercicio 2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/FORMULARIO 120/120-11-2024.pdf
+      → 089 PERIODO 2024/DOCUMENTOS CONTABLES/11 NOVIEMBRE/FORMULARIO 120 120-11-2024.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «120-11-2024», se le agregó la carpeta de donde venía
+  PERIODO 2024/DOCUMENTOS CONTABLES/FORMULARIO 120/120-12-2024.pdf
+      → 089 PERIODO 2024/DOCUMENTOS CONTABLES/12 DICIEMBRE/FORMULARIO 120 120-12-2024.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «120-12-2024», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE DE BALANCES/CALCULO IRE GENERAL CIERRE 2025.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/CALCULO IRE 2025 CRISTAL SA.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE DE BALANCES/FORMULARIO 500-2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/DDJJ IRE 2025 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 500, ejercicio 2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/CONSTANCIA DE RUC.pdf
+      → 089 TRIBUTARIO/CONSTANCIA RUC CRISTAL SA.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/EE.FF 2025/FORMULARIO 158-2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/EEFF 2025 PRESENTADO FORM 158 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 158, ejercicio 2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/FORMULARIO 120/120-01-2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/01 ENERO/FORMULARIO 120 120-01-2025.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «120-01-2025», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS CONTABLES/FORMULARIO 120/120-02-2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/02 FEBRERO/DDJJ IVA 022025 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 120, período 02/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/FORMULARIO 120/120-03-2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/03 MARZO/DDJJ IVA 032025 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 120, período 03/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/FORMULARIO 120/120-04-2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/04 ABRIL/DDJJ IVA 042025 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 120, período 04/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/FORMULARIO 120/120-05-2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/05 MAYO/DDJJ IVA 052025 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 120, período 05/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/FORMULARIO 120/120-06-2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/DDJJ IVA 062025 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 120, período 06/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/FORMULARIO 120/120-07-2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/DDJJ IVA 072025 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 120, período 07/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/FORMULARIO 120/120-08-2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/DDJJ IVA 082025 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 120, período 08/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/FORMULARIO 120/120-09-2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/FORMULARIO 120 120-09-2025.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «120-09-2025», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS CONTABLES/FORMULARIO 120/120-10-2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/FORMULARIO 120 120-10-2025.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «120-10-2025», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS CONTABLES/FORMULARIO 120/120-11-2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/FORMULARIO 120 120-11-2025.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «120-11-2025», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS CONTABLES/FORMULARIO 120/120-12-2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/FORMULARIO 120 120-12-2025.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «120-12-2025», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/2 FEBRERO/factura CRISTAL SA FEBRERO (1).pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/02 FEBRERO/factura CRISTAL SA FEBRERO.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/2 FEBRERO/Gastos/Factura Effort Feb 2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA COMPRA EFFORT 022025 CRISTAL SA.pdf   [Honorarios que EFFORT le factura al cliente]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/3 MARZO/Libro Ventas y Compras/LC.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/03 MARZO/LIBRO COMPRAS 032025 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/3 MARZO/Libro Ventas y Compras/LV.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/03 MARZO/LIBRO VENTAS 032025 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/4 ABRIL/Libro Venta y Libro Compra/LC.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/04 ABRIL/LIBRO COMPRAS 042025 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/4 ABRIL/Libro Venta y Libro Compra/LV.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/04 ABRIL/LIBRO VENTAS 042025 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/5 MAYO/Libro vta y compra/LC.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/05 MAYO/LIBRO COMPRAS 052025 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/5 MAYO/Libro vta y compra/LV.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/05 MAYO/LIBRO VENTAS 052025 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/6 JUNIO/Boleta de Pago _ IVA 062025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/BOLETA DE PAGO IVA 062025 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/6 JUNIO/fac junio effort.pdf
+      → 089 PERIODO 2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA COMPRA EFFORT 062025 CRISTAL SA.pdf   [Honorarios que EFFORT le factura al cliente]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/6 JUNIO/LV y LC/LC.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/LIBRO COMPRAS 062025 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/6 JUNIO/LV y LC/LV.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/LIBRO VENTAS 062025 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/7 JULIO/LV y LC/LC.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/LIBRO COMPRAS 072025 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/7 JULIO/LV y LC/LV.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/LIBRO VENTAS 072025 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/LC.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/LIBRO COMPRAS 082025 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/LV.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/LIBRO VENTAS 082025 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/F.E 0925(74).xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092025 CRISTAL SA VERSION ANTERIOR 1.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2025]
+      nota: Hay una versión más reciente del mismo documento (Setiembre.xlsx): esta queda como versión anterior
+  PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 COMPRAS/Abril.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/04 ABRIL/RG COMPRAS 042025 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 04/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 COMPRAS/Agosto.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/RG COMPRAS 082025 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 08/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 COMPRAS/DICIEMBRE.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/RG COMPRAS 122025 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 12/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 COMPRAS/Febrero.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/02 FEBRERO/RG COMPRAS 022025 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 02/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 COMPRAS/Julio.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/RG COMPRAS 072025 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 07/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 COMPRAS/Junio.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/RG COMPRAS 062025 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 06/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 COMPRAS/Marzo.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/03 MARZO/RG COMPRAS 032025 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 03/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 COMPRAS/Mayo.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/05 MAYO/RG COMPRAS 052025 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 05/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 COMPRAS/Noviembre rect..xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/RG COMPRAS 112025 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 11/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 COMPRAS/Noviembre.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/RG COMPRAS 112025 CRISTAL SA VERSION ANTERIOR 1.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 11/2025]
+      nota: Hay una versión más reciente del mismo documento (Noviembre rect..xlsx): esta queda como versión anterior
+  PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 COMPRAS/Octubre.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/RG COMPRAS 102025 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 10/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 COMPRAS/Setiembre.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092025 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 VENTAS/Abril.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/04 ABRIL/RG VENTAS 042025 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 04/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 VENTAS/Agosto.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/RG VENTAS 082025 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 08/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 VENTAS/Diciembre.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/RG VENTAS 122025 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 12/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 VENTAS/Febrero.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/02 FEBRERO/RG VENTAS 022025 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 02/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 VENTAS/Julio.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/RG VENTAS 072025 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 07/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 VENTAS/Junio.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/RG VENTAS 062025 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 06/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 VENTAS/Marzo.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/03 MARZO/RG VENTAS 032025 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 03/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 VENTAS/Mayo.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/05 MAYO/RG VENTAS 052025 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 05/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 VENTAS/Noviembre.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/RG VENTAS 112025 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 11/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 VENTAS/Octubre.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/RG VENTAS 102025 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 10/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 VENTAS/Setiembre.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG VENTAS 092025 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 09/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/TALON DE CONFIRMACION/Abril.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/04 ABRIL/TALON RG 90 042025 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 241, período 04/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/TALON DE CONFIRMACION/Agosto.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/TALON RG 90 082025 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 241, período 08/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/TALON DE CONFIRMACION/Diciembre.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/TALON DE CONFIRMACION Diciembre.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «Diciembre», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS CONTABLES/TALON DE CONFIRMACION/Enero.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/01 ENERO/TALON RG 90 012025 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 241, período 01/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/TALON DE CONFIRMACION/Febrero.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/02 FEBRERO/TALON RG 90 022025 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 241, período 02/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/TALON DE CONFIRMACION/Julio.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/TALON RG 90 072025 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 241, período 07/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/TALON DE CONFIRMACION/Junio.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/TALON RG 90 062025 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 241, período 06/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/TALON DE CONFIRMACION/Marzo.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/03 MARZO/TALON RG 90 032025 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 241, período 03/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/TALON DE CONFIRMACION/Mayo.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/05 MAYO/TALON RG 90 052025 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 241, período 05/2025]
+  PERIODO 2025/DOCUMENTOS CONTABLES/TALON DE CONFIRMACION/Noviembre.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/TALON DE CONFIRMACION Noviembre.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «Noviembre», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS CONTABLES/TALON DE CONFIRMACION/Octubre.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/TALON DE CONFIRMACION Octubre.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «Octubre», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS CONTABLES/TALON DE CONFIRMACION/Setiembre.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/TALON DE CONFIRMACION Setiembre.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «Setiembre», se le agregó la carpeta de donde venía
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA 2025/drfs-003---comunicacion-en-el-registro-administrativo-de-beneficiarios-finales-6370171 (1).pdf
+      → 089 LEGAL Y SOCIETARIO/ASAMBLEA 2025/drfs-003---comunicacion-en-el-registro-administrativo-de-beneficiarios-finales-6370171.pdf   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA 2025/drfs-006---comunicacion-asamblearia--7353997 (1).pdf
+      → 089 LEGAL Y SOCIETARIO/ASAMBLEA 2025/drfs-006---comunicacion-asamblearia--7353997.pdf   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA 2025/Libro Deposito de Acciones  Registro y asistencia a Asambleas 17 OCT 2022.xls
+      → 089 LEGAL Y SOCIETARIO/ASAMBLEA 2025/Libro Deposito de Acciones Registro y asistencia a Asambleas 17 OCT 2022.xls   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA 2025/MEMORIA DEL EJERCICIO-CRISTAL SA .pdf
+      → 089 LEGAL Y SOCIETARIO/ASAMBLEA 2025/MEMORIA DEL EJERCICIO-CRISTAL SA.pdf   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA 2025/REGISTRO DE ASISTENCIA ASAMBLEA .pdf
+      → 089 LEGAL Y SOCIETARIO/ASAMBLEA 2025/REGISTRO DE ASISTENCIA ASAMBLEA.pdf   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ESTATUTO CRISTAL S.A. _compressed (3).pdf
+      → 089 LEGAL Y SOCIETARIO/ESTATUTO CRISTAL S.A. _compressed.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ESTATUTO CRISTAL S.A. .pdf
+      → 089 LEGAL Y SOCIETARIO/ESTATUTO CRISTAL S.A..pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/SOLICITUD Y CONTRATO DE PRESTACION DE SERVICIOS_220822 (2).pdf
+      → 089 LEGAL Y SOCIETARIO/SOLICITUD Y CONTRATO DE PRESTACION DE SERVICIOS_220822.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/Tasacion  Ita Concretec.pdf .pdf
+      → 089 LEGAL Y SOCIETARIO/Tasacion Ita Concretec.pdf.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS VARIOS/CI SOCIOS/CI MAGNO BORDON .pdf
+      → 089 PERIODO 2025/DOCUMENTOS VARIOS/CI SOCIOS/CI MAGNO BORDON.pdf   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2025/DOCUMENTOS VARIOS/CI SOCIOS/CI MAGNO BORDON.pdf
+      → 089 PERIODO 2025/DOCUMENTOS VARIOS/CI SOCIOS/CI MAGNO BORDON - CI SOCIOS.pdf   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA 276-CRISTAL SA-FEBRERO.pdf
+      → 089 PERIODO 2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA COMPRA EFFORT 276 022025 CRISTAL SA.pdf   [Honorarios que EFFORT le factura al cliente]
+  PERIODO 2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA 345-CRISTAL SA-MARZO.pdf
+      → 089 PERIODO 2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA COMPRA EFFORT 345 032025 CRISTAL SA.pdf   [Honorarios que EFFORT le factura al cliente]
+  PERIODO 2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA 388-CRISTAL SA-ABRIL.pdf
+      → 089 PERIODO 2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA COMPRA EFFORT 388 042025 CRISTAL SA.pdf   [Honorarios que EFFORT le factura al cliente]
+  PERIODO 2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA 42-CRISTAL SA-MAYO.pdf
+      → 089 PERIODO 2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA COMPRA EFFORT 052025 CRISTAL SA.pdf   [Honorarios que EFFORT le factura al cliente]
+  PERIODO 2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA 475-CRISTAL SA-JUNIO.pdf
+      → 089 PERIODO 2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA COMPRA EFFORT 475 062025 CRISTAL SA.pdf   [Honorarios que EFFORT le factura al cliente]
+  PERIODO 2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA 515-CRISTAL SA-JULIO.pdf
+      → 089 PERIODO 2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA COMPRA EFFORT 515 072025 CRISTAL SA.pdf   [Honorarios que EFFORT le factura al cliente]
+  PERIODO 2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA 557-CRISTAL SA-AGOSTO.pdf
+      → 089 PERIODO 2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA COMPRA EFFORT 557 082025 CRISTAL SA.pdf   [Honorarios que EFFORT le factura al cliente]
+  PERIODO 2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA 599-CRISTAL SA-SETIEMBRE.pdf
+      → 089 PERIODO 2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA COMPRA EFFORT 599 092025 CRISTAL SA.pdf   [Honorarios que EFFORT le factura al cliente]
+  PERIODO 2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA 643-CRISTAL SA-OCTUBRE.pdf
+      → 089 PERIODO 2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA COMPRA EFFORT 643 102025 CRISTAL SA.pdf   [Honorarios que EFFORT le factura al cliente]
+  PERIODO 2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA 683-CRISTAL SA-NOVIEMBRE.pdf
+      → 089 PERIODO 2025/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA COMPRA EFFORT 683 112025 CRISTAL SA.pdf   [Honorarios que EFFORT le factura al cliente]
+  PERIODO 2026/DOCUMENTOS CONTABLES/CCT/ENERO.pdf
+      → 089 TRIBUTARIO/CCT ENERO.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+      nota: Al nombre, que solo decía «ENERO», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/CCT/FEBRERO.pdf
+      → 089 TRIBUTARIO/CCT FEBRERO.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+      nota: Al nombre, que solo decía «FEBRERO», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/COMUNICACIONES DNIT/FEBRERO/ANULACION FC 148.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/FACTURA COMPRA 148 022026 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-01-2026.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/DDJJ IVA 012026 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 120, período 01/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-02-2026.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/DDJJ IVA 022026 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 120, período 02/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-03-2026.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/DDJJ IVA 032026 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 120, período 03/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-04-2026.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/DDJJ IVA 042026 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 120, período 04/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-05-2026.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/DDJJ IVA 052026 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 120, período 05/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-06-2026.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/DDJJ IVA 062026 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 120, período 06/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-07-2026.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/DDJJ IVA 072026 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 120, período 07/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-08-26.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/DDJJ IVA 082026 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 120, período 08/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010633.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010633.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010633», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010634.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010634.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010634», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010635.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010635.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010635», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010637.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010637.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010637», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010638.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010638.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010638», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010639.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010639.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010639», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010640.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010640.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010640», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010641.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010641.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010641», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010642.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010642.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010642», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010643.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010643.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010643», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010644.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010644.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010644», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010645.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010645.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010645», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010646.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010646.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010646», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010647.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010647.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010647», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010648.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010648.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010648», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010649.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010649.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010649», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010650.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010650.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010650», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010651.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010651.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010651», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010652.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010652.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010652», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010653.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010653.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010653», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010654.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010654.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010654», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010655.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010655.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010655», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010656.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010656.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010656», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010657.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010657.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010657», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010658.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010658.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010658», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010659.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010659.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010659», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010660.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010660.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010660», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010617.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010617.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010617», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010618.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010618.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010618», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010619.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010619.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010619», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010620.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010620.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010620», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010621.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010621.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010621», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010622.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010622.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010622», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010623.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010623.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010623», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010661.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010661.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010661», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010662.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010662.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010662», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/1ENERO/Facturas de venta.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/FACTURA VENTA 012026 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/FAC 3270 HONORARIOS DE DESPACHANTE .jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/FAC 3270 HONORARIOS DE DESPACHANTE.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/ANULACION FC 162.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/FACTURA COMPRA 162 032026 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/ANULACION FC 163.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/FACTURA COMPRA 163 032026 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/ANULACION FC 165.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/FACTURA COMPRA 165 032026 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/ANULACION FC 173.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/FACTURA COMPRA 173 032026 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/WhatsApp Image 2026-04-20 at 10.59.29 (1).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/WhatsApp Image 2026-04-20 at 10.59.29.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/WhatsApp Image 2026-04-20 at 10.59.29.jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/WhatsApp Image 2026-04-20 at 10.59.29 - MARZO 2026.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/WhatsApp Image 2026-04-20 at 10.59.30 (1).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/WhatsApp Image 2026-04-20 at 10.59.30.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/WhatsApp Image 2026-04-20 at 10.59.30 (2).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/WhatsApp Image 2026-04-20 at 10.59.30 - MARZO 2026.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/WhatsApp Image 2026-04-20 at 10.59.30.jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/WhatsApp Image 2026-04-20 at 10.59.30 02.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/WhatsApp Image 2026-04-20 at 12.01.11 (1).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/WhatsApp Image 2026-04-20 at 12.01.11.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/WhatsApp Image 2026-04-20 at 12.01.11 (2).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/WhatsApp Image 2026-04-20 at 12.01.11 02.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/WhatsApp Image 2026-04-20 at 12.01.11.jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/WhatsApp Image 2026-04-20 at 12.01.11 - MARZO 2026.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/WhatsApp Image 2026-04-20 at 12.01.12 (1).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/WhatsApp Image 2026-04-20 at 12.01.12.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/WhatsApp Image 2026-04-20 at 12.01.12 (2).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/WhatsApp Image 2026-04-20 at 12.01.12 - MARZO 2026.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/WhatsApp Image 2026-04-20 at 12.01.12 (3).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/WhatsApp Image 2026-04-20 at 12.01.12 02.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/WhatsApp Image 2026-04-20 at 12.01.12.jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/WhatsApp Image 2026-04-20 at 12.01.12 03.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/WhatsApp Image 2026-04-20 at 12.01.13 (1).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/WhatsApp Image 2026-04-20 at 12.01.13.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/WhatsApp Image 2026-04-20 at 12.01.13 (2).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/WhatsApp Image 2026-04-20 at 12.01.13 - MARZO 2026.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/WhatsApp Image 2026-04-20 at 12.01.13 (3).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/WhatsApp Image 2026-04-20 at 12.01.13 02.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/WhatsApp Image 2026-04-20 at 12.01.13.jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/WhatsApp Image 2026-04-20 at 12.01.13 03.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/WhatsApp Image 2026-04-20 at 12.01.14 (1).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/WhatsApp Image 2026-04-20 at 12.01.14.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/WhatsApp Image 2026-04-20 at 12.01.14 (2).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/WhatsApp Image 2026-04-20 at 12.01.14 - MARZO 2026.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/WhatsApp Image 2026-04-20 at 12.01.14 (3).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/WhatsApp Image 2026-04-20 at 12.01.14 02.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/WhatsApp Image 2026-04-20 at 12.01.14.jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/WhatsApp Image 2026-04-20 at 12.01.14 03.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/WhatsApp Image 2026-04-20 at 12.01.15 (1).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/WhatsApp Image 2026-04-20 at 12.01.15.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/WhatsApp Image 2026-04-20 at 12.01.15.jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/WhatsApp Image 2026-04-20 at 12.01.15 - MARZO 2026.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/Boleta de Pago IVA GENERAL 042026.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/BOLETA DE PAGO IVA 042026 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/PHOTO-2026-05-05-12-04-44 1.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA COMPRA 042026 CRISTAL SA.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/WhatsApp Image 2026-05-19 at 9.12.09 AM (3).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA COMPRA 042026 CRISTAL SA 01.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/WhatsApp Image 2026-05-19 at 9.12.10 AM (1).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA COMPRA 042026 CRISTAL SA 03.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/WhatsApp Image 2026-05-19 at 9.12.10 AM (2).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA COMPRA 042026 CRISTAL SA 04.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/WhatsApp Image 2026-05-19 at 9.12.10 AM (3).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA COMPRA 042026 CRISTAL SA 05.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/WhatsApp Image 2026-05-19 at 9.12.10 AM.jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA COMPRA 042026 CRISTAL SA 02.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/WhatsApp Image 2026-05-19 at 9.12.11 AM (2).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA COMPRA 042026 CRISTAL SA 07.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/WhatsApp Image 2026-05-19 at 9.12.11 AM (3).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA COMPRA 042026 CRISTAL SA 08.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/WhatsApp Image 2026-05-19 at 9.12.11 AM.jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA COMPRA 042026 CRISTAL SA 06.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/WhatsApp Image 2026-05-19 at 9.12.12 AM (1).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA COMPRA 042026 CRISTAL SA 10.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/WhatsApp Image 2026-05-19 at 9.12.12 AM.jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA COMPRA 042026 CRISTAL SA 09.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/WhatsApp Image 2026-05-19 at 9.12.13 AM (1).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA COMPRA 042026 CRISTAL SA 12.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/WhatsApp Image 2026-05-19 at 9.12.13 AM.jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA COMPRA 042026 CRISTAL SA 11.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/WhatsApp Image 2026-05-19 at 9.12.14 AM (1).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA COMPRA 042026 CRISTAL SA 14.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/WhatsApp Image 2026-05-19 at 9.12.14 AM (2).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA COMPRA 042026 CRISTAL SA 15.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/WhatsApp Image 2026-05-19 at 9.12.14 AM.jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA COMPRA 042026 CRISTAL SA 13.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/WhatsApp Image 2026-05-19 at 9.12.15 AM (1).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA COMPRA 042026 CRISTAL SA 17.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/WhatsApp Image 2026-05-19 at 9.12.15 AM (2).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA COMPRA 042026 CRISTAL SA 18.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/WhatsApp Image 2026-05-19 at 9.12.15 AM (3).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA COMPRA 042026 CRISTAL SA 19.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/WhatsApp Image 2026-05-19 at 9.12.15 AM.jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA COMPRA 042026 CRISTAL SA 16.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac compras/WhatsApp Image 2026-05-19 at 9.12.16 AM.jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA COMPRA 042026 CRISTAL SA 20.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-35 1.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA VENTA 042026 CRISTAL SA 03.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-35.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA VENTA 042026 CRISTAL SA 01.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-36 1.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA VENTA 042026 CRISTAL SA 04.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-36 2.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA VENTA 042026 CRISTAL SA 05.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-36.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA VENTA 042026 CRISTAL SA 02.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-37 1.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA VENTA 042026 CRISTAL SA 06.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-37.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA VENTA 042026 CRISTAL SA 07.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-38.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA VENTA 042026 CRISTAL SA 08.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-39 1.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA VENTA 042026 CRISTAL SA 10.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-39 2.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA VENTA 042026 CRISTAL SA 11.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-39.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA VENTA 042026 CRISTAL SA 09.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-41 1.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA VENTA 042026 CRISTAL SA 13.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-41.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA VENTA 042026 CRISTAL SA 12.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.03 AM (1).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA VENTA 042026 CRISTAL SA 01.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.04 AM.jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA VENTA 042026 CRISTAL SA 02.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.06 AM (1).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA VENTA 042026 CRISTAL SA 04.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.06 AM (3).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA VENTA 042026 CRISTAL SA 05.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.06 AM.jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA VENTA 042026 CRISTAL SA 03.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.07 AM (1).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA VENTA 042026 CRISTAL SA 07.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.07 AM.jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA VENTA 042026 CRISTAL SA 06.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.08 AM (1).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA VENTA 042026 CRISTAL SA 08.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.08 AM (2).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA VENTA 042026 CRISTAL SA 09.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.08 AM (3).jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA VENTA 042026 CRISTAL SA 10.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.09 AM.jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA VENTA 042026 CRISTAL SA 11.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/Boleta de Pago IVA GENERAL 042026 CRISTAL S.A
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/BOLETA DE PAGO IVA 042026 CRISTAL SA 01.a   [Período tomado de la carpeta donde estaba]
+      nota: Boleta guardada en 05/2026: va en el mes que paga (04/2026), según su nombre
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/Boleta de Pago IVA GENERAL 052026 CRISTAL S.A
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/BOLETA DE PAGO IVA 052026 CRISTAL SA.a   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/Boleta de Pago IVA GENERAL ABRIL-MAYO 2026 CRISTAL S.A
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/BOLETA DE PAGO IVA 042026 CRISTAL SA 02.a   [Período tomado de la carpeta donde estaba]
+      nota: Boleta guardada en 05/2026: va en el mes que paga (04/2026), según su nombre
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 09.02 (1).pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 09.02 - MAYO 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/FACTURAS NO CARGADAS/1000010636.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/FACTURAS NO CARGADAS 1000010636.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010636», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/VENTAS/239.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/VENTAS 239.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «239», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/VENTAS/240.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/VENTAS 240.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «240», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/VENTAS/241.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/VENTAS 241.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «241», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/VENTAS/242.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/VENTAS 242.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «242», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/VENTAS/243.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/VENTAS 243.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «243», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/VENTAS/244.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/VENTAS 244.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «244», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/VENTAS/245.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/VENTAS 245.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «245», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/VENTAS/246.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/VENTAS 246.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «246», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/VENTAS/247.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/VENTAS 247.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «247», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/VENTAS/248.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/VENTAS 248.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «248», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/VENTAS/249.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/VENTAS 249.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «249», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/VENTAS/250.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/VENTAS 250.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «250», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/VENTAS/251.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/VENTAS 251.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «251», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/VENTAS/252.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/VENTAS 252.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «252», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/VENTAS/253.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/VENTAS 253.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «253», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/VENTAS/254.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/VENTAS 254.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «254», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/VENTAS/255.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/VENTAS 255.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «255», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/VENTAS/256.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/VENTAS 256.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «256», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/VENTAS/257.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/VENTAS 257.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «257», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/VENTAS/258.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/VENTAS 258.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «258», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/VENTAS/259.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/VENTAS 259.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «259», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 COMPRAS/01 ENERO.xlsx
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/RG COMPRAS 012026 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 01/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 COMPRAS/02 FEBRERO.xlsx
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/RG COMPRAS 022026 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 02/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 COMPRAS/03 MARZO.xlsx
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/RG COMPRAS 032026 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 03/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 COMPRAS/04 ABRIL.xlsx
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/RG COMPRAS 042026 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 04/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 COMPRAS/05 MAYO.xlsx
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/RG COMPRAS 052026 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 05/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 COMPRAS/06 JUNIO.xlsx
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/RG COMPRAS 062026 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 06/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 COMPRAS/07 JULIO.xlsx
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/RG COMPRAS 072026 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 07/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 COMPRAS/08 AGOSTO.xlsx
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG COMPRAS 082026 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 08/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 VENTAS/01 ENERO.xlsx
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/RG VENTAS 012026 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 01/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 VENTAS/02 FEBRERO.xlsx
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/RG VENTAS 022026 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 02/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 VENTAS/03 MARZO.xlsx
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/RG VENTAS 032026 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 03/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 VENTAS/04 ABRIL.xlsx
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/RG VENTAS 042026 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 04/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 VENTAS/05 MAYO.xlsx
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/RG VENTAS 052026 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 05/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 VENTAS/06 JUNIO.xlsx
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/RG VENTAS 062026 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 06/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 VENTAS/07 JULIO.xlsx
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/RG VENTAS 072026 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 07/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 VENTAS/08 AGOSTO.xlsx
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG VENTAS 082026 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 08/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/ABRIL.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/TALON RG 90 042026 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 241, período 04/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/ENERO.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/TALON RG 90 012026 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 241, período 01/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/FEBRERO.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/TALON RG 90 022026 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 241, período 02/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/JUNIO.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/TALON RG 90 062026 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 241, período 06/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/MARZO.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/TALON RG 90 032026 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 241, período 03/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/MAYO.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/TALON RG 90 052026 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 241, período 05/2026]
+  PERIODO 2026/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA 818-CRISTAL SA-FEBRERO.pdf
+      → 089 PERIODO 2026/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA COMPRA EFFORT 818 022026 CRISTAL SA.pdf   [Honorarios que EFFORT le factura al cliente]
+
+MOVIDOS CONSERVANDO SU NOMBRE (381)
+-------------------------------------
+  PERIODO 2024/DOCUMENTOS CONTABLES/ESTADOS FINANCIEROS 2024/80153246NE2024.pdf
+      → 089 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/80153246NE2024.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/ESTADOS FINANCIEROS 2024/80153246NE2024.xlsx
+      → 089 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/80153246NE2024.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/ESTADOS FINANCIEROS 2024/80153246NE2024.zip
+      → 089 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/80153246NE2024.zip   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/ESTADOS FINANCIEROS 2024/DECLARACION IDU 2024.pdf
+      → 089 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/DECLARACION IDU 2024.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/ESTADOS FINANCIEROS 2024/EF2024_9b44092d_80153246_948.zip
+      → 089 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/EF2024_9b44092d_80153246_948.zip   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/BALANCES/ACTIVOS CRISTAL CONSTRUCCIONES_WORD.- TASADOR.-.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/ACTIVOS CRISTAL CONSTRUCCIONES_WORD.- TASADOR.-.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/BALANCES/Balance General Inicial CRISTAL S.A..pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/Balance General Inicial CRISTAL S.A..pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/BALANCES/Balance General Resoluc.pdf 2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/Balance General Resoluc.pdf 2025.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/BALANCES/BALANCE GENERAL Y ESTADO DE RESULTADOS 2024-CRISTAL S.A.pdf
+      → 089 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/BALANCE GENERAL Y ESTADO DE RESULTADOS 2024-CRISTAL S.A.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/BALANCES/Est Res49.pdf 2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/Est Res49.pdf 2025.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE DE BALANCES/ASIENTO DE GND.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/ASIENTO DE GND.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE DE BALANCES/ASIENTOS DE ANTICIPOS.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/ASIENTOS DE ANTICIPOS.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE DE BALANCES/BALANCE GENERAL 2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/BALANCE GENERAL 2025.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE DE BALANCES/BALANCE GENERAL CRISTAL S.A 2025.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/BALANCE GENERAL CRISTAL S.A 2025.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE DE BALANCES/ESTADO DE RESULTADOS CRISTAL S.A 2025.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/ESTADO DE RESULTADOS CRISTAL S.A 2025.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE DE BALANCES/LISTADO INGRESOS BANCO.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/LISTADO INGRESOS BANCO.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE DE BALANCES/PLANILLA DE IPS.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS LABORALES/IPS/PLANILLA DE IPS.xlsx   [Documento del IPS]
+  PERIODO 2025/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/ANULACION 2 OCTUBRE.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/ANULACION 2 OCTUBRE.pdf   [Período tomado del nombre del archivo]
+  PERIODO 2025/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/Anulacion abril.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/04 ABRIL/Anulacion abril.pdf   [Período tomado del nombre del archivo]
+  PERIODO 2025/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/Anulacion junio.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/Anulacion junio.pdf   [Período tomado del nombre del archivo]
+  PERIODO 2025/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/ANULACION OCTUBRE.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/ANULACION OCTUBRE.pdf   [Período tomado del nombre del archivo]
+  PERIODO 2025/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/ANULACION SETIEMBRE.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/ANULACION SETIEMBRE.pdf   [Período tomado del nombre del archivo]
+  PERIODO 2025/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/Baja de timbrado.pdf
+      → 089 TRIBUTARIO/Baja de timbrado.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/CCT/CCT 06.pdf
+      → 089 TRIBUTARIO/CCT 06.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/CCT/CCT 09.pdf
+      → 089 TRIBUTARIO/CCT 09.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/CCT/CCT AL 07092025.pdf
+      → 089 TRIBUTARIO/CCT AL 07092025.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/CCT/CCT03.pdf
+      → 089 TRIBUTARIO/CCT03.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/CCT/CCT05.pdf
+      → 089 TRIBUTARIO/CCT05.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/CCT/CCT08.pdf
+      → 089 TRIBUTARIO/CCT08.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/CCT/CCT09.pdf
+      → 089 TRIBUTARIO/CCT09.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/Cédula Tributaria _ MARANGATU.pdf
+      → 089 TRIBUTARIO/Cédula Tributaria _ MARANGATU.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/Comunicacion de baja timbrado.pdf
+      → 089 TRIBUTARIO/Comunicacion de baja timbrado.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/EE.FF 2025/80153246NE2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/80153246NE2025.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/EE.FF 2025/80153246NE2025.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/80153246NE2025.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/EE.FF 2025/80153246NE2025.zip
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/80153246NE2025.zip   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/EE.FF 2025/BALANCE GENERAL.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/BALANCE GENERAL.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/EE.FF 2025/EF2025_7f420814_80153246_948.zip
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/EF2025_7f420814_80153246_948.zip   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/EE.FF 2025/ESTADO DE RESULTADOS.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/ESTADO DE RESULTADOS.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/EE.FF 2025/FLUJO DE EFECTIVO.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/FLUJO DE EFECTIVO.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/EE.FF 2025/PATRIMONIO NETO.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/PATRIMONIO NETO.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/FORMULARIO 120/120-11-2025 REC..pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/120-11-2025 REC..pdf   [Período tomado del nombre del archivo]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/10 OCTUBRE/Cristal S.A.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/Cristal S.A.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/10 OCTUBRE/DET. IVA CRISTAL S.A.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/DET. IVA CRISTAL S.A.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/10 OCTUBRE/L.C 2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/L.C 2025.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/10 OCTUBRE/L.V 2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/L.V 2025.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/10 OCTUBRE/Ventas octubre 2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/Ventas octubre 2025.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/11 NOVIEMBRE/80153246_REC_202511.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/80153246_REC_202511.xlsx   [Archivo de sustento de una rectificativa, tal como lo genera el SET (no se renombra)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/11 NOVIEMBRE/80153246_REC_202511.zip
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/80153246_REC_202511.zip   [Archivo de sustento de una rectificativa, tal como lo genera el SET (no se renombra)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/11 NOVIEMBRE/ANULACION DE COMPROBANTES 11-25.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/ANULACION DE COMPROBANTES 11-25.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/11 NOVIEMBRE/BOLETA DE PAGO CRISTAL S.A 11-25.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/BOLETA DE PAGO CRISTAL S.A 11-25.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/11 NOVIEMBRE/Compras Cristal S.A 11-25.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Compras Cristal S.A 11-25.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/11 NOVIEMBRE/DETERMINACION IVA 112025 CRISTAL S.A
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/DETERMINACION IVA 112025 CRISTAL S.A   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/11 NOVIEMBRE/L.C 2025 RECT..pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/L.C 2025 RECT..pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/11 NOVIEMBRE/L.V 2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/L.V 2025.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/11 NOVIEMBRE/RECTIFICATIVA 11-25.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/RECTIFICATIVA 11-25.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/11 NOVIEMBRE/Ventas Cristal S.A 11-25.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Ventas Cristal S.A 11-25.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/12 DICIEMBRE/CamScanner 13-1-26 10.14.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/CamScanner 13-1-26 10.14.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/12 DICIEMBRE/Cristal SA.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/Cristal SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/12 DICIEMBRE/DETERMINACION IVA CRISTAL 12-25.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/DETERMINACION IVA CRISTAL 12-25.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/12 DICIEMBRE/factura #794 16 dic 2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/factura #794 16 dic 2025.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/12 DICIEMBRE/factura de fecha 14 nov.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/factura de fecha 14 nov.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/12 DICIEMBRE/L.C 2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/L.C 2025.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/12 DICIEMBRE/L.V 2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/L.V 2025.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/12 DICIEMBRE/Scan 006 dic 2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/Scan 006 dic 2025.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/12 DICIEMBRE/Scan 21 nov 2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/Scan 21 nov 2025.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/12 DICIEMBRE/Ventas diciembre 2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/Ventas diciembre 2025.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/2 FEBRERO/Gastos/facturas CRISTAL SA FEBRERO.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/02 FEBRERO/facturas CRISTAL SA FEBRERO.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/2 FEBRERO/PLANILLA DETERMINACION IMPUESTOS.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/02 FEBRERO/PLANILLA DETERMINACION IMPUESTOS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/2 FEBRERO/PLANILLA DETERMINACION IMPUESTOS.xls
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/02 FEBRERO/PLANILLA DETERMINACION IMPUESTOS.xls   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/2 FEBRERO/Ventas y compras/Compras.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/02 FEBRERO/Compras.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/2 FEBRERO/Ventas y compras/Ventas.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/02 FEBRERO/Ventas.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/3 MARZO/Ventas y Compras.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/03 MARZO/Ventas y Compras.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/4 ABRIL/Fact. CRISTAL SA COMPRAS 04.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/04 ABRIL/Fact. CRISTAL SA COMPRAS 04.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/4 ABRIL/Facturas CRISTAL SA VENTAS 04.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/04 ABRIL/Facturas CRISTAL SA VENTAS 04.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/4 ABRIL/PLANILLA DETERMINACION IMPUESTOS.xls
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/04 ABRIL/PLANILLA DETERMINACION IMPUESTOS.xls   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/5 MAYO/Anulacion 2.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/05 MAYO/Anulacion 2.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/5 MAYO/Anulacion 3.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/05 MAYO/Anulacion 3.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/5 MAYO/Anulacion de facturas.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/05 MAYO/Anulacion de facturas.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/5 MAYO/Compras CRISTAL mayo 2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/05 MAYO/Compras CRISTAL mayo 2025.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/5 MAYO/EXTRACTO DE IPS MAYO 2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS LABORALES/IPS/EXTRACTO DE IPS MAYO 2025.pdf   [Documento del IPS]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/5 MAYO/PLANILLA DETERMINACION IMPUESTOS.xls
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/05 MAYO/PLANILLA DETERMINACION IMPUESTOS.xls   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/5 MAYO/Ventas CRISTAL mayo 2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/05 MAYO/Ventas CRISTAL mayo 2025.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/6 JUNIO/COMPRAS 4.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/COMPRAS 4.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/6 JUNIO/FACTURA 475-JUNIO.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/FACTURA 475-JUNIO.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/6 JUNIO/FACTURAS COMPRAS 1.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/FACTURAS COMPRAS 1.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/6 JUNIO/FACTURAS COMPRAS 3.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/FACTURAS COMPRAS 3.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/6 JUNIO/FACTURAS COMPRAS.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/FACTURAS COMPRAS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/6 JUNIO/Facturas de Ventas 2.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/Facturas de Ventas 2.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/6 JUNIO/FACTURAS VENTAS ANULADAS.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/FACTURAS VENTAS ANULADAS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/6 JUNIO/PLANILLA DETERMINACION IMPUESTOS.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/PLANILLA DETERMINACION IMPUESTOS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/6 JUNIO/PLANILLA DETERMINACION IMPUESTOS.xls
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/PLANILLA DETERMINACION IMPUESTOS.xls   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/7 JULIO/Factura 515-Julio.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/Factura 515-Julio.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/7 JULIO/Facturas compras CRISTAL SA.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/Facturas compras CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/7 JULIO/Facturas ventas CRISTAL SA.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/Facturas ventas CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/7 JULIO/PLANILLA DETERMINACION IMPUESTOS.xls
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/PLANILLA DETERMINACION IMPUESTOS.xls   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/ANULACION DE FACTURA.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/ANULACION DE FACTURA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/PLANILLA DETERMINACION IMPUESTOS.xls
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/PLANILLA DETERMINACION IMPUESTOS.xls   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/VENTAS.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/Compras Sept 2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/Compras Sept 2025.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/FAC 303.jpg
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/FAC 303.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/L.C 2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/L.C 2025.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/L.V 2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/L.V 2025.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/PROFORMA CRISTAL S.A.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/PROFORMA CRISTAL S.A.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/Ventas Septiembre 2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/Ventas Septiembre 2025.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA 2025/ACTA DE ASAMBLEA 2025 CRISTAL SA.pdf
+      → 089 LEGAL Y SOCIETARIO/ASAMBLEA 2025/ACTA DE ASAMBLEA 2025 CRISTAL SA.pdf   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA 2025/Acta de Asamblea No 01 CRISTAL S.A..doc
+      → 089 LEGAL Y SOCIETARIO/ASAMBLEA 2025/Acta de Asamblea No 01 CRISTAL S.A..doc   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA 2025/Acta de Asamblea No 01 CRISTAL S.A..pdf
+      → 089 LEGAL Y SOCIETARIO/ASAMBLEA 2025/Acta de Asamblea No 01 CRISTAL S.A..pdf   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA 2025/BENEFICIARIOS FINALES CRISTAL S.A. 2024.pdf
+      → 089 LEGAL Y SOCIETARIO/ASAMBLEA 2025/BENEFICIARIOS FINALES CRISTAL S.A. 2024.pdf   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA 2025/Constancia _ MARANGATU.pdf
+      → 089 LEGAL Y SOCIETARIO/ASAMBLEA 2025/Constancia _ MARANGATU.pdf   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA 2025/Convocatoria de asamblea 2025.doc
+      → 089 LEGAL Y SOCIETARIO/ASAMBLEA 2025/Convocatoria de asamblea 2025.doc   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA 2025/drfs-002---comunicacion-en-el-registro-administrativo-de-personas-y-estructuras-juridicas-7166459.pdf
+      → 089 LEGAL Y SOCIETARIO/ASAMBLEA 2025/drfs-002---comunicacion-en-el-registro-administrativo-de-personas-y-estructuras-juridicas-7166459.pdf   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA 2025/drfs-003---comunicacion-en-el-registro-administrativo-de-beneficiarios-finales-7166860.pdf
+      → 089 LEGAL Y SOCIETARIO/ASAMBLEA 2025/drfs-003---comunicacion-en-el-registro-administrativo-de-beneficiarios-finales-7166860.pdf   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA 2025/drfs-005---inscripcion-de-sociedades-en-dgpejbf-7421005.pdf
+      → 089 LEGAL Y SOCIETARIO/ASAMBLEA 2025/drfs-005---inscripcion-de-sociedades-en-dgpejbf-7421005.pdf   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA 2025/drfs-006---comunicacion-asamblearia--7425700.pdf
+      → 089 LEGAL Y SOCIETARIO/ASAMBLEA 2025/drfs-006---comunicacion-asamblearia--7425700.pdf   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA 2025/fac de publicacion ..pdf constitucion.pdf
+      → 089 LEGAL Y SOCIETARIO/ASAMBLEA 2025/fac de publicacion ..pdf constitucion.pdf   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA 2025/INFORME DEL SINDICO-CRISTAL S.A.pdf
+      → 089 LEGAL Y SOCIETARIO/ASAMBLEA 2025/INFORME DEL SINDICO-CRISTAL S.A.pdf   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA 2025/Informe del Sindico.doc
+      → 089 LEGAL Y SOCIETARIO/ASAMBLEA 2025/Informe del Sindico.doc   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA 2025/Libro Registro de Accionistas.xls
+      → 089 LEGAL Y SOCIETARIO/ASAMBLEA 2025/Libro Registro de Accionistas.xls   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA 2025/Memoria del Ejercicio 2024 copesa.docx
+      → 089 LEGAL Y SOCIETARIO/ASAMBLEA 2025/Memoria del Ejercicio 2024 copesa.docx   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/constancia_de_no_adeudar_pdf.php.pdf
+      → 089 LEGAL Y SOCIETARIO/constancia_de_no_adeudar_pdf.php.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/doc._Digit[1].pdf
+      → 089 LEGAL Y SOCIETARIO/doc._Digit[1].pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/EMPLEADOS/BLAS CHAVEZ.pdf
+      → 089 LEGAL Y SOCIETARIO/BLAS CHAVEZ.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/EMPLEADOS/FERNANDO ORTIZ.pdf
+      → 089 LEGAL Y SOCIETARIO/FERNANDO ORTIZ.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/EMPLEADOS/FLORENCIO OJEDA.pdf
+      → 089 LEGAL Y SOCIETARIO/FLORENCIO OJEDA.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/EMPLEADOS/MAURO ORTIZ.pdf
+      → 089 LEGAL Y SOCIETARIO/MAURO ORTIZ.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/EMPLEADOS/NOMINA DE EMPLEADOS CRISTAL SA.docx
+      → 089 LEGAL Y SOCIETARIO/NOMINA DE EMPLEADOS CRISTAL SA.docx   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/EMPLEADOS/NOMINA DE EMPLEADOS CRISTAL SA.pdf
+      → 089 LEGAL Y SOCIETARIO/NOMINA DE EMPLEADOS CRISTAL SA.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/EMPLEADOS/PEDRO CHAVEZ.pdf
+      → 089 LEGAL Y SOCIETARIO/PEDRO CHAVEZ.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/EMPLEADOS/RICARDO PORTILLO.pdf
+      → 089 LEGAL Y SOCIETARIO/RICARDO PORTILLO.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/EMPLEADOS/VICENTE ORTIZ.pdf
+      → 089 LEGAL Y SOCIETARIO/VICENTE ORTIZ.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/Estado de Resultados 2024 CRISTAL SA...pdf
+      → 089 LEGAL Y SOCIETARIO/Estado de Resultados 2024 CRISTAL SA...pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ESTRUCTURA JURIDICA 2024 CRISTAL SA.pdf
+      → 089 LEGAL Y SOCIETARIO/ESTRUCTURA JURIDICA 2024 CRISTAL SA.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/Fac abc convocatoria de asamblea.pdf
+      → 089 LEGAL Y SOCIETARIO/Fac abc convocatoria de asamblea.pdf   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/Factura electrónica 001-003-0072145.pdf
+      → 089 LEGAL Y SOCIETARIO/Factura electrónica 001-003-0072145.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/IPS/Constancia de no adeudar IPS.pdf
+      → 089 PERIODO 2025/DOCUMENTOS LABORALES/IPS/Constancia de no adeudar IPS.pdf   [Documento del IPS]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/IPS/ECTRACTO MAYO-JUNIO.pdf
+      → 089 PERIODO 2025/DOCUMENTOS LABORALES/IPS/ECTRACTO MAYO-JUNIO.pdf   [Documento del IPS]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/IPS/EXTRACTO DE IPS MES DE MARZO 2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS LABORALES/IPS/EXTRACTO DE IPS MES DE MARZO 2025.pdf   [Documento del IPS]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/IPS/EXTRACTO MAYO A JULIO.pdf
+      → 089 PERIODO 2025/DOCUMENTOS LABORALES/IPS/EXTRACTO MAYO A JULIO.pdf   [Documento del IPS]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/IPS/form inscripcion patronal cristal sa.pdf
+      → 089 PERIODO 2025/DOCUMENTOS LABORALES/IPS/form inscripcion patronal cristal sa.pdf   [Documento del IPS]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/IPS/Inscripcion IPS.pdf
+      → 089 PERIODO 2025/DOCUMENTOS LABORALES/IPS/Inscripcion IPS.pdf   [Documento del IPS]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/jasper_certificado_laboral.php.pdf
+      → 089 LEGAL Y SOCIETARIO/jasper_certificado_laboral.php.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/Libro Registro de Accionistas.pdf
+      → 089 LEGAL Y SOCIETARIO/Libro Registro de Accionistas.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/LIBROS RUBRICADOS/Rbr_14652848_ACTA DE ASAMBLEA_12-05-2025.pdf
+      → 089 LEGAL Y SOCIETARIO/Rbr_14652848_ACTA DE ASAMBLEA_12-05-2025.pdf   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/LIBROS RUBRICADOS/Rbr_14652848_ACTA DE DIRECTORIO_12-05-2025.pdf
+      → 089 LEGAL Y SOCIETARIO/Rbr_14652848_ACTA DE DIRECTORIO_12-05-2025.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/LIBROS RUBRICADOS/Rbr_14652848_DIARIO_12-05-2025.pdf
+      → 089 LEGAL Y SOCIETARIO/Rbr_14652848_DIARIO_12-05-2025.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/LIBROS RUBRICADOS/Rbr_14652848_INVENTARIO_12-05-2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/Rbr_14652848_INVENTARIO_12-05-2025.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/LIBROS RUBRICADOS/Rbr_14652848_MAYOR_12-05-2025.pdf
+      → 089 LEGAL Y SOCIETARIO/Rbr_14652848_MAYOR_12-05-2025.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/LIBROS RUBRICADOS/Rbr_14652848_REGISTRO DE ACCIONISTAS_12-05-2025.pdf
+      → 089 LEGAL Y SOCIETARIO/Rbr_14652848_REGISTRO DE ACCIONISTAS_12-05-2025.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/LIBROS RUBRICADOS/Rbr_14652848_REGISTRO DE ASISTENCIA A ASAMBLEA_12-05-2025.pdf
+      → 089 LEGAL Y SOCIETARIO/Rbr_14652848_REGISTRO DE ASISTENCIA A ASAMBLEA_12-05-2025.pdf   [Documento de asamblea]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/Nota de Autorización CCT F1 Campos obligatorios.docx
+      → 089 TRIBUTARIO/Nota de Autorización CCT F1 Campos obligatorios.docx   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/NOTA DNCP.docx
+      → 089 LEGAL Y SOCIETARIO/NOTA DNCP.docx   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/Referencia Bancaria.pdf
+      → 089 LEGAL Y SOCIETARIO/Referencia Bancaria.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/SOLICITUD 3.pdf
+      → 089 LEGAL Y SOCIETARIO/SOLICITUD 3.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS VARIOS/Amonestacion.docx
+      → 089 PERIODO 2025/DOCUMENTOS VARIOS/Amonestacion.docx   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2025/DOCUMENTOS VARIOS/CI SOCIOS/CI LAURA BARRETO.pdf
+      → 089 PERIODO 2025/DOCUMENTOS VARIOS/CI SOCIOS/CI LAURA BARRETO.pdf   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2025/DOCUMENTOS VARIOS/CI SOCIOS/CI SOCIOS Y REPRE.pdf
+      → 089 PERIODO 2025/DOCUMENTOS VARIOS/CI SOCIOS/CI SOCIOS Y REPRE.pdf   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2025/DOCUMENTOS VARIOS/Cuadro Auxiliar Contable CRISTAL SA.pdf
+      → 089 PERIODO 2025/DOCUMENTOS VARIOS/Cuadro Auxiliar Contable CRISTAL SA.pdf   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2025/DOCUMENTOS VARIOS/Cuadro Auxiliar Contable CRISTAL SA.xlsx
+      → 089 PERIODO 2025/DOCUMENTOS VARIOS/Cuadro Auxiliar Contable CRISTAL SA.xlsx   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2025/DOCUMENTOS VARIOS/patente municipal 2025.pdf
+      → 089 PERIODO 2025/DOCUMENTOS VARIOS/patente municipal 2025.pdf   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2025/DOCUMENTOS VARIOS/Referencia Bancaria.docx
+      → 089 PERIODO 2025/DOCUMENTOS VARIOS/Referencia Bancaria.docx   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2026/DOCUMENTOS CONTABLES/CCT/CCT ABRIL.pdf
+      → 089 TRIBUTARIO/CCT ABRIL.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/CCT/CCT MARZO.pdf
+      → 089 TRIBUTARIO/CCT MARZO.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/CCT/CCT SETIEMBRE.pdf
+      → 089 TRIBUTARIO/CCT SETIEMBRE.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/CCT/CERTIFICADO DE CUMPLIMIENTO TRIBUTARIO.pdf
+      → 089 TRIBUTARIO/CERTIFICADO DE CUMPLIMIENTO TRIBUTARIO.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/COMUNICACIONES DNIT/ABRIL/BAJA DE DOCUMENTO 191.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/BAJA DE DOCUMENTO 191.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/COMUNICACIONES DNIT/ABRIL/BAJA DE DOCUMENTO 193.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/BAJA DE DOCUMENTO 193.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/COMUNICACIONES DNIT/ABRIL/BAJA DE DOCUMENTO 196.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/BAJA DE DOCUMENTO 196.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/COMUNICACIONES DNIT/ABRIL/BAJA DE DOCUMENTO 199.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/BAJA DE DOCUMENTO 199.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/COMUNICACIONES DNIT/ENERO/BAJA DE DOCUMENTO 135.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/BAJA DE DOCUMENTO 135.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/COMUNICACIONES DNIT/ENERO/BAJA DE DOCUMENTO 139.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/BAJA DE DOCUMENTO 139.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/COMUNICACIONES DNIT/FEBRERO/ANULACION 147.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/ANULACION 147.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/COMUNICACIONES DNIT/FEBRERO/ANULACION 151.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/ANULACION 151.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/COMUNICACIONES DNIT/FEBRERO/ANULACION 152.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/ANULACION 152.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/COMUNICACIONES DNIT/FEBRERO/ANULACION 154.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/ANULACION 154.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/COMUNICACIONES DNIT/JUNIO/COMUNICACION DE BAJA.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/COMUNICACION DE BAJA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/COMUNICACIONES DNIT/MAYO/BAJA DE DOCUMENTO 201.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/BAJA DE DOCUMENTO 201.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/COMUNICACIONES DNIT/MAYO/BAJA DE DOCUMENTO 204.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/BAJA DE DOCUMENTO 204.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/COMUNICACIONES DNIT/MAYO/BAJA DE DOCUMENTO 206.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/BAJA DE DOCUMENTO 206.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/COMUNICACIONES DNIT/MAYO/BAJA DE DOCUMENTO 210.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/BAJA DE DOCUMENTO 210.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/COMUNICACIONES DNIT/MAYO/BAJA DE DOCUMENTO 212.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/BAJA DE DOCUMENTO 212.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/Boleta de Pago MARANGATU.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/Boleta de Pago MARANGATU.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/Consultas 2.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/Consultas 2.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/Consultas 3.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/Consultas 3.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/Consultas 4.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/Consultas 4.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/Consultas 5.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/Consultas 5.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/Consultas 6.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/Consultas 6.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/Consultas.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/Consultas.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/PLANILLA DETERMINACION IMPUESTOS.xls
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/PLANILLA DETERMINACION IMPUESTOS.xls   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010624.jpg.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010624.jpg.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010625.jpg.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010625.jpg.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010626.jpg.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010626.jpg.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010627.jpg.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010627.jpg.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010628.jpg.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010628.jpg.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010629.jpg.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010629.jpg.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010630.jpg.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010630.jpg.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010631.jpg.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010631.jpg.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010632.jpg.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010632.jpg.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/1ENERO/CamScanner 13-2-26 14.56.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/CamScanner 13-2-26 14.56.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/1ENERO/L.C 2026.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/L.C 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/1ENERO/L.V 2026.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/L.V 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/1ENERO/PDFReader_20260213_0922.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/PDFReader_20260213_0922.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/1ENERO/PDFReader_20260213_0924.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/PDFReader_20260213_0924.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/1ENERO/PDFReader_20260213_0925.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/PDFReader_20260213_0925.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/1ENERO/PDFReader_20260213_0926.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/PDFReader_20260213_0926.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/1ENERO/PDFReader_20260213_0927.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/PDFReader_20260213_0927.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/1ENERO/PLANILLA DETERMINACION IMPUESTOS.xls
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/PLANILLA DETERMINACION IMPUESTOS.xls   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/1ENERO/RETENCIONES.xlsx
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/RETENCIONES.xlsx   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/00.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/00.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/CamScanner 18-3-26 08.45.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/CamScanner 18-3-26 08.45.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/COMP022026.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/COMP022026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/DESPHOJA 1.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/DESPHOJA 1.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/factura # 824.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/factura # 824.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/Factura # 827 Walter Benegas.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/Factura # 827 Walter Benegas.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/factura #818 walter benegas.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/factura #818 walter benegas.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/Facturas ventas febrero 2026.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/Facturas ventas febrero 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/L.C 2026.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/L.C 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/L.V 2026.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/L.V 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/PDFReader_20260303_0838.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/PDFReader_20260303_0838.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/PDFReader_20260303_0839.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/PDFReader_20260303_0839.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/PDFReader_20260303_0840.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/PDFReader_20260303_0840.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/PDFReader_20260303_0841.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/PDFReader_20260303_0841.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/PDFReader_20260303_0844.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/PDFReader_20260303_0844.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/PDFReader_20260303_0845.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/PDFReader_20260303_0845.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/PHOTO-2026-03-18-08-45-04 2.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/PHOTO-2026-03-18-08-45-04 2.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/PHOTO-2026-03-18-08-45-04 4.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/PHOTO-2026-03-18-08-45-04 4.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/PHOTO-2026-03-18-08-45-04.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/PHOTO-2026-03-18-08-45-04.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/PHOTO-2026-03-18-08-45-05 1.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/PHOTO-2026-03-18-08-45-05 1.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/PHOTO-2026-03-18-08-45-05 2.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/PHOTO-2026-03-18-08-45-05 2.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/PHOTO-2026-03-18-08-45-05.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/PHOTO-2026-03-18-08-45-05.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/Proforma - Invoice 10 01173 2025.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/Proforma - Invoice 10 01173 2025.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/RETENCIONES.xlsx
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/RETENCIONES.xlsx   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/L.C 2026.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/L.C 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/L.V 2026.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/L.V 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/RETENCIONES.xlsx
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/RETENCIONES.xlsx   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/3MARZO/WhatsApp Image 2026-04-20 at 11.00.11.jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/WhatsApp Image 2026-04-20 at 11.00.11.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/DETERMINACION IVA 042026 CRISTAL S.A
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/DETERMINACION IVA 042026 CRISTAL S.A   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/L.C 2026.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/L.C 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/L.V 2026.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/L.V 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/PHOTO-2026-05-05-12-04-40.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/PHOTO-2026-05-05-12-04-40.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/PHOTO-2026-05-05-12-04-49.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/PHOTO-2026-05-05-12-04-49.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/RETENCIONES.xlsx
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/RETENCIONES.xlsx   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 08.58.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 08.58.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 08.59.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 08.59.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 09.01.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 09.01.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 09.02.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 09.02.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 09.03.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 09.03.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 09.05.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 09.05.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 09.06.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 09.06.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 09.08.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 09.08.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 09.09.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 09.09.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 09.11.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 09.11.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 09.12.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 09.12.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 09.13.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 09.13.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 09.14.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 09.14.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 09.16.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 09.16.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 09.17.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 09.17.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 09.18.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 09.18.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 09.19.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 09.19.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 09.20.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 09.20.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 09.21.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 09.21.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 09.22.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 09.22.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 10.13.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 10.13.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 10.14.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 10.14.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 10.15.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 10.15.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 10.16.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 10.16.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 10.20.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 10.20.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 10.27.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 10.27.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 10.29.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 10.29.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 10.44.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 10.44.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 10.45.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 10.45.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 10.46.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 10.46.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 10.47.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 10.47.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 10.48.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 10.48.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 10.52.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 10.52.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 10.54.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 10.54.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 10.55.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 10.55.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 10.56.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 10.56.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 10.58.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 10.58.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 10.59.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 10.59.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 11.00.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 11.00.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 11.01.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 11.01.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 11.02.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 11.02.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 11.03.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 11.03.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 11.04.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 11.04.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 11.05.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 11.05.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 11.06.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 11.06.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/DETERMINACION IVA 052026 CRISTAL S.A
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/DETERMINACION IVA 052026 CRISTAL S.A   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/L.C 2026.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/L.C 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/L.V 2026.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/L.V 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/PHOTO-2026-06-09-08-16-22.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/PHOTO-2026-06-09-08-16-22.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/WhatsApp Image 2026-05-29 at 11.20.00.jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/WhatsApp Image 2026-05-29 at 11.20.00.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/Captura de pantalla 2026-07-14 112557.png
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/Captura de pantalla 2026-07-14 112557.png   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 1.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 1.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 10.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 10.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 11.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 11.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 12.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 12.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 13.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 13.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 14.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 14.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 15.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 15.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 16.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 16.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 17.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 17.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 18.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 18.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 19.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 19.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 2.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 2.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 20.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 20.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 21.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 21.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 22.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 22.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 222.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 222.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 223.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 223.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 224.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 224.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 225.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 225.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 226.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 226.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 227.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 227.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 229.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 229.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 23.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 23.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 234.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 234.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 24.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 24.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 25.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 25.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 26.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 26.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 27.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 27.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 28.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 28.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 29.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 29.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 3.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 3.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 30.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 30.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 31.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 31.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 4.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 4.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 5.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 5.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 6.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 6.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 7.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 7.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 8.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 8.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/FAC 9.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/FAC 9.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/NOTA DE CREDITO 0005.jpeg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/NOTA DE CREDITO 0005.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/PLANILLA DETERMINACION IMPUESTOS.xls
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/PLANILLA DETERMINACION IMPUESTOS.xls   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/Boleta de Pago _ MARANGATU.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/Boleta de Pago _ MARANGATU.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 03-08-2026 14.31.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 03-08-2026 14.31.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 03-08-2026 14.36.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 03-08-2026 14.36.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 03-08-2026 14.44.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 03-08-2026 14.44.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 03-08-2026 15.36.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 03-08-2026 15.36.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 03-08-2026 15.39.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 03-08-2026 15.39.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 03-08-2026 15.45.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 03-08-2026 15.45.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 03-08-2026 15.51.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 03-08-2026 15.51.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 03-08-2026 16.04.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 03-08-2026 16.04.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 03-08-2026 16.17.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 03-08-2026 16.17.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 03-08-2026 16.18.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 03-08-2026 16.18.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 03-08-2026 16.20.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 03-08-2026 16.20.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 03-08-2026 16.22.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 03-08-2026 16.22.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 03-08-2026 16.23.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 03-08-2026 16.23.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 03-08-2026 16.25.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 03-08-2026 16.25.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 03-08-2026 16.41.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 03-08-2026 16.41.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 03-08-2026 16.44.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 03-08-2026 16.44.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 04-08-2026 07.31.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 04-08-2026 07.31.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 04-08-2026 07.37.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 04-08-2026 07.37.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 04-08-2026 07.40.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 04-08-2026 07.40.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 04-08-2026 07.43.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 04-08-2026 07.43.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 04-08-2026 07.45.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 04-08-2026 07.45.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 04-08-2026 07.46.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 04-08-2026 07.46.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 04-08-2026 07.56.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 04-08-2026 07.56.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 04-08-2026 07.58.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 04-08-2026 07.58.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 04-08-2026 08.00.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 04-08-2026 08.00.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 04-08-2026 08.01.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 04-08-2026 08.01.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 04-08-2026 08.03.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 04-08-2026 08.03.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 04-08-2026 08.05.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 04-08-2026 08.05.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 04-08-2026 08.06.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 04-08-2026 08.06.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/CamScanner 04-08-2026 08.37.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/CamScanner 04-08-2026 08.37.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/Consultas.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/Consultas.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/Consultas2.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/Consultas2.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/PDFReader_20260804_1025.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/PDFReader_20260804_1025.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/PDFReader_20260804_1026.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/PDFReader_20260804_1026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/COMPRAS/PDFReader_20260804_1027.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/PDFReader_20260804_1027.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/PLANILLA DETERMINACION IMPUESTOS.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/PLANILLA DETERMINACION IMPUESTOS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/PLANILLA DETERMINACION IMPUESTOS.xls
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/PLANILLA DETERMINACION IMPUESTOS.xls   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/RETENCIONES.xlsx
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/RETENCIONES.xlsx   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS LEGALES/Acta de Asamblea No 02 CRISTAL S.A..doc
+      → 089 LEGAL Y SOCIETARIO/Acta de Asamblea No 02 CRISTAL S.A..doc   [Documento de asamblea]
+  PERIODO 2026/DOCUMENTOS LEGALES/Acta de Asamblea No 02 CRISTAL S.A..pdf
+      → 089 LEGAL Y SOCIETARIO/Acta de Asamblea No 02 CRISTAL S.A..pdf   [Documento de asamblea]
+  PERIODO 2026/DOCUMENTOS LEGALES/Convocatoria de asamblea 2026.doc
+      → 089 LEGAL Y SOCIETARIO/ASAMBLEA 2026/Convocatoria de asamblea 2026.doc   [Documento de asamblea]
+  PERIODO 2026/DOCUMENTOS VARIOS/Constancia _ MARANGATU.pdf
+      → 089 PERIODO 2026/DOCUMENTOS VARIOS/Constancia _ MARANGATU.pdf   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2026/DOCUMENTOS VARIOS/MTESS/CONSTANCIA MAURO ORTIZ - RETIRO IPS.pdf
+      → 089 PERIODO 2026/DOCUMENTOS LABORALES/IPS/CONSTANCIA MAURO ORTIZ - RETIRO IPS.pdf   [Documento del IPS]
+  PERIODO 2026/DOCUMENTOS VARIOS/MTESS/FUNCIONARIOS MTESS - CRISTAL 2026.xlsx
+      → 089 PERIODO 2026/DOCUMENTOS LABORALES/MTESS/FUNCIONARIOS MTESS - CRISTAL 2026.xlsx   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+  PERIODO 2026/DOCUMENTOS VARIOS/MTESS/PLANILLA REOP - CRISTAL 2026.xlsx
+      → 089 PERIODO 2026/DOCUMENTOS LABORALES/MTESS/PLANILLA REOP - CRISTAL 2026.xlsx   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+  PERIODO 2026/DOCUMENTOS VARIOS/PLANILLA DE CONTROL MENSUAL -Beatriz.xlsx
+      → 089 PERIODO 2026/DOCUMENTOS VARIOS/PLANILLA DE CONTROL MENSUAL -Beatriz.xlsx   [Estaba en DOCUMENTOS VARIOS]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «089 ZZ A CLASIFICAR» (para que lo ubique una persona) (36)
+----------------------------------------------------------------
+  PERIODO 2024/DOCUMENTOS CONTABLES/FORMULARIO 120/DDJJ RENTA 2024.pdf
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRE 2024 CRISTAL S.A..pdf
+  PERIODO 2025/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/ANULACION FC 132.pdf
+  PERIODO 2025/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/ANULACION FC 133.pdf
+  PERIODO 2025/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/Comunicacion de Nota de remision.pdf
+  PERIODO 2025/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/Constancia _ MARANGATU.pdf
+  PERIODO 2026/DOCUMENTOS CONTABLES/COMPROBANTE DE PAGO DE IMPUESTOS.jpeg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188002.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188003.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188005.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188007.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188017.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188035.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188037.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188039.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188041.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188043.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188046.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188050.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188051.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188054.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188056.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188057.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188061.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188063.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188065.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188067.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188069.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188071.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188073.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188076.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188078.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188080.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188082.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188084.jpg
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188087.jpg
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno

@@ -1,0 +1,68 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 116 QUIMECO E.A.S
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+
+AL INICIO
+  Archivos: 12 · Peso: 6.5 MB · Subcarpetas con archivos: 5
+
+RESUMEN
+  Duplicados apartados (cuarentena): 1
+  Movidos y renombrados según el manual: 6
+  Movidos conservando su nombre: 5
+  Sin cambios: 0
+  A «116 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 0
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 0
+  Nombres originales que no dicen qué documento son: 5
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  116 LEGAL Y SOCIETARIO: 1
+  116 PERIODO 2026: 10
+
+DUPLICADOS APARTADOS (1)
+----------------------------
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/DDJJ IVA 062026/07 DDJJ IVA 072026 QUIMECO.pdf
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MES/07 JULIO 2026/DDJJ IVA 072026 QUIMECO.pdf  (Copia idéntica (mismo contenido byte por byte))
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron): ninguno
+
+MOVIDOS Y RENOMBRADOS (6)
+-----------------------------
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/07 JULIO 2026/DDJJ IVA 072026 QUIMECO.pdf
+      → 116 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/DDJJ IVA 072026 QUIMECO EAS.pdf   [Declaración leída por dentro: formulario 120, período 07/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/07 JULIO 2026/LIBRO VENTAS 072026 QUIMECO.pdf
+      → 116 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/LIBRO VENTAS 072026 QUIMECO EAS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/07 JULIO 2026/RG COMPRAS 072026.xlsx
+      → 116 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/RG COMPRAS 072026 QUIMECO EAS.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 07/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/DDJJ IVA 062026/01 DDJJ IVA 062026.pdf
+      → 116 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/DDJJ IVA 062026 QUIMECO EAS.pdf   [Declaración leída por dentro: formulario 120, período 06/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/DDJJ IVA 062026/08 DDJJ IVA 082026 QUIMECO SM.pdf
+      → 116 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/DDJJ IVA 082026 QUIMECO EAS.pdf   [Declaración leída por dentro: formulario 120, período 08/2026]
+  PERIODO 2026/DOCUMENTOS SOCIETARIOS/DOCUMENTOS PARA APERTURA DE EAS/CI DIEGO BECONI CON FIRMAS .pdf
+      → 116 PERIODO 2026/DOCUMENTOS VARIOS/DOCUMENTOS PARA APERTURA DE EAS/CI DIEGO BECONI CON FIRMAS.pdf   [Parte de un pedido o paquete de documentos («DOCUMENTOS PARA APERTURA DE EAS»): se conserva junto en DOCUMENTOS VARIOS]
+
+MOVIDOS CONSERVANDO SU NOMBRE (5)
+-------------------------------------
+  PERIODO 2026/DOCUMENTOS SOCIETARIOS/CONSTITUCION DE EAS/CONSTITUCION QUIMECO E.A.S.pdf
+      → 116 LEGAL Y SOCIETARIO/CONSTITUCION QUIMECO E.A.S.pdf   [Documento legal o societario]
+  PERIODO 2026/DOCUMENTOS SOCIETARIOS/DOCUMENTOS PARA APERTURA DE EAS/Cedula Diego Beconi.pdf
+      → 116 PERIODO 2026/DOCUMENTOS VARIOS/DOCUMENTOS PARA APERTURA DE EAS/Cedula Diego Beconi.pdf   [Parte de un pedido o paquete de documentos («DOCUMENTOS PARA APERTURA DE EAS»): se conserva junto en DOCUMENTOS VARIOS]
+  PERIODO 2026/DOCUMENTOS SOCIETARIOS/DOCUMENTOS PARA APERTURA DE EAS/CI ROCIO VERA.pdf
+      → 116 PERIODO 2026/DOCUMENTOS VARIOS/DOCUMENTOS PARA APERTURA DE EAS/CI ROCIO VERA.pdf   [Parte de un pedido o paquete de documentos («DOCUMENTOS PARA APERTURA DE EAS»): se conserva junto en DOCUMENTOS VARIOS]
+  PERIODO 2026/DOCUMENTOS SOCIETARIOS/DOCUMENTOS PARA APERTURA DE EAS/CI SOCIOS.pdf
+      → 116 PERIODO 2026/DOCUMENTOS VARIOS/DOCUMENTOS PARA APERTURA DE EAS/CI SOCIOS.pdf   [Parte de un pedido o paquete de documentos («DOCUMENTOS PARA APERTURA DE EAS»): se conserva junto en DOCUMENTOS VARIOS]
+  PERIODO 2026/DOCUMENTOS VARIOS/BOLESTAS DE PAGO/Boleta de Pago _QUIMECO EAS.pdf
+      → 116 PERIODO 2026/DOCUMENTOS VARIOS/BOLESTAS DE PAGO/Boleta de Pago _QUIMECO EAS.pdf   [Estaba en DOCUMENTOS VARIOS]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «116 ZZ A CLASIFICAR» (para que lo ubique una persona): ninguno
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno

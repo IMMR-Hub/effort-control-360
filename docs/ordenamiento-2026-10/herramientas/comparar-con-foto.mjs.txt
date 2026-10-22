@@ -1,0 +1,24 @@
+// SOLO LECTURA. Compara D:\ORDENADO con la foto del 19-oct: mismas rutas, mismos pesos, mismas carpetas.
+// Sirve para comprobar que la reversa dejó todo exactamente como estaba.
+import fs from 'node:fs';
+import path from 'node:path';
+const listar = (raiz, excluir) => {
+  const archivos = new Map(), carpetas = new Set();
+  const ir = (d) => {
+    for (const e of fs.readdirSync(d, { withFileTypes: true })) {
+      const abs = path.join(d, e.name); const rel = path.relative(raiz, abs).replace(/\\/g, '/');
+      if (excluir(rel)) continue;
+      if (e.isDirectory()) { carpetas.add(rel); ir(abs); } else archivos.set(rel, fs.statSync(abs).size);
+    }
+  };
+  ir(raiz); return { archivos, carpetas };
+};
+const foto = listar('D:/COPIA ONEDRIVE EFFORT 2026-10-19', (r) => r.startsWith('_registro'));
+const ord = listar('D:/ORDENADO', (r) => r.startsWith('_BITACORA'));
+const faltan = [...foto.archivos].filter(([r, s]) => ord.archivos.get(r) !== s).map(([r]) => r);
+const sobran = [...ord.archivos.keys()].filter((r) => !foto.archivos.has(r));
+const carpFaltan = [...foto.carpetas].filter((c) => !ord.carpetas.has(c));
+const carpSobran = [...ord.carpetas].filter((c) => !foto.carpetas.has(c));
+console.log(`foto: ${foto.archivos.size} archivos, ${foto.carpetas.size} carpetas · ordenado: ${ord.archivos.size} archivos, ${ord.carpetas.size} carpetas`);
+console.log(`archivos distintos o que faltan: ${faltan.length} · sobran: ${sobran.length} · carpetas que faltan: ${carpFaltan.length} · sobran: ${carpSobran.length}`);
+for (const x of [...faltan.slice(0, 5), ...sobran.slice(0, 5), ...carpFaltan.slice(0, 5), ...carpSobran.slice(0, 5)]) console.log('  ', x);

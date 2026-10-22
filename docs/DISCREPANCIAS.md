@@ -55,7 +55,8 @@ de Lili o Laura), **Daniel** (decisión o acción en una cuenta), **Claude**
 | 39 | Manual de procedimiento de documentos v1.3: decisiones que EFFORT no validó | **Abierto 2026-10-07** | EFFORT (Laura y Lili) | Aprobar el manual y decidir quién lo aplica (sección 8 del manual). Ver el punto |
 | 40 | Planilla de clientes para el alta masiva: supuestos no validados | **Abierto 2026-10-05** | EFFORT | Completar la planilla de 132 filas (régimen, obligaciones, RUC) y contestar sobre 045, 070, 099. Ver el punto |
 | 41 | Criterio para los archivos repetidos (1.068 copias en 52 clientes) | **Abierto 2026-10-06** | Daniel y EFFORT | Confirmar «se conserva el más antiguo» y decidir qué hacer con las copias (borrar es REGLA 0). Ver el punto |
-| 42 | Copia de seguridad del OneDrive de EFFORT en disco externo | **EN CURSO 2026-10-19** | Claude (terminar) y Daniel (decidir) | Que termine y se verifique; segunda copia en otro lugar; cifrado del disco. Ver el punto |
+| 42 | Copia de seguridad del OneDrive de EFFORT en disco externo | **Terminada y verificada 2026-10-20; el disco FALLÓ OTRA VEZ el 2026-10-22** | Daniel (disco) y Claude (reverificar) | 36.488/36.488 verificados el 20-10. El 22-10 15:45 el disco dio errores (disk 51, ntfs 140, ntfs 50) y desapareció: segunda falla en 3 días. Reverificar la foto al reconectar; probablemente cambiar cable/puerto o el disco; segunda copia en otro lugar; cifrado |
+| 44 | RUC propuestos en la planilla de clientes que no son del cliente | **Abierto 2026-10-22** | Daniel y EFFORT | **056 FACUNDO CARRASCOSA:** la planilla propone 1300663-0, que es de DAVID TADEO FRANCISCO ROMERO CABALLERO (la carpeta «045 DAVID ROMERO» está dentro del 056 y era la única declaración). Corregir la planilla y avisar a EFFORT. **113 CASA VIVA:** sus declaraciones dicen «PAVISA SOCIEDAD ANONIMA» (¿nombre de fantasía?): confirmar. Ver el punto |
 | 43 | Plan de infraestructura y precio para 132 clientes | **Abierto 2026-10-06** | Daniel | Decidir y pagar DigitalOcean 2 GB + Supabase Pro antes de la carga masiva; región de la base; precio de mantenimiento. Ver el punto |
 
 ---
@@ -1996,3 +1997,25 @@ US$25/mes) y Supabase Pro (US$25/mes: 8 GB, copias diarias, 250 GB de transferen
 masiva. Pendiente de Daniel: pagar, la **región de la base** (Virginia bajaría la latencia de ~300 ms a ~10 ms, pero los datos contables saldrían de Sudamérica: es
 una decisión de EFFORT, ver el punto 18), y el **precio de mantenimiento** (se sugirió US$650/mes hasta 150 clientes y US$4 por cliente extra). La memoria de
 150 clientes **no se midió todavía con datos reales**: se mide en las primeras tandas de la carga. **Quién:** Daniel.
+
+---
+
+## 44. RUC de la planilla de clientes que no son del cliente — ABIERTO (2026-10-22)
+
+**Qué pasó.** Al ordenar la copia de prueba (tarea 164) la carpeta `045 DAVID ROMERO`, que está **dentro** de
+`056 FACUNDO CARRASCOSA`, se ordenó como si fuera del 056. Al revisar se leyó el nombre del contribuyente dentro de su
+declaración (formulario 120, marzo de 2024): **ROMERO CABALLERO DAVID TADEO FRANCISCO, RUC 1300663**. La planilla de
+clientes que se le mandó a EFFORT (`docs/analisis-onedrive-2026-10/Planilla de clientes - EFFORT Control 360.xlsx`)
+propone ese mismo RUC para el **056**, porque esa era la única declaración que había en la carpeta del 056
+(«Sale de 1 de 1 declaraciones»). La propuesta es incorrecta.
+
+**Se revisaron los 91 RUC que propone la planilla** comparando el nombre de la carpeta con el nombre que dicen las
+declaraciones de ese RUC (`docs/ordenamiento-2026-10/herramientas/rucs.cjs.txt`). Además del 056:
+- **113 CASA VIVA (80051798-9):** las declaraciones dicen «PAVISA SOCIEDAD ANONIMA». Puede ser el nombre de fantasía: confirmar.
+- 023 DIBEC UNIPERSONAL figura como «BECONI OCHIPINTI DIEGO RAFAEL»: es correcto (es la persona física).
+
+**Qué hace el sistema mientras tanto:** el plan de ordenamiento v2 descarta ese RUC para el 056 y deja la carpeta del
+045 entera en `056 ZZ A CLASIFICAR` (no la mezcla). **Cómo se cierra:** corregir la fila 056 de la planilla (y avisar a
+EFFORT si ya la están completando), y que EFFORT confirme el 113 y qué hacer con el 045 (ya está en la hoja «Dudas»).
+*Lección (refuerza la 22): un dato propuesto «de 1 de 1» documentos se verifica contra el nombre del propio documento
+antes de entregarlo.*

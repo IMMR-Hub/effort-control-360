@@ -1,0 +1,174 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 005 ORGANIC GROUP EAS
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+
+AL INICIO
+  Archivos: 75 · Peso: 38.2 MB · Subcarpetas con archivos: 12
+
+RESUMEN
+  Duplicados apartados (cuarentena): 6
+  Movidos y renombrados según el manual: 10
+  Movidos conservando su nombre: 31
+  Sin cambios: 0
+  A «005 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 28
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 0
+  Nombres originales que no dicen qué documento son: 49
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 1
+
+AL FINAL (archivos por carpeta de primer nivel)
+  005 PERIODO 2023: 10
+  005 PERIODO 2024: 15
+  005 PERIODO 2025: 14
+  005 TRIBUTARIO: 2
+  005 ZZ A CLASIFICAR: 28
+
+DUPLICADOS APARTADOS (6)
+----------------------------
+  DOCUMENTOS/CERTIFICADO DE TRABAJO.pdf
+      igual a: PERIODO 2024/CERTIFICADO DE TRABAJO.pdf  (Copia idéntica (mismo contenido byte por byte))
+  DOCUMENTOS/Constancia_de_Beneficiarios_Finales.pdf 2024.pdf
+      igual a: PERIODO 2024/Constancia_de_Beneficiarios_Finales.pdf 2024.pdf  (Copia idéntica (mismo contenido byte por byte))
+  DOCUMENTOS/DDJJ IRE GENERAL_2024_REC.pdf
+      igual a: PERIODO 2024/DDJJ IRE GENERAL_2024_REC.pdf  (Copia idéntica (mismo contenido byte por byte))
+  DOCUMENTOS/DDJJ PROFORMA IRE GENERAL 2024.pdf
+      igual a: PERIODO 2024/DDJJ PROFORMA IRE GENERAL 2024.pdf  (Copia idéntica (mismo contenido byte por byte))
+  DOCUMENTOS/ESTRUCTURA JURIDICA 2024.pdf
+      igual a: PERIODO 2024/ESTRUCTURA JURIDICA 2024.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2024/PRESUPUESTO RUBRICA ORGANIC GROUP E.A.S..pdf
+      igual a: DOCUMENTOS/PRESUPUESTO RUBRICA ORGANIC GROUP E.A.S..pdf  (Copia idéntica (mismo contenido byte por byte))
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron): ninguno
+
+MOVIDOS Y RENOMBRADOS (10)
+-----------------------------
+  DOCUMENTOS/constancia de ruc.pdf
+      → 005 TRIBUTARIO/CONSTANCIA RUC ORGANIC GROUP EAS.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2023/12 DICIEMBRE 2023/DDJJ IVA 122023 REC.pdf
+      → 005 PERIODO 2023/DOCUMENTOS CONTABLES/12 DICIEMBRE/DDJJ IVA 122023 RECTIFICATIVA ORGANIC GROUP EAS.pdf   [Declaración leída por dentro: formulario 120, período 12/2023]
+  PERIODO 2023/DDJJ EEFF FORM. 158.pdf
+      → 005 PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/EEFF 2023 PRESENTADO FORM 158 ORGANIC GROUP EAS.pdf   [Declaración leída por dentro: formulario 158, ejercicio 2023]
+  PERIODO 2023/DDJJ IRE GENERAL_REC_2023.pdf
+      → 005 PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/DDJJ IRE 2023 RECTIFICATIVA ORGANIC GROUP EAS.pdf   [Declaración leída por dentro: formulario 500, ejercicio 2023]
+  PERIODO 2024/1 ENERO/DDJJ IVA 012024 REC.pdf
+      → 005 PERIODO 2024/DOCUMENTOS CONTABLES/01 ENERO/DDJJ IVA 012024 RECTIFICATIVA ORGANIC GROUP EAS.pdf   [Declaración leída por dentro: formulario 120, período 01/2024]
+  PERIODO 2024/1 ENERO/RECTIF. IVA 012024.pdf
+      → 005 PERIODO 2024/DOCUMENTOS CONTABLES/01 ENERO/DDJJ IVA 012024 RECTIFICATIVA ORGANIC GROUP EAS VERSION ANTERIOR 1.pdf   [Declaración leída por dentro: formulario 145, período 01/2024]
+      nota: Hay una versión más reciente del mismo documento (DDJJ IVA 012024 REC.pdf): esta queda como versión anterior
+  PERIODO 2024/CIERRE 2024/DDJJ 158 EEFF 2024.pdf
+      → 005 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/EEFF 2024 PRESENTADO FORM 158 ORGANIC GROUP EAS.pdf   [Declaración leída por dentro: formulario 158, ejercicio 2024]
+  PERIODO 2024/DDJJ PROFORMA IRE GENERAL 2024.pdf
+      → 005 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/CALCULO IRE 2024 ORGANIC GROUP EAS.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025 ORGANIC GROUP EAS/FORMULARIO 158 ORGANIC GROUP EAS UNIPERSONAL.pdf
+      → 005 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/EEFF 2025 PRESENTADO FORM 158 ORGANIC GROUP EAS.pdf   [Declaración leída por dentro: formulario 158, ejercicio 2025]
+  PERIODO 2025/DOCUMENTOS DNIT/06 DDJJ IVA 062025.pdf
+      → 005 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/DDJJ IVA 062025 ORGANIC GROUP EAS.pdf   [Declaración leída por dentro: formulario 120, período 06/2025]
+
+MOVIDOS CONSERVANDO SU NOMBRE (31)
+-------------------------------------
+  PERIODO 2023/12 DICIEMBRE 2023/80132565_REC_202312.xlsx
+      → 005 PERIODO 2023/DOCUMENTOS CONTABLES/12 DICIEMBRE/80132565_REC_202312.xlsx   [Archivo de sustento de una rectificativa, tal como lo genera el SET (no se renombra)]
+  PERIODO 2023/12 DICIEMBRE 2023/80132565_REC_202312.zip
+      → 005 PERIODO 2023/DOCUMENTOS CONTABLES/12 DICIEMBRE/80132565_REC_202312.zip   [Archivo de sustento de una rectificativa, tal como lo genera el SET (no se renombra)]
+  PERIODO 2023/ABRIL 2023/FAC HONORARIOS ABRIL 2023 ORGANIC GROUP.pdf
+      → 005 PERIODO 2023/DOCUMENTOS CONTABLES/04 ABRIL/FAC HONORARIOS ABRIL 2023 ORGANIC GROUP.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2023/Boleta de Pago _ MARANGATU nov 2023.pdf
+      → 005 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/Boleta de Pago _ MARANGATU nov 2023.pdf   [Período tomado del nombre del archivo]
+  PERIODO 2023/marzo 2023/CONTRATO DE LOCACIÓN.docx
+      → 005 PERIODO 2023/DOCUMENTOS CONTABLES/03 MARZO/CONTRATO DE LOCACIÓN.docx   [Período tomado de la carpeta donde estaba]
+  PERIODO 2023/marzo 2023/fac honorarios profesionales marzo 2023.pdf
+      → 005 PERIODO 2023/DOCUMENTOS CONTABLES/03 MARZO/fac honorarios profesionales marzo 2023.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2023/MAYO 2023/FAC ORGANIC GROUP - ANULADO.pdf
+      → 005 PERIODO 2023/DOCUMENTOS CONTABLES/05 MAYO/FAC ORGANIC GROUP - ANULADO.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/1 ENERO/80132565_REC_202401.xlsx
+      → 005 PERIODO 2024/DOCUMENTOS CONTABLES/01 ENERO/80132565_REC_202401.xlsx   [Archivo de sustento de una rectificativa, tal como lo genera el SET (no se renombra)]
+  PERIODO 2024/80132565_REC_202401.zip
+      → 005 PERIODO 2024/DOCUMENTOS CONTABLES/01 ENERO/80132565_REC_202401.zip   [Archivo de sustento de una rectificativa, tal como lo genera el SET (no se renombra)]
+  PERIODO 2024/CIERRE 2024/80132565NE2024.pdf
+      → 005 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/80132565NE2024.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/CIERRE 2024/80132565NE2024.xlsx
+      → 005 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/80132565NE2024.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/CIERRE 2024/80132565NE2024.zip
+      → 005 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/80132565NE2024.zip   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/CIERRE 2024/ANEXO 1.pdf
+      → 005 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/ANEXO 1.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/CIERRE 2024/ANEXO 2.pdf
+      → 005 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/ANEXO 2.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/CIERRE 2024/ANEXO 3.pdf
+      → 005 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/ANEXO 3.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/CIERRE 2024/ANEXO 4.pdf
+      → 005 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/ANEXO 4.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/CIERRE 2024/EEFF 2024 ORGANIC GROUP.pdf
+      → 005 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/EEFF 2024 ORGANIC GROUP.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/CIERRE 2024/EF2024_99770900_80132565_948.zip
+      → 005 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/EF2024_99770900_80132565_948.zip   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025 ORGANIC GROUP EAS/80132565NE2025.pdf
+      → 005 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/80132565NE2025.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025 ORGANIC GROUP EAS/80132565NE2025.zip
+      → 005 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/80132565NE2025.zip   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025 ORGANIC GROUP EAS/ANEXO I.pdf
+      → 005 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/ANEXO I.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025 ORGANIC GROUP EAS/ANEXO II.pdf
+      → 005 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/ANEXO II.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025 ORGANIC GROUP EAS/ANEXO III.pdf
+      → 005 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/ANEXO III.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025 ORGANIC GROUP EAS/ANEXO IV.pdf
+      → 005 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/ANEXO IV.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025 ORGANIC GROUP EAS/EEFF - ORGANIC GROUP 2025.xlsm
+      → 005 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/EEFF - ORGANIC GROUP 2025.xlsm   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+      nota: Excel con 17 vínculo(s) a otros archivos
+  PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025 ORGANIC GROUP EAS/EEFF 2025 ORGANIC GROUP EAS UNIPERSONAL.pdf
+      → 005 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/EEFF 2025 ORGANIC GROUP EAS UNIPERSONAL.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025 ORGANIC GROUP EAS/EEFF 2025 ORGANIC GROUP EAS UNIPERSONAL.zip
+      → 005 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/EEFF 2025 ORGANIC GROUP EAS UNIPERSONAL.zip   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025 ORGANIC GROUP EAS/EF2025_831f07c5_80132565_948.zip
+      → 005 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/EF2025_831f07c5_80132565_948.zip   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025 ORGANIC GROUP EAS/NOTAS CONTABLES 2025 ORGANIC GROUP E.A.S.xlsx
+      → 005 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/NOTAS CONTABLES 2025 ORGANIC GROUP E.A.S.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS DNIT/BAJA DE DOC. TIMBRADO 17331406.pdf
+      → 005 TRIBUTARIO/BAJA DE DOC. TIMBRADO 17331406.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2025/DOCUMENTOS VARIOS/ESTADO DE CUENTA ORGANIC GROUP.pdf
+      → 005 PERIODO 2025/DOCUMENTOS VARIOS/ESTADO DE CUENTA ORGANIC GROUP.pdf   [Estaba en DOCUMENTOS VARIOS]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «005 ZZ A CLASIFICAR» (para que lo ubique una persona) (28)
+----------------------------------------------------------------
+  DOCUMENTOS/BOLETA DE PAGO ORGANIC GROUP.pdf
+  DOCUMENTOS/CI HAMID ALKHOURY.pdf
+  DOCUMENTOS/CI HOSSAM BCHERAQUI.pdf
+  DOCUMENTOS/CI SOCIO Y REPRESENTANTE.pdf
+  DOCUMENTOS/CONSTITUCION EAS - no es.pdf
+  DOCUMENTOS/CONSTITUCION EAS.pdf_NUEVO_compressed.pdf
+  DOCUMENTOS/CONSTITUCION EAS.pdf_NUEVO.pdf
+  DOCUMENTOS/CONTRATO DE SUB LOCACION.pdf
+  DOCUMENTOS/EAS MIC.pdf
+  DOCUMENTOS/imprimirDetalleEstadoCuenta.pdf
+  DOCUMENTOS/PEDIDO DE FACTURA.pdf
+  DOCUMENTOS/PRESUPUESTO RUBRICA ORGANIC GROUP E.A.S..pdf
+  PERIODO 2023/80132565_REC_2023.xlsx
+  PERIODO 2023/80132565_REC_2023.zip
+  PERIODO 2023/80132565NE2023.docx
+  PERIODO 2023/80132565NE2023.pdf
+  PERIODO 2023/80132565NE2023.xlsx
+  PERIODO 2023/80132565NE2023.zip
+  PERIODO 2023/EF2023_8dce08be_80132565_948.zip
+  PERIODO 2024/80132565_REC_2024.xlsx
+  PERIODO 2024/80132565_REC_2024.zip
+  PERIODO 2024/80132565NE2024.pdf
+  PERIODO 2024/CERTIFICADO DE TRABAJO.doc
+  PERIODO 2024/CERTIFICADO DE TRABAJO.pdf
+  PERIODO 2024/Constancia_de_Beneficiarios_Finales.pdf 2024.pdf
+  PERIODO 2024/DDJJ IRE GENERAL_2024_REC.pdf
+  PERIODO 2024/ESTRUCTURA JURIDICA 2024.pdf
+  PERIODO 2025/DOCUMENTOS DNIT/ESTADO DE CUENTA ORGANIC GROUP EAS.pdf
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar) (1)
+------------------------------------------------------
+  PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025 ORGANIC GROUP EAS/EEFF - ORGANIC GROUP 2025.xlsm  →  005 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/EEFF - ORGANIC GROUP 2025.xlsm  [Excel con 17 vínculo(s) a otros archivos]
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno

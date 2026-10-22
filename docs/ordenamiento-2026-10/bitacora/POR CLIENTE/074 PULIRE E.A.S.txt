@@ -1,0 +1,122 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 074 PULIRE E.A.S
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+
+AL INICIO
+  Archivos: 37 · Peso: 13.0 MB · Subcarpetas con archivos: 7
+
+RESUMEN
+  Duplicados apartados (cuarentena): 1
+  Movidos y renombrados según el manual: 16
+  Movidos conservando su nombre: 18
+  Sin cambios: 0
+  A «074 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 2
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 0
+  Nombres originales que no dicen qué documento son: 14
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  074 LEGAL Y SOCIETARIO: 11
+  074 PERIODO 2021: 1
+  074 PERIODO 2022: 1
+  074 PERIODO 2023: 1
+  074 PERIODO 2024: 15
+  074 TRIBUTARIO: 5
+  074 ZZ A CLASIFICAR: 2
+
+DUPLICADOS APARTADOS (1)
+----------------------------
+  PERIODO 2024/MAYO/IVA GENERAL 05-2024.pdf
+      igual a: PERIODO 2024/ABRIL/IVA GENERAL 04-2024.pdf  (La misma declaración presentada (mismo número de orden 12070189788), bajada otra vez)
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron): ninguno
+
+MOVIDOS Y RENOMBRADOS (16)
+-----------------------------
+  DOCUMENTOS LEGALES/CONSTANCIA DE RUC.pdf
+      → 074 TRIBUTARIO/CONSTANCIA RUC PULIRE EAS.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  Libro Deposito de Acciones  Registro y asistencia a Asambleas 17 OCT 2022.xls
+      → 074 LEGAL Y SOCIETARIO/ASAMBLEA 2022/Libro Deposito de Acciones Registro y asistencia a Asambleas 17 OCT 2022.xls   [Documento de asamblea]
+  PERIODO 2024/ABRIL/IVA GENERAL 04-2024.pdf
+      → 074 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/DDJJ IVA 042024 PULIRE EAS.pdf   [Declaración leída por dentro: formulario 120, período 04/2024]
+  PERIODO 2024/ABRIL/LIBRO COMPRAS MES DE ABRIL.pdf
+      → 074 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/LIBRO COMPRAS 042024 PULIRE EAS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/ABRIL/LIBRO VENTAS MES DE ABRIL.pdf
+      → 074 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/LIBRO VENTAS 042024 PULIRE EAS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/FEBRERO/IVA GENERAL 02-2024.pdf
+      → 074 PERIODO 2024/DOCUMENTOS CONTABLES/02 FEBRERO/DDJJ IVA 022024 PULIRE EAS.pdf   [Declaración leída por dentro: formulario 120, período 02/2024]
+  PERIODO 2024/FEBRERO/LIBRO COMPRAS 02-2024.pdf
+      → 074 PERIODO 2024/DOCUMENTOS CONTABLES/02 FEBRERO/LIBRO COMPRAS 022024 PULIRE EAS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/FEBRERO/LIBRO VENTAS 02-2024.pdf
+      → 074 PERIODO 2024/DOCUMENTOS CONTABLES/02 FEBRERO/LIBRO VENTAS 022024 PULIRE EAS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/JUNIO/IVA GENERAL 06-2024.pdf
+      → 074 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/DDJJ IVA 062024 PULIRE EAS.pdf   [Declaración leída por dentro: formulario 120, período 06/2024]
+  PERIODO 2024/JUNIO/LIBRO COMPRAS MES DE JUNIO.pdf
+      → 074 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/LIBRO COMPRAS 062024 PULIRE EAS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/JUNIO/LIBRO VENTAS MES DE JUNIO.pdf
+      → 074 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/LIBRO VENTAS 062024 PULIRE EAS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/MARZO/IVA GENERAL 03-2024.pdf
+      → 074 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/DDJJ IVA 032024 PULIRE EAS.pdf   [Declaración leída por dentro: formulario 120, período 03/2024]
+  PERIODO 2024/MARZO/LIBRO COMPRAS MES DE MARZO.pdf
+      → 074 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/LIBRO COMPRAS 032024 PULIRE EAS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/MARZO/LIBRO VENTAS MES DE MARZO.pdf
+      → 074 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/LIBRO VENTAS 032024 PULIRE EAS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/MAYO/LIBRO COMPRAS MES DE MAYO.pdf
+      → 074 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO/LIBRO COMPRAS 052024 PULIRE EAS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/MAYO/LIBRO VENTAS MES DE MAYO.pdf
+      → 074 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO/LIBRO VENTAS 052024 PULIRE EAS.pdf   [Período tomado de la carpeta donde estaba]
+
+MOVIDOS CONSERVANDO SU NOMBRE (18)
+-------------------------------------
+  DOCUMENTOS LEGALES/ANEXO FICHA CLIENTE.pdf
+      → 074 LEGAL Y SOCIETARIO/ANEXO FICHA CLIENTE.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES/C.I DE SOCIO-REPRESENTANTE.pdf
+      → 074 LEGAL Y SOCIETARIO/C.I DE SOCIO-REPRESENTANTE.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES/C.I DIEGO BECONI.pdf
+      → 074 LEGAL Y SOCIETARIO/C.I DIEGO BECONI.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES/C.I REPRESENTANTE LEGAL.pdf
+      → 074 LEGAL Y SOCIETARIO/C.I REPRESENTANTE LEGAL.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES/Cédula Tributaria _ MARANGATU.pdf
+      → 074 TRIBUTARIO/Cédula Tributaria _ MARANGATU.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  DOCUMENTOS LEGALES/CONSTANCIA DE CONSTITUCION.pdf
+      → 074 LEGAL Y SOCIETARIO/CONSTANCIA DE CONSTITUCION.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES/ESTADOS FINANCIEROS 2021.pdf
+      → 074 PERIODO 2021/DOCUMENTOS CONTABLES/CIERRE 2021/ESTADOS FINANCIEROS 2021.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  DOCUMENTOS LEGALES/ESTADOS FINANCIEROS 2022.pdf
+      → 074 PERIODO 2022/DOCUMENTOS CONTABLES/CIERRE 2022/ESTADOS FINANCIEROS 2022.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  DOCUMENTOS LEGALES/ESTADOS FINANCIEROS 2023.pdf
+      → 074 PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/ESTADOS FINANCIEROS 2023.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  DOCUMENTOS LEGALES/FICHA DE DATOS DE CLIENTES.pdf
+      → 074 LEGAL Y SOCIETARIO/FICHA DE DATOS DE CLIENTES.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES/PROFORMA DE ESTATUTO.pdf
+      → 074 LEGAL Y SOCIETARIO/PROFORMA DE ESTATUTO.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES/SOLICITUD DE APERTURA DE CUENTA.pdf
+      → 074 LEGAL Y SOCIETARIO/SOLICITUD DE APERTURA DE CUENTA.pdf   [Documento legal o societario]
+  Libro Registro de Accionistas.pdf
+      → 074 LEGAL Y SOCIETARIO/Libro Registro de Accionistas.pdf   [Documento legal o societario]
+  Libro Registro de Accionistas.xls
+      → 074 LEGAL Y SOCIETARIO/Libro Registro de Accionistas.xls   [Documento legal o societario]
+  PERIODO 2024/ABRIL/CCT AL 07-05.pdf
+      → 074 TRIBUTARIO/CCT AL 07-05.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2024/ABRIL/Certificado de Presentacion de DDJJ.pdf
+      → 074 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/Certificado de Presentacion de DDJJ.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/MARZO/CCT AL 18-04.pdf
+      → 074 TRIBUTARIO/CCT AL 18-04.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2024/MAYO/CCT AL 07-06.pdf
+      → 074 TRIBUTARIO/CCT AL 07-06.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «074 ZZ A CLASIFICAR» (para que lo ubique una persona) (2)
+----------------------------------------------------------------
+  Boleta de Pago Iva General-Pulire E.A.S
+  IPS/ENTRADA IPS ADRIANA BENITEZ MONGELOS.pdf
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno

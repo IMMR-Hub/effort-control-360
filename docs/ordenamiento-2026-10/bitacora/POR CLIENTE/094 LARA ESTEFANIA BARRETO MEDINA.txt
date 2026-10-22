@@ -1,0 +1,128 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 094 LARA ESTEFANIA BARRETO MEDINA
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+
+AL INICIO
+  Archivos: 27 · Peso: 2.1 MB · Subcarpetas con archivos: 3
+
+RESUMEN
+  Duplicados apartados (cuarentena): 0
+  Movidos y renombrados según el manual: 10
+  Movidos conservando su nombre: 16
+  Sin cambios: 0
+  A «094 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 1
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 0
+  Nombres originales que no dicen qué documento son: 3
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 15
+
+AL FINAL (archivos por carpeta de primer nivel)
+  094 PERIODO 2024: 26
+  094 ZZ A CLASIFICAR: 1
+
+DUPLICADOS APARTADOS: ninguno
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron): ninguno
+
+MOVIDOS Y RENOMBRADOS (10)
+-----------------------------
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg ventas 2024/venras agosto.xlsx
+      → 094 PERIODO 2024/DOCUMENTOS CONTABLES/08 AGOSTO/RG VENTAS 082024 LARA ESTEFANIA BARRETO MEDINA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 08/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg ventas 2024/ventas abril.xlsx
+      → 094 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/RG VENTAS 042024 LARA ESTEFANIA BARRETO MEDINA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 04/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg ventas 2024/ventas diciembre.xlsx
+      → 094 PERIODO 2024/DOCUMENTOS CONTABLES/12 DICIEMBRE/RG VENTAS 122024 LARA ESTEFANIA BARRETO MEDINA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 12/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg ventas 2024/ventas enero.xlsx
+      → 094 PERIODO 2024/DOCUMENTOS CONTABLES/01 ENERO/RG VENTAS 012024 LARA ESTEFANIA BARRETO MEDINA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 01/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg ventas 2024/ventas febrero.xlsx
+      → 094 PERIODO 2024/DOCUMENTOS CONTABLES/02 FEBRERO/RG VENTAS 022024 LARA ESTEFANIA BARRETO MEDINA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 02/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg ventas 2024/ventas julio.xlsx
+      → 094 PERIODO 2024/DOCUMENTOS CONTABLES/07 JULIO/RG VENTAS 072024 LARA ESTEFANIA BARRETO MEDINA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 07/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg ventas 2024/ventas junio.xlsx
+      → 094 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/RG VENTAS 062024 LARA ESTEFANIA BARRETO MEDINA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 06/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg ventas 2024/ventas marzo.xlsx
+      → 094 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/RG VENTAS 032024 LARA ESTEFANIA BARRETO MEDINA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 03/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg ventas 2024/ventas mayo.xlsx
+      → 094 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO/RG VENTAS 052024 LARA ESTEFANIA BARRETO MEDINA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 05/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg ventas 2024/ventas noviembre.xlsx
+      → 094 PERIODO 2024/DOCUMENTOS CONTABLES/11 NOVIEMBRE/RG VENTAS 112024 LARA ESTEFANIA BARRETO MEDINA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 11/2024]
+
+MOVIDOS CONSERVANDO SU NOMBRE (16)
+-------------------------------------
+  PERIODO 2024/DOCUMENTOS CONTABLES/DETERMINACIÓN DEL IRP 2024 LARA BARRETO.pdf
+      → 094 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/DETERMINACIÓN DEL IRP 2024 LARA BARRETO.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/LIQ IRP LARA 2024.xlsx
+      → 094 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/LIQ IRP LARA 2024.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+      nota: Excel con 14 vínculo(s) a otros archivos
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg compras 2024/compras abril.xlsx
+      → 094 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/compras abril.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 04/2024]
+      nota: Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg compras 2024/compras agosto.xlsx
+      → 094 PERIODO 2024/DOCUMENTOS CONTABLES/08 AGOSTO/compras agosto.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 08/2024]
+      nota: Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg compras 2024/compras diceimbre.xlsx
+      → 094 PERIODO 2024/DOCUMENTOS CONTABLES/12 DICIEMBRE/compras diceimbre.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 12/2024]
+      nota: Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg compras 2024/compras enero.xlsx
+      → 094 PERIODO 2024/DOCUMENTOS CONTABLES/01 ENERO/compras enero.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 01/2024]
+      nota: Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg compras 2024/compras febrero.xlsx
+      → 094 PERIODO 2024/DOCUMENTOS CONTABLES/02 FEBRERO/compras febrero.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 02/2024]
+      nota: Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg compras 2024/compras julio.xlsx
+      → 094 PERIODO 2024/DOCUMENTOS CONTABLES/07 JULIO/compras julio.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 07/2024]
+      nota: Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg compras 2024/compras junio.xlsx
+      → 094 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/compras junio.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 06/2024]
+      nota: Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg compras 2024/compras marzo.xlsx
+      → 094 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/compras marzo.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 03/2024]
+      nota: Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg compras 2024/compras mayo.xlsx
+      → 094 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO/compras mayo.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 05/2024]
+      nota: Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg compras 2024/compras noviembre.xlsx
+      → 094 PERIODO 2024/DOCUMENTOS CONTABLES/11 NOVIEMBRE/compras noviembre.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 11/2024]
+      nota: Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg compras 2024/compras octubre.xlsx
+      → 094 PERIODO 2024/DOCUMENTOS CONTABLES/10 OCTUBRE/compras octubre.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 10/2024]
+      nota: Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg compras 2024/compras setiembre.xlsx
+      → 094 PERIODO 2024/DOCUMENTOS CONTABLES/09 SETIEMBRE/compras setiembre.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2024]
+      nota: Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg ventas 2024/ventas octubre.xlsx
+      → 094 PERIODO 2024/DOCUMENTOS CONTABLES/10 OCTUBRE/ventas octubre.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 10/2024]
+      nota: Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg ventas 2024/ventas setiembre.xlsx
+      → 094 PERIODO 2024/DOCUMENTOS CONTABLES/09 SETIEMBRE/ventas setiembre.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 09/2024]
+      nota: Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «094 ZZ A CLASIFICAR» (para que lo ubique una persona) (1)
+----------------------------------------------------------------
+  PERIODO 2024/DOCUMENTOS CONTABLES/PROFORMA FORM.515 IRP_RSP 2024 LARA BARRETO.pdf
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar) (15)
+------------------------------------------------------
+  PERIODO 2024/DOCUMENTOS CONTABLES/LIQ IRP LARA 2024.xlsx  →  094 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/LIQ IRP LARA 2024.xlsx  [Excel con 14 vínculo(s) a otros archivos]
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg compras 2024/compras abril.xlsx  →  094 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/compras abril.xlsx  [Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg compras 2024/compras agosto.xlsx  →  094 PERIODO 2024/DOCUMENTOS CONTABLES/08 AGOSTO/compras agosto.xlsx  [Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg compras 2024/compras diceimbre.xlsx  →  094 PERIODO 2024/DOCUMENTOS CONTABLES/12 DICIEMBRE/compras diceimbre.xlsx  [Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg compras 2024/compras enero.xlsx  →  094 PERIODO 2024/DOCUMENTOS CONTABLES/01 ENERO/compras enero.xlsx  [Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg compras 2024/compras febrero.xlsx  →  094 PERIODO 2024/DOCUMENTOS CONTABLES/02 FEBRERO/compras febrero.xlsx  [Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg compras 2024/compras julio.xlsx  →  094 PERIODO 2024/DOCUMENTOS CONTABLES/07 JULIO/compras julio.xlsx  [Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg compras 2024/compras junio.xlsx  →  094 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/compras junio.xlsx  [Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg compras 2024/compras marzo.xlsx  →  094 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/compras marzo.xlsx  [Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg compras 2024/compras mayo.xlsx  →  094 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO/compras mayo.xlsx  [Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg compras 2024/compras noviembre.xlsx  →  094 PERIODO 2024/DOCUMENTOS CONTABLES/11 NOVIEMBRE/compras noviembre.xlsx  [Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg compras 2024/compras octubre.xlsx  →  094 PERIODO 2024/DOCUMENTOS CONTABLES/10 OCTUBRE/compras octubre.xlsx  [Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg compras 2024/compras setiembre.xlsx  →  094 PERIODO 2024/DOCUMENTOS CONTABLES/09 SETIEMBRE/compras setiembre.xlsx  [Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg ventas 2024/ventas octubre.xlsx  →  094 PERIODO 2024/DOCUMENTOS CONTABLES/10 OCTUBRE/ventas octubre.xlsx  [Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/rg ventas 2024/ventas setiembre.xlsx  →  094 PERIODO 2024/DOCUMENTOS CONTABLES/09 SETIEMBRE/ventas setiembre.xlsx  [Otro Excel lo usa por vínculo (LIQ IRP LARA 2024.xlsx)]
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno

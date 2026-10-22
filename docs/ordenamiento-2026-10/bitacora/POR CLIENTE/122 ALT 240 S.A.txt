@@ -1,0 +1,124 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 122 ALT 240 S.A
+Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Solo plan.
+
+AL INICIO
+  Archivos: 40 · Peso: 28.0 MB · Subcarpetas con archivos: 5
+
+RESUMEN
+  Duplicados apartados (cuarentena): 0
+  Movidos y renombrados según el manual: 0
+  Movidos conservando su nombre: 39
+  Sin cambios: 0
+  A «122 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 1
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 1
+  Nombres originales que no dicen qué documento son: 23
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  122 LEGAL Y SOCIETARIO: 39
+  122 ZZ A CLASIFICAR: 1
+
+DUPLICADOS APARTADOS: ninguno
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (1)
+---------------------------------------------------------
+  drfs-decreto-nro.-9043_2018,-art.-9-_-comunicacion-de-transferencia-de-acciones.-5433507 final.pdf  →  drfs-decreto-nro.-9043_2018,-art.-9-_-comunicacion-de-transferencia-de-acciones.-5433507 final.pdf
+
+MOVIDOS Y RENOMBRADOS: ninguno
+
+MOVIDOS CONSERVANDO SU NOMBRE (39)
+-------------------------------------
+  DOC LEGALES/ASAMBLEAS/ACTA ASAMBLEA ALT 240 2023.docx
+      → 122 LEGAL Y SOCIETARIO/ASAMBLEA 2023/ACTA ASAMBLEA ALT 240 2023.docx   [Documento de asamblea]
+  DOC LEGALES/ASAMBLEAS/Acta D 240.pdf
+      → 122 LEGAL Y SOCIETARIO/Acta D 240.pdf   [Documento de asamblea]
+  DOC LEGALES/ASAMBLEAS/ALT 240 AD_convocatoria da Asamblea.docx
+      → 122 LEGAL Y SOCIETARIO/ALT 240 AD_convocatoria da Asamblea.docx   [Documento de asamblea]
+  DOC LEGALES/ASAMBLEAS/ALT 240 Memoria de Directorio 2021 2022.docx
+      → 122 LEGAL Y SOCIETARIO/ALT 240 Memoria de Directorio 2021 2022.docx   [Documento de asamblea]
+  DOC LEGALES/ASAMBLEAS/Asamblea 240.pdf
+      → 122 LEGAL Y SOCIETARIO/Asamblea 240.pdf   [Documento de asamblea]
+  DOC LEGALES/ASAMBLEAS/CONVOCATORIA A ASAMBLEA 2026.pdf
+      → 122 LEGAL Y SOCIETARIO/ASAMBLEA 2026/CONVOCATORIA A ASAMBLEA 2026.pdf   [Documento de asamblea]
+  DOC LEGALES/ASAMBLEAS/Convocatoria Asamblea 2023 ALT 240.pdf
+      → 122 LEGAL Y SOCIETARIO/ASAMBLEA 2023/Convocatoria Asamblea 2023 ALT 240.pdf   [Documento de asamblea]
+  DOC LEGALES/ASAMBLEAS/Convocatoria de asamblea 2026 ALT 240 SA.doc
+      → 122 LEGAL Y SOCIETARIO/ASAMBLEA 2026/Convocatoria de asamblea 2026 ALT 240 SA.doc   [Documento de asamblea]
+  DOC LEGALES/ASAMBLEAS/EDICTO ALT 240 2023.docx
+      → 122 LEGAL Y SOCIETARIO/ASAMBLEA 2023/EDICTO ALT 240 2023.docx   [Documento de asamblea]
+  DOC LEGALES/ASAMBLEAS/Factura Asamblea 2023 mas convocatoria.pdf
+      → 122 LEGAL Y SOCIETARIO/ASAMBLEA 2023/Factura Asamblea 2023 mas convocatoria.pdf   [Documento de asamblea]
+  DOC LEGALES/ASAMBLEAS/Factura Asamblea ALT 240.pdf
+      → 122 LEGAL Y SOCIETARIO/Factura Asamblea ALT 240.pdf   [Documento de asamblea]
+  DOC LEGALES/ASAMBLEAS/Factura constitucion RUC.pdf
+      → 122 LEGAL Y SOCIETARIO/Factura constitucion RUC.pdf   [Documento de asamblea]
+  DOC LEGALES/ASAMBLEAS/Informe del Sindico ALT 240.doc
+      → 122 LEGAL Y SOCIETARIO/Informe del Sindico ALT 240.doc   [Documento de asamblea]
+  DOC LEGALES/ASAMBLEAS/Informe del Sindico ALT 240.pdf
+      → 122 LEGAL Y SOCIETARIO/Informe del Sindico ALT 240.pdf   [Documento de asamblea]
+  DOC LEGALES/ASAMBLEAS/Memoria ALT 240 2023.pdf
+      → 122 LEGAL Y SOCIETARIO/ASAMBLEA 2023/Memoria ALT 240 2023.pdf   [Documento de asamblea]
+  DOC LEGALES/ASAMBLEAS/Registro Asamblea 2023 ALT 240.pdf
+      → 122 LEGAL Y SOCIETARIO/ASAMBLEA 2023/Registro Asamblea 2023 ALT 240.pdf   [Documento de asamblea]
+  DOC LEGALES/CI SOCIOS/Arturo CI.jpeg
+      → 122 LEGAL Y SOCIETARIO/Arturo CI.jpeg   [Documento legal o societario]
+  DOC LEGALES/CI SOCIOS/Susana CI atras.jpeg
+      → 122 LEGAL Y SOCIETARIO/Susana CI atras.jpeg   [Documento legal o societario]
+  DOC LEGALES/CI SOCIOS/Susana CI.jpeg
+      → 122 LEGAL Y SOCIETARIO/Susana CI.jpeg   [Documento legal o societario]
+  DOC LEGALES/CONTANCIAS ABOGACIA/ALT 240 - DGPEJBF 2022.pdf
+      → 122 LEGAL Y SOCIETARIO/ALT 240 - DGPEJBF 2022.pdf   [Documento legal o societario]
+  DOC LEGALES/CONTANCIAS ABOGACIA/ALT 240 2023 drfs--comunicacion-en-el-registro-administrativo-de-beneficiarios-finales-4756570.pdf
+      → 122 LEGAL Y SOCIETARIO/ALT 240 2023 drfs--comunicacion-en-el-registro-administrativo-de-beneficiarios-finales-4756570.pdf   [Documento legal o societario]
+  DOC LEGALES/CONTANCIAS ABOGACIA/ALT 240 2023 drfs-comunicacion-en-el-registro-administrativo-de-personas-y-estructuras-juridicas-4756651.pdf
+      → 122 LEGAL Y SOCIETARIO/ALT 240 2023 drfs-comunicacion-en-el-registro-administrativo-de-personas-y-estructuras-juridicas-4756651.pdf   [Documento legal o societario]
+  DOC LEGALES/CONTANCIAS ABOGACIA/ALT 240 Registro de transferencia 2023.pdf
+      → 122 LEGAL Y SOCIETARIO/ALT 240 Registro de transferencia 2023.pdf   [Documento legal o societario]
+  DOC LEGALES/CONTANCIAS ABOGACIA/ALT 240 S.A. - CONSTANCIA DE INSCRIPCION.pdf
+      → 122 LEGAL Y SOCIETARIO/ALT 240 S.A. - CONSTANCIA DE INSCRIPCION.pdf   [Documento legal o societario]
+  DOC LEGALES/CONTANCIAS ABOGACIA/drfs--comunicacion-en-el-registro-administrativo-de-beneficiarios-finales-5289052.pdf
+      → 122 LEGAL Y SOCIETARIO/drfs--comunicacion-en-el-registro-administrativo-de-beneficiarios-finales-5289052.pdf   [Documento legal o societario]
+  DOC LEGALES/CONTANCIAS ABOGACIA/drfs--comunicacion-en-el-registro-administrativo-de-beneficiarios-finales-5738782 2024.pdf
+      → 122 LEGAL Y SOCIETARIO/drfs--comunicacion-en-el-registro-administrativo-de-beneficiarios-finales-5738782 2024.pdf   [Documento legal o societario]
+  DOC LEGALES/CONTANCIAS ABOGACIA/drfs-002---comunicacion-en-el-registro-administrativo-de-personas-y-estructuras-juridicas-6962681 2025.pdf
+      → 122 LEGAL Y SOCIETARIO/drfs-002---comunicacion-en-el-registro-administrativo-de-personas-y-estructuras-juridicas-6962681 2025.pdf   [Documento legal o societario]
+  DOC LEGALES/CONTANCIAS ABOGACIA/drfs-003---comunicacion-en-el-registro-administrativo-de-beneficiarios-finales-6962895 2025.pdf
+      → 122 LEGAL Y SOCIETARIO/drfs-003---comunicacion-en-el-registro-administrativo-de-beneficiarios-finales-6962895 2025.pdf   [Documento legal o societario]
+  DOC LEGALES/CONTANCIAS ABOGACIA/drfs-comunicacion-asamblearia--5289045.pdf
+      → 122 LEGAL Y SOCIETARIO/drfs-comunicacion-asamblearia--5289045.pdf   [Documento de asamblea]
+  DOC LEGALES/CONTANCIAS ABOGACIA/drfs-comunicacion-asamblearia--5430523.pdf
+      → 122 LEGAL Y SOCIETARIO/drfs-comunicacion-asamblearia--5430523.pdf   [Documento de asamblea]
+  DOC LEGALES/CONTANCIAS ABOGACIA/drfs-comunicacion-en-el-registro-administrativo-de-personas-y-estructuras-juridicas-5289063.pdf
+      → 122 LEGAL Y SOCIETARIO/drfs-comunicacion-en-el-registro-administrativo-de-personas-y-estructuras-juridicas-5289063.pdf   [Documento legal o societario]
+  DOC LEGALES/CONTANCIAS ABOGACIA/drfs-comunicacion-en-el-registro-administrativo-de-personas-y-estructuras-juridicas-5738697 2024.pdf
+      → 122 LEGAL Y SOCIETARIO/drfs-comunicacion-en-el-registro-administrativo-de-personas-y-estructuras-juridicas-5738697 2024.pdf   [Documento legal o societario]
+  DOC LEGALES/CONTANCIAS ABOGACIA/drfs-decreto-nro.-9043_2018,-art.-9-_-comunicacion-de-transferencia-de-acciones.-5283149.pdf
+      → 122 LEGAL Y SOCIETARIO/drfs-decreto-nro.-9043_2018,-art.-9-_-comunicacion-de-transferencia-de-acciones.-5283149.pdf   [Documento legal o societario]
+  DOC LEGALES/CONTANCIAS ABOGACIA/drfs-decreto-nro.-9043_2018,-art.-9-_-comunicacion-de-transferencia-de-acciones.-5430509.pdf
+      → 122 LEGAL Y SOCIETARIO/drfs-decreto-nro.-9043_2018,-art.-9-_-comunicacion-de-transferencia-de-acciones.-5430509.pdf   [Documento legal o societario]
+  DOC LEGALES/CONTANCIAS ABOGACIA/drfs-decreto-nro.-9043_2018,-art.-9-_-comunicacion-de-transferencia-de-acciones.-5433507 final.pdf
+      → 122 LEGAL Y SOCIETARIO/drfs-decreto-nro.-9043_2018,-art.-9-_-comunicacion-de-transferencia-de-acciones.-5433507 final.pdf   [Documento legal o societario]
+  DOC LEGALES/CONTRATO TRANSFERENCIAS DE ACCIONES ALT 240.doc
+      → 122 LEGAL Y SOCIETARIO/CONTRATO TRANSFERENCIAS DE ACCIONES ALT 240.doc   [Documento legal o societario]
+  DOC LEGALES/Escritura de constitucion ALT 240.pdf
+      → 122 LEGAL Y SOCIETARIO/Escritura de constitucion ALT 240.pdf   [Documento legal o societario]
+  DOC LEGALES/Registro de accionestas y AD integracion.pdf
+      → 122 LEGAL Y SOCIETARIO/Registro de accionestas y AD integracion.pdf   [Documento legal o societario]
+  DOC LEGALES/TITULO ACCIONES ALT 240.docx
+      → 122 LEGAL Y SOCIETARIO/TITULO ACCIONES ALT 240.docx   [Documento legal o societario]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «122 ZZ A CLASIFICAR» (para que lo ubique una persona) (1)
+----------------------------------------------------------------
+  DOC CONTABLES/Balance 2021 2022 ALTE 240.pdf
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno
