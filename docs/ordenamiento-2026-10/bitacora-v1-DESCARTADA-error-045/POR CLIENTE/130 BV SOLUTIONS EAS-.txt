@@ -1,0 +1,131 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 130 BV SOLUTIONS EAS-
+Fecha: 20/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+
+AL INICIO
+  Archivos: 33 · Peso: 22.6 MB · Subcarpetas con archivos: 7
+
+RESUMEN
+  Duplicados apartados (cuarentena): 1
+  Movidos y renombrados según el manual: 9
+  Movidos conservando su nombre: 15
+  Sin cambios: 0
+  A «130 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 8
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 0
+  Nombres originales que no dicen qué documento son: 12
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 8
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  130 LEGAL Y SOCIETARIO: 10
+  130 PERIODO 2026: 13
+  130 TRIBUTARIO: 1
+  130 ZZ A CLASIFICAR: 8
+
+DUPLICADOS APARTADOS (1)
+----------------------------
+  DOCUMENTOS CONTABLES/MES/06 JUNIO/BALANCE DE APERTURA 2026.pdf
+      igual a: DOCUMENTOS LEGALES Y SOCITARIOS/BALANCE DE APERTURA 2026.pdf  (Copia idéntica (mismo contenido byte por byte))
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO (8)
+------------------------------------------------------
+  DOCUMENTOS CONTABLES/MES/06 JUNIO/DDJJ 062026.pdf  →  El nombre dice 06/2026 y la carpeta 06/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/08 AGOSTO/DDJJ 082026 - BV SOLUTIONS EAS.pdf  →  El nombre dice 08/2026 y la carpeta 08/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/08 AGOSTO/DETERMINCACION DE IVA 082026 - BV SOLUTIONS EAS.xlsx  →  El nombre dice 08/2026 y la carpeta 08/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/08 AGOSTO/LIBRO COMPRAS 082026.pdf  →  El nombre dice 08/2026 y la carpeta 08/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/08 AGOSTO/LIBRO VENTAS 082026.pdf  →  El nombre dice 08/2026 y la carpeta 08/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/09 SEPTIEMBRE/DETERMINACION DE IVA 092026 - BV SOLUTIONS EAS.pdf  →  El nombre dice 09/2026 y la carpeta 09/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/09 SEPTIEMBRE/LIBRO COMPRAS 092026 - BV SOLUTIONS EAS.pdf  →  El nombre dice 09/2026 y la carpeta 09/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/09 SEPTIEMBRE/LIBRO VENTAS 092026 - BV SOLUTIONS EAS.pdf  →  El nombre dice 09/2026 y la carpeta 09/?: se respetó la carpeta
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron): ninguno
+
+MOVIDOS Y RENOMBRADOS (9)
+-----------------------------
+  DOCUMENTOS CONTABLES/MES/07 JULIO/DDJJ 072026 BV SOLUTIONS EAS.pdf
+      → 130 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/DDJJ IVA 072026 BV SOLUTIONS EAS.pdf   [Declaración leída por dentro: formulario 120, período 07/2026]
+  DOCUMENTOS CONTABLES/MES/08 AGOSTO/LIBRO COMPRAS 082026.pdf
+      → 130 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/LIBRO COMPRAS 082026 BV SOLUTIONS EAS.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 08/2026 y la carpeta 08/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/08 AGOSTO/LIBRO VENTAS 082026.pdf
+      → 130 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/LIBRO VENTAS 082026 BV SOLUTIONS EAS.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 08/2026 y la carpeta 08/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/08 AGOSTO/RG90 VENTAS  082026.xlsx
+      → 130 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG VENTAS 082026 BV SOLUTIONS EAS.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 08/2026]
+  DOCUMENTOS CONTABLES/MES/09 SEPTIEMBRE/DDJJ 092026.pdf
+      → 130 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DDJJ IVA 092026 BV SOLUTIONS EAS.pdf   [Declaración leída por dentro: formulario 120, período 09/2026]
+  DOCUMENTOS CONTABLES/MES/09 SEPTIEMBRE/LIBRO COMPRAS 092026 - BV SOLUTIONS EAS.pdf
+      → 130 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO COMPRAS 092026 BV SOLUTIONS EAS.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 09/2026 y la carpeta 09/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/09 SEPTIEMBRE/LIBRO VENTAS 092026 - BV SOLUTIONS EAS.pdf
+      → 130 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO VENTAS 092026 BV SOLUTIONS EAS.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 09/2026 y la carpeta 09/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/09 SEPTIEMBRE/RG90 COMPRAS 092026.xlsx
+      → 130 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092026 BV SOLUTIONS EAS.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2026]
+  DOCUMENTOS LEGALES Y SOCITARIOS/FIRMA PARA EAS .pdf
+      → 130 LEGAL Y SOCIETARIO/FIRMA PARA EAS.pdf   [Documento legal o societario]
+
+MOVIDOS CONSERVANDO SU NOMBRE (15)
+-------------------------------------
+  DOCUMENTOS CONTABLES/MES/06 JUNIO/DDJJ 062026.pdf
+      → 130 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/DDJJ 062026.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 06/2026 y la carpeta 06/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/08 AGOSTO/DDJJ 082026 - BV SOLUTIONS EAS.pdf
+      → 130 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/DDJJ 082026 - BV SOLUTIONS EAS.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 08/2026 y la carpeta 08/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/08 AGOSTO/DETERMINCACION DE IVA 082026 - BV SOLUTIONS EAS.xlsx
+      → 130 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/DETERMINCACION DE IVA 082026 - BV SOLUTIONS EAS.xlsx   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 08/2026 y la carpeta 08/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/09 SEPTIEMBRE/DETERMINACION DE IVA 092026 - BV SOLUTIONS EAS.pdf
+      → 130 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DETERMINACION DE IVA 092026 - BV SOLUTIONS EAS.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 09/2026 y la carpeta 09/?: se respetó la carpeta
+  DOCUMENTOS LEGALES Y SOCITARIOS/BALANCE DE APERTURA 2026.pdf
+      → 130 PERIODO 2026/DOCUMENTOS CONTABLES/CIERRE 2026/BALANCE DE APERTURA 2026.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  DOCUMENTOS LEGALES Y SOCITARIOS/CEDULA REPRESENTANTE LEGAL BV SOLUTIONS.pdf
+      → 130 LEGAL Y SOCIETARIO/CEDULA REPRESENTANTE LEGAL BV SOLUTIONS.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCITARIOS/Cédula Tributaria _ MARANGATU.pdf
+      → 130 TRIBUTARIO/Cédula Tributaria _ MARANGATU.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  DOCUMENTOS LEGALES Y SOCITARIOS/CERTIFICACION DE FIRMA DNIT - R. LEGAL.pdf
+      → 130 LEGAL Y SOCIETARIO/CERTIFICACION DE FIRMA DNIT - R. LEGAL.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCITARIOS/CI NICOLAS BERGONZI.pdf
+      → 130 LEGAL Y SOCIETARIO/CI NICOLAS BERGONZI.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCITARIOS/Constancia _ MARANGATU.pdf
+      → 130 LEGAL Y SOCIETARIO/Constancia _ MARANGATU.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCITARIOS/CONSTANCIA DE CONSTITUCION ESTRUC Y BENEFICIARIOS FINALES.pdf
+      → 130 LEGAL Y SOCIETARIO/CONSTANCIA DE CONSTITUCION ESTRUC Y BENEFICIARIOS FINALES.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCITARIOS/Constancia de Estructuras Juridicas 2026.pdf
+      → 130 LEGAL Y SOCIETARIO/Constancia de Estructuras Juridicas 2026.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCITARIOS/Constancia_de_Beneficiarios_Finales.pdf
+      → 130 LEGAL Y SOCIETARIO/Constancia_de_Beneficiarios_Finales.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCITARIOS/ESTATUTO DE CONSTITUCION BV SOLUTIONS EAS.pdf
+      → 130 LEGAL Y SOCIETARIO/ESTATUTO DE CONSTITUCION BV SOLUTIONS EAS.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCITARIOS/SOCIOS BV SOLUTIONS.pdf
+      → 130 LEGAL Y SOCIETARIO/SOCIOS BV SOLUTIONS.pdf   [Documento legal o societario]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «130 ZZ A CLASIFICAR» (para que lo ubique una persona) (8)
+----------------------------------------------------------------
+  DOCUMENTOS CONTABLES/MES/07 JULIO/FAC 3.pdf
+  DOCUMENTOS CONTABLES/MES/07 JULIO/FAC 4.pdf
+  DOCUMENTOS CONTABLES/MES/07 JULIO/FAC 5.pdf
+  DOCUMENTOS CONTABLES/MES/08 AGOSTO/BOLETA IVA - AGOSTO.pdf
+  DOCUMENTOS CONTABLES/MES/DETERMINACION DE IVA - BV SOLUTIONS EAS3.xlsx
+  DOCUMENTOS LEGALES Y SOCITARIOS/Inventario.pdf
+  DOCUMENTOS VARIOS/Recibo de Dinero .docx
+  RESUMEN_DE_IVA_COPIAR.xlsx
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (8)
+--------------------------------------------------
+  DOCUMENTOS CONTABLES/MES/06 JUNIO
+  DOCUMENTOS CONTABLES/MES/07 JULIO
+  DOCUMENTOS CONTABLES/MES/08 AGOSTO
+  DOCUMENTOS CONTABLES/MES/09 SEPTIEMBRE
+  DOCUMENTOS CONTABLES/MES
+  DOCUMENTOS CONTABLES
+  DOCUMENTOS LEGALES Y SOCITARIOS
+  DOCUMENTOS VARIOS

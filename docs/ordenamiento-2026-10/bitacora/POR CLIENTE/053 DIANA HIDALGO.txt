@@ -1,35 +1,36 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 053 DIANA HIDALGO
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 238 · Peso: 59.6 MB · Subcarpetas con archivos: 38
+  Archivos: 243 · Peso: 60.3 MB · Subcarpetas con archivos: 39
 
 RESUMEN
   Duplicados apartados (cuarentena): 0
-  Movidos y renombrados según el manual: 106
+  Movidos y renombrados según el manual: 111
   Movidos conservando su nombre: 130
   Sin cambios: 0
   A «053 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 2
   Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
   Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 32
   Nombres originales que no dicen qué documento son: 60
-  Nombre o ubicación que contradice lo que dice el documento por dentro: 3
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 4
   Excel con vínculos (no se renombraron): 0
 
 AL FINAL (archivos por carpeta de primer nivel)
   053 PERIODO 2024: 105
   053 PERIODO 2025: 70
-  053 PERIODO 2026: 48
+  053 PERIODO 2026: 53
   053 TRIBUTARIO: 13
   053 ZZ A CLASIFICAR: 2
 
 DUPLICADOS APARTADOS: ninguno
 
-NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO (3)
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO (4)
 ------------------------------------------------------
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/02 FEBRERO/LIBRO VENTAS FEBRERO 2025.pdf  →  El nombre dice 02/2025 y la carpeta 02/2026: se respetó la carpeta
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/05 MAYO/LIBRO COMPRAS MAYO 2025 DIANA HIDALGO.pdf  →  El nombre dice 05/2025 y la carpeta 05/2026: se respetó la carpeta · Hay una versión más reciente del mismo documento (libro compras ok mayo.pdf): esta queda como versión anterior
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/05 MAYO/LIBRO VENTAS MAYO 2025 DIANA HIDALGO.pdf  →  El nombre dice 05/2025 y la carpeta 05/2026: se respetó la carpeta
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/09 SEPTIEMBRE/LIBRO COMPRAS 092029.pdf  →  El nombre dice 09/2029 y la carpeta 09/2026: se respetó la carpeta
 
 NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (32)
 ---------------------------------------------------------
@@ -66,7 +67,7 @@ NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (32)
   WhatsApp Image 2025-07-25 at 08.56.12.jpeg  →  WhatsApp Image 2025-07-25 at 08.56.12.jpeg
   libro compras ok mayo.pdf  →  LIBRO COMPRAS 052026 DIANA HIDALGO.pdf
 
-MOVIDOS Y RENOMBRADOS (106)
+MOVIDOS Y RENOMBRADOS (111)
 -----------------------------
   PERIODO 2024/DOCUMENTOS CONTABLES/MES/AGOSTO 2024/DETERMINACIÓN IVA AGOSTO 2024  DIANA HIDALGO .pdf
       → 053 PERIODO 2024/DOCUMENTOS CONTABLES/08 AGOSTO/DETERMINACIÓN IVA AGOSTO 2024 DIANA HIDALGO 02.pdf   [Período tomado de la carpeta donde estaba]
@@ -293,6 +294,17 @@ MOVIDOS Y RENOMBRADOS (106)
       → 053 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG COMPRAS 082026 DIANA HIDALGO.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 08/2026]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/08 AGOSTO/RG90 VENTAS 082026.xlsx
       → 053 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG VENTAS 082026 DIANA HIDALGO.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 08/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/09 SEPTIEMBRE/DDJJ IVA 092026.pdf
+      → 053 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DDJJ IVA 092026 DIANA HIDALGO.pdf   [Declaración leída por dentro: formulario 120, período 09/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/09 SEPTIEMBRE/LIBRO COMPRAS 092029.pdf
+      → 053 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO COMPRAS 092026 DIANA HIDALGO.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 09/2029 y la carpeta 09/2026: se respetó la carpeta
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/09 SEPTIEMBRE/LIBRO VENTAS 092026.pdf
+      → 053 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO VENTAS 092026 DIANA HIDALGO.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/09 SEPTIEMBRE/RG90 COMPRAS 092026.xlsx
+      → 053 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092026 DIANA HIDALGO.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/09 SEPTIEMBRE/RG90 VENTAS 092026.xlsx
+      → 053 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG VENTAS 092026 DIANA HIDALGO.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 09/2026]
 
 MOVIDOS CONSERVANDO SU NOMBRE (130)
 -------------------------------------
@@ -568,7 +580,7 @@ A «053 ZZ A CLASIFICAR» (para que lo ubique una persona) (2)
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (50)
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (51)
 --------------------------------------------------
   PERIODO 2024/DOCUMENTOS CONTABLES/IRP 2024
   PERIODO 2024/DOCUMENTOS CONTABLES/MES/AGOSTO 2024
@@ -617,6 +629,7 @@ CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (50)
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/06 JUNIO
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/07 JULIO
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/08 AGOSTO
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/09 SEPTIEMBRE
   PERIODO 2026/DOCUMENTOS CONTABLES/MES
   PERIODO 2026/DOCUMENTOS CONTABLES
   PERIODO 2026

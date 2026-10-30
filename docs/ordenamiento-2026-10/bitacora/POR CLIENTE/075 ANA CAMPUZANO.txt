@@ -1,17 +1,17 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 075 ANA CAMPUZANO
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 408 · Peso: 78.3 MB · Subcarpetas con archivos: 50
+  Archivos: 412 · Peso: 79.1 MB · Subcarpetas con archivos: 50
 
 RESUMEN
   Duplicados apartados (cuarentena): 0
-  Movidos y renombrados según el manual: 171
-  Movidos conservando su nombre: 237
+  Movidos y renombrados según el manual: 173
+  Movidos conservando su nombre: 239
   Sin cambios: 0
   A «075 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 0
   Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
-  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 19
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 21
   Nombres originales que no dicen qué documento son: 123
   Nombre o ubicación que contradice lo que dice el documento por dentro: 2
   Excel con vínculos (no se renombraron): 4
@@ -20,7 +20,7 @@ AL FINAL (archivos por carpeta de primer nivel)
   075 LEGAL Y SOCIETARIO: 1
   075 PERIODO 2024: 185
   075 PERIODO 2025: 109
-  075 PERIODO 2026: 100
+  075 PERIODO 2026: 104
   075 TRIBUTARIO: 13
 
 DUPLICADOS APARTADOS: ninguno
@@ -30,7 +30,7 @@ NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO (2)
   PERIODO 2025/DOCUMENTOS CONTABLES/MES/NOVIEMBRE 2025/BOLETA DE PAGO CUOTA 1 - IVA OCTUBRE 2025 - ANA CAMPUZANO.pdf  →  Boleta guardada en 11/2025: va en el mes que paga (10/2025), según su nombre
   PERIODO 2025/DOCUMENTOS CONTABLES/MES/NOVIEMBRE 2025/BOLETA DE PAGO CUOTA 1 SALDO  - IVA OCTUBRE 2025 - ANA CAMPUZANO.pdf  →  Boleta guardada en 11/2025: va en el mes que paga (10/2025), según su nombre
 
-NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (19)
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (21)
 ---------------------------------------------------------
   Determinación del IRP 2024 OK N ANA CAMPUZANO.pdf  →  Determinación del IRP 2024 OK N ANA CAMPUZANO.pdf
   DETERMINACION DEL IRP A OCTUBRE OK ANA C.pdf  →  DETERMINACION DEL IRP A OCTUBRE OK ANA C.pdf
@@ -51,8 +51,10 @@ NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (19)
   WhatsApp Image 2025-02-13 at 17.51.34.jpeg  →  WhatsApp Image 2025-02-13 at 17.51.34.jpeg
   DETERMINACIÓN DEL IVA ACTUALIZADO.pdf  →  DETERMINACIÓN DEL IVA ACTUALIZADO.pdf
   DETERMINACIÓN DEL IVA ACTUALIZADO.xlsx  →  DETERMINACIÓN DEL IVA ACTUALIZADO.xlsx
+  DETERMINACIÓN DEL IVA ACTUALIZADO.pdf  →  DETERMINACIÓN DEL IVA ACTUALIZADO.pdf
+  LIBRO COMPRAS ACTUALIZADO SET.pdf  →  LIBRO COMPRAS 092026 ANA CAMPUZANO.pdf
 
-MOVIDOS Y RENOMBRADOS (171)
+MOVIDOS Y RENOMBRADOS (173)
 -----------------------------
   Constancia de Ruc - Ana Campuzano.pdf
       → 075 TRIBUTARIO/CONSTANCIA RUC ANA CAMPUZANO VERSION ANTERIOR 2.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
@@ -410,10 +412,15 @@ MOVIDOS Y RENOMBRADOS (171)
       → 075 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/RG VENTAS 052026 ANA CAMPUZANO.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 05/2026]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/MAYO/TALON DE PRESENTACION.pdf
       → 075 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/TALON RG 90 052026 ANA CAMPUZANO.pdf   [Declaración leída por dentro: formulario 241, período 05/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/SETIEMBRE/DDJJ SETEIMBRE2026 ANA C.pdf
+      → 075 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DDJJ IVA 092026 ANA CAMPUZANO.pdf   [Declaración leída por dentro: formulario 120, período 09/2026]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/SETIEMBRE/DetalleComprobantesRegistrados - 2026-10-19T100230.453.xlsx
       → 075 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092026 ANA CAMPUZANO.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2026]
-  PERIODO 2026/DOCUMENTOS CONTABLES/MES/SETIEMBRE/LIBRO COMPRAS SETIEMBRE 2026 ANA C.pdf
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/SETIEMBRE/LIBRO COMPRAS ACTUALIZADO SET.pdf
       → 075 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO COMPRAS 092026 ANA CAMPUZANO.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/SETIEMBRE/LIBRO COMPRAS SETIEMBRE 2026 ANA C.pdf
+      → 075 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO COMPRAS 092026 ANA CAMPUZANO VERSION ANTERIOR 1.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Hay una versión más reciente del mismo documento (LIBRO COMPRAS ACTUALIZADO SET.pdf): esta queda como versión anterior
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/SETIEMBRE/LIBRO VENTAS SETIEMBRE 2026 ANA C.pdf
       → 075 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO VENTAS 092026 ANA CAMPUZANO.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA 766-ANA CAMPUZANO-CONTABILIDAD ENERO.pdf
@@ -438,7 +445,7 @@ MOVIDOS Y RENOMBRADOS (171)
   PERIODO 2026/DOCUMENTOS VARIOS/Nueva carpeta (2)/mayo rg.xlsx
       → 075 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/RG COMPRAS 052026 ANA CAMPUZANO.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 05/2026]
 
-MOVIDOS CONSERVANDO SU NOMBRE (237)
+MOVIDOS CONSERVANDO SU NOMBRE (239)
 -------------------------------------
   PERIODO 2024/DOCUMENTOS CONTABLES/IRP 2024 ANA/DETERMINACIÓN DEL IRP 2023 ANA C.pdf
       → 075 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/DETERMINACIÓN DEL IRP 2023 ANA C.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
@@ -910,8 +917,12 @@ MOVIDOS CONSERVANDO SU NOMBRE (237)
       → 075 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/IMPUTACION MASIVA/1550828_202609_COMPRAS_577125_1.txt   [Archivo de imputación masiva del SET (no se renombra)]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/SETIEMBRE/1550828_202609_COMPRAS_577125_1.zip
       → 075 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/IMPUTACION MASIVA/1550828_202609_COMPRAS_577125_1.zip   [Archivo de imputación masiva del SET (no se renombra)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/SETIEMBRE/Boleta de pago cuota inicial Ana C.pdf
+      → 075 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/Boleta de pago cuota inicial Ana C.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/SETIEMBRE/C202609.csv
       → 075 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/C202609.csv   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/SETIEMBRE/DETERMINACIÓN DEL IVA ACTUALIZADO.pdf
+      → 075 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DETERMINACIÓN DEL IVA ACTUALIZADO.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/SETIEMBRE/DETERMINACIÓN DEL IVA MES DE SETIEMBRE 2026 ANA C..pdf
       → 075 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DETERMINACIÓN DEL IVA MES DE SETIEMBRE 2026 ANA C..pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS VARIOS/IPS/EXTRACTO JUNIO 2026 - ANA CAMPUZANO.pdf

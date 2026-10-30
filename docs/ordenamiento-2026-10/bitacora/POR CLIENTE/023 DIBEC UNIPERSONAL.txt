@@ -1,13 +1,13 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 023 DIBEC UNIPERSONAL
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 1491 · Peso: 884.4 MB · Subcarpetas con archivos: 188
+  Archivos: 1492 · Peso: 884.4 MB · Subcarpetas con archivos: 188
 
 RESUMEN
   Duplicados apartados (cuarentena): 168
   Movidos y renombrados según el manual: 522
-  Movidos conservando su nombre: 677
+  Movidos conservando su nombre: 678
   Sin cambios: 0
   A «023 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 123
   Enviados a otro cliente: 1 · Recibidos de otro cliente: 0
@@ -24,7 +24,7 @@ AL FINAL (archivos por carpeta de primer nivel)
   023 PERIODO 2023: 296
   023 PERIODO 2024: 324
   023 PERIODO 2025: 419
-  023 PERIODO 2026: 91
+  023 PERIODO 2026: 92
   023 TRIBUTARIO: 28
   023 ZZ A CLASIFICAR: 123
 
@@ -1674,7 +1674,7 @@ MOVIDOS Y RENOMBRADOS (522)
       → 023 PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/EEFF 2023 PRESENTADO FORM 158 DIBEC UNIPERSONAL.pdf   [Declaración leída por dentro: formulario 158, ejercicio 2023]
       nota: Estaba guardada en la carpeta de 2026: no corresponde al período que declara
 
-MOVIDOS CONSERVANDO SU NOMBRE (677)
+MOVIDOS CONSERVANDO SU NOMBRE (678)
 -------------------------------------
   PERIODO 2022/COMPRAS Y VENTAS 08y09.2022 DIEGO BECONI.xlsx
       → 023 PERIODO 2022/DOCUMENTOS CONTABLES/09 SETIEMBRE/COMPRAS Y VENTAS 08y09.2022 DIEGO BECONI.xlsx   [Período tomado del nombre del archivo]
@@ -2965,6 +2965,8 @@ MOVIDOS CONSERVANDO SU NOMBRE (677)
       → 023 PERIODO 2026/DOCUMENTOS LABORALES/MTESS/PLANILLA DE SALARIOS 072026.xlsx   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
   PERIODO 2026/CONTABILIDAD/CONTROLES 2026/SALARIOS/PLANILLA DE SALARIOS 082026.xlsx
       → 023 PERIODO 2026/DOCUMENTOS LABORALES/MTESS/PLANILLA DE SALARIOS 082026.xlsx   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+  PERIODO 2026/CONTABILIDAD/CONTROLES 2026/SALARIOS/PLANILLA DE SALARIOS 092026.xlsx
+      → 023 PERIODO 2026/DOCUMENTOS LABORALES/MTESS/PLANILLA DE SALARIOS 092026.xlsx   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
   PERIODO 2026/CONTABILIDAD/CONTROLES 2026/SALARIOS/PROV. DE SALARIOS 072026 DIEGO BECONI.pdf
       → 023 PERIODO 2026/DOCUMENTOS LABORALES/MTESS/PROV. DE SALARIOS 072026 DIEGO BECONI.pdf   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
   PERIODO 2026/CONTABILIDAD/MES/01 ENERO 2026/RETENCIONES RECIBIDD 012026.xlsx

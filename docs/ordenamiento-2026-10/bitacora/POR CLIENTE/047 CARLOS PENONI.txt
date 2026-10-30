@@ -1,18 +1,18 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 047 CARLOS PENONI
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 197 · Peso: 31.7 MB · Subcarpetas con archivos: 52
+  Archivos: 204 · Peso: 32.3 MB · Subcarpetas con archivos: 53
 
 RESUMEN
   Duplicados apartados (cuarentena): 0
-  Movidos y renombrados según el manual: 116
-  Movidos conservando su nombre: 72
+  Movidos y renombrados según el manual: 120
+  Movidos conservando su nombre: 74
   Sin cambios: 0
-  A «047 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 9
+  A «047 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 10
   Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
   Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 0
-  Nombres originales que no dicen qué documento son: 124
+  Nombres originales que no dicen qué documento son: 128
   Nombre o ubicación que contradice lo que dice el documento por dentro: 3
   Excel con vínculos (no se renombraron): 0
 
@@ -20,9 +20,9 @@ AL FINAL (archivos por carpeta de primer nivel)
   047 LEGAL Y SOCIETARIO: 2
   047 PERIODO 2024: 43
   047 PERIODO 2025: 64
-  047 PERIODO 2026: 71
-  047 TRIBUTARIO: 8
-  047 ZZ A CLASIFICAR: 9
+  047 PERIODO 2026: 76
+  047 TRIBUTARIO: 9
+  047 ZZ A CLASIFICAR: 10
 
 DUPLICADOS APARTADOS: ninguno
 
@@ -34,7 +34,7 @@ NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO (3)
 
 NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron): ninguno
 
-MOVIDOS Y RENOMBRADOS (116)
+MOVIDOS Y RENOMBRADOS (120)
 -----------------------------
   PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE DE BALANCES/FORMULARIO 500 AÑO 2024.pdf
       → 047 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/DDJJ IRE 2024 CARLOS PENONI.pdf   [Declaración leída por dentro: formulario 500, ejercicio 2024]
@@ -197,7 +197,7 @@ MOVIDOS Y RENOMBRADOS (116)
       → 047 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/RG VENTAS 072025 CARLOS PENONI.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 07/2025]
   PERIODO 2025/DOCUMENTOS CONTABLES/RG 90 VENTAS/NOVIEMBRE.xlsx
       → 047 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/RG VENTAS 112025 CARLOS PENONI.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 11/2025]
-  PERIODO 2026/CALCULO IRP CARLOS PENONI.xlsx
+  PERIODO 2026/CALCULO IRP SP CARLOS PENONI.xlsx
       → 047 PERIODO 2026/DOCUMENTOS CONTABLES/CIERRE 2026/CALCULO IRP 2026 CARLOS PENONI.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
   PERIODO 2026/FORMULARIO 120/120-01-2026.pdf
       → 047 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/DDJJ IVA 012026 CARLOS PENONI.pdf   [Declaración leída por dentro: formulario 120, período 01/2026]
@@ -215,6 +215,8 @@ MOVIDOS Y RENOMBRADOS (116)
       → 047 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/DDJJ IVA 072026 CARLOS PENONI.pdf   [Declaración leída por dentro: formulario 120, período 07/2026]
   PERIODO 2026/FORMULARIO 120/120-08-2026.pdf
       → 047 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/DDJJ IVA 082026 CARLOS PENONI.pdf   [Declaración leída por dentro: formulario 120, período 08/2026]
+  PERIODO 2026/FORMULARIO 120/120-09-2026.pdf
+      → 047 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DDJJ IVA 092026 CARLOS PENONI.pdf   [Declaración leída por dentro: formulario 120, período 09/2026]
   PERIODO 2026/MESES/03 MARZO/Boleta de Pago IVA 032026 CARLOS PENONI.pdf
       → 047 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/BOLETA DE PAGO IVA 032026 CARLOS PENONI.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/MESES/06 JUNIO/Boleta de Pago IVA GENERAL 062026 CARLOS PENONI.pdf
@@ -234,6 +236,10 @@ MOVIDOS Y RENOMBRADOS (116)
   PERIODO 2026/MESES/07 JULIO/Boleta de Pago por cuotas de Facilidad IVA 07-08 2026.pdf
       → 047 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/BOLETA DE PAGO IVA 082026 CARLOS PENONI.pdf   [Período tomado de la carpeta donde estaba]
       nota: Boleta guardada en 07/2026: va en el mes que paga (08/2026), según su nombre
+  PERIODO 2026/MESES/09 SETIEMBRE/Boleta de Pago IVA GENERAL 092026 CARLOS PENONI.pdf
+      → 047 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/BOLETA DE PAGO IVA 092026 CARLOS PENONI.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/MESES/10 OCTUBRE/BAJA FAC DE VENTA 356.pdf
+      → 047 PERIODO 2026/DOCUMENTOS CONTABLES/10 OCTUBRE/FACTURA VENTA 356 102026 CARLOS PENONI.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/RG COMPRAS/01 ENERO.xlsx
       → 047 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/RG COMPRAS 012026 CARLOS PENONI.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 01/2026]
   PERIODO 2026/RG COMPRAS/02 FEBRERO.xlsx
@@ -280,8 +286,11 @@ MOVIDOS Y RENOMBRADOS (116)
       → 047 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/TALON RG 90 072026 CARLOS PENONI.pdf   [Declaración leída por dentro: formulario 241, período 07/2026]
   PERIODO 2026/TALON DE PRESENTACION/08 AGOSTO.pdf
       → 047 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/TALON RG 90 082026 CARLOS PENONI.pdf   [Declaración leída por dentro: formulario 241, período 08/2026]
+  PERIODO 2026/TALON DE PRESENTACION/09 SETIEMBRE.pdf
+      → 047 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/TALON DE PRESENTACION 09 SETIEMBRE.pdf   [Período tomado del nombre del archivo]
+      nota: Al nombre, que solo decía «09 SETIEMBRE», se le agregó la carpeta de donde venía
 
-MOVIDOS CONSERVANDO SU NOMBRE (72)
+MOVIDOS CONSERVANDO SU NOMBRE (74)
 -------------------------------------
   PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE DE BALANCES/Planilla Cierre 2024.xlsx
       → 047 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/Planilla Cierre 2024.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
@@ -357,12 +366,16 @@ MOVIDOS CONSERVANDO SU NOMBRE (72)
       → 047 PERIODO 2025/DOCUMENTOS CONTABLES/03 MARZO/365006_REC_202503.xlsx   [Archivo de sustento de una rectificativa, tal como lo genera el SET (no se renombra)]
   PERIODO 2025/DOCUMENTOS VARIOS/PLANILLA DE CONTROL MENSUAL -Beatriz.xlsx
       → 047 PERIODO 2025/DOCUMENTOS VARIOS/PLANILLA DE CONTROL MENSUAL -Beatriz.xlsx   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2026/Cálculo Auxiliar - Formulario N° 516 - IRP Rentas y Ganancias De Capital.xlsx
+      → 047 PERIODO 2026/DOCUMENTOS CONTABLES/CIERRE 2026/Cálculo Auxiliar - Formulario N° 516 - IRP Rentas y Ganancias De Capital.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
   PERIODO 2026/CCT/CCT ABRIL.pdf
       → 047 TRIBUTARIO/CCT ABRIL.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
   PERIODO 2026/CCT/CCT JUNIO.pdf
       → 047 TRIBUTARIO/CCT JUNIO.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
   PERIODO 2026/CCT/CCT MARZO.pdf
       → 047 TRIBUTARIO/CCT MARZO.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2026/CCT/CCT OCTUBRE.pdf
+      → 047 TRIBUTARIO/CCT OCTUBRE.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
   PERIODO 2026/COMUNICACIONES DNIT/ENERO/BAJA DE PREIMPRESO 135.pdf
       → 047 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/BAJA DE PREIMPRESO 135.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/COMUNICACIONES DNIT/JULIO/BAJA FAC 351-352.pdf
@@ -432,7 +445,7 @@ ENVIADOS A OTRO CLIENTE: ninguno
 
 RECIBIDOS DE OTRO CLIENTE: ninguno
 
-A «047 ZZ A CLASIFICAR» (para que lo ubique una persona) (9)
+A «047 ZZ A CLASIFICAR» (para que lo ubique una persona) (10)
 ----------------------------------------------------------------
   PERIODO 2024/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/CCT10.pdf
   PERIODO 2025/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/Boleta de Pago _ MARANGATU.pdf
@@ -443,10 +456,11 @@ A «047 ZZ A CLASIFICAR» (para que lo ubique una persona) (9)
   PERIODO 2025/DOCUMENTOS CONTABLES/EE.FF2025/DECLARACION IDU 2025.pdf
   PERIODO 2025/DOCUMENTOS CONTABLES/EE.FF2025/EF2025_87a70863_365006_948.zip
   PERIODO 2026/DETERMINACION IVA.xlsx
+  PLANILLA DE CONTROL MENSUAL CARLOS P.xlsx
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (67)
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (68)
 --------------------------------------------------
   PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE DE BALANCES
   PERIODO 2024/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT
@@ -509,6 +523,7 @@ CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (67)
   PERIODO 2026/MESES/07 JULIO
   PERIODO 2026/MESES/08 AGOSTO
   PERIODO 2026/MESES/09 SETIEMBRE
+  PERIODO 2026/MESES/10 OCTUBRE
   PERIODO 2026/MESES
   PERIODO 2026/RG COMPRAS
   PERIODO 2026/RG VENTAS/TALON DE PRESENTACION

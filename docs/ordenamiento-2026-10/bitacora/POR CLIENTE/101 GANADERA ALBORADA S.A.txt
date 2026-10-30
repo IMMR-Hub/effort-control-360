@@ -1,13 +1,13 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 101 GANADERA ALBORADA S.A
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 96 · Peso: 106.1 MB · Subcarpetas con archivos: 14
+  Archivos: 97 · Peso: 106.4 MB · Subcarpetas con archivos: 14
 
 RESUMEN
   Duplicados apartados (cuarentena): 2
   Movidos y renombrados según el manual: 21
-  Movidos conservando su nombre: 62
+  Movidos conservando su nombre: 63
   Sin cambios: 0
   A «101 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 11
   Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
@@ -17,7 +17,7 @@ RESUMEN
   Excel con vínculos (no se renombraron): 0
 
 AL FINAL (archivos por carpeta de primer nivel)
-  101 LEGAL Y SOCIETARIO: 33
+  101 LEGAL Y SOCIETARIO: 34
   101 PERIODO 2024: 1
   101 PERIODO 2025: 45
   101 PERIODO 2026: 4
@@ -91,7 +91,7 @@ MOVIDOS Y RENOMBRADOS (21)
   PERIODO 2026/DOCUMENTOS VARIOS/Nº 22  Acta de Asamblea Ordinaria - 2023.pdf
       → 101 LEGAL Y SOCIETARIO/ASAMBLEA 2023/Nº 22 Acta de Asamblea Ordinaria - 2023.pdf   [Documento de asamblea]
 
-MOVIDOS CONSERVANDO SU NOMBRE (62)
+MOVIDOS CONSERVANDO SU NOMBRE (63)
 -------------------------------------
   PERIODO 2025/BALANCE ANALITICO GANADERA ALBORADA 30092025 - PROVISORIO.xlsx
       → 101 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/BALANCE ANALITICO GANADERA ALBORADA 30092025 - PROVISORIO.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
@@ -193,6 +193,8 @@ MOVIDOS CONSERVANDO SU NOMBRE (62)
       → 101 LEGAL Y SOCIETARIO/ASAMBLEA 2026/ACTA DE ASAMBLEA NRO 26 EJERCICIO 2025.pdf   [Documento de asamblea]
   PERIODO 2026/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA 2026/BALANCE GENERAL Y ESTADO DE RESULTADO AÑO 2025.pdf
       → 101 LEGAL Y SOCIETARIO/ASAMBLEA 2026/BALANCE GENERAL Y ESTADO DE RESULTADO AÑO 2025.pdf   [Documento de asamblea]
+  PERIODO 2026/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA 2026/constancia drfs-006---comunicacion-asamblearia--8295564.pdf
+      → 101 LEGAL Y SOCIETARIO/ASAMBLEA 2026/constancia drfs-006---comunicacion-asamblearia--8295564.pdf   [Documento de asamblea]
   PERIODO 2026/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA 2026/DEPOSITO DE ACCIONES Y REGISTRO DE ASISTENCIA A ASAMBLEA GENERALES.pdf
       → 101 LEGAL Y SOCIETARIO/ASAMBLEA 2026/DEPOSITO DE ACCIONES Y REGISTRO DE ASISTENCIA A ASAMBLEA GENERALES.pdf   [Documento de asamblea]
   PERIODO 2026/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA 2026/drfs-006---comunicacion-asamblearia--8078382.pdf

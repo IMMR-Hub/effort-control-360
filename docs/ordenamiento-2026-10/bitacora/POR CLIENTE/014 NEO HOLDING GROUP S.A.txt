@@ -1,18 +1,18 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 014 NEO HOLDING GROUP S.A
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 1742 · Peso: 1685.6 MB · Subcarpetas con archivos: 138
+  Archivos: 1752 · Peso: 1756.0 MB · Subcarpetas con archivos: 140
 
 RESUMEN
-  Duplicados apartados (cuarentena): 149
-  Movidos y renombrados según el manual: 386
-  Movidos conservando su nombre: 863
+  Duplicados apartados (cuarentena): 156
+  Movidos y renombrados según el manual: 388
+  Movidos conservando su nombre: 864
   Sin cambios: 0
   A «014 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 342
   Enviados a otro cliente: 2 · Recibidos de otro cliente: 0
   Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 112
-  Nombres originales que no dicen qué documento son: 1174
+  Nombres originales que no dicen qué documento son: 1180
   Nombre o ubicación que contradice lo que dice el documento por dentro: 26
   Excel con vínculos (no se renombraron): 19
 
@@ -24,11 +24,11 @@ AL FINAL (archivos por carpeta de primer nivel)
   014 PERIODO 2023: 194
   014 PERIODO 2024: 299
   014 PERIODO 2025: 210
-  014 PERIODO 2026: 112
+  014 PERIODO 2026: 115
   014 TRIBUTARIO: 11
   014 ZZ A CLASIFICAR: 342
 
-DUPLICADOS APARTADOS (149)
+DUPLICADOS APARTADOS (156)
 ----------------------------
   DOCUMENTOS/NEO HOLDING/2021 y 2022 NEO HOLDING/3CYCLE/PURCHASE ORDERS/PO#147 3cycle usa.pdf
       igual a: DOCUMENTOS/NEO HOLDING/NEO ORDENES/PO/PO#147 3cycle usa.pdf  (Copia idéntica (mismo contenido byte por byte))
@@ -324,6 +324,20 @@ DUPLICADOS APARTADOS (149)
       igual a: DOCUMENTOS/NEO HOLDING/NEO ORDENES/SO #2 IINTERCABLE SRL.pdf  (Copia idéntica (mismo contenido byte por byte))
   extractos noelia armoa 2021/agosto 2021 dolares.jpg
       igual a: extractos noelia armoa 2021/agosto 2021.jpg  (Copia idéntica (mismo contenido byte por byte))
+  RRHH PARAGUAY/2026/ROCAS Q3/Acceso Sistema REI.docx
+      igual a: RRHH PARAGUAY/Acceso Sistema REI.docx  (Copia idéntica (mismo contenido byte por byte))
+  RRHH PARAGUAY/2026/ROCAS Q3/AGENDAMIENTO MEDICO 2026.xlsx
+      igual a: RRHH PARAGUAY/AGENDAMIENTO MEDICO 2026.xlsx  (Copia idéntica (mismo contenido byte por byte))
+  RRHH PARAGUAY/2026/ROCAS Q3/INSTRUCTIVO IPS - MTESS .docx
+      igual a: RRHH PARAGUAY/INSTRUCTIVO IPS - MTESS .docx  (Copia idéntica (mismo contenido byte por byte))
+  RRHH PARAGUAY/2026/ROCAS Q3/Proceso_de_contratacion_personal_Paraguay .docx
+      igual a: RRHH PARAGUAY/2026/ROCAS Q2/Proceso_de_contratacion_personal_Paraguay .docx  (Copia idéntica (mismo contenido byte por byte))
+  RRHH PARAGUAY/2026/ROCAS Q3/VIDEOS EXPLICATIVOS/COMO PROCESAR PLANILLA DE IPS .mp4
+      igual a: RRHH PARAGUAY/VIDEOS EXPLICATIVOS/COMO PROCESAR PLANILLA DE IPS .mp4  (Copia idéntica (mismo contenido byte por byte))
+  RRHH PARAGUAY/2026/ROCAS Q3/VIDEOS EXPLICATIVOS/ENTRADA Y SALIDA DE EMPLEADOS EN IPS .mp4
+      igual a: DOCUMENTOS/NEO HOLDING/2025/NOVIEMBRE 2025/1205 (3).mp4  (Copia idéntica (mismo contenido byte por byte))
+  RRHH PARAGUAY/2026/ROCAS Q3/VIDEOS EXPLICATIVOS/PLANILLA DE CALCULO DE SALARIO MENSUAL.mp4
+      igual a: DOCUMENTOS/NEO HOLDING/2025/NOVIEMBRE 2025/1205.mp4  (Copia idéntica (mismo contenido byte por byte))
   RRHH PARAGUAY/VIDEOS EXPLICATIVOS/ENTRADA Y SALIDA DE EMPLEADOS EN IPS .mp4
       igual a: DOCUMENTOS/NEO HOLDING/2025/NOVIEMBRE 2025/1205 (3).mp4  (Copia idéntica (mismo contenido byte por byte))
   RRHH PARAGUAY/VIDEOS EXPLICATIVOS/PLANILLA DE CALCULO DE SALARIO MENSUAL.mp4
@@ -470,7 +484,7 @@ NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (109)
   IMG-20251126-WA0054.jpg  →  IMG-20251126-WA0054.jpg
   Formulario Actualización De Datos Personales - Neo Holding (1).docx  →  Formulario Actualización De Datos Personales - Neo Holding.docx
 
-MOVIDOS Y RENOMBRADOS (386)
+MOVIDOS Y RENOMBRADOS (388)
 -----------------------------
   DOCUMENTOS/NEO HOLDING/2021 y 2022 NEO HOLDING/BALANCE INICIAL 2021  .xlsx
       → 014 PERIODO 2021/DOCUMENTOS CONTABLES/CIERRE 2021/BALANCE INICIAL 2021 - 2021 y 2022 NEO HOLDING.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
@@ -968,6 +982,9 @@ MOVIDOS Y RENOMBRADOS (386)
   DOCUMENTOS/NEO HOLDING/2026/SETIEMBRE 2026/Factura (8).pdf
       → 014 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/Factura.pdf   [Período tomado de la carpeta donde estaba]
   DOCUMENTOS/NEO HOLDING/2026/SETIEMBRE 2026/LIBRO COMPRAS 2026 NEO PY.pdf
+      → 014 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO COMPRAS 092026 NEO HOLDING GROUP SA VERSION ANTERIOR 1.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Hay una versión más reciente del mismo documento (LIBRO COMPRAS SET 2026 NEO PY.pdf): esta queda como versión anterior
+  DOCUMENTOS/NEO HOLDING/2026/SETIEMBRE 2026/LIBRO COMPRAS SET 2026 NEO PY.pdf
       → 014 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO COMPRAS 092026 NEO HOLDING GROUP SA.pdf   [Período tomado de la carpeta donde estaba]
   DOCUMENTOS/NEO HOLDING/2026/SETIEMBRE 2026/LIBRO VENTAS SETIEMBRE 2026 NEO PY.pdf
       → 014 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO VENTAS 092026 NEO HOLDING GROUP SA.pdf   [Período tomado de la carpeta donde estaba]
@@ -1249,6 +1266,8 @@ MOVIDOS Y RENOMBRADOS (386)
       → 014 PERIODO 2026/DOCUMENTOS LABORALES/MTESS/REPOSO KEVIN 13-14 ENERO 2026.jpeg   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
   RRHH PARAGUAY/2026/ROCAS Q2/Matriz de tipos de permiso y documentacion requerida .xlsx
       → 014 PERIODO 2026/DOCUMENTOS LABORALES/MTESS/Matriz de tipos de permiso y documentacion requerida.xlsx   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+  RRHH PARAGUAY/2026/ROCAS Q2/Proceso_de_contratacion_personal_Paraguay .docx
+      → 014 PERIODO 2026/DOCUMENTOS LABORALES/MTESS/Proceso_de_contratacion_personal_Paraguay.docx   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
   RRHH PARAGUAY/CONTRATOS DE TRABAJO/Adenda de Contrato Laborale JUAN GAMARRA .doc
       → 014 LEGAL Y SOCIETARIO/Adenda de Contrato Laborale JUAN GAMARRA.doc   [Contrato de trabajo (sin año: va con los contratos)]
   RRHH PARAGUAY/CONTRATOS DE TRABAJO/CONTRATO DE PRESTACIÓN DE SERVICIOS CRISTHIAN GARCIA .docx
@@ -1286,7 +1305,7 @@ MOVIDOS Y RENOMBRADOS (386)
   RRHH PARAGUAY/CONTRATOS DE TRABAJO/Recinsion de Contrato por ventas Wagner Montiel .pdf
       → 014 LEGAL Y SOCIETARIO/Recinsion de Contrato por ventas Wagner Montiel.pdf   [Contrato de trabajo (sin año: va con los contratos)]
 
-MOVIDOS CONSERVANDO SU NOMBRE (863)
+MOVIDOS CONSERVANDO SU NOMBRE (864)
 -------------------------------------
   DOCUMENTOS/NEO HOLDING/2022/BILLS ABRIL 2022/alquiler abril dpto c.jpg
       → 014 PERIODO 2022/DOCUMENTOS CONTABLES/04 ABRIL/alquiler abril dpto c.jpg   [Período tomado de la carpeta donde estaba]
@@ -2930,12 +2949,14 @@ MOVIDOS CONSERVANDO SU NOMBRE (863)
       → 014 PERIODO 2026/DOCUMENTOS LABORALES/MTESS/CERTIFICADO LABORAL WAGNER MONTIEL.pdf   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
   RRHH PARAGUAY/2026/Esquema_Salario_Minimo_Paraguay_2026.xlsx
       → 014 PERIODO 2026/DOCUMENTOS LABORALES/MTESS/Esquema_Salario_Minimo_Paraguay_2026.xlsx   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
-  RRHH PARAGUAY/2026/Guía del proceso de contratación de personal en Paraguay.docx
-      → 014 PERIODO 2026/DOCUMENTOS LABORALES/MTESS/Guía del proceso de contratación de personal en Paraguay.docx   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
   RRHH PARAGUAY/2026/INSTRUCTIVO_IPS_MTESS_paso_a_paso.docx
       → 014 PERIODO 2026/DOCUMENTOS LABORALES/MTESS/INSTRUCTIVO_IPS_MTESS_paso_a_paso.docx   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+  RRHH PARAGUAY/2026/LIQUIDACION DE HABERES KEVIN MONGES.pdf
+      → 014 PERIODO 2026/DOCUMENTOS LABORALES/MTESS/LIQUIDACION DE HABERES KEVIN MONGES.pdf   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
   RRHH PARAGUAY/2026/Nota de rectificacion de planilla enero 2026.docx
       → 014 PERIODO 2026/DOCUMENTOS LABORALES/MTESS/Nota de rectificacion de planilla enero 2026.docx   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+  RRHH PARAGUAY/2026/Renuncia Kevin Monges.docx
+      → 014 PERIODO 2026/DOCUMENTOS LABORALES/MTESS/Renuncia Kevin Monges.docx   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
   RRHH PARAGUAY/2026/Reposo Rolando Rivarola mayo 2026.pdf
       → 014 PERIODO 2026/DOCUMENTOS LABORALES/MTESS/Reposo Rolando Rivarola mayo 2026.pdf   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
   RRHH PARAGUAY/2026/RESPOSO KEVIN 16 - 17 ENERO 2026.jpeg
@@ -3427,7 +3448,7 @@ EXCEL CON VÍNCULOS (se movieron sin renombrar) (19)
   DOCUMENTOS/NEO HOLDING/2024/FEBRERO 2024/NEO PARAGUAY Payroll  Febrero- 2024.xlsx  →  014 PERIODO 2024/DOCUMENTOS CONTABLES/02 FEBRERO/NEO PARAGUAY Payroll  Febrero- 2024.xlsx  [Excel con 1 vínculo(s) a otros archivos]
   DOCUMENTOS/NEO HOLDING/2024/MARZO 2024/NEO PARAGUAY Payroll Marzo - 2024.xlsx  →  014 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/NEO PARAGUAY Payroll Marzo - 2024.xlsx  [Excel con 1 vínculo(s) a otros archivos]
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (152)
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (154)
 --------------------------------------------------
   DOCUMENTOS/NEO HOLDING/2021 y 2022 NEO HOLDING/3CYCLE/PURCHASE ORDERS
   DOCUMENTOS/NEO HOLDING/2021 y 2022 NEO HOLDING/3CYCLE/SALES ORDERS
@@ -3577,6 +3598,8 @@ CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (152)
   RRHH PARAGUAY/2025/RECIBOS DE SALARIO
   RRHH PARAGUAY/2025
   RRHH PARAGUAY/2026/ROCAS Q2
+  RRHH PARAGUAY/2026/ROCAS Q3/VIDEOS EXPLICATIVOS
+  RRHH PARAGUAY/2026/ROCAS Q3
   RRHH PARAGUAY/2026
   RRHH PARAGUAY/CONTRATOS DE TRABAJO
   RRHH PARAGUAY/VIDEOS EXPLICATIVOS

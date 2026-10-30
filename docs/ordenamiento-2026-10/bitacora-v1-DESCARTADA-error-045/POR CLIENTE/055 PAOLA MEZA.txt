@@ -1,0 +1,117 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 055 PAOLA MEZA
+Fecha: 20/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+
+AL INICIO
+  Archivos: 30 · Peso: 5.5 MB · Subcarpetas con archivos: 7
+
+RESUMEN
+  Duplicados apartados (cuarentena): 0
+  Movidos y renombrados según el manual: 18
+  Movidos conservando su nombre: 12
+  Sin cambios: 0
+  A «055 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 0
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 1
+  Nombres originales que no dicen qué documento son: 23
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  055 PERIODO 2024: 14
+  055 PERIODO 2025: 16
+
+DUPLICADOS APARTADOS: ninguno
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (1)
+---------------------------------------------------------
+  WhatsApp Image 2026-05-05 at 08.04.01.jpeg  →  WhatsApp Image 2026-05-05 at 08.04.01.jpeg
+
+MOVIDOS Y RENOMBRADOS (18)
+-----------------------------
+  PERIODO 2024/DOCUMENTOS CONTABLES/DetalleComprobantesRegistrados - 2026-04-24T111022.289.xlsx
+      → 055 PERIODO 2024/DOCUMENTOS CONTABLES/11 NOVIEMBRE/RG COMPRAS 112024 PAOLA MEZA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 11/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/DetalleComprobantesRegistrados - 2026-04-24T111105.256.xlsx
+      → 055 PERIODO 2024/DOCUMENTOS CONTABLES/12 DICIEMBRE/RG COMPRAS 122024 PAOLA MEZA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 12/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP 2024/rg90 compras paola 2024.xlsx
+      → 055 PERIODO 2024/DOCUMENTOS CONTABLES/01 ENERO/RG COMPRAS 012024 PAOLA MEZA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 01/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP 2024/RG90 IRP COMPRAS OCTUBRE 2024 PAOLA.xlsx
+      → 055 PERIODO 2024/DOCUMENTOS CONTABLES/10 OCTUBRE/RG COMPRAS 102024 PAOLA MEZA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 10/2024]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/JUNIO 2024/FACT  DE PRESTAMO.pdf
+      → 055 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/FACT DE PRESTAMO.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS VARIOS/solicitud de baja iva  paola.pdf
+      → 055 PERIODO 2024/DOCUMENTOS VARIOS/solicitud de baja iva paola.pdf   [Estaba en DOCUMENTOS VARIOS]
+  PERIODO 2025/RG/DetalleComprobantesRegistrados - 2026-04-21T150030.717.xlsx
+      → 055 PERIODO 2025/DOCUMENTOS CONTABLES/01 ENERO/RG COMPRAS 012025 PAOLA MEZA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 01/2025]
+  PERIODO 2025/RG/DetalleComprobantesRegistrados - 2026-04-21T151010.997.xlsx
+      → 055 PERIODO 2025/DOCUMENTOS CONTABLES/02 FEBRERO/RG COMPRAS 022025 PAOLA MEZA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 02/2025]
+  PERIODO 2025/RG/DetalleComprobantesRegistrados - 2026-04-21T152518.423.xlsx
+      → 055 PERIODO 2025/DOCUMENTOS CONTABLES/03 MARZO/RG COMPRAS 032025 PAOLA MEZA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 03/2025]
+  PERIODO 2025/RG/DetalleComprobantesRegistrados - 2026-04-21T152758.773.xlsx
+      → 055 PERIODO 2025/DOCUMENTOS CONTABLES/04 ABRIL/RG COMPRAS 042025 PAOLA MEZA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 04/2025]
+  PERIODO 2025/RG/DetalleComprobantesRegistrados - 2026-04-21T153156.482.xlsx
+      → 055 PERIODO 2025/DOCUMENTOS CONTABLES/05 MAYO/RG COMPRAS 052025 PAOLA MEZA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 05/2025]
+  PERIODO 2025/RG/DetalleComprobantesRegistrados - 2026-04-22T153307.313.xlsx
+      → 055 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/RG COMPRAS 062025 PAOLA MEZA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 06/2025]
+  PERIODO 2025/RG/DetalleComprobantesRegistrados - 2026-04-22T153351.575.xlsx
+      → 055 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/RG COMPRAS 072025 PAOLA MEZA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 07/2025]
+  PERIODO 2025/RG/DetalleComprobantesRegistrados - 2026-04-22T153500.220.xlsx
+      → 055 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO/RG COMPRAS 082025 PAOLA MEZA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 08/2025]
+  PERIODO 2025/RG/DetalleComprobantesRegistrados - 2026-04-22T153550.438.xlsx
+      → 055 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092025 PAOLA MEZA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2025]
+  PERIODO 2025/RG/DetalleComprobantesRegistrados - 2026-04-22T153626.880.xlsx
+      → 055 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/RG COMPRAS 102025 PAOLA MEZA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 10/2025]
+  PERIODO 2025/RG/DetalleComprobantesRegistrados - 2026-04-22T153701.836.xlsx
+      → 055 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/RG COMPRAS 112025 PAOLA MEZA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 11/2025]
+  PERIODO 2025/RG/DetalleComprobantesRegistrados - 2026-04-22T153746.977.xlsx
+      → 055 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/RG COMPRAS 122025 PAOLA MEZA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 12/2025]
+
+MOVIDOS CONSERVANDO SU NOMBRE (12)
+-------------------------------------
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP 2024/DETERMINACIÓN DEL IRP 2024 PAOLA MEZA.pdf
+      → 055 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/DETERMINACIÓN DEL IRP 2024 PAOLA MEZA.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP 2024/DETERMINACIÓN DEL IRP A OCTUBRE OBS FALTA INGRESOS PAOLA MEZA 2024.pdf
+      → 055 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/DETERMINACIÓN DEL IRP A OCTUBRE OBS FALTA INGRESOS PAOLA MEZA 2024.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP 2024/Determinación del IRP RSP 2024 PAOLA MEZA.pdf
+      → 055 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/Determinación del IRP RSP 2024 PAOLA MEZA.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP 2024/LIQ IRP 2024 I.xlsx
+      → 055 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/LIQ IRP 2024 I.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP 2024/LIQ IRP A OCTUBRE 2024.xlsx
+      → 055 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/LIQ IRP A OCTUBRE 2024.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/JUNIO 2024/FACT DE PRESTAMO JULIO.pdf
+      → 055 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/FACT DE PRESTAMO JULIO.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/JUNIO 2024/fact de prestamo set.pdf
+      → 055 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/fact de prestamo set.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/SETIEMBRE 2024/ESTADO DE CUENTA DE PAOLA MEZA.pdf
+      → 055 PERIODO 2024/DOCUMENTOS CONTABLES/09 SETIEMBRE/ESTADO DE CUENTA DE PAOLA MEZA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/IRP/Determinación del IRP RSP 2025 PAOLA MEZA.pdf
+      → 055 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/Determinación del IRP RSP 2025 PAOLA MEZA.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/IRP/DETERMINACIÓN IRP RSP 2025 PAOLA MEZA.pdf
+      → 055 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/DETERMINACIÓN IRP RSP 2025 PAOLA MEZA.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/IRP/LIQ IRP 2025 PAOLA MEZA.xlsx
+      → 055 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/LIQ IRP 2025 PAOLA MEZA.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/IRP/WhatsApp Image 2026-05-05 at 08.04.01.jpeg
+      → 055 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/WhatsApp Image 2026-05-05 at 08.04.01.jpeg   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «055 ZZ A CLASIFICAR» (para que lo ubique una persona): ninguno
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (11)
+--------------------------------------------------
+  PERIODO 2024/DOCUMENTOS CONTABLES/IRP 2024
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/JUNIO 2024
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/OCTUBRE 2024
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/SETIEMBRE 2024
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES
+  PERIODO 2024/DOCUMENTOS CONTABLES
+  PERIODO 2024/DOCUMENTOS VARIOS
+  PERIODO 2024
+  PERIODO 2025/IRP
+  PERIODO 2025/RG
+  PERIODO 2025

@@ -1,13 +1,13 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 085 GESTION AGROPECUARIA SRL
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 653 · Peso: 151.9 MB · Subcarpetas con archivos: 90
+  Archivos: 654 · Peso: 152.3 MB · Subcarpetas con archivos: 90
 
 RESUMEN
   Duplicados apartados (cuarentena): 5
   Movidos y renombrados según el manual: 185
-  Movidos conservando su nombre: 408
+  Movidos conservando su nombre: 409
   Sin cambios: 0
   A «085 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 55
   Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
@@ -17,7 +17,7 @@ RESUMEN
   Excel con vínculos (no se renombraron): 3
 
 AL FINAL (archivos por carpeta de primer nivel)
-  085 LEGAL Y SOCIETARIO: 35
+  085 LEGAL Y SOCIETARIO: 36
   085 PERIODO 2022: 8
   085 PERIODO 2023: 16
   085 PERIODO 2024: 26
@@ -443,7 +443,7 @@ MOVIDOS Y RENOMBRADOS (185)
   DOCUMENTOS VARIOS/PERIODO 2025/SOLICITUDES/Cuota  7 fracc IRE.pdf
       → 085 PERIODO 2025/DOCUMENTOS VARIOS/SOLICITUDES/Cuota 7 fracc IRE.pdf   [Parte de un pedido o paquete de documentos («SOLICITUDES»): se conserva junto en DOCUMENTOS VARIOS]
 
-MOVIDOS CONSERVANDO SU NOMBRE (408)
+MOVIDOS CONSERVANDO SU NOMBRE (409)
 -------------------------------------
   DOCUMENTOS CONTABLES/PERIODO 2023/EEFF 2023/80112294NE2023.pdf
       → 085 PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/80112294NE2023.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
@@ -1149,6 +1149,8 @@ MOVIDOS CONSERVANDO SU NOMBRE (408)
       → 085 PERIODO 2026/DOCUMENTOS VARIOS/BOLETA DE PAGO/FAC. IRE 2-6 GESTION AGROPECUARIA.pdf   [Estaba en DOCUMENTOS VARIOS]
   DOCUMENTOS LEGALES/ACTA DE REUNION 2025.pdf
       → 085 LEGAL Y SOCIETARIO/ACTA DE REUNION 2025.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES/Constancia de BF y EJ.pdf
+      → 085 LEGAL Y SOCIETARIO/Constancia de BF y EJ.pdf   [Documento legal o societario]
   DOCUMENTOS LEGALES/ESTATUTO GESTION AGROPECUARIA S.R.L. firmado pdf.pdf
       → 085 LEGAL Y SOCIETARIO/ESTATUTO GESTION AGROPECUARIA S.R.L. firmado pdf.pdf   [Documento legal o societario]
   DOCUMENTOS LEGALES/PERIODO 2020/ESTATUTO GESTION AGROPECUARIA S.R.L.pdf

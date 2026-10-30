@@ -1,0 +1,66 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 064 ANGELA MIGUELA FLORES
+Fecha: 20/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+
+AL INICIO
+  Archivos: 11 · Peso: 3.6 MB · Subcarpetas con archivos: 0
+
+RESUMEN
+  Duplicados apartados (cuarentena): 0
+  Movidos y renombrados según el manual: 2
+  Movidos conservando su nombre: 9
+  Sin cambios: 0
+  A «064 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 0
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 0
+  Nombres originales que no dicen qué documento son: 10
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  064 PERIODO 2025: 5
+  064 PERIODO 2026: 5
+  064 TRIBUTARIO: 1
+
+DUPLICADOS APARTADOS: ninguno
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron): ninguno
+
+MOVIDOS Y RENOMBRADOS (2)
+-----------------------------
+  IVA ABRIL 2026.pdf
+      → 064 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/DDJJ IVA 042026 ANGELA MIGUELA FLORES.pdf   [Declaración leída por dentro: formulario 120, período 04/2026]
+  IVA MAYO 2026 .pdf
+      → 064 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/IVA MAYO 2026.pdf   [Período tomado del nombre del archivo]
+
+MOVIDOS CONSERVANDO SU NOMBRE (9)
+-------------------------------------
+  CCT MIGUELA.pdf
+      → 064 TRIBUTARIO/CCT MIGUELA.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  IVA DIC 2025.pdf
+      → 064 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/IVA DIC 2025.pdf   [Período tomado del nombre del archivo]
+  IVA ENERO 2026.pdf
+      → 064 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/IVA ENERO 2026.pdf   [Período tomado del nombre del archivo]
+  IVA FEB 2025.pdf
+      → 064 PERIODO 2025/DOCUMENTOS CONTABLES/02 FEBRERO/IVA FEB 2025.pdf   [Período tomado del nombre del archivo]
+  IVA JUNIO 2026.pdf
+      → 064 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/IVA JUNIO 2026.pdf   [Período tomado del nombre del archivo]
+  IVA MARZO 2026.pdf
+      → 064 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/IVA MARZO 2026.pdf   [Período tomado del nombre del archivo]
+  IVA NOV 2025.pdf
+      → 064 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/IVA NOV 2025.pdf   [Período tomado del nombre del archivo]
+  IVA OCT 2025.pdf
+      → 064 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/IVA OCT 2025.pdf   [Período tomado del nombre del archivo]
+  IVA SET 2025.pdf
+      → 064 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/IVA SET 2025.pdf   [Período tomado del nombre del archivo]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «064 ZZ A CLASIFICAR» (para que lo ubique una persona): ninguno
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON: ninguno

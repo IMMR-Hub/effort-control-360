@@ -1,13 +1,13 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 043 SIPAR S.A
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 250 · Peso: 431.2 MB · Subcarpetas con archivos: 25
+  Archivos: 251 · Peso: 431.4 MB · Subcarpetas con archivos: 25
 
 RESUMEN
   Duplicados apartados (cuarentena): 11
   Movidos y renombrados según el manual: 68
-  Movidos conservando su nombre: 117
+  Movidos conservando su nombre: 118
   Sin cambios: 0
   A «043 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 54
   Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
@@ -17,7 +17,7 @@ RESUMEN
   Excel con vínculos (no se renombraron): 3
 
 AL FINAL (archivos por carpeta de primer nivel)
-  043 LEGAL Y SOCIETARIO: 103
+  043 LEGAL Y SOCIETARIO: 104
   043 PERIODO 2023: 2
   043 PERIODO 2024: 8
   043 PERIODO 2025: 40
@@ -200,7 +200,7 @@ MOVIDOS Y RENOMBRADOS (68)
   2026/DOCUMENTOS LEGALES/SIARA/registro de accionistas sipar .pdf
       → 043 LEGAL Y SOCIETARIO/registro de accionistas sipar.pdf   [Documento legal o societario]
 
-MOVIDOS CONSERVANDO SU NOMBRE (117)
+MOVIDOS CONSERVANDO SU NOMBRE (118)
 -------------------------------------
   2024/80012742_REC_202402.xlsx
       → 043 PERIODO 2024/DOCUMENTOS CONTABLES/02 FEBRERO/80012742_REC_202402.xlsx   [Archivo de sustento de una rectificativa, tal como lo genera el SET (no se renombra)]
@@ -374,6 +374,8 @@ MOVIDOS CONSERVANDO SU NOMBRE (117)
       → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2026/Asistencia de accionistas.pdf   [Documento de asamblea]
   2026/DOCUMENTOS LEGALES/ASAMBLEA 2026/borrador asamblea SIPAR 2026.docx
       → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2026/borrador asamblea SIPAR 2026.docx   [Documento de asamblea]
+  2026/DOCUMENTOS LEGALES/ASAMBLEA 2026/Constancia drfs-006---comunicacion-asamblearia--8295568.pdf
+      → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2026/Constancia drfs-006---comunicacion-asamblearia--8295568.pdf   [Documento de asamblea]
   2026/DOCUMENTOS LEGALES/ASAMBLEA 2026/Convocatoria de asamblea 2026.doc
       → 043 LEGAL Y SOCIETARIO/ASAMBLEA 2026/Convocatoria de asamblea 2026.doc   [Documento de asamblea]
   2026/DOCUMENTOS LEGALES/ASAMBLEA 2026/Factura electrónica 001-003-0102249.pdf

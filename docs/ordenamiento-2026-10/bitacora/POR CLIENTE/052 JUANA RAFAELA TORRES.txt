@@ -1,18 +1,18 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 052 JUANA RAFAELA TORRES
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 218 · Peso: 175.0 MB · Subcarpetas con archivos: 42
+  Archivos: 225 · Peso: 175.7 MB · Subcarpetas con archivos: 44
 
 RESUMEN
   Duplicados apartados (cuarentena): 0
-  Movidos y renombrados según el manual: 100
-  Movidos conservando su nombre: 113
+  Movidos y renombrados según el manual: 105
+  Movidos conservando su nombre: 115
   Sin cambios: 0
   A «052 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 5
   Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
   Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 35
-  Nombres originales que no dicen qué documento son: 60
+  Nombres originales que no dicen qué documento son: 61
   Nombre o ubicación que contradice lo que dice el documento por dentro: 0
   Excel con vínculos (no se renombraron): 0
 
@@ -20,8 +20,8 @@ AL FINAL (archivos por carpeta de primer nivel)
   052 PERIODO 2023: 1
   052 PERIODO 2024: 96
   052 PERIODO 2025: 59
-  052 PERIODO 2026: 42
-  052 TRIBUTARIO: 15
+  052 PERIODO 2026: 48
+  052 TRIBUTARIO: 16
   052 ZZ A CLASIFICAR: 5
 
 DUPLICADOS APARTADOS: ninguno
@@ -66,7 +66,7 @@ NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (35)
   WhatsApp Image 2026-09-24 at 08.47.52.jpeg  →  WhatsApp Image 2026-09-24 at 08.47.52 - AGOSTO 2026.jpeg
   WhatsApp Image 2026-09-24 at 08.47.53.jpeg  →  WhatsApp Image 2026-09-24 at 08.47.53.jpeg
 
-MOVIDOS Y RENOMBRADOS (100)
+MOVIDOS Y RENOMBRADOS (105)
 -----------------------------
   PERIODO 2023/Copia de LIQ IRP 2023 JUANA TORRES.xlsx
       → 052 PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/LIQ IRP 2023 JUANA TORRES.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
@@ -277,8 +277,18 @@ MOVIDOS Y RENOMBRADOS (100)
       → 052 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/WhatsApp Image 2026-09-24 at 08.47.52.jpeg   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/08 AGOSTO/WhatsApp Image 2026-09-24 at 08.47.52.jpeg
       → 052 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/WhatsApp Image 2026-09-24 at 08.47.52 - AGOSTO 2026.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/09 SETIEMBRE/120-09-2026.pdf
+      → 052 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DDJJ IVA 092026 JUANA RAFAELA TORRES.pdf   [Declaración leída por dentro: formulario 120, período 09/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/09 SETIEMBRE/LC.pdf
+      → 052 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO COMPRAS 092026 JUANA RAFAELA TORRES.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/09 SETIEMBRE/LV.pdf
+      → 052 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO VENTAS 092026 JUANA RAFAELA TORRES.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/09 SETIEMBRE/RG90 COMPRAS SETIEMBRE.xlsx
+      → 052 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092026 JUANA RAFAELA TORRES.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/09 SETIEMBRE/RG90 VENTAS SETIEMBRE.xlsx
+      → 052 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG VENTAS 092026 JUANA RAFAELA TORRES.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 09/2026]
 
-MOVIDOS CONSERVANDO SU NOMBRE (113)
+MOVIDOS CONSERVANDO SU NOMBRE (115)
 -------------------------------------
   PERIODO 2024/DOCUMENTOS CONTABLES/IRP 2024/boleta de pago irp juana.pdf
       → 052 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/boleta de pago irp juana.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
@@ -506,6 +516,10 @@ MOVIDOS CONSERVANDO SU NOMBRE (113)
       → 052 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/WhatsApp Image 2026-08-25 at 09.36.42.jpeg   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/08 AGOSTO/WhatsApp Image 2026-09-24 at 08.47.53.jpeg
       → 052 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/WhatsApp Image 2026-09-24 at 08.47.53.jpeg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/09 SETIEMBRE/CCT.pdf
+      → 052 TRIBUTARIO/CCT.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/VARIOS/planilla de control IVA E IRP.xlsx
+      → 052 PERIODO 2026/DOCUMENTOS CONTABLES/CIERRE 2026/planilla de control IVA E IRP.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
 
 ENVIADOS A OTRO CLIENTE: ninguno
 
@@ -521,7 +535,7 @@ A «052 ZZ A CLASIFICAR» (para que lo ubique una persona) (5)
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (55)
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (57)
 --------------------------------------------------
   PERIODO 2023/DOCUMENTOS CONTABLES
   PERIODO 2023
@@ -575,6 +589,8 @@ CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (55)
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/06 JUNIO
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/07 JULIO
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/08 AGOSTO
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/09 SETIEMBRE
   PERIODO 2026/DOCUMENTOS CONTABLES/MES
+  PERIODO 2026/DOCUMENTOS CONTABLES/VARIOS
   PERIODO 2026/DOCUMENTOS CONTABLES
   PERIODO 2026

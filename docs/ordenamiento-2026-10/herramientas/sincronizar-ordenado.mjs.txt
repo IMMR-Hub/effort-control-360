@@ -1,0 +1,50 @@
+// Lleva D:\ORDENADO (en su estructura ORIGINAL, con la prueba deshecha) al estado actual del OneDrive, usando el
+// informe de cambios de actualizar.mjs. Copia desde la FOTO actualizada (no baja nada de internet).
+// Nunca borra: lo que ya no está en OneDrive, o la versión vieja de un archivo modificado, se aparta a
+// D:\ORDENADO\_FUERA DE ONEDRIVE <fecha>\ con su ruta.
+// Uso: node sincronizar-ordenado.mjs <fecha AAAA-MM-DD> [--aplicar]
+import fs from 'node:fs';
+import path from 'node:path';
+
+const FECHA = process.argv[2];
+const APLICAR = process.argv.includes('--aplicar');
+const FOTO = path.resolve('D:/COPIA ONEDRIVE EFFORT 2026-10-19');
+const ORD = path.resolve('D:/ORDENADO');
+const APARTE = path.join(ORD, `_FUERA DE ONEDRIVE ${FECHA}`);
+const dentro = (base, rel) => { const abs = path.resolve(base, rel); if (!abs.startsWith(base + path.sep)) throw new Error(`BLOQUEADO: ${abs}`); return abs; };
+// OneDrive cambia mientras se trabaja: se unen los informes de todas las pasadas del día (guardados acá).
+const cambios = { nuevos: [], modificados: [], movidosORenombrados: [], yaNoEstanEnOneDrive: [] };
+for (const f of fs.readdirSync('.').filter((x) => x.startsWith(`cambios-${FECHA}`) && x.endsWith('.json'))) {
+  const c = JSON.parse(fs.readFileSync(f, 'utf8')); for (const k of Object.keys(cambios)) cambios[k].push(...c[k]);
+}
+const estado = JSON.parse(fs.readFileSync(path.join(FOTO, '_registro', `estado-onedrive-${FECHA}.json`), 'utf8'));
+
+const apartar = new Set([...cambios.yaNoEstanEnOneDrive.map((x) => x.ruta), ...cambios.movidosORenombrados.map((x) => x.antes), ...cambios.modificados.map((x) => x.ruta)]);
+const enOneDrive = new Set(estado.map((x) => x.ruta));
+const traer = new Set([...cambios.nuevos.map((x) => x.ruta), ...cambios.movidosORenombrados.map((x) => x.ahora), ...cambios.modificados.map((x) => x.ruta)].filter((r) => enOneDrive.has(r)));
+let apartados = 0, traidos = 0; const problemas = [];
+for (const rel of apartar) {
+  const de = dentro(ORD, rel);
+  if (!fs.existsSync(de)) continue;
+  let a = dentro(APARTE, rel); let n = 1; while (fs.existsSync(a)) a = dentro(APARTE, `${rel} (${++n})`);
+  if (APLICAR) { fs.mkdirSync(path.dirname(a), { recursive: true }); fs.renameSync(de, a); fs.appendFileSync('sincronizacion.jsonl', JSON.stringify({ apartado: rel, a: path.relative(ORD, a) }) + '\n'); }
+  apartados++;
+}
+for (const rel of traer) {
+  const src = dentro(FOTO, rel), dst = dentro(ORD, rel);
+  if (!fs.existsSync(src)) { problemas.push(`no está en la foto: ${rel}`); continue; }
+  if (fs.existsSync(dst)) { problemas.push(`ocupado en ORDENADO (no se pisa): ${rel}`); continue; }
+  if (APLICAR) { fs.mkdirSync(path.dirname(dst), { recursive: true }); fs.copyFileSync(src, dst, fs.constants.COPYFILE_EXCL); const t = fs.statSync(src).mtime; fs.utimesSync(dst, t, t); fs.appendFileSync('sincronizacion.jsonl', JSON.stringify({ traido: rel }) + '\n'); }
+  traidos++;
+}
+// Comprobación: ORDENADO (sin las carpetas de servicio) tiene exactamente los archivos del OneDrive actual, con su peso.
+let bien = 0; const mal = [];
+if (APLICAR) {
+  const quedan = new Map();
+  const ir = (d) => { for (const e of fs.readdirSync(d, { withFileTypes: true })) { const abs = path.join(d, e.name); const rel = path.relative(ORD, abs).replace(/\\/g, '/'); if (/^_/.test(rel)) continue; e.isDirectory() ? ir(abs) : quedan.set(rel, fs.statSync(abs).size); } };
+  ir(ORD);
+  for (const a of estado) { if (quedan.get(a.ruta) === a.tam) bien++; else mal.push(`falta o pesa distinto: ${a.ruta}`); quedan.delete(a.ruta); }
+  for (const r of quedan.keys()) mal.push(`sobra (no está en OneDrive): ${r}`);
+}
+console.log(`${APLICAR ? '' : 'SIMULACIÓN · '}apartados: ${apartados} · traídos de la foto: ${traidos} · problemas: ${problemas.length}${APLICAR ? ` · coinciden con OneDrive: ${bien}/${estado.length} · diferencias: ${mal.length}` : ''}`);
+for (const p of [...problemas, ...mal].slice(0, 15)) console.log('  ', p);

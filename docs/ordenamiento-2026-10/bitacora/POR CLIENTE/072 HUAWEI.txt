@@ -1,18 +1,18 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 072 HUAWEI
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 54 · Peso: 31.6 MB · Subcarpetas con archivos: 18
+  Archivos: 56 · Peso: 31.8 MB · Subcarpetas con archivos: 18
 
 RESUMEN
   Duplicados apartados (cuarentena): 7
   Movidos y renombrados según el manual: 1
-  Movidos conservando su nombre: 39
+  Movidos conservando su nombre: 41
   Sin cambios: 0
   A «072 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 7
   Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
   Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 1
-  Nombres originales que no dicen qué documento son: 20
+  Nombres originales que no dicen qué documento son: 21
   Nombre o ubicación que contradice lo que dice el documento por dentro: 1
   Excel con vínculos (no se renombraron): 0
 
@@ -20,7 +20,7 @@ AL FINAL (archivos por carpeta de primer nivel)
   072 LEGAL Y SOCIETARIO: 1
   072 PERIODO 2024: 19
   072 PERIODO 2025: 12
-  072 PERIODO 2026: 8
+  072 PERIODO 2026: 10
   072 ZZ A CLASIFICAR: 7
 
 DUPLICADOS APARTADOS (7)
@@ -53,7 +53,7 @@ MOVIDOS Y RENOMBRADOS (1)
   PERIODO 2024/MAYO 2024/FACTURA 282  PO293.pdf
       → 072 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO/FACTURA 282 PO293.pdf   [Período tomado de la carpeta donde estaba]
 
-MOVIDOS CONSERVANDO SU NOMBRE (39)
+MOVIDOS CONSERVANDO SU NOMBRE (41)
 -------------------------------------
   PERIODO 2024/ABRIL 2024/FACTURA 257 HUAWEI.pdf
       → 072 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA 257 HUAWEI.pdf   [Período tomado de la carpeta donde estaba]
@@ -116,6 +116,8 @@ MOVIDOS CONSERVANDO SU NOMBRE (39)
       → 072 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/FACTURA 685-HUAWEI TECHNOLOGIES PY S.A.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2025/OCTUBRE 2025/Factura 001-001-0000604 PO 668.pdf
       → 072 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/Factura 001-001-0000604 PO 668.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FACTURACION EFFORT/Factura 1317 PO 958.pdf
+      → 072 PERIODO 2026/DOCUMENTOS VARIOS/FACTURACION EFFORT/Factura 1317 PO 958.pdf   [Honorarios que EFFORT le factura al cliente]
   PERIODO 2026/DOCUMENTOS CONTABLES/FACTURACION EFFORT/FACTURA 731.pdf
       → 072 PERIODO 2026/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA 731.pdf   [Honorarios que EFFORT le factura al cliente]
   PERIODO 2026/DOCUMENTOS CONTABLES/FACTURACION EFFORT/FACTURA 732.pdf
@@ -132,6 +134,8 @@ MOVIDOS CONSERVANDO SU NOMBRE (39)
       → 072 PERIODO 2026/DOCUMENTOS VARIOS/FACTURACION EFFORT/FCR 1091 PO 900.pdf   [Honorarios que EFFORT le factura al cliente]
   PERIODO 2026/DOCUMENTOS CONTABLES/FACTURACION EFFORT/FCR 1228 PO 927.pdf
       → 072 PERIODO 2026/DOCUMENTOS VARIOS/FACTURACION EFFORT/FCR 1228 PO 927.pdf   [Honorarios que EFFORT le factura al cliente]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FACTURACION EFFORT/PO 958 SET.pdf
+      → 072 PERIODO 2026/DOCUMENTOS VARIOS/FACTURACION EFFORT/PO 958 SET.pdf   [Honorarios que EFFORT le factura al cliente]
   PERIODO 2026/DOCUMENTOS LEGALES Y SOCIETARIOS/Contrato Huawei 2026.pdf
       → 072 LEGAL Y SOCIETARIO/Contrato Huawei 2026.pdf   [Documento legal o societario]
 

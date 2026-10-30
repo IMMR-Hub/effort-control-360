@@ -1,0 +1,88 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 129 LILIAN CORTESE
+Fecha: 20/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+
+AL INICIO
+  Archivos: 15 · Peso: 2.4 MB · Subcarpetas con archivos: 4
+
+RESUMEN
+  Duplicados apartados (cuarentena): 0
+  Movidos y renombrados según el manual: 10
+  Movidos conservando su nombre: 2
+  Sin cambios: 0
+  A «129 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 3
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 0
+  Nombres originales que no dicen qué documento son: 1
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 3
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  129 LEGAL Y SOCIETARIO: 1
+  129 PERIODO 2026: 9
+  129 TRIBUTARIO: 2
+  129 ZZ A CLASIFICAR: 3
+
+DUPLICADOS APARTADOS: ninguno
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO (3)
+------------------------------------------------------
+  DOCUMENTOS CONTABLES/MES/7 JULIO/LIBRO COMPRAS 072026 - LILIAN CORTESE.pdf  →  El nombre dice 07/2026 y la carpeta 07/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/8 AGOSTO/LIBRO COMPRAS 072026 - LILIAN CORTESE.pdf  →  El nombre dice 07/2026 y la carpeta 08/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/9 SEPTIEMBRE/LIBRO COMPRAS 092026.pdf  →  El nombre dice 09/2026 y la carpeta 09/?: se respetó la carpeta
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron): ninguno
+
+MOVIDOS Y RENOMBRADOS (10)
+-----------------------------
+  DOCUMENTOS CONTABLES/MES/7 JULIO/DDJJ 072026 - LILIAN CORTESE.pdf
+      → 129 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/DDJJ IVA 072026 LILIAN CORTESE.pdf   [Declaración leída por dentro: formulario 120, período 07/2026]
+  DOCUMENTOS CONTABLES/MES/7 JULIO/LIBRO COMPRAS 072026 - LILIAN CORTESE.pdf
+      → 129 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/LIBRO COMPRAS 072026 LILIAN CORTESE.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 07/2026 y la carpeta 07/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/7 JULIO/RG90 COMPRAS 072026 - LILIAN CORTESE.xlsx
+      → 129 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/RG COMPRAS 072026 LILIAN CORTESE.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 07/2026]
+  DOCUMENTOS CONTABLES/MES/8 AGOSTO/DDJJ 082026 - LILIAN CORTESE.pdf
+      → 129 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/DDJJ IVA 082026 LILIAN CORTESE.pdf   [Declaración leída por dentro: formulario 120, período 08/2026]
+  DOCUMENTOS CONTABLES/MES/8 AGOSTO/LIBRO COMPRAS 072026 - LILIAN CORTESE.pdf
+      → 129 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/LIBRO COMPRAS 082026 LILIAN CORTESE.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 07/2026 y la carpeta 08/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/8 AGOSTO/RG90 COMPRAS 082026 - LILIAN CORTESE.xlsx
+      → 129 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG COMPRAS 082026 LILIAN CORTESE.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 08/2026]
+  DOCUMENTOS CONTABLES/MES/9 SEPTIEMBRE/DDJJ 092026.pdf
+      → 129 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DDJJ IVA 092026 LILIAN CORTESE.pdf   [Declaración leída por dentro: formulario 120, período 09/2026]
+  DOCUMENTOS CONTABLES/MES/9 SEPTIEMBRE/LIBRO COMPRAS 092026.pdf
+      → 129 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO COMPRAS 092026 LILIAN CORTESE.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 09/2026 y la carpeta 09/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/9 SEPTIEMBRE/RG90 COMPRAS 092026.xlsx
+      → 129 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092026 LILIAN CORTESE.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2026]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/CONSTANCIA DE RUC.pdf
+      → 129 TRIBUTARIO/CONSTANCIA RUC LILIAN CORTESE.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+
+MOVIDOS CONSERVANDO SU NOMBRE (2)
+-------------------------------------
+  DOCUMENTOS CONTABLES/MES/8 AGOSTO/CERTIFICADO DE CUMPLIMIENTO TRIBUTARIO - LILIAN CORTESE.pdf
+      → 129 TRIBUTARIO/CERTIFICADO DE CUMPLIMIENTO TRIBUTARIO - LILIAN CORTESE.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/CEDULA LILIAN CORTESE.pdf
+      → 129 LEGAL Y SOCIETARIO/CEDULA LILIAN CORTESE.pdf   [Documento legal o societario]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «129 ZZ A CLASIFICAR» (para que lo ubique una persona) (3)
+----------------------------------------------------------------
+  DOCUMENTOS CONTABLES/MES/7 JULIO/Boleta de Pago _ MARANGATU.pdf
+  DOCUMENTOS CONTABLES/MES/7 JULIO/DETERMINACION IVA - LILIAN CORTESE.pdf
+  DOCUMENTOS CONTABLES/MES/7 JULIO/DETERMINACION IVA - LILIAN CORTESE.xlsx
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (7)
+--------------------------------------------------
+  DOCUMENTOS CONTABLES/MES/7 JULIO
+  DOCUMENTOS CONTABLES/MES/8 AGOSTO
+  DOCUMENTOS CONTABLES/MES/9 SEPTIEMBRE
+  DOCUMENTOS CONTABLES/MES
+  DOCUMENTOS CONTABLES
+  DOCUMENTOS LEGALES Y SOCIETARIOS
+  DOCUMENTOS VARIOS

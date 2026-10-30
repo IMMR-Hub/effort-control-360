@@ -1,18 +1,18 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 086 BOU ASSI NAJI BAHIJ
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 170 · Peso: 252.5 MB · Subcarpetas con archivos: 46
+  Archivos: 175 · Peso: 253.7 MB · Subcarpetas con archivos: 46
 
 RESUMEN
   Duplicados apartados (cuarentena): 7
-  Movidos y renombrados según el manual: 72
-  Movidos conservando su nombre: 50
+  Movidos y renombrados según el manual: 76
+  Movidos conservando su nombre: 51
   Sin cambios: 0
   A «086 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 41
   Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
   Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 8
-  Nombres originales que no dicen qué documento son: 118
+  Nombres originales que no dicen qué documento son: 121
   Nombre o ubicación que contradice lo que dice el documento por dentro: 0
   Excel con vínculos (no se renombraron): 0
 
@@ -20,8 +20,8 @@ AL FINAL (archivos por carpeta de primer nivel)
   086 LEGAL Y SOCIETARIO: 8
   086 PERIODO 2024: 11
   086 PERIODO 2025: 65
-  086 PERIODO 2026: 28
-  086 TRIBUTARIO: 10
+  086 PERIODO 2026: 32
+  086 TRIBUTARIO: 11
   086 ZZ A CLASIFICAR: 41
 
 DUPLICADOS APARTADOS (7)
@@ -54,7 +54,7 @@ NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (8)
   WhatsApp Image 2024-11-19 AS.6.jpeg  →  (a ZZ A CLASIFICAR, sin renombrar)
   WhatsApp Image 2024-11-19 AS.7.jpeg  →  (a ZZ A CLASIFICAR, sin renombrar)
 
-MOVIDOS Y RENOMBRADOS (72)
+MOVIDOS Y RENOMBRADOS (76)
 -----------------------------
   PERIODO 2024/DOCUMENTOS CONTABLES/ESTADOS FINANCIEROS 2024/FORMULARIO 158-2024.pdf
       → 086 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/EEFF 2024 PRESENTADO FORM 158 BOU ASSI NAJI BAHIJ.pdf   [Declaración leída por dentro: formulario 158, ejercicio 2024]
@@ -194,10 +194,18 @@ MOVIDOS Y RENOMBRADOS (72)
       → 086 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/DDJJ IVA 052026 BOU ASSI NAJI BAHIJ.pdf   [Declaración leída por dentro: formulario 120, período 05/2026]
   PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-06-2026.pdf
       → 086 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/DDJJ IVA 062026 BOU ASSI NAJI BAHIJ.pdf   [Declaración leída por dentro: formulario 120, período 06/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-07-26.pdf
+      → 086 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/DDJJ IVA 072026 BOU ASSI NAJI BAHIJ.pdf   [Declaración leída por dentro: formulario 120, período 07/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-08-26.pdf
+      → 086 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/DDJJ IVA 082026 BOU ASSI NAJI BAHIJ.pdf   [Declaración leída por dentro: formulario 120, período 08/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-09-2026.pdf
+      → 086 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DDJJ IVA 092026 BOU ASSI NAJI BAHIJ.pdf   [Declaración leída por dentro: formulario 120, período 09/2026]
   PERIODO 2026/DOCUMENTOS CONTABLES/MESES/03 MARZO/FC TELECEL SAE.pdf
       → 086 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/FACTURA COMPRA 032026 BOU ASSI NAJI BAHIJ.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MESES/03 MARZO/LIBRO COMPRAS 2026.pdf
       → 086 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/LIBRO COMPRAS 032026 BOU ASSI NAJI BAHIJ.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 SETIEMBRE/LC.pdf
+      → 086 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO COMPRAS 092026 BOU ASSI NAJI BAHIJ.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/RG COMPRAS/01 ENERO.xlsx
       → 086 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/RG COMPRAS 012026 BOU ASSI NAJI BAHIJ.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 01/2026]
   PERIODO 2026/DOCUMENTOS CONTABLES/RG COMPRAS/02 FEBRERO.xlsx
@@ -215,7 +223,7 @@ MOVIDOS Y RENOMBRADOS (72)
   PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/MAYO.pdf
       → 086 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/TALON RG 90 052026 BOU ASSI NAJI BAHIJ.pdf   [Declaración leída por dentro: formulario 241, período 05/2026]
 
-MOVIDOS CONSERVANDO SU NOMBRE (50)
+MOVIDOS CONSERVANDO SU NOMBRE (51)
 -------------------------------------
   PERIODO 2024/DOCUMENTOS CONTABLES/CCT/CCT23-12-24.pdf
       → 086 TRIBUTARIO/CCT23-12-24.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
@@ -295,6 +303,8 @@ MOVIDOS CONSERVANDO SU NOMBRE (50)
       → 086 TRIBUTARIO/ABRIL-Beatriz.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
   PERIODO 2026/DOCUMENTOS CONTABLES/CCT/CCT MAYO.pdf
       → 086 TRIBUTARIO/CCT MAYO.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/CCT/CCT OCTUBRE.pdf
+      → 086 TRIBUTARIO/CCT OCTUBRE.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
   PERIODO 2026/DOCUMENTOS CONTABLES/MESES/01 ENERO/L.C 2026.pdf
       → 086 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/L.C 2026.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MESES/02 FEBRERO/L.C 2026.pdf

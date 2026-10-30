@@ -1,0 +1,184 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 072 HUAWEI
+Fecha: 20/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+
+AL INICIO
+  Archivos: 54 · Peso: 31.6 MB · Subcarpetas con archivos: 18
+
+RESUMEN
+  Duplicados apartados (cuarentena): 7
+  Movidos y renombrados según el manual: 1
+  Movidos conservando su nombre: 39
+  Sin cambios: 0
+  A «072 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 7
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 1
+  Nombres originales que no dicen qué documento son: 20
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 1
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  072 LEGAL Y SOCIETARIO: 1
+  072 PERIODO 2024: 19
+  072 PERIODO 2025: 12
+  072 PERIODO 2026: 8
+  072 ZZ A CLASIFICAR: 7
+
+DUPLICADOS APARTADOS (7)
+----------------------------
+  PERIODO 2024/DICIEMBRE 2024/FAC 196 EFFORT CONSULTORA PO 420.pdf
+      igual a: FAC 196 EFFORT CONSULTORA.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2024/DICIEMBRE 2024/FAC 197 PO 437.pdf
+      igual a: FACTURACION HUAWEI 001-001-0000197.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2024/NOVIEMBRE 2024/FCR 162_PO 420.pdf
+      igual a: FAC 162 HUAWEI.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2024/OCTUBRE 2024/Factura 123 OP 392.pdf
+      igual a: PERIODO 2024/OCTUBRE 2024/Factura 123 HUAWEI oct 2024.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2025/MARZO 2025/DD HONESTIDAD 2025.pdf
+      igual a: DD HONESTIDAD.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/FACTURACION EFFORT/FACTURA 831 PO 828.pdf
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/FACTURACION EFFORT/FACTURA 831.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/FACTURACION EFFORT/FACTURA 832 PO 801.pdf
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/FACTURACION EFFORT/FACTURA 832.pdf  (Copia idéntica (mismo contenido byte por byte))
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO (1)
+------------------------------------------------------
+  PERIODO 2025/MARZO 2025/FACTURA ENERO FEBRERO 2025.pdf  →  El nombre dice 01/2025 y la carpeta 03/2025: se respetó la carpeta
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (1)
+---------------------------------------------------------
+  preview (1)-2.pdf  →  preview (1)-2.pdf
+
+MOVIDOS Y RENOMBRADOS (1)
+-----------------------------
+  PERIODO 2024/MAYO 2024/FACTURA 282  PO293.pdf
+      → 072 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO/FACTURA 282 PO293.pdf   [Período tomado de la carpeta donde estaba]
+
+MOVIDOS CONSERVANDO SU NOMBRE (39)
+-------------------------------------
+  PERIODO 2024/ABRIL 2024/FACTURA 257 HUAWEI.pdf
+      → 072 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA 257 HUAWEI.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/ABRIL 2024/FACTURA 258 HUAWEI.pdf
+      → 072 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/FACTURA 258 HUAWEI.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/AGOSTO 2024/Factura 39 PO 366_HUAWEI.pdf
+      → 072 PERIODO 2024/DOCUMENTOS CONTABLES/08 AGOSTO/Factura 39 PO 366_HUAWEI.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/AGOSTO 2024/Factura 40_PO 364_HUAWEI.pdf
+      → 072 PERIODO 2024/DOCUMENTOS CONTABLES/08 AGOSTO/Factura 40_PO 364_HUAWEI.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/JULIO 2024/FACTURACION HUAWEI AL 30072024.pdf
+      → 072 PERIODO 2024/DOCUMENTOS CONTABLES/07 JULIO/FACTURACION HUAWEI AL 30072024.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/JULIO 2024/FCR 367_PO 328.pdf
+      → 072 PERIODO 2024/DOCUMENTOS CONTABLES/07 JULIO/FCR 367_PO 328.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/JULIO 2024/FCR 368_PO 327.pdf
+      → 072 PERIODO 2024/DOCUMENTOS CONTABLES/07 JULIO/FCR 368_PO 327.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/JULIO 2024/OPs.pdf
+      → 072 PERIODO 2024/DOCUMENTOS CONTABLES/07 JULIO/OPs.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/JULIO 2024/preview (1)-2.pdf
+      → 072 PERIODO 2024/DOCUMENTOS CONTABLES/07 JULIO/preview (1)-2.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/JUNIO 2024/FACTURA 322 PO 303.pdf
+      → 072 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/FACTURA 322 PO 303.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/JUNIO 2024/FACTURA 324 PO 304.pdf
+      → 072 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/FACTURA 324 PO 304.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/MAYO 2024/Captura de pantalla 2024-05-08 154546.png
+      → 072 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO/Captura de pantalla 2024-05-08 154546.png   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/MAYO 2024/FACTURA 276.pdf
+      → 072 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO/FACTURA 276.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/MAYO 2024/FACTURA 277.pdf
+      → 072 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO/FACTURA 277.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/MAYO 2024/FACTURA 281 PO297.pdf
+      → 072 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO/FACTURA 281 PO297.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/OCTUBRE 2024/Factura 123 HUAWEI oct 2024.pdf
+      → 072 PERIODO 2024/DOCUMENTOS CONTABLES/10 OCTUBRE/Factura 123 HUAWEI oct 2024.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/SETIEMBRE 2024/FAC MES DE SET # 80.pdf
+      → 072 PERIODO 2024/DOCUMENTOS CONTABLES/09 SETIEMBRE/FAC MES DE SET # 80.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/SETIEMBRE 2024/FAC MES DE SET #81.pdf
+      → 072 PERIODO 2024/DOCUMENTOS CONTABLES/09 SETIEMBRE/FAC MES DE SET #81.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/ENERO 2025/Factura Enero Huawei 232_PO 480.pdf
+      → 072 PERIODO 2025/DOCUMENTOS CONTABLES/01 ENERO/Factura Enero Huawei 232_PO 480.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/ENERO 2025/PO 480.pdf
+      → 072 PERIODO 2025/DOCUMENTOS CONTABLES/01 ENERO/PO 480.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/JULIO 2025/Factura 519 PO 669.pdf
+      → 072 PERIODO 2025/DOCUMENTOS CONTABLES/07 JULIO/Factura 519 PO 669.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/JUNIO 2025/Factura 518 PO 685.pdf
+      → 072 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO/Factura 518 PO 685.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/MARZO 2025/FACTURA ENERO FEBRERO 2025.pdf
+      → 072 PERIODO 2025/DOCUMENTOS CONTABLES/03 MARZO/FACTURA ENERO FEBRERO 2025.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 01/2025 y la carpeta 03/2025: se respetó la carpeta
+  PERIODO 2025/MARZO 2025/Factura.pdf 347_PO 537 HUAWEI.pdf
+      → 072 PERIODO 2025/DOCUMENTOS CONTABLES/03 MARZO/Factura.pdf 347_PO 537 HUAWEI.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/MARZO 2025/Factura.pdf 348_ PO 509 HUAWEI.pdf
+      → 072 PERIODO 2025/DOCUMENTOS CONTABLES/03 MARZO/Factura.pdf 348_ PO 509 HUAWEI.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/MAYO 2025/Factura NRO 433_PO 608.pdf
+      → 072 PERIODO 2025/DOCUMENTOS CONTABLES/05 MAYO/Factura NRO 433_PO 608.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/MAYO 2025/Factura NRO 434_PO 592.pdf
+      → 072 PERIODO 2025/DOCUMENTOS CONTABLES/05 MAYO/Factura NRO 434_PO 592.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/MAYO 2025/Factura NRO 435_PO 587.pdf
+      → 072 PERIODO 2025/DOCUMENTOS CONTABLES/05 MAYO/Factura NRO 435_PO 587.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/NOVIEMBRE 2025/FACTURA 685-HUAWEI TECHNOLOGIES PY S.A.pdf
+      → 072 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE/FACTURA 685-HUAWEI TECHNOLOGIES PY S.A.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2025/OCTUBRE 2025/Factura 001-001-0000604 PO 668.pdf
+      → 072 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE/Factura 001-001-0000604 PO 668.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FACTURACION EFFORT/FACTURA 731.pdf
+      → 072 PERIODO 2026/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA 731.pdf   [Honorarios que EFFORT le factura al cliente]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FACTURACION EFFORT/FACTURA 732.pdf
+      → 072 PERIODO 2026/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA 732.pdf   [Honorarios que EFFORT le factura al cliente]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FACTURACION EFFORT/FACTURA 733.pdf
+      → 072 PERIODO 2026/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA 733.pdf   [Honorarios que EFFORT le factura al cliente]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FACTURACION EFFORT/FACTURA 831.pdf
+      → 072 PERIODO 2026/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA 831.pdf   [Honorarios que EFFORT le factura al cliente]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FACTURACION EFFORT/FACTURA 832.pdf
+      → 072 PERIODO 2026/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA 832.pdf   [Honorarios que EFFORT le factura al cliente]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FACTURACION EFFORT/FCR 1090 PO 914.pdf
+      → 072 PERIODO 2026/DOCUMENTOS VARIOS/FACTURACION EFFORT/FCR 1090 PO 914.pdf   [Honorarios que EFFORT le factura al cliente]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FACTURACION EFFORT/FCR 1091 PO 900.pdf
+      → 072 PERIODO 2026/DOCUMENTOS VARIOS/FACTURACION EFFORT/FCR 1091 PO 900.pdf   [Honorarios que EFFORT le factura al cliente]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FACTURACION EFFORT/FCR 1228 PO 927.pdf
+      → 072 PERIODO 2026/DOCUMENTOS VARIOS/FACTURACION EFFORT/FCR 1228 PO 927.pdf   [Honorarios que EFFORT le factura al cliente]
+  PERIODO 2026/DOCUMENTOS LEGALES Y SOCIETARIOS/Contrato Huawei 2026.pdf
+      → 072 LEGAL Y SOCIETARIO/Contrato Huawei 2026.pdf   [Documento legal o societario]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «072 ZZ A CLASIFICAR» (para que lo ubique una persona) (7)
+----------------------------------------------------------------
+  Cta Cte Cliente Pend HUAWEI.pdf
+  DD HONESTIDAD.pdf
+  FAC 162 HUAWEI.pdf
+  FAC 196 EFFORT CONSULTORA.pdf
+  FACTURACION HUAWEI 001-001-0000197.pdf
+  FACTURAS HUAWEI 2024.zip
+  NOTA CREDITO HUAWEI.pdf
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (29)
+--------------------------------------------------
+  PERIODO 2024/ABRIL 2024
+  PERIODO 2024/AGOSTO 2024
+  PERIODO 2024/DICIEMBRE 2024
+  PERIODO 2024/DOCUMENTOS CONTABLES
+  PERIODO 2024/DOCUMENTOS LEGALES Y SOCIETARIOS
+  PERIODO 2024/DOCUMENTOS VARIOS
+  PERIODO 2024/JULIO 2024
+  PERIODO 2024/JUNIO 2024
+  PERIODO 2024/MAYO 2024
+  PERIODO 2024/NOVIEMBRE 2024
+  PERIODO 2024/OCTUBRE 2024
+  PERIODO 2024/SETIEMBRE 2024
+  PERIODO 2024
+  PERIODO 2025/AGOSTO 2025
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS
+  PERIODO 2025/DOCUMENTOS VARIOS
+  PERIODO 2025/ENERO 2025
+  PERIODO 2025/JULIO 2025
+  PERIODO 2025/JUNIO 2025
+  PERIODO 2025/MARZO 2025
+  PERIODO 2025/MAYO 2025
+  PERIODO 2025/NOVIEMBRE 2025
+  PERIODO 2025/OCTUBRE 2025
+  PERIODO 2025
+  PERIODO 2026/DOCUMENTOS CONTABLES/FACTURACION EFFORT
+  PERIODO 2026/DOCUMENTOS CONTABLES
+  PERIODO 2026/DOCUMENTOS LEGALES Y SOCIETARIOS
+  PERIODO 2026/DOCUMENTOS VARIOS
+  PERIODO 2026

@@ -1,0 +1,152 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 082 FFV E.A.S
+Fecha: 20/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+
+AL INICIO
+  Archivos: 49 · Peso: 57.6 MB · Subcarpetas con archivos: 10
+
+RESUMEN
+  Duplicados apartados (cuarentena): 4
+  Movidos y renombrados según el manual: 13
+  Movidos conservando su nombre: 14
+  Sin cambios: 0
+  A «082 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 18
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 3
+  Nombres originales que no dicen qué documento son: 37
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  082 LEGAL Y SOCIETARIO: 8
+  082 PERIODO 2024: 5
+  082 PERIODO 2026: 7
+  082 TRIBUTARIO: 7
+  082 ZZ A CLASIFICAR: 18
+
+DUPLICADOS APARTADOS (4)
+----------------------------
+  DOCUMENTOS LEGALES/CI ALISON RAMIREZ.pdf
+      igual a: DOCUMENTOS VARIOS/CI ALISON RAMIREZ.pdf  (Copia idéntica (mismo contenido byte por byte))
+  DOCUMENTOS LEGALES/Dictamen_de_Transformación.pdf
+      igual a: DOCUMENTOS VARIOS/DOC DE TRANSFORMACION/drfs-004---dictamenes-7982838 (1).pdf  (Copia idéntica (mismo contenido byte por byte))
+  DOCUMENTOS VARIOS/APERTURA DE CUENTA/CI ALISON RAMIREZ.pdf
+      igual a: DOCUMENTOS VARIOS/CI ALISON RAMIREZ.pdf  (Copia idéntica (mismo contenido byte por byte))
+  DOCUMENTOS VARIOS/Dictamen_de_Transformación.pdf
+      igual a: DOCUMENTOS VARIOS/DOC DE TRANSFORMACION/drfs-004---dictamenes-7982838 (1).pdf  (Copia idéntica (mismo contenido byte por byte))
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (3)
+---------------------------------------------------------
+  Constancia_de_Constitución (8).pdf  →  Constancia_de_Constitución.pdf
+  drfs-004---dictamenes-7982838 (1).pdf  →  (a ZZ A CLASIFICAR, sin renombrar)
+  Protocolo de transformacion SRL _compressed (2).pdf  →  (a ZZ A CLASIFICAR, sin renombrar)
+
+MOVIDOS Y RENOMBRADOS (13)
+-----------------------------
+  DOCUMENTOS CONTABLES/CCT/05MAYO.pdf
+      → 082 TRIBUTARIO/CCT 05MAYO.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+      nota: Al nombre, que solo decía «05MAYO», se le agregó la carpeta de donde venía
+  DOCUMENTOS CONTABLES/CCT/07JULIO.pdf
+      → 082 TRIBUTARIO/CCT 07JULIO.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+      nota: Al nombre, que solo decía «07JULIO», se le agregó la carpeta de donde venía
+  DOCUMENTOS CONTABLES/CCT/08 AGOSTO.pdf
+      → 082 TRIBUTARIO/CCT 08 AGOSTO.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+      nota: Al nombre, que solo decía «08 AGOSTO», se le agregó la carpeta de donde venía
+  DOCUMENTOS CONTABLES/CCT/08AGOSTO.pdf
+      → 082 TRIBUTARIO/CCT 08AGOSTO.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+      nota: Al nombre, que solo decía «08AGOSTO», se le agregó la carpeta de donde venía
+  DOCUMENTOS CONTABLES/CCT/10OCTUBRE.pdf
+      → 082 TRIBUTARIO/CCT 10OCTUBRE.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+      nota: Al nombre, que solo decía «10OCTUBRE», se le agregó la carpeta de donde venía
+  DOCUMENTOS CONTABLES/FORMULARIO 120/120-05-2026.pdf
+      → 082 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/DDJJ IVA 052026 FFV EAS.pdf   [Declaración leída por dentro: formulario 120, período 05/2026]
+  DOCUMENTOS CONTABLES/FORMULARIO 120/120-08-2026.pdf
+      → 082 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/DDJJ IVA 082026 FFV EAS.pdf   [Declaración leída por dentro: formulario 120, período 08/2026]
+  DOCUMENTOS CONTABLES/RG COMPRAS/05 MAYO.xlsx
+      → 082 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/RG COMPRAS 052026 FFV EAS.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 05/2026]
+  DOCUMENTOS CONTABLES/RG COMPRAS/08 AGOSTO.xlsx
+      → 082 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG COMPRAS 082026 FFV EAS.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 08/2026]
+  DOCUMENTOS CONTABLES/TALON DE PRESENTACION/AGOSTO.pdf
+      → 082 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/TALON RG 90 082026 FFV EAS.pdf   [Declaración leída por dentro: formulario 241, período 08/2026]
+  DOCUMENTOS CONTABLES/TALON DE PRESENTACION/MAYO.pdf
+      → 082 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/TALON RG 90 052026 FFV EAS.pdf   [Declaración leída por dentro: formulario 241, período 05/2026]
+  DOCUMENTOS LEGALES/Constancia_de_Constitución (8).pdf
+      → 082 LEGAL Y SOCIETARIO/Constancia_de_Constitución.pdf   [Documento legal o societario]
+  DOCUMENTOS VARIOS/DOC DE TRANSFORMACION/ACTA 3.pdf firmado .pdf
+      → 082 LEGAL Y SOCIETARIO/ACTA 3.pdf firmado.pdf   [Documento legal o societario]
+
+MOVIDOS CONSERVANDO SU NOMBRE (14)
+-------------------------------------
+  DOCUMENTOS CONTABLES/COMUNICADOS DNIT/Solicitud de timbrado.pdf
+      → 082 TRIBUTARIO/Solicitud de timbrado.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  DOCUMENTOS LEGALES/CI KATERINE.pdf
+      → 082 LEGAL Y SOCIETARIO/CI KATERINE.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES/Doc para finalizacion de transformacion SRL A EAS.pdf
+      → 082 LEGAL Y SOCIETARIO/Doc para finalizacion de transformacion SRL A EAS.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES/ESTATUTO.pdf
+      → 082 LEGAL Y SOCIETARIO/ESTATUTO.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES/PATENETE COMERCIAL.pdf
+      → 082 LEGAL Y SOCIETARIO/PATENETE COMERCIAL.pdf   [Documento legal o societario]
+  DOCUMENTOS VARIOS/2024/80084460NE2024.pdf
+      → 082 PERIODO 2024/DOCUMENTOS VARIOS/80084460NE2024.pdf   [Estaba en DOCUMENTOS VARIOS]
+  DOCUMENTOS VARIOS/2024/80084460NE2024.zip
+      → 082 PERIODO 2024/DOCUMENTOS VARIOS/80084460NE2024.zip   [Estaba en DOCUMENTOS VARIOS]
+  DOCUMENTOS VARIOS/2024/EEFF 2024.pdf
+      → 082 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/EEFF 2024.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  DOCUMENTOS VARIOS/2024/EF2024_8e2708a7_80084460_948.zip
+      → 082 PERIODO 2024/DOCUMENTOS VARIOS/EF2024_8e2708a7_80084460_948.zip   [Estaba en DOCUMENTOS VARIOS]
+  DOCUMENTOS VARIOS/2024/form 500 2024.pdf
+      → 082 PERIODO 2024/DOCUMENTOS VARIOS/form 500 2024.pdf   [Estaba en DOCUMENTOS VARIOS]
+  DOCUMENTOS VARIOS/DOC DE TRANSFORMACION/ACTA N 3.docx
+      → 082 LEGAL Y SOCIETARIO/ACTA N 3.docx   [Documento legal o societario]
+  DOCUMENTOS VARIOS/DOC DE TRANSFORMACION/ACTA N 3.pdf
+      → 082 LEGAL Y SOCIETARIO/ACTA N 3.pdf   [Documento legal o societario]
+  DOCUMENTOS VARIOS/DOC DE TRANSFORMACION/CCT.pdf
+      → 082 TRIBUTARIO/CCT.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  DOCUMENTOS VARIOS/DOC DE TRANSFORMACION/Patente comercial 2026.pdf
+      → 082 PERIODO 2026/DOCUMENTOS VARIOS/DOC DE TRANSFORMACION/Patente comercial 2026.pdf   [Estaba en DOCUMENTOS VARIOS]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «082 ZZ A CLASIFICAR» (para que lo ubique una persona) (18)
+----------------------------------------------------------------
+  DOCUMENTOS CONTABLES/COMUNICADOS DNIT/Constancia _ MARANGATU.pdf
+  DOCUMENTOS VARIOS/_Formulario de Suscripción 24 hs negocios - FFV EAS.pdf
+  DOCUMENTOS VARIOS/Adjudicación de Inmueble.pdf
+  DOCUMENTOS VARIOS/APERTURA DE CUENTA/_Ficha-de-Datos-Clientes-PJ - FFV EAS.pdf
+  DOCUMENTOS VARIOS/APERTURA DE CUENTA/_FORMULARIO - FICHA DE CLIENTE -FFV EAS.pdf
+  DOCUMENTOS VARIOS/APERTURA DE CUENTA/_Solicitud-para-Apertura-de-cta-PJ - FFV EAS UNIPERSONAL.pdf
+  DOCUMENTOS VARIOS/APERTURA DE CUENTA/_Z-00143 Formulario Suscripción pagos y cobros electrónicos - FVV EAS.pdf
+  DOCUMENTOS VARIOS/APERTURA DE CUENTA/Constancia _ MARANGATU.pdf
+  DOCUMENTOS VARIOS/BALANCE[1].pdf
+  DOCUMENTOS VARIOS/CI ALISON RAMIREZ.pdf
+  DOCUMENTOS VARIOS/Constancia _ MARANGATU.pdf
+  DOCUMENTOS VARIOS/DOC DE TRANSFORMACION/Aprobacion de transformacion drfs-004---dictamenes-7982838.pdf
+  DOCUMENTOS VARIOS/DOC DE TRANSFORMACION/drfs-004---dictamenes-7908983.pdf Solicitud.pdf
+  DOCUMENTOS VARIOS/DOC DE TRANSFORMACION/drfs-004---dictamenes-7982838 (1).pdf
+  DOCUMENTOS VARIOS/DOC DE TRANSFORMACION/Factura electrÃ³nica 001-003-0078164.pdf
+  DOCUMENTOS VARIOS/DOC DE TRANSFORMACION/Protocolo de transformacion SRL .pdf
+  DOCUMENTOS VARIOS/Protocolo de transformacion SRL _compressed (2).pdf
+  DOCUMENTOS VARIOS/Publicacion por transformacion .docx
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (14)
+--------------------------------------------------
+  DOCUMENTOS CONTABLES/CCT
+  DOCUMENTOS CONTABLES/COMUNICADOS DNIT
+  DOCUMENTOS CONTABLES/FORMULARIO 120
+  DOCUMENTOS CONTABLES/MESES
+  DOCUMENTOS CONTABLES/RG COMPRAS
+  DOCUMENTOS CONTABLES/RG VENTAS
+  DOCUMENTOS CONTABLES/TALON DE PRESENTACION
+  DOCUMENTOS CONTABLES
+  DOCUMENTOS LEGALES
+  DOCUMENTOS VARIOS/2024
+  DOCUMENTOS VARIOS/APERTURA DE CUENTA
+  DOCUMENTOS VARIOS/DOC DE TRANSFORMACION
+  DOCUMENTOS VARIOS/RUBRICAS
+  DOCUMENTOS VARIOS

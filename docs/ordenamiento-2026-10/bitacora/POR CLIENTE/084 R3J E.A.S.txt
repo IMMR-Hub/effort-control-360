@@ -1,28 +1,28 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 084 R3J E.A.S
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 222 · Peso: 142.9 MB · Subcarpetas con archivos: 40
+  Archivos: 224 · Peso: 143.8 MB · Subcarpetas con archivos: 40
 
 RESUMEN
   Duplicados apartados (cuarentena): 2
   Movidos y renombrados según el manual: 94
-  Movidos conservando su nombre: 91
+  Movidos conservando su nombre: 92
   Sin cambios: 0
-  A «084 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 35
+  A «084 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 36
   Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
   Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 6
-  Nombres originales que no dicen qué documento son: 72
+  Nombres originales que no dicen qué documento son: 73
   Nombre o ubicación que contradice lo que dice el documento por dentro: 0
   Excel con vínculos (no se renombraron): 4
 
 AL FINAL (archivos por carpeta de primer nivel)
   084 LEGAL Y SOCIETARIO: 39
   084 PERIODO 2024: 29
-  084 PERIODO 2025: 61
+  084 PERIODO 2025: 62
   084 PERIODO 2026: 51
   084 TRIBUTARIO: 5
-  084 ZZ A CLASIFICAR: 35
+  084 ZZ A CLASIFICAR: 36
 
 DUPLICADOS APARTADOS (2)
 ----------------------------
@@ -236,7 +236,7 @@ MOVIDOS Y RENOMBRADOS (94)
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/09 SETIEMBRE 2026/RG NC 092026.xlsx
       → 084 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG VENTAS 092026 R3J EAS.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 09/2026]
 
-MOVIDOS CONSERVANDO SU NOMBRE (91)
+MOVIDOS CONSERVANDO SU NOMBRE (92)
 -------------------------------------
   Cédula Tributaria _ MARANGATU.pdf
       → 084 TRIBUTARIO/Cédula Tributaria _ MARANGATU.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
@@ -325,6 +325,8 @@ MOVIDOS CONSERVANDO SU NOMBRE (91)
       → 084 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/ANEXO III FLUJO DE EFECTIVO.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
   PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/ANEXO IV CAMBIOS DEL PATRIMONIO.pdf
       → 084 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/ANEXO IV CAMBIOS DEL PATRIMONIO.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/DDJJ IRE GRAL 2025.pdf
+      → 084 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/DDJJ IRE GRAL 2025.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
   PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/EEFF - R3J EAS 2025.xlsm
       → 084 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/EEFF - R3J EAS 2025.xlsm   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
       nota: Excel con 17 vínculo(s) a otros archivos
@@ -429,7 +431,7 @@ ENVIADOS A OTRO CLIENTE: ninguno
 
 RECIBIDOS DE OTRO CLIENTE: ninguno
 
-A «084 ZZ A CLASIFICAR» (para que lo ubique una persona) (35)
+A «084 ZZ A CLASIFICAR» (para que lo ubique una persona) (36)
 ----------------------------------------------------------------
   Constancia _ MARANGATU.pdf
   DOCUMENTOS LEGALES/LIBROS RUBRICADOS/Rbr_14283281_INVENTARIO_04-12-2024.pdf
@@ -456,6 +458,7 @@ A «084 ZZ A CLASIFICAR» (para que lo ubique una persona) (35)
   PLAN DE NEGOCIOS/FLUJO DE CAJA_BANCOOP.xls
   PLAN DE NEGOCIOS/LICENCIA AMBIENTAL.pdf
   PLAN DE NEGOCIOS/mesa de entrada licencia ambiental.pdf
+  PLAN DE NEGOCIOS/PERMISO AMBIENTAL R3J EAS - Exp_3503_24_RESOLUCION_REVISADA_MAJO_ALDERETE.pdf
   PLAN DE NEGOCIOS/Plan de Negocios R3J EAS.doc
   PLAN DE NEGOCIOS/Plan de Negocios R3J EAS.pdf
   PLAN DE NEGOCIOS/Plan de Negocios R3J EAS.pdf FINAL.pdf

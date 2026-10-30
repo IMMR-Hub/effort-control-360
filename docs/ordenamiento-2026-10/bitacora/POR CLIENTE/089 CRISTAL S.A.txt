@@ -1,18 +1,18 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 089 CRISTAL S.A
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 713 · Peso: 787.6 MB · Subcarpetas con archivos: 69
+  Archivos: 741 · Peso: 801.1 MB · Subcarpetas con archivos: 70
 
 RESUMEN
-  Duplicados apartados (cuarentena): 34
-  Movidos y renombrados según el manual: 262
-  Movidos conservando su nombre: 381
+  Duplicados apartados (cuarentena): 43
+  Movidos y renombrados según el manual: 273
+  Movidos conservando su nombre: 418
   Sin cambios: 0
-  A «089 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 36
+  A «089 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 7
   Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
-  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 195
-  Nombres originales que no dicen qué documento son: 543
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 196
+  Nombres originales que no dicen qué documento son: 556
   Nombre o ubicación que contradice lo que dice el documento por dentro: 2
   Excel con vínculos (no se renombraron): 0
 
@@ -20,11 +20,11 @@ AL FINAL (archivos por carpeta de primer nivel)
   089 LEGAL Y SOCIETARIO: 53
   089 PERIODO 2024: 9
   089 PERIODO 2025: 182
-  089 PERIODO 2026: 381
-  089 TRIBUTARIO: 18
-  089 ZZ A CLASIFICAR: 36
+  089 PERIODO 2026: 428
+  089 TRIBUTARIO: 19
+  089 ZZ A CLASIFICAR: 7
 
-DUPLICADOS APARTADOS (34)
+DUPLICADOS APARTADOS (43)
 ----------------------------
   NOTA DE CREDITO 0005.jpeg
       igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/NOTA DE CREDITO 0005.jpeg  (Copia idéntica (mismo contenido byte por byte))
@@ -94,6 +94,24 @@ DUPLICADOS APARTADOS (34)
       igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/PHOTO-2026-05-05-12-04-36 1.jpg  (Copia idéntica (mismo contenido byte por byte))
   PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.18 AM.jpeg
       igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MESES/4ABRIL/fac ventas/WhatsApp Image 2026-05-19 at 9.12.06 AM.jpeg  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS VARIOS/PEDIDO DEL BANCO/120-04-2026.pdf
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-04-2026.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS VARIOS/PEDIDO DEL BANCO/120-05-2026.pdf
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-05-2026.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS VARIOS/PEDIDO DEL BANCO/120-06-2026.pdf
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-06-2026.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS VARIOS/PEDIDO DEL BANCO/120-07-2026.pdf
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-07-2026.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS VARIOS/PEDIDO DEL BANCO/120-08-26.pdf
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-08-26.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS VARIOS/PEDIDO DEL BANCO/120-09-2026.pdf
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-09-2026.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS VARIOS/PEDIDO DEL BANCO/Beneficiario Final.pdf
+      igual a: PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA 2025/drfs-003---comunicacion-en-el-registro-administrativo-de-beneficiarios-finales-6370171 (1).pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS VARIOS/PEDIDO DEL BANCO/Estructura Juridica .pdf
+      igual a: PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ASAMBLEA 2025/drfs-002---comunicacion-en-el-registro-administrativo-de-personas-y-estructuras-juridicas-7166459.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS VARIOS/PEDIDO DEL BANCO/Libro Registro de Accionistas.pdf
+      igual a: PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/Libro Registro de Accionistas.pdf  (Copia idéntica (mismo contenido byte por byte))
 
 NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO (2)
 ------------------------------------------------------
@@ -268,7 +286,7 @@ NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (165)
   CamScanner 04-08-2026 08.06.pdf  →  CamScanner 04-08-2026 08.06.pdf
   CamScanner 04-08-2026 08.37.pdf  →  CamScanner 04-08-2026 08.37.pdf
 
-MOVIDOS Y RENOMBRADOS (262)
+MOVIDOS Y RENOMBRADOS (273)
 -----------------------------
   PERIODO 2024/DOCUMENTOS CONTABLES/ESTADOS FINANCIEROS 2024/FORMULARIO 158-2024.pdf
       → 089 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/EEFF 2024 PRESENTADO FORM 158 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 158, ejercicio 2024]
@@ -491,114 +509,8 @@ MOVIDOS Y RENOMBRADOS (262)
       → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/DDJJ IVA 072026 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 120, período 07/2026]
   PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-08-26.pdf
       → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/DDJJ IVA 082026 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 120, período 08/2026]
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010633.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010633.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010633», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010634.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010634.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010634», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010635.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010635.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010635», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010637.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010637.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010637», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010638.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010638.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010638», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010639.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010639.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010639», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010640.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010640.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010640», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010641.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010641.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010641», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010642.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010642.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010642», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010643.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010643.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010643», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010644.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010644.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010644», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010645.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010645.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010645», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010646.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010646.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010646», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010647.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010647.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010647», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010648.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010648.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010648», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010649.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010649.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010649», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010650.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010650.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010650», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010651.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010651.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010651», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010652.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010652.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010652», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010653.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010653.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010653», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010654.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010654.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010654», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010655.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010655.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010655», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010656.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010656.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010656», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010657.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010657.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010657», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010658.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010658.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010658», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010659.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010659.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010659», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/1000010660.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010660.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010660», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010617.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010617.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010617», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010618.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010618.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010618», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010619.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010619.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010619», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010620.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010620.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010620», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010621.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010621.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010621», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010622.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010622.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010622», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010623.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010623.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010623», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010661.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010661.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010661», se le agregó la carpeta de donde venía
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010662.jpg
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010662.jpg   [Período tomado de la carpeta donde estaba]
-      nota: Al nombre, que solo decía «1000010662», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-09-2026.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DDJJ IVA 092026 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 120, período 09/2026]
   PERIODO 2026/DOCUMENTOS CONTABLES/MESES/1ENERO/Facturas de venta.pdf
       → 089 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/FACTURA VENTA 012026 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MESES/2FEBRERO/FAC 3270 HONORARIOS DE DESPACHANTE .jpeg
@@ -757,9 +669,17 @@ MOVIDOS Y RENOMBRADOS (262)
       nota: Boleta guardada en 05/2026: va en el mes que paga (04/2026), según su nombre
   PERIODO 2026/DOCUMENTOS CONTABLES/MESES/5MAYO/CamScanner 01-06-2026 09.02 (1).pdf
       → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/CamScanner 01-06-2026 09.02 - MAYO 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/LC.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/LIBRO COMPRAS 062026 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/6JUNIO/LV.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/LIBRO VENTAS 062026 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/FACTURAS NO CARGADAS/1000010636.jpg
       → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/FACTURAS NO CARGADAS 1000010636.jpg   [Período tomado de la carpeta donde estaba]
       nota: Al nombre, que solo decía «1000010636», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/LC.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/LIBRO COMPRAS 072026 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/LV.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/LIBRO VENTAS 072026 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/VENTAS/239.pdf
       → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/VENTAS 239.pdf   [Período tomado de la carpeta donde estaba]
       nota: Al nombre, que solo decía «239», se le agregó la carpeta de donde venía
@@ -823,6 +743,122 @@ MOVIDOS Y RENOMBRADOS (262)
   PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/VENTAS/259.pdf
       → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/VENTAS 259.pdf   [Período tomado de la carpeta donde estaba]
       nota: Al nombre, que solo decía «259», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010633.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010633.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010633», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010634.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010634.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010634», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010635.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010635.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010635», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010637.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010637.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010637», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010638.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010638.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010638», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010639.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010639.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010639», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010640.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010640.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010640», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010641.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010641.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010641», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010642.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010642.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010642», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010643.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010643.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010643», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010644.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010644.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010644», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010645.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010645.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010645», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010646.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010646.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010646», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010647.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010647.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010647», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010648.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010648.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010648», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010649.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010649.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010649», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010650.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010650.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010650», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010651.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010651.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010651», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010652.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010652.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010652», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010653.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010653.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010653», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010654.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010654.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010654», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010655.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010655.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010655», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010656.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010656.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010656», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010657.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010657.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010657», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010658.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010658.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010658», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010659.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010659.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010659», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/1000010660.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/COMPRAS 1000010660.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010660», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/LC.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/LIBRO COMPRAS 082026 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/LV.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/LIBRO VENTAS 082026 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/VENTAS/1000010617.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010617.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010617», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/VENTAS/1000010618.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010618.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010618», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/VENTAS/1000010619.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010619.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010619», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/VENTAS/1000010620.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010620.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010620», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/VENTAS/1000010621.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010621.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010621», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/VENTAS/1000010622.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010622.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010622», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/VENTAS/1000010623.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010623.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010623», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/VENTAS/1000010661.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010661.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010661», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/VENTAS/1000010662.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/VENTAS 1000010662.jpg   [Período tomado de la carpeta donde estaba]
+      nota: Al nombre, que solo decía «1000010662», se le agregó la carpeta de donde venía
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/LC.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO COMPRAS 092026 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/LV.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO VENTAS 092026 CRISTAL SA.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 COMPRAS/01 ENERO.xlsx
       → 089 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/RG COMPRAS 012026 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 01/2026]
   PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 COMPRAS/02 FEBRERO.xlsx
@@ -839,6 +875,8 @@ MOVIDOS Y RENOMBRADOS (262)
       → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/RG COMPRAS 072026 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 07/2026]
   PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 COMPRAS/08 AGOSTO.xlsx
       → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG COMPRAS 082026 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 08/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 COMPRAS/09 SETIEMBRE.xlsx
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092026 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2026]
   PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 VENTAS/01 ENERO.xlsx
       → 089 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/RG VENTAS 012026 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 01/2026]
   PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 VENTAS/02 FEBRERO.xlsx
@@ -855,6 +893,8 @@ MOVIDOS Y RENOMBRADOS (262)
       → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/RG VENTAS 072026 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 07/2026]
   PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 VENTAS/08 AGOSTO.xlsx
       → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG VENTAS 082026 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 08/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 VENTAS/09 SETIEMBRE.xlsx
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG VENTAS 092026 CRISTAL SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 09/2026]
   PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/ABRIL.pdf
       → 089 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/TALON RG 90 042026 CRISTAL SA.pdf   [Declaración leída por dentro: formulario 241, período 04/2026]
   PERIODO 2026/DOCUMENTOS CONTABLES/TALON DE PRESENTACION/ENERO.pdf
@@ -870,7 +910,7 @@ MOVIDOS Y RENOMBRADOS (262)
   PERIODO 2026/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA 818-CRISTAL SA-FEBRERO.pdf
       → 089 PERIODO 2026/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA COMPRA EFFORT 818 022026 CRISTAL SA.pdf   [Honorarios que EFFORT le factura al cliente]
 
-MOVIDOS CONSERVANDO SU NOMBRE (381)
+MOVIDOS CONSERVANDO SU NOMBRE (418)
 -------------------------------------
   PERIODO 2024/DOCUMENTOS CONTABLES/ESTADOS FINANCIEROS 2024/80153246NE2024.pdf
       → 089 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/80153246NE2024.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
@@ -1198,6 +1238,8 @@ MOVIDOS CONSERVANDO SU NOMBRE (381)
       → 089 TRIBUTARIO/CCT ABRIL.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
   PERIODO 2026/DOCUMENTOS CONTABLES/CCT/CCT MARZO.pdf
       → 089 TRIBUTARIO/CCT MARZO.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/CCT/CCT OCTUBRE.pdf
+      → 089 TRIBUTARIO/CCT OCTUBRE.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
   PERIODO 2026/DOCUMENTOS CONTABLES/CCT/CCT SETIEMBRE.pdf
       → 089 TRIBUTARIO/CCT SETIEMBRE.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
   PERIODO 2026/DOCUMENTOS CONTABLES/CCT/CERTIFICADO DE CUMPLIMIENTO TRIBUTARIO.pdf
@@ -1234,40 +1276,6 @@ MOVIDOS CONSERVANDO SU NOMBRE (381)
       → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/BAJA DE DOCUMENTO 210.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/COMUNICACIONES DNIT/MAYO/BAJA DE DOCUMENTO 212.pdf
       → 089 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/BAJA DE DOCUMENTO 212.pdf   [Período tomado de la carpeta donde estaba]
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/Boleta de Pago MARANGATU.pdf
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/Boleta de Pago MARANGATU.pdf   [Período tomado de la carpeta donde estaba]
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/Consultas 2.pdf
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/Consultas 2.pdf   [Período tomado de la carpeta donde estaba]
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/Consultas 3.pdf
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/Consultas 3.pdf   [Período tomado de la carpeta donde estaba]
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/Consultas 4.pdf
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/Consultas 4.pdf   [Período tomado de la carpeta donde estaba]
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/Consultas 5.pdf
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/Consultas 5.pdf   [Período tomado de la carpeta donde estaba]
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/Consultas 6.pdf
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/Consultas 6.pdf   [Período tomado de la carpeta donde estaba]
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/COMPRAS/Consultas.pdf
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/Consultas.pdf   [Período tomado de la carpeta donde estaba]
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/PLANILLA DETERMINACION IMPUESTOS.xls
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/PLANILLA DETERMINACION IMPUESTOS.xls   [Período tomado de la carpeta donde estaba]
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010624.jpg.pdf
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010624.jpg.pdf   [Período tomado de la carpeta donde estaba]
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010625.jpg.pdf
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010625.jpg.pdf   [Período tomado de la carpeta donde estaba]
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010626.jpg.pdf
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010626.jpg.pdf   [Período tomado de la carpeta donde estaba]
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010627.jpg.pdf
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010627.jpg.pdf   [Período tomado de la carpeta donde estaba]
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010628.jpg.pdf
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010628.jpg.pdf   [Período tomado de la carpeta donde estaba]
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010629.jpg.pdf
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010629.jpg.pdf   [Período tomado de la carpeta donde estaba]
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010630.jpg.pdf
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010630.jpg.pdf   [Período tomado de la carpeta donde estaba]
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010631.jpg.pdf
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010631.jpg.pdf   [Período tomado de la carpeta donde estaba]
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/VENTAS/1000010632.jpg.pdf
-      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010632.jpg.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MESES/1ENERO/CamScanner 13-2-26 14.56.pdf
       → 089 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/CamScanner 13-2-26 14.56.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MESES/1ENERO/L.C 2026.pdf
@@ -1618,6 +1626,100 @@ MOVIDOS CONSERVANDO SU NOMBRE (381)
       → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/PLANILLA DETERMINACION IMPUESTOS.xls   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/RETENCIONES.xlsx
       → 089 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/RETENCIONES.xlsx   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/Boleta de Pago MARANGATU.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/Boleta de Pago MARANGATU.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/Consultas 2.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/Consultas 2.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/Consultas 3.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/Consultas 3.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/Consultas 4.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/Consultas 4.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/Consultas 5.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/Consultas 5.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/Consultas 6.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/Consultas 6.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS/Consultas.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/Consultas.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/PLANILLA DETERMINACION IMPUESTOS.xls
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/PLANILLA DETERMINACION IMPUESTOS.xls   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/VENTAS/1000010624.jpg.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010624.jpg.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/VENTAS/1000010625.jpg.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010625.jpg.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/VENTAS/1000010626.jpg.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010626.jpg.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/VENTAS/1000010627.jpg.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010627.jpg.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/VENTAS/1000010628.jpg.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010628.jpg.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/VENTAS/1000010629.jpg.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010629.jpg.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/VENTAS/1000010630.jpg.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010630.jpg.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/VENTAS/1000010631.jpg.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010631.jpg.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/VENTAS/1000010632.jpg.pdf
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/1000010632.jpg.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188002.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188002.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188003.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188003.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188005.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188005.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188007.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188007.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188017.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188017.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188035.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188035.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188037.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188037.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188039.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188039.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188041.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188041.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188043.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188043.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188046.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188046.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188050.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188050.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188051.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188051.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188054.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188054.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188056.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188056.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188057.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188057.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188061.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188061.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188063.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188063.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188065.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188065.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188067.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188067.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188069.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188069.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188071.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188071.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188073.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188073.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188076.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188076.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188078.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188078.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188080.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188080.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188082.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188082.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188084.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188084.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/1000188087.jpg
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/1000188087.jpg   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE/PLANILLA DETERMINACION IMPUESTOS.xls
+      → 089 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/PLANILLA DETERMINACION IMPUESTOS.xls   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS LEGALES/Acta de Asamblea No 02 CRISTAL S.A..doc
       → 089 LEGAL Y SOCIETARIO/Acta de Asamblea No 02 CRISTAL S.A..doc   [Documento de asamblea]
   PERIODO 2026/DOCUMENTOS LEGALES/Acta de Asamblea No 02 CRISTAL S.A..pdf
@@ -1632,6 +1734,18 @@ MOVIDOS CONSERVANDO SU NOMBRE (381)
       → 089 PERIODO 2026/DOCUMENTOS LABORALES/MTESS/FUNCIONARIOS MTESS - CRISTAL 2026.xlsx   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
   PERIODO 2026/DOCUMENTOS VARIOS/MTESS/PLANILLA REOP - CRISTAL 2026.xlsx
       → 089 PERIODO 2026/DOCUMENTOS LABORALES/MTESS/PLANILLA REOP - CRISTAL 2026.xlsx   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
+  PERIODO 2026/DOCUMENTOS VARIOS/PEDIDO DEL BANCO/Acta de Asamblea No 02 CRISTAL S.A..pdf
+      → 089 PERIODO 2026/DOCUMENTOS VARIOS/PEDIDO DEL BANCO/Acta de Asamblea No 02 CRISTAL S.A..pdf   [Parte de un pedido o paquete de documentos («PEDIDO DEL BANCO»): se conserva junto en DOCUMENTOS VARIOS]
+  PERIODO 2026/DOCUMENTOS VARIOS/PEDIDO DEL BANCO/Balance General Apertura.pdf
+      → 089 PERIODO 2026/DOCUMENTOS VARIOS/PEDIDO DEL BANCO/Balance General Apertura.pdf   [Parte de un pedido o paquete de documentos («PEDIDO DEL BANCO»): se conserva junto en DOCUMENTOS VARIOS]
+  PERIODO 2026/DOCUMENTOS VARIOS/PEDIDO DEL BANCO/CI MAGNO BORDON.pdf
+      → 089 PERIODO 2026/DOCUMENTOS VARIOS/PEDIDO DEL BANCO/CI MAGNO BORDON.pdf   [Parte de un pedido o paquete de documentos («PEDIDO DEL BANCO»): se conserva junto en DOCUMENTOS VARIOS]
+  PERIODO 2026/DOCUMENTOS VARIOS/PEDIDO DEL BANCO/Constancia _ MARANGATU.pdf
+      → 089 PERIODO 2026/DOCUMENTOS VARIOS/PEDIDO DEL BANCO/Constancia _ MARANGATU.pdf   [Parte de un pedido o paquete de documentos («PEDIDO DEL BANCO»): se conserva junto en DOCUMENTOS VARIOS]
+  PERIODO 2026/DOCUMENTOS VARIOS/PEDIDO DEL BANCO/Constancia en el Registro Administrativo.pdf
+      → 089 PERIODO 2026/DOCUMENTOS VARIOS/PEDIDO DEL BANCO/Constancia en el Registro Administrativo.pdf   [Parte de un pedido o paquete de documentos («PEDIDO DEL BANCO»): se conserva junto en DOCUMENTOS VARIOS]
+  PERIODO 2026/DOCUMENTOS VARIOS/PEDIDO DEL BANCO/ESTATUTO CRISTAL S.A. _compressed.pdf
+      → 089 PERIODO 2026/DOCUMENTOS VARIOS/PEDIDO DEL BANCO/ESTATUTO CRISTAL S.A. _compressed.pdf   [Parte de un pedido o paquete de documentos («PEDIDO DEL BANCO»): se conserva junto en DOCUMENTOS VARIOS]
   PERIODO 2026/DOCUMENTOS VARIOS/PLANILLA DE CONTROL MENSUAL -Beatriz.xlsx
       → 089 PERIODO 2026/DOCUMENTOS VARIOS/PLANILLA DE CONTROL MENSUAL -Beatriz.xlsx   [Estaba en DOCUMENTOS VARIOS]
 
@@ -1639,7 +1753,7 @@ ENVIADOS A OTRO CLIENTE: ninguno
 
 RECIBIDOS DE OTRO CLIENTE: ninguno
 
-A «089 ZZ A CLASIFICAR» (para que lo ubique una persona) (36)
+A «089 ZZ A CLASIFICAR» (para que lo ubique una persona) (7)
 ----------------------------------------------------------------
   PERIODO 2024/DOCUMENTOS CONTABLES/FORMULARIO 120/DDJJ RENTA 2024.pdf
   PERIODO 2024/DOCUMENTOS CONTABLES/IRE 2024 CRISTAL S.A..pdf
@@ -1648,39 +1762,10 @@ A «089 ZZ A CLASIFICAR» (para que lo ubique una persona) (36)
   PERIODO 2025/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/Comunicacion de Nota de remision.pdf
   PERIODO 2025/DOCUMENTOS CONTABLES/DOCUMENTOS DNIT/Constancia _ MARANGATU.pdf
   PERIODO 2026/DOCUMENTOS CONTABLES/COMPROBANTE DE PAGO DE IMPUESTOS.jpeg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188002.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188003.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188005.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188007.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188017.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188035.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188037.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188039.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188041.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188043.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188046.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188050.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188051.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188054.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188056.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188057.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188061.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188063.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188065.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188067.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188069.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188071.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188073.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188076.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188078.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188080.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188082.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188084.jpg
-  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 CRISTAL S.A/1000188087.jpg
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (78)
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (83)
 --------------------------------------------------
   PERIODO 2024/DOCUMENTOS CONTABLES/ESTADOS FINANCIEROS 2024
   PERIODO 2024/DOCUMENTOS CONTABLES/FORMULARIO 120
@@ -1750,6 +1835,10 @@ CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (78)
   PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/FACTURAS NO CARGADAS
   PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO/VENTAS
   PERIODO 2026/DOCUMENTOS CONTABLES/MESES/7 JULIO
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/COMPRAS
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO/VENTAS
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/8 AGOSTO
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/9 SETIEMBRE
   PERIODO 2026/DOCUMENTOS CONTABLES/MESES
   PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 COMPRAS
   PERIODO 2026/DOCUMENTOS CONTABLES/RG 90 VENTAS
@@ -1758,5 +1847,6 @@ CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (78)
   PERIODO 2026/DOCUMENTOS LEGALES
   PERIODO 2026/DOCUMENTOS VARIOS/FACTURACION EFFORT
   PERIODO 2026/DOCUMENTOS VARIOS/MTESS
+  PERIODO 2026/DOCUMENTOS VARIOS/PEDIDO DEL BANCO
   PERIODO 2026/DOCUMENTOS VARIOS
   PERIODO 2026

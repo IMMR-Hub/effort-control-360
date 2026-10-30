@@ -1,18 +1,18 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 082 FFV E.A.S
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 49 · Peso: 57.6 MB · Subcarpetas con archivos: 10
+  Archivos: 51 · Peso: 57.8 MB · Subcarpetas con archivos: 10
 
 RESUMEN
   Duplicados apartados (cuarentena): 4
   Movidos y renombrados según el manual: 13
   Movidos conservando su nombre: 14
   Sin cambios: 0
-  A «082 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 18
+  A «082 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 20
   Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
   Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 3
-  Nombres originales que no dicen qué documento son: 37
+  Nombres originales que no dicen qué documento son: 38
   Nombre o ubicación que contradice lo que dice el documento por dentro: 0
   Excel con vínculos (no se renombraron): 0
 
@@ -21,7 +21,7 @@ AL FINAL (archivos por carpeta de primer nivel)
   082 PERIODO 2024: 5
   082 PERIODO 2026: 7
   082 TRIBUTARIO: 7
-  082 ZZ A CLASIFICAR: 18
+  082 ZZ A CLASIFICAR: 20
 
 DUPLICADOS APARTADOS (4)
 ----------------------------
@@ -111,15 +111,17 @@ ENVIADOS A OTRO CLIENTE: ninguno
 
 RECIBIDOS DE OTRO CLIENTE: ninguno
 
-A «082 ZZ A CLASIFICAR» (para que lo ubique una persona) (18)
+A «082 ZZ A CLASIFICAR» (para que lo ubique una persona) (20)
 ----------------------------------------------------------------
   DOCUMENTOS CONTABLES/COMUNICADOS DNIT/Constancia _ MARANGATU.pdf
+  DOCUMENTOS CONTABLES/COMUNICADOS DNIT/Solicitud de de actualizacion de datos.pdf
   DOCUMENTOS VARIOS/_Formulario de Suscripción 24 hs negocios - FFV EAS.pdf
   DOCUMENTOS VARIOS/Adjudicación de Inmueble.pdf
   DOCUMENTOS VARIOS/APERTURA DE CUENTA/_Ficha-de-Datos-Clientes-PJ - FFV EAS.pdf
   DOCUMENTOS VARIOS/APERTURA DE CUENTA/_FORMULARIO - FICHA DE CLIENTE -FFV EAS.pdf
   DOCUMENTOS VARIOS/APERTURA DE CUENTA/_Solicitud-para-Apertura-de-cta-PJ - FFV EAS UNIPERSONAL.pdf
   DOCUMENTOS VARIOS/APERTURA DE CUENTA/_Z-00143 Formulario Suscripción pagos y cobros electrónicos - FVV EAS.pdf
+  DOCUMENTOS VARIOS/APERTURA DE CUENTA/BALANCE APERTURA.pdf
   DOCUMENTOS VARIOS/APERTURA DE CUENTA/Constancia _ MARANGATU.pdf
   DOCUMENTOS VARIOS/BALANCE[1].pdf
   DOCUMENTOS VARIOS/CI ALISON RAMIREZ.pdf

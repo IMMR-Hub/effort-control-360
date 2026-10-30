@@ -1,18 +1,18 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 029 ORL COMERCIAL E.A.S
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 200 · Peso: 37.8 MB · Subcarpetas con archivos: 45
+  Archivos: 202 · Peso: 37.9 MB · Subcarpetas con archivos: 46
 
 RESUMEN
   Duplicados apartados (cuarentena): 0
-  Movidos y renombrados según el manual: 124
+  Movidos y renombrados según el manual: 125
   Movidos conservando su nombre: 72
   Sin cambios: 0
-  A «029 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 4
+  A «029 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 5
   Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
   Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 4
-  Nombres originales que no dicen qué documento son: 58
+  Nombres originales que no dicen qué documento son: 59
   Nombre o ubicación que contradice lo que dice el documento por dentro: 2
   Excel con vínculos (no se renombraron): 0
 
@@ -21,9 +21,9 @@ AL FINAL (archivos por carpeta de primer nivel)
   029 PERIODO 2023: 9
   029 PERIODO 2024: 36
   029 PERIODO 2025: 58
-  029 PERIODO 2026: 62
+  029 PERIODO 2026: 63
   029 TRIBUTARIO: 11
-  029 ZZ A CLASIFICAR: 4
+  029 ZZ A CLASIFICAR: 5
 
 DUPLICADOS APARTADOS: ninguno
 
@@ -39,7 +39,7 @@ NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (4)
   enero2025 (1).xlsx  →  enero2025.xlsx
   MARZO 2025 (1).xls.xlsx  →  MARZO 2025 (1).xls.xlsx
 
-MOVIDOS Y RENOMBRADOS (124)
+MOVIDOS Y RENOMBRADOS (125)
 -----------------------------
   PERIODO 2023/diciembre 2023/IVA GENERAL 12-2023.pdf
       → 029 PERIODO 2023/DOCUMENTOS CONTABLES/12 DICIEMBRE/DDJJ IVA 122023 ORL COMERCIAL EAS.pdf   [Declaración leída por dentro: formulario 120, período 12/2023]
@@ -292,6 +292,8 @@ MOVIDOS Y RENOMBRADOS (124)
       → 029 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG COMPRAS 082026 ORL COMERCIAL EAS.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 08/2026]
   PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG VENTAS AGOSTO 2026 - ORL COMERCIAL.xlsx
       → 029 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG VENTAS 082026 ORL COMERCIAL EAS.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 08/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS SETIEMBRE 2026 - ORL COMERCIAL.xlsx
+      → 029 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092026 ORL COMERCIAL EAS.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2026]
   PERIODO 2026/DOCUMENTOS LEGALES Y SOCIETARIOS/LIQUIDACION DE HABERES ALICIA GOMEZ .xlsx
       → 029 PERIODO 2026/DOCUMENTOS LABORALES/MTESS/LIQUIDACION DE HABERES ALICIA GOMEZ.xlsx   [Documento laboral (MTESS, sueldos, contratos de trabajo)]
   PERIODO 2026/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA 756-ORL COMERCIAL-ENERO.pdf
@@ -450,8 +452,9 @@ ENVIADOS A OTRO CLIENTE: ninguno
 
 RECIBIDOS DE OTRO CLIENTE: ninguno
 
-A «029 ZZ A CLASIFICAR» (para que lo ubique una persona) (4)
+A «029 ZZ A CLASIFICAR» (para que lo ubique una persona) (5)
 ----------------------------------------------------------------
+  DOCUMENTACION LEGAL/ENTRADA IPS MARIA LUJAN PAEZ.pdf
   PERIODO 2023/FORMULARIO 501.pdf
   PERIODO 2024/DOCUMENTOS CONTABLES/Constancia _ MARANGATU.pdf
   PERIODO 2024/DOCUMENTOS CONTABLES/ORL COMERCIAL ESTADO DE CUENTA 31102024.pdf
@@ -459,7 +462,7 @@ A «029 ZZ A CLASIFICAR» (para que lo ubique una persona) (4)
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (54)
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (55)
 --------------------------------------------------
   DOCUMENTACION LEGAL
   PERIODO 2023/diciembre 2023
@@ -510,6 +513,7 @@ CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (54)
   PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO
   PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO
   PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO
+  PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE
   PERIODO 2026/DOCUMENTOS CONTABLES
   PERIODO 2026/DOCUMENTOS LEGALES Y SOCIETARIOS
   PERIODO 2026/DOCUMENTOS VARIOS/FACTURACION EFFORT

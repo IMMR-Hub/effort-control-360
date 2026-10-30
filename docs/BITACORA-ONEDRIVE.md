@@ -450,3 +450,17 @@ En concreto:
   `999 ZZ A CLASIFICAR`. Script aparte, solo GET y PATCH; solo renombra carpetas que están directamente dentro
   de `999 CLIENTE MUESTRA` y figuran en una tabla fija; `conflictBehavior=fail`. Verificado: mismo contenido
   (212 archivos y 31 subcarpetas) y `CLIENTES` sigue con 144 elementos. El manual pasó a la versión 1.3.
+
+## 2026-10-30 — Lectura (solo GET) para actualizar la copia del disco externo
+
+- **Qué:** pedido de Daniel: «haz una última verificación de los archivos del OneDrive y actualiza en el disco externo
+  tanto los archivos modificados, nuevos, etc. en la copia y en el ordenado». Se leyó el inventario completo de
+  `lsosa@effort.com.py` (consulta de cambios de Graph) y se bajaron los archivos nuevos y modificados. **Solo GET**: la
+  única puerta de salida del script rechaza cualquier otro método. No se escribió nada en OneDrive.
+- **Cambios desde la copia del 2026-10-19:** 449 archivos nuevos, 31 modificados, 178 movidos o renombrados y 11 que ya
+  no están en OneDrive (siguen en la copia). Estado final: **36.926 archivos, 19,39 GB, 6.348 carpetas; 36.926 de
+  36.926 verificados** (peso y huella de Microsoft). Tres pasadas, porque Laura y Lili siguieron trabajando mientras se copiaba.
+- **La copia no pierde nada:** antes de reemplazar un archivo modificado, la versión del 19-10 se apartó a
+  `_registro/versiones anteriores 2026-10-30/` (29 archivos). Informes: `_registro/cambios-2026-10-30*.json` y
+  `estado-onedrive-2026-10-30.json`. Script: `docs/ordenamiento-2026-10/herramientas/actualizar.mjs.txt`.
+- **Observación (no es obra nuestra):** los 11 que ya no están y los 178 movidos los movió, renombró o borró alguien de EFFORT.

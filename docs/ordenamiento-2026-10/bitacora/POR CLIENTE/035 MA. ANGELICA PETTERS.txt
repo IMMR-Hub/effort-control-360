@@ -1,18 +1,18 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 035 MA. ANGELICA PETTERS
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 271 · Peso: 65.9 MB · Subcarpetas con archivos: 47
+  Archivos: 280 · Peso: 68.6 MB · Subcarpetas con archivos: 47
 
 RESUMEN
-  Duplicados apartados (cuarentena): 0
-  Movidos y renombrados según el manual: 158
+  Duplicados apartados (cuarentena): 2
+  Movidos y renombrados según el manual: 164
   Movidos conservando su nombre: 112
   Sin cambios: 0
-  A «035 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 1
+  A «035 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 2
   Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
   Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 54
-  Nombres originales que no dicen qué documento son: 98
+  Nombres originales que no dicen qué documento son: 106
   Nombre o ubicación que contradice lo que dice el documento por dentro: 1
   Excel con vínculos (no se renombraron): 0
 
@@ -21,11 +21,16 @@ AL FINAL (archivos por carpeta de primer nivel)
   035 PERIODO 2023: 6
   035 PERIODO 2024: 147
   035 PERIODO 2025: 45
-  035 PERIODO 2026: 56
+  035 PERIODO 2026: 62
   035 TRIBUTARIO: 13
-  035 ZZ A CLASIFICAR: 1
+  035 ZZ A CLASIFICAR: 2
 
-DUPLICADOS APARTADOS: ninguno
+DUPLICADOS APARTADOS (2)
+----------------------------
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-01-2026.pdf
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MES/01 ENERO/DDJJ ENERO 2026 - MARIA ANGELICA PETERS.pdf  (La misma declaración presentada (mismo número de orden 12085980543), bajada otra vez)
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-05-2026.pdf
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MES/05 MAYO/120-05-2026.pdf  (La misma declaración presentada (mismo número de orden 12088997725), bajada otra vez)
 
 NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO (1)
 ------------------------------------------------------
@@ -88,7 +93,7 @@ NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (54)
   DDJJ JUNIO OK 2026 ANGEKICA PETTERS.pdf  →  DDJJ JUNIO OK 2026 ANGEKICA PETTERS.pdf
   LIBRO VENTAS OK 2026 JUNIO.pdf  →  LIBRO VENTAS 062026 MA ANGELICA PETTERS.pdf
 
-MOVIDOS Y RENOMBRADOS (158)
+MOVIDOS Y RENOMBRADOS (164)
 -----------------------------
   PERIODO 2024/DOCUMENTOS CONTABLES/IRE SIMPLE/RG 2024/rg 90 ventas 2024 angelica.xlsx
       → 035 PERIODO 2024/DOCUMENTOS CONTABLES/01 ENERO/RG VENTAS 012024 MA ANGELICA PETTERS.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 01/2024]
@@ -342,6 +347,18 @@ MOVIDOS Y RENOMBRADOS (158)
       → 035 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO VENTAS 092025 MA ANGELICA PETTERS.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/CCT/CCT 09-2026.pdf
       → 035 TRIBUTARIO/CCT 092026 MA ANGELICA PETTERS.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-02-2026.pdf
+      → 035 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/DDJJ IVA 022026 MA ANGELICA PETTERS.pdf   [Declaración leída por dentro: formulario 120, período 02/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-03-2026.pdf
+      → 035 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/DDJJ IVA 032026 MA ANGELICA PETTERS.pdf   [Declaración leída por dentro: formulario 120, período 03/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-04-2026.pdf
+      → 035 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/DDJJ IVA 042026 MA ANGELICA PETTERS.pdf   [Declaración leída por dentro: formulario 120, período 04/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-06-2026.pdf
+      → 035 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/DDJJ IVA 062026 MA ANGELICA PETTERS.pdf   [Declaración leída por dentro: formulario 120, período 06/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-07-2026.pdf
+      → 035 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/DDJJ IVA 072026 MA ANGELICA PETTERS.pdf   [Declaración leída por dentro: formulario 120, período 07/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-08-2026.pdf
+      → 035 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/DDJJ IVA 082026 MA ANGELICA PETTERS.pdf   [Declaración leída por dentro: formulario 120, período 08/2026]
   PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-09-2026.pdf
       → 035 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DDJJ IVA 092026 MA ANGELICA PETTERS.pdf   [Declaración leída por dentro: formulario 120, período 09/2026]
   PERIODO 2026/DOCUMENTOS CONTABLES/LQ. IRE SIMPLE ANGELICA PETTERS.xlsx
@@ -645,8 +662,9 @@ ENVIADOS A OTRO CLIENTE: ninguno
 
 RECIBIDOS DE OTRO CLIENTE: ninguno
 
-A «035 ZZ A CLASIFICAR» (para que lo ubique una persona) (1)
+A «035 ZZ A CLASIFICAR» (para que lo ubique una persona) (2)
 ----------------------------------------------------------------
+  PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/FORMULARIO  501 IMPUESTO A LA RENTA EMPRESARIAL SIMPLE.pdf
   PERIODO 2026/DOCUMENTOS CONTABLES/PRESENTACION IRES SIMPLE MARIA ANGELICA 2025.pdf
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno

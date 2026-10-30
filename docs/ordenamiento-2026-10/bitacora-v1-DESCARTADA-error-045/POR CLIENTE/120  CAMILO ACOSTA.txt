@@ -1,0 +1,78 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 120  CAMILO ACOSTA
+Fecha: 20/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+
+AL INICIO
+  Archivos: 14 · Peso: 10.0 MB · Subcarpetas con archivos: 2
+
+RESUMEN
+  Duplicados apartados (cuarentena): 0
+  Movidos y renombrados según el manual: 8
+  Movidos conservando su nombre: 6
+  Sin cambios: 0
+  A «120 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 0
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 1
+  Nombres originales que no dicen qué documento son: 1
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  120 PERIODO 2026: 13
+  120 TRIBUTARIO: 1
+
+DUPLICADOS APARTADOS: ninguno
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (1)
+---------------------------------------------------------
+  CamScanner 15-09-2026 10.55.pdf  →  CamScanner 15-09-2026 10.55.pdf
+
+MOVIDOS Y RENOMBRADOS (8)
+-----------------------------
+  PERIODO 2026/DOCUMENTOS CONTABLES/AGOSTO/LIBRO COMPRAS AGOSTO 2026 CAMILO A.pdf
+      → 120 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/LIBRO COMPRAS 082026 CAMILO ACOSTA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/AGOSTO/LIBRO VENTAS AGOSTO 2026 CAMILO A.pdf
+      → 120 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/LIBRO VENTAS 082026 CAMILO ACOSTA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/AGOSTO/RG VENTAS LILINA L AGOSTO.xlsx
+      → 120 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG VENTAS 082026 CAMILO ACOSTA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 08/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/Setiembre/DDJJ SETIEMBRE 2026 CAMILO A.pdf
+      → 120 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DDJJ IVA 092026 CAMILO ACOSTA.pdf   [Declaración leída por dentro: formulario 120, período 09/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/Setiembre/LIBRO COMPRAS SETIEMBRE 2026 CAMILO A.pdf
+      → 120 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO COMPRAS 092026 CAMILO ACOSTA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/Setiembre/LIBRO VENTAS SETIEMBRE 2026 CAMILO A..pdf
+      → 120 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO VENTAS 092026 CAMILO ACOSTA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/Setiembre/RG COMPRAS CAMILO SET 2026.xlsx
+      → 120 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092026 CAMILO ACOSTA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/Setiembre/rg ventas camilo seteimbre 2026.xlsx
+      → 120 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG VENTAS 092026 CAMILO ACOSTA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 09/2026]
+
+MOVIDOS CONSERVANDO SU NOMBRE (6)
+-------------------------------------
+  PERIODO 2026/DOCUMENTOS CONTABLES/AGOSTO/Boleta de pago.pdf
+      → 120 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/Boleta de pago.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/AGOSTO/CamScanner 15-09-2026 10.55.pdf
+      → 120 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/CamScanner 15-09-2026 10.55.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/AGOSTO/DDJJ AGOSTO 2026 CAMILO FABIAN.pdf
+      → 120 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/DDJJ AGOSTO 2026 CAMILO FABIAN.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/AGOSTO/DETERMINACIÓN DELIVA AGOSTO 2026 CAMILO ACOSTA.pdf
+      → 120 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/DETERMINACIÓN DELIVA AGOSTO 2026 CAMILO ACOSTA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/Setiembre/CCT CAMILO ACOSTA 14102026.pdf
+      → 120 TRIBUTARIO/CCT CAMILO ACOSTA 14102026.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/Setiembre/DETERMINACIÓN DEL IVA SETIEMBRE 2026 CAMILO A.pdf
+      → 120 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DETERMINACIÓN DEL IVA SETIEMBRE 2026 CAMILO A.pdf   [Período tomado de la carpeta donde estaba]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «120 ZZ A CLASIFICAR» (para que lo ubique una persona): ninguno
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (4)
+--------------------------------------------------
+  PERIODO 2026/DOCUMENTOS CONTABLES/AGOSTO
+  PERIODO 2026/DOCUMENTOS CONTABLES/Setiembre
+  PERIODO 2026/DOCUMENTOS CONTABLES
+  PERIODO 2026

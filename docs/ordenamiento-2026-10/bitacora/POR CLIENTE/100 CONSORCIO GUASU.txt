@@ -1,25 +1,25 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 100 CONSORCIO GUASU
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 101 · Peso: 31.4 MB · Subcarpetas con archivos: 14
+  Archivos: 103 · Peso: 31.9 MB · Subcarpetas con archivos: 14
 
 RESUMEN
   Duplicados apartados (cuarentena): 0
   Movidos y renombrados según el manual: 59
-  Movidos conservando su nombre: 27
+  Movidos conservando su nombre: 29
   Sin cambios: 0
   A «100 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 15
   Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
   Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 9
-  Nombres originales que no dicen qué documento son: 39
+  Nombres originales que no dicen qué documento son: 40
   Nombre o ubicación que contradice lo que dice el documento por dentro: 0
   Excel con vínculos (no se renombraron): 1
 
 AL FINAL (archivos por carpeta de primer nivel)
   100 LEGAL Y SOCIETARIO: 10
   100 PERIODO 2025: 29
-  100 PERIODO 2026: 41
+  100 PERIODO 2026: 43
   100 TRIBUTARIO: 6
   100 ZZ A CLASIFICAR: 15
 
@@ -169,7 +169,7 @@ MOVIDOS Y RENOMBRADOS (59)
   PERIODO 2026/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA 824-CONSORCIO GUASU-FEBRERO.pdf
       → 100 PERIODO 2026/DOCUMENTOS VARIOS/FACTURACION EFFORT/FACTURA COMPRA EFFORT 824 022026 CONSORCIO GUASU.pdf   [Honorarios que EFFORT le factura al cliente]
 
-MOVIDOS CONSERVANDO SU NOMBRE (27)
+MOVIDOS CONSERVANDO SU NOMBRE (29)
 -------------------------------------
   PERIODO 2025/DOCUMENTOS CONTABLES/Balance General Resoluc.pdf 2025 firmado.pdf
       → 100 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/Balance General Resoluc.pdf 2025 firmado.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
@@ -204,6 +204,8 @@ MOVIDOS CONSERVANDO SU NOMBRE (27)
       → 100 TRIBUTARIO/solicitud de inscripcion en el RUC.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
   PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/solicitud facturador electronico.pdf
       → 100 LEGAL Y SOCIETARIO/solicitud facturador electronico.pdf   [Documento legal o societario]
+  PERIODO 2026/DOCUMENTOS CONTABLES/COMRAS A SETIEMBRE 2026.pdf
+      → 100 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/COMRAS A SETIEMBRE 2026.pdf   [Período tomado del nombre del archivo]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/04 ABRIL/DET.IMPUESTO IVA 04 2026 - CONSORCIO GUASU.pdf
       → 100 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/DET.IMPUESTO IVA 04 2026 - CONSORCIO GUASU.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/05 MAYO/80157340_REC_202605.zip
@@ -222,6 +224,8 @@ MOVIDOS CONSERVANDO SU NOMBRE (27)
       → 100 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/FACT 1166 - ALEJANDRA PICCHIONI.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/09 SEPTIEMBRE/DETERMINACION DE IVA 092026 - CONROSCIO GUAS.pdf
       → 100 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DETERMINACION DE IVA 092026 - CONROSCIO GUAS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/VENTAS A SETIEMBRE 2026.pdf
+      → 100 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/VENTAS A SETIEMBRE 2026.pdf   [Período tomado del nombre del archivo]
   PERIODO 2026/DOCUMENTOS VARIOS/CCT 09102026.pdf
       → 100 TRIBUTARIO/CCT 09102026.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
   PERIODO 2026/DOCUMENTOS VARIOS/CCT CONSORCIO GUASU 170726.pdf

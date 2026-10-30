@@ -2,16 +2,16 @@
  "porCliente": {
   "100": {
    "cliente": "100 CONSORCIO GUASU",
-   "archivos": 101,
-   "movidosSinRenombrar": 27,
+   "archivos": 103,
+   "movidosSinRenombrar": 29,
    "movidosYRenombrados": 59,
    "aClasificar": 15,
    "vinculados": 1
   },
   "101": {
    "cliente": "101 GANADERA ALBORADA S.A",
-   "archivos": 96,
-   "movidosSinRenombrar": 62,
+   "archivos": 97,
+   "movidosSinRenombrar": 63,
    "movidosYRenombrados": 21,
    "duplicados": 2,
    "aClasificar": 11
@@ -41,15 +41,15 @@
    "cliente": "105 ALMA BENITEZ OVIEDO",
    "archivos": 92,
    "movidosSinRenombrar": 27,
-   "movidosYRenombrados": 63,
-   "aClasificar": 2
+   "aClasificar": 2,
+   "movidosYRenombrados": 63
   },
   "106": {
    "cliente": "106 GANADERA INDIANA",
-   "archivos": 196,
-   "aClasificar": 87,
-   "movidosYRenombrados": 28,
-   "movidosSinRenombrar": 81
+   "archivos": 220,
+   "aClasificar": 99,
+   "movidosYRenombrados": 35,
+   "movidosSinRenombrar": 86
   },
   "107": {
    "cliente": "107 AM Y ASOCIADOS EAS",
@@ -70,8 +70,8 @@
    "cliente": "109 GABRIEL CUBAS",
    "archivos": 27,
    "aClasificar": 18,
-   "movidosSinRenombrar": 8,
-   "movidosYRenombrados": 1
+   "movidosYRenombrados": 1,
+   "movidosSinRenombrar": 8
   },
   "110": {
    "cliente": "110 SOLEDAD JURE",
@@ -109,10 +109,10 @@
   },
   "115": {
    "cliente": "115 GONZALO GIMENEZ",
-   "archivos": 49,
-   "movidosYRenombrados": 30,
-   "movidosSinRenombrar": 12,
-   "aClasificar": 7
+   "archivos": 74,
+   "movidosYRenombrados": 49,
+   "movidosSinRenombrar": 17,
+   "aClasificar": 8
   },
   "116": {
    "cliente": "116 QUIMECO E.A.S",
@@ -123,10 +123,10 @@
   },
   "117": {
    "cliente": "117 DIEGO NICOLAS VELAZQUEZ",
-   "archivos": 113,
-   "movidosSinRenombrar": 49,
-   "movidosYRenombrados": 59,
-   "aClasificar": 5
+   "archivos": 125,
+   "movidosSinRenombrar": 56,
+   "movidosYRenombrados": 63,
+   "aClasificar": 6
   },
   "118": {
    "cliente": "118 MVB EAS",
@@ -138,10 +138,10 @@
   },
   "119": {
    "cliente": "119 ALISON BETTINA RAMIREZ",
-   "archivos": 27,
-   "movidosSinRenombrar": 5,
+   "archivos": 34,
+   "movidosSinRenombrar": 6,
    "aClasificar": 2,
-   "movidosYRenombrados": 20
+   "movidosYRenombrados": 26
   },
   "120": {
    "cliente": "120  CAMILO ACOSTA",
@@ -152,8 +152,8 @@
   "122": {
    "cliente": "122 ALT 240 S.A",
    "archivos": 40,
-   "movidosSinRenombrar": 39,
-   "aClasificar": 1
+   "aClasificar": 1,
+   "movidosSinRenombrar": 39
   },
   "123": {
    "cliente": "123 AGRICOLA GANADERA LA FLORIDA S.A",
@@ -178,14 +178,14 @@
   },
   "126": {
    "cliente": "126 RRHH EFFORT",
-   "archivos": 10,
-   "aClasificar": 10
+   "archivos": 13,
+   "aClasificar": 13
   },
   "127": {
    "cliente": "127 OPEN SISTEMAS SRL",
    "archivos": 8,
-   "movidosSinRenombrar": 2,
-   "movidosYRenombrados": 6
+   "movidosYRenombrados": 6,
+   "movidosSinRenombrar": 2
   },
   "128": {
    "cliente": "128 ASOCIACION PARAGUAYA DE CRIADORES DE PAMPA CHAQUEÑO",
@@ -195,8 +195,8 @@
   "129": {
    "cliente": "129 LILIAN CORTESE",
    "archivos": 15,
-   "movidosYRenombrados": 10,
    "movidosSinRenombrar": 2,
+   "movidosYRenombrados": 10,
    "aClasificar": 3
   },
   "130": {
@@ -209,10 +209,10 @@
   },
   "131": {
    "cliente": "131 COMPAÑIA 2B S.A",
-   "archivos": 36,
-   "movidosYRenombrados": 21,
-   "movidosSinRenombrar": 9,
-   "aClasificar": 6
+   "archivos": 42,
+   "movidosYRenombrados": 24,
+   "movidosSinRenombrar": 10,
+   "aClasificar": 8
   },
   "132": {
    "cliente": "132 MAISON ELIXIR EAS",
@@ -221,11 +221,11 @@
   },
   "002": {
    "cliente": "002 FUMIPRO S.A",
-   "archivos": 825,
-   "movidosSinRenombrar": 245,
+   "archivos": 837,
+   "movidosSinRenombrar": 255,
    "aClasificar": 27,
    "duplicados": 48,
-   "movidosYRenombrados": 505
+   "movidosYRenombrados": 507
   },
   "005": {
    "cliente": "005 ORGANIC GROUP EAS",
@@ -238,21 +238,12 @@
   },
   "011": {
    "cliente": "011 LAURA SOSA ARGAÑA",
-   "archivos": 375,
-   "aClasificar": 16,
-   "movidosYRenombrados": 142,
-   "movidosSinRenombrar": 215,
+   "archivos": 388,
+   "aClasificar": 17,
+   "movidosSinRenombrar": 217,
+   "movidosYRenombrados": 152,
    "duplicados": 2,
    "vinculados": 2
-  },
-  "013": {
-   "cliente": "013 BAIRES EAS",
-   "archivos": 2243,
-   "movidosSinRenombrar": 1598,
-   "movidosYRenombrados": 597,
-   "duplicados": 42,
-   "vinculados": 1,
-   "aClasificar": 6
   },
   "012": {
    "cliente": "012 GARSO S.A",
@@ -263,37 +254,46 @@
    "vinculados": 4,
    "aClasificar": 5
   },
+  "013": {
+   "cliente": "013 BAIRES EAS",
+   "archivos": 2246,
+   "movidosSinRenombrar": 1598,
+   "movidosYRenombrados": 600,
+   "duplicados": 42,
+   "vinculados": 1,
+   "aClasificar": 6
+  },
   "033": {
    "cliente": "033 SAFARI RANCH S.A",
    "archivos": 10,
    "aClasificar": 3,
-   "movidosSinRenombrar": 1,
    "movidosYRenombrados": 1,
+   "movidosSinRenombrar": 1,
    "duplicados": 5
   },
   "019": {
    "cliente": "019 ECOSUR EAS",
    "archivos": 226,
-   "movidosYRenombrados": 124,
    "movidosSinRenombrar": 75,
+   "movidosYRenombrados": 124,
    "aClasificar": 27
   },
   "021": {
    "cliente": "021 COPESA",
-   "archivos": 2216,
-   "aClasificar": 86,
+   "archivos": 2243,
+   "aClasificar": 87,
    "vinculados": 56,
-   "movidosSinRenombrar": 922,
-   "movidosYRenombrados": 907,
-   "duplicados": 300,
+   "movidosSinRenombrar": 927,
+   "movidosYRenombrados": 916,
+   "duplicados": 312,
    "aZZGeneral": 1
   },
   "022": {
    "cliente": "022 EFFORT E.A.S",
-   "archivos": 626,
+   "archivos": 700,
    "aClasificar": 20,
    "duplicados": 27,
-   "movidosYRenombrados": 420,
+   "movidosYRenombrados": 494,
    "movidosSinRenombrar": 158,
    "aOtroCliente": 1,
    "vinculados": 1
@@ -310,9 +310,9 @@
    "cliente": "006 RAYVAN EL KHOURY",
    "archivos": 399,
    "movidosSinRenombrar": 123,
+   "aClasificar": 16,
    "movidosYRenombrados": 180,
    "duplicados": 80,
-   "aClasificar": 16,
    "vinculados": 3
   },
   "007": {
@@ -327,39 +327,48 @@
   },
   "008": {
    "cliente": "008 RAMIRO GARCIA MUÑOZ",
-   "archivos": 327,
+   "archivos": 335,
    "movidosSinRenombrar": 193,
    "duplicados": 1,
-   "movidosYRenombrados": 129,
+   "movidosYRenombrados": 137,
    "aClasificar": 4
   },
   "010": {
    "cliente": "010 ALEJANDRA PICCHIONI",
-   "archivos": 167,
+   "archivos": 169,
    "movidosSinRenombrar": 93,
-   "movidosYRenombrados": 72,
+   "movidosYRenombrados": 74,
    "duplicados": 2,
    "vinculados": 2
   },
+  "014": {
+   "cliente": "014 NEO HOLDING GROUP S.A",
+   "archivos": 1752,
+   "movidosSinRenombrar": 864,
+   "movidosYRenombrados": 388,
+   "aClasificar": 342,
+   "duplicados": 156,
+   "vinculados": 19,
+   "aOtroCliente": 2
+  },
   "023": {
    "cliente": "023 DIBEC UNIPERSONAL",
-   "archivos": 1491,
-   "movidosSinRenombrar": 677,
+   "archivos": 1492,
+   "movidosSinRenombrar": 678,
    "movidosYRenombrados": 522,
    "duplicados": 168,
    "aClasificar": 123,
    "vinculados": 16,
    "aOtroCliente": 1
   },
-  "014": {
-   "cliente": "014 NEO HOLDING GROUP S.A",
-   "archivos": 1742,
-   "movidosSinRenombrar": 863,
-   "movidosYRenombrados": 386,
-   "aClasificar": 342,
-   "duplicados": 149,
-   "vinculados": 19,
-   "aOtroCliente": 2
+  "025": {
+   "cliente": "025 MUNDO MOVIL S.A",
+   "archivos": 440,
+   "movidosSinRenombrar": 198,
+   "movidosYRenombrados": 221,
+   "duplicados": 8,
+   "aClasificar": 13,
+   "vinculados": 5
   },
   "024": {
    "cliente": "024 ALUSAN E.A.S",
@@ -370,33 +379,12 @@
    "duplicados": 17,
    "vinculados": 2
   },
-  "025": {
-   "cliente": "025 MUNDO MOVIL S.A",
-   "archivos": 428,
-   "movidosSinRenombrar": 197,
-   "movidosYRenombrados": 213,
-   "duplicados": 5,
-   "aClasificar": 13,
-   "vinculados": 5
-  },
   "029": {
    "cliente": "029 ORL COMERCIAL E.A.S",
-   "archivos": 200,
+   "archivos": 202,
    "movidosSinRenombrar": 72,
-   "movidosYRenombrados": 124,
-   "aClasificar": 4
-  },
-  "071": {
-   "cliente": "071 NATALIA APONTE",
-   "archivos": 116,
-   "aClasificar": 7,
-   "movidosSinRenombrar": 68,
-   "movidosYRenombrados": 41
-  },
-  "028": {
-   "cliente": "028 NEUMATICOS ASUNCION",
-   "archivos": 1,
-   "aClasificar": 1
+   "movidosYRenombrados": 125,
+   "aClasificar": 5
   },
   "027": {
    "cliente": "027 MARIEL RODRIGUEZ",
@@ -406,6 +394,18 @@
    "duplicados": 4,
    "aClasificar": 3
   },
+  "028": {
+   "cliente": "028 NEUMATICOS ASUNCION",
+   "archivos": 1,
+   "aClasificar": 1
+  },
+  "071": {
+   "cliente": "071 NATALIA APONTE",
+   "archivos": 116,
+   "aClasificar": 7,
+   "movidosSinRenombrar": 68,
+   "movidosYRenombrados": 41
+  },
   "030": {
    "cliente": "030 AQUILA ENERGY E.A.S",
    "archivos": 85,
@@ -413,25 +413,25 @@
    "movidosYRenombrados": 35,
    "aClasificar": 2
   },
+  "031": {
+   "cliente": "031 EVA MACIEL",
+   "archivos": 452,
+   "movidosSinRenombrar": 242,
+   "movidosYRenombrados": 189,
+   "duplicados": 18,
+   "vinculados": 1,
+   "aClasificar": 3
+  },
   "034": {
    "cliente": "034 SIRACUA E.A.S",
    "archivos": 2,
    "aClasificar": 2
   },
-  "031": {
-   "cliente": "031 EVA MACIEL",
-   "archivos": 449,
-   "movidosSinRenombrar": 240,
-   "movidosYRenombrados": 189,
-   "duplicados": 18,
-   "vinculados": 1,
-   "aClasificar": 2
-  },
   "015": {
    "cliente": "015 SOMOS PIRI EAS",
    "archivos": 227,
-   "movidosSinRenombrar": 121,
    "movidosYRenombrados": 74,
+   "movidosSinRenombrar": 121,
    "aClasificar": 31,
    "duplicados": 1
   },
@@ -443,37 +443,38 @@
    "aClasificar": 32,
    "duplicados": 35
   },
+  "035": {
+   "cliente": "035 MA. ANGELICA PETTERS",
+   "archivos": 280,
+   "movidosSinRenombrar": 112,
+   "movidosYRenombrados": 164,
+   "aClasificar": 2,
+   "duplicados": 2
+  },
   "032": {
    "cliente": "032 DIBEC S.A",
-   "archivos": 391,
+   "archivos": 394,
    "aOtroCliente": 1,
    "movidosYRenombrados": 109,
-   "movidosSinRenombrar": 214,
+   "movidosSinRenombrar": 217,
    "aClasificar": 43,
    "duplicados": 24,
    "vinculados": 1
   },
-  "035": {
-   "cliente": "035 MA. ANGELICA PETTERS",
-   "archivos": 271,
-   "movidosSinRenombrar": 112,
-   "movidosYRenombrados": 158,
-   "aClasificar": 1
-  },
   "036": {
    "cliente": "036 FERNANDO HERREROS",
-   "archivos": 217,
-   "movidosYRenombrados": 106,
-   "movidosSinRenombrar": 100,
+   "archivos": 223,
+   "movidosYRenombrados": 109,
+   "movidosSinRenombrar": 102,
    "duplicados": 1,
-   "aClasificar": 10
+   "aClasificar": 11
   },
   "018": {
    "cliente": "018 AGROGRANJA KOE JU EAS",
-   "archivos": 280,
-   "movidosYRenombrados": 163,
+   "archivos": 288,
    "aClasificar": 18,
-   "movidosSinRenombrar": 99,
+   "movidosYRenombrados": 168,
+   "movidosSinRenombrar": 102,
    "vinculados": 1
   },
   "037": {
@@ -491,6 +492,15 @@
    "aClasificar": 4,
    "duplicados": 4
   },
+  "073": {
+   "cliente": "073 E-SOLUTIONS S.A",
+   "archivos": 697,
+   "aClasificar": 27,
+   "movidosSinRenombrar": 369,
+   "movidosYRenombrados": 277,
+   "duplicados": 24,
+   "vinculados": 4
+  },
   "041": {
    "cliente": "041 GABRIELA GOSSEN",
    "archivos": 123,
@@ -499,15 +509,6 @@
    "vinculados": 3,
    "aClasificar": 8,
    "duplicados": 3
-  },
-  "073": {
-   "cliente": "073 E-SOLUTIONS S.A",
-   "archivos": 697,
-   "aClasificar": 27,
-   "movidosSinRenombrar": 369,
-   "duplicados": 24,
-   "movidosYRenombrados": 277,
-   "vinculados": 4
   },
   "042": {
    "cliente": "042 JAZMIN VILLAGRA",
@@ -519,25 +520,25 @@
   },
   "043": {
    "cliente": "043 SIPAR S.A",
-   "archivos": 250,
-   "movidosSinRenombrar": 117,
-   "aClasificar": 54,
+   "archivos": 251,
+   "movidosSinRenombrar": 118,
    "movidosYRenombrados": 68,
+   "aClasificar": 54,
    "duplicados": 11,
    "vinculados": 3
   },
   "040": {
    "cliente": "040 GISSELLE FARIAS",
-   "archivos": 256,
-   "movidosSinRenombrar": 130,
-   "movidosYRenombrados": 116,
+   "archivos": 263,
+   "movidosSinRenombrar": 132,
+   "movidosYRenombrados": 121,
    "duplicados": 9,
    "aClasificar": 1
   },
   "038": {
    "cliente": "038 LUIS GONZALEZ",
-   "archivos": 244,
-   "movidosYRenombrados": 162,
+   "archivos": 250,
+   "movidosYRenombrados": 168,
    "movidosSinRenombrar": 68,
    "aClasificar": 14
   },
@@ -559,9 +560,9 @@
   },
   "053": {
    "cliente": "053 DIANA HIDALGO",
-   "archivos": 238,
+   "archivos": 243,
    "movidosSinRenombrar": 130,
-   "movidosYRenombrados": 106,
+   "movidosYRenombrados": 111,
    "aClasificar": 2
   },
   "009": {
@@ -573,26 +574,26 @@
    "movidosSinRenombrar": 17,
    "aOtroCliente": 1
   },
+  "052": {
+   "cliente": "052 JUANA RAFAELA TORRES",
+   "archivos": 225,
+   "movidosYRenombrados": 105,
+   "movidosSinRenombrar": 115,
+   "aClasificar": 5
+  },
   "067": {
    "cliente": "067 LILCY S.A",
-   "archivos": 237,
+   "archivos": 239,
    "movidosSinRenombrar": 129,
-   "movidosYRenombrados": 95,
+   "movidosYRenombrados": 97,
    "aClasificar": 10,
    "duplicados": 3,
    "vinculados": 1
   },
-  "052": {
-   "cliente": "052 JUANA RAFAELA TORRES",
-   "archivos": 218,
-   "movidosYRenombrados": 100,
-   "movidosSinRenombrar": 113,
-   "aClasificar": 5
-  },
   "072": {
    "cliente": "072 HUAWEI",
-   "archivos": 54,
-   "movidosSinRenombrar": 39,
+   "archivos": 56,
+   "movidosSinRenombrar": 41,
    "movidosYRenombrados": 1,
    "aClasificar": 7,
    "duplicados": 7
@@ -600,32 +601,32 @@
   "065": {
    "cliente": "065 HECTOR MARTINEZ ROJAS",
    "archivos": 165,
-   "movidosSinRenombrar": 29,
    "movidosYRenombrados": 134,
+   "movidosSinRenombrar": 29,
    "aClasificar": 2
   },
   "068": {
    "cliente": "068 ECOAGRO S.A",
-   "archivos": 945,
-   "movidosYRenombrados": 364,
-   "movidosSinRenombrar": 444,
+   "archivos": 957,
+   "movidosYRenombrados": 369,
+   "movidosSinRenombrar": 450,
    "aClasificar": 41,
-   "duplicados": 96,
+   "duplicados": 97,
    "vinculados": 32
   },
   "054": {
    "cliente": "054 FATIMA PEÑA",
-   "archivos": 95,
-   "movidosSinRenombrar": 56,
-   "aClasificar": 5,
-   "movidosYRenombrados": 34
+   "archivos": 98,
+   "movidosSinRenombrar": 57,
+   "aClasificar": 6,
+   "movidosYRenombrados": 35
   },
   "074": {
    "cliente": "074 PULIRE E.A.S",
    "archivos": 37,
+   "aClasificar": 2,
    "movidosYRenombrados": 16,
    "movidosSinRenombrar": 18,
-   "aClasificar": 2,
    "duplicados": 1
   },
   "046": {
@@ -650,17 +651,17 @@
   },
   "051": {
    "cliente": "051 ISAAC WU",
-   "archivos": 208,
-   "movidosYRenombrados": 108,
-   "movidosSinRenombrar": 82,
+   "archivos": 217,
+   "movidosYRenombrados": 114,
+   "movidosSinRenombrar": 85,
    "aClasificar": 6,
    "duplicados": 12
   },
   "075": {
    "cliente": "075 ANA CAMPUZANO",
-   "archivos": 408,
-   "movidosSinRenombrar": 237,
-   "movidosYRenombrados": 171,
+   "archivos": 412,
+   "movidosYRenombrados": 173,
+   "movidosSinRenombrar": 239,
    "vinculados": 4
   },
   "077": {
@@ -670,10 +671,10 @@
   },
   "080": {
    "cliente": "080 QUALIA SRL",
-   "archivos": 474,
-   "movidosSinRenombrar": 272,
+   "archivos": 485,
+   "movidosSinRenombrar": 279,
    "duplicados": 5,
-   "movidosYRenombrados": 150,
+   "movidosYRenombrados": 154,
    "aClasificar": 47
   },
   "078": {
@@ -687,17 +688,17 @@
   },
   "081": {
    "cliente": "081 MARKELIER EAS UNIP",
-   "archivos": 207,
-   "movidosSinRenombrar": 119,
+   "archivos": 211,
+   "movidosSinRenombrar": 121,
    "movidosYRenombrados": 78,
    "vinculados": 1,
-   "aClasificar": 10
+   "aClasificar": 12
   },
   "079": {
    "cliente": "079 MARIA VANESSA ACUÑA",
-   "archivos": 289,
-   "movidosSinRenombrar": 159,
-   "movidosYRenombrados": 125,
+   "archivos": 293,
+   "movidosSinRenombrar": 160,
+   "movidosYRenombrados": 128,
    "duplicados": 4,
    "aClasificar": 1
   },
@@ -709,17 +710,23 @@
   },
   "082": {
    "cliente": "082 FFV E.A.S",
-   "archivos": 49,
+   "archivos": 51,
+   "aClasificar": 20,
    "movidosSinRenombrar": 14,
-   "aClasificar": 18,
    "movidosYRenombrados": 13,
    "duplicados": 4
   },
   "050": {
    "cliente": "050 MONICA LESME",
-   "archivos": 31,
-   "movidosYRenombrados": 28,
+   "archivos": 33,
+   "movidosYRenombrados": 30,
    "movidosSinRenombrar": 3
+  },
+  "055": {
+   "cliente": "055 PAOLA MEZA",
+   "archivos": 30,
+   "movidosSinRenombrar": 12,
+   "movidosYRenombrados": 18
   },
   "083": {
    "cliente": "083 NG EAS UNIPERSONAL",
@@ -730,56 +737,50 @@
    "duplicados": 3,
    "aOtroCliente": 1
   },
-  "055": {
-   "cliente": "055 PAOLA MEZA",
-   "archivos": 30,
-   "movidosSinRenombrar": 12,
-   "movidosYRenombrados": 18
-  },
   "049": {
    "cliente": "049 JOSE PENONI",
-   "archivos": 267,
-   "movidosYRenombrados": 141,
-   "movidosSinRenombrar": 107,
-   "aClasificar": 19
+   "archivos": 276,
+   "movidosYRenombrados": 148,
+   "movidosSinRenombrar": 108,
+   "aClasificar": 20
   },
   "047": {
    "cliente": "047 CARLOS PENONI",
-   "archivos": 197,
-   "movidosYRenombrados": 116,
-   "movidosSinRenombrar": 72,
-   "aClasificar": 9
+   "archivos": 204,
+   "movidosYRenombrados": 120,
+   "movidosSinRenombrar": 74,
+   "aClasificar": 10
   },
   "084": {
    "cliente": "084 R3J E.A.S",
-   "archivos": 222,
-   "movidosSinRenombrar": 91,
-   "aClasificar": 35,
+   "archivos": 224,
    "movidosYRenombrados": 94,
+   "movidosSinRenombrar": 92,
+   "aClasificar": 36,
    "duplicados": 2,
    "vinculados": 4
   },
   "086": {
    "cliente": "086 BOU ASSI NAJI BAHIJ",
-   "archivos": 170,
+   "archivos": 175,
    "aClasificar": 41,
-   "movidosSinRenombrar": 50,
+   "movidosSinRenombrar": 51,
    "duplicados": 7,
-   "movidosYRenombrados": 72
+   "movidosYRenombrados": 76
   },
   "085": {
    "cliente": "085 GESTION AGROPECUARIA SRL",
-   "archivos": 653,
+   "archivos": 654,
    "movidosYRenombrados": 185,
-   "movidosSinRenombrar": 408,
+   "movidosSinRenombrar": 409,
    "aClasificar": 55,
    "vinculados": 3,
    "duplicados": 5
   },
   "087": {
    "cliente": "087 NICODEMUS RUÍZ ORTÍZ",
-   "archivos": 110,
-   "movidosYRenombrados": 62,
+   "archivos": 112,
+   "movidosYRenombrados": 64,
    "movidosSinRenombrar": 36,
    "aClasificar": 12
   },
@@ -792,25 +793,26 @@
   },
   "089": {
    "cliente": "089 CRISTAL S.A",
-   "archivos": 713,
-   "movidosSinRenombrar": 381,
-   "movidosYRenombrados": 262,
-   "aClasificar": 36,
-   "duplicados": 34
+   "archivos": 741,
+   "movidosYRenombrados": 273,
+   "movidosSinRenombrar": 418,
+   "aClasificar": 7,
+   "duplicados": 43
   },
   "090": {
    "cliente": "090 RAPIGAS EAS",
-   "archivos": 177,
-   "movidosSinRenombrar": 54,
+   "archivos": 191,
+   "movidosSinRenombrar": 57,
    "movidosYRenombrados": 109,
-   "aClasificar": 14
+   "aClasificar": 18,
+   "duplicados": 7
   },
   "091": {
    "cliente": "091 OSMAR MANUEL LOPEZ LESME",
-   "archivos": 297,
-   "movidosSinRenombrar": 128,
+   "archivos": 299,
+   "movidosSinRenombrar": 129,
    "aClasificar": 18,
-   "movidosYRenombrados": 148,
+   "movidosYRenombrados": 149,
    "duplicados": 3
   },
   "092": {
@@ -860,8 +862,8 @@
   "098": {
    "cliente": "098 MARIA JOSE AGUAYO",
    "archivos": 13,
-   "movidosSinRenombrar": 12,
-   "movidosYRenombrados": 1
+   "movidosYRenombrados": 1,
+   "movidosSinRenombrar": 12
   },
   "004": {
    "cliente": "004 HUMO EAS",
@@ -871,8 +873,8 @@
   "069": {
    "cliente": "069 EDWIN SETRINI",
    "archivos": 18,
-   "movidosYRenombrados": 14,
    "aClasificar": 2,
+   "movidosYRenombrados": 14,
    "movidosSinRenombrar": 2
   },
   "064": {
@@ -883,9 +885,9 @@
   },
   "020": {
    "cliente": "020 LILIAN LACONICH",
-   "archivos": 191,
+   "archivos": 200,
    "movidosSinRenombrar": 86,
-   "movidosYRenombrados": 105,
+   "movidosYRenombrados": 114,
    "vinculados": 3
   },
   "058": {
@@ -903,20 +905,20 @@
   }
  },
  "total": {
-  "archivos": 27288,
-  "movidosSinRenombrar": 12981,
-  "zona_LEGAL": 1370,
-  "zona_MES": 16662,
-  "aClasificar": 1892,
-  "movidosYRenombrados": 11133,
-  "zona_VARIOS": 1756,
-  "duplicados": 1273,
-  "zona_CIERRE": 2040,
+  "archivos": 27721,
+  "movidosSinRenombrar": 13109,
+  "zona_LEGAL": 1389,
+  "zona_MES": 16982,
+  "aClasificar": 1900,
+  "zona_CIERRE": 2050,
+  "zona_VARIOS": 1764,
+  "movidosYRenombrados": 11389,
+  "duplicados": 1314,
   "vinculados": 198,
-  "zona_MTESS": 629,
-  "zona_TRIBUTARIO": 760,
-  "zona_FACT_EFFORT": 336,
-  "zona_IPS": 569,
+  "zona_MTESS": 633,
+  "zona_TRIBUTARIO": 778,
+  "zona_FACT_EFFORT": 338,
+  "zona_IPS": 572,
   "aOtroCliente": 8,
   "aZZGeneral": 1,
   "zona_GENERAL_ZZ": 1

@@ -1,18 +1,18 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 051 ISAAC WU
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 208 · Peso: 65.5 MB · Subcarpetas con archivos: 36
+  Archivos: 217 · Peso: 66.7 MB · Subcarpetas con archivos: 37
 
 RESUMEN
   Duplicados apartados (cuarentena): 12
-  Movidos y renombrados según el manual: 108
-  Movidos conservando su nombre: 82
+  Movidos y renombrados según el manual: 114
+  Movidos conservando su nombre: 85
   Sin cambios: 0
   A «051 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 6
   Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
   Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 0
-  Nombres originales que no dicen qué documento son: 60
+  Nombres originales que no dicen qué documento son: 62
   Nombre o ubicación que contradice lo que dice el documento por dentro: 0
   Excel con vínculos (no se renombraron): 0
 
@@ -20,7 +20,7 @@ AL FINAL (archivos por carpeta de primer nivel)
   051 PERIODO 2023: 12
   051 PERIODO 2024: 37
   051 PERIODO 2025: 55
-  051 PERIODO 2026: 77
+  051 PERIODO 2026: 86
   051 TRIBUTARIO: 9
   051 ZZ A CLASIFICAR: 6
 
@@ -55,7 +55,7 @@ NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
 
 NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron): ninguno
 
-MOVIDOS Y RENOMBRADOS (108)
+MOVIDOS Y RENOMBRADOS (114)
 -----------------------------
   PERIODO 2024/DOCUMENTOS CONTABLES/10 OCTUBRE/IVA GENERAL 10-2024.pdf
       → 051 PERIODO 2024/DOCUMENTOS CONTABLES/10 OCTUBRE/DDJJ IVA 102024 ISAAC WU.pdf   [Declaración leída por dentro: formulario 120, período 10/2024]
@@ -278,8 +278,21 @@ MOVIDOS Y RENOMBRADOS (108)
       → 051 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG COMPRAS 082026 ISAAC WU.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 08/2026]
   PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/RG VENTAS 08 2026 - ISAAC WU.xlsx
       → 051 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG VENTAS 082026 ISAAC WU.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 08/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 SETIEMBRE/BOLETA DE PAGO IVA 09 2026 - ISAAC WU CHOU.pdf
+      → 051 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/BOLETA DE PAGO IVA 092026 ISAAC WU.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 SETIEMBRE/DDJJ SETIEMBRE 2026 - ISAAC WU CHOU.pdf
+      → 051 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DDJJ IVA 092026 ISAAC WU.pdf   [Declaración leída por dentro: formulario 120, período 09/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 SETIEMBRE/LIBRO COMPRAS 09 2026 - ISAAC WU CHOU.pdf
+      → 051 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO COMPRAS 092026 ISAAC WU.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 SETIEMBRE/LIBRO VENTAS 09 2026 - ISAAC WU CHOU.pdf
+      → 051 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO VENTAS 092026 ISAAC WU VERSION ANTERIOR 1.pdf   [Período tomado de la carpeta donde estaba]
+      nota: Hay una versión más reciente del mismo documento (LIBRO VENTAS SETIEMBRE 2026 - ISAAC WU CHOU.pdf): esta queda como versión anterior
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 SETIEMBRE/LIBRO VENTAS SETIEMBRE 2026 - ISAAC WU CHOU.pdf
+      → 051 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO VENTAS 092026 ISAAC WU.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 SETIEMBRE/RG COMPRAS 09 2026 - ISAAC WU.xlsx
+      → 051 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092026 ISAAC WU.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2026]
 
-MOVIDOS CONSERVANDO SU NOMBRE (82)
+MOVIDOS CONSERVANDO SU NOMBRE (85)
 -------------------------------------
   PERIODO 2023/2024/ABRIL 2024.pdf
       → 051 PERIODO 2024/DOCUMENTOS CONTABLES/04 ABRIL/ABRIL 2024.pdf   [Período tomado del nombre del archivo]
@@ -443,6 +456,12 @@ MOVIDOS CONSERVANDO SU NOMBRE (82)
       → 051 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/DET. IMPUESTO IVA AGOSTO 2026 - ISAAC WU CHOU.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO/Retenciones recibidas 08 2026 - ISAAC WU.xlsx
       → 051 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/Retenciones recibidas 08 2026 - ISAAC WU.xlsx   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 SETIEMBRE/DET. IMPUESTO IVA 09 2026 - ISAAC WU CHOU.pdf
+      → 051 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DET. IMPUESTO IVA 09 2026 - ISAAC WU CHOU.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 SETIEMBRE/DET. IMPUESTO IVA SETIEMBRE 2026 - ISAAC WU CHOU.pdf
+      → 051 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DET. IMPUESTO IVA SETIEMBRE 2026 - ISAAC WU CHOU.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 SETIEMBRE/Retenciones recibidas 09 2026 - ISAAC WU.xlsx
+      → 051 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/Retenciones recibidas 09 2026 - ISAAC WU.xlsx   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/VARIOS/Baja timbrado 18254280.pdf
       → 051 TRIBUTARIO/Baja timbrado 18254280.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
 
@@ -461,7 +480,7 @@ A «051 ZZ A CLASIFICAR» (para que lo ubique una persona) (6)
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (53)
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (54)
 --------------------------------------------------
   PERIODO 2023/2024
   PERIODO 2023/DOCUMENTOS CONTABLES
@@ -512,6 +531,7 @@ CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (53)
   PERIODO 2026/DOCUMENTOS CONTABLES/MESES/06 JUNIO
   PERIODO 2026/DOCUMENTOS CONTABLES/MESES/07 JULIO
   PERIODO 2026/DOCUMENTOS CONTABLES/MESES/08 AGOSTO
+  PERIODO 2026/DOCUMENTOS CONTABLES/MESES/09 SETIEMBRE
   PERIODO 2026/DOCUMENTOS CONTABLES/MESES
   PERIODO 2026/DOCUMENTOS CONTABLES
   PERIODO 2026/VARIOS

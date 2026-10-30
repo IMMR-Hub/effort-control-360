@@ -1,18 +1,18 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 091 OSMAR MANUEL LOPEZ LESME
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 297 · Peso: 50.6 MB · Subcarpetas con archivos: 54
+  Archivos: 299 · Peso: 50.8 MB · Subcarpetas con archivos: 55
 
 RESUMEN
   Duplicados apartados (cuarentena): 3
-  Movidos y renombrados según el manual: 148
-  Movidos conservando su nombre: 128
+  Movidos y renombrados según el manual: 149
+  Movidos conservando su nombre: 129
   Sin cambios: 0
   A «091 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 18
   Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
   Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 2
-  Nombres originales que no dicen qué documento son: 200
+  Nombres originales que no dicen qué documento son: 202
   Nombre o ubicación que contradice lo que dice el documento por dentro: 0
   Excel con vínculos (no se renombraron): 0
 
@@ -20,7 +20,7 @@ AL FINAL (archivos por carpeta de primer nivel)
   091 PERIODO 2024: 4
   091 PERIODO 2025: 126
   091 PERIODO 2026: 133
-  091 TRIBUTARIO: 13
+  091 TRIBUTARIO: 15
   091 ZZ A CLASIFICAR: 18
 
 DUPLICADOS APARTADOS (3)
@@ -39,7 +39,7 @@ NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (2)
   WhatsApp Image 2026-04-06 at 17.24.26.jpeg  →  WhatsApp Image 2026-04-06 at 17.24.26.jpeg
   WhatsApp Image 2026-07-06 at 14.50.52.jpeg  →  WhatsApp Image 2026-07-06 at 14.50.52.jpeg
 
-MOVIDOS Y RENOMBRADOS (148)
+MOVIDOS Y RENOMBRADOS (149)
 -----------------------------
   DOCUMENTOS/Constancia de RUC Osmar Lopez.pdf
       → 091 TRIBUTARIO/CONSTANCIA RUC OSMAR MANUEL LOPEZ LESME.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
@@ -275,6 +275,8 @@ MOVIDOS Y RENOMBRADOS (148)
       nota: Al nombre, que solo decía «MAYO», se le agregó la carpeta de donde venía
   PERIODO 2026/DOCUMENTOS CONTABLES/COMUNICACIONES DNIT/02 FEBRERO/BAJA DE DOCUMENTO FC 6910.pdf
       → 091 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/FACTURA COMPRA 6910 022026 OSMAR MANUEL LOPEZ LESME.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/COMUNICACIONES DNIT/BAJA DE TIMBRADO   18113127 NC.pdf
+      → 091 TRIBUTARIO/BAJA DE TIMBRADO 18113127 NC.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
   PERIODO 2026/DOCUMENTOS CONTABLES/FORMULARIO 120/120-01-2026.pdf
       → 091 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/FORMULARIO 120 120-01-2026.pdf   [Período tomado del nombre del archivo]
       nota: Al nombre, que solo decía «120-01-2026», se le agregó la carpeta de donde venía
@@ -378,7 +380,7 @@ MOVIDOS Y RENOMBRADOS (148)
   PERIODO 2026/VARIOS/MUNICIPALIDAD/Registro de firma OSMAR LOPEZ .docx
       → 091 PERIODO 2026/DOCUMENTOS VARIOS/MUNICIPALIDAD/Registro de firma OSMAR LOPEZ.docx   [Estaba en DOCUMENTOS VARIOS]
 
-MOVIDOS CONSERVANDO SU NOMBRE (128)
+MOVIDOS CONSERVANDO SU NOMBRE (129)
 -------------------------------------
   DOCUMENTOS/Cedula Tributaria Osmar Lopez.pdf
       → 091 TRIBUTARIO/Cedula Tributaria Osmar Lopez.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
@@ -478,6 +480,8 @@ MOVIDOS CONSERVANDO SU NOMBRE (128)
       → 091 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/BAJA DE DOCUMENTO 6841.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/COMUNICACIONES DNIT/02 FEBRERO/BAJA DE DOCUMENTO NC 323.pdf
       → 091 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/BAJA DE DOCUMENTO NC 323.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/COMUNICACIONES DNIT/BAJA DE TIMBRADO 18394405 FC.pdf
+      → 091 TRIBUTARIO/BAJA DE TIMBRADO 18394405 FC.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
   PERIODO 2026/DOCUMENTOS CONTABLES/COMUNICACIONES DNIT/JULIO/ANULACION 7212.pdf
       → 091 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/ANULACION 7212.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/COMUNICACIONES DNIT/JULIO/ANULACION 7246.pdf

@@ -1,0 +1,58 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 092 ANABELLA PINO
+Fecha: 20/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+
+AL INICIO
+  Archivos: 6 · Peso: 3.2 MB · Subcarpetas con archivos: 1
+
+RESUMEN
+  Duplicados apartados (cuarentena): 0
+  Movidos y renombrados según el manual: 1
+  Movidos conservando su nombre: 5
+  Sin cambios: 0
+  A «092 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 0
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 1
+  Nombres originales que no dicen qué documento son: 5
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  092 LEGAL Y SOCIETARIO: 6
+
+DUPLICADOS APARTADOS: ninguno
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (1)
+---------------------------------------------------------
+  Factura (6).pdf  →  Factura.pdf
+
+MOVIDOS Y RENOMBRADOS (1)
+-----------------------------
+  DOCUMENTOS LEGALES/Factura (6).pdf
+      → 092 LEGAL Y SOCIETARIO/Factura.pdf   [Documento legal o societario]
+
+MOVIDOS CONSERVANDO SU NOMBRE (5)
+-------------------------------------
+  DOCUMENTOS LEGALES/CI ANABELLA.pdf
+      → 092 LEGAL Y SOCIETARIO/CI ANABELLA.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES/CI SOCIOS.pdf
+      → 092 LEGAL Y SOCIETARIO/CI SOCIOS.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES/PRESUPUESTO ANABELLA PINO 2025.xls
+      → 092 LEGAL Y SOCIETARIO/PRESUPUESTO ANABELLA PINO 2025.xls   [Documento legal o societario]
+  DOCUMENTOS LEGALES/proforma 27_03_2025.pdf
+      → 092 LEGAL Y SOCIETARIO/proforma 27_03_2025.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES/proforma.pdf
+      → 092 LEGAL Y SOCIETARIO/proforma.pdf   [Documento legal o societario]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «092 ZZ A CLASIFICAR» (para que lo ubique una persona): ninguno
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (1)
+--------------------------------------------------
+  DOCUMENTOS LEGALES

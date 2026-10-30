@@ -1,18 +1,18 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 031 EVA MACIEL
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 449 · Peso: 1491.3 MB · Subcarpetas con archivos: 67
+  Archivos: 452 · Peso: 1492.4 MB · Subcarpetas con archivos: 68
 
 RESUMEN
   Duplicados apartados (cuarentena): 18
   Movidos y renombrados según el manual: 189
-  Movidos conservando su nombre: 240
+  Movidos conservando su nombre: 242
   Sin cambios: 0
-  A «031 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 2
+  A «031 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 3
   Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
   Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 127
-  Nombres originales que no dicen qué documento son: 273
+  Nombres originales que no dicen qué documento son: 275
   Nombre o ubicación que contradice lo que dice el documento por dentro: 1
   Excel con vínculos (no se renombraron): 1
 
@@ -20,9 +20,9 @@ AL FINAL (archivos por carpeta de primer nivel)
   031 PERIODO 2023: 69
   031 PERIODO 2024: 225
   031 PERIODO 2025: 66
-  031 PERIODO 2026: 49
+  031 PERIODO 2026: 51
   031 TRIBUTARIO: 20
-  031 ZZ A CLASIFICAR: 2
+  031 ZZ A CLASIFICAR: 3
 
 DUPLICADOS APARTADOS (18)
 ----------------------------
@@ -456,9 +456,7 @@ MOVIDOS Y RENOMBRADOS (189)
   PERIODO 2024/DOCUMENTOS CONTABLES/MES/6 JUNIO 2024/CCT  07.pdf
       → 031 TRIBUTARIO/CCT 07.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
   PERIODO 2024/DOCUMENTOS CONTABLES/MES/6 JUNIO 2024/DETERMINACION IVA JUNIO 2024 EVA MACIEL.pdf
-      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/DETERMINACION IVA JUNIO 2024 EVA MACIEL 02.pdf   [Período tomado de la carpeta donde estaba]
-  PERIODO 2024/DOCUMENTOS CONTABLES/MES/6 JUNIO 2024/DETERMINACIÓN IVA JUNIO 2024 EVA MACIEL.pdf
-      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/DETERMINACION IVA JUNIO 2024 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/DETERMINACIÓN IVA JUNIO 2024 EVA MACIEL 02.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2024/DOCUMENTOS CONTABLES/MES/7 JULIO 2024/LIBRO COMPRAS JULIO 2024.pdf
       → 031 PERIODO 2024/DOCUMENTOS CONTABLES/07 JULIO/LIBRO COMPRAS 072024 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2024/DOCUMENTOS CONTABLES/MES/8 AGOSTO/LIBRO VENTAS AGOSTO 2024 EM.pdf
@@ -629,6 +627,8 @@ MOVIDOS Y RENOMBRADOS (189)
       → 031 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/LIBRO COMPRAS 072026 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/07 JULIO/LIBRO VENTAS JULIO 2026 EVA MACIEL.pdf
       → 031 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/LIBRO VENTAS 072026 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/10 OCTUBRE/FAC DE VENTA 338.jpeg
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/10 OCTUBRE/FACTURA VENTA 338 102026 EVA MACIEL.jpeg   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/DetalleComprobantesRegistrados - 2026-08-25T141448.134.xlsx
       → 031 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/RG COMPRAS 032026 EVA MACIEL VERSION ANTERIOR 1.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 03/2026]
       nota: Hay una versión más reciente del mismo documento (DetalleComprobantesRegistrados - 2026-08-25T141747.869.xlsx): esta queda como versión anterior
@@ -657,7 +657,7 @@ MOVIDOS Y RENOMBRADOS (189)
       → 031 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/TALON DE PRESENTACION 09 SETIEMBRE.pdf   [Período tomado del nombre del archivo]
       nota: Al nombre, que solo decía «09 SETIEMBRE», se le agregó la carpeta de donde venía
 
-MOVIDOS CONSERVANDO SU NOMBRE (240)
+MOVIDOS CONSERVANDO SU NOMBRE (242)
 -------------------------------------
   PERIODO 2023/DICIEMBRE 2023/Diciembre 2023-20240119T114615Z-001.zip
       → 031 PERIODO 2023/DOCUMENTOS CONTABLES/12 DICIEMBRE/Diciembre 2023-20240119T114615Z-001.zip   [Período tomado de la carpeta donde estaba]
@@ -954,6 +954,8 @@ MOVIDOS CONSERVANDO SU NOMBRE (240)
       → 031 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/CONSTANCIA DE PRESENTACIÓN JUNIO 2024.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2024/DOCUMENTOS CONTABLES/MES/6 JUNIO 2024/DDJJ JUNIO 2024 EVA M.pdf
       → 031 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/DDJJ JUNIO 2024 EVA M.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2024/DOCUMENTOS CONTABLES/MES/6 JUNIO 2024/DETERMINACIÓN IVA JUNIO 2024 EVA MACIEL.pdf
+      → 031 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/DETERMINACIÓN IVA JUNIO 2024 EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2024/DOCUMENTOS CONTABLES/MES/6 JUNIO 2024/LIBRO COMPRA JUNIO 2024.pdf
       → 031 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO/LIBRO COMPRA JUNIO 2024.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2024/DOCUMENTOS CONTABLES/MES/6 JUNIO 2024/LIBRO VENTA JUNIO 2024.pdf
@@ -1139,6 +1141,8 @@ MOVIDOS CONSERVANDO SU NOMBRE (240)
       → 031 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/L.C 2026.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/09 SETIEMBRE/L.V 2026.pdf
       → 031 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/L.V 2026.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/10 OCTUBRE/EVA MACIEL.pdf
+      → 031 PERIODO 2026/DOCUMENTOS CONTABLES/10 OCTUBRE/EVA MACIEL.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS VARIOS/FACTURA 9776 - EVA MACIEL.pdf
       → 031 PERIODO 2026/DOCUMENTOS VARIOS/FACTURA 9776 - EVA MACIEL.pdf   [Estaba en DOCUMENTOS VARIOS]
 
@@ -1146,16 +1150,17 @@ ENVIADOS A OTRO CLIENTE: ninguno
 
 RECIBIDOS DE OTRO CLIENTE: ninguno
 
-A «031 ZZ A CLASIFICAR» (para que lo ubique una persona) (2)
+A «031 ZZ A CLASIFICAR» (para que lo ubique una persona) (3)
 ----------------------------------------------------------------
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/factura electronica tang hung pin 27042026.pdf
   PERIODO 2026/patente.pdf
+  TALONARIO DE FACTURA.jpeg
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar) (1)
 ------------------------------------------------------
   PERIODO 2024/DOCUMENTOS CONTABLES/IRP/irp 2024/LIQ IRP DE ENERO A JUNIO 2024 EVA MACIEL.xlsx  →  031 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/LIQ IRP DE ENERO A JUNIO 2024 EVA MACIEL.xlsx  [Excel con 1 vínculo(s) a otros archivos]
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (85)
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (86)
 --------------------------------------------------
   PERIODO 2023/DICIEMBRE 2023
   PERIODO 2023/DOCUMENTOS CONTABLES
@@ -1235,6 +1240,7 @@ CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (85)
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/07 JULIO
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/08 AGOSTO
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/09 SETIEMBRE
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/10 OCTUBRE
   PERIODO 2026/DOCUMENTOS CONTABLES/MES
   PERIODO 2026/DOCUMENTOS CONTABLES/RG COMPRAS
   PERIODO 2026/DOCUMENTOS CONTABLES/RG VENTAS

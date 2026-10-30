@@ -1,18 +1,18 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 081 MARKELIER EAS UNIP
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 207 · Peso: 67.8 MB · Subcarpetas con archivos: 42
+  Archivos: 211 · Peso: 70.2 MB · Subcarpetas con archivos: 42
 
 RESUMEN
   Duplicados apartados (cuarentena): 0
   Movidos y renombrados según el manual: 78
-  Movidos conservando su nombre: 119
+  Movidos conservando su nombre: 121
   Sin cambios: 0
-  A «081 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 10
+  A «081 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 12
   Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
   Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 16
-  Nombres originales que no dicen qué documento son: 57
+  Nombres originales que no dicen qué documento son: 58
   Nombre o ubicación que contradice lo que dice el documento por dentro: 2
   Excel con vínculos (no se renombraron): 1
 
@@ -20,9 +20,9 @@ AL FINAL (archivos por carpeta de primer nivel)
   081 LEGAL Y SOCIETARIO: 12
   081 PERIODO 2024: 75
   081 PERIODO 2025: 92
-  081 PERIODO 2026: 17
+  081 PERIODO 2026: 19
   081 TRIBUTARIO: 1
-  081 ZZ A CLASIFICAR: 10
+  081 ZZ A CLASIFICAR: 12
 
 DUPLICADOS APARTADOS: ninguno
 
@@ -212,7 +212,7 @@ MOVIDOS Y RENOMBRADOS (78)
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/MAYO/RG COMPRAS MAYO MARKELIER 2026 MAYO.xlsx
       → 081 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/RG COMPRAS 052026 MARKELIER EAS UNIP.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 05/2026]
 
-MOVIDOS CONSERVANDO SU NOMBRE (119)
+MOVIDOS CONSERVANDO SU NOMBRE (121)
 -------------------------------------
   PERIODO 2024/DOCUMENTOS CONTABLES/EEFF/80145650NE2024.pdf
       → 081 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/80145650NE2024.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
@@ -449,18 +449,22 @@ MOVIDOS CONSERVANDO SU NOMBRE (119)
       → 081 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/DDJJ MARKELIER ABRIL 2026.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/FEBRERO/DDJJ FEBRERO 2026 MARKELIER.pdf
       → 081 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/DDJJ FEBRERO 2026 MARKELIER.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/JULIO/DDJJ JULIO 2026 MARKELIER EAS.pdf
+      → 081 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/DDJJ JULIO 2026 MARKELIER EAS.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/JUNIO/DDJJ JUNIO 2026 MARKELIER EAS.pdf
       → 081 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/DDJJ JUNIO 2026 MARKELIER EAS.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/MARZO/DDJJ MARZO MARKELIER EAS.pdf
       → 081 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/DDJJ MARZO MARKELIER EAS.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/MARZO/IRE GENERAL 2025 MARKELIER EAS.pdf
       → 081 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/IRE GENERAL 2025 MARKELIER EAS.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/MAYO/DDJJ MAYO 2026 MARKELIER EAS.pdf
+      → 081 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/DDJJ MAYO 2026 MARKELIER EAS.pdf   [Período tomado de la carpeta donde estaba]
 
 ENVIADOS A OTRO CLIENTE: ninguno
 
 RECIBIDOS DE OTRO CLIENTE: ninguno
 
-A «081 ZZ A CLASIFICAR» (para que lo ubique una persona) (10)
+A «081 ZZ A CLASIFICAR» (para que lo ubique una persona) (12)
 ----------------------------------------------------------------
   PERIODO 2025/DOCUMENTOS CONTABLES/CALCULO DE DEUDAS/CALCULO DEUDA .xlsx
   PERIODO 2025/DOCUMENTOS CONTABLES/CALCULO DE DEUDAS/CALCULO DEUDA MARKELIER EAS.xlsx
@@ -468,9 +472,11 @@ A «081 ZZ A CLASIFICAR» (para que lo ubique una persona) (10)
   PERIODO 2025/DOCUMENTOS CONTABLES/CALCULO DE DEUDAS/DEUDA A PAGAR ANTE LA DNIT.pdf
   PERIODO 2025/DOCUMENTOS CONTABLES/Lista_Bienes.xls
   PERIODO 2025/ExtractoDeCuentaExcel (1) (1) novirmbre 2025.xlsx
+  PERIODO 2026/Constancia_de_Beneficiarios_Finales.pdf
   PERIODO 2026/cuadro de depreciación.pdf
   PERIODO 2026/cuenta corriente hasta la fecha 20 fatima peña.pdf
   PERIODO 2026/cuenta corriente.pdf
+  PERIODO 2026/Estructura Juridica.pdf
   PERIODO 2026/PROFORMA IRE GRAL MARKELIER 2025.pdf
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar) (1)

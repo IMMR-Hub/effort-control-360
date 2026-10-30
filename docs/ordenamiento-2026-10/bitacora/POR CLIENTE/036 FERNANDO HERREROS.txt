@@ -1,15 +1,15 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 036 FERNANDO HERREROS
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 217 · Peso: 61.0 MB · Subcarpetas con archivos: 44
+  Archivos: 223 · Peso: 62.7 MB · Subcarpetas con archivos: 45
 
 RESUMEN
   Duplicados apartados (cuarentena): 1
-  Movidos y renombrados según el manual: 106
-  Movidos conservando su nombre: 100
+  Movidos y renombrados según el manual: 109
+  Movidos conservando su nombre: 102
   Sin cambios: 0
-  A «036 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 10
+  A «036 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 11
   Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
   Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 13
   Nombres originales que no dicen qué documento son: 32
@@ -20,9 +20,9 @@ AL FINAL (archivos por carpeta de primer nivel)
   036 PERIODO 2023: 8
   036 PERIODO 2024: 90
   036 PERIODO 2025: 60
-  036 PERIODO 2026: 36
+  036 PERIODO 2026: 41
   036 TRIBUTARIO: 12
-  036 ZZ A CLASIFICAR: 10
+  036 ZZ A CLASIFICAR: 11
 
 DUPLICADOS APARTADOS (1)
 ----------------------------
@@ -46,7 +46,7 @@ NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (12)
   LIBRO COMPRAS AGOSTO 2026 FERNANDO H OK.pdf  →  LIBRO COMPRAS 082026 FERNANDO HERREROS.pdf
   LIBRO JUNIO 2026 ACTUALIZADO FERNANDO.xlsx  →  RG COMPRAS 062026 FERNANDO HERREROS.xlsx
 
-MOVIDOS Y RENOMBRADOS (106)
+MOVIDOS Y RENOMBRADOS (109)
 -----------------------------
   PERIODO 2023/DOCUMENTOS CONTABLES/NOVIEMBRE 2023/imprimirDetalleEstadoCuenta (3).pdf
       → 036 PERIODO 2023/DOCUMENTOS CONTABLES/11 NOVIEMBRE/imprimirDetalleEstadoCuenta.pdf   [Período tomado de la carpeta donde estaba]
@@ -269,8 +269,14 @@ MOVIDOS Y RENOMBRADOS (106)
       → 036 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/LIBRO VENTAS 032026 FERNANDO HERREROS.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTALES/MES/MAYO/LIBRO MAYO COMPRAS 2026.pdf
       → 036 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/LIBRO COMPRAS 052026 FERNANDO HERREROS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTALES/MES/SETIEMBRE/LIBRO COMPRAS FERNANDO H SETIEMBRE 2026.pdf
+      → 036 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO COMPRAS 092026 FERNANDO HERREROS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTALES/MES/SETIEMBRE/LIBRO VENTAS FERNANDO H SETIEMBRE2026.pdf
+      → 036 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO VENTAS 092026 FERNANDO HERREROS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTALES/MES/SETIEMBRE/rg compras setiembre fernando herreros.xlsx
+      → 036 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092026 FERNANDO HERREROS.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2026]
 
-MOVIDOS CONSERVANDO SU NOMBRE (100)
+MOVIDOS CONSERVANDO SU NOMBRE (102)
 -------------------------------------
   PERIODO 2023/DOCUMENTOS CONTABLES/DICIEMBRE 2023/LIBROCOMPRAS_12-23.pdf
       → 036 PERIODO 2023/DOCUMENTOS CONTABLES/12 DICIEMBRE/LIBROCOMPRAS_12-23.pdf   [Período tomado de la carpeta donde estaba]
@@ -472,12 +478,16 @@ MOVIDOS CONSERVANDO SU NOMBRE (100)
       → 036 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/DDJJ MARZO 2026 FERNANDO HERREROS.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTALES/MES/MARZO/DETERMINACIÓN DEL IVA MES DE MARZO 2026 FERNANDO HERREROS.pdf
       → 036 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/DETERMINACIÓN DEL IVA MES DE MARZO 2026 FERNANDO HERREROS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTALES/MES/SETIEMBRE/boleta de pago.pdf
+      → 036 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/boleta de pago.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTALES/MES/SETIEMBRE/DDJJ SETIEMBRE 2026 FERNANDO HERREROS.pdf
+      → 036 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DDJJ SETIEMBRE 2026 FERNANDO HERREROS.pdf   [Período tomado de la carpeta donde estaba]
 
 ENVIADOS A OTRO CLIENTE: ninguno
 
 RECIBIDOS DE OTRO CLIENTE: ninguno
 
-A «036 ZZ A CLASIFICAR» (para que lo ubique una persona) (10)
+A «036 ZZ A CLASIFICAR» (para que lo ubique una persona) (11)
 ----------------------------------------------------------------
   PERIODO 2024/DOCUMENTOS CONTABLES/MES/DIECIEMBRE 2024/Boleta de pago cuota inicial.pdf
   PERIODO 2025/DOCUMENTOS CONTABLES/MES/facturas/boleta de pago cuota 1 fernando.pdf
@@ -486,13 +496,14 @@ A «036 ZZ A CLASIFICAR» (para que lo ubique una persona) (10)
   PERIODO 2025/DOCUMENTOS CONTABLES/MES/facturas/boleta de pago fernando.pdf
   PERIODO 2025/DOCUMENTOS CONTABLES/MES/facturas/Factura Electrónica DECATHLON PY-NICOSIA SA.pdf
   PERIODO 2025/DOCUMENTOS CONTABLES/MES/jJUNIO 2025/BOLETA DE PAGO FAC DE IVA ULTIMA CUOTA.pdf
+  PERIODO 2026/boleta de pago cuota 3 fernando.pdf
   PERIODO 2026/boleta de pago facilidad cuota 1 Fernando Herreros.pdf
   PERIODO 2026/DOCUMENTOS CONTALES/MES/boleta de pago cuota inicial.pdf
   PERIODO 2026/Factura bona vista.pdf
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (59)
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (60)
 --------------------------------------------------
   PERIODO 2023/DOCUMENTOS CONTABLES/DICIEMBRE 2023
   PERIODO 2023/DOCUMENTOS CONTABLES/NOVIEMBRE 2023
@@ -550,6 +561,7 @@ CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (59)
   PERIODO 2026/DOCUMENTOS CONTALES/MES/JUNIO
   PERIODO 2026/DOCUMENTOS CONTALES/MES/MARZO
   PERIODO 2026/DOCUMENTOS CONTALES/MES/MAYO
+  PERIODO 2026/DOCUMENTOS CONTALES/MES/SETIEMBRE
   PERIODO 2026/DOCUMENTOS CONTALES/MES
   PERIODO 2026/DOCUMENTOS CONTALES
   PERIODO 2026

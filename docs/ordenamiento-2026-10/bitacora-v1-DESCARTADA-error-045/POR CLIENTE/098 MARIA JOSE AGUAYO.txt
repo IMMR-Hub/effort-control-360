@@ -1,0 +1,73 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 098 MARIA JOSE AGUAYO
+Fecha: 20/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+
+AL INICIO
+  Archivos: 13 · Peso: 54.8 MB · Subcarpetas con archivos: 1
+
+RESUMEN
+  Duplicados apartados (cuarentena): 0
+  Movidos y renombrados según el manual: 1
+  Movidos conservando su nombre: 12
+  Sin cambios: 0
+  A «098 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 0
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 0
+  Nombres originales que no dicen qué documento son: 9
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  098 LEGAL Y SOCIETARIO: 13
+
+DUPLICADOS APARTADOS: ninguno
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron): ninguno
+
+MOVIDOS Y RENOMBRADOS (1)
+-----------------------------
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/CI MJA FRENTE .png
+      → 098 LEGAL Y SOCIETARIO/CI MJA FRENTE.png   [Documento legal o societario]
+
+MOVIDOS CONSERVANDO SU NOMBRE (12)
+-------------------------------------
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/CÉDULA DE JOSE LUIS VALENZUELA.pdf
+      → 098 LEGAL Y SOCIETARIO/CÉDULA DE JOSE LUIS VALENZUELA.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/Cedula_MJA_Paraguaya.pdf
+      → 098 LEGAL Y SOCIETARIO/Cedula_MJA_Paraguaya.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/CI LAURA SOSA-1.pdf
+      → 098 LEGAL Y SOCIETARIO/CI LAURA SOSA-1.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/CI MJA DORSO.png
+      → 098 LEGAL Y SOCIETARIO/CI MJA DORSO.png   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/CI MJA Y LAURA.pdf
+      → 098 LEGAL Y SOCIETARIO/CI MJA Y LAURA.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ESTATUTO MJA FIRMADO_compressed.pdf
+      → 098 LEGAL Y SOCIETARIO/ESTATUTO MJA FIRMADO_compressed.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ESTATUTO MJA FIRMADO_nueva actividad_compressed.pdf
+      → 098 LEGAL Y SOCIETARIO/ESTATUTO MJA FIRMADO_nueva actividad_compressed.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ESTATUTO MJA FIRMADO_nueva actividad.pdf
+      → 098 LEGAL Y SOCIETARIO/ESTATUTO MJA FIRMADO_nueva actividad.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/ESTATUTO MJA FIRMADO.pdf
+      → 098 LEGAL Y SOCIETARIO/ESTATUTO MJA FIRMADO.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/proforma.pdf
+      → 098 LEGAL Y SOCIETARIO/proforma.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/proforma.pdf_NUEVA ACTIVIDAD.pdf
+      → 098 LEGAL Y SOCIETARIO/proforma.pdf_NUEVA ACTIVIDAD.pdf   [Documento legal o societario]
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS/SELFIE MJA.jpeg
+      → 098 LEGAL Y SOCIETARIO/SELFIE MJA.jpeg   [Documento legal o societario]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «098 ZZ A CLASIFICAR» (para que lo ubique una persona): ninguno
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (4)
+--------------------------------------------------
+  PERIODO 2025/DOCUMENTOS CONTABLES
+  PERIODO 2025/DOCUMENTOS LEGALES Y SOCIETARIOS
+  PERIODO 2025/DOCUMENTOS VARIOS
+  PERIODO 2025

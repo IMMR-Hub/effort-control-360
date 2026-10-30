@@ -1,0 +1,67 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 004 HUMO EAS
+Fecha: 20/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+
+AL INICIO
+  Archivos: 10 · Peso: 29.8 MB · Subcarpetas con archivos: 1
+
+RESUMEN
+  Duplicados apartados (cuarentena): 0
+  Movidos y renombrados según el manual: 0
+  Movidos conservando su nombre: 10
+  Sin cambios: 0
+  A «004 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 0
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 1
+  Nombres originales que no dicen qué documento son: 10
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  004 LEGAL Y SOCIETARIO: 10
+
+DUPLICADOS APARTADOS: ninguno
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (1)
+---------------------------------------------------------
+  CONSTITUCION HUMO EAS.pdf nuevo.pdf  →  CONSTITUCION HUMO EAS.pdf nuevo.pdf
+
+MOVIDOS Y RENOMBRADOS: ninguno
+
+MOVIDOS CONSERVANDO SU NOMBRE (10)
+-------------------------------------
+  DOCUMENTOS LEGALES Y SOCIETARIOS/Cédulas Socios.pdf
+      → 004 LEGAL Y SOCIETARIO/Cédulas Socios.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/CI GUIDO CAMPUZANO.pdf
+      → 004 LEGAL Y SOCIETARIO/CI GUIDO CAMPUZANO.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/CI LILI CAMPUZANO.pdf
+      → 004 LEGAL Y SOCIETARIO/CI LILI CAMPUZANO.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/CI SOCIOS.pdf
+      → 004 LEGAL Y SOCIETARIO/CI SOCIOS.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/Constitución EAS.pdf
+      → 004 LEGAL Y SOCIETARIO/Constitución EAS.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/CONSTITUCION HUMO EAS.pdf
+      → 004 LEGAL Y SOCIETARIO/CONSTITUCION HUMO EAS.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/CONSTITUCION HUMO EAS.pdf FIRMADO_compressed.pdf
+      → 004 LEGAL Y SOCIETARIO/CONSTITUCION HUMO EAS.pdf FIRMADO_compressed.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/CONSTITUCION HUMO EAS.pdf FIRMADO.pdf
+      → 004 LEGAL Y SOCIETARIO/CONSTITUCION HUMO EAS.pdf FIRMADO.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/CONSTITUCION HUMO EAS.pdf nuevo.pdf
+      → 004 LEGAL Y SOCIETARIO/CONSTITUCION HUMO EAS.pdf nuevo.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/EAS MIC.pdf
+      → 004 LEGAL Y SOCIETARIO/EAS MIC.pdf   [Documento legal o societario]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «004 ZZ A CLASIFICAR» (para que lo ubique una persona): ninguno
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (3)
+--------------------------------------------------
+  DOCUMENTOS CONTABLES
+  DOCUMENTOS LEGALES Y SOCIETARIOS
+  DOCUMENTOS VARIOS

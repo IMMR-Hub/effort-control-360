@@ -1,18 +1,18 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 008 RAMIRO GARCIA MUÑOZ
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 327 · Peso: 127.6 MB · Subcarpetas con archivos: 58
+  Archivos: 335 · Peso: 127.8 MB · Subcarpetas con archivos: 58
 
 RESUMEN
   Duplicados apartados (cuarentena): 1
-  Movidos y renombrados según el manual: 129
+  Movidos y renombrados según el manual: 137
   Movidos conservando su nombre: 193
   Sin cambios: 0
   A «008 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 4
   Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
   Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 9
-  Nombres originales que no dicen qué documento son: 98
+  Nombres originales que no dicen qué documento son: 106
   Nombre o ubicación que contradice lo que dice el documento por dentro: 3
   Excel con vínculos (no se renombraron): 0
 
@@ -21,7 +21,7 @@ AL FINAL (archivos por carpeta de primer nivel)
   008 PERIODO 2023: 26
   008 PERIODO 2024: 123
   008 PERIODO 2025: 104
-  008 PERIODO 2026: 58
+  008 PERIODO 2026: 66
   008 TRIBUTARIO: 8
   008 ZZ A CLASIFICAR: 4
 
@@ -48,7 +48,7 @@ NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (9)
   DETERMINACIÓN DEL IVA ENERO OK 2025 RAMIRO.pdf  →  DETERMINACIÓN DEL IVA ENERO OK 2025 RAMIRO.pdf
   DETERMINACIÓN DEL IVA MAYO 2025 RAMIRO GARCIA ACTUALIZADO.pdf  →  DETERMINACIÓN DEL IVA MAYO 2025 RAMIRO GARCIA ACTUALIZADO.pdf
 
-MOVIDOS Y RENOMBRADOS (129)
+MOVIDOS Y RENOMBRADOS (137)
 -----------------------------
   PERIODO 2023/DOCUMENTOS CONTABLES/IRP/1 LIQUIDACION DE IRP E IRE/FORMATO LIQUIDACION IRP Ramiro Garcia muñoz2023.xlsx
       → 008 PERIODO 2023/DOCUMENTOS CONTABLES/CIERRE 2023/CALCULO IRP 2023 RAMIRO GARCIA MUÑOZ.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
@@ -245,6 +245,22 @@ MOVIDOS Y RENOMBRADOS (129)
       → 008 PERIODO 2025/DOCUMENTOS VARIOS/RECIBO POLIZA.pdf   [Estaba en DOCUMENTOS VARIOS]
   PERIODO 2026/Boleta de pago iva mes de marzo.pdf
       → 008 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/BOLETA DE PAGO IVA 032026 RAMIRO GARCIA MUÑOZ 02.pdf   [Período tomado del nombre del archivo]
+  PERIODO 2026/DetalleComprobantesRegistrados - 2026-10-26T130636.794.xlsx
+      → 008 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/RG COMPRAS 012026 RAMIRO GARCIA MUÑOZ.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 01/2026]
+  PERIODO 2026/DetalleComprobantesRegistrados - 2026-10-26T130737.648.xlsx
+      → 008 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/RG COMPRAS 022026 RAMIRO GARCIA MUÑOZ.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 02/2026]
+  PERIODO 2026/DetalleComprobantesRegistrados - 2026-10-26T131115.263.xlsx
+      → 008 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/RG COMPRAS 042026 RAMIRO GARCIA MUÑOZ.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 04/2026]
+  PERIODO 2026/DetalleComprobantesRegistrados - 2026-10-26T131141.679.xlsx
+      → 008 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/RG COMPRAS 052026 RAMIRO GARCIA MUÑOZ.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 05/2026]
+  PERIODO 2026/DetalleComprobantesRegistrados - 2026-10-26T131229.925.xlsx
+      → 008 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/RG COMPRAS 062026 RAMIRO GARCIA MUÑOZ.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 06/2026]
+  PERIODO 2026/DetalleComprobantesRegistrados - 2026-10-26T131300.362.xlsx
+      → 008 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/RG COMPRAS 072026 RAMIRO GARCIA MUÑOZ.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 07/2026]
+  PERIODO 2026/DetalleComprobantesRegistrados - 2026-10-26T131330.036.xlsx
+      → 008 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG COMPRAS 082026 RAMIRO GARCIA MUÑOZ.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 08/2026]
+  PERIODO 2026/DetalleComprobantesRegistrados - 2026-10-26T131354.683.xlsx
+      → 008 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092026 RAMIRO GARCIA MUÑOZ.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2026]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/01 ENERO/BOLETA DE PAGO IVA ENERO 2026 - RAMIRO GARCIA.pdf
       → 008 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/BOLETA DE PAGO IVA 012026 RAMIRO GARCIA MUÑOZ.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/01 ENERO/CCT VIGENTE - RAMIRO GARCIA.pdf
@@ -261,7 +277,8 @@ MOVIDOS Y RENOMBRADOS (129)
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/ABRIL/Libro ventas Abril 2026 Ramiro Garcia.pdf
       → 008 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/LIBRO VENTAS 042026 RAMIRO GARCIA MUÑOZ.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/ABRIL/rg compras abril 2026 ramiro garcia.xlsx
-      → 008 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/RG COMPRAS 042026 RAMIRO GARCIA MUÑOZ.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 04/2026]
+      → 008 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/RG COMPRAS 042026 RAMIRO GARCIA MUÑOZ VERSION ANTERIOR 1.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 04/2026]
+      nota: Hay una versión más reciente del mismo documento (DetalleComprobantesRegistrados - 2026-10-26T131115.263.xlsx): esta queda como versión anterior
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/ABRIL/rg ventas abril 2026 ramiro garcia.xlsx
       → 008 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/RG VENTAS 042026 RAMIRO GARCIA MUÑOZ.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 04/2026]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/AGOSTO/LIBRO VENTAS AGOSTO 2026 RAMIRO GARCIA.pdf
@@ -277,7 +294,8 @@ MOVIDOS Y RENOMBRADOS (129)
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/JULIO/LIBRO VENTAS  JULIO 2026 RAMIRO.pdf
       → 008 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/LIBRO VENTAS 072026 RAMIRO GARCIA MUÑOZ.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/JULIO/rg compras julio ramiro g.xlsx
-      → 008 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/RG COMPRAS 072026 RAMIRO GARCIA MUÑOZ.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 07/2026]
+      → 008 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/RG COMPRAS 072026 RAMIRO GARCIA MUÑOZ VERSION ANTERIOR 1.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 07/2026]
+      nota: Hay una versión más reciente del mismo documento (DetalleComprobantesRegistrados - 2026-10-26T131300.362.xlsx): esta queda como versión anterior
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/JUNIO/LIBRO COMPRAS JUNIO 2026 RAMIRO.pdf
       → 008 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/LIBRO COMPRAS 062026 RAMIRO GARCIA MUÑOZ.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/JUNIO/LIBRO VENTAS JUNIO 2026 RAMIRO.pdf
@@ -297,11 +315,13 @@ MOVIDOS Y RENOMBRADOS (129)
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/MAYO/LIBRO VENTAS MAYO 2026 RAMIRO GARCIA.pdf
       → 008 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/LIBRO VENTAS 052026 RAMIRO GARCIA MUÑOZ.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/MAYO/RG COMPRAS 2026 MAYO.xlsx
-      → 008 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/RG COMPRAS 052026 RAMIRO GARCIA MUÑOZ.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 05/2026]
+      → 008 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/RG COMPRAS 052026 RAMIRO GARCIA MUÑOZ VERSION ANTERIOR 1.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 05/2026]
+      nota: Hay una versión más reciente del mismo documento (DetalleComprobantesRegistrados - 2026-10-26T131141.679.xlsx): esta queda como versión anterior
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/SETIEMBRE/LIBRO COMPRAS SETIEMBRE 2026 RAMIRO G 2026.pdf
       → 008 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO COMPRAS 092026 RAMIRO GARCIA MUÑOZ.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/SETIEMBRE/RG COMPRAS SET 2026 RAMIRO G.xlsx
-      → 008 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092026 RAMIRO GARCIA MUÑOZ.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2026]
+      → 008 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092026 RAMIRO GARCIA MUÑOZ VERSION ANTERIOR 1.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2026]
+      nota: Hay una versión más reciente del mismo documento (DetalleComprobantesRegistrados - 2026-10-26T131354.683.xlsx): esta queda como versión anterior
   PERIODO 2026/DOCUMENTOS VARIOS/DECLARACIONES/DDJJ DICIEMBRE 2025 RAMIRO G.pdf
       → 008 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE/DDJJ DICIEMBRE 2025 RAMIRO G - DECLARACIONES.pdf   [Documento contable que dice su mes y estaba en DOCUMENTOS VARIOS]
   PERIODO 2026/DOCUMENTOS VARIOS/DECLARACIONES/DDJJ ENERO 2026 RAMIRO G.pdf

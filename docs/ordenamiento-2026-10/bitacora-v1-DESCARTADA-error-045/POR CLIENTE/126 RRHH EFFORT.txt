@@ -1,0 +1,58 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 126 RRHH EFFORT
+Fecha: 20/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+
+AL INICIO
+  Archivos: 10 · Peso: 1.0 MB · Subcarpetas con archivos: 3
+
+RESUMEN
+  Duplicados apartados (cuarentena): 0
+  Movidos y renombrados según el manual: 0
+  Movidos conservando su nombre: 0
+  Sin cambios: 0
+  A «126 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 10
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 0
+  Nombres originales que no dicen qué documento son: 7
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  126 ZZ A CLASIFICAR: 10
+
+DUPLICADOS APARTADOS: ninguno
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron): ninguno
+
+MOVIDOS Y RENOMBRADOS: ninguno
+
+MOVIDOS CONSERVANDO SU NOMBRE: ninguno
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «126 ZZ A CLASIFICAR» (para que lo ubique una persona) (10)
+----------------------------------------------------------------
+  CONTRATOS Y REGLAMENTO/REGLAMENTO INTERNO EFFORT .pdf
+  EX FUNCIONARIOS/RENUNCIA VOLUNTARIA - JORGE DAVID BARRIOS YRALA/CONSTANCIA DE SALIDA REOP - JORGE DAVID BARRIOS.pdf
+  EX FUNCIONARIOS/RENUNCIA VOLUNTARIA - JORGE DAVID BARRIOS YRALA/CONTANCIA DE SALIDA IPS - JORGE DAVID BARRIOS.pdf
+  EX FUNCIONARIOS/RENUNCIA VOLUNTARIA - JORGE DAVID BARRIOS YRALA/LIQ JORGE DAVID BARRIOS YRALA.xlsx
+  EX FUNCIONARIOS/RENUNCIA VOLUNTARIA - JORGE DAVID BARRIOS YRALA/LIQ. JORGE DAVID BARRIOS.pdf
+  FUNCIONARIOS.xlsx
+  NOTAS Y SOLICITUDES/CONSTANCIA DE TRABAJO.docx
+  NOTAS Y SOLICITUDES/NOTA DE AUT VACACIONES.docx
+  NOTAS Y SOLICITUDES/SOLICITUD DE PERMISO.pdf
+  PLANILLA REOP - EFFORT.xlsx
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (6)
+--------------------------------------------------
+  CONTRATOS Y REGLAMENTO
+  EX FUNCIONARIOS/RENUNCIA VOLUNTARIA - JORGE DAVID BARRIOS YRALA
+  EX FUNCIONARIOS
+  NOTAS Y SOLICITUDES
+  RECIBOS
+  SALARIOS

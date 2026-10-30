@@ -1,29 +1,44 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 090 RAPIGAS EAS
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 177 · Peso: 42.7 MB · Subcarpetas con archivos: 28
+  Archivos: 191 · Peso: 44.3 MB · Subcarpetas con archivos: 29
 
 RESUMEN
-  Duplicados apartados (cuarentena): 0
+  Duplicados apartados (cuarentena): 7
   Movidos y renombrados según el manual: 109
-  Movidos conservando su nombre: 54
+  Movidos conservando su nombre: 57
   Sin cambios: 0
-  A «090 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 14
+  A «090 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 18
   Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
   Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 12
-  Nombres originales que no dicen qué documento son: 56
+  Nombres originales que no dicen qué documento son: 64
   Nombre o ubicación que contradice lo que dice el documento por dentro: 1
   Excel con vínculos (no se renombraron): 0
 
 AL FINAL (archivos por carpeta de primer nivel)
-  090 LEGAL Y SOCIETARIO: 13
+  090 LEGAL Y SOCIETARIO: 16
   090 PERIODO 2025: 69
   090 PERIODO 2026: 74
   090 TRIBUTARIO: 7
-  090 ZZ A CLASIFICAR: 14
+  090 ZZ A CLASIFICAR: 18
 
-DUPLICADOS APARTADOS: ninguno
+DUPLICADOS APARTADOS (7)
+----------------------------
+  PERIODO 2026/RUBRICAS/Rbr_16110645_ACTA DEL ORGANO DE ADMINISTRACION_01-10-2026.pdf
+      igual a: PERIODO 2026/RUBRICAS/RUBRICAS/Rbr_16110645_ACTA DEL ORGANO DE ADMINISTRACION_01-10-2026.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/RUBRICAS/Rbr_16110645_ACTA DEL ORGANO DE GOBIERNO_01-10-2026.pdf
+      igual a: PERIODO 2026/RUBRICAS/RUBRICAS/Rbr_16110645_ACTA DEL ORGANO DE GOBIERNO_01-10-2026.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/RUBRICAS/Rbr_16110645_ASISTENCIA A ASAMBLEA_01-10-2026.pdf
+      igual a: PERIODO 2026/RUBRICAS/RUBRICAS/Rbr_16110645_ASISTENCIA A ASAMBLEA_01-10-2026.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/RUBRICAS/Rbr_16110645_DIARIO_01-10-2026.pdf
+      igual a: PERIODO 2026/RUBRICAS/RUBRICAS/Rbr_16110645_DIARIO_01-10-2026.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/RUBRICAS/Rbr_16110645_MAYOR_01-10-2026.pdf
+      igual a: PERIODO 2026/RUBRICAS/RUBRICAS/Rbr_16110645_MAYOR_01-10-2026.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/RUBRICAS/Rbr_16110645_REGISTRO DE ACCIONES_01-10-2026.pdf
+      igual a: PERIODO 2026/RUBRICAS/RUBRICAS/Rbr_16110645_REGISTRO DE ACCIONES_01-10-2026.pdf  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/RUBRICAS/RUBRICAS/PRESUPUESTO RUBRICAS - RAPIGAS E.A.S.pdf
+      igual a: PERIODO 2026/RUBRICAS/PRESUPUESTO RUBRICAS - RAPIGAS E.A.S  (Copia idéntica (mismo contenido byte por byte))
 
 NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO (1)
 ------------------------------------------------------
@@ -280,7 +295,7 @@ MOVIDOS Y RENOMBRADOS (109)
   PERIODO 2026/RUBRICAS/DOC A-I/CONSTANCIA DE RUC RAPIGAS.pdf
       → 090 TRIBUTARIO/CONSTANCIA RUC RAPIGAS EAS.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
 
-MOVIDOS CONSERVANDO SU NOMBRE (54)
+MOVIDOS CONSERVANDO SU NOMBRE (57)
 -------------------------------------
   PERIODO 2025/DOCUMENTOS CONTABLES/EE FF/80153456NE2025.pdf
       → 090 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/80153456NE2025.pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
@@ -390,12 +405,18 @@ MOVIDOS CONSERVANDO SU NOMBRE (54)
       → 090 LEGAL Y SOCIETARIO/Constancia de estructura juridica 2026.pdf   [Documento legal o societario]
   PERIODO 2026/RUBRICAS/DOC A-I/Escritura-RAPIGAS E.A.S.pdf
       → 090 LEGAL Y SOCIETARIO/Escritura-RAPIGAS E.A.S.pdf   [Documento legal o societario]
+  PERIODO 2026/RUBRICAS/RUBRICAS/Rbr_16110645_ACTA DEL ORGANO DE ADMINISTRACION_01-10-2026.pdf
+      → 090 LEGAL Y SOCIETARIO/Rbr_16110645_ACTA DEL ORGANO DE ADMINISTRACION_01-10-2026.pdf   [Documento legal o societario]
+  PERIODO 2026/RUBRICAS/RUBRICAS/Rbr_16110645_ACTA DEL ORGANO DE GOBIERNO_01-10-2026.pdf
+      → 090 LEGAL Y SOCIETARIO/Rbr_16110645_ACTA DEL ORGANO DE GOBIERNO_01-10-2026.pdf   [Documento legal o societario]
+  PERIODO 2026/RUBRICAS/RUBRICAS/Rbr_16110645_ASISTENCIA A ASAMBLEA_01-10-2026.pdf
+      → 090 LEGAL Y SOCIETARIO/Rbr_16110645_ASISTENCIA A ASAMBLEA_01-10-2026.pdf   [Documento de asamblea]
 
 ENVIADOS A OTRO CLIENTE: ninguno
 
 RECIBIDOS DE OTRO CLIENTE: ninguno
 
-A «090 ZZ A CLASIFICAR» (para que lo ubique una persona) (14)
+A «090 ZZ A CLASIFICAR» (para que lo ubique una persona) (18)
 ----------------------------------------------------------------
   boleta de pago rapigas.pdf
   PERIODO 2026/DOCUMENTOS CONTABLES/boleta de pago cuota inicial por IRE RAPIGAS EAS.pdf
@@ -410,11 +431,15 @@ A «090 ZZ A CLASIFICAR» (para que lo ubique una persona) (14)
   PERIODO 2026/RUBRICAS/DOC A-I/LIQUIDACION DE RUBRICAS.pdf
   PERIODO 2026/RUBRICAS/DOC A-I/liquidacionInscripcion 49337224.pdf
   PERIODO 2026/RUBRICAS/DOC A-I/REPRESENTANTE LEGAL RAPIGAS.pdf
+  PERIODO 2026/RUBRICAS/FACT 1316 RUBRICAS - RAPIGAS EAS.pdf
   PERIODO 2026/RUBRICAS/PRESUPUESTO RUBRICAS - RAPIGAS E.A.S
+  PERIODO 2026/RUBRICAS/RUBRICAS/Rbr_16110645_DIARIO_01-10-2026.pdf
+  PERIODO 2026/RUBRICAS/RUBRICAS/Rbr_16110645_MAYOR_01-10-2026.pdf
+  PERIODO 2026/RUBRICAS/RUBRICAS/Rbr_16110645_REGISTRO DE ACCIONES_01-10-2026.pdf
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (37)
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (38)
 --------------------------------------------------
   PERIODO 2025/DOCUMENTOS CONTABLES/EE FF/extractos bancarios
   PERIODO 2025/DOCUMENTOS CONTABLES/EE FF
@@ -451,5 +476,6 @@ CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (37)
   PERIODO 2026/DOCUMENTOS CONTABLES
   PERIODO 2026/DOCUMENTOS LEGALES
   PERIODO 2026/RUBRICAS/DOC A-I
+  PERIODO 2026/RUBRICAS/RUBRICAS
   PERIODO 2026/RUBRICAS
   PERIODO 2026

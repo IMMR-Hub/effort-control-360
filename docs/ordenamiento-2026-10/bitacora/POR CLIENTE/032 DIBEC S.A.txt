@@ -1,30 +1,30 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 032 DIBEC S.A
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 391 · Peso: 160.4 MB · Subcarpetas con archivos: 67
+  Archivos: 394 · Peso: 160.9 MB · Subcarpetas con archivos: 68
 
 RESUMEN
   Duplicados apartados (cuarentena): 24
   Movidos y renombrados según el manual: 109
-  Movidos conservando su nombre: 214
+  Movidos conservando su nombre: 217
   Sin cambios: 0
   A «032 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 43
   Enviados a otro cliente: 1 · Recibidos de otro cliente: 1
   Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 4
-  Nombres originales que no dicen qué documento son: 142
+  Nombres originales que no dicen qué documento son: 145
   Nombre o ubicación que contradice lo que dice el documento por dentro: 1
   Excel con vínculos (no se renombraron): 1
 
 AL FINAL (archivos por carpeta de primer nivel)
-  032 LEGAL Y SOCIETARIO: 26
+  032 LEGAL Y SOCIETARIO: 28
   032 PERIODO 2020: 1
   032 PERIODO 2021: 1
   032 PERIODO 2022: 6
   032 PERIODO 2023: 47
   032 PERIODO 2024: 85
   032 PERIODO 2025: 79
-  032 PERIODO 2026: 69
+  032 PERIODO 2026: 70
   032 TRIBUTARIO: 10
   032 ZZ A CLASIFICAR: 43
 
@@ -324,7 +324,7 @@ MOVIDOS Y RENOMBRADOS (109)
   PERIODO 2026/SIARA/Estatutos de De DIBEC S.A.pdf
       → 032 LEGAL Y SOCIETARIO/Estatutos de De DIBEC S.A - SIARA.pdf   [Documento legal o societario]
 
-MOVIDOS CONSERVANDO SU NOMBRE (214)
+MOVIDOS CONSERVANDO SU NOMBRE (217)
 -------------------------------------
   PERIODO 2022/EEFF 2022 FUMIPRO S.A..pdf
       → 032 PERIODO 2022/DOCUMENTOS CONTABLES/CIERRE 2022/EEFF 2022 FUMIPRO S.A..pdf   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
@@ -753,8 +753,14 @@ MOVIDOS CONSERVANDO SU NOMBRE (214)
       → 032 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/LIBRO COMPRAS 082026 DIBEC SA.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/MES/08 AGOSTO 2026/RG COMPRAS 082026 DIBEC SA.xlsx
       → 032 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG COMPRAS 082026 DIBEC SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 08/2026]
+  PERIODO 2026/MES/09 SEPTIEMBRE 2026/Proforma Form_120 DIBEC SA.pdf
+      → 032 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/Proforma Form_120 DIBEC SA.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/SIARA/Captura.PNG
       → 032 LEGAL Y SOCIETARIO/Captura.PNG   [Documento legal o societario]
+  PERIODO 2026/SIARA/Libro Registro de Accionistas.pdf
+      → 032 LEGAL Y SOCIETARIO/Libro Registro de Accionistas.pdf   [Documento legal o societario]
+  PERIODO 2026/SIARA/Libro Registro de Accionistas.xls
+      → 032 LEGAL Y SOCIETARIO/Libro Registro de Accionistas.xls   [Documento legal o societario]
 
 ENVIADOS A OTRO CLIENTE (1)
 -------------------------------
@@ -816,7 +822,7 @@ EXCEL CON VÍNCULOS (se movieron sin renombrar) (1)
 ------------------------------------------------------
   PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/EEFF - DIBEC SA AL 31122025.xlsm  →  032 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/EEFF - DIBEC SA AL 31122025.xlsm  [Excel con 17 vínculo(s) a otros archivos]
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (80)
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (81)
 --------------------------------------------------
   PERIODO 2022/ARMAR 2022
   PERIODO 2022/DOCUMENTOS CONTABLES
@@ -895,6 +901,7 @@ CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (80)
   PERIODO 2026/MES/06 JUNIO 2026
   PERIODO 2026/MES/07 JULIO 2026
   PERIODO 2026/MES/08 AGOSTO 2026
+  PERIODO 2026/MES/09 SEPTIEMBRE 2026
   PERIODO 2026/MES
   PERIODO 2026/SIARA
   PERIODO 2026

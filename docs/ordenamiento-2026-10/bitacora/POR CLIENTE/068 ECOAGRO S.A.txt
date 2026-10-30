@@ -1,31 +1,31 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 068 ECOAGRO S.A
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 945 · Peso: 495.9 MB · Subcarpetas con archivos: 135
+  Archivos: 957 · Peso: 517.1 MB · Subcarpetas con archivos: 136
 
 RESUMEN
-  Duplicados apartados (cuarentena): 96
-  Movidos y renombrados según el manual: 364
-  Movidos conservando su nombre: 444
+  Duplicados apartados (cuarentena): 97
+  Movidos y renombrados según el manual: 369
+  Movidos conservando su nombre: 450
   Sin cambios: 0
   A «068 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 41
   Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
-  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 76
-  Nombres originales que no dicen qué documento son: 613
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 79
+  Nombres originales que no dicen qué documento son: 619
   Nombre o ubicación que contradice lo que dice el documento por dentro: 3
   Excel con vínculos (no se renombraron): 32
 
 AL FINAL (archivos por carpeta de primer nivel)
-  068 LEGAL Y SOCIETARIO: 54
+  068 LEGAL Y SOCIETARIO: 59
   068 PERIODO 2023: 16
   068 PERIODO 2024: 284
   068 PERIODO 2025: 314
-  068 PERIODO 2026: 128
+  068 PERIODO 2026: 134
   068 TRIBUTARIO: 12
   068 ZZ A CLASIFICAR: 41
 
-DUPLICADOS APARTADOS (96)
+DUPLICADOS APARTADOS (97)
 ----------------------------
   PERIODO 2024/DOCUMENTOS CONTABLES/10 OCTUBRE/DDJJ IVA 102024.pdf
       igual a: PERIODO 2024/DOCUMENTOS VARIOS/PEDIDOS DE MERCEDES/DDJJ IVA 102024 ECOAGRO SA.pdf  (La misma declaración presentada (mismo número de orden 12075554606), bajada otra vez)
@@ -205,6 +205,8 @@ DUPLICADOS APARTADOS (96)
       igual a: PERIODO 2025/DOCUMENTOS VARIOS/SEGUROS/08 AGOSTO/RECIBO 53263504.pdf  (Copia idéntica (mismo contenido byte por byte))
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/IMPORTACIONES/03 MARZO/copia.xls
       igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MES/copia importación.xls  (Copia idéntica (mismo contenido byte por byte))
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/IMPORTACIONES/04 ABRIL/copia - copia.xls
+      igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MES/copia importación.xls  (Copia idéntica (mismo contenido byte por byte))
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/IMPORTACIONES/04 ABRIL/copia.xls
       igual a: PERIODO 2026/DOCUMENTOS CONTABLES/MES/copia importación.xls  (Copia idéntica (mismo contenido byte por byte))
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/IMPORTACIONES/05 MAYO/copia.xls
@@ -226,7 +228,7 @@ NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO (3)
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/IMPORTACIONES/03 MARZO/02 FEBRERO 3785.2026.xls  →  El nombre dice 02/2026 y la carpeta 03/2026: se respetó la carpeta · Al nombre, que solo decía «02 FEBRERO 3785.2026», se le agregó la carpeta de donde venía
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/IMPORTACIONES/03 MARZO/03 FEBRERO 3771.2026.xls  →  El nombre dice 02/2026 y la carpeta 03/2026: se respetó la carpeta · Al nombre, que solo decía «03 FEBRERO 3771.2026», se le agregó la carpeta de donde venía
 
-NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (69)
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (71)
 ---------------------------------------------------------
   RG COMPRAS ACTUALIZADO.xlsx  →  RG COMPRAS 032024 ECOAGRO SA.xlsx
   CUENTA CORRIENTE GRANJA KIM ACTUALIZADO AL 28112024.xlsx  →  (a ZZ A CLASIFICAR, sin renombrar)
@@ -295,10 +297,12 @@ NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (69)
   Imagen de WhatsApp 2025-08-21 a las 15.28.55_c25fbc02.jpg  →  Imagen de WhatsApp 2025-08-21 a las 15.28.55_c25fbc02.jpg
   CamScanner 25-9-26 13.03.pdf  →  CamScanner 25-9-26 13.03.pdf
   CamScanner 25-9-26 14.17.pdf  →  CamScanner 25-9-26 14.17.pdf
+  DetalleComprobantesRegistrados COMPRAS FINAL.xlsx  →  RG COMPRAS 092026 ECOAGRO SA.xlsx
+  DetalleComprobantesRegistrados VENTAS FINAL.xlsx  →  RG VENTAS 092026 ECOAGRO SA.xlsx
   copia importación.xls  →  (a ZZ A CLASIFICAR, sin renombrar)
   copia.xls  →  (a ZZ A CLASIFICAR, sin renombrar)
 
-MOVIDOS Y RENOMBRADOS (364)
+MOVIDOS Y RENOMBRADOS (369)
 -----------------------------
   PERIODO 2023/CIERRE 2023/DDJJ IVA ECOAGRO SA/DDJJ 2023/Ver Declaración _ MARANGATU01.pdf
       → 068 PERIODO 2023/DOCUMENTOS CONTABLES/01 ENERO/DDJJ IVA 012023 ECOAGRO SA.pdf   [Declaración leída por dentro: formulario 120, período 01/2023]
@@ -1013,18 +1017,23 @@ MOVIDOS Y RENOMBRADOS (364)
       → 068 LEGAL Y SOCIETARIO/ASAMBLEA 2026/Acta de directorio para compra de vehiculo.docx   [Documento de asamblea]
   PERIODO 2026/DOC LEGALES/ASAMBLEA 2026/Asistencia de accionistas .pdf
       → 068 LEGAL Y SOCIETARIO/ASAMBLEA 2026/Asistencia de accionistas.pdf   [Documento de asamblea]
+  PERIODO 2026/DOC LEGALES/SIARA/24-09.2019.pdf
+      → 068 LEGAL Y SOCIETARIO/SIARA 24-09.2019.pdf   [Documento legal o societario]
+      nota: Al nombre, que solo decía «24-09.2019», se le agregó la carpeta de donde venía
   PERIODO 2026/DOC LEGALES/SIARA/ACTA 2025 .pdf
       → 068 LEGAL Y SOCIETARIO/ACTA 2025.pdf   [Documento legal o societario]
   PERIODO 2026/DOC LEGALES/SIARA/ACTA DE ASAMBLEA NRO 24 ECOAGRO .pdf
       → 068 LEGAL Y SOCIETARIO/ACTA DE ASAMBLEA NRO 24 ECOAGRO.pdf   [Documento de asamblea]
+  PERIODO 2026/DOC LEGALES/SIARA/Actualizacion registro de accionistas .pdf
+      → 068 LEGAL Y SOCIETARIO/Actualizacion registro de accionistas.pdf   [Documento legal o societario]
   PERIODO 2026/DOC LEGALES/SIARA/ESCRITURA DE MODIFICACION N°133.pdf
       → 068 LEGAL Y SOCIETARIO/ESCRITURA DE MODIFICACION N°133 - SIARA.pdf   [Documento legal o societario]
-  PERIODO 2026/DOC LEGALES/SIARA/Libro de registro de accionistas .pdf
-      → 068 LEGAL Y SOCIETARIO/Libro de registro de accionistas.pdf   [Documento legal o societario]
   PERIODO 2026/DOC LEGALES/SIARA/MODIFICACION DE ESTATUTOS ECOAGRO .pdf
       → 068 LEGAL Y SOCIETARIO/MODIFICACION DE ESTATUTOS ECOAGRO.pdf   [Documento legal o societario]
   PERIODO 2026/DOC LEGALES/SIARA/PROTOCOLOZICACION DE ACTA DE ASAMBLEA ECOAGRO .pdf
       → 068 LEGAL Y SOCIETARIO/PROTOCOLOZICACION DE ACTA DE ASAMBLEA ECOAGRO.pdf   [Documento de asamblea]
+  PERIODO 2026/DOC LEGALES/SIARA/Registro de accionistas ecoagro .pdf
+      → 068 LEGAL Y SOCIETARIO/Registro de accionistas ecoagro.pdf   [Documento legal o societario]
   PERIODO 2026/DOCUMENTOS CONTABLES/BANCO CONTINENTAL/EXTRACTOS BANCARIOS/DOLARES/DOLARES 012026.pdf
       → 068 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/EXTRACTO CONTINENTAL USD 012026 ECOAGRO SA.pdf   [Período tomado del nombre del archivo]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/01 ENERO 2026/Boleta de Pago IVA 012026 ECOAGRO SA.pdf
@@ -1063,6 +1072,12 @@ MOVIDOS Y RENOMBRADOS (364)
       → 068 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/LIBRO COMPRAS 082026 ECOAGRO SA.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/08 AGOSTO 2026/LV 082026 ECOAGRO SA.pdf
       → 068 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/LIBRO VENTAS 082026 ECOAGRO SA.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/09 SEPTIEMBRE 2026/DetalleComprobantesRegistrados COMPRAS FINAL.xlsx
+      → 068 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092026 ECOAGRO SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/09 SEPTIEMBRE 2026/DetalleComprobantesRegistrados VENTAS FINAL.xlsx
+      → 068 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG VENTAS 092026 ECOAGRO SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 09/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/09 SEPTIEMBRE 2026/Ver Declaración _ MARANGATU Form. 120.pdf
+      → 068 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DDJJ IVA 092026 ECOAGRO SA.pdf   [Declaración leída por dentro: formulario 120, período 09/2026]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/IMPORTACIONES/01 ENERO/1 ENERO 3733.2026.xls
       → 068 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/IMPORTACIONES 1 ENERO 3733.2026.xls   [Período tomado de la carpeta donde estaba]
       nota: Al nombre, que solo decía «1 ENERO 3733.2026», se le agregó la carpeta de donde venía
@@ -1224,7 +1239,7 @@ MOVIDOS Y RENOMBRADOS (364)
   PERIODO 2026/PEDIDO BANCO CONTINENTAL/DETALLE DE CLIENTES Y PROVEEDORES Y DEUDAS  .xlsx
       → 068 PERIODO 2026/DOCUMENTOS VARIOS/PEDIDO BANCO CONTINENTAL/DETALLE DE CLIENTES Y PROVEEDORES Y DEUDAS.xlsx   [Parte de un pedido o paquete de documentos («PEDIDO BANCO CONTINENTAL»): se conserva junto en DOCUMENTOS VARIOS]
 
-MOVIDOS CONSERVANDO SU NOMBRE (444)
+MOVIDOS CONSERVANDO SU NOMBRE (450)
 -------------------------------------
   PERIODO 2023/CCT AL 26082024.pdf
       → 068 TRIBUTARIO/CCT AL 26082024.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
@@ -1993,6 +2008,8 @@ MOVIDOS CONSERVANDO SU NOMBRE (444)
       → 068 LEGAL Y SOCIETARIO/ASAMBLEA 2026/Acta de Asamblea No-- 2026.docx   [Documento de asamblea]
   PERIODO 2026/DOC LEGALES/ASAMBLEA 2026/BALANCE GENERAL.pdf
       → 068 LEGAL Y SOCIETARIO/ASAMBLEA 2026/BALANCE GENERAL.pdf   [Documento de asamblea]
+  PERIODO 2026/DOC LEGALES/ASAMBLEA 2026/Constancia drfs-006---comunicacion-asamblearia--8295548.pdf
+      → 068 LEGAL Y SOCIETARIO/ASAMBLEA 2026/Constancia drfs-006---comunicacion-asamblearia--8295548.pdf   [Documento de asamblea]
   PERIODO 2026/DOC LEGALES/ASAMBLEA 2026/Convocatoria de asamblea ecoagro 2026.doc
       → 068 LEGAL Y SOCIETARIO/ASAMBLEA 2026/Convocatoria de asamblea ecoagro 2026.doc   [Documento de asamblea]
   PERIODO 2026/DOC LEGALES/ASAMBLEA 2026/ESTADO DE RESULTADOS.pdf
@@ -2005,6 +2022,10 @@ MOVIDOS CONSERVANDO SU NOMBRE (444)
       → 068 LEGAL Y SOCIETARIO/ASAMBLEA 2026/Memoria del Ejercicio 2025.pdf   [Documento de asamblea]
   PERIODO 2026/DOC LEGALES/SIARA/CONSTITUCION SOCIEDAD ECOAGRO.pdf
       → 068 LEGAL Y SOCIETARIO/CONSTITUCION SOCIEDAD ECOAGRO.pdf   [Documento legal o societario]
+  PERIODO 2026/DOC LEGALES/SIARA/CONTRATO DE COMPA VENTA DE ACCIONES.docx
+      → 068 LEGAL Y SOCIETARIO/CONTRATO DE COMPA VENTA DE ACCIONES.docx   [Documento legal o societario]
+  PERIODO 2026/DOC LEGALES/SIARA/CONTRATO DE COMPA VENTA DE ACCIONES.pdf1.pdf
+      → 068 LEGAL Y SOCIETARIO/CONTRATO DE COMPA VENTA DE ACCIONES.pdf1.pdf   [Documento legal o societario]
   PERIODO 2026/DOC LEGALES/SIARA/ESCRITURA DE MODIFICACION DE ESTATUTO NRO 28.pdf
       → 068 LEGAL Y SOCIETARIO/ESCRITURA DE MODIFICACION DE ESTATUTO NRO 28.pdf   [Documento legal o societario]
   PERIODO 2026/DOC LEGALES/SIARA/registro de accionistas.pdf
@@ -2025,6 +2046,10 @@ MOVIDOS CONSERVANDO SU NOMBRE (444)
       → 068 PERIODO 2026/DOCUMENTOS CONTABLES/02 FEBRERO/DDJJ IVA 022026 ECOAGRO SA.pdf   [Declaración leída por dentro: formulario 120, período 02/2026]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/03 MARZO 2026/DDJJ IVA 032026 ECOAGRO SA.pdf
       → 068 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/DDJJ IVA 032026 ECOAGRO SA.pdf   [Declaración leída por dentro: formulario 120, período 03/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/04 ABRIL 2026/80022319_REC_202604..xlsx
+      → 068 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/80022319_REC_202604..xlsx   [Archivo de sustento de una rectificativa, tal como lo genera el SET (no se renombra)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/04 ABRIL 2026/80022319_REC_202604.xlsx
+      → 068 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/80022319_REC_202604.xlsx   [Archivo de sustento de una rectificativa, tal como lo genera el SET (no se renombra)]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/04 ABRIL 2026/DDJJ IVA 042026 ECOAGRO SA.pdf
       → 068 PERIODO 2026/DOCUMENTOS CONTABLES/04 ABRIL/DDJJ IVA 042026 ECOAGRO SA.pdf   [Declaración leída por dentro: formulario 120, período 04/2026]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/04 ABRIL 2026/LIBRO VENTAS 042026 ECOAGRO SA.pdf
@@ -2053,6 +2078,8 @@ MOVIDOS CONSERVANDO SU NOMBRE (444)
       → 068 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG COMPRAS 082026 ECOAGRO SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 08/2026]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/08 AGOSTO 2026/RG VENTAS 082026 ECOAGRO SA.xlsx
       → 068 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG VENTAS 082026 ECOAGRO SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 08/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/09 SEPTIEMBRE 2026/Boleta de Pago _ MARANGATU.pdf
+      → 068 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/Boleta de Pago _ MARANGATU.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/IMPORTACIONES/03 MARZO/01 FEBRERO SIN NOMBRE.xls
       → 068 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/01 FEBRERO SIN NOMBRE.xls   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/IMPORTACIONES/06 JUNIO/01 3845.2026 solo copias.xls
@@ -2231,7 +2258,7 @@ EXCEL CON VÍNCULOS (se movieron sin renombrar) (32)
   PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/AUDITORIA/RETORNO JOSE/ECOAGRO S.A.de PT 006 Cruce del IVA.xlsx  →  068 PERIODO 2025/DOCUMENTOS VARIOS/AUDITORIA/RETORNO JOSE/ECOAGRO S.A.de PT 006 Cruce del IVA.xlsx  [Excel con 1 vínculo(s) a otros archivos]
   PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/EEFF - ECOAGRO SA 2025.xlsm  →  068 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025/EEFF - ECOAGRO SA 2025.xlsm  [Excel con 17 vínculo(s) a otros archivos]
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (191)
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (192)
 --------------------------------------------------
   PERIODO 2020/DDJJ RECTIFICADA 2020
   PERIODO 2020/DOCUMENTOS CONTABLES
@@ -2404,6 +2431,7 @@ CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (191)
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/06 JUNIO 2026
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/07 JULIO 2026
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/08 AGOSTO 2026
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/09 SEPTIEMBRE 2026
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/IMPORTACIONES/01 ENERO
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/IMPORTACIONES/02 FEBRERO
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/IMPORTACIONES/03 MARZO

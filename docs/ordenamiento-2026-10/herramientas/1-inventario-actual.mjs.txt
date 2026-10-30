@@ -1,0 +1,20 @@
+// SOLO LECTURA. Inventario de los archivos de clientes según el ESTADO ACTUAL de OneDrive (estado-onedrive-<fecha>.json,
+// que escribe actualizar.mjs), con la fecha que tiene cada archivo en la foto del disco.
+// Uso: node 1-inventario-actual.mjs <fecha> <salida.json>
+import fs from 'node:fs';
+import path from 'node:path';
+const FOTO = 'D:/COPIA ONEDRIVE EFFORT 2026-10-19';
+const CLIENTES = 'CLIENTES EFFORT E.A.S/CLIENTES/';
+const [FECHA, SALIDA] = process.argv.slice(2);
+const estado = JSON.parse(fs.readFileSync(`${FOTO}/_registro/estado-onedrive-${FECHA}.json`, 'utf8'));
+const items = [];
+for (const r of estado) {
+  if (!r.ruta.startsWith(CLIENTES)) continue;
+  const rel = r.ruta.slice(CLIENTES.length);
+  const m = /^(\d{3})(?!\d)[^/]*\//.exec(rel); if (!m) continue;
+  const st = fs.statSync(path.join(FOTO, r.ruta));
+  if (st.size !== r.tam) throw new Error(`la foto no está al día: ${r.ruta}`);
+  items.push({ id: r.id, cod: m[1], rel, tam: r.tam, hash: r.hash, mod: st.mtime.toISOString() });
+}
+fs.writeFileSync(SALIDA, JSON.stringify(items));
+console.log(`archivos de clientes: ${items.length}, clientes: ${new Set(items.map((i) => i.cod)).size}`);

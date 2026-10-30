@@ -1,0 +1,53 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 056 FACUNDO CARRASCOSA
+Fecha: 20/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+
+AL INICIO
+  Archivos: 3 · Peso: 0.4 MB · Subcarpetas con archivos: 1
+
+RESUMEN
+  Duplicados apartados (cuarentena): 0
+  Movidos y renombrados según el manual: 3
+  Movidos conservando su nombre: 0
+  Sin cambios: 0
+  A «056 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 0
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 0
+  Nombres originales que no dicen qué documento son: 1
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 0
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  056 PERIODO 2024: 3
+
+DUPLICADOS APARTADOS: ninguno
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO: ninguno
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron): ninguno
+
+MOVIDOS Y RENOMBRADOS (3)
+-----------------------------
+  045 DAVID ROMERO/2024/MARZO/IVA GENERAL 03-2024.pdf
+      → 056 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/DDJJ IVA 032024 FACUNDO CARRASCOSA.pdf   [Declaración leída por dentro: formulario 120, período 03/2024]
+  045 DAVID ROMERO/2024/MARZO/LIBRO COMPRAS-MES DE MARZO.pdf
+      → 056 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/LIBRO COMPRAS 032024 FACUNDO CARRASCOSA.pdf   [Período tomado de la carpeta donde estaba]
+  045 DAVID ROMERO/2024/MARZO/LIBRO VENTAS-MES DE MARZO.pdf
+      → 056 PERIODO 2024/DOCUMENTOS CONTABLES/03 MARZO/LIBRO VENTAS 032024 FACUNDO CARRASCOSA.pdf   [Período tomado de la carpeta donde estaba]
+
+MOVIDOS CONSERVANDO SU NOMBRE: ninguno
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «056 ZZ A CLASIFICAR» (para que lo ubique una persona): ninguno
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (5)
+--------------------------------------------------
+  045 DAVID ROMERO/2024/ENERO
+  045 DAVID ROMERO/2024/FEBRERO
+  045 DAVID ROMERO/2024/MARZO
+  045 DAVID ROMERO/2024
+  045 DAVID ROMERO

@@ -1,18 +1,18 @@
 ﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 040 GISSELLE FARIAS
-Fecha: 22/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+Fecha: 30/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
 
 AL INICIO
-  Archivos: 256 · Peso: 60.3 MB · Subcarpetas con archivos: 49
+  Archivos: 263 · Peso: 61.8 MB · Subcarpetas con archivos: 50
 
 RESUMEN
   Duplicados apartados (cuarentena): 9
-  Movidos y renombrados según el manual: 116
-  Movidos conservando su nombre: 130
+  Movidos y renombrados según el manual: 121
+  Movidos conservando su nombre: 132
   Sin cambios: 0
   A «040 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 1
   Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
   Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 3
-  Nombres originales que no dicen qué documento son: 42
+  Nombres originales que no dicen qué documento son: 43
   Nombre o ubicación que contradice lo que dice el documento por dentro: 6
   Excel con vínculos (no se renombraron): 0
 
@@ -20,8 +20,8 @@ AL FINAL (archivos por carpeta de primer nivel)
   040 PERIODO 2023: 1
   040 PERIODO 2024: 120
   040 PERIODO 2025: 71
-  040 PERIODO 2026: 40
-  040 TRIBUTARIO: 14
+  040 PERIODO 2026: 46
+  040 TRIBUTARIO: 15
   040 ZZ A CLASIFICAR: 1
 
 DUPLICADOS APARTADOS (9)
@@ -60,7 +60,7 @@ NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron) (3)
   RG COMPRAS OCTUBRE 2025 - GISSEL FARIAS ACTUALIZADO .xlsx  →  RG COMPRAS 102025 GISSELLE FARIAS.xlsx
   boleta de pago ok.pdf  →  boleta de pago ok.pdf
 
-MOVIDOS Y RENOMBRADOS (116)
+MOVIDOS Y RENOMBRADOS (121)
 -----------------------------
   PERIODO 2023/JUNIO/Ver Declaración _ MARANGATU.pdf
       → 040 PERIODO 2023/DOCUMENTOS CONTABLES/06 JUNIO/DDJJ IVA 062023 RECTIFICATIVA GISSELLE FARIAS.pdf   [Declaración leída por dentro: formulario 120, período 06/2023]
@@ -300,6 +300,17 @@ MOVIDOS Y RENOMBRADOS (116)
       → 040 PERIODO 2026/DOCUMENTOS CONTABLES/03 MARZO/RG VENTAS 032026 GISSELLE FARIAS.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 03/2026]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/MAYO/LIBRO COMPRAS MAYO GISSEL.pdf
       → 040 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/LIBRO COMPRAS 052026 GISSELLE FARIAS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/SETIEMBRE/DetalleComprobantesRegistrados - 2026-10-21T113610.297.xlsx
+      → 040 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092026 GISSELLE FARIAS VERSION ANTERIOR 1.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2026]
+      nota: Hay una versión más reciente del mismo documento (RG COMPRAS SETIEMBRE 2026 GISSE F.xlsx): esta queda como versión anterior
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/SETIEMBRE/LIBRO COMPRAS SETIEMBRE 2026 GISSEL F.pdf
+      → 040 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO COMPRAS 092026 GISSELLE FARIAS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/SETIEMBRE/LIBRO VENTAS SETIEMBRE 2026 GISSEL F.pdf
+      → 040 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO VENTAS 092026 GISSELLE FARIAS.pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/SETIEMBRE/RG COMPRAS SETIEMBRE 2026 GISSE F.xlsx
+      → 040 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092026 GISSELLE FARIAS.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2026]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/SETIEMBRE/RG VENTAS SET GISSEL F.xlsx
+      → 040 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG VENTAS 092026 GISSELLE FARIAS.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 09/2026]
   PERIODO 2026/enero 2026.xlsx
       → 040 PERIODO 2026/DOCUMENTOS CONTABLES/01 ENERO/RG COMPRAS 012026 GISSELLE FARIAS.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 01/2026]
   PERIODO 2026/febrero 2026.xlsx
@@ -311,7 +322,7 @@ MOVIDOS Y RENOMBRADOS (116)
   PERIODO 2026/mayo 2026.xlsx
       → 040 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/RG COMPRAS 052026 GISSELLE FARIAS.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 05/2026]
 
-MOVIDOS CONSERVANDO SU NOMBRE (130)
+MOVIDOS CONSERVANDO SU NOMBRE (132)
 -------------------------------------
   PERIODO 2024/DOCUMENTOS CONTABLES/IRP/EGRESO 2024 FARIAS/EGRESO AGOST 2024.xlsx
       → 040 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024/EGRESO AGOST 2024.xlsx   [Documento anual del cierre (IRE, IRP, estados financieros, balance)]
@@ -579,6 +590,10 @@ MOVIDOS CONSERVANDO SU NOMBRE (130)
       → 040 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/Boleta de pago mayo Gissel.pdf   [Período tomado de la carpeta donde estaba]
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/MAYO/DDJJ MAYO 2026 GISSEL..pdf
       → 040 PERIODO 2026/DOCUMENTOS CONTABLES/05 MAYO/DDJJ MAYO 2026 GISSEL..pdf   [Período tomado de la carpeta donde estaba]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/SETIEMBRE/CCT VIGENTE GISSEL F 21102026.pdf
+      → 040 TRIBUTARIO/CCT VIGENTE GISSEL F 21102026.pdf   [Identidad tributaria del cliente (RUC, CCT, cédula tributaria, timbrado)]
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/SETIEMBRE/DDJJ 2026 SETIEMBRE GISSEL FARIAS.pdf
+      → 040 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DDJJ 2026 SETIEMBRE GISSEL FARIAS.pdf   [Período tomado de la carpeta donde estaba]
 
 ENVIADOS A OTRO CLIENTE: ninguno
 
@@ -590,7 +605,7 @@ A «040 ZZ A CLASIFICAR» (para que lo ubique una persona) (1)
 
 EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
 
-CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (64)
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (65)
 --------------------------------------------------
   PERIODO 2023/DOCUMENTOS CONTABLES
   PERIODO 2023/DOCUMENTOS VARIOS
@@ -653,6 +668,7 @@ CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (64)
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/JUNIO
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/MARZO
   PERIODO 2026/DOCUMENTOS CONTABLES/MES/MAYO
+  PERIODO 2026/DOCUMENTOS CONTABLES/MES/SETIEMBRE
   PERIODO 2026/DOCUMENTOS CONTABLES/MES
   PERIODO 2026/DOCUMENTOS CONTABLES
   PERIODO 2026

@@ -1,0 +1,149 @@
+﻿BITÁCORA DEL ORDENAMIENTO — CLIENTE 131 COMPAÑIA 2B S.A
+Fecha: 20/10/2026 · Sobre la copia de prueba (D:\ORDENADO), no sobre el OneDrive real. Aplicado.
+
+AL INICIO
+  Archivos: 36 · Peso: 10.5 MB · Subcarpetas con archivos: 6
+
+RESUMEN
+  Duplicados apartados (cuarentena): 0
+  Movidos y renombrados según el manual: 21
+  Movidos conservando su nombre: 9
+  Sin cambios: 0
+  A «131 ZZ A CLASIFICAR» (no se pudo ubicar con certeza): 6
+  Enviados a otro cliente: 0 · Recibidos de otro cliente: 0
+  Nombres originales con palabras prohibidas por el manual (copia, (1), IMG, WhatsApp…): 0
+  Nombres originales que no dicen qué documento son: 7
+  Nombre o ubicación que contradice lo que dice el documento por dentro: 13
+  Excel con vínculos (no se renombraron): 0
+
+AL FINAL (archivos por carpeta de primer nivel)
+  131 LEGAL Y SOCIETARIO: 4
+  131 PERIODO 2026: 26
+  131 ZZ A CLASIFICAR: 6
+
+DUPLICADOS APARTADOS: ninguno
+
+NOMBRE O UBICACIÓN QUE CONTRADICE EL CONTENIDO (13)
+------------------------------------------------------
+  DOCUMENTOS CONTABLES/MES/06 JUNIO/LIBRO COMPRAS 072026 - COMPAÑIA 2B.pdf  →  El nombre dice 07/2026 y la carpeta 06/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/06 JUNIO/LIBRO VENTAS 072026 - COMPAÑIA 2B.pdf  →  El nombre dice 07/2026 y la carpeta 06/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/07 JULIO/DDJJ 072026 RECTIFICADA - COMPAÑIA 2B.pdf  →  El nombre dice 07/2026 y la carpeta 07/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/07 JULIO/LIBRO COMPRAS 072026 - COMPAÑIA 2B.pdf  →  El nombre dice 07/2026 y la carpeta 07/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/07 JULIO/LIBRO VENTAS 072026 - COMPAÑIA 2B.pdf  →  El nombre dice 07/2026 y la carpeta 07/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/08 AGOSTO/DETERMINACION DEL IVA 082026 - COMPAÑIA 2B.pdf  →  El nombre dice 08/2026 y la carpeta 08/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/08 AGOSTO/DETERMINACION DEL IVA 082026 - COMPAÑIA 2B.xlsx  →  El nombre dice 08/2026 y la carpeta 08/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/08 AGOSTO/LIBRO COMPRAS 082026 - COMPAÑIA 2B.pdf  →  El nombre dice 08/2026 y la carpeta 08/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/08 AGOSTO/LIBRO VENTAS 082026 - COMPAÑIA 2B.pdf  →  El nombre dice 08/2026 y la carpeta 08/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/09 SETIEMBRE/DETERMINACION DE IMPUESTO IVA 09 2026 - COMPAÑIA 2B SA.pdf  →  El nombre dice 09/2026 y la carpeta 09/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/09 SETIEMBRE/LIBRO COMPRAS 09 2026 - COMPAÑIA 2B SA.pdf  →  El nombre dice 09/2026 y la carpeta 09/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/09 SETIEMBRE/LIBRO VENTAS 09 2026 - COMPAÑIA 2B SA.pdf  →  El nombre dice 09/2026 y la carpeta 09/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/09 SETIEMBRE/RETENCIONES RECIBIDAS 09 2026 - COMPAÑIA 2B SA.xlsx  →  El nombre dice 09/2026 y la carpeta 09/?: se respetó la carpeta
+
+NOMBRES CON PALABRAS PROHIBIDAS (y cómo quedaron): ninguno
+
+MOVIDOS Y RENOMBRADOS (21)
+-----------------------------
+  DOCUMENTOS CONTABLES/MES/06 JUNIO/DDJJ 062026 - COMPAÑIA 2B.pdf
+      → 131 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/DDJJ IVA 062026 COMPAÑIA 2B SA.pdf   [Declaración leída por dentro: formulario 120, período 06/2026]
+  DOCUMENTOS CONTABLES/MES/06 JUNIO/LIBRO COMPRAS 072026 - COMPAÑIA 2B.pdf
+      → 131 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/LIBRO COMPRAS 062026 COMPAÑIA 2B SA.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 07/2026 y la carpeta 06/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/06 JUNIO/LIBRO VENTAS 072026 - COMPAÑIA 2B.pdf
+      → 131 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/LIBRO VENTAS 062026 COMPAÑIA 2B SA.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 07/2026 y la carpeta 06/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/06 JUNIO/RG90 COMPRAS 062026 - COMPAÑIA 2B-.xlsx
+      → 131 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/RG COMPRAS 062026 COMPAÑIA 2B SA VERSION ANTERIOR 1.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 06/2026]
+      nota: Hay una versión más reciente del mismo documento (RG90 COMPRAS 062026 - COMPAÑIA 2B.xlsx): esta queda como versión anterior
+  DOCUMENTOS CONTABLES/MES/06 JUNIO/RG90 COMPRAS 062026 - COMPAÑIA 2B.xlsx
+      → 131 PERIODO 2026/DOCUMENTOS CONTABLES/06 JUNIO/RG COMPRAS 062026 COMPAÑIA 2B SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 06/2026]
+  DOCUMENTOS CONTABLES/MES/07 JULIO/DDJJ 072026 - COMPAÑIA 2B.pdf
+      → 131 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/DDJJ IVA 072026 COMPAÑIA 2B SA.pdf   [Declaración leída por dentro: formulario 120, período 07/2026]
+  DOCUMENTOS CONTABLES/MES/07 JULIO/LIBRO COMPRAS 072026 - COMPAÑIA 2B.pdf
+      → 131 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/LIBRO COMPRAS 072026 COMPAÑIA 2B SA.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 07/2026 y la carpeta 07/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/07 JULIO/LIBRO VENTAS 072026 - COMPAÑIA 2B.pdf
+      → 131 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/LIBRO VENTAS 072026 COMPAÑIA 2B SA.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 07/2026 y la carpeta 07/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/07 JULIO/RG90 COMPRAS 072026 - COMPAÑIA 2B.xlsx
+      → 131 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/RG COMPRAS 072026 COMPAÑIA 2B SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 07/2026]
+  DOCUMENTOS CONTABLES/MES/08 AGOSTO/DDJJ 082026 - COMPAÑIA 2B.pdf
+      → 131 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/DDJJ IVA 082026 COMPAÑIA 2B SA.pdf   [Declaración leída por dentro: formulario 120, período 08/2026]
+  DOCUMENTOS CONTABLES/MES/08 AGOSTO/LIBRO COMPRAS 082026 - COMPAÑIA 2B.pdf
+      → 131 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/LIBRO COMPRAS 082026 COMPAÑIA 2B SA.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 08/2026 y la carpeta 08/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/08 AGOSTO/LIBRO VENTAS 082026 - COMPAÑIA 2B.pdf
+      → 131 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/LIBRO VENTAS 082026 COMPAÑIA 2B SA.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 08/2026 y la carpeta 08/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/08 AGOSTO/RG90 COMPRAS 082026 - COMPAÑIA 2B.xlsx
+      → 131 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG COMPRAS 082026 COMPAÑIA 2B SA VERSION ANTERIOR 1.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 08/2026]
+      nota: Hay una versión más reciente del mismo documento (RG90 COMPRAS 082026.xlsx): esta queda como versión anterior
+  DOCUMENTOS CONTABLES/MES/08 AGOSTO/RG90 COMPRAS 082026.xlsx
+      → 131 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG COMPRAS 082026 COMPAÑIA 2B SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 08/2026]
+  DOCUMENTOS CONTABLES/MES/08 AGOSTO/RG90 VENTAS 082026 - COMPAÑIA 2B.xlsx
+      → 131 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/RG VENTAS 082026 COMPAÑIA 2B SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 08/2026]
+  DOCUMENTOS CONTABLES/MES/09 SETIEMBRE/DDJJ SETIEMBRE 2026 - COMPAÑIA 2B SA.pdf
+      → 131 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DDJJ IVA 092026 COMPAÑIA 2B SA.pdf   [Declaración leída por dentro: formulario 120, período 09/2026]
+  DOCUMENTOS CONTABLES/MES/09 SETIEMBRE/LIBRO COMPRAS 09 2026 - COMPAÑIA 2B SA.pdf
+      → 131 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO COMPRAS 092026 COMPAÑIA 2B SA.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 09/2026 y la carpeta 09/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/09 SETIEMBRE/LIBRO VENTAS 09 2026 - COMPAÑIA 2B SA.pdf
+      → 131 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/LIBRO VENTAS 092026 COMPAÑIA 2B SA.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 09/2026 y la carpeta 09/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/09 SETIEMBRE/RG90 COMPRAS 09 2026 - COMPAÑIA 2B SA.xlsx
+      → 131 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG COMPRAS 092026 COMPAÑIA 2B SA.xlsx   [Planilla RG 90 leída por dentro: COMPRAS, período 09/2026]
+  DOCUMENTOS CONTABLES/MES/09 SETIEMBRE/RG90 VENTAS 09 2026 - COMPAÑIA 2B SA.xlsx
+      → 131 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RG VENTAS 092026 COMPAÑIA 2B SA.xlsx   [Planilla RG 90 leída por dentro: VENTAS, período 09/2026]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/Memo Compañia 2B S.A. .docx
+      → 131 LEGAL Y SOCIETARIO/Memo Compañia 2B S.A..docx   [Documento legal o societario]
+
+MOVIDOS CONSERVANDO SU NOMBRE (9)
+-------------------------------------
+  DOCUMENTOS CONTABLES/MES/07 JULIO/80139886_REC_202607.zip
+      → 131 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/80139886_REC_202607.zip   [Archivo de sustento de una rectificativa, tal como lo genera el SET (no se renombra)]
+  DOCUMENTOS CONTABLES/MES/07 JULIO/DDJJ 072026 RECTIFICADA - COMPAÑIA 2B.pdf
+      → 131 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO/DDJJ 072026 RECTIFICADA - COMPAÑIA 2B.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 07/2026 y la carpeta 07/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/08 AGOSTO/DETERMINACION DEL IVA 082026 - COMPAÑIA 2B.pdf
+      → 131 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/DETERMINACION DEL IVA 082026 - COMPAÑIA 2B.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 08/2026 y la carpeta 08/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/08 AGOSTO/DETERMINACION DEL IVA 082026 - COMPAÑIA 2B.xlsx
+      → 131 PERIODO 2026/DOCUMENTOS CONTABLES/08 AGOSTO/DETERMINACION DEL IVA 082026 - COMPAÑIA 2B.xlsx   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 08/2026 y la carpeta 08/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/09 SETIEMBRE/DETERMINACION DE IMPUESTO IVA 09 2026 - COMPAÑIA 2B SA.pdf
+      → 131 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/DETERMINACION DE IMPUESTO IVA 09 2026 - COMPAÑIA 2B SA.pdf   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 09/2026 y la carpeta 09/?: se respetó la carpeta
+  DOCUMENTOS CONTABLES/MES/09 SETIEMBRE/RETENCIONES RECIBIDAS 09 2026 - COMPAÑIA 2B SA.xlsx
+      → 131 PERIODO 2026/DOCUMENTOS CONTABLES/09 SETIEMBRE/RETENCIONES RECIBIDAS 09 2026 - COMPAÑIA 2B SA.xlsx   [Período tomado de la carpeta donde estaba]
+      nota: El nombre dice 09/2026 y la carpeta 09/?: se respetó la carpeta
+  DOCUMENTOS LEGALES Y SOCIETARIOS/COMPAÑIA 2B S.A. - MEMORÁNDUM.pdf
+      → 131 LEGAL Y SOCIETARIO/COMPAÑIA 2B S.A. - MEMORÁNDUM.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/Constancia de EJ Y FF 2025.pdf
+      → 131 LEGAL Y SOCIETARIO/Constancia de EJ Y FF 2025.pdf   [Documento legal o societario]
+  DOCUMENTOS LEGALES Y SOCIETARIOS/MEMORÁNDUM - COMPAÑIA 2B S.A..pdf
+      → 131 LEGAL Y SOCIETARIO/MEMORÁNDUM - COMPAÑIA 2B S.A..pdf   [Documento legal o societario]
+
+ENVIADOS A OTRO CLIENTE: ninguno
+
+RECIBIDOS DE OTRO CLIENTE: ninguno
+
+A «131 ZZ A CLASIFICAR» (para que lo ubique una persona) (6)
+----------------------------------------------------------------
+  DOCUMENTOS CONTABLES/MES/07 JULIO/RECTIFICATIVA - 80139886-0_REC_202607.xlsx
+  DOCUMENTOS VARIOS/BOLETA COMPAÑIA 2B.pdf
+  DOCUMENTOS VARIOS/Boleta de Pago _ MARANGATU.pdf
+  DOCUMENTOS VARIOS/Boleta de Pago IRE - Compañia 2B.pdf
+  DOCUMENTOS VARIOS/BOLETA IRE GRAL.pdf
+  DOCUMENTOS VARIOS/DDJJ IRE GENERAL.pdf
+
+EXCEL CON VÍNCULOS (se movieron sin renombrar): ninguno
+
+CARPETAS QUE QUEDARON VACÍAS Y SE QUITARON (8)
+--------------------------------------------------
+  DOCUMENTOS CONTABLES/MES/06 JUNIO
+  DOCUMENTOS CONTABLES/MES/07 JULIO
+  DOCUMENTOS CONTABLES/MES/08 AGOSTO
+  DOCUMENTOS CONTABLES/MES/09 SETIEMBRE
+  DOCUMENTOS CONTABLES/MES
+  DOCUMENTOS CONTABLES
+  DOCUMENTOS LEGALES Y SOCIETARIOS
+  DOCUMENTOS VARIOS
