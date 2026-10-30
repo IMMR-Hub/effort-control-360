@@ -57,6 +57,14 @@ no dicen qué documento son; 182 cuyo nombre o ubicación contradice lo que dice
 `5-bitacora <salida>`. `6-deshacer` vuelve todo atrás leyendo el diario; `comparar-con-foto` comprueba que quedó igual
 a la foto; `rucs` compara el RUC de la planilla con el nombre de las declaraciones.
 
+## Estado al 2026-10-30 — COPIA Y ORDENADO AL DÍA CON EL ONEDRIVE
+
+- **Foto actualizada** con lo que cambió en OneDrive desde el 19-10 (449 nuevos, 31 modificados, 178 movidos o renombrados, 11 que ya no están): 36.926/36.926 verificados. Versiones viejas resguardadas en `_registro/versiones anteriores 2026-10-30/`. Ver `docs/BITACORA-ONEDRIVE.md`.
+- **`D:\ORDENADO`:** se deshizo el v2 (27.288, 0 problemas); se igualó al OneDrive de hoy con `sincronizar-ordenado.mjs` (656 traídos de la foto, 218 apartados a `D:\ORDENADO\_FUERA DE ONEDRIVE 2026-10-30\`, nada borrado; 36.926/36.926 iguales a OneDrive); se leyeron por dentro los 438 PDF y Excel nuevos o modificados (`contenido-9.jsonl`), y se aplicó el **plan v3: 27.721 archivos de 120 clientes, 0 problemas, 27.721/27.721 verificados**, todos los clientes solo con las carpetas de primer nivel del manual.
+- Plan v3: 11.389 renombrados según el manual · 13.109 movidos con su nombre · 1.314 duplicados a cuarentena · 1.900 a ZZ A CLASIFICAR · 8 a otro cliente · 485 versiones anteriores · 198 Excel con vínculos sin renombrar.
+- Bitácora v3: `bitacora/BITACORA DEL ORDENAMIENTO - 30-10-2026.xlsx` + `bitacora/POR CLIENTE/` (también en el disco). Las anteriores quedan renombradas (v1 descartada, v2 reemplazada).
+- **Para el ordenamiento final del OneDrive** hay que repetir la actualización ese mismo día, porque los archivos siguen cambiando: `actualizar.mjs --copiar` → `6-deshacer --aplicar` → `sincronizar-ordenado <fecha> --aplicar` → `1-inventario-actual` → `2-contenido-actual` con los ids nuevos → `3-plan` → `validar-plan` → `4-aplicar` → `7-verificar` → `5-bitacora`.
+
 ## Estado al 2026-10-22 18:40 — PLAN v2 APLICADO Y VERIFICADO EN `D:\ORDENADO`
 
 - Disco reconectado: `chkdsk D:` solo análisis sin problemas (0 KB en sectores defectuosos). **Foto reverificada: 36.488 de 36.488 bien, 0 dañados.**

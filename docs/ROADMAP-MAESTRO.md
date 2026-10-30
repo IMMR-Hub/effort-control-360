@@ -30,6 +30,17 @@ skill global **`backend-datos-sensibles`**, reutilizable en otros proyectos.
 
 ---
 
+## ▶ HANDOFF — 2026-10-30 (manda sobre los de abajo)
+
+**164 — copia y ordenamiento de prueba AL DÍA con el OneDrive del 2026-10-30.** La foto del disco tiene los 36.926 archivos actuales verificados (las versiones viejas, resguardadas); `D:\ORDENADO` tiene el plan v3 aplicado y verificado (27.721/27.721). Detalle y cómo repetir la actualización: `docs/ordenamiento-2026-10/LEEME.md`.
+
+**Lo que sigue, en orden:**
+1. Laura y Lili revisan la bitácora v3 y el disco.
+2. Daniel levanta por escrito las reglas 0 y 5 para la operación concreta: mover y renombrar en el OneDrive real, duplicados a cuarentena, nada se borra.
+3. Se escribe la herramienta que aplica el plan en OneDrive con Graph (`PATCH` de nombre y carpeta, `conflictBehavior=fail`, diario y reversa, simulación por defecto; modelo: `renombrar.mjs`). Ese mismo día se actualizan la copia y el plan, y se aplica. Recomendado: **Opus, esfuerzo alto**.
+
+Pendientes de Daniel: DISCREPANCIAS 44 (RUC del 056) y 42 (cable o disco, segunda copia).
+
 ## ▶ HANDOFF — 2026-10-22 (manda sobre el del 2026-10-20, que sigue abajo)
 
 > **Actualización 2026-10-22 18:40:** disco reconectado, chkdsk sin problemas, **foto reverificada 36.488/36.488**; reversa del v1 terminada (0 diferencias con la foto) y **plan v2 aplicado y verificado en `D:\ORDENADO`** (27.288/27.288). Los pasos 1 a 5 de abajo ya están hechos. **Lo que sigue es el paso 6:** mostrárselo a Laura y Lili (bitácora en `docs/ordenamiento-2026-10/bitacora/` y en el disco). Pendiente de Daniel: corregir el RUC del 056 en la planilla (DISCREPANCIAS 44), y decidir la segunda copia y el cambio de cable/disco (DISCREPANCIAS 42).
