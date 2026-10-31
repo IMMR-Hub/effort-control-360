@@ -1,0 +1,56 @@
+// SOLO LECTURA (GET). Comprueba en el OneDrive real que cada archivo del plan quedó donde el plan dice, y que los
+// clientes del lote tienen en su primer nivel solo las carpetas del manual.
+// Uso: node verificar-onedrive.mjs --clientes 002,021,... | --resto | --todos
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const PILOTO = ['002', '021', '032', '043', '068'];
+const i = process.argv.indexOf('--clientes');
+const elegido = process.argv.includes('--todos') ? () => true : process.argv.includes('--resto') ? (c) => !PILOTO.includes(c) : ((s) => (c) => s.has(c))(new Set(process.argv[i + 1].split(',')));
+const AQUI = path.dirname(fileURLToPath(import.meta.url));
+const BASE = 'CLIENTES EFFORT E.A.S/CLIENTES';
+for (const linea of fs.readFileSync('C:/Users/Daniel/NexusFlow AI/effort-control-360/.env', 'utf8').split('\n')) {
+  const m = linea.match(/^([A-Z_][A-Z0-9_]*)=(.*)$/);
+  if (m && !process.env[m[1]]) process.env[m[1]] = m[2].trim().replace(/^["']|["']$/g, '');
+}
+let token = null, vence = 0;
+async function obtenerToken() {
+  if (token && Date.now() < vence) return token;
+  const r = await fetch(`https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}/oauth2/v2.0/token`, { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ client_id: process.env.AZURE_CLIENT_ID, client_secret: process.env.AZURE_CLIENT_SECRET, scope: 'https://graph.microsoft.com/.default', grant_type: 'client_credentials' }) });
+  const j = await r.json(); token = j.access_token; vence = Date.now() + (j.expires_in - 300) * 1000; return token;
+}
+async function json(ruta) {
+  for (let n = 1; n <= 8; n++) {
+    try {
+      const r = await fetch(ruta.startsWith('http') ? ruta : `https://graph.microsoft.com/v1.0${ruta}`, { headers: { authorization: `Bearer ${await obtenerToken()}` } });
+      if (r.status === 429 || r.status >= 500) { await new Promise((s) => setTimeout(s, Number(r.headers.get('retry-after') ?? 0) * 1000 || 3000 * n)); continue; }
+      if (!r.ok) throw new Error(`GET ${r.status}`);
+      return r.json();
+    } catch (e) { if (n === 8) throw e; await new Promise((s) => setTimeout(s, 3000 * n)); }
+  }
+}
+const driveId = process.env.AZURE_DRIVE_ID_ORIGEN ?? (await json(`/users/${encodeURIComponent(process.env.ONEDRIVE_USUARIO_ORIGEN ?? 'lsosa@effort.com.py')}/drive?$select=id`)).id;
+const items = new Map(); let url = `/drives/${driveId}/root/delta?$select=id,name,size,file,folder,parentReference,deleted,root`; let idRaiz = null;
+while (url) { const p = await json(url); for (const it of p.value) { if (it.deleted) continue; if (it.root) idRaiz = it.id; items.set(it.id, { padre: it.parentReference?.id, nombre: it.name, carpeta: !!it.folder, tam: it.size }); } url = p['@odata.nextLink'] ?? null; }
+const rutas = new Map();
+const ruta = (id) => { if (rutas.has(id)) return rutas.get(id); const it = items.get(id); const r = it.padre === idRaiz || !items.has(it.padre) ? it.nombre : `${ruta(it.padre)}/${it.nombre}`; rutas.set(id, r); return r; };
+const plan = JSON.parse(fs.readFileSync(path.join(AQUI, '..', 'plan.json'), 'utf8')).filter((f) => elegido(f.cod));
+let bien = 0; const mal = [];
+for (const f of plan) {
+  const it = items.get(f.id);
+  if (!it) { mal.push({ origen: f.origen, motivo: 'ya no existe en OneDrive' }); continue; }
+  const r = ruta(f.id);
+  if (r === `${BASE}/${f.destinoRel}`) bien++; else mal.push({ origen: f.origen, esperado: f.destinoRel, ahora: r.replace(`${BASE}/`, '') });
+}
+const raros = [];
+for (const cod of [...new Set(plan.map((f) => f.cod))]) {
+  const cliente = plan.find((f) => f.cod === cod).cliente;
+  const re = new RegExp(`^${cod} (LEGAL Y SOCIETARIO|TRIBUTARIO|ZZ A CLASIFICAR|PERIODO \\d{4})$`);
+  for (const [id, it] of items) if (it.padre && ruta(it.padre) === `${BASE}/${cliente}` && !(it.carpeta && re.test(it.nombre))) raros.push(`${cliente}/${it.nombre}${it.carpeta ? '/' : ''}`);
+}
+const salida = { fecha: new Date().toISOString(), planDelLote: plan.length, enSuLugar: bien, distintos: mal, primerNivelFueraDelManual: raros };
+fs.writeFileSync(path.join(AQUI, `verificacion-${process.argv.slice(2).join('_').replace(/[^\w-]/g, '')}.json`), JSON.stringify(salida, null, 1));
+console.log(`plan del lote: ${plan.length} · en su lugar en OneDrive: ${bien} · distintos: ${mal.length} · primer nivel fuera del manual: ${raros.length}`);
+for (const m of mal.slice(0, 10)) console.log('  ', JSON.stringify(m));
+for (const r of raros.slice(0, 10)) console.log('   primer nivel:', r);

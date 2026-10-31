@@ -1,0 +1,41 @@
+// Segunda parte, de corrido: aplicar el RESTO (repitiendo la pasada si hubo cortes de red; es seguro porque saltea lo
+// ya movido), verificar, reintentar los bloqueados del piloto y verificar todo. Se detiene si hay errores que no son
+// de red, o si más del 1 % cambió o chocó. Registro en encadenar.log.
+import fs from 'node:fs';
+import path from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+const AQUI = path.dirname(fileURLToPath(import.meta.url));
+const LOG = path.join(AQUI, 'encadenar.log');
+const log = (t) => { const l = `${new Date().toLocaleString('es-PY', { timeZone: 'America/Asuncion' })}  ${t}`; fs.appendFileSync(LOG, l + '\n'); console.log(l); };
+const correr = (script, args) => {
+  log(`→ node ${script} ${args.join(' ')}`);
+  const r = spawnSync(process.execPath, [path.join(AQUI, script), ...args], { cwd: AQUI, encoding: 'utf8', maxBuffer: 1e8 });
+  log(`  ${(r.stdout ?? '').trim().split('\n').filter((l) => /LISTO|plan del lote/.test(l)).pop() ?? ''}`);
+  if (r.status !== 0) { log(`  FALLÓ (código ${r.status}): ${(r.stderr ?? '').slice(-600)}`); throw new Error('paso fallido'); }
+};
+const informe = (n) => JSON.parse(fs.readFileSync(path.join(AQUI, `informe-${n}.json`), 'utf8'));
+const deRed = (e) => /fetch failed|terminated|ECONN|socket|timeout|aborted|reintentos/i.test(e.motivo);
+function aplicarHastaSinErroresDeRed(args, nombre) {
+  for (let vuelta = 1; vuelta <= 4; vuelta++) {
+    correr('aplicar-onedrive.mjs', args);
+    const i = informe(nombre);
+    const otros = i.errores.filter((e) => !deRed(e));
+    const raros = i.cambiaronDesdeElPlan.length + i.conflictos.length;
+    log(`  control (vuelta ${vuelta}): movidos ${i.movidos} · cambiaron ${i.cambiaronDesdeElPlan.length} · conflictos ${i.conflictos.length} · bloqueados ${i.bloqueados.length} · errores de red ${i.errores.length - otros.length} · otros errores ${otros.length}`);
+    fs.copyFileSync(path.join(AQUI, `informe-${nombre}.json`), path.join(AQUI, `informe-${nombre}-vuelta${vuelta}.json`));
+    if (otros.length) { log('  DETENIDO: hay errores que no son de red'); throw new Error('control'); }
+    if (raros > 230) { log('  DETENIDO: más del 1 % cambió o chocó'); throw new Error('control'); }
+    if (i.errores.length === 0) return;
+  }
+  log('  quedaron errores de red después de 4 vueltas: se informan, no se detiene');
+}
+try {
+  log('=== SEGUNDA PARTE: el resto de los clientes ===');
+  aplicarHastaSinErroresDeRed(['--resto', '--aplicar'], 'resto');
+  correr('verificar-onedrive.mjs', ['--resto']);
+  log('→ reintento de los bloqueados del piloto');
+  aplicarHastaSinErroresDeRed(['--clientes', '002,021,032,043,068', '--aplicar'], '002-021-032-043-068');
+  correr('verificar-onedrive.mjs', ['--todos']);
+  log('=== TERMINADO ===');
+} catch (e) { log(`=== DETENIDO: ${e.message} ===`); process.exit(1); }

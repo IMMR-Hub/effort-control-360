@@ -382,6 +382,18 @@ agregá la entrada — el valor está en que siga creciendo.
      carpeta `999 CLIENTE MUESTRA` con sus documentos de ejemplo dentro de `CLIENTES`. Se hizo con un script
      aparte que solo crea y solo escribe dentro de esa carpeta; está en `docs/BITACORA-ONEDRIVE.md`. **No abre
      ninguna otra escritura**: todo lo demás sigue siendo de solo lectura, sin excepción.
+   - **Segunda excepción, 2026-10-30 (Daniel, en el chat, para esa operación y ninguna otra):** aplicar el plan de
+     ordenamiento (tarea 164) en el OneDrive real — **mover y renombrar** los archivos de las carpetas de clientes según
+     el plan v3 aprobado por Laura y Lili, duplicados a la carpeta de cuarentena `ZZ DUPLICADOS PARA REVISAR`, carpetas
+     viejas vacías apartadas a `ZZ CARPETAS VACIAS PARA REVISAR`, **sin borrar nada**. Palabras de Daniel: «1. esta
+     aceptado 2. autorizo 3. manten actualizada la carpeta por si acaso acabas haciendo algo mal para poder reestaurar el
+     OneDrive y corregir el error. NO borres la copia de seguridad» y «inicia con los 5 clientes, luego completa los
+     demas clientes». Herramienta: `aplicar-onedrive.mjs` (sin DELETE, `conflictBehavior=fail`, `If-Match`, diario y
+     reversa con `deshacer-onedrive.mjs`). Detalle en `docs/BITACORA-ONEDRIVE.md`. **No abre ninguna otra escritura.**
+   - **La copia de seguridad del disco externo, `D:\COPIA ONEDRIVE EFFORT 2026-10-19\`, es de solo lectura para
+     siempre** (Daniel, 2026-10-31: «bajo ninguna circunstancia modifiques ni borres la copia de seguridad en el disco
+     D»). Es la foto del OneDrive antes del ordenamiento: no se actualiza, no se verifica con `--verificar` (borra lo
+     dañado), no se toca. Cómo usarla para restaurar: `docs/ordenamiento-2026-10/COMO-RESTAURAR.md`.
    - Hasta el 2026-09-09 esto era en gran parte teórico: el adaptador real
      (`DriveGraph`) nunca había tocado ningún archivo de producción, solo se
      probaba contra el doble en memoria (`DriveFalso`). La primera lectura

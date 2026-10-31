@@ -1,0 +1,57 @@
+// DESHACE en el OneDrive real lo que hizo aplicar-onedrive.mjs, leyendo diario-onedrive.jsonl de atrás para adelante:
+// cada archivo vuelve a su carpeta y a su nombre originales, y cada carpeta vieja apartada vuelve a su cliente.
+// Uso: node deshacer-onedrive.mjs [--clientes 002,021] (simula) · ... --aplicar
+// Mismas protecciones que el aplicador: solo GET y PATCH (nombre y carpeta), conflictBehavior=fail, sin DELETE.
+// Las carpetas que creó el ordenamiento quedan (vacías): sacarlas es borrar, y eso lo decide una persona.
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const APLICAR = process.argv.includes('--aplicar');
+const i = process.argv.indexOf('--clientes');
+const SOLO = i > 0 ? new Set(process.argv[i + 1].split(',')) : null;
+const AQUI = path.dirname(fileURLToPath(import.meta.url));
+const DIARIO = path.join(AQUI, 'diario-onedrive.jsonl');
+for (const linea of fs.readFileSync('C:/Users/Daniel/NexusFlow AI/effort-control-360/.env', 'utf8').split('\n')) {
+  const m = linea.match(/^([A-Z_][A-Z0-9_]*)=(.*)$/);
+  if (m && !process.env[m[1]]) process.env[m[1]] = m[2].trim().replace(/^["']|["']$/g, '');
+}
+let token = null, vence = 0;
+async function obtenerToken() {
+  if (token && Date.now() < vence) return token;
+  const r = await fetch(`https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}/oauth2/v2.0/token`, { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ client_id: process.env.AZURE_CLIENT_ID, client_secret: process.env.AZURE_CLIENT_SECRET, scope: 'https://graph.microsoft.com/.default', grant_type: 'client_credentials' }) });
+  if (!r.ok) throw new Error(`token: ${r.status}`);
+  const j = await r.json(); token = j.access_token; vence = Date.now() + (j.expires_in - 300) * 1000; return token;
+}
+const lineas = fs.readFileSync(DIARIO, 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
+const devueltos = new Set(lineas.filter((r) => r.tipo === 'devuelto').map((r) => r.id));
+const permitidos = new Map();
+for (const r of lineas) if ((r.tipo === 'movido' || r.tipo === 'carpetaVaciaApartada') && !devueltos.has(r.id) && (!SOLO || SOLO.has(r.cod))) permitidos.set(r.id, r);
+async function llamar(metodo, ruta, cuerpo) {
+  if (metodo !== 'GET' && metodo !== 'PATCH') throw new Error(`BLOQUEADO: ${metodo}`);
+  if (metodo === 'PATCH') {
+    const m = /^\/drives\/[^/]+\/items\/([^/?]+)\?@microsoft\.graph\.conflictBehavior=fail$/.exec(ruta);
+    const r = m && permitidos.get(m[1]);
+    if (!r || cuerpo.parentReference?.id !== r.deCarpetaId || (cuerpo.name !== undefined && cuerpo.name !== r.deNombre)) throw new Error(`BLOQUEADO: PATCH no permitido ${ruta}`);
+    if (!APLICAR) throw new Error('BLOQUEADO: simulación');
+  }
+  for (let n = 1; n <= 8; n++) {
+    try {
+      const r = await fetch(`https://graph.microsoft.com/v1.0${ruta}`, { method: metodo, headers: { authorization: `Bearer ${await obtenerToken()}`, ...(cuerpo ? { 'content-type': 'application/json' } : {}) }, body: cuerpo ? JSON.stringify(cuerpo) : undefined });
+      if (r.status === 429 || r.status >= 500) { await new Promise((s) => setTimeout(s, Number(r.headers.get('retry-after') ?? 0) * 1000 || 3000 * n)); continue; }
+      return r;
+    } catch (e) { if (n === 8) throw e; await new Promise((s) => setTimeout(s, 3000 * n)); }
+  }
+}
+const driveId = process.env.AZURE_DRIVE_ID_ORIGEN ?? (await (await llamar('GET', `/users/${encodeURIComponent(process.env.ONEDRIVE_USUARIO_ORIGEN ?? 'lsosa@effort.com.py')}/drive?$select=id`)).json()).id;
+const lista = [...permitidos.values()].reverse();
+let n = 0; const problemas = [];
+for (const r of lista) {
+  if (!APLICAR) { n++; continue; }
+  const cuerpo = r.tipo === 'movido' ? { name: r.deNombre, parentReference: { id: r.deCarpetaId } } : { parentReference: { id: r.deCarpetaId } };
+  const p = await llamar('PATCH', `/drives/${driveId}/items/${r.id}?@microsoft.graph.conflictBehavior=fail`, cuerpo);
+  if (p.ok) { fs.appendFileSync(DIARIO, JSON.stringify({ tipo: 'devuelto', id: r.id, cod: r.cod, ts: new Date().toISOString() }) + '\n'); n++; }
+  else problemas.push({ id: r.id, deRuta: r.deRuta ?? r.deNombre, motivo: `${p.status} ${(await p.text()).slice(0, 120)}` });
+}
+console.log(`${APLICAR ? 'devueltos' : 'se devolverían'}: ${n} · problemas: ${problemas.length}`);
+if (problemas.length) { fs.writeFileSync(path.join(AQUI, 'problemas-deshacer.json'), JSON.stringify(problemas, null, 1)); console.log(problemas.slice(0, 10)); }

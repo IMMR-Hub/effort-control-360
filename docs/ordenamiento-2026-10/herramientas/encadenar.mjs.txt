@@ -1,0 +1,54 @@
+// Corre el ordenamiento del OneDrive de corrido: piloto (5 clientes) y después el resto, con controles entre pasos.
+// Se DETIENE solo si algo sale raro (cualquier error, o más del 1 % de archivos que cambiaron o chocaron).
+// Registro en encadenar.log. Uso: node encadenar.mjs
+import fs from 'node:fs';
+import path from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+
+const AQUI = path.dirname(fileURLToPath(import.meta.url));
+const LOG = path.join(AQUI, 'encadenar.log');
+const log = (t) => { const l = `${new Date().toLocaleString('es-PY', { timeZone: 'America/Asuncion' })}  ${t}`; fs.appendFileSync(LOG, l + '\n'); console.log(l); };
+const PILOTO = '002,021,032,043,068';
+const correr = (script, args) => {
+  log(`→ node ${script} ${args.join(' ')}`);
+  const r = spawnSync(process.execPath, [path.join(AQUI, script), ...args], { cwd: AQUI, encoding: 'utf8', maxBuffer: 1e8 });
+  const ultima = (r.stdout ?? '').trim().split('\n').filter((l) => /LISTO|plan del lote|devueltos/.test(l)).pop() ?? '';
+  log(`  ${ultima}`);
+  if (r.status !== 0) { log(`  FALLÓ (código ${r.status}): ${(r.stderr ?? '').slice(-600)}`); throw new Error('paso fallido'); }
+};
+const informe = (nombre) => JSON.parse(fs.readFileSync(path.join(AQUI, `informe-${nombre}.json`), 'utf8'));
+function control(nombre, etapa) {
+  const i = informe(nombre);
+  const total = i.movidos + i.cambiaronDesdeElPlan.length + i.conflictos.length + i.bloqueados.length + i.errores.length;
+  const raros = i.cambiaronDesdeElPlan.length + i.conflictos.length;
+  log(`  control ${etapa}: movidos ${i.movidos} · cambiaron ${i.cambiaronDesdeElPlan.length} · conflictos ${i.conflictos.length} · bloqueados ${i.bloqueados.length} · errores ${i.errores.length}`);
+  if (i.errores.length > 0) { log(`  DETENIDO: hay errores. Ver informe-${nombre}.json`); throw new Error('control'); }
+  if (total > 0 && raros / total > 0.01) { log(`  DETENIDO: más del 1 % cambió o chocó (${raros}/${total}). Ver informe-${nombre}.json`); throw new Error('control'); }
+}
+function controlVerificacion(nombre, nombreInforme) {
+  const v = JSON.parse(fs.readFileSync(path.join(AQUI, `verificacion-${nombre}.json`), 'utf8'));
+  const i = informe(nombreInforme);
+  const esperables = i.cambiaronDesdeElPlan.length + i.conflictos.length + i.bloqueados.length;
+  log(`  verificación: ${v.enSuLugar}/${v.planDelLote} en su lugar · distintos ${v.distintos.length} (esperables por cambios/conflictos/bloqueados: ${esperables}) · primer nivel fuera del manual ${v.primerNivelFueraDelManual.length} (carpetas viejas con archivos nuevos: ${i.carpetasViejasConArchivos.length})`);
+  if (v.distintos.length > esperables) { log('  DETENIDO: hay más archivos fuera de lugar que los esperables'); throw new Error('control'); }
+}
+try {
+  log('=== INICIO del ordenamiento del OneDrive real ===');
+  // 1. Piloto: simulación (se reutiliza si ya terminó) → aplicar → verificar
+  if (!fs.existsSync(path.join(AQUI, `informe-${PILOTO.replaceAll(',', '-')}-simulacion.json`))) correr('aplicar-onedrive.mjs', ['--clientes', PILOTO]);
+  control(`${PILOTO.replaceAll(',', '-')}-simulacion`, 'simulación piloto');
+  correr('aplicar-onedrive.mjs', ['--clientes', PILOTO, '--aplicar']);
+  control(PILOTO.replaceAll(',', '-'), 'piloto aplicado');
+  correr('verificar-onedrive.mjs', ['--clientes', PILOTO]);
+  controlVerificacion(`--clientes_${PILOTO.replaceAll(',', '')}`.replace(/[^\w-]/g, ''), PILOTO.replaceAll(',', '-'));
+  // 2. Resto: simulación → aplicar → verificar
+  correr('aplicar-onedrive.mjs', ['--resto']);
+  control('resto-simulacion', 'simulación resto');
+  correr('aplicar-onedrive.mjs', ['--resto', '--aplicar']);
+  control('resto', 'resto aplicado');
+  correr('verificar-onedrive.mjs', ['--resto']);
+  controlVerificacion('--resto'.replace(/[^\w-]/g, ''), 'resto');
+  correr('verificar-onedrive.mjs', ['--todos']);
+  log('=== TERMINADO sin detenciones ===');
+} catch (e) { log(`=== DETENIDO: ${e.message} ===`); process.exit(1); }

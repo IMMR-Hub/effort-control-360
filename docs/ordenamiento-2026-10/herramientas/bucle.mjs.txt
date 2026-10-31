@@ -1,0 +1,32 @@
+// Bucle independiente de la sesión de Claude: corre encadenar2.mjs hasta que termine bien (máx. 10 vueltas).
+// encadenar2 es seguro de repetir: el aplicador saltea lo que ya está en el diario y no mueve nada que haya cambiado.
+// Antes de empezar espera a que no haya otro aplicador corriendo (para no trabajar dos a la vez).
+// Registro en bucle.log. Se lanza desacoplado con: cmd /c start "" /min node bucle.mjs
+import fs from 'node:fs';
+import path from 'node:path';
+import { spawnSync, execFileSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+
+const AQUI = path.dirname(fileURLToPath(import.meta.url));
+const LOG = path.join(AQUI, 'bucle.log');
+const log = (t) => fs.appendFileSync(LOG, `${new Date().toLocaleString('es-PY', { timeZone: 'America/Asuncion' })}  ${t}\n`);
+const esperar = (ms) => new Promise((s) => setTimeout(s, ms));
+function otroCorriendo() {
+  try {
+    const out = execFileSync('powershell.exe', ['-NoProfile', '-Command', `Get-CimInstance Win32_Process -Filter "Name='node.exe'" | Where-Object { $_.CommandLine -match 'encadenar2|aplicar-onedrive' -and $_.ProcessId -ne ${process.pid} } | Measure-Object | Select-Object -ExpandProperty Count`], { encoding: 'utf8' });
+    return Number(out.trim()) > 0;
+  } catch { return true; }
+}
+log(`=== BUCLE iniciado (pid ${process.pid}) ===`);
+while (otroCorriendo()) { log('  hay otro aplicador corriendo: espero 2 min'); await esperar(120_000); }
+for (let vuelta = 1; vuelta <= 10; vuelta++) {
+  log(`→ vuelta ${vuelta}: node encadenar2.mjs`);
+  const r = spawnSync(process.execPath, [path.join(AQUI, 'encadenar2.mjs')], { cwd: AQUI, encoding: 'utf8', maxBuffer: 1e8 });
+  const fin = fs.readFileSync(path.join(AQUI, 'encadenar.log'), 'utf8').trim().split('\n').slice(-3).join(' | ');
+  log(`  código ${r.status} · ${fin}`);
+  if (r.status === 0 && /=== TERMINADO ===/.test(fin)) { log('=== BUCLE TERMINADO: trabajo completo ==='); process.exit(0); }
+  if (/DETENIDO: hay errores que no son de red|DETENIDO: más del 1 %|DETENIDO: hay más archivos fuera de lugar/.test(fin)) { log('=== BUCLE DETENIDO: el control encontró algo raro (no es la red). Revisar encadenar.log ==='); process.exit(1); }
+  log('  se cortó por la red o por otra causa: espero 5 min y repito');
+  await esperar(300_000);
+}
+log('=== BUCLE DETENIDO: 10 vueltas sin terminar ===');

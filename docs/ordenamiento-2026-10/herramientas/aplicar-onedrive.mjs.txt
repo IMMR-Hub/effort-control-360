@@ -1,0 +1,202 @@
+// APLICA EL PLAN DE ORDENAMIENTO EN EL ONEDRIVE REAL DE EFFORT (lsosa@effort.com.py).
+// Autorizado por Daniel en el chat el 2026-10-30: «2. autorizo» (mover y renombrar en el OneDrive real, duplicados a
+// cuarentena, nada se borra) y «inicia con los 5 clientes, luego completa los demás».
+//
+// Uso:  node aplicar-onedrive.mjs --clientes 002,021,032,043,068            → SIMULA (solo GET) y dice qué haría
+//       node aplicar-onedrive.mjs --clientes 002,021,032,043,068 --aplicar  → mueve y renombra
+//       node aplicar-onedrive.mjs --resto [--aplicar]                       → todos los clientes del plan menos esos 5
+//
+// Protecciones por construcción (no dependen de que alguien tenga cuidado):
+//   · Una única puerta hacia Graph. Métodos: GET, POST (solo crear CARPETAS) y PATCH (solo nombre y carpeta).
+//     No existe ninguna rama de DELETE, copia ni subida de contenido.
+//   · POST solo crea carpetas dentro de «CLIENTES EFFORT E.A.S/CLIENTES», con conflictBehavior=fail.
+//   · PATCH solo sobre archivos del plan (o carpetas viejas verificadas VACÍAS), solo los campos name y parentReference,
+//     solo hacia carpetas dentro de CLIENTES, con conflictBehavior=fail (nunca pisa) e If-Match (si el archivo cambió
+//     entre la comprobación y el movimiento, Graph lo rechaza).
+//   · Antes de mover un archivo se comprueba que sigue donde el plan dice, con el mismo nombre, peso y huella. Si no,
+//     NO se toca y se anota.
+//   · Cada movimiento queda en diario-onedrive.jsonl (de dónde a dónde, con los id de las carpetas): con eso
+//     deshacer-onedrive.mjs devuelve todo a su lugar.
+//   · Sin --aplicar no se escribe nada.
+// Los secretos se leen del .env al proceso y van en el cuerpo de un fetch: no se imprimen.
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const APLICAR = process.argv.includes('--aplicar');
+const argClientes = process.argv[process.argv.indexOf('--clientes') + 1];
+const PILOTO = ['002', '021', '032', '043', '068'];
+const RESTO = process.argv.includes('--resto');
+if (!RESTO && !process.argv.includes('--clientes')) throw new Error('Falta --clientes NNN,NNN o --resto');
+const CLIENTES_ELEGIDOS = RESTO ? null : new Set(argClientes.split(','));
+const elegido = (cod) => (RESTO ? !PILOTO.includes(cod) : CLIENTES_ELEGIDOS.has(cod));
+
+const AQUI = path.dirname(fileURLToPath(import.meta.url));
+const DATOS = path.resolve(AQUI, '..');
+const DIARIO = path.join(AQUI, 'diario-onedrive.jsonl');
+const INFORME = path.join(AQUI, `informe-${RESTO ? 'resto' : [...CLIENTES_ELEGIDOS].join('-')}${APLICAR ? '' : '-simulacion'}.json`);
+const BASE = 'CLIENTES EFFORT E.A.S/CLIENTES';
+const ZZ_VACIAS = 'ZZ CARPETAS VACIAS PARA REVISAR';
+const CONCURRENCIA = 8;
+
+for (const linea of fs.readFileSync('C:/Users/Daniel/NexusFlow AI/effort-control-360/.env', 'utf8').split('\n')) {
+  const m = linea.match(/^([A-Z_][A-Z0-9_]*)=(.*)$/);
+  if (m && !process.env[m[1]]) process.env[m[1]] = m[2].trim().replace(/^["']|["']$/g, '');
+}
+
+// ------------------------------------------------------------------ la única puerta hacia Graph
+let token = null, vence = 0;
+async function obtenerToken() {
+  if (token && Date.now() < vence) return token;
+  const r = await fetch(`https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}/oauth2/v2.0/token`, {
+    method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({ client_id: process.env.AZURE_CLIENT_ID, client_secret: process.env.AZURE_CLIENT_SECRET, scope: 'https://graph.microsoft.com/.default', grant_type: 'client_credentials' }),
+  });
+  if (!r.ok) throw new Error(`token: ${r.status}`);
+  const j = await r.json(); token = j.access_token; vence = Date.now() + (j.expires_in - 300) * 1000; return token;
+}
+const carpetasDentroDeBase = new Set(); // id de carpetas comprobadas dentro de CLIENTES
+const itemsPermitidos = new Set();      // id de archivos del plan y carpetas viejas verificadas vacías
+let driveId = null;
+async function llamar(metodo, ruta, { cuerpo, ifMatch } = {}) {
+  if (!['GET', 'POST', 'PATCH'].includes(metodo)) throw new Error(`BLOQUEADO: método ${metodo}`);
+  if (metodo !== 'GET') {
+    if (!APLICAR) throw new Error('BLOQUEADO: simulación, no se escribe');
+    if (metodo === 'POST') {
+      const m = /^\/drives\/[^/]+\/items\/([^/]+)\/children$/.exec(ruta);
+      if (!m || !carpetasDentroDeBase.has(m[1]) || !cuerpo?.folder || cuerpo['@microsoft.graph.conflictBehavior'] !== 'fail' || Object.keys(cuerpo).some((k) => !['name', 'folder', '@microsoft.graph.conflictBehavior'].includes(k)))
+        throw new Error(`BLOQUEADO: POST no permitido ${ruta}`);
+    }
+    if (metodo === 'PATCH') {
+      const m = /^\/drives\/[^/]+\/items\/([^/?]+)\?@microsoft\.graph\.conflictBehavior=fail$/.exec(ruta);
+      if (!m || !itemsPermitidos.has(m[1]) || Object.keys(cuerpo).some((k) => !['name', 'parentReference'].includes(k)) || !carpetasDentroDeBase.has(cuerpo.parentReference?.id) || Object.keys(cuerpo.parentReference).length !== 1)
+        throw new Error(`BLOQUEADO: PATCH no permitido ${ruta}`);
+    }
+  }
+  for (let intento = 1; intento <= 8; intento++) {
+    try {
+      const headers = { authorization: `Bearer ${await obtenerToken()}` };
+      if (cuerpo) headers['content-type'] = 'application/json';
+      if (ifMatch) headers['if-match'] = ifMatch;
+      const r = await fetch(`https://graph.microsoft.com/v1.0${ruta}`, { method: metodo, headers, body: cuerpo ? JSON.stringify(cuerpo) : undefined, signal: AbortSignal.timeout(120_000) });
+      if (r.status === 429 || r.status === 503 || r.status === 504 || r.status >= 500) {
+        const espera = Number(r.headers.get('retry-after') ?? 0) * 1000 || 3000 * intento; await new Promise((s) => setTimeout(s, espera)); continue;
+      }
+      return r;
+    } catch (e) { if (intento === 8) throw e; await new Promise((s) => setTimeout(s, 3000 * intento)); }
+  }
+  throw new Error('demasiados reintentos');
+}
+const enc = (p) => p.split('/').map(encodeURIComponent).join('/');
+const decodificarRuta = (parentPath) => { const s = parentPath.replace(/^\/drive(s\/[^/]+)?\/root:\/?/, ''); try { return decodeURIComponent(s); } catch { return s; } };
+
+// ------------------------------------------------------------------ carpetas de destino (se crean si faltan)
+const idDeCarpeta = new Map();
+async function carpeta(rel) { // rel relativo a la raíz del drive, dentro de BASE
+  if (idDeCarpeta.has(rel)) return idDeCarpeta.get(rel);
+  const p = (async () => {
+    let r = await llamar('GET', `/drives/${driveId}/root:/${enc(rel)}?$select=id,folder`);
+    if (r.ok) { const j = await r.json(); if (!j.folder) throw new Error(`no es carpeta: ${rel}`); carpetasDentroDeBase.add(j.id); return j.id; }
+    if (r.status !== 404) throw new Error(`GET carpeta ${rel}: ${r.status}`);
+    if (rel === BASE) throw new Error('no existe CLIENTES');
+    const padre = await carpeta(path.posix.dirname(rel));
+    if (!APLICAR) { const falso = `nueva:${rel}`; carpetasDentroDeBase.add(falso); return falso; }
+    r = await llamar('POST', `/drives/${driveId}/items/${padre}/children`, { cuerpo: { name: path.posix.basename(rel), folder: {}, '@microsoft.graph.conflictBehavior': 'fail' } });
+    if (r.status === 409) { const g = await llamar('GET', `/drives/${driveId}/root:/${enc(rel)}?$select=id`); const j = await g.json(); carpetasDentroDeBase.add(j.id); return j.id; }
+    if (!r.ok) throw new Error(`crear carpeta ${rel}: ${r.status} ${(await r.text()).slice(0, 200)}`);
+    const j = await r.json(); carpetasDentroDeBase.add(j.id);
+    fs.appendFileSync(DIARIO, JSON.stringify({ tipo: 'carpetaCreada', id: j.id, ruta: rel, ts: new Date().toISOString() }) + '\n');
+    carpetasCreadas++;
+    return j.id;
+  })();
+  idDeCarpeta.set(rel, p);
+  return p;
+}
+let carpetasCreadas = 0;
+
+// ------------------------------------------------------------------ el plan
+const plan = JSON.parse(fs.readFileSync(path.join(DATOS, 'plan.json'), 'utf8'));
+const filas = plan.filter((f) => f.cambia && elegido(f.cod));
+const yaHechos = new Set();
+if (fs.existsSync(DIARIO)) for (const l of fs.readFileSync(DIARIO, 'utf8').split('\n')) if (l) { const r = JSON.parse(l); if (r.tipo === 'movido') yaHechos.add(r.id); if (r.tipo === 'devuelto') yaHechos.delete(r.id); }
+const pendientes = filas.filter((f) => !yaHechos.has(f.id));
+for (const f of pendientes) itemsPermitidos.add(f.id);
+const clientesDelLote = [...new Set(filas.map((f) => f.cod))].sort();
+console.log(`${APLICAR ? 'APLICANDO EN EL ONEDRIVE REAL' : 'SIMULANDO (solo lectura)'} · clientes: ${clientesDelLote.length} (${clientesDelLote.slice(0, 8).join(', ')}${clientesDelLote.length > 8 ? '…' : ''}) · movimientos: ${pendientes.length} (ya hechos antes: ${filas.length - pendientes.length})`);
+
+const usuario = process.env.ONEDRIVE_USUARIO_ORIGEN ?? 'lsosa@effort.com.py';
+driveId = process.env.AZURE_DRIVE_ID_ORIGEN ?? (await (await llamar('GET', `/users/${encodeURIComponent(usuario)}/drive?$select=id`)).json()).id;
+await carpeta(BASE);
+
+const resultado = { movidos: 0, sinCambiosEnPlan: 0, cambiaronDesdeElPlan: [], conflictos: [], bloqueados: [], errores: [], carpetasViejasApartadas: [], carpetasViejasConArchivos: [] };
+const t0 = Date.now(); let k = 0, hechos = 0;
+async function mover(f) {
+  const r = await llamar('GET', `/drives/${driveId}/items/${f.id}?$select=id,name,size,file,parentReference,eTag`);
+  if (r.status === 404) { resultado.cambiaronDesdeElPlan.push({ id: f.id, origen: f.origen, motivo: 'ya no existe en OneDrive' }); return; }
+  if (!r.ok) { resultado.errores.push({ id: f.id, origen: f.origen, motivo: `GET ${r.status}` }); return; }
+  const it = await r.json();
+  const rutaActual = `${decodificarRuta(it.parentReference.path)}/${it.name}`;
+  const esperada = `${BASE}/${f.origen}`;
+  if (rutaActual !== esperada || it.size !== f.tam || (f.hash && it.file?.hashes?.quickXorHash !== f.hash)) {
+    resultado.cambiaronDesdeElPlan.push({ id: f.id, origen: f.origen, ahora: rutaActual, motivo: rutaActual !== esperada ? 'está en otro lugar o con otro nombre' : 'el contenido cambió' });
+    return;
+  }
+  const dirDestino = `${BASE}/${path.posix.dirname(f.destinoRel)}`;
+  const nombre = path.posix.basename(f.destinoRel);
+  const destinoId = await carpeta(dirDestino);
+  if (!APLICAR) { resultado.movidos++; return; }
+  const p = await llamar('PATCH', `/drives/${driveId}/items/${f.id}?@microsoft.graph.conflictBehavior=fail`, { cuerpo: { name: nombre, parentReference: { id: destinoId } }, ifMatch: it.eTag });
+  if (p.ok) {
+    const j = await p.json();
+    fs.appendFileSync(DIARIO, JSON.stringify({ tipo: 'movido', id: f.id, cod: f.cod, deCarpetaId: it.parentReference.id, deNombre: it.name, deRuta: esperada, aCarpetaId: destinoId, aNombre: j.name, aRuta: `${dirDestino}/${j.name}`, ts: new Date().toISOString() }) + '\n');
+    resultado.movidos++;
+  } else if (p.status === 409) resultado.conflictos.push({ id: f.id, origen: f.origen, destino: f.destinoRel, motivo: 'ya hay un archivo con ese nombre en el destino (no se pisa)' });
+  else if (p.status === 423) resultado.bloqueados.push(f);
+  else if (p.status === 412) resultado.cambiaronDesdeElPlan.push({ id: f.id, origen: f.origen, motivo: 'cambió justo antes de moverlo' });
+  else resultado.errores.push({ id: f.id, origen: f.origen, motivo: `PATCH ${p.status} ${(await p.text()).slice(0, 160)}` });
+}
+async function trabajador(lista) {
+  while (k < lista.length) {
+    const f = lista[k++];
+    try { await mover(f); } catch (e) { resultado.errores.push({ id: f.id, origen: f.origen, motivo: String(e.message ?? e).slice(0, 160) }); }
+    if (++hechos % 500 === 0) console.log(`  ${hechos}/${lista.length} · movidos ${resultado.movidos} · ${Math.round((Date.now() - t0) / 1000)} s · conflictos ${resultado.conflictos.length} · cambiaron ${resultado.cambiaronDesdeElPlan.length} · errores ${resultado.errores.length}`);
+  }
+}
+// Primero las carpetas de destino (en orden, para no crear la misma dos veces), después los archivos.
+for (const d of [...new Set(pendientes.map((f) => `${BASE}/${path.posix.dirname(f.destinoRel)}`))].sort()) await carpeta(d);
+console.log(`  carpetas de destino listas (${APLICAR ? `creadas ${carpetasCreadas}` : 'simulación'})`);
+await Promise.all(Array.from({ length: CONCURRENCIA }, () => trabajador(pendientes)));
+// Los archivos abiertos por alguien (bloqueados) se reintentan hasta 3 veces, con un minuto de espera.
+for (let vuelta = 1; vuelta <= 3 && resultado.bloqueados.length; vuelta++) {
+  const otra = resultado.bloqueados; resultado.bloqueados = []; k = 0; hechos = 0;
+  console.log(`  reintento ${vuelta} de ${otra.length} archivos abiertos por alguien…`); await new Promise((s) => setTimeout(s, 60_000));
+  await Promise.all(Array.from({ length: 2 }, () => trabajador(otra)));
+}
+resultado.bloqueados = resultado.bloqueados.map((f) => ({ id: f.id, origen: f.origen, motivo: 'abierto por alguien (bloqueado) en los 4 intentos' }));
+
+// ------------------------------------------------------------------ carpetas viejas que quedaron VACÍAS: se apartan (no se borran)
+async function hijos(id) {
+  const out = []; let url = `/drives/${driveId}/items/${id}/children?$select=id,name,folder,file&$top=999`;
+  while (url) { const r = await llamar('GET', url.replace('https://graph.microsoft.com/v1.0', '')); if (!r.ok) throw new Error(`children ${r.status}`); const j = await r.json(); out.push(...j.value); url = j['@odata.nextLink'] ?? null; }
+  return out;
+}
+async function tieneArchivos(id) { for (const h of await hijos(id)) { if (h.file) return true; if (h.folder && (await tieneArchivos(h.id))) return true; } return false; }
+const carpetasCliente = new Map(plan.map((f) => [f.cod, f.cliente]));
+for (const cod of clientesDelLote) {
+  const nombreCliente = carpetasCliente.get(cod);
+  const idCliente = await carpeta(`${BASE}/${nombreCliente}`);
+  if (String(idCliente).startsWith('nueva:')) continue;
+  const delManual = new RegExp(`^${cod} (LEGAL Y SOCIETARIO|TRIBUTARIO|ZZ A CLASIFICAR|PERIODO \\d{4})$`);
+  for (const h of await hijos(idCliente)) {
+    if (!h.folder || delManual.test(h.name)) continue;
+    if (await tieneArchivos(h.id)) { resultado.carpetasViejasConArchivos.push(`${nombreCliente}/${h.name}`); continue; }
+    if (!APLICAR) { resultado.carpetasViejasApartadas.push(`${nombreCliente}/${h.name}`); continue; }
+    const destino = await carpeta(`${BASE}/${ZZ_VACIAS}/${nombreCliente}`);
+    itemsPermitidos.add(h.id);
+    const p = await llamar('PATCH', `/drives/${driveId}/items/${h.id}?@microsoft.graph.conflictBehavior=fail`, { cuerpo: { parentReference: { id: destino } } });
+    if (p.ok) { fs.appendFileSync(DIARIO, JSON.stringify({ tipo: 'carpetaVaciaApartada', id: h.id, cod, deCarpetaId: idCliente, deNombre: h.name, aCarpetaId: destino, ts: new Date().toISOString() }) + '\n'); resultado.carpetasViejasApartadas.push(`${nombreCliente}/${h.name}`); }
+    else resultado.errores.push({ id: h.id, origen: `${nombreCliente}/${h.name}`, motivo: `apartar carpeta vacía: ${p.status}` });
+  }
+}
+fs.writeFileSync(INFORME, JSON.stringify(resultado, null, 1));
+console.log(`LISTO en ${Math.round((Date.now() - t0) / 60000)} min · ${APLICAR ? 'movidos' : 'se moverían'}: ${resultado.movidos} · carpetas creadas: ${carpetasCreadas} · carpetas viejas vacías ${APLICAR ? 'apartadas' : 'a apartar'}: ${resultado.carpetasViejasApartadas.length} · con archivos (quedan): ${resultado.carpetasViejasConArchivos.length} · cambiaron desde el plan: ${resultado.cambiaronDesdeElPlan.length} · conflictos: ${resultado.conflictos.length} · bloqueados: ${resultado.bloqueados.length} · errores: ${resultado.errores.length}`);

@@ -464,3 +464,23 @@ En concreto:
   `_registro/versiones anteriores 2026-10-30/` (29 archivos). Informes: `_registro/cambios-2026-10-30*.json` y
   `estado-onedrive-2026-10-30.json`. Script: `docs/ordenamiento-2026-10/herramientas/actualizar.mjs.txt`.
 - **Observación (no es obra nuestra):** los 11 que ya no están y los 178 movidos los movió, renombró o borró alguien de EFFORT.
+
+## 2026-10-30 — ESCRITURA AUTORIZADA: aplicar el ordenamiento (tarea 164) en el OneDrive de EFFORT
+
+- **Autorización (Daniel, en el chat, 2026-10-30), sobre la propuesta «Laura y Lili revisan / Vos autorizás por escrito
+  mover y renombrar en el OneDrive real, con los duplicados a cuarentena y sin borrar nada»:** «1. esta aceptado
+  2. autorizo 3. manten actualizada la carpeta por si acaso acabas haciendo algo mal para poder reestaurar el OneDrive y
+  corregir el error. NO borres la copia de seguridad y haz el plan para hacerlo todo de corrido sin tener que pedirme 20
+  veces la autorizacion», y después: «inicia con los 5 clientes, luego completa los demas clientes del OneDrive. No
+  olvides de dejar la copia de seguridad en el disco D por si acaso».
+- **Las tres preguntas (CLAUDE.md):** (1) *¿Es necesario?* Sí: es la tarea 164 aprobada; el sistema no puede leer bien
+  carpetas desordenadas. (2) *¿Qué pasa si sale mal?* Un archivo queda en el lugar o con el nombre equivocado; se
+  deshace con `deshacer-onedrive.mjs` (diario de cada movimiento con los id de origen), OneDrive guarda el historial, y
+  la copia del disco D (al día, 36.926 archivos verificados, más las versiones anteriores) permite restaurar el
+  contenido. No se borra nada, así que nada se pierde. (3) *¿Cuál es la forma correcta?* La de `subir.mjs`/`renombrar.mjs`
+  del 999: puerta única hacia Graph, sin DELETE, `conflictBehavior=fail`, simulación primero; más `If-Match` y la
+  comprobación de que cada archivo sigue igual que en el plan antes de moverlo.
+- **Impacto en el sistema (revisado en el código):** la sincronización identifica los archivos por su huella; un archivo
+  movido o renombrado, como mucho, se vuelve a bajar, se reconoce como ya conocido y no crea un documento nuevo; no se
+  borran documentos cuando un archivo sale de la carpeta del cliente.
+- **Orden:** primero los 5 clientes piloto (002, 021, 032, 043, 068), verificar; después el resto.
