@@ -1,0 +1,111 @@
+// BARRIDO FINAL: deja cada cliente con la estructura del 999 en su primer nivel.
+// Los archivos que quedaron en carpetas viejas (llegaron después de armar el plan, o estaban abiertos) se llevan a
+// «NNN ZZ A CLASIFICAR/<ruta original dentro del cliente>» (sin renombrar), y la carpeta vieja ya vacía se aparta a
+// «CLIENTES/ZZ CARPETAS VACIAS PARA REVISAR/<cliente>/». Nada se borra. Todo queda en diario-onedrive.jsonl
+// (deshacer-onedrive.mjs lo revierte). Mismas protecciones que aplicar-onedrive.mjs: GET/POST(carpetas)/PATCH
+// (nombre y carpeta), conflictBehavior=fail, If-Match, sin DELETE. Sin --aplicar solo simula.
+// Uso: node barrido-final.mjs [--aplicar]
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const APLICAR = process.argv.includes('--aplicar');
+const AQUI = path.dirname(fileURLToPath(import.meta.url));
+const DIARIO = path.join(AQUI, 'diario-onedrive.jsonl');
+const BASE = 'CLIENTES EFFORT E.A.S/CLIENTES';
+const ZZ_VACIAS = 'ZZ CARPETAS VACIAS PARA REVISAR';
+for (const linea of fs.readFileSync('C:/Users/Daniel/NexusFlow AI/effort-control-360/.env', 'utf8').split('\n')) {
+  const m = linea.match(/^([A-Z_][A-Z0-9_]*)=(.*)$/);
+  if (m && !process.env[m[1]]) process.env[m[1]] = m[2].trim().replace(/^["']|["']$/g, '');
+}
+let token = null, vence = 0;
+async function obtenerToken() {
+  if (token && Date.now() < vence) return token;
+  const r = await fetch(`https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}/oauth2/v2.0/token`, { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ client_id: process.env.AZURE_CLIENT_ID, client_secret: process.env.AZURE_CLIENT_SECRET, scope: 'https://graph.microsoft.com/.default', grant_type: 'client_credentials' }) });
+  if (!r.ok) throw new Error(`token: ${r.status}`);
+  const j = await r.json(); token = j.access_token; vence = Date.now() + (j.expires_in - 300) * 1000; return token;
+}
+const carpetasOk = new Set(); const permitidos = new Set();
+async function llamar(metodo, ruta, { cuerpo, ifMatch } = {}) {
+  if (!['GET', 'POST', 'PATCH'].includes(metodo)) throw new Error(`BLOQUEADO: ${metodo}`);
+  if (metodo !== 'GET') {
+    if (!APLICAR) throw new Error('BLOQUEADO: simulación');
+    if (metodo === 'POST') { const m = /\/items\/([^/]+)\/children$/.exec(ruta); if (!m || !carpetasOk.has(m[1]) || !cuerpo.folder || cuerpo['@microsoft.graph.conflictBehavior'] !== 'fail') throw new Error('BLOQUEADO POST'); }
+    if (metodo === 'PATCH') { const m = /\/items\/([^/?]+)\?@microsoft\.graph\.conflictBehavior=fail$/.exec(ruta); if (!m || !permitidos.has(m[1]) || !carpetasOk.has(cuerpo.parentReference?.id) || Object.keys(cuerpo).some((k) => !['name', 'parentReference'].includes(k))) throw new Error('BLOQUEADO PATCH'); }
+  }
+  for (let n = 1; n <= 8; n++) {
+    try {
+      const h = { authorization: `Bearer ${await obtenerToken()}` }; if (cuerpo) h['content-type'] = 'application/json'; if (ifMatch) h['if-match'] = ifMatch;
+      const r = await fetch(ruta.startsWith('http') ? ruta : `https://graph.microsoft.com/v1.0${ruta}`, { method: metodo, headers: h, body: cuerpo ? JSON.stringify(cuerpo) : undefined, signal: AbortSignal.timeout(120_000) });
+      if (r.status === 429 || r.status >= 500) { await new Promise((s) => setTimeout(s, Number(r.headers.get('retry-after') ?? 0) * 1000 || 3000 * n)); continue; }
+      return r;
+    } catch (e) { if (n === 8) throw e; await new Promise((s) => setTimeout(s, 3000 * n)); }
+  }
+}
+const enc = (p) => p.split('/').map(encodeURIComponent).join('/');
+const driveId = process.env.AZURE_DRIVE_ID_ORIGEN ?? (await (await llamar('GET', `/users/${encodeURIComponent(process.env.ONEDRIVE_USUARIO_ORIGEN ?? 'lsosa@effort.com.py')}/drive?$select=id`)).json()).id;
+const idDe = new Map();
+async function carpeta(rel) {
+  if (idDe.has(rel)) return idDe.get(rel);
+  let r = await llamar('GET', `/drives/${driveId}/root:/${enc(rel)}?$select=id,folder`);
+  let id;
+  if (r.ok) id = (await r.json()).id;
+  else if (r.status === 404) {
+    const padre = await carpeta(path.posix.dirname(rel));
+    if (!APLICAR) id = `nueva:${rel}`;
+    else {
+      r = await llamar('POST', `/drives/${driveId}/items/${padre}/children`, { cuerpo: { name: path.posix.basename(rel), folder: {}, '@microsoft.graph.conflictBehavior': 'fail' } });
+      if (r.status === 409) id = (await (await llamar('GET', `/drives/${driveId}/root:/${enc(rel)}?$select=id`)).json()).id;
+      else if (r.ok) { id = (await r.json()).id; fs.appendFileSync(DIARIO, JSON.stringify({ tipo: 'carpetaCreada', id, ruta: rel, ts: new Date().toISOString() }) + '\n'); }
+      else throw new Error(`crear ${rel}: ${r.status}`);
+    }
+  } else throw new Error(`GET ${rel}: ${r.status}`);
+  carpetasOk.add(id); idDe.set(rel, id); return id;
+}
+async function hijos(id) {
+  const out = []; let url = `/drives/${driveId}/items/${id}/children?$select=id,name,folder,file,size,eTag&$top=999`;
+  while (url) { const r = await llamar('GET', url); if (!r.ok) throw new Error(`children ${r.status}`); const j = await r.json(); out.push(...j.value); url = j['@odata.nextLink'] ?? null; }
+  return out;
+}
+async function archivosBajo(id, rel, acc) { for (const h of await hijos(id)) { const r = `${rel}/${h.name}`; if (h.file) acc.push({ ...h, rel: r }); else if (h.folder) await archivosBajo(h.id, r, acc); } return acc; }
+
+const res = { archivosAZZ: [], carpetasApartadas: [], conflictos: [], errores: [] };
+const raiz = await carpeta(BASE);
+const clientes = (await hijos(raiz)).filter((h) => h.folder && /^\d{3}(?!\d)/.test(h.name) && !h.name.startsWith('999'));
+console.log(`${APLICAR ? 'APLICANDO' : 'SIMULANDO'} barrido final en ${clientes.length} clientes`);
+for (const c of clientes) {
+  const cod = c.name.slice(0, 3);
+  carpetasOk.add(c.id);
+  const delManual = new RegExp(`^${cod} (LEGAL Y SOCIETARIO|TRIBUTARIO|ZZ A CLASIFICAR|PERIODO \\d{4})$`);
+  for (const h of await hijos(c.id)) {
+    if (h.folder && delManual.test(h.name)) continue;
+    // Un archivo suelto en la raíz del cliente, o una carpeta vieja: lo que tenga va a NNN ZZ A CLASIFICAR.
+    const archivos = h.file ? [{ ...h, rel: h.name }] : await archivosBajo(h.id, h.name, []);
+    for (const a of archivos) {
+      const relDestino = `${BASE}/${c.name}/${cod} ZZ A CLASIFICAR/${a.rel}`;
+      const dirDestino = path.posix.dirname(relDestino);
+      try {
+        const destinoId = await carpeta(dirDestino);
+        if (!APLICAR) { res.archivosAZZ.push(`${c.name}/${a.rel}`); continue; }
+        permitidos.add(a.id);
+        const it = await (await llamar('GET', `/drives/${driveId}/items/${a.id}?$select=id,name,parentReference,eTag`)).json();
+        const p = await llamar('PATCH', `/drives/${driveId}/items/${a.id}?@microsoft.graph.conflictBehavior=fail`, { cuerpo: { name: a.name, parentReference: { id: destinoId } }, ifMatch: it.eTag });
+        if (p.ok) { fs.appendFileSync(DIARIO, JSON.stringify({ tipo: 'movido', origen: 'barrido-final', id: a.id, cod, deCarpetaId: it.parentReference.id, deNombre: it.name, deRuta: `${BASE}/${c.name}/${a.rel}`, aCarpetaId: destinoId, aNombre: a.name, aRuta: relDestino, ts: new Date().toISOString() }) + '\n'); res.archivosAZZ.push(`${c.name}/${a.rel}`); }
+        else if (p.status === 409) res.conflictos.push(`${c.name}/${a.rel}`);
+        else res.errores.push(`${c.name}/${a.rel}: ${p.status}`);
+      } catch (e) { res.errores.push(`${c.name}/${a.rel}: ${e.message}`); }
+    }
+    if (h.file) continue;
+    // La carpeta vieja: si quedó sin archivos, se aparta.
+    const quedan = APLICAR ? await archivosBajo(h.id, h.name, []) : [];
+    if (quedan.length) continue;
+    if (!APLICAR) { res.carpetasApartadas.push(`${c.name}/${h.name}`); continue; }
+    const destino = await carpeta(`${BASE}/${ZZ_VACIAS}/${c.name}`);
+    permitidos.add(h.id);
+    const p = await llamar('PATCH', `/drives/${driveId}/items/${h.id}?@microsoft.graph.conflictBehavior=fail`, { cuerpo: { parentReference: { id: destino } } });
+    if (p.ok) { fs.appendFileSync(DIARIO, JSON.stringify({ tipo: 'carpetaVaciaApartada', origen: 'barrido-final', id: h.id, cod, deCarpetaId: c.id, deNombre: h.name, aCarpetaId: destino, ts: new Date().toISOString() }) + '\n'); res.carpetasApartadas.push(`${c.name}/${h.name}`); }
+    else res.errores.push(`apartar ${c.name}/${h.name}: ${p.status}`);
+  }
+}
+fs.writeFileSync(path.join(AQUI, `informe-barrido-final${APLICAR ? '' : '-simulacion'}.json`), JSON.stringify(res, null, 1));
+console.log(`LISTO · archivos a ZZ A CLASIFICAR: ${res.archivosAZZ.length} · carpetas viejas apartadas: ${res.carpetasApartadas.length} · conflictos: ${res.conflictos.length} · errores: ${res.errores.length}`);

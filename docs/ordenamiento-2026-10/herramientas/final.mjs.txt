@@ -1,0 +1,25 @@
+// Espera a que termine el barrido final (despues-del-bucle.log) y corre: el bucle de revisión (mín. 3 rondas, con
+// correcciones) y la planilla de candidatos a borrar. Copia el diario y los informes a D:\DATOS ORDENAMIENTO 2026-10-20
+// (NUNCA a la copia de seguridad). Registro en final.log. Independiente de la sesión de Claude.
+import fs from 'node:fs';
+import path from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+const AQUI = path.dirname(fileURLToPath(import.meta.url));
+const LOG = path.join(AQUI, 'final.log');
+const log = (t) => fs.appendFileSync(LOG, `${new Date().toLocaleString('es-PY', { timeZone: 'America/Asuncion' })}  ${t}\n`);
+const esperar = (ms) => new Promise((s) => setTimeout(s, ms));
+const correr = (args) => { log(`→ node ${args.join(' ')}`); const r = spawnSync(process.execPath, args.map((a, i) => (i === 0 ? path.join(AQUI, a) : a)), { cwd: AQUI, encoding: 'utf8', maxBuffer: 1e9 }); log(`  código ${r.status} · ${(r.stdout ?? '').trim().split('\n').pop()}`); if (r.status !== 0 && r.stderr) log(`  ${r.stderr.slice(-500)}`); return r.status; };
+log('=== esperando a que termine el barrido final ===');
+for (;;) {
+  const t = fs.existsSync(path.join(AQUI, 'despues-del-bucle.log')) ? fs.readFileSync(path.join(AQUI, 'despues-del-bucle.log'), 'utf8') : '';
+  if (/=== TERMINADO|=== DETENIDO|el bucle se detuvo/.test(t)) break;
+  await esperar(120_000);
+}
+const rev = correr(['revision.mjs']);
+log(`  revisión terminó con código ${rev} (0 = limpia; 2 = quedan casos para una persona; 3 = no quedó limpia en 8 rondas)`);
+correr(['candidatos-a-borrar.mjs', 'C:/Users/Daniel/NexusFlow AI/effort-control-360/docs/ordenamiento-2026-10', 'D:/DATOS ORDENAMIENTO 2026-10-20/onedrive', 'C:/Users/Daniel/DATOS ORDENAMIENTO EFFORT 2026-10/onedrive']);
+const destino = 'D:/DATOS ORDENAMIENTO 2026-10-20/onedrive';
+fs.mkdirSync(destino, { recursive: true });
+for (const f of fs.readdirSync(AQUI).filter((x) => /\.(jsonl|json|log)$/.test(x))) fs.copyFileSync(path.join(AQUI, f), path.join(destino, f));
+log('=== FINAL: revisión y planilla listas; diario e informes copiados a D:\DATOS ORDENAMIENTO 2026-10-20\onedrive ===');

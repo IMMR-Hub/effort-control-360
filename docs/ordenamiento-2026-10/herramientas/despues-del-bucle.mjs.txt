@@ -1,0 +1,24 @@
+// Espera a que bucle.mjs termine bien y después corre el barrido final (simular → si no hay errores, aplicar) y la
+// verificación de todos los clientes. Registro en despues-del-bucle.log. Independiente de la sesión de Claude.
+import fs from 'node:fs';
+import path from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+const AQUI = path.dirname(fileURLToPath(import.meta.url));
+const LOG = path.join(AQUI, 'despues-del-bucle.log');
+const log = (t) => fs.appendFileSync(LOG, `${new Date().toLocaleString('es-PY', { timeZone: 'America/Asuncion' })}  ${t}\n`);
+const esperar = (ms) => new Promise((s) => setTimeout(s, ms));
+const correr = (args) => { log(`→ node ${args.join(' ')}`); const r = spawnSync(process.execPath, args.map((a, i) => (i === 0 ? path.join(AQUI, a) : a)), { cwd: AQUI, encoding: 'utf8', maxBuffer: 1e8 }); log(`  código ${r.status} · ${(r.stdout ?? '').trim().split('\n').pop()}`); if (r.status !== 0) log(`  ${(r.stderr ?? '').slice(-500)}`); return r.status; };
+log('=== esperando a que termine el bucle ===');
+for (;;) {
+  const b = fs.existsSync(path.join(AQUI, 'bucle.log')) ? fs.readFileSync(path.join(AQUI, 'bucle.log'), 'utf8') : '';
+  if (/BUCLE TERMINADO/.test(b)) break;
+  if (/BUCLE DETENIDO/.test(b)) { log('=== el bucle se detuvo: no corro el barrido. Revisar encadenar.log ==='); process.exit(1); }
+  await esperar(120_000);
+}
+if (correr(['barrido-final.mjs']) !== 0) process.exit(1);
+const sim = JSON.parse(fs.readFileSync(path.join(AQUI, 'informe-barrido-final-simulacion.json'), 'utf8'));
+if (sim.errores.length) { log(`=== DETENIDO: la simulación del barrido tuvo ${sim.errores.length} errores ===`); process.exit(1); }
+correr(['barrido-final.mjs', '--aplicar']);
+correr(['verificar-onedrive.mjs', '--todos']);
+log('=== TERMINADO: barrido final y verificación de todos los clientes ===');

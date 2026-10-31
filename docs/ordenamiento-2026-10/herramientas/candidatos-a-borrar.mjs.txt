@@ -1,0 +1,105 @@
+// Arma la planilla «CANDIDATOS A BORRAR» después de la revisión: qué se podría borrar, dónde está, a qué corresponde,
+// el motivo y el % de seguridad. NO borra nada. Lee el inventario actual del OneDrive (solo GET), el plan y el diario.
+// Uso: node candidatos-a-borrar.mjs <carpeta de salida> [<otra carpeta de salida> ...]
+import fs from 'node:fs';
+import path from 'node:path';
+import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
+
+const AQUI = path.dirname(fileURLToPath(import.meta.url));
+const require = createRequire('C:/Users/Daniel/NexusFlow AI/effort-control-360/package.json');
+const ExcelJS = require('exceljs');
+const BASE = 'CLIENTES EFFORT E.A.S/CLIENTES/';
+for (const linea of fs.readFileSync('C:/Users/Daniel/NexusFlow AI/effort-control-360/.env', 'utf8').split('\n')) {
+  const m = linea.match(/^([A-Z_][A-Z0-9_]*)=(.*)$/);
+  if (m && !process.env[m[1]]) process.env[m[1]] = m[2].trim().replace(/^["']|["']$/g, '');
+}
+let token = null, vence = 0;
+async function obtenerToken() {
+  if (token && Date.now() < vence) return token;
+  const r = await fetch(`https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}/oauth2/v2.0/token`, { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ client_id: process.env.AZURE_CLIENT_ID, client_secret: process.env.AZURE_CLIENT_SECRET, scope: 'https://graph.microsoft.com/.default', grant_type: 'client_credentials' }) });
+  const j = await r.json(); token = j.access_token; vence = Date.now() + (j.expires_in - 300) * 1000; return token;
+}
+async function jget(ruta) {
+  for (let n = 1; n <= 8; n++) {
+    try {
+      const r = await fetch(ruta.startsWith('http') ? ruta : `https://graph.microsoft.com/v1.0${ruta}`, { headers: { authorization: `Bearer ${await obtenerToken()}` } });
+      if (r.status === 429 || r.status >= 500) { await new Promise((s) => setTimeout(s, 3000 * n)); continue; }
+      if (!r.ok) throw new Error(`GET ${r.status}`); return r.json();
+    } catch (e) { if (n === 8) throw e; await new Promise((s) => setTimeout(s, 3000 * n)); }
+  }
+}
+const driveId = process.env.AZURE_DRIVE_ID_ORIGEN ?? (await jget(`/users/${encodeURIComponent(process.env.ONEDRIVE_USUARIO_ORIGEN ?? 'lsosa@effort.com.py')}/drive?$select=id`)).id;
+const items = new Map(); let url = `/drives/${driveId}/root/delta?$select=id,name,size,file,folder,parentReference,deleted,root`; let idRaiz = null;
+while (url) { const p = await jget(url); for (const it of p.value) { if (it.deleted) continue; if (it.root) idRaiz = it.id; items.set(it.id, { padre: it.parentReference?.id, nombre: it.name, carpeta: !!it.folder, hijos: it.folder?.childCount ?? 0, tam: it.size, hash: it.file?.hashes?.quickXorHash }); } url = p['@odata.nextLink'] ?? null; }
+const rutas = new Map();
+const ruta = (id) => { if (!items.has(id)) return null; if (rutas.has(id)) return rutas.get(id); const it = items.get(id); const r = it.padre === idRaiz || !items.has(it.padre) ? it.nombre : `${ruta(it.padre)}/${it.nombre}`; rutas.set(id, r); return r; };
+const corta = (r) => (r ?? '').replace(BASE, '');
+const plan = JSON.parse(fs.readFileSync(path.join(AQUI, '..', 'plan.json'), 'utf8'));
+const planPorId = new Map(plan.map((f) => [f.id, f]));
+const diario = fs.readFileSync(path.join(AQUI, 'diario-onedrive.jsonl'), 'utf8').split('\n').filter(Boolean).map((l) => JSON.parse(l));
+
+const filas = [];
+// 1. DUPLICADOS (en ZZ DUPLICADOS PARA REVISAR)
+for (const f of plan.filter((x) => x.accion === 'DUPLICADO')) {
+  const it = items.get(f.id); const r = ruta(f.id);
+  if (!it || !r?.includes('ZZ DUPLICADOS PARA REVISAR')) continue;
+  const cons = planPorId.get(f.idConservado); const rc = ruta(f.idConservado); const ic = items.get(f.idConservado);
+  const identico = ic && it.hash && ic.hash === it.hash && ic.tam === it.tam;
+  const mismaDecl = /misma declaración/.test(f.motivo ?? '');
+  let seguridad, motivo;
+  if (!ic) { seguridad = 0; motivo = 'La copia que se conservó YA NO ESTÁ en OneDrive: NO borrar este (es la única copia que queda)'; }
+  else if (identico) { seguridad = 100; motivo = 'Duplicado: contenido idéntico byte por byte (misma huella de Microsoft) a la copia que se conservó'; }
+  else if (mismaDecl) { seguridad = 99; motivo = `Duplicado: la misma declaración de la DNIT (${f.motivo.match(/número de orden \d+/)?.[0] ?? 'mismo número de orden'}) bajada otra vez; el PDF difiere solo en la fecha de impresión`; }
+  else { seguridad = 50; motivo = 'El contenido ya no es igual al de la copia conservada (alguien cambió uno de los dos): revisar antes de borrar'; }
+  filas.push({ tipo: 'ARCHIVO DUPLICADO', cliente: f.cliente, nombre: it.nombre, donde: corta(r), corresponde: rc ? `Se conserva: ${corta(rc)}` : '—', motivo, seguridad, tamKB: Math.round((it.tam ?? 0) / 1024) });
+}
+// 2. CARPETAS VIEJAS VACÍAS (en ZZ CARPETAS VACIAS PARA REVISAR)
+for (const d of diario.filter((x) => x.tipo === 'carpetaVaciaApartada')) {
+  const it = items.get(d.id); const r = ruta(d.id);
+  if (!it || !r?.includes('ZZ CARPETAS VACIAS PARA REVISAR')) continue;
+  let archivosAdentro = 0; for (const [id, x] of items) if (!x.carpeta && ruta(id)?.startsWith(r + '/')) archivosAdentro++;
+  filas.push({ tipo: 'CARPETA VIEJA VACÍA', cliente: r.split('/')[3] ?? '', nombre: it.nombre, donde: corta(r), corresponde: 'Su contenido ya está en la estructura nueva del cliente (ver la bitácora)', motivo: archivosAdentro ? `NO borrar: tiene ${archivosAdentro} archivo(s) adentro` : 'Carpeta de la estructura vieja que quedó sin ningún archivo después del ordenamiento', seguridad: archivosAdentro ? 0 : 100, tamKB: 0 });
+}
+// 3. NO se proponen para borrar (se listan para que se vea que se revisaron)
+const noBorrar = [];
+for (const f of plan) {
+  const it = items.get(f.id); const r = ruta(f.id); if (!it || !r) continue;
+  if (/ZZ A CLASIFICAR/.test(r)) noBorrar.push({ tipo: 'A CLASIFICAR', cliente: f.cliente, nombre: it.nombre, donde: corta(r), motivo: 'Documento real cuyo período o tipo no se pudo saber con certeza: lo ubica una persona (manual 4.8). NO se borra.' });
+  else if (/VERSION ANTERIOR/.test(it.nombre)) noBorrar.push({ tipo: 'VERSIÓN ANTERIOR', cliente: f.cliente, nombre: it.nombre, donde: corta(r), motivo: 'Versión anterior de un documento (hay una más reciente con el nombre limpio). Se recomienda conservarla.' });
+}
+
+const wb = new ExcelJS.Workbook();
+const leer = wb.addWorksheet('Cómo leer'); leer.getColumn(1).width = 120;
+[
+  `CANDIDATOS A BORRAR del OneDrive de EFFORT — ${new Date().toLocaleDateString('es-PY', { timeZone: 'America/Asuncion' })}`,
+  '',
+  'Nada de esto se borró. Son los archivos y carpetas que el ordenamiento sacó de las carpetas de los clientes y que se podrían borrar.',
+  'Están en dos carpetas dentro de CLIENTES: «ZZ DUPLICADOS PARA REVISAR» y «ZZ CARPETAS VACIAS PARA REVISAR».',
+  '',
+  'Columna «% de seguridad»:',
+  '  100 % = el contenido es idéntico byte por byte a la copia que se conservó (misma huella de Microsoft), o la carpeta no tiene ningún archivo.',
+  '  99 %  = es la misma declaración de la DNIT (mismo número de orden) bajada dos veces; el PDF difiere solo en la fecha en que se imprimió.',
+  '  50 %  = el contenido ya no coincide con la copia conservada: revisar a mano.',
+  '  0 %   = NO borrar (la copia conservada ya no existe, o la carpeta tiene archivos).',
+  '',
+  'Hoja «No se borran»: documentos A CLASIFICAR y versiones anteriores. Se listan para que se vea que se revisaron, pero no se proponen para borrar.',
+  'Además existe la copia de seguridad completa de cómo estaba el OneDrive antes (disco externo D), que no se toca.',
+].forEach((t, i) => { const c = leer.getCell(i + 1, 1); c.value = t; c.alignment = { wrapText: true }; if (!i) c.font = { bold: true, size: 14 }; });
+const cab = (ws, cols) => { ws.columns = cols; ws.getRow(1).font = { bold: true, color: { argb: 'FFFFFFFF' } }; ws.getRow(1).fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1F3864' } }; ws.views = [{ state: 'frozen', ySplit: 1 }]; ws.autoFilter = { from: { row: 1, column: 1 }, to: { row: 1, column: cols.length } }; };
+const ws = wb.addWorksheet('Candidatos a borrar');
+cab(ws, [{ header: 'Tipo', key: 'tipo', width: 20 }, { header: 'Cliente', key: 'cliente', width: 28 }, { header: 'Nombre', key: 'nombre', width: 45 }, { header: 'Dónde está ahora', key: 'donde', width: 80 }, { header: 'A qué corresponde / qué se conserva', key: 'corresponde', width: 80 }, { header: 'Motivo', key: 'motivo', width: 70 }, { header: '% de seguridad de que borrarlo es correcto', key: 'seguridad', width: 14 }, { header: 'Peso (KB)', key: 'tamKB', width: 10 }]);
+for (const f of filas.sort((a, b) => b.seguridad - a.seguridad || a.cliente.localeCompare(b.cliente) || a.donde.localeCompare(b.donde))) {
+  const row = ws.addRow(f);
+  row.getCell('seguridad').fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: f.seguridad >= 99 ? 'FFC6EFCE' : f.seguridad >= 50 ? 'FFFFEB9C' : 'FFFFC7CE' } };
+}
+const ws2 = wb.addWorksheet('No se borran');
+cab(ws2, [{ header: 'Tipo', key: 'tipo', width: 20 }, { header: 'Cliente', key: 'cliente', width: 28 }, { header: 'Nombre', key: 'nombre', width: 50 }, { header: 'Dónde está', key: 'donde', width: 90 }, { header: 'Motivo', key: 'motivo', width: 80 }]);
+for (const f of noBorrar) ws2.addRow(f);
+const res = wb.addWorksheet('Resumen');
+cab(res, [{ header: 'Qué', key: 'q', width: 60 }, { header: 'Cantidad', key: 'n', width: 12 }]);
+const cuenta = (p) => filas.filter(p).length;
+[['Duplicados con 100 % de seguridad (idénticos)', cuenta((f) => f.tipo === 'ARCHIVO DUPLICADO' && f.seguridad === 100)], ['Duplicados con 99 % (misma declaración DNIT)', cuenta((f) => f.tipo === 'ARCHIVO DUPLICADO' && f.seguridad === 99)], ['Duplicados para revisar a mano (50 %)', cuenta((f) => f.seguridad === 50)], ['NO borrar (0 %)', cuenta((f) => f.seguridad === 0)], ['Carpetas viejas vacías (100 %)', cuenta((f) => f.tipo === 'CARPETA VIEJA VACÍA' && f.seguridad === 100)], ['Documentos A CLASIFICAR (no se borran)', noBorrar.filter((x) => x.tipo === 'A CLASIFICAR').length], ['Versiones anteriores (no se borran)', noBorrar.filter((x) => x.tipo === 'VERSIÓN ANTERIOR').length]].forEach(([q, n]) => res.addRow({ q, n }));
+const nombre = `CANDIDATOS A BORRAR - ${new Date().toLocaleDateString('es-PY', { timeZone: 'America/Asuncion' }).replace(/\//g, '-')}.xlsx`;
+for (const dir of process.argv.slice(2)) { fs.mkdirSync(dir, { recursive: true }); await wb.xlsx.writeFile(path.join(dir, nombre)); }
+console.log(`LISTO · candidatos: ${filas.length} (100%: ${cuenta((f) => f.seguridad === 100)}, 99%: ${cuenta((f) => f.seguridad === 99)}, revisar: ${cuenta((f) => f.seguridad === 50)}, no borrar: ${cuenta((f) => f.seguridad === 0)}) · no se borran: ${noBorrar.length} · ${nombre}`);

@@ -30,6 +30,38 @@ skill global **`backend-datos-sensibles`**, reutilizable en otros proyectos.
 
 ---
 
+## ▶ HANDOFF — 2026-10-31 20:10 (MANDA SOBRE TODOS LOS DE ABAJO) — para «Effort Control 360 dashboard 12»
+
+**Tarea 164 — ORDENAMIENTO DEL ONEDRIVE REAL DE EFFORT: EN CURSO, corriendo solo en procesos de Windows independientes de Claude.**
+Autorizado por Daniel el 2026-10-30 (CLAUDE.md regla 5, segunda excepción; `docs/BITACORA-ONEDRIVE.md`). Laura y Lili aprobaron el plan.
+
+**Estado al 2026-10-31 20:10:**
+- **27.720 archivos de los 120 clientes YA movidos y renombrados en el OneDrive real** según el plan v3 (piloto 002/021/032/043/068: 4.681 de 4.682, verificado; resto: 23.039 de 23.039). Comprobado contra el diario: 0 movimientos fuera del plan, 0 a un destino distinto. 5.742 carpetas nuevas creadas con la estructura del 999.
+- El aplicador está apartando las carpetas viejas vacías a `CLIENTES/ZZ CARPETAS VACIAS PARA REVISAR/<cliente>/` (202 al 20:02, iba por el cliente 048 de 132).
+- Falta 1 archivo del piloto que estaba abierto: `021 COPESA/PERIODO 2026/VARIOS/FLUJO DE CAJA COPESA A JUNIO 2027  (1).xlsx`.
+
+**Procesos encadenados que siguen solos** (carpeta `C:\Users\Daniel\DATOS ORDENAMIENTO EFFORT 2026-10\onedrive\`; cada uno espera al anterior):
+1. `encadenar2.mjs` → `aplicar-onedrive.mjs --resto --aplicar` (pid 7356 → 8636): termina de apartar carpetas vacías. Registro: `encadenar.log`.
+2. `bucle.mjs` (pid 9128): repite `encadenar2` hasta que termine bien (saltea lo hecho; reintenta el bloqueado de COPESA; verifica). Registro: `bucle.log`.
+3. `despues-del-bucle.mjs` (pid 6224): `barrido-final.mjs` simula y aplica — archivos que quedaron en carpetas viejas (llegados después del plan) → `NNN ZZ A CLASIFICAR/<ruta original>`; carpetas viejas vacías → apartadas. Luego `verificar-onedrive.mjs --todos`. Registro: `despues-del-bucle.log`.
+4. `final.mjs` (pid 3228): **bucle de revisión** `revision.mjs` (mínimo 3 rondas, máximo 8; en cada ronda: inventario completo del OneDrive, compara contra el PLAN, contra la COPIA DE SEGURIDAD y contra la ESTRUCTURA DEL 999 nivel por nivel; corrige y vuelve a revisar; termina solo cuando una ronda ≥3 sale con 0 problemas) y después la planilla **`CANDIDATOS A BORRAR - <fecha>.xlsx`** (`candidatos-a-borrar.mjs`: nombre, dónde está, a qué corresponde/qué se conserva, motivo y % de seguridad: 100 % idéntico byte a byte o carpeta vacía, 99 % misma declaración DNIT con el mismo número de orden, 50 % revisar, 0 % no borrar; hoja aparte «No se borran»: A CLASIFICAR y versiones anteriores). Se guarda en `docs/ordenamiento-2026-10/`, en la carpeta de datos y en `D:\DATOS ORDENAMIENTO 2026-10-20\onedrive\`. Registros: `revision.log`, `revision-ronda-N.json`, `final.log`.
+Estimado para terminar todo: 3 a 5 horas desde las 20:00 del 31-10.
+
+**Qué hacer en la conversación nueva:**
+1. Leer `final.log`, `revision.log`, `despues-del-bucle.log`, `bucle.log` y `encadenar.log` (en ese orden de importancia). Ver si los procesos siguen (`Get-CimInstance Win32_Process` filtrando node con `encadenar|bucle|despues|final|aplicar|revision`). Si alguno se detuvo, leer su motivo antes de relanzar; todos son seguros de repetir.
+2. **NO decir «está listo» hasta que `revision.log` diga «REVISIÓN LIMPIA» y exista la planilla.** Daniel lo exigió: «No quiero que me digas "está listo" a la primera».
+3. Pasarle a Daniel la planilla `CANDIDATOS A BORRAR` y esperar su autorización expresa para borrar (REGLA 0: autorización para esa operación concreta). Recién con eso, escribir la herramienta de borrado (Graph DELETE manda a la papelera de OneDrive, recuperable 93 días; diario; simulación primero).
+4. Actualizar: este roadmap (marcar 164), `docs/ordenamiento-2026-10/LEEME.md`, `docs/BITACORA-ONEDRIVE.md` (resultado), regenerar la bitácora en Excel si hace falta, commit local.
+5. Devolver los permisos de la app a como estaban: `C:\Users\Daniel\NexusFlow AI\.claude\settings.local.antes-ordenamiento-2026-10-31.json` (se agregaron allow Bash/Read/Edit/Write/Glob/Grep solo para este trabajo).
+6. Pendientes de Daniel: DISCREPANCIAS 44 (el RUC del 056 en la planilla de clientes es de David Romero, 045; CASA VIVA declara como PAVISA SA), 42 (cable/disco y segunda copia), revisar las carpetas ZZ.
+
+**Reglas que no se rompen (todas escritas en CLAUDE.md y en la memoria):**
+- **La copia de seguridad `D:\COPIA ONEDRIVE EFFORT 2026-10-19\` es de SOLO LECTURA PARA SIEMPRE** (Daniel, 2026-10-31). No se actualiza, no se verifica con `--verificar` (borra lo dañado), no se toca. Es la foto del OneDrive antes del ordenamiento.
+- Nada se borra en OneDrive sin autorización expresa de Daniel para esa operación (REGLA 0). Los duplicados y carpetas vacías están en `CLIENTES/ZZ DUPLICADOS PARA REVISAR` y `CLIENTES/ZZ CARPETAS VACIAS PARA REVISAR`.
+- Cada movimiento queda en `diario-onedrive.jsonl`; cómo deshacer todo o parte: `docs/ordenamiento-2026-10/COMO-RESTAURAR.md` (`deshacer-onedrive.mjs`).
+- PowerShell como herramienta estuvo deshabilitado en la sesión: usar Bash (y `powershell.exe` como programa desde Bash). Los comandos de más de 10 min van desacoplados (`Start-Process` con un `.ps1` que impide la suspensión), nunca en primer plano.
+- Recomendar modelo y esfuerzo en cada «siguiente paso». Para seguir: **Sonnet, esfuerzo alto** (es monitorear y reportar); para escribir la herramienta de borrado: **Opus, esfuerzo alto**.
+
 ## ▶ HANDOFF — 2026-10-30 (manda sobre los de abajo)
 
 **164 — copia y ordenamiento de prueba AL DÍA con el OneDrive del 2026-10-30.** La foto del disco tiene los 36.926 archivos actuales verificados (las versiones viejas, resguardadas); `D:\ORDENADO` tiene el plan v3 aplicado y verificado (27.721/27.721). Detalle y cómo repetir la actualización: `docs/ordenamiento-2026-10/LEEME.md`.
