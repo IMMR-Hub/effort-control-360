@@ -13,6 +13,7 @@ import {
   buscarRespaldoDelDia,
   cargarCarpetas,
   cargarValidadores,
+  carpetasDelPlan,
   crearLectorDeGraph,
   formatearInforme,
   interpretarCarpetas,
@@ -57,6 +58,7 @@ const carpeta = (codigo, nombre = `CLIENTE ${codigo}`, id = `id-carpeta-${codigo
 /** Cliente tal como lo devuelve `ClientesPrisma.listar`. */
 const existente = (cambios) => ({
   id: 'cli-1',
+  codigo: null,
   nombre: 'X',
   ruc: '80003112-1',
   tipoPersona: 'JURIDICA',
@@ -133,17 +135,22 @@ describe('lectura de la planilla', () => {
    * Lección 8: correr el código contra el archivo de verdad. Esta es la planilla
    * versionada que se mandó a EFFORT (sin devolver todavía).
    */
-  it('lee la planilla real: 132 filas del 001 al 132, y bloquea el RUC del 056 (DISCREPANCIAS 44)', async () => {
+  it('lee la planilla real: 132 filas del 001 al 132; el 056 se da de alta SIN el RUC del 045 (DISCREPANCIAS 44)', async () => {
     const { filaEncabezado, filas } = await leerPlanilla(PLANILLA_POR_DEFECTO, ExcelJS);
     expect(filaEncabezado).toBe(2);
     expect(filas).toHaveLength(132);
     expect(filas[0].codigo).toBe('001');
     expect(filas.at(-1).codigo).toBe('132');
 
-    const plan = planificarAlta({ filas, carpetas: [], conIds: false, existentes: null, validar });
+    // Una carpeta por fila, salvo los tres códigos que no tienen (045, 070, 099).
+    const carpetas = filas.filter((f) => !['045', '070', '099'].includes(f.codigo)).map((f) => carpeta(f.codigo, f.nombre, null));
+    const plan = planificarAlta({ filas, carpetas, conIds: false, existentes: null, validar });
     const c056 = plan.acciones.find((a) => a.codigo === '056');
-    expect(c056.tipo).toBe('bloqueado');
-    expect(c056.problemas.map((p) => p.texto).join(' ')).toMatch(/1300663-0 no corresponde/);
+    expect(c056.tipo).toBe('crear');
+    expect(c056.datos.ruc).toBeNull();
+    expect(c056.problemas.map((p) => p.texto).join(' ')).toMatch(/1300663-0 no corresponde.*queda «RUC pendiente»/);
+    // Sin carpeta no hay alta: los clientes son los que tienen carpeta.
+    expect(plan.acciones.find((a) => a.codigo === '045').tipo).toBe('sin_carpeta');
     // Los 5 del piloto no aparecen como «crear» aunque no se haya leído la base.
     const piloto = plan.acciones.filter((a) => ['002', '021', '032', '043', '068'].includes(a.codigo));
     expect(piloto.map((a) => a.tipo)).toEqual(Array(5).fill('existente_sin_verificar'));
@@ -153,41 +160,68 @@ describe('lectura de la planilla', () => {
 /* ------------------------------------------------------------------------- */
 
 describe('planificar el alta', () => {
-  it('crea un cliente nuevo con RUC válido y conecta su carpeta', () => {
+  it('crea un cliente nuevo con su código, su RUC válido y su carpeta', () => {
     const plan = planificar({ filas: [fila('001', { ruc: '6256615-6' })], carpetas: [carpeta('001')] });
     expect(plan.acciones[0].tipo).toBe('crear');
-    expect(plan.acciones[0].datos).toMatchObject({ ruc: '6256615-6', tipoPersona: 'FISICA', carpetaOneDriveId: 'id-carpeta-001' });
+    expect(plan.acciones[0].datos).toMatchObject({
+      codigo: '001', ruc: '6256615-6', tipoPersona: 'FISICA', carpetaOneDriveId: 'id-carpeta-001',
+    });
     expect(plan.resumen.conCarpetaAConectar).toBe(1);
   });
 
-  it('sin RUC no se da de alta, y no se inventa uno', () => {
+  /* --- RUC pendiente (2026-11-01): nunca bloquea, nunca se inventa ---------- */
+
+  it('sin RUC se da de alta igual, con el RUC pendiente: no se inventa uno', () => {
     const plan = planificar({ filas: [fila('004')], carpetas: [carpeta('004')] });
-    expect(plan.acciones[0].tipo).toBe('bloqueado');
+    expect(plan.acciones[0].tipo).toBe('crear');
     expect(plan.acciones[0].datos.ruc).toBeNull();
+    expect(plan.resumen.crearConRucPendiente).toBe(1);
     expect(plan.resumen.faltaDeEffort.sinRuc).toBe(1);
   });
 
-  it('un RUC con dígito verificador inválido no se da de alta', () => {
-    const plan = planificar({ filas: [fila('001', { ruc: '6256615-7' })] });
-    expect(plan.acciones[0].tipo).toBe('bloqueado');
-    expect(plan.acciones[0].problemas[1].texto).toMatch(/dígito verificador/);
+  it('un RUC con dígito verificador inválido no se carga: el cliente queda pendiente', () => {
+    const plan = planificar({ filas: [fila('001', { ruc: '6256615-7' })], carpetas: [carpeta('001')] });
+    expect(plan.acciones[0].tipo).toBe('crear');
+    expect(plan.acciones[0].datos.ruc).toBeNull();
+    expect(plan.acciones[0].problemas.some((p) => /dígito verificador.*RUC pendiente/.test(p.texto))).toBe(true);
   });
 
-  it('un RUC repetido en dos filas bloquea a las dos', () => {
+  it('un RUC repetido en dos filas no se le carga a ninguna de las dos', () => {
     const plan = planificar({
       filas: [fila('001', { ruc: '6256615-6' }), fila('003', { ruc: '6256615-6' })],
       carpetas: [carpeta('001'), carpeta('003')],
     });
-    expect(plan.acciones.map((a) => a.tipo)).toEqual(['bloqueado', 'bloqueado']);
+    expect(plan.acciones.map((a) => [a.tipo, a.datos.ruc])).toEqual([['crear', null], ['crear', null]]);
     expect(plan.acciones[0].problemas.some((p) => /repetido.*003/.test(p.texto))).toBe(true);
   });
 
-  it('el RUC propuesto para el 056 es del 045: bloqueado; si EFFORT lo corrige, se libera', () => {
+  it('el RUC propuesto para el 056 es del 045: el 056 se crea sin él; si EFFORT lo corrige, se carga', () => {
     const conElDel045 = planificar({ filas: [fila('056', { ruc: '1300663-0' })], carpetas: [carpeta('056')] });
-    expect(conElDel045.acciones[0].tipo).toBe('bloqueado');
+    expect(conElDel045.acciones[0].tipo).toBe('crear');
+    expect(conElDel045.acciones[0].datos.ruc).toBeNull();
 
     const corregido = planificar({ filas: [fila('056', { ruc: '6256615-6' })], carpetas: [carpeta('056')] });
-    expect(corregido.acciones[0].tipo).toBe('crear');
+    expect(corregido.acciones[0].datos.ruc).toBe('6256615-6');
+  });
+
+  it('un RUC «de 1 de 1» se carga, con aviso para confirmar', () => {
+    const plan = planificar({
+      filas: [fila('064', { ruc: '656187-0', origenRuc: 'Sale de 1 de 1 declaraciones de su carpeta.' })],
+      carpetas: [carpeta('064')],
+    });
+    expect(plan.acciones[0].datos.ruc).toBe('656187-0');
+    expect(plan.acciones[0].problemas.some((p) => /una sola declaración: confirmar/.test(p.texto))).toBe(true);
+    expect(plan.resumen.faltaDeEffort.rucAConfirmar).toBe(1);
+  });
+
+  it('un RUC que en la base ya tiene otro cliente no se carga: el nuevo queda pendiente', () => {
+    const plan = planificar({
+      filas: [fila('001', { ruc: '80003112-1' })],
+      carpetas: [carpeta('001')],
+      existentes: [existente({ id: 'copesa', codigo: '021', nombre: 'COPESA', ruc: '80003112-1' })],
+    });
+    expect(plan.acciones[0].tipo).toBe('bloqueado');
+    expect(plan.acciones[0].problemas.some((p) => /ya tiene el código 021/.test(p.texto))).toBe(true);
   });
 
   it('el 113 (PAVISA) se da de alta pero con aviso', () => {
@@ -199,17 +233,20 @@ describe('planificar el alta', () => {
     expect(plan.acciones[0].problemas.some((p) => /PAVISA/.test(p.texto))).toBe(true);
   });
 
-  it('régimen vacío y cliente sin carpeta son avisos, no bloqueos; la carpeta sin cliente se lista', () => {
-    const plan = planificar({ filas: [fila('001', { ruc: '6256615-6' })], carpetas: [carpeta('200', 'NUEVO')] });
-    const textos = plan.acciones[0].problemas.map((p) => p.texto).join(' | ');
+  it('régimen vacío es un aviso; una fila sin carpeta no se da de alta; la carpeta sin fila se lista', () => {
+    const plan = planificar({
+      filas: [fila('001', { ruc: '6256615-6' }), fila('045')],
+      carpetas: [carpeta('001'), carpeta('200', 'NUEVO')],
+    });
     expect(plan.acciones[0].tipo).toBe('crear');
-    expect(textos).toMatch(/régimen vacío/);
-    expect(textos).toMatch(/sin carpeta/);
+    expect(plan.acciones[0].problemas.map((p) => p.texto).join(' | ')).toMatch(/régimen vacío/);
+    expect(plan.acciones[1].tipo).toBe('sin_carpeta');
+    expect(plan.resumen.sinCarpeta).toBe(1);
     expect(plan.carpetasSinCliente.map((c) => c.carpeta)).toEqual(['200 NUEVO']);
   });
 
   it('sin tipo de persona no se da de alta (el esquema lo exige)', () => {
-    const plan = planificar({ filas: [fila('001', { ruc: '6256615-6', tipoPersona: null })] });
+    const plan = planificar({ filas: [fila('001', { ruc: '6256615-6', tipoPersona: null })], carpetas: [carpeta('001')] });
     expect(plan.acciones[0].tipo).toBe('bloqueado');
   });
 
@@ -220,11 +257,11 @@ describe('planificar el alta', () => {
 
   /* --- Los 5 del piloto no se duplican, y lo cargado a mano no se pisa ---- */
 
-  it('un cliente existente se reconoce por su carpeta y no se duplica', () => {
+  it('un cliente existente se reconoce por su código y no se duplica', () => {
     const plan = planificar({
       filas: [fila('021', { nombre: 'COPESA', ruc: '80003112-1', tipoPersona: 'JURIDICA' })],
       carpetas: [carpeta('021', 'COPESA', '01256M3REYI7YSD4RO2BDZLOCVJVVQUYFF')],
-      existentes: [existente({ nombre: 'COPESA CONSTRUCCIONES SA', carpetaOneDriveId: '01256M3REYI7YSD4RO2BDZLOCVJVVQUYFF' })],
+      existentes: [existente({ codigo: '021', nombre: 'COPESA CONSTRUCCIONES SA', carpetaOneDriveId: '01256M3REYI7YSD4RO2BDZLOCVJVVQUYFF' })],
     });
     expect(plan.acciones[0].tipo).toBe('sin_cambios');
     expect(plan.resumen.crear).toBe(0);
@@ -234,21 +271,52 @@ describe('planificar el alta', () => {
     ]);
   });
 
+  it('un cliente anterior sin código se reconoce por la carpeta y se le completa el código', () => {
+    const plan = planificar({
+      filas: [fila('021', { nombre: 'COPESA', ruc: '80003112-1', tipoPersona: 'JURIDICA' })],
+      carpetas: [carpeta('021', 'COPESA', 'id-copesa')],
+      existentes: [existente({ nombre: 'COPESA CONSTRUCCIONES SA', carpetaOneDriveId: 'id-copesa' })],
+    });
+    expect(plan.acciones[0].tipo).toBe('actualizar');
+    expect(plan.acciones[0].cambios).toEqual({ codigo: '021' });
+  });
+
+  it('el código de un cliente no se pisa: si la carpeta es de otro código, se revisa a mano', () => {
+    const plan = planificar({
+      filas: [fila('021', { ruc: '80003112-1', tipoPersona: 'JURIDICA' })],
+      carpetas: [carpeta('021', 'COPESA', 'id-copesa')],
+      existentes: [existente({ codigo: '068', nombre: 'ECOAGRO', carpetaOneDriveId: 'id-copesa', ruc: '80022319-5' })],
+      forzar: ['nombre'],
+    });
+    expect(plan.acciones[0].tipo).toBe('bloqueado');
+    expect(plan.acciones[0].problemas.some((p) => /ya tiene el código 068/.test(p.texto))).toBe(true);
+  });
+
   it('un cliente existente sin carpeta se reconoce por el RUC y se le completa la carpeta', () => {
     const plan = planificar({
       filas: [fila('021', { nombre: 'COPESA', ruc: '80003112-1', tipoPersona: 'JURIDICA', regimen: 'IRE – Régimen General' })],
       carpetas: [carpeta('021', 'COPESA')],
-      existentes: [existente({ nombre: 'COPESA CONSTRUCCIONES SA' })],
+      existentes: [existente({ codigo: '021', nombre: 'COPESA CONSTRUCCIONES SA' })],
     });
     expect(plan.acciones[0].tipo).toBe('actualizar');
     expect(plan.acciones[0].cambios).toEqual({ carpetaOneDriveId: 'id-carpeta-021', regimenTributario: 'IRE – Régimen General' });
+  });
+
+  it('a un cliente existente con RUC pendiente se le carga el RUC cuando la planilla trae uno confiable', () => {
+    const plan = planificar({
+      filas: [fila('004', { ruc: '6256615-6' })],
+      carpetas: [carpeta('004')],
+      existentes: [existente({ codigo: '004', nombre: 'CLIENTE 004', ruc: null, tipoPersona: 'FISICA', carpetaOneDriveId: 'id-carpeta-004' })],
+    });
+    expect(plan.acciones[0].tipo).toBe('actualizar');
+    expect(plan.acciones[0].cambios).toEqual({ ruc: '6256615-6' });
   });
 
   it('--forzar-campo permite pisar un dato ya cargado', () => {
     const plan = planificar({
       filas: [fila('021', { nombre: 'COPESA', ruc: '80003112-1', tipoPersona: 'JURIDICA' })],
       carpetas: [carpeta('021', 'COPESA')],
-      existentes: [existente({ nombre: 'COPESA CONSTRUCCIONES SA', carpetaOneDriveId: 'id-carpeta-021' })],
+      existentes: [existente({ codigo: '021', nombre: 'COPESA CONSTRUCCIONES SA', carpetaOneDriveId: 'id-carpeta-021' })],
       forzar: ['nombre'],
     });
     expect(plan.acciones[0].cambios).toEqual({ nombre: 'COPESA' });
@@ -258,7 +326,7 @@ describe('planificar el alta', () => {
     const base = {
       filas: [fila('021', { ruc: '80003112-1', tipoPersona: 'JURIDICA', sigueSiendoCliente: false })],
       carpetas: [carpeta('021')],
-      existentes: [existente({ nombre: 'CLIENTE 021', carpetaOneDriveId: 'id-carpeta-021' })],
+      existentes: [existente({ codigo: '021', nombre: 'CLIENTE 021', carpetaOneDriveId: 'id-carpeta-021' })],
     };
     expect(planificar(base).acciones[0].cambios).toEqual({});
     expect(planificar({ ...base, forzar: ['activo'] }).acciones[0].cambios).toEqual({ activo: false });
@@ -315,7 +383,7 @@ describe('planificar el alta', () => {
     const plan = planificar({
       filas: [fila('021', { ruc: '80003112-1', tipoPersona: 'JURIDICA', obligaciones: { IVA_GENERAL: true, PLANILLA_RG90: null, IRE: false, EEFF: null } })],
       carpetas: [carpeta('021')],
-      existentes: [existente({ nombre: 'CLIENTE 021', carpetaOneDriveId: 'id-carpeta-021' })],
+      existentes: [existente({ codigo: '021', nombre: 'CLIENTE 021', carpetaOneDriveId: 'id-carpeta-021' })],
       asignaciones: [
         { clienteId: 'cli-1', obligacionId: 'o-iva' },
         { clienteId: 'cli-1', obligacionId: 'o-ire' },
@@ -329,26 +397,34 @@ describe('planificar el alta', () => {
   });
 
   it('el informe dice qué falta de EFFORT', () => {
-    const plan = planificar({ filas: [fila('001', { ruc: '6256615-6' }), fila('004')] });
+    const plan = planificar({
+      filas: [fila('001', { ruc: '6256615-6' }), fila('004'), fila('045')],
+      carpetas: [carpeta('001'), carpeta('004')],
+    });
     const texto = formatearInforme(plan, { fuenteCarpetas: 'doble' });
-    expect(texto).toMatch(/CREAR \(1\)/);
-    expect(texto).toMatch(/NO SE DAN DE ALTA \(1\)/);
-    expect(texto).toMatch(/sin RUC: 1/);
+    expect(texto).toMatch(/crear: 2 \(con RUC pendiente: 1\)/);
+    expect(texto).toMatch(/004 CLIENTE 004 +RUC PENDIENTE/);
+    expect(texto).toMatch(/SIN CARPETA EN CLIENTES .*\(1\)/);
+    expect(texto).toMatch(/RUC pendiente: 1 /);
   });
 });
 
 /* ------------------------------------------------------------------------- */
 
 describe('aplicar el plan', () => {
-  function dobles({ rucOcupado = null, fallaEn = null } = {}) {
+  function dobles({ rucOcupado = null, codigoOcupado = null, fallaEn = null } = {}) {
     const llamadas = [];
     const clientes = {
-      buscarPorRuc: async (ruc) => (ruc === rucOcupado ? { id: 'otro', nombre: 'OTRO' } : null),
+      buscarPorRuc: async (ruc) => {
+        llamadas.push(['buscarPorRuc', ruc]);
+        return ruc === rucOcupado ? { id: 'otro', nombre: 'OTRO' } : null;
+      },
+      buscarPorCodigo: async (codigo) => (codigo === codigoOcupado ? { id: 'otro', nombre: 'OTRO' } : null),
       buscarPorId: async (id) => ({ id, nombre: 'COPESA CONSTRUCCIONES SA', carpetaOneDriveId: null, regimenTributario: null }),
       crear: async (datos) => {
-        llamadas.push(['crear', datos.ruc]);
-        if (datos.ruc === fallaEn) throw new Error('Can\'t reach database server');
-        return { id: `nuevo-${datos.ruc}`, ...datos };
+        llamadas.push(['crear', datos.codigo, datos.ruc]);
+        if (fallaEn && datos.ruc === fallaEn) throw new Error('Can\'t reach database server');
+        return { id: `nuevo-${datos.codigo}`, ...datos };
       },
       actualizar: async (id, cambios) => {
         llamadas.push(['actualizar', id, cambios]);
@@ -385,9 +461,10 @@ describe('aplicar el plan', () => {
     );
     expect(r).toEqual({ creados: 1, actualizados: 0, obligaciones: 1, fallos: [] });
     expect(d.llamadas).toEqual([
-      ['crear', '6256615-6'],
-      ['actualizar', 'nuevo-6256615-6', { carpetaOneDriveId: 'id-001' }],
-      ['obligacion', 'nuevo-6256615-6', 'o-iva', '2026-01-01'],
+      ['buscarPorRuc', '6256615-6'],
+      ['crear', '001', '6256615-6'],
+      ['actualizar', 'nuevo-001', { carpetaOneDriveId: 'id-001' }],
+      ['obligacion', 'nuevo-001', 'o-iva', '2026-01-01'],
     ]);
     expect(d.eventos.map((e) => e.accion)).toEqual(['cliente.creado', 'cliente.actualizado']);
     expect(d.eventos[0]).toMatchObject({ usuarioId: 'sistema', datosDespues: { codigo: '001', via: 'scripts/alta-masiva-clientes.mjs' } });
@@ -398,7 +475,26 @@ describe('aplicar el plan', () => {
     const r = await aplicarPlan(planDe([crear('001', '6256615-6')]), { ...d, operadorId: 's', desde: null });
     expect(r.creados).toBe(0);
     expect(r.fallos[0].motivo).toMatch(/ya existe/);
+    expect(d.llamadas.filter(([q]) => q !== 'buscarPorRuc')).toEqual([]);
+  });
+
+  it('si el código apareció en la base después de simular, no lo duplica', async () => {
+    const d = dobles({ codigoOcupado: '001' });
+    const r = await aplicarPlan(planDe([crear('001', '6256615-6')]), { ...d, operadorId: 's', desde: null });
+    expect(r.creados).toBe(0);
+    expect(r.fallos[0].motivo).toMatch(/ya existe un cliente con el código 001/);
     expect(d.llamadas).toEqual([]);
+  });
+
+  it('crea con el RUC pendiente (null) sin buscar un RUC que no existe, y lo deja en la bitácora', async () => {
+    const d = dobles();
+    const r = await aplicarPlan(planDe([crear('004', null)]), { ...d, operadorId: 's', desde: null });
+    expect(r.creados).toBe(1);
+    expect(d.llamadas).toEqual([
+      ['crear', '004', null],
+      ['actualizar', 'nuevo-004', { carpetaOneDriveId: 'id-004' }],
+    ]);
+    expect(d.eventos[0]).toMatchObject({ accion: 'cliente.creado', datosDespues: { codigo: '004', ruc: null } });
   });
 
   it('un fallo de red en un cliente no corta a los demás', async () => {
@@ -587,6 +683,35 @@ describe('fuentes de carpetas y argumentos', () => {
       },
     });
     expect(soloNombres).toMatchObject({ conIds: false, carpetas: [{ codigo: '001', id: null }] });
+  });
+
+  it('sin archivo de ids usa el plan del ordenamiento antes que el inventario viejo', () => {
+    const plan = [
+      { cod: '002', cliente: '002 FUMIPRO S.A' },
+      { cod: '002', cliente: '002 FUMIPRO S.A' },
+      { cod: '114', cliente: '114  GERARDO SOSA' },
+      { cod: '999', cliente: '999 CLIENTE MUESTRA' },
+    ];
+    const r = cargarCarpetas({
+      rutaIds: 'ids.json',
+      rutaPlan: 'plan.json',
+      rutaNombres: 'nombres.json',
+      leer: (ruta) => {
+        if (ruta === 'plan.json') return JSON.stringify(plan);
+        throw new Error('ENOENT');
+      },
+    });
+    expect(r).toMatchObject({ conIds: false, fuente: 'plan.json' });
+    expect(r.carpetas).toEqual([
+      { codigo: '002', nombre: 'FUMIPRO S.A', carpeta: '002 FUMIPRO S.A', id: null },
+      { codigo: '114', nombre: 'GERARDO SOSA', carpeta: '114  GERARDO SOSA', id: null },
+    ]);
+  });
+
+  it('carpetasDelPlan: una por código, sin el 999 ni códigos que no sean de 3 cifras', () => {
+    expect(carpetasDelPlan([{ cod: '1234', cliente: 'x' }, { cod: null }, { cod: '021', cliente: '021 COPESA' }])).toEqual([
+      { codigo: '021', nombre: 'COPESA', carpeta: '021 COPESA', id: null },
+    ]);
   });
 
   it('lee argumentos con valor y listas', () => {

@@ -1,9 +1,10 @@
-#!/usr/bin/env node
 /**
  * Alta masiva de clientes desde la planilla de clientes de EFFORT.
  *
  * **Por qué existe.** El sistema controla 5 clientes (piloto) y EFFORT tiene
- * ~120 con carpeta en el OneDrive. Darlos de alta uno por uno desde la pantalla
+ * 120 con carpeta en el OneDrive. Daniel, 2026-11-01: «Todos los clientes que
+ * están en las carpetas de EFFORT son clientes, así que deben ser tratados como
+ * tal. Hazlos clientes con el mismo número que ya aparece». Darlos de alta uno por uno desde la pantalla
  * son 120 formularios, y la pantalla tampoco conecta la carpeta de OneDrive ni
  * asigna obligaciones (roadmap, «alta masiva»). Esto lee la planilla que EFFORT
  * devuelve completa (`docs/analisis-onedrive-2026-10/Planilla de clientes -
@@ -41,26 +42,28 @@
  * Los secretos van del `.env` al cuerpo del `fetch`: nunca se imprimen ni van
  * como argumento de un subproceso (regla 8).
  *
- * **Lo que el esquema obliga, y lo que este script NO inventa:**
- * - `cliente.ruc` es `NOT NULL UNIQUE` (`schema.prisma`) y la API exige el
- *   dígito verificador (`rucSchema`). **Un cliente sin RUC no se puede dar de
- *   alta**, y no se le pone uno de relleno: el generador de vencimientos usa la
- *   terminación del RUC para fijar las fechas, así que un RUC inventado
- *   produciría vencimientos falsos. Si hiciera falta darlos de alta antes de
- *   tener el RUC, la única opción honesta es una migración (escrita a mano) que
- *   vuelva `ruc` opcional y haga que el generador saltee a los clientes sin RUC.
- *   Es una decisión de Daniel; hoy no existe.
- * - `cliente` no tiene columna de código (001…132). El código se reconoce por la
- *   carpeta (`carpeta_onedrive_id` de `CLIENTES/NNN NOMBRE`) y, si todavía no
- *   tiene carpeta, por el RUC. Así los 5 clientes del piloto, que ya tienen las
- *   dos cosas, no se duplican.
+ * **Lo que el esquema obliga, y lo que este script NO inventa** (migración
+ * `20261101120000_codigo_de_cliente_y_ruc_pendiente`):
+ * - Se da de alta a **todos los que tienen carpeta** `CLIENTES/NNN NOMBRE`, con
+ *   su código (el número de la carpeta), su nombre y su carpeta. Una fila de la
+ *   planilla sin carpeta (045, 070, 099…) no se da de alta.
+ * - `cliente.codigo` es único: cada cliente se reconoce por su código. Si un
+ *   cliente anterior no lo tiene, se lo reconoce por la carpeta o el RUC y se le
+ *   completa el código (nunca se pisa uno que ya tenga).
+ * - `cliente.ruc` es opcional: **el RUC se carga solo si es confiable** (formato
+ *   y dígito verificador válidos, no repetido en la planilla, no observado en
+ *   `RUC_OBSERVADOS`, no usado por otro cliente de la base). Si no, el cliente
+ *   queda «RUC pendiente» y no se le calculan los vencimientos que dependen de
+ *   la terminación del RUC. Nunca se pone uno de relleno: daría fechas falsas.
+ * - `cliente.tipo_persona` es obligatorio: sin él (en la planilla), no hay alta.
  * - `obligacion_de_cliente.desde` es obligatorio y no está en la planilla: las
  *   obligaciones se asignan solo con `--desde AAAA-MM-DD` explícito, solo las
  *   que la planilla marca «Sí», y nunca se quita una (un «No» con la obligación
  *   ya asignada se informa, no se borra).
  * - Régimen, tipo de persona y obligaciones son propuestas sin validar hasta
  *   que EFFORT devuelva la planilla (DISCREPANCIAS 40). El RUC propuesto para el
- *   056 es del 045 (DISCREPANCIAS 44) y está bloqueado acá.
+ *   056 es del 045 (DISCREPANCIAS 44): no se carga, el 056 queda «RUC
+ *   pendiente». El 113 (PAVISA) y los RUC «de 1 de 1» se cargan con aviso.
  *
  * Uso:
  *   node scripts/alta-masiva-clientes.mjs                       → simula contra la base (solo lee)
@@ -71,6 +74,8 @@
  * Opciones:
  *   --planilla <ruta>        planilla devuelta por EFFORT (por defecto, la de docs/analisis-onedrive-2026-10/)
  *   --carpetas <ruta>        archivo de `--leer-carpetas` con los ids (por defecto, docs/analisis-onedrive-2026-10/datos/carpetas-de-clientes.json)
+ *   --plan <ruta>            sin archivo de ids: lista de carpetas (sin ids, solo para simular) del plan del ordenamiento
+ *                            (por defecto, C:\Users\Daniel\DATOS ORDENAMIENTO EFFORT 2026-10\plan.json; si no está, el inventario del 2026-10-03)
  *   --salida <ruta>          dónde guarda `--leer-carpetas` (por defecto, la misma ruta de --carpetas)
  *   --codigos 001,002        solo esos clientes (para aplicar en tandas)
  *   --desde AAAA-MM-DD       fecha desde la que rigen las obligaciones marcadas «Sí» (sin esto, no se asignan)
@@ -96,6 +101,12 @@ export const PLANILLA_POR_DEFECTO = join(
   'docs/analisis-onedrive-2026-10/Planilla de clientes - EFFORT Control 360.xlsx',
 );
 export const CARPETAS_POR_DEFECTO = join(RAIZ, 'docs/analisis-onedrive-2026-10/datos/carpetas-de-clientes.json');
+/**
+ * Plan del ordenamiento del OneDrive (tarea 164), aplicado el 2026-10-30/11-01:
+ * una entrada por archivo, con `cod` y `cliente` (la carpeta). Es la lista de
+ * carpetas con archivos más reciente que hay en disco, sin ids. Solo simula.
+ */
+export const PLAN_DEL_ORDENAMIENTO = 'C:/Users/Daniel/DATOS ORDENAMIENTO EFFORT 2026-10/plan.json';
 /** Inventario del 2026-10-03: tiene los nombres de las carpetas, no sus ids. Sirve solo para simular. */
 export const NOMBRES_DE_CARPETAS = join(RAIZ, 'docs/analisis-onedrive-2026-10/datos/clientes-por-codigo.json');
 
@@ -407,16 +418,45 @@ export async function leerCarpetasDeGraph({ fetch: hacerFetch, entorno = process
 }
 
 /**
- * Carpetas a usar: las del archivo de `--leer-carpetas` (con ids) o, si no
- * existe, los nombres del inventario del 2026-10-03 (sin ids: sirve para
- * simular, no para aplicar).
+ * Carpetas `NNN NOMBRE` del plan del ordenamiento (una entrada por archivo):
+ * una por código, ordenadas. Sin ids.
  */
-export function cargarCarpetas({ rutaIds, rutaNombres, leer = (r) => readFileSync(r, 'utf8') }) {
+export function carpetasDelPlan(entradas) {
+  const porCodigo = new Map();
+  for (const e of entradas) {
+    if (!e?.cod || !e?.cliente || !/^\d{3}$/.test(e.cod) || e.cod === '999') continue;
+    if (!porCodigo.has(e.cod)) porCodigo.set(e.cod, new Set());
+    porCodigo.get(e.cod).add(e.cliente);
+  }
+  const carpetas = [];
+  for (const [codigo, nombres] of porCodigo) {
+    for (const carpeta of nombres) {
+      carpetas.push({ codigo, nombre: carpeta.slice(codigo.length).trim(), carpeta, id: null });
+    }
+  }
+  return carpetas.sort((a, b) => a.codigo.localeCompare(b.codigo));
+}
+
+/**
+ * Carpetas a usar: las del archivo de `--leer-carpetas` (con ids); si no
+ * existe, las del plan del ordenamiento; y si tampoco, los nombres del
+ * inventario del 2026-10-03. Las dos últimas no tienen ids: sirven para
+ * simular, no para aplicar.
+ */
+export function cargarCarpetas({ rutaIds, rutaPlan = null, rutaNombres, leer = (r) => readFileSync(r, 'utf8') }) {
   try {
     const j = JSON.parse(leer(rutaIds));
     return { fuente: rutaIds, conIds: true, leidoEn: j.leidoEn ?? null, carpetas: j.carpetas };
   } catch {
-    // Sin archivo de ids: se cae a los nombres.
+    // Sin archivo de ids: se cae al plan o a los nombres.
+  }
+  if (rutaPlan) {
+    try {
+      const carpetas = carpetasDelPlan(JSON.parse(leer(rutaPlan)));
+      if (carpetas.length > 0) return { fuente: rutaPlan, conIds: false, leidoEn: null, carpetas };
+    } catch {
+      // Sin plan: se cae al inventario.
+    }
   }
   try {
     const j = JSON.parse(leer(rutaNombres));
@@ -499,7 +539,7 @@ export function planificarAlta({
     if (soloCodigos.size > 0 && !soloCodigos.has(fila.codigo)) continue;
     const problemas = [];
 
-    // --- Identidad -----------------------------------------------------------
+    // --- Identidad: código, nombre y carpeta ---------------------------------
     if ((filasPorCodigo.get(fila.codigo) ?? []).length > 1) {
       problemas.push(problema('todo', `el código ${fila.codigo} aparece en más de una fila de la planilla`));
     }
@@ -515,24 +555,26 @@ export function planificarAlta({
       if (nombre && normalizar(`${fila.codigo} ${nombre}`) !== normalizar(carpeta.carpeta)) {
         problemas.push(problema(false, `la carpeta se llama «${carpeta.carpeta}», la planilla dice «${nombre}»`));
       }
-    } else {
-      problemas.push(problema(false, 'cliente sin carpeta en CLIENTES: se da de alta sin carpeta (no se sincroniza nada)'));
     }
     const carpetaId = carpeta?.id ?? null;
 
-    // --- RUC -----------------------------------------------------------------
+    // --- RUC: se carga solo si es confiable; si no, queda pendiente -----------
+    // Nunca bloquea el alta (Daniel, 2026-11-01: todos los que tienen carpeta
+    // son clientes). Lo que nunca se hace es cargar un RUC dudoso o inventado:
+    // un RUC equivocado da vencimientos falsos y cruza declaraciones ajenas.
     let rucValido = null;
+    const pendiente = (motivo) => problemas.push(problema(false, `${motivo}: no se carga, el cliente queda «RUC pendiente»`));
     if (!fila.ruc) {
-      problemas.push(problema('alta', 'RUC faltante: el esquema lo exige (cliente.ruc NOT NULL UNIQUE) y no se inventa'));
+      problemas.push(problema(false, 'RUC pendiente: EFFORT todavía no lo dio; sin RUC no se calculan sus vencimientos'));
     } else if (!validar.ruc(fila.ruc)) {
-      problemas.push(problema('alta', `RUC «${fila.ruc}» con formato o dígito verificador inválido`));
+      pendiente(`RUC «${fila.ruc}» con formato o dígito verificador inválido`);
     } else {
       const otros = (codigosPorRuc.get(fila.ruc) ?? []).filter((c) => c !== fila.codigo);
       const observado = RUC_OBSERVADOS[fila.codigo];
       if (otros.length > 0) {
-        problemas.push(problema('alta', `RUC ${fila.ruc} repetido en la planilla (también en ${otros.join(', ')})`));
+        pendiente(`RUC ${fila.ruc} repetido en la planilla (también en ${otros.join(', ')})`);
       } else if (observado && observado.ruc === fila.ruc && observado.bloquea) {
-        problemas.push(problema('alta', `RUC ${fila.ruc} no corresponde: ${observado.motivo}`));
+        pendiente(`RUC ${fila.ruc} no corresponde: ${observado.motivo}`);
       } else {
         rucValido = fila.ruc;
         if (observado && observado.ruc === fila.ruc) problemas.push(problema(false, `RUC ${fila.ruc}: ${observado.motivo}`));
@@ -566,25 +608,35 @@ export function planificarAlta({
       problemas.push(problema(false, `responsable «${fila.responsable}»: no se asigna acá (la cartera se carga desde Equipo)`));
     }
 
-    // --- Cliente existente ---------------------------------------------------
+    // --- Cliente existente: por código, y si no, por carpeta o RUC ------------
     let existente = null;
     let existenteSegunPlanilla = false;
     if (baseLeida) {
-      const porCarpeta = carpetaId ? existentes.find((c) => c.carpetaOneDriveId === carpetaId) : null;
-      const porRuc = rucValido ? existentes.find((c) => c.ruc === rucValido) : null;
-      if (porCarpeta && porRuc && porCarpeta.id !== porRuc.id) {
+      const porCodigo = existentes.find((c) => c.codigo === fila.codigo) ?? null;
+      const porCarpeta = carpetaId ? existentes.find((c) => c.carpetaOneDriveId === carpetaId) ?? null : null;
+      const porRuc = rucValido ? existentes.find((c) => c.ruc === rucValido) ?? null : null;
+      const distintos = [...new Map([porCodigo, porCarpeta, porRuc].filter(Boolean).map((c) => [c.id, c])).values()];
+      if (distintos.length > 1) {
         problemas.push(
-          problema('todo', `la carpeta ya es de «${porCarpeta.nombre}» y el RUC de «${porRuc.nombre}»: revisar a mano`),
+          problema(
+            'todo',
+            `el código, la carpeta o el RUC apuntan a clientes distintos (${distintos.map((c) => `«${c.nombre}»`).join(', ')}): revisar a mano`,
+          ),
         );
       }
-      existente = porCarpeta ?? porRuc ?? null;
-      if (!existente && fila.ruc && validar.ruc(fila.ruc)) {
-        // RUC observado o repetido: igual hay que ver si en la base ya lo tiene otro cliente.
-        const conEseRuc = existentes.find((c) => c.ruc === fila.ruc);
-        if (conEseRuc) problemas.push(problema('alta', `el RUC ${fila.ruc} ya es de «${conEseRuc.nombre}» en la base`));
+      existente = porCodigo ?? porCarpeta ?? porRuc ?? null;
+      if (existente && existente.codigo && existente.codigo !== fila.codigo) {
+        problemas.push(problema('todo', `«${existente.nombre}» ya tiene el código ${existente.codigo}, no el ${fila.codigo}: revisar a mano`));
       }
+      // Un RUC que en la base ya tiene otro cliente cae en uno de los dos
+      // bloqueos de arriba (apuntan a clientes distintos, o ese cliente ya
+      // tiene otro código): nunca se le carga a un segundo cliente.
     } else {
       existenteSegunPlanilla = /ya cargado en el sistema/i.test(fila.origenRuc ?? '');
+    }
+
+    if (!existente && !carpeta && !existenteSegunPlanilla) {
+      problemas.push(problema('alta', 'sin carpeta en CLIENTES: no se da de alta (los clientes son los que tienen carpeta)'));
     }
 
     // --- Obligaciones ----------------------------------------------------------
@@ -613,6 +665,7 @@ export function planificarAlta({
 
     // --- Decisión ----------------------------------------------------------------
     const datos = {
+      codigo: fila.codigo,
       nombre,
       ruc: rucValido,
       tipoPersona: fila.tipoPersona,
@@ -632,7 +685,7 @@ export function planificarAlta({
       cambios: {},
       conservados: [],
       obligaciones: obligacionesAAsignar,
-      existente: existente ? { id: existente.id, nombre: existente.nombre, ruc: existente.ruc } : null,
+      existente: existente ? { id: existente.id, nombre: existente.nombre, ruc: existente.ruc, codigo: existente.codigo ?? null } : null,
       existenteSegunPlanilla,
       tipo: null,
     };
@@ -640,6 +693,8 @@ export function planificarAlta({
     if (problemas.some((p) => p.bloquea === 'todo')) {
       accion.tipo = 'bloqueado';
     } else if (existente) {
+      // El código no se pisa nunca (ni con --forzar-campo): solo se completa.
+      if (!existente.codigo) accion.cambios.codigo = fila.codigo;
       for (const campo of ['nombre', 'tipoPersona', 'regimenTributario', 'email', 'telefono', 'carpetaOneDriveId', 'observaciones', 'ruc']) {
         const propuesto = datos[campo];
         if (propuesto === null || propuesto === undefined) continue;
@@ -658,6 +713,8 @@ export function planificarAlta({
       accion.tipo = 'baja';
     } else if (existenteSegunPlanilla) {
       accion.tipo = 'existente_sin_verificar';
+    } else if (!carpeta) {
+      accion.tipo = 'sin_carpeta';
     } else if (problemas.some((p) => p.bloquea === 'alta')) {
       accion.tipo = 'bloqueado';
     } else {
@@ -670,14 +727,18 @@ export function planificarAlta({
   const carpetasSinCliente = carpetas.filter((c) => !codigosDePlanilla.has(c.codigo));
 
   const contar = (tipo) => acciones.filter((a) => a.tipo === tipo).length;
+  const tienen = (a, re) => a.problemas.some((p) => re.test(p.texto));
+  const conCarpeta = acciones.filter((a) => a.carpeta || a.existente || a.existenteSegunPlanilla);
   const resumen = {
     filas: acciones.length,
     crear: contar('crear'),
+    crearConRucPendiente: acciones.filter((a) => a.tipo === 'crear' && !a.datos.ruc).length,
     actualizar: contar('actualizar'),
     sinCambios: contar('sin_cambios'),
     existentesSinVerificar: contar('existente_sin_verificar'),
     bloqueados: contar('bloqueado'),
     bajas: contar('baja'),
+    sinCarpeta: contar('sin_carpeta'),
     carpetasSinCliente: carpetasSinCliente.length,
     conCarpetaAConectar: acciones.filter(
       (a) => (a.tipo === 'crear' && a.datos.carpetaOneDriveId) || (a.tipo === 'actualizar' && a.cambios.carpetaOneDriveId),
@@ -685,13 +746,15 @@ export function planificarAlta({
     obligacionesAAsignar: acciones
       .filter((a) => a.tipo === 'crear' || a.tipo === 'actualizar')
       .reduce((n, a) => n + a.obligaciones.length, 0),
+    // Lo que falta de EFFORT, contado solo entre los clientes con carpeta.
     faltaDeEffort: {
-      sinRuc: acciones.filter((a) => a.problemas.some((p) => /^RUC faltante/.test(p.texto))).length,
-      rucQueNoCorresponde: acciones.filter((a) => a.problemas.some((p) => /no corresponde|repetido|ya es de/.test(p.texto))).length,
-      sinRegimen: acciones.filter((a) => a.problemas.some((p) => /^régimen vacío/.test(p.texto))).length,
-      sinObligaciones: acciones.filter((a) => a.problemas.some((p) => /^obligaciones sin completar/.test(p.texto))).length,
-      sinConfirmarQueSigue: acciones.filter((a) => a.problemas.some((p) => /no confirmó/.test(p.texto))).length,
-      sinNombre: acciones.filter((a) => a.problemas.some((p) => /^sin nombre/.test(p.texto))).length,
+      sinRuc: conCarpeta.filter((a) => tienen(a, /^RUC pendiente/)).length,
+      rucQueNoCorresponde: conCarpeta.filter((a) => tienen(a, /no corresponde|repetido|ya es de|dígito verificador/)).length,
+      rucAConfirmar: conCarpeta.filter((a) => a.datos.ruc && tienen(a, /confirmar/)).length,
+      sinRegimen: conCarpeta.filter((a) => tienen(a, /^régimen vacío/)).length,
+      sinObligaciones: conCarpeta.filter((a) => tienen(a, /^obligaciones sin completar/)).length,
+      sinConfirmarQueSigue: conCarpeta.filter((a) => tienen(a, /no confirmó/)).length,
+      sinNombre: acciones.filter((a) => tienen(a, /^sin nombre/)).length,
     },
   };
 
@@ -709,7 +772,8 @@ export function formatearInforme(plan, { fuenteCarpetas = null, detalle = false 
     const d = a.datos;
     const carpeta = d.carpetaOneDriveId ? 'carpeta conectada' : a.carpeta ? 'carpeta sin id (falta --leer-carpetas)' : 'sin carpeta';
     const obl = a.obligaciones.length > 0 ? ` · obligaciones: ${a.obligaciones.map((o) => o.codigo).join(', ')}` : '';
-    return `  ${a.codigo} ${String(a.nombre ?? '').padEnd(32).slice(0, 32)} RUC ${d.ruc ?? (a.rucDePlanilla ? `${a.rucDePlanilla} (no se usa)` : '—')} · ${d.tipoPersona ?? '—'} · régimen: ${d.regimenTributario ?? '—'} · ${carpeta}${obl}`;
+    const ruc = d.ruc ?? (a.rucDePlanilla ? `PENDIENTE (${a.rucDePlanilla} no se usa)` : 'PENDIENTE');
+    return `  ${a.codigo} ${String(a.nombre ?? '').padEnd(32).slice(0, 32)} RUC ${ruc} · ${d.tipoPersona ?? '—'} · régimen: ${d.regimenTributario ?? '—'} · ${carpeta}${obl}`;
   };
   const avisos = (a) =>
     a.problemas.filter((p) => detalle || !p.general).map((p) => `      ${p.bloquea ? '✗' : '·'} ${p.texto}`);
@@ -719,9 +783,9 @@ export function formatearInforme(plan, { fuenteCarpetas = null, detalle = false 
   l.push(`Carpetas: ${fuenteCarpetas ?? 'ninguna fuente'}${plan.conIds ? '' : ' — SIN ids: con esto no se puede aplicar'}`);
   l.push('');
   l.push(
-    `Filas: ${r.filas} · crear: ${r.crear} · actualizar: ${r.actualizar} · sin cambios: ${r.sinCambios}` +
+    `Filas: ${r.filas} · crear: ${r.crear} (con RUC pendiente: ${r.crearConRucPendiente}) · actualizar: ${r.actualizar} · sin cambios: ${r.sinCambios}` +
       (r.existentesSinVerificar ? ` · ya cargados según la planilla (sin verificar): ${r.existentesSinVerificar}` : '') +
-      ` · no se dan de alta: ${r.bloqueados} · bajas: ${r.bajas}`,
+      ` · sin carpeta (no son clientes del OneDrive): ${r.sinCarpeta} · no se dan de alta: ${r.bloqueados} · bajas: ${r.bajas}`,
   );
 
   const grupo = (titulo, tipo, detalle) => {
@@ -747,20 +811,21 @@ export function formatearInforme(plan, { fuenteCarpetas = null, detalle = false 
   });
   grupo('YA CARGADOS SEGÚN LA PLANILLA (sin leer la base no se puede comparar)', 'existente_sin_verificar');
   grupo('NO SE DAN DE ALTA', 'bloqueado');
+  grupo('SIN CARPETA EN CLIENTES (no se dan de alta: los clientes son los que tienen carpeta)', 'sin_carpeta');
   grupo('BAJAS (la planilla dice que ya no son clientes: no se crean)', 'baja');
 
   if (plan.carpetasSinCliente.length > 0) {
     l.push('');
-    l.push(`CARPETAS SIN CLIENTE EN LA PLANILLA (${plan.carpetasSinCliente.length})`);
+    l.push(`CARPETAS SIN FILA EN LA PLANILLA (${plan.carpetasSinCliente.length}: falta al menos el tipo de persona, no se crean)`);
     for (const c of plan.carpetasSinCliente) l.push(`  ${c.carpeta}`);
   }
 
   const f = r.faltaDeEffort;
   l.push('');
-  l.push('LO QUE FALTA DE EFFORT');
-  l.push(`  sin RUC: ${f.sinRuc} · RUC que no corresponde o repetido: ${f.rucQueNoCorresponde} · sin nombre: ${f.sinNombre}`);
+  l.push('LO QUE FALTA DE EFFORT (clientes con carpeta)');
+  l.push(`  RUC pendiente: ${f.sinRuc} · RUC que no corresponde, repetido o inválido: ${f.rucQueNoCorresponde} · RUC cargado a confirmar: ${f.rucAConfirmar} · sin nombre: ${f.sinNombre}`);
   l.push(`  sin régimen: ${f.sinRegimen} · sin obligaciones: ${f.sinObligaciones} · sin confirmar que siguen: ${f.sinConfirmarQueSigue}`);
-  if (!detalle) l.push('  (estos tres avisos no se repiten fila por fila; --detalle los muestra)');
+  if (!detalle) l.push('  (régimen, obligaciones y confirmación no se repiten fila por fila; --detalle los muestra)');
   if (r.conCarpetaAConectar > 0) {
     l.push('');
     l.push(
@@ -859,9 +924,16 @@ export async function aplicarPlan(plan, { clientes, obligaciones, registrar, ope
       if (a.tipo === 'crear') {
         // Se vuelve a mirar justo antes de escribir: entre la simulación y esto
         // alguien pudo cargarlo por la pantalla.
-        const yaEsta = await clientes.buscarPorRuc(a.datos.ruc);
-        if (yaEsta) throw new Error(`ya existe un cliente con el RUC ${a.datos.ruc} («${yaEsta.nombre}»); volver a simular`);
+        const conEseCodigo = await clientes.buscarPorCodigo(a.codigo);
+        if (conEseCodigo) {
+          throw new Error(`ya existe un cliente con el código ${a.codigo} («${conEseCodigo.nombre}»); volver a simular`);
+        }
+        if (a.datos.ruc) {
+          const yaEsta = await clientes.buscarPorRuc(a.datos.ruc);
+          if (yaEsta) throw new Error(`ya existe un cliente con el RUC ${a.datos.ruc} («${yaEsta.nombre}»); volver a simular`);
+        }
         const creado = await clientes.crear({
+          codigo: a.codigo,
           nombre: a.datos.nombre,
           ruc: a.datos.ruc,
           tipoPersona: a.datos.tipoPersona,
@@ -889,6 +961,12 @@ export async function aplicarPlan(plan, { clientes, obligaciones, registrar, ope
       } else {
         clienteId = a.existente.id;
         if (Object.keys(a.cambios).length > 0) {
+          if (a.cambios.codigo) {
+            const conEseCodigo = await clientes.buscarPorCodigo(a.cambios.codigo);
+            if (conEseCodigo && conEseCodigo.id !== clienteId) {
+              throw new Error(`el código ${a.cambios.codigo} ya es de «${conEseCodigo.nombre}»`);
+            }
+          }
           if (a.cambios.ruc) {
             const conEseRuc = await clientes.buscarPorRuc(a.cambios.ruc);
             if (conEseRuc && conEseRuc.id !== clienteId) {
@@ -995,7 +1073,11 @@ async function principal() {
   console.log(`  hoja «Clientes», encabezado en la fila ${filaEncabezado}, ${filas.length} filas con código`);
   for (const i of ilegibles) console.log(`  (fila ${i.filaExcel}: código «${i.codigo}» ilegible, se saltea)`);
 
-  const carpetas = cargarCarpetas({ rutaIds: rutaCarpetas, rutaNombres: NOMBRES_DE_CARPETAS });
+  const carpetas = cargarCarpetas({
+    rutaIds: rutaCarpetas,
+    rutaPlan: argumento(argv, 'plan') ?? PLAN_DEL_ORDENAMIENTO,
+    rutaNombres: NOMBRES_DE_CARPETAS,
+  });
   const validar = await cargarValidadores();
 
   // --- Base (solo lectura salvo --aplicar) -----------------------------------
