@@ -12,7 +12,12 @@ import { randomUUID } from 'node:crypto';
 
 import { DriveFalso } from '@effort/drive';
 
-import { detalleParaBitacora, sincronizarDesdeOneDrive } from '../src/servicios/sincronizadorDeOneDrive.js';
+import type { EntradaDeBitacora } from '../src/bitacora.js';
+import {
+  cambiosAlReconocer,
+  detalleParaBitacora,
+  sincronizarDesdeOneDrive,
+} from '../src/servicios/sincronizadorDeOneDrive.js';
 import type { AltaDeEvidencia, ResumenDeSincronizacion } from '../src/servicios/sincronizadorDeOneDrive.js';
 import { ClientesFalsos, clienteMinimo } from './dobles.js';
 import { DocumentosFalsos } from './dobles-dominio.js';
@@ -23,7 +28,15 @@ const USUARIO = 'usr-sistema';
 
 /** Registro de evidencias en memoria, con la misma unicidad por sha256. */
 function crearRegistro() {
-  const porSha = new Map<string, { id: string }>();
+  /*
+   * Lo que guarda la base de cada evidencia. Igual que `registrarOVincular`:
+   * si el contenido ya estaba, se le anota el origen siempre, y nombre y ruta
+   * solo si es del mismo cliente (devolviendo los anteriores).
+   */
+  const porSha = new Map<
+    string,
+    { id: string; clienteId: string; nombreArchivo: string; rutaOneDrive: string; itemIdOrigen: string | null }
+  >();
   const altas: AltaDeEvidencia[] = [];
   /*
    * Los archivos del origen se anotan APARTE de las evidencias, igual que en la
@@ -32,33 +45,65 @@ function crearRegistro() {
    * respondiera "ya lo vi" solo por contenido, el test no podría distinguir el
    * bug del comportamiento correcto.
    */
-  const archivosVistos = new Map<string, { itemIdOrigen: string; modificadoEnOrigen: Date | null }>();
+  const archivosVistos = new Map<
+    string,
+    { itemIdOrigen: string; modificadoEnOrigen: Date | null; evidenciaId: string }
+  >();
 
   return {
     altas,
     archivosVistos,
-    async marcarOrigen(datos: { clienteId: string; itemIdOrigen: string; modificadoEnOrigen: Date | null }) {
+    porSha,
+    async marcarOrigen(datos: {
+      clienteId: string;
+      itemIdOrigen: string;
+      modificadoEnOrigen: Date | null;
+      evidenciaId: string;
+    }) {
       archivosVistos.set(`${datos.clienteId}|${datos.itemIdOrigen}`, {
         itemIdOrigen: datos.itemIdOrigen,
         modificadoEnOrigen: datos.modificadoEnOrigen,
+        evidenciaId: datos.evidenciaId,
       });
     },
     async registrar(datos: AltaDeEvidencia) {
+      altas.push(datos);
       const yaEstaba = porSha.get(datos.sha256);
       if (yaEstaba) {
         // Igual que la base: se le anota el origen para no volver a bajarlo.
-        altas.push(datos);
-        return { evidencia: yaEstaba, esNueva: false };
+        yaEstaba.itemIdOrigen = datos.itemIdOrigen;
+        if (yaEstaba.clienteId !== datos.clienteId) {
+          return { evidencia: { id: yaEstaba.id }, esNueva: false, anterior: null };
+        }
+        const anterior = { nombreArchivo: yaEstaba.nombreArchivo, rutaOneDrive: yaEstaba.rutaOneDrive };
+        yaEstaba.nombreArchivo = datos.nombreArchivo;
+        yaEstaba.rutaOneDrive = datos.rutaOneDrive;
+        return { evidencia: { id: yaEstaba.id }, esNueva: false, anterior };
       }
-      const evidencia = { id: randomUUID() };
+      const evidencia = {
+        id: randomUUID(),
+        clienteId: datos.clienteId,
+        nombreArchivo: datos.nombreArchivo,
+        rutaOneDrive: datos.rutaOneDrive,
+        itemIdOrigen: datos.itemIdOrigen,
+      };
       porSha.set(datos.sha256, evidencia);
-      altas.push(datos);
-      return { evidencia, esNueva: true };
+      return { evidencia: { id: evidencia.id }, esNueva: true };
     },
+    /** Igual que `ArchivosDeOrigenPrisma.huellas`, con la ruta anotada. */
     async huellas(clienteId: string) {
       return [...archivosVistos.entries()]
         .filter(([clave]) => clave.startsWith(`${clienteId}|`))
-        .map(([, valor]) => valor);
+        .map(([, valor]) => {
+          const evidencia = [...porSha.values()].find((e) => e.id === valor.evidenciaId);
+          const describeEsteArchivo =
+            evidencia?.itemIdOrigen === valor.itemIdOrigen && evidencia.clienteId === clienteId;
+          return {
+            itemIdOrigen: valor.itemIdOrigen,
+            modificadoEnOrigen: valor.modificadoEnOrigen,
+            rutaRegistrada: describeEsteArchivo ? evidencia.rutaOneDrive : null,
+          };
+        });
     },
   };
 }
@@ -69,6 +114,7 @@ function armar() {
   const origen = new DriveFalso();
   const destino = new DriveFalso();
   const registro = crearRegistro();
+  const bitacora: EntradaDeBitacora[] = [];
 
   clientes.clientes.push({
     ...clienteMinimo({ id: FUMIPRO, nombre: 'FUMIPRO S.A.', ruc: '80119631-0', activo: true }),
@@ -83,6 +129,7 @@ function armar() {
     origen,
     destino,
     registro,
+    bitacora,
     deps: {
       clientes,
       documentos,
@@ -96,6 +143,9 @@ function armar() {
         modificadoEnOrigen: Date | null;
         evidenciaId: string;
       }) => registro.marcarOrigen(datos),
+      registrarEnBitacora: async (entrada: EntradaDeBitacora) => {
+        bitacora.push(entrada);
+      },
       ahora: () => new Date('2026-09-11T12:00:00Z'),
     },
   };
@@ -384,6 +434,219 @@ describe('sincronización desde OneDrive', () => {
     expect(resumen.fallos).toHaveLength(1);
     expect(resumen.fallos[0]!.archivo).toBe('video-institucional.mp4');
     expect(resumen.fallos[0]!.motivo).toMatch(/26\.0 MB/);
+  });
+});
+
+/*
+ * El ordenamiento del OneDrive de octubre de 2026 (tarea 164) movió y renombró
+ * miles de archivos según el manual v1.3, conservando su id. Dos cosas estaban
+ * mal antes del 2026-11-01: el período salía de la fecha de modificación (que
+ * pasó a ser la del ordenamiento), y un archivo reconocido dejaba su documento
+ * con el nombre, la ruta, el tipo y el período viejos.
+ */
+describe('período por carpeta y archivos reconocidos después del ordenamiento', () => {
+  const COPESA = '21212121-2121-4121-8121-212121212121';
+  const RAIZ_COPESA = 'CLIENTES/021 COPESA';
+  const MARZO_2025 = `${RAIZ_COPESA}/021 PERIODO 2025/DOCUMENTOS CONTABLES/03 MARZO`;
+  const DIA_DEL_ORDENAMIENTO = new Date('2026-10-30T15:00:00Z');
+
+  function armarConCopesa() {
+    const ctx = armar();
+    ctx.clientes.clientes.push({
+      ...clienteMinimo({ id: COPESA, nombre: 'COPESA CONSTRUCCIONES SA', ruc: '80000000-1', activo: true }),
+      carpetaOneDriveId: 'carpeta-copesa',
+    });
+    ctx.origen.registrarCarpeta('carpeta-copesa', RAIZ_COPESA);
+    return ctx;
+  }
+
+  const documentosDeCopesa = (ctx: ReturnType<typeof armar>) =>
+    ctx.documentos.documentos.filter((d) => d.clienteId === COPESA);
+
+  it('un archivo nuevo toma el período de su carpeta, no de la fecha del ordenamiento', async () => {
+    const ctx = armarConCopesa();
+    ctx.origen.sembrar(MARZO_2025, 'RG COMPRAS 032025 COPESA.xlsx', Buffer.from('rg marzo'), {
+      modificadoEn: DIA_DEL_ORDENAMIENTO,
+    });
+
+    await sincronizarDesdeOneDrive(ctx.deps, USUARIO);
+
+    expect(documentosDeCopesa(ctx)).toMatchObject([{ periodo: '2025-03', tipo: 'LIBRO_COMPRAS' }]);
+  });
+
+  it('09 SETIEMBRE y CIERRE 2024 también se leen de la carpeta', async () => {
+    const ctx = armarConCopesa();
+    ctx.origen.sembrar(
+      `${RAIZ_COPESA}/021 PERIODO 2024/DOCUMENTOS CONTABLES/09 SETIEMBRE`,
+      'DDJJ IVA 092024 COPESA.pdf',
+      Buffer.from('iva setiembre'),
+      { modificadoEn: DIA_DEL_ORDENAMIENTO },
+    );
+    ctx.origen.sembrar(
+      `${RAIZ_COPESA}/021 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024`,
+      'DDJJ IRE 2024 COPESA.pdf',
+      Buffer.from('ire 2024'),
+      { modificadoEn: DIA_DEL_ORDENAMIENTO },
+    );
+
+    await sincronizarDesdeOneDrive(ctx.deps, USUARIO);
+
+    expect(documentosDeCopesa(ctx).map((d) => d.periodo).sort()).toEqual(['2024-09', '2024-12']);
+  });
+
+  it('en ZZ A CLASIFICAR, sin período en el nombre, usa la fecha del sistema de archivos', async () => {
+    const ctx = armarConCopesa();
+    ctx.origen.sembrar(`${RAIZ_COPESA}/021 ZZ A CLASIFICAR`, 'ENERO.pdf', Buffer.from('suelto'), {
+      modificadoEn: DIA_DEL_ORDENAMIENTO,
+      modificadoEnSistemaDeArchivos: new Date('2024-02-15T10:00:00Z'),
+    });
+
+    await sincronizarDesdeOneDrive(ctx.deps, USUARIO);
+
+    expect(documentosDeCopesa(ctx)).toMatchObject([{ periodo: '2024-02' }]);
+  });
+
+  it('un archivo renombrado y movido actualiza nombre, ruta, tipo y período, y deja rastro', async () => {
+    const ctx = armarConCopesa();
+    // Antes del ordenamiento: sin el período en la ruta ni en el nombre, la
+    // fecha decía abril (mal). El tipo lo daba la carpeta vieja.
+    ctx.origen.sembrar(`${RAIZ_COPESA}/PERIODO 2025/RG 90 COMPRAS`, 'MARZO.xlsx', Buffer.from('rg'), {
+      itemId: 'item-rg',
+      modificadoEn: new Date('2025-04-10T12:00:00Z'),
+    });
+    await sincronizarDesdeOneDrive(ctx.deps, USUARIO);
+    expect(documentosDeCopesa(ctx)).toMatchObject([{ periodo: '2025-04', tipo: 'LIBRO_COMPRAS' }]);
+
+    // El ordenamiento: mismo id, otra carpeta, otro nombre, otra fecha.
+    ctx.origen.sembrar(MARZO_2025, 'RG COMPRAS 032025 COPESA.xlsx', Buffer.from('rg'), {
+      itemId: 'item-rg',
+      modificadoEn: DIA_DEL_ORDENAMIENTO,
+    });
+    const segunda = await sincronizarDesdeOneDrive(ctx.deps, USUARIO);
+
+    expect(segunda.nuevosEnTotal).toBe(0);
+    const documentos = documentosDeCopesa(ctx);
+    expect(documentos).toHaveLength(1);
+    expect(documentos[0]).toMatchObject({ periodo: '2025-03', tipo: 'LIBRO_COMPRAS' });
+
+    const evidencia = [...ctx.registro.porSha.values()][0]!;
+    expect(evidencia.nombreArchivo).toBe('RG COMPRAS 032025 COPESA.xlsx');
+    expect(evidencia.rutaOneDrive).toContain('021 PERIODO 2025/DOCUMENTOS CONTABLES/03 MARZO/');
+
+    expect(ctx.bitacora.map((e) => e.accion)).toEqual([
+      'evidencia.renombrada_en_origen',
+      'documento.reclasificado',
+    ]);
+    expect(ctx.bitacora[1]).toMatchObject({
+      entidadId: documentos[0]!.id,
+      datosAntes: { tipo: 'LIBRO_COMPRAS', periodo: '2025-04' },
+      datosDespues: { tipo: 'LIBRO_COMPRAS', periodo: '2025-03', origenDelPeriodo: 'CARPETA' },
+    });
+  });
+
+  // La pista que daba `RG 90 COMPRAS` no se puede deducir de `03 MARZO`: se
+  // conserva el tipo que el documento ya tenía.
+  it('un archivo sin renombrar que pasó a la carpeta del mes no pierde su tipo', async () => {
+    const ctx = armarConCopesa();
+    ctx.origen.sembrar(`${RAIZ_COPESA}/PERIODO 2025/RG 90 COMPRAS`, '03 MARZO.xlsx', Buffer.from('rg'), {
+      itemId: 'item-rg',
+      modificadoEn: new Date('2025-04-10T12:00:00Z'),
+    });
+    await sincronizarDesdeOneDrive(ctx.deps, USUARIO);
+
+    ctx.origen.sembrar(MARZO_2025, '03 MARZO.xlsx', Buffer.from('rg'), {
+      itemId: 'item-rg',
+      modificadoEn: DIA_DEL_ORDENAMIENTO,
+    });
+    await sincronizarDesdeOneDrive(ctx.deps, USUARIO);
+
+    expect(documentosDeCopesa(ctx)).toMatchObject([{ tipo: 'LIBRO_COMPRAS', periodo: '2025-03' }]);
+  });
+
+  it('movido a ZZ A CLASIFICAR, la fecha no pisa el período que ya tenía', async () => {
+    const ctx = armarConCopesa();
+    ctx.origen.sembrar(MARZO_2025, 'RG COMPRAS 032025 COPESA.xlsx', Buffer.from('rg'), { itemId: 'item-rg' });
+    await sincronizarDesdeOneDrive(ctx.deps, USUARIO);
+
+    ctx.origen.sembrar(`${RAIZ_COPESA}/021 ZZ A CLASIFICAR`, 'archivo suelto.xlsx', Buffer.from('rg'), {
+      itemId: 'item-rg',
+      modificadoEn: DIA_DEL_ORDENAMIENTO,
+    });
+    await sincronizarDesdeOneDrive(ctx.deps, USUARIO);
+
+    expect(documentosDeCopesa(ctx)).toMatchObject([{ tipo: 'LIBRO_COMPRAS', periodo: '2025-03' }]);
+    expect(ctx.bitacora.map((e) => e.accion)).toEqual(['evidencia.renombrada_en_origen']);
+  });
+
+  /*
+   * Si la fecha del archivo vuelve a ser la que el sistema ya tenía anotada
+   * (la restauración de fechas después del ordenamiento), el atajo de «misma
+   * fecha, no se toca» lo saltearía para siempre con el nombre viejo. La ruta
+   * anotada en su evidencia lo delata.
+   */
+  it('renombrado con la misma fecha igual se vuelve a mirar, y después ya no', async () => {
+    const ctx = armarConCopesa();
+    const fecha = new Date('2025-04-10T12:00:00Z');
+    ctx.origen.sembrar(`${RAIZ_COPESA}/PERIODO 2025/RG 90 COMPRAS`, 'MARZO.xlsx', Buffer.from('rg'), {
+      itemId: 'item-rg',
+      modificadoEn: fecha,
+    });
+    await sincronizarDesdeOneDrive(ctx.deps, USUARIO);
+
+    ctx.origen.sembrar(MARZO_2025, 'RG COMPRAS 032025 COPESA.xlsx', Buffer.from('rg'), {
+      itemId: 'item-rg',
+      modificadoEn: fecha,
+    });
+    const segunda = await sincronizarDesdeOneDrive(ctx.deps, USUARIO);
+    expect(segunda.clientes.find((c) => c.cliente.startsWith('COPESA'))!.sinCambios).toBe(0);
+    expect(documentosDeCopesa(ctx)).toMatchObject([{ periodo: '2025-03' }]);
+
+    let descargas = 0;
+    const leerOriginal = ctx.origen.leer.bind(ctx.origen);
+    ctx.origen.leer = async (itemId: string) => {
+      descargas += 1;
+      return leerOriginal(itemId);
+    };
+    await sincronizarDesdeOneDrive(ctx.deps, USUARIO);
+    expect(descargas).toBe(0);
+  });
+});
+
+describe('qué cambia en un documento reconocido', () => {
+  const archivo = (nombre: string, rutaCarpeta: string) => ({
+    itemId: 'x',
+    nombre,
+    rutaCarpeta,
+    tamanoBytes: 1,
+    modificadoEn: new Date('2026-10-30T15:00:00Z'),
+    tipoMime: null,
+  });
+
+  it('un documento cargado a mano no se toca', () => {
+    expect(
+      cambiosAlReconocer(
+        { tipo: 'OTRO', periodo: '2026-10', canalRecepcion: 'EMAIL' },
+        archivo('RG COMPRAS 032025 COPESA.xlsx', '021 PERIODO 2025/DOCUMENTOS CONTABLES/03 MARZO'),
+      ),
+    ).toBeNull();
+  });
+
+  it('sin cambios, no devuelve nada', () => {
+    expect(
+      cambiosAlReconocer(
+        { tipo: 'LIBRO_COMPRAS', periodo: '2025-03', canalRecepcion: 'ONEDRIVE' },
+        archivo('RG COMPRAS 032025 COPESA.xlsx', '021 PERIODO 2025/DOCUMENTOS CONTABLES/03 MARZO'),
+      ),
+    ).toBeNull();
+  });
+
+  it('el nombre según la guía corrige el período cuando la carpeta no lo dice', () => {
+    expect(
+      cambiosAlReconocer(
+        { tipo: 'OTRO', periodo: '2026-10', canalRecepcion: 'ONEDRIVE' },
+        archivo('DDJJ IVA 042024 COPESA.pdf', '021 ZZ A CLASIFICAR'),
+      ),
+    ).toEqual({ tipo: 'DECLARACION_JURADA', periodo: '2024-04', origenDelPeriodo: 'NOMBRE' });
   });
 });
 

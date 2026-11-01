@@ -120,6 +120,7 @@ export class DriveFalso implements DriveDeArchivos, FuenteDeCambios {
         nombre: entrada?.meta.nombre ?? '',
         tamanoBytes: entrada?.meta.tamanoBytes ?? 0,
         modificadoEn: entrada?.meta.modificadoEn ?? new Date(0),
+        modificadoEnSistemaDeArchivos: entrada?.meta.modificadoEnSistemaDeArchivos ?? null,
         tipoMime: entrada?.meta.tipoMime ?? null,
         eliminado,
         esCarpeta: false,
@@ -162,7 +163,8 @@ export class DriveFalso implements DriveDeArchivos, FuenteDeCambios {
     // `itemId` y `modificadoEn` explícitos permiten simular que alguien EDITÓ
     // un archivo que ya estaba: mismo id, contenido y fecha nuevos. Sin esto
     // cada llamada crea un archivo distinto, que es otro escenario.
-    opciones: { itemId?: string; modificadoEn?: Date } = {},
+    // `modificadoEnSistemaDeArchivos` simula el `fileSystemInfo` de Graph.
+    opciones: { itemId?: string; modificadoEn?: Date; modificadoEnSistemaDeArchivos?: Date } = {},
   ): ArchivoDrive {
     const meta: ArchivoDrive = {
       itemId: opciones.itemId ?? randomUUID(),
@@ -170,6 +172,7 @@ export class DriveFalso implements DriveDeArchivos, FuenteDeCambios {
       rutaCarpeta: carpeta,
       tamanoBytes: contenido.length,
       modificadoEn: opciones.modificadoEn ?? new Date(),
+      modificadoEnSistemaDeArchivos: opciones.modificadoEnSistemaDeArchivos ?? null,
       tipoMime: null,
     };
     this.#archivos.set(meta.itemId, { meta, contenido });

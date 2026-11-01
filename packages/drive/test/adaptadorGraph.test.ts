@@ -103,6 +103,44 @@ describe('DriveGraph', () => {
     });
   });
 
+  /*
+   * El período de un documento sin carpeta ni nombre que lo digan cae a una
+   * fecha (`deducirPeriodo` en `@effort/core`). Se prefiere la del sistema de
+   * archivos, así que el recorrido tiene que pedirla: Graph no manda lo que no
+   * está en `$select`.
+   */
+  it('el recorrido pide fileSystemInfo y lo deja aparte de lastModifiedDateTime', async () => {
+    const pedidos: string[] = [];
+    vi.stubGlobal(
+      'fetch',
+      vi.fn(async (url: string) => {
+        if (url.toString().includes('login.microsoftonline.com')) return respuestaToken();
+        pedidos.push(url.toString());
+        return new Response(
+          JSON.stringify({
+            value: [
+              {
+                id: 'item-1', name: 'DDJJ IVA 042024 COPESA.pdf', size: 10,
+                lastModifiedDateTime: '2026-10-30T15:00:00Z',
+                fileSystemInfo: { lastModifiedDateTime: '2024-05-20T10:00:00Z' },
+                file: {},
+              },
+              { id: 'item-2', name: 'sin-fecha.pdf', size: 10, lastModifiedDateTime: '2026-10-30T15:00:00Z', file: {} },
+            ],
+          }),
+          { status: 200 },
+        );
+      }),
+    );
+
+    const archivos = await new DriveGraph(CONFIGURACION).listarRecursivoPorId('carpeta');
+
+    expect(pedidos[0]).toContain('fileSystemInfo');
+    expect(archivos[0]!.modificadoEn).toEqual(new Date('2026-10-30T15:00:00Z'));
+    expect(archivos[0]!.modificadoEnSistemaDeArchivos).toEqual(new Date('2024-05-20T10:00:00Z'));
+    expect(archivos[1]!.modificadoEnSistemaDeArchivos).toBeNull();
+  });
+
   it('leer devuelve el contenido como Buffer', async () => {
     vi.stubGlobal(
       'fetch',

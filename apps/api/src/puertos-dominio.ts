@@ -101,6 +101,24 @@ export interface RepositorioDeDocumentos {
    * incluye anulados y los que no tienen número de comprobante.
    */
   contarPorCliente(periodo: string, filtro: FiltroDeCartera): Promise<Record<string, number>>;
+  /**
+   * Documentos de ese cliente cuyo archivo es esta evidencia. Lo usa la
+   * sincronización al reconocer un archivo que ya tenía (2026-11-01).
+   */
+  deEvidencia(evidenciaId: string, clienteId: string): Promise<DocumentoAlmacenado[]>;
+  /**
+   * Cambia tipo y período de un documento reconocido en OneDrive, **solo si
+   * todavía tiene los valores `anterior`**: si alguien lo cambió entre la
+   * lectura y ahora, no se pisa (mismo criterio que
+   * `scripts/reclasificar-documentos.mjs`). Devuelve si se aplicó. No borra
+   * nada; el rastro lo deja quien llama, en la bitácora.
+   */
+  reclasificarDesdeOrigen(
+    id: string,
+    anterior: { readonly tipo: string; readonly periodo: string },
+    nuevo: { readonly tipo: string; readonly periodo: string },
+    usuarioId: string,
+  ): Promise<boolean>;
 }
 
 /* ========================================================================== */
@@ -340,12 +358,25 @@ export interface ResultadoDeRegistro {
   readonly evidencia: EvidenciaAlmacenada;
   /** False cuando ese contenido ya estaba y solo se le anotó el origen. */
   readonly esNueva: boolean;
+  /**
+   * Solo cuando ese contenido ya estaba y se le actualizaron nombre y ruta:
+   * los que tenía antes, para dejarlos en la bitácora. `null` si no se tocaron
+   * (la evidencia es de otro cliente).
+   */
+  readonly anterior?: { readonly nombreArchivo: string; readonly rutaOneDrive: string } | null;
 }
 
 /** Lo mínimo para decidir si un archivo del origen ya se importó. */
 export interface HuellaDeOrigen {
   readonly itemIdOrigen: string;
   readonly modificadoEnOrigen: Date | null;
+  /**
+   * Ruta de la copia que tiene anotada la evidencia de este archivo, solo si
+   * esa evidencia describe a este mismo archivo (mismo `itemIdOrigen`, mismo
+   * cliente). Si no coincide con la ruta actual, el archivo se renombró o se
+   * movió y hay que volver a mirarlo aunque su fecha no haya cambiado.
+   */
+  readonly rutaRegistrada?: string | null;
 }
 
 export interface RepositorioDeEvidencias {
@@ -359,7 +390,9 @@ export interface RepositorioDeEvidencias {
    */
   huellasDeOrigen(clienteId: string): Promise<HuellaDeOrigen[]>;
   /**
-   * Registra un archivo; si ese contenido ya estaba, le anota de dónde vino.
+   * Registra un archivo; si ese contenido ya estaba, le anota de dónde vino y,
+   * si la evidencia es del mismo cliente, su nombre y su ruta actuales (antes
+   * del 2026-11-01 quedaban los de la primera vez, aunque lo renombraran).
    *
    * La unicidad la decide la huella `sha256` del contenido, no el nombre ni la
    * ruta: el mismo archivo renombrado, o copiado a otra carpeta, sigue siendo

@@ -38,6 +38,8 @@ export interface CambioDeArchivo {
   readonly nombre: string;
   readonly tamanoBytes: number;
   readonly modificadoEn: Date;
+  /** Ver `ArchivoDrive.modificadoEnSistemaDeArchivos`. */
+  readonly modificadoEnSistemaDeArchivos?: Date | null;
   readonly tipoMime: string | null;
   readonly eliminado: boolean;
   /** Las carpetas también aparecen entre los cambios; no se copian. */
@@ -74,7 +76,20 @@ export interface ArchivoDrive {
   /** Ruta de la carpeta que lo contiene, relativa a la raíz del drive. */
   readonly rutaCarpeta: string;
   readonly tamanoBytes: number;
+  /**
+   * `lastModifiedDateTime` del elemento. Al renombrar los archivos en el
+   * ordenamiento de octubre de 2026 pasó a ser la fecha del ordenamiento: sirve
+   * para decidir si hay que volver a bajarlo, no para el período del documento.
+   */
   readonly modificadoEn: Date;
+  /**
+   * `fileSystemInfo.lastModifiedDateTime`: según la documentación de Graph, la
+   * fecha que informa el equipo que subió el archivo. Solo se usa como último
+   * recurso para el período (`deducirPeriodo` en `@effort/core`). Que un
+   * renombrado no la cambie NO está verificado contra el OneDrive real.
+   * Opcional: no todo adaptador la tiene.
+   */
+  readonly modificadoEnSistemaDeArchivos?: Date | null;
   /** `null` cuando Graph no informa el tipo (carpetas, algunos formatos). */
   readonly tipoMime: string | null;
 }

@@ -263,6 +263,7 @@ export async function sincronizarConCambios(
         rutaCarpeta: ruta.length === raiz[1].length ? '' : ruta.slice(raiz[1].length + 1),
         tamanoBytes: cambio.tamanoBytes,
         modificadoEn: cambio.modificadoEn,
+        modificadoEnSistemaDeArchivos: cambio.modificadoEnSistemaDeArchivos ?? null,
         tipoMime: cambio.tipoMime,
       });
       porCarpeta.set(raiz[0], lista);

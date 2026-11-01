@@ -90,6 +90,8 @@ const ETIQUETA_ACCION: Record<string, string> = {
   'documento.registrado': 'Cargó un documento',
   'documento.importado_desde_archivo': 'Importó documentos desde un archivo',
   'documento.cambio_estado': 'Cambió el estado de un documento',
+  'documento.reclasificado': 'Cambió el tipo o el período de un documento según su archivo',
+  'evidencia.renombrada_en_origen': 'Un archivo cambió de nombre o de carpeta en OneDrive',
   'proceso_mensual.actualizado': 'Actualizó el proceso mensual',
   'vencimiento.registrado': 'Cargó un vencimiento',
   'vencimiento.presentado': 'Marcó un vencimiento como presentado',
