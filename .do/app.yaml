@@ -43,7 +43,8 @@ services:
     build_command: npm ci && npx tsc --build
     run_command: node apps/api/dist/arrancar.js
     http_port: 3000
-    instance_size_slug: apps-s-1vcpu-0.5gb
+    # 2 GB desde el 2026-11-01 (Daniel lo subió en el panel para cargar los ~120 clientes; antes 0.5 GB). DISCREPANCIAS 43.
+    instance_size_slug: apps-s-1vcpu-2gb
     instance_count: 1
     health_check:
       http_path: /salud
