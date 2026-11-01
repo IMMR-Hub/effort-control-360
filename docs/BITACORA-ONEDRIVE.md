@@ -484,3 +484,53 @@ En concreto:
   movido o renombrado, como mucho, se vuelve a bajar, se reconoce como ya conocido y no crea un documento nuevo; no se
   borran documentos cuando un archivo sale de la carpeta del cliente.
 - **Orden:** primero los 5 clientes piloto (002, 021, 032, 043, 068), verificar; después el resto.
+
+## 2026-10-30/31 — Resultado del ordenamiento (tarea 164)
+
+- **Movidos y renombrados:** 27.720 de 27.721 archivos del plan v3, en 120 clientes; 0 movimientos fuera del plan. Carpetas
+  viejas vacías apartadas a `CLIENTES/ZZ CARPETAS VACIAS PARA REVISAR`; duplicados a `CLIENTES/ZZ DUPLICADOS PARA REVISAR`.
+- **Pendiente:** `021 COPESA/PERIODO 2026/VARIOS/FLUJO DE CAJA COPESA A JUNIO 2027  (1).xlsx`: alguien lo tiene abierto
+  desde el 30-10 (Graph responde 423 «bloqueado»). Daniel: «eso lo podemos hacer lunes». Se mueve con
+  `aplicar-onedrive.mjs --clientes 021 --aplicar` en cuanto se cierre.
+- **Revisión** (`revision.mjs`: plan + copia de seguridad + estructura del 999): limpia el 2026-11-01 07:03 en 3 rondas
+  seguidas, excluyendo solo ese archivo (a pedido de Daniel).
+
+## 2026-11-01 — ESCRITURA: fechas de modificación devueltas a su valor original
+
+- **Qué pasó:** al renombrar con PATCH, OneDrive pone como fecha de modificación la del cambio. 11.394 archivos renombrados
+  aparecían «modificados el 30/31-10-2026»: en el Explorador ya no servía ordenar por fecha, y el sistema toma esa fecha.
+- **Qué se hizo:** `restaurar-fechas.mjs` cambia solo `fileSystemInfo.lastModifiedDateTime` (metadato; el contenido no se
+  toca) al valor del inventario del 30-10, con If-Match; no toca un archivo cuyo contenido cambió. Probado primero en 1
+  archivo (vuelven las dos fechas: la de OneDrive y la del Explorador). Resultado: 11.394 restaurados (+256 después del
+  acortado), 0 errores; verificación completa: 27.721 de 27.721 con su fecha original. Cada cambio en el diario
+  (`fechaRestaurada`, con la fecha anterior).
+
+## 2026-11-01 — BORRADO AUTORIZADO A LA PAPELERA: CANDIDATOS A BORRAR
+
+- **Autorización (Daniel, en el chat, 2026-11-01), sobre la planilla `CANDIDATOS A BORRAR - 1-11-2026.xlsx` que se le
+  mandó:** «ok hagamos el borrado de "todo" pero mantenlo en la papelera de OneDrive por 93 dias».
+- **Las tres preguntas:** (1) *¿Es necesario?* Lo decidió Daniel: son copias idénticas (o la misma declaración DNIT) con la
+  copia que se conserva verificada, y carpetas vacías. (2) *¿Qué pasa si sale mal?* Todo va a la papelera de OneDrive
+  (recuperable 93 días) y además está en la copia del disco D. (3) *¿Forma correcta?* `borrar-candidatos.mjs`: solo ítems
+  de la planilla autorizada (comparados por ruta con ese Excel), recomprueba cada uno en el momento (sigue en la carpeta
+  ZZ, el duplicado no cambió, la copia conservada existe e idéntica, la carpeta no tiene archivos), DELETE con If-Match,
+  que manda a la papelera (nunca el borrado definitivo), simulación primero.
+- **Resultado:** simulación 1.742 / 0 salteados / 0 errores; aplicado 1.742 de 1.742 (1.081 duplicados idénticos,
+  233 misma declaración DNIT, 428 carpetas vacías), 0 errores. Diario: `borradoAPapelera` con la ruta de cada uno.
+  Quedan las carpetas `ZZ DUPLICADOS PARA REVISAR` y `ZZ CARPETAS VACIAS PARA REVISAR` con su esqueleto de subcarpetas
+  vacías (no estaban en la planilla, así que no se borraron).
+
+## 2026-11-01 — ESCRITURA AUTORIZADA: acortar rutas largas
+
+- **Autorización (Daniel, 2026-11-01):** «Hazlo como tu lo recomiendas, para que ya no volvamos a tener el mismo problema
+  mas adelante» y «podrias usar directamente el codigo numero de cada cliente»; «tiene que seguir teniendo sentido».
+- **Por qué:** Office no abre desde la carpeta sincronizada una ruta de más de 218 caracteres (Excel) o 259 (Word/PDF). Con
+  el prefijo de la PC (usuario de hasta 10 letras) y 5 de margen, 465 archivos se pasaban.
+- **Qué se hizo** (`acortar-rutas.mjs` planifica, `aplicar-acortar.mjs` aplica; solo PATCH de nombre, conflictBehavior=fail,
+  If-Match, diario `renombradoAcortar` con el nombre anterior): 52 carpetas viejas abreviadas (nunca las del manual) y 256
+  archivos renombrados (el nombre del cliente se reemplazó por su código; abreviaturas sin cortar palabras). Sin tocar
+  Excel con vínculos internos ni las carpetas de esos vínculos. 0 errores. Resueltos 340 de 465; quedan 125 (unos 60 no
+  abrirían con los usuarios reales) en la hoja «Rutas largas para decidir» de la bitácora, para Laura y Lili.
+- **Abreviaturas:** `docs/ordenamiento-2026-10/DICCIONARIO DE ABREVIATURAS - EFFORT.docx`.
+- **Revisión final** (solo verificación, 2026-11-01 09:31): **limpia en 3 rondas, 26.406 de 26.407 en su lugar** (el que
+  falta es el Excel bloqueado de COPESA).

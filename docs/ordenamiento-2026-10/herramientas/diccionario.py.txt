@@ -1,0 +1,111 @@
+# Diccionario de abreviaturas de EFFORT (Daniel, 2026-11-01: «la biblia de los acrónimos… lo más fácil posible para que todos
+# lo entiendan»). Cada significado sale de la guía de nombres, del manual v1.3 o del texto de documentos reales del OneDrive;
+# lo que no se pudo comprobar va marcado «A DEFINIR POR EFFORT». Uso: python -I diccionario.py <carpeta salida> [...]
+import json, os, sys, shutil
+from docx import Document
+from docx.shared import Pt, RGBColor
+from docx.enum.text import WD_ALIGN_PARAGRAPH
+
+AQUI = os.path.dirname(os.path.abspath(__file__))
+plan = json.load(open(os.path.join(AQUI, '..', 'plan.json'), encoding='utf-8'))
+clientes = sorted({(f['cod'], f['cliente']) for f in plan})
+
+doc = Document()
+estilo = doc.styles['Normal']; estilo.font.name = 'Calibri'; estilo.font.size = Pt(11)
+def titulo(t, n=1): doc.add_heading(t, level=n)
+def parrafo(t, negrita=False):
+    p = doc.add_paragraph(); r = p.add_run(t); r.bold = negrita; return p
+def tabla(cab, filas):
+    t = doc.add_table(rows=1, cols=len(cab)); t.style = 'Light Grid Accent 1'
+    for i, c in enumerate(cab):
+        t.rows[0].cells[i].text = c
+        for r in t.rows[0].cells[i].paragraphs[0].runs: r.bold = True
+    for f in filas:
+        celdas = t.add_row().cells
+        for i, v in enumerate(f): celdas[i].text = str(v)
+    doc.add_paragraph()
+
+h = doc.add_heading('Diccionario de abreviaturas de EFFORT', 0); h.alignment = WD_ALIGN_PARAGRAPH.CENTER
+parrafo('Para qué sirve: para que cualquier persona del equipo entienda qué quiere decir cada sigla o palabra corta que '
+        'aparece en los nombres de carpetas y archivos del OneDrive. Si encontrás una que no está acá, avisá para agregarla.')
+parrafo('Regla de oro: si una abreviatura puede confundirse con otra, NO se abrevia; se escribe la palabra completa.', True)
+
+titulo('1. El número del cliente')
+parrafo('Cada cliente tiene un número de 3 cifras (por ejemplo 021 = COPESA). Ese número va al principio de sus carpetas '
+        '(«021 PERIODO 2025», «021 TRIBUTARIO») y, cuando el nombre de un archivo era demasiado largo, reemplaza al nombre del '
+        'cliente al final del archivo. Ejemplo: «RG VENTAS 072024 094.xlsx» = planilla RG 90 de ventas de julio de 2024 del cliente 094. '
+        'La lista completa de números está al final de este documento.')
+
+titulo('2. Fechas y períodos')
+tabla(['Cómo se escribe', 'Qué significa', 'Ejemplo'], [
+    ['MMAAAA', 'Mes y año (2 cifras para el mes, 4 para el año)', '032026 = marzo de 2026'],
+    ['AAAA', 'Año', '2025'],
+    ['01 ENERO … 12 DICIEMBRE', 'Carpeta de cada mes (setiembre se escribe SETIEMBRE)', '09 SETIEMBRE'],
+    ['CIERRE AAAA', 'Carpeta del cierre del ejercicio de ese año', 'CIERRE 2025'],
+    ['PERIODO AAAA', 'Carpeta con todo lo de ese año', '021 PERIODO 2025'],
+])
+
+titulo('3. Siglas de impuestos, organismos y documentos')
+tabla(['Sigla', 'Significa', 'De dónde sale'], [
+    ['DDJJ', 'Declaración jurada', 'Guía de nombres'],
+    ['IVA', 'Impuesto al Valor Agregado', 'Declaraciones reales de la DNIT'],
+    ['IRE', 'Impuesto a la Renta Empresarial', 'Documentos reales del OneDrive'],
+    ['IRP', 'Impuesto a la Renta Personal', 'Documentos reales del OneDrive'],
+    ['RG 90', 'Resolución General 90 (planillas de compras y ventas)', 'Carpetas reales «RESOLUCION GENERAL 90»'],
+    ['RG COMPRAS / RG VENTAS', 'Planilla RG 90 de compras / de ventas', 'Guía de nombres'],
+    ['DNIT', 'Dirección Nacional de Ingresos Tributarios', 'Declaraciones reales de la DNIT'],
+    ['RUC', 'Registro Único de Contribuyente', 'Documentos reales del OneDrive'],
+    ['CCT', 'Certificado de cumplimiento tributario', 'Manual de procedimiento v1.3'],
+    ['EEFF', 'Estados financieros (balance)', 'Guía de nombres y documentos reales'],
+    ['NC', 'Nota de crédito («NC EMITIDAS», «NC RECIBIDAS»)', 'Guía de nombres'],
+    ['FORM', 'Formulario (FORM 120, FORM 525…)', 'Guía de nombres'],
+    ['IPS', 'Instituto de Previsión Social', 'Documentos reales del OneDrive'],
+    ['MTESS', 'Ministerio de Trabajo, Empleo y Seguridad Social', 'Documentos reales del OneDrive'],
+    ['ZZ', 'Va al final de la lista a propósito: «ZZ A CLASIFICAR» = lo que una persona todavía tiene que ubicar', 'Manual de procedimiento v1.3'],
+])
+
+titulo('4. Palabras cortas usadas al acortar nombres largos (01-11-2026)')
+parrafo('Windows y Excel no abren un archivo cuya ruta completa es demasiado larga. Para evitarlo se acortaron algunas carpetas '
+        'viejas y algunos nombres, siempre con estas abreviaturas y sin cortar palabras por la mitad:')
+tabla(['Corta', 'Completa', 'Corta', 'Completa'], [
+    ['REQ', 'Requerimiento(s)', 'DOC', 'Documento(s) / documentación'],
+    ['REQ 1 / REQ 2 / REQ 3', 'Requerimientos primera / segunda / tercera parte', 'PED', 'Pedido(s)'],
+    ['AUDIT', 'Auditoría', 'BANC', 'Bancario(s)'],
+    ['LIQ', 'Liquidación / liquidaciones', 'IMPORT', 'Importación'],
+    ['APERT', 'Apertura', 'CTA', 'Cuenta'],
+    ['EMPR', 'Empresarial', 'ACTUAC', 'Actuaciones'],
+    ['ULT', 'Últimas', 'EJ', 'Ejercicio'],
+    ['ORIG', 'Originales', 'INV', 'Inventario'],
+    ['ANALIT', 'Analíticos', 'RESULT', 'Resultados'],
+    ['GRAL', 'General', 'DPTO', 'Departamento'],
+    ['FUNC', 'Funcionarios', 'VOL', 'Voluntaria'],
+    ['ACLAR', 'Aclaratorias', '', ''],
+])
+parrafo('También se quitaron palabras de relleno (de, del, la, y, para, en) cuando sobraban. La ruta vieja y la nueva de cada '
+        'archivo están en la bitácora del ordenamiento.')
+
+titulo('5. Palabras que NO se abrevian')
+tabla(['Se escribe así', 'Por qué'], [
+    ['FACTURA CONTADO / FACTURA CREDITO', '«FC» o «F.C.» serviría para las dos: se confunden. Propuesta corta si hiciera falta: «FACT CONTADO» y «FACT CREDITO» (A DEFINIR POR EFFORT).'],
+    ['FACTURA COMPRA / FACTURA VENTA', 'Guía de nombres: el sistema las reconoce así.'],
+    ['VERSION ANTERIOR', 'Indica que hay una versión más nueva del mismo documento.'],
+    ['CORRECCION', 'Así se marca la planilla RG 90 que corrige a otra (lo pidió EFFORT).'],
+    ['BORRADOR', 'Un borrador nunca debe parecer la declaración presentada.'],
+])
+
+titulo('6. A definir por EFFORT')
+parrafo('Estas siglas aparecen en archivos o en la guía, pero su significado no se pudo comprobar en un documento: que las defina '
+        'Laura o Lili antes de agregarlas al diccionario.')
+tabla(['Sigla', 'Dónde aparece', 'Significado'], [
+    ['FC / F.C.', 'Algunos nombres de archivos viejos (ej. «fc 23.pdf»)', 'A DEFINIR POR EFFORT (¿factura de compra, contado, crédito?)'],
+    ['IDU', 'Formulario 526 (guía de nombres)', 'A DEFINIR POR EFFORT'],
+    ['ISC', 'Lista de impuestos del sistema', 'A DEFINIR POR EFFORT'],
+])
+
+titulo('7. Números de los clientes')
+tabla(['Número', 'Cliente (nombre de la carpeta)'], [[c, n[4:] if n[:3] == c else n] for c, n in clientes])
+
+nombre = 'DICCIONARIO DE ABREVIATURAS - EFFORT.docx'
+os.makedirs(sys.argv[1], exist_ok=True); doc.save(os.path.join(sys.argv[1], nombre))
+for d in sys.argv[2:]: os.makedirs(d, exist_ok=True); shutil.copyfile(os.path.join(sys.argv[1], nombre), os.path.join(d, nombre))
+print(f'LISTO · clientes {len(clientes)} · {nombre}')

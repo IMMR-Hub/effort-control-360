@@ -1,0 +1,13 @@
+# Revisión (mín. 3 rondas) excluyendo SOLO el Excel bloqueado de COPESA (Daniel, 2026-10-31: se resuelve el lunes),
+# y después la planilla de candidatos. Registro en revision-sin-copesa.log; el detalle de las rondas en revision.log.
+Add-Type -Namespace Energia5 -Name Windows -MemberDefinition '[System.Runtime.InteropServices.DllImport("kernel32.dll")] public static extern uint SetThreadExecutionState(uint flags);'
+[Energia5.Windows]::SetThreadExecutionState(0x80000001) | Out-Null
+Set-Location 'C:\Users\Daniel\DATOS ORDENAMIENTO EFFORT 2026-10\onedrive'
+$log = 'revision-sin-copesa.log'
+Add-Content $log "$(Get-Date -Format 'dd/MM/yyyy HH:mm:ss')  === INICIO revisión excluyendo 01256M3RFTP5ZFS3ZTUJFKNE5BD3XSIBUG (COPESA, bloqueado) ==="
+& node revision.mjs --excluir 01256M3RFTP5ZFS3ZTUJFKNE5BD3XSIBUG
+$rev = $LASTEXITCODE
+Add-Content $log "$(Get-Date -Format 'dd/MM/yyyy HH:mm:ss')  revisión terminó con código $rev (0 = limpia; 2 = casos para una persona; 3 = 8 rondas sin quedar limpia)"
+$out = & node candidatos-a-borrar.mjs 'C:/Users/Daniel/NexusFlow AI/effort-control-360/docs/ordenamiento-2026-10' 'D:/DATOS ORDENAMIENTO 2026-10-20/onedrive' 'C:/Users/Daniel/DATOS ORDENAMIENTO EFFORT 2026-10/onedrive'
+Add-Content $log "$(Get-Date -Format 'dd/MM/yyyy HH:mm:ss')  planilla: código $LASTEXITCODE · $($out | Select-Object -Last 1)"
+Add-Content $log "$(Get-Date -Format 'dd/MM/yyyy HH:mm:ss')  === FIN ==="

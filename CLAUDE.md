@@ -332,6 +332,17 @@ obedece mal, porque no se sabe qué caso de borde cubre.
     en el disco que puede fallar: se copian a C:; (g) un disco que falla dos veces en tres días no es una copia de seguridad: se reverifica la foto y se cambia
     cable, puerto o disco antes de seguir.*
 
+24. **Renombrar en OneDrive cambia la fecha, y una ruta más larga puede dejar un archivo sin abrir.** El 2026-10-31, después de
+    ordenar el OneDrive real, una muestra mostró que los 11.394 archivos RENOMBRADOS con PATCH tenían como fecha de
+    modificación la del ordenamiento (los que solo se movieron, no): en el Explorador «todo era de hoy» y el sistema toma esa
+    fecha para el período y para «gana la más reciente». Se devolvió la original con `fileSystemInfo.lastModifiedDateTime`.
+    Además, la estructura nueva alargó las rutas y 171 archivos pasaron el límite de Office (218 caracteres en Excel, 259 en
+    el resto) contando el prefijo de la PC. *Lección: (a) después de renombrar con Graph, comparar fechas en una muestra y
+    restaurarlas en el mismo trabajo; (b) antes de aplicar una estructura nueva, medir el largo de ruta con el prefijo real de
+    la PC (`C:\Users\<usuario>\OneDrive - EFFORT CONSULTORA E.A.S\…`) y no solo el de OneDrive; (c) acortar sin cortar palabras
+    y con un diccionario de abreviaturas que la oficina pueda leer; (d) un vigilante que cuenta procesos con `(…).Count` en
+    PowerShell 5.1 da 0 con un solo resultado: usar `Measure-Object`, y avisar a Daniel apenas termina un trabajo largo.*
+
 **Cómo se usa esta sección:** antes de escribir algo que lea archivos externos,
 borre datos, o corra solo, buscá acá si ya nos pasó. Y cuando algo salga mal,
 agregá la entrada — el valor está en que siga creciendo.

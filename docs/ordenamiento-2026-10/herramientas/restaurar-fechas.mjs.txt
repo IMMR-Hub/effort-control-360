@@ -1,0 +1,72 @@
+// Devuelve la FECHA DE MODIFICACIÓN original a los archivos que el ordenamiento renombró: al renombrar con PATCH, OneDrive
+// puso como fecha de modificación la del ordenamiento (30/31-10-2026) y en el Explorador parecían «modificados hoy».
+// Solo cambia fileSystemInfo.lastModifiedDateTime (metadato; el contenido no se toca) al valor del inventario del 30-10
+// (campo «mod» del plan, que coincide con OneDrive en los archivos que no se renombraron). Sin DELETE, con If-Match.
+// Cada cambio queda en diario-onedrive.jsonl (tipo «fechaRestaurada», con la fecha anterior para poder deshacerlo).
+// Uso: node restaurar-fechas.mjs [--ids id1,id2] [--aplicar]   (sin --aplicar solo informa)
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const AQUI = path.dirname(fileURLToPath(import.meta.url));
+const DIARIO = path.join(AQUI, 'diario-onedrive.jsonl');
+const LOG = path.join(AQUI, 'restaurar-fechas.log');
+const APLICAR = process.argv.includes('--aplicar');
+const SOLO = process.argv.includes('--ids') ? new Set(process.argv[process.argv.indexOf('--ids') + 1].split(',')) : null;
+const log = (t) => { const l = `${new Date().toLocaleString('es-PY', { timeZone: 'America/Asuncion' })}  ${t}`; fs.appendFileSync(LOG, l + '\n'); console.log(l); };
+for (const linea of fs.readFileSync('C:/Users/Daniel/NexusFlow AI/effort-control-360/.env', 'utf8').split('\n')) {
+  const m = linea.match(/^([A-Z_][A-Z0-9_]*)=(.*)$/);
+  if (m && !process.env[m[1]]) process.env[m[1]] = m[2].trim().replace(/^["']|["']$/g, '');
+}
+let token = null, vence = 0;
+async function tk() {
+  if (token && Date.now() < vence) return token;
+  const r = await fetch(`https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}/oauth2/v2.0/token`, { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ client_id: process.env.AZURE_CLIENT_ID, client_secret: process.env.AZURE_CLIENT_SECRET, scope: 'https://graph.microsoft.com/.default', grant_type: 'client_credentials' }) });
+  const j = await r.json(); token = j.access_token; vence = Date.now() + (j.expires_in - 300) * 1000; return token;
+}
+async function llamar(metodo, ruta, { cuerpo, ifMatch } = {}) {
+  for (let i = 0; i < 6; i++) {
+    try {
+      const h = { authorization: `Bearer ${await tk()}`, 'content-type': 'application/json' }; if (ifMatch) h['if-match'] = ifMatch;
+      const r = await fetch(`https://graph.microsoft.com/v1.0${ruta}`, { method: metodo, headers: h, body: cuerpo ? JSON.stringify(cuerpo) : undefined, signal: AbortSignal.timeout(120_000) });
+      if (r.status === 429 || r.status >= 500) { await new Promise((s) => setTimeout(s, (Number(r.headers.get('retry-after')) || 2 ** i * 2) * 1000)); continue; }
+      return r;
+    } catch { await new Promise((s) => setTimeout(s, 2 ** i * 2000)); }
+  }
+  throw new Error(`sin respuesta: ${metodo} ${ruta}`);
+}
+const driveId = process.env.AZURE_DRIVE_ID_ORIGEN ?? (await (await llamar('GET', `/users/${encodeURIComponent(process.env.ONEDRIVE_USUARIO_ORIGEN ?? 'lsosa@effort.com.py')}/drive?$select=id`)).json()).id;
+const plan = JSON.parse(fs.readFileSync(path.join(AQUI, '..', 'plan.json'), 'utf8'));
+const hechos = new Set(fs.readFileSync(DIARIO, 'utf8').split('\n').filter((l) => l.includes('"fechaRestaurada"')).map((l) => JSON.parse(l).id));
+const TODOS = process.argv.includes("--todos"); // --todos: revisa también los ya restaurados (para verificar o después de renombrar otra vez)
+const candidatos = plan.filter((f) => f.mod && (!SOLO || SOLO.has(f.id)) && (TODOS || !hechos.has(f.id)));
+log(`=== RESTAURAR FECHAS ${APLICAR ? '(aplicando)' : '(solo informe)'} · a revisar: ${candidatos.length} · ya restaurados antes: ${hechos.size} ===`);
+const res = { igual: 0, restaurados: 0, aRestaurar: 0, cambiadosPorEffort: 0, noExiste: 0, errores: [] };
+// Inventario completo en una pasada (delta), en vez de un GET por archivo.
+const items = new Map(); let url = `/drives/${driveId}/root/delta?$select=id,name,eTag,lastModifiedDateTime,fileSystemInfo,file,deleted`;
+while (url) { const r = await llamar('GET', url.replace('https://graph.microsoft.com/v1.0', '')); const p = await r.json(); for (const it of p.value ?? []) if (!it.deleted && it.file) items.set(it.id, it); url = p['@odata.nextLink'] ?? null; }
+log(`  inventario leído: ${items.size} archivos`);
+let n = 0;
+// 6 a la vez: cada archivo es independiente (If-Match por archivo) y el diario se escribe con appendFileSync, línea por línea.
+const cola = [...candidatos];
+async function trabajador() { for (let f = cola.shift(); f; f = cola.shift()) await uno(f); }
+await Promise.all(Array.from({ length: 6 }, trabajador));
+async function uno(f) {
+  n++; if (n % 1000 === 0) log(`  ${n}/${candidatos.length} · restaurados ${res.restaurados} · iguales ${res.igual}`);
+  const it = items.get(f.id);
+  if (!it) { res.noExiste++; return; }
+  const original = new Date(f.mod).toISOString(), actual = new Date(it.fileSystemInfo?.lastModifiedDateTime ?? it.lastModifiedDateTime).toISOString();
+  if (actual === original) { res.igual++; return; }
+  // Si el contenido cambió desde el plan, la fecha nueva es real (alguien lo editó): no se toca.
+  if (f.hash && it.file?.hashes?.quickXorHash && it.file.hashes.quickXorHash !== f.hash) { res.cambiadosPorEffort++; return; }
+  // Solo se corrige la fecha que puso el ordenamiento (30-10 o 31-10-2026 en adelante).
+  if (actual < '2026-10-30T00:00:00.000Z') { res.errores.push(`${f.id}: fecha actual ${actual} distinta de la original ${original} y anterior al ordenamiento: no se toca`); return; }
+  res.aRestaurar++;
+  if (!APLICAR) return;
+  const p = await llamar('PATCH', `/drives/${driveId}/items/${f.id}`, { cuerpo: { fileSystemInfo: { lastModifiedDateTime: original } }, ifMatch: it.eTag });
+  if (!p.ok) { res.errores.push(`${f.id}: PATCH ${p.status}`); return; }
+  const d = await p.json();
+  fs.appendFileSync(DIARIO, JSON.stringify({ tipo: 'fechaRestaurada', id: f.id, cod: f.cod, nombre: it.name, fechaAnterior: actual, fechaRestaurada: original, ahoraLastModified: d.lastModifiedDateTime, ahoraFileSystemInfo: d.fileSystemInfo?.lastModifiedDateTime, ts: new Date().toISOString() }) + '\n');
+  res.restaurados++;
+}
+fs.writeFileSync(path.join(AQUI, `informe-restaurar-fechas${APLICAR ? '' : '-simulacion'}.json`), JSON.stringify(res, null, 1));
+log(`LISTO · iguales ${res.igual} · a restaurar ${res.aRestaurar} · restaurados ${res.restaurados} · editados por EFFORT (no se tocan) ${res.cambiadosPorEffort} · no existen ${res.noExiste} · errores ${res.errores.length}`);

@@ -30,7 +30,25 @@ skill global **`backend-datos-sensibles`**, reutilizable en otros proyectos.
 
 ---
 
-## ▶ HANDOFF — 2026-10-31 20:10 (MANDA SOBRE TODOS LOS DE ABAJO) — para «Effort Control 360 dashboard 12»
+## ▶ HANDOFF — 2026-11-01 (MANDA SOBRE TODOS LOS DE ABAJO)
+
+**Tarea 164 — ordenamiento del OneDrive real: HECHO Y VERIFICADO salvo 1 archivo.** Detalle y números en `docs/BITACORA-ONEDRIVE.md` (entradas del 30-10 al 01-11) y `docs/ordenamiento-2026-10/LEEME.md`.
+- 27.720 de 27.721 archivos movidos/renombrados según el plan v3. **Falta 1:** `021 COPESA/PERIODO 2026/VARIOS/FLUJO DE CAJA COPESA A JUNIO 2027  (1).xlsx` (alguien lo tiene abierto, error 423). El lunes, cuando lo cierren: `node aplicar-onedrive.mjs --clientes 021 --aplicar` (carpeta de datos) → `node restaurar-fechas.mjs --ids 01256M3RFTP5ZFS3ZTUJFKNE5BD3XSIBUG --aplicar` → `node revision.mjs --solo-verificar` (sin `--excluir`: tiene que salir limpia) → marcar la 164 `[x]`.
+- **Fechas:** renombrar con Graph pone la fecha del cambio; se devolvió la original a 11.650 archivos (`restaurar-fechas.mjs`), verificado 27.721/27.721.
+- **Borrado a la papelera** (autorizado por Daniel 2026-11-01 sobre la planilla): 1.742 de 1.742 (1.314 duplicados, 428 carpetas vacías), recuperables 93 días.
+- **Rutas largas:** 52 carpetas viejas y 256 archivos acortados (cliente → su código; abreviaturas del `DICCIONARIO DE ABREVIATURAS - EFFORT.docx`). Quedan 125 para que decidan Laura y Lili (hoja «Rutas largas para decidir»).
+- **Vínculos de Excel:** solo 2 Excel / 15 vínculos a «Cambiar origen» (`VINCULOS DE EXCEL A ACTUALIZAR - 01-11-2026.xlsx`).
+- **Revisión final (solo verificación) limpia** el 01-11 09:31: 26.406 de 26.407 en su lugar (falta el de COPESA).
+- Entregables en `docs/ordenamiento-2026-10/`: `BITACORA DEL ORDENAMIENTO DEL ONEDRIVE - 01-11-2026.xlsx`, `CANDIDATOS A BORRAR - 1-11-2026.xlsx`, `VINCULOS…`, `DICCIONARIO…`.
+
+**Lo que sigue — todos los clientes en EFFORT Control 360 (Daniel, 2026-11-01: «Todos los clientes que están en las carpetas de Effort son clientes… Hazlos clientes con el mismo número… y haz un documento con los datos pendientes»):**
+1. **Daniel sube el servidor** (lo paga él): DigitalOcean App Platform `effort-control-360` → Settings → componente → tamaño `apps-s-1vcpu-2gb`; Supabase → organización → Billing → Pro. Después, actualizar `instance_size_slug` en `.do/app.yaml`.
+2. Rama local `clientes-todos` (en preparación): período por carpeta + documentos reconocidos con nombre/ruta nuevos (rama `periodo-por-carpeta`), alta masiva (`alta-masiva-clientes`), código de cliente y RUC opcional mientras esté pendiente (migración escrita a mano, sin aplicar) y `docs/clientes/DATOS PENDIENTES DE CLIENTES - 01-11-2026.xlsx`.
+3. Orden en producción: respaldo (`node scripts/respaldar-base.mjs`) → **Daniel corre `prisma migrate deploy`** → `npm run verify` → push y despliegue → `alta-masiva-clientes.mjs --leer-carpetas` (solo GET; anotar en la bitácora del OneDrive) → alta por tandas con `--codigos`.
+4. Después, con Daniel: qué archivos sube el sistema cliente por cliente para que quede bien cargado.
+Recomendado: **Opus, esfuerzo alto** para integrar y desplegar; **Sonnet, esfuerzo alto** para el archivo de COPESA y la verificación.
+
+## ▶ HANDOFF — 2026-10-31 20:10 (reemplazado por el de arriba) — para «Effort Control 360 dashboard 12»
 
 **Tarea 164 — ORDENAMIENTO DEL ONEDRIVE REAL DE EFFORT: EN CURSO, corriendo solo en procesos de Windows independientes de Claude.**
 Autorizado por Daniel el 2026-10-30 (CLAUDE.md regla 5, segunda excepción; `docs/BITACORA-ONEDRIVE.md`). Laura y Lili aprobaron el plan.

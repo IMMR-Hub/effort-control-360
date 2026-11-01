@@ -1,0 +1,116 @@
+# Bitácora del ordenamiento del OneDrive REAL (no la de prueba): sale del diario (lo que de verdad se hizo) + el plan v3
+# (por qué). Una fila por archivo con la ruta vieja y la nueva, para encontrar cualquier archivo y para «Cambiar origen»
+# en los Excel con vínculos. Solo lee; escribe el Excel en las carpetas que se le pasan.
+# Uso: python -I bitacora-real.py <rutas-largas.json o -> <vinculos.json o -> <carpeta salida> [<carpeta salida> ...]
+import json, os, sys, datetime
+from openpyxl import Workbook
+from openpyxl.styles import Font, PatternFill, Alignment
+
+AQUI = os.path.dirname(os.path.abspath(__file__))
+BASE = 'CLIENTES EFFORT E.A.S/CLIENTES/'
+plan = json.load(open(os.path.join(AQUI, '..', 'plan.json'), encoding='utf-8'))
+diario = [json.loads(l) for l in open(os.path.join(AQUI, 'diario-onedrive.jsonl'), encoding='utf-8') if l.strip()]
+corta = lambda r: r[len(BASE):] if r and r.startswith(BASE) else (r or '')
+hora = lambda ts: datetime.datetime.fromisoformat(ts.replace('Z', '+00:00')).astimezone(datetime.timezone(datetime.timedelta(hours=-3))).strftime('%d/%m/%Y %H:%M')
+
+movido = {}  # id -> último movimiento del archivo
+for d in diario:
+    if d.get('tipo') == 'movido' and d.get('motivo') != 'carpeta vacía dentro del cliente':
+        movido[d['id']] = d
+
+wb = Workbook(write_only=True)
+AZUL = PatternFill('solid', fgColor='1F3864'); BLANCO = Font(bold=True, color='FFFFFF')
+def hoja(nombre, cab, anchos):
+    ws = wb.create_sheet(nombre)
+    for i, a in enumerate(anchos):
+        ws.column_dimensions[chr(65 + i)].width = a
+    ws.freeze_panes = 'A2'
+    from openpyxl.cell import WriteOnlyCell
+    fila = []
+    for c in cab:
+        x = WriteOnlyCell(ws, value=c); x.font = BLANCO; x.fill = AZUL; fila.append(x)
+    ws.append(fila)
+    return ws
+
+hoy = datetime.datetime.now().strftime('%d/%m/%Y')
+leer = wb.create_sheet('Cómo leer'); leer.column_dimensions['A'].width = 130
+for t in [
+    f'BITÁCORA DEL ORDENAMIENTO DEL ONEDRIVE DE EFFORT — generada el {hoy}',
+    '',
+    'El 30 y 31 de octubre de 2026 se ordenaron las carpetas de los clientes (CLIENTES EFFORT E.A.S / CLIENTES) según el manual de',
+    'procedimiento de documentos v1.3 y el plan aprobado por Laura y Lili. No se borró nada: lo repetido está en «ZZ DUPLICADOS PARA REVISAR»',
+    'y las carpetas viejas que quedaron vacías están en «ZZ CARPETAS VACIAS PARA REVISAR».',
+    '',
+    'Para encontrar un archivo: hoja «Buscar archivo», Ctrl+B (o Ctrl+F) y escribir parte del nombre viejo o de la carpeta vieja.',
+    'La columna «Ruta nueva» dice dónde está hoy (todas las rutas son dentro de CLIENTES EFFORT E.A.S / CLIENTES).',
+    '',
+    'Si un Excel avisa que no encuentra un vínculo: Datos → Editar vínculos → Cambiar origen, y elegir el archivo en su ruta nueva',
+    '(planilla aparte «VINCULOS DE EXCEL A ACTUALIZAR»: son 2 Excel, 15 vínculos). Los valores guardados no se pierden; solo dejan de',
+    'actualizarse hasta corregir el origen.',
+    '',
+    'Fechas: al renombrar, OneDrive había puesto como fecha de modificación la del ordenamiento; se devolvió a cada archivo su fecha original.',
+    '',
+    'Rutas largas: el 01-11 se acortaron 52 carpetas viejas y 256 nombres (hoja «Nombres acortados»; las abreviaturas están en el',
+    '«DICCIONARIO DE ABREVIATURAS - EFFORT»). Los que siguen largos están en «Rutas largas para decidir»: si alguno no abre desde la PC,',
+    'abrirlo desde OneDrive en el navegador (onedrive.com).',
+    '',
+    'Copias repetidas: el 01-11, con autorización de Daniel, se mandaron a la PAPELERA DE ONEDRIVE (se pueden recuperar durante 93 días',
+    'desde la papelera de OneDrive). En «Buscar archivo» figuran como «papelera», con la copia que se conservó.',
+    '',
+    'Hoja «Pendientes»: lo que todavía no se pudo mover (por ejemplo, un archivo que alguien dejó abierto).',
+]:
+    leer.append([t])
+
+ws = hoja('Buscar archivo', ['Código', 'Cliente', 'Nombre viejo', 'Nombre nuevo', 'Ruta vieja', 'Ruta nueva', 'Qué se hizo', 'Cuándo', 'Por qué'], [8, 30, 45, 45, 80, 80, 26, 17, 50])
+pendientes = []
+cuenta = {'movido': 0, 'pendiente': 0, 'papelera': 0, 'acortados': 0}
+borrados = {d['id']: d for d in diario if d.get('tipo') == 'borradoAPapelera'}
+plan_por_id = {f['id']: f for f in plan}
+rf = os.path.join(AQUI, 'rutas-finales-aplicadas.json')
+rutas_finales = json.load(open(rf, encoding='utf-8')) if os.path.exists(rf) else {}
+for f in plan:
+    d = movido.get(f['id'])
+    destino = rutas_finales.get(f['id'], f['destinoRel'])
+    nombre_viejo = os.path.basename(f['origen']); nombre_nuevo = os.path.basename(destino)
+    if f['accion'] == 'DUPLICADO': que = 'Copia repetida → cuarentena'
+    elif nombre_viejo != nombre_nuevo: que = 'Movido y renombrado'
+    else: que = 'Movido (mismo nombre)'
+    if f['id'] in rutas_finales: que += ' · ruta acortada 01-11'; cuenta['acortados'] += 1
+    if f['id'] in borrados:
+        cuenta['papelera'] += 1; cuando = hora(borrados[f['id']]['ts'])
+        idc = f.get('idConservado'); cons = rutas_finales.get(idc) or (plan_por_id[idc]['destinoRel'] if idc in plan_por_id else '')
+        ruta_nueva = 'EN LA PAPELERA DE ONEDRIVE (recuperable hasta 93 días). Se conserva: ' + (cons or '(ver planilla de candidatos)')
+        que = 'Copia repetida → papelera (autorizado por Daniel 01-11)'
+    elif d:
+        cuenta['movido'] += 1; cuando = hora(d['ts']); ruta_nueva = destino
+    else:
+        cuenta['pendiente'] += 1; cuando = 'PENDIENTE'; ruta_nueva = f['origen'] + '   (sigue en su lugar viejo)'
+        pendientes.append(f)
+    ws.append([f['cod'], f['cliente'], nombre_viejo, nombre_nuevo, f['origen'], ruta_nueva, que, cuando, f.get('motivo') or ''])
+
+wp = hoja('Pendientes', ['Código', 'Cliente', 'Archivo (dónde está hoy)', 'Dónde va', 'Motivo'], [8, 30, 90, 90, 60])
+for f in pendientes:
+    wp.append([f['cod'], f['cliente'], f['origen'], f['destinoRel'], 'Alguien lo tiene abierto (OneDrive responde «bloqueado», error 423). Cerrarlo en Excel y avisar: se mueve en 3 minutos.'])
+
+pa = os.path.join(AQUI, 'plan-acortar.json')
+if os.path.exists(pa) and rutas_finales:
+    acortar = json.load(open(pa, encoding='utf-8'))
+    wa = hoja('Nombres acortados', ['Qué', 'Antes (dentro de CLIENTES)', 'Ahora'], [10, 100, 60])
+    for c in acortar['carpetas']: wa.append(['Carpeta', c['de'], c['a']])
+    for a in acortar['archivos']: wa.append(['Archivo', a['de'], a['nombreNuevo']])
+    wl = hoja('Rutas largas para decidir', ['Largo en una PC con usuario de 10 letras', 'Límite con margen', 'Ruta (dentro de CLIENTES)', 'Motivo'], [16, 12, 130, 40])
+    for q in sorted(acortar['quedanLargos'], key=lambda x: -x['largo']):
+        wl.append([q['largo'], q['limite'], q['rel'], q['motivo'] + '. Mientras tanto: abrir desde OneDrive en el navegador.'])
+if sys.argv[2] != '-' and os.path.exists(sys.argv[2]):
+    wv = hoja('Vínculos a actualizar', ['Cliente', 'Excel (dónde está ahora)', 'Vínculo viejo', 'Archivo vinculado (dónde está ahora)'], [28, 90, 90, 90])
+    for v in json.load(open(sys.argv[2], encoding='utf-8')):
+        if str(v.get('estado', '')).startswith('SE ROMPE'):
+            wv.append([v.get('cliente'), v.get('excelAhora'), v.get('vinculo'), v.get('destinoAhora')])
+
+nombre = f'BITACORA DEL ORDENAMIENTO DEL ONEDRIVE - {datetime.datetime.now().strftime("%d-%m-%Y")}.xlsx'
+for carpeta in sys.argv[3:]:
+    os.makedirs(carpeta, exist_ok=True); wb.save(os.path.join(carpeta, nombre)) if carpeta == sys.argv[3] else None
+import shutil
+for carpeta in sys.argv[4:]:
+    shutil.copyfile(os.path.join(sys.argv[3], nombre), os.path.join(carpeta, nombre))
+print(f'LISTO · archivos: {len(plan)} · movidos: {cuenta["movido"]} · a la papelera: {cuenta["papelera"]} · rutas acortadas: {cuenta["acortados"]} · pendientes: {cuenta["pendiente"]} · {nombre}')

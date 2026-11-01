@@ -1,0 +1,139 @@
+// ACORTAR RUTAS LARGAS (Daniel, 2026-11-01: «hazlo como tú lo recomiendas, para que ya no volvamos a tener el mismo problema»;
+// «podrías usar directamente el código número de cada cliente»).
+// Office no abre desde la carpeta sincronizada un archivo cuya ruta completa en la PC pasa de 218 caracteres (Excel/CSV) o
+// 259 (Word, PDF y el resto). Se calcula con el prefijo de la PC
+//   C:\Users\<usuario de hasta 10 letras>\OneDrive - EFFORT CONSULTORA E.A.S\CLIENTES EFFORT E.A.S\CLIENTES\
+// y 5 caracteres de margen (una copia «(1)» o un usuario algo más largo no lo vuelve a romper).
+// Orden, de lo menos a lo más invasivo:
+//   1. subcarpetas VIEJAS que quedaron dentro de DOCUMENTOS VARIOS, ZZ A CLASIFICAR, etc. (nunca las carpetas del manual):
+//      se quita el nombre del cliente si se repite y se abrevian palabras comunes; si no alcanza, se dejan las primeras
+//      palabras enteras hasta 18 letras;
+//   2. en el nombre del archivo, el nombre del cliente se reemplaza por su código (ej. «RG COMPRAS 032024 035.xlsx»);
+//   3. si todavía no entra, se quitan palabras enteras del final del nombre, nunca la fecha MMAAAA ni el código.
+//   Si con eso no alcanza, NO se mutila el nombre: queda en la lista «quedanLargos» para que decida una persona.
+// No toca: ZZ DUPLICADOS / ZZ CARPETAS VACIAS (van a la papelera), Excel con vínculos (ni el que apunta ni al que apuntan) ni
+// sus carpetas, ni el archivo bloqueado de COPESA. Solo PLANIFICA: escribe plan-acortar.json; aplica aplicar-acortar.mjs.
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const P = path.posix;
+const AQUI = path.dirname(fileURLToPath(import.meta.url));
+const plan = JSON.parse(fs.readFileSync(path.join(AQUI, '..', 'plan.json'), 'utf8'));
+const PREFIJO = 'C:/Users/'.length + 10 + '/OneDrive - EFFORT CONSULTORA E.A.S/'.length + 'CLIENTES EFFORT E.A.S/CLIENTES/'.length;
+const MARGEN = 5;
+const BLOQUEADO = '01256M3RFTP5ZFS3ZTUJFKNE5BD3XSIBUG';
+const limite = (nombre) => (/\.(xls|xlsx|xlsm|xlsb|xltx|csv)$/i.test(nombre) ? 218 : 259) - MARGEN;
+const MANUAL = /^(\d{3} (LEGAL Y SOCIETARIO|TRIBUTARIO|ZZ A CLASIFICAR|PERIODO \d{4})|DOCUMENTOS (CONTABLES|LABORALES|VARIOS)|(0[1-9]|1[0-2]) (ENERO|FEBRERO|MARZO|ABRIL|MAYO|JUNIO|JULIO|AGOSTO|SETIEMBRE|OCTUBRE|NOVIEMBRE|DICIEMBRE)|CIERRE \d{4}|IPS|MTESS|ASAMBLEA \d{4}|NC (EMITIDAS|RECIBIDAS) \d{6}|IMPUTACION MASIVA)$/;
+const ABREV = [['REQUERIMIENTOS', 'REQ'], ['REQUERIMIENTO', 'REQ'], ['PRIMERA', '1'], ['SEGUNDA', '2'], ['TERCERA', '3'], ['PARTE', ''], ['DOCUMENTOS', 'DOC'], ['DOCUMENTO', 'DOC'], ['DOCUMENTACION', 'DOC'], ['PEDIDOS', 'PED'], ['PEDIDO', 'PED'], ['SOLICITADOS', 'SOLIC'], ['SOLICITUD', 'SOLIC'], ['AUDITORIA', 'AUDIT'], ['BANCARIOS', 'BANC'], ['BANCARIO', 'BANC'], ['PRESTAMOS', 'PREST'], ['LIQUIDACIONES', 'LIQ'], ['LIQUIDACION', 'LIQ'], ['IMPORTACION', 'IMPORT'], ['COOPERATIVA', 'COOP'], ['UNIVERSITARIA', 'UNIV'], ['APERTURA', 'APERT'], ['EMPRESARIAL', 'EMPR'], ['ACTUACIONES', 'ACTUAC'], ['ULTIMAS', 'ULT'], ['EJERCICIO', 'EJ'], ['ORIGINALES', 'ORIG'], ['INVENTARIO', 'INV'], ['ANALITICOS', 'ANALIT'], ['RESULTADOS', 'RESULT'], ['GENERAL', 'GRAL'], ['DEPARTAMENTO', 'DPTO'], ['FUNCIONARIOS', 'FUNC'], ['VOLUNTARIA', 'VOL'], ['ACLARATORIAS', 'ACLAR'], ['FORMULARIOS', 'FORM'], ['FORMULARIO', 'FORM']];
+const RELLENO = ['DE', 'DEL', 'LA', 'LAS', 'LOS', 'EL', 'Y', 'PARA', 'EN', 'AL', 'POR'];
+const SUFIJOS = /^(S\.?A\.?|EAS|E\.A\.S\.?|SRL|S\.R\.L\.?|UNIPERSONAL|SOCIEDAD|ANONIMA)$/i;
+const escapar = (t) => t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+const palabra = (w) => new RegExp(`(^|[\\s\\-_.])${escapar(w)}(?=$|[\\s\\-_.])`, 'gi');
+
+// Vínculos de Excel: ni la fuente ni el destino se tocan (ni sus carpetas), para no romper vínculos que hoy funcionan.
+const vinc = JSON.parse(fs.readFileSync('C:/Users/Daniel/AppData/Local/Temp/claude/C--Users-Daniel--claude-spares-spare-4xX3dr/af4fe588-2ea0-4be0-946a-a2d6b0867f35/scratchpad/vinculos-excel/vinculos-detalle.json', 'utf8'));
+// Solo importan los vínculos entre archivos del OneDrive (los que siguen funcionando y los 15 a «Cambiar origen»); los que
+// apuntan fuera del OneDrive no dependen de estos nombres. De cada uno se protegen los dos archivos y las carpetas del lado del
+// destino por debajo de la carpeta común (renombrar una carpeta común o del lado del Excel no cambia la ruta relativa).
+const internos = (vinc.filas ?? []).filter((v) => /^(SIGUE FUNCIONANDO|SE ROMPE)/.test(v.estado ?? '') && v.excelAhora && v.destinoAhora);
+const conVinculo = new Set(internos.flatMap((v) => [v.excelAhora, v.destinoAhora].map((r) => String(r).split('\\').join('/'))));
+const carpetasProtegidas = new Set();
+for (const v of internos) {
+  const a = String(v.excelAhora).split('\\').join('/').split('/'), b = String(v.destinoAhora).split('\\').join('/').split('/');
+  let c = 0; while (c < Math.min(a.length, b.length) - 1 && a[c] === b[c]) c++;
+  for (let i = c; i < b.length - 1; i++) carpetasProtegidas.add(b.slice(0, i + 1).join('/'));
+}
+
+const activos = plan.filter((f) => !/^ZZ (DUPLICADOS|CARPETAS VACIAS)/.test(f.destinoRel) && f.id !== BLOQUEADO);
+for (const f of activos) f.rel = f.destinoRel;
+const largo = (rel) => PREFIJO + rel.length;
+const afectados = () => activos.filter((f) => largo(f.rel) > limite(f.rel));
+const clienteDe = (rel) => rel.split('/')[0];
+const palabrasCliente = (cli) => cli.replace(/^\d{3} /, '').split(/\s+/).filter((w) => w.replace(/\W/g, '').length > 2 && !/^(S\.?A\.?|EAS|E\.A\.S\.?|SRL|S\.R\.L\.?|UNIPERSONAL|GROUP|MA\.?)$/i.test(w));
+
+const renCarpetas = new Map(); // ruta (original) de carpeta → nombre nuevo del último segmento
+function acortarCarpeta(nombre, cli, fuerte) {
+  let n = ` ${nombre.toUpperCase()} `;
+  for (const w of palabrasCliente(cli)) n = n.replace(palabra(w.toUpperCase()), '$1');
+  for (const [w, x] of ABREV) n = n.replace(palabra(w), `$1${x}`);
+  n = n.replace(/\s{2,}/g, ' ').replace(/^[\s\-_.]+|[\s\-_.]+$/g, '');
+  if (!n) n = nombre.toUpperCase().split(' ').slice(0, 2).join(' ');
+  if (fuerte) for (const w of RELLENO) n = n.replace(palabra(w), '$1');
+  n = n.replace(/\s{2,}/g, ' ').replace(/^[\s\-_.]+|[\s\-_.]+$/g, '');
+  return n === nombre ? null : n;
+}
+const aplicarRen = (rel) => { const s = rel.split('/'); return s.map((x, i) => (i < s.length - 1 && renCarpetas.has(s.slice(0, i + 1).join('/')) ? renCarpetas.get(s.slice(0, i + 1).join('/')) : x)).join('/'); };
+for (const fuerte of [false, true]) {
+  for (const f of afectados()) {
+    const s = f.destinoRel.split('/');
+    for (let i = 1; i < s.length - 1; i++) {
+      const k = s.slice(0, i + 1).join('/');
+      if (MANUAL.test(s[i]) || carpetasProtegidas.has(k)) continue;
+      const nuevo = acortarCarpeta(s[i], clienteDe(f.destinoRel), fuerte);
+      if (nuevo && (!renCarpetas.has(k) || renCarpetas.get(k).length > nuevo.length)) renCarpetas.set(k, nuevo);
+    }
+    for (const g of activos) g.rel = aplicarRen(g.destinoRel);
+    if (!afectados().length) break;
+  }
+}
+// Carpetas hermanas que quedarían con el mismo nombre (entre ellas o con una que no cambia): se numeran «… 2», «… 3».
+const nombresEnPadre = new Map(); // padre original → Set(nombres finales en mayúsculas)
+for (const f of activos) { const s = f.destinoRel.split('/'); for (let i = 1; i < s.length - 1; i++) { const padre = s.slice(0, i).join('/'); const k = s.slice(0, i + 1).join('/'); if (renCarpetas.has(k)) continue; if (!nombresEnPadre.has(padre)) nombresEnPadre.set(padre, new Set()); nombresEnPadre.get(padre).add(s[i].toUpperCase()); } }
+let choquesCarpetas = 0;
+for (const [k, n] of [...renCarpetas].sort()) {
+  const padre = P.dirname(k); const usados = nombresEnPadre.get(padre) ?? new Set(); nombresEnPadre.set(padre, usados);
+  let final = n; for (let i = 2; usados.has(final.toUpperCase()); i++) final = `${n} ${i}`;
+  if (final !== n) choquesCarpetas++;
+  usados.add(final.toUpperCase()); renCarpetas.set(k, final);
+}
+for (const f of activos) f.rel = aplicarRen(f.destinoRel);
+
+// Pasos 2 y 3: nombre del archivo.
+// Palabras separadas solo por espacios (no se toca el interior de nombres unidos con guiones, como «drfs-comunicacion-en-el-…»).
+const entreEspacios = (w) => new RegExp(`(^|\\s)${escapar(w)}(?=$|\\s)`, 'gi');
+const renArchivos = new Map();
+for (const f of afectados()) {
+  if (conVinculo.has(f.destinoRel)) continue;
+  const dir = P.dirname(f.rel); const ext = P.extname(f.rel); let base = P.basename(f.rel, ext);
+  const max = limite(f.rel) - PREFIJO - dir.length - 1 - ext.length;
+  const cod = clienteDe(f.rel).slice(0, 3);
+  const pc = palabrasCliente(clienteDe(f.rel)).map((w) => w.replace(/[.,]+$/, ''));
+  if (pc.length) {
+    // 2. El tramo seguido con el nombre del cliente (sus palabras, en cualquier orden, más «Y», «-», SA, EAS, UNIPERSONAL…)
+    //    se reemplaza por el código una sola vez. Si el archivo no nombra al cliente, no se toca este paso.
+    const w = base.split(' ');
+    const esCli = (x) => pc.some((p) => p.toUpperCase() === x.replace(/[.,]+$/, '').toUpperCase());
+    const relleno = (x) => SUFIJOS.test(x) || /^(Y|-|–|DE)$/i.test(x);
+    const i = w.findIndex(esCli);
+    if (i >= 0) {
+      let j = i; while (j + 1 < w.length && (esCli(w[j + 1]) || (relleno(w[j + 1]) && w.slice(j + 2).some((x, k) => k < 2 && esCli(x))) || SUFIJOS.test(w[j + 1]))) j++;
+      let a = i; while (a > 0 && esCli(w[a - 1])) a--;
+      const resto = [...w.slice(0, a), cod, ...w.slice(j + 1)].filter((x, k, arr) => !(esCli(x) && arr.indexOf(cod) !== k));
+      base = resto.join(' ').replace(/\s{2,}/g, ' ').trim();
+    }
+  }
+  if (base.length > max) {
+    // 3. Abreviaturas comunes y palabras de relleno, solo entre espacios.
+    let b2 = ` ${base} `; for (const [x, y] of ABREV) b2 = b2.replace(entreEspacios(x), `$1${y}`); for (const x of RELLENO) b2 = b2.replace(entreEspacios(x), '$1');
+    b2 = b2.replace(/\s{2,}/g, ' ').trim(); if (b2.length >= 8) base = b2;
+  }
+  // Solo se renombra si con eso el archivo queda resuelto: un cambio de nombre que no arregla nada no se hace.
+  if (base.length > max) continue;
+  const nuevo = `${base}${ext}`;
+  if (nuevo !== P.basename(f.rel)) { renArchivos.set(f.id, nuevo); f.rel = `${dir}/${nuevo}`; }
+}
+// Choques de nombre de archivo en la misma carpeta: se numeran « (2)».
+const porRuta = new Map(); for (const f of activos) { const k = f.rel.toUpperCase(); porRuta.set(k, [...(porRuta.get(k) ?? []), f]); }
+let choquesArchivos = 0;
+for (const [, grupo] of porRuta) if (grupo.length > 1) grupo.filter((f) => renArchivos.has(f.id)).forEach((f, i) => { choquesArchivos++; const ext = P.extname(f.rel); const n = `${P.basename(f.rel, ext)} (${i + 2})${ext}`; renArchivos.set(f.id, n); f.rel = `${P.dirname(f.rel)}/${n}`; });
+const repetidas = [...new Set(activos.map((f) => f.rel.toUpperCase()))].length !== activos.length;
+const quedan = afectados();
+const salida = {
+  prefijoUsado: PREFIJO, margen: MARGEN, rutasRepetidasAlFinal: repetidas,
+  carpetas: [...renCarpetas].map(([de, a]) => ({ de, a })).sort((x, y) => y.de.split('/').length - x.de.split('/').length),
+  archivos: [...renArchivos].map(([id, a]) => { const f = activos.find((x) => x.id === id); return { id, de: f.destinoRel, nombreNuevo: a, rutaFinal: f.rel }; }),
+  quedanLargos: quedan.map((f) => ({ id: f.id, rel: f.rel, largo: largo(f.rel), limite: limite(f.rel), motivo: conVinculo.has(f.destinoRel) ? 'Excel con vínculos: no se toca' : 'no se pudo acortar sin mutilar el nombre' })),
+};
+salida.rutasFinales = Object.fromEntries(activos.filter((f) => f.rel !== f.destinoRel).map((f) => [f.id, f.rel]));
+fs.writeFileSync(path.join(AQUI, 'plan-acortar.json'), JSON.stringify(salida, null, 1));
+console.log(`prefijo ${PREFIJO} + margen ${MARGEN} · afectados al inicio ${activos.filter((f) => largo(f.destinoRel) > limite(f.destinoRel)).length} · carpetas a renombrar ${salida.carpetas.length} (numeradas ${choquesCarpetas}) · archivos a renombrar ${salida.archivos.length} (numerados ${choquesArchivos}) · quedan largos ${quedan.length} · rutas repetidas: ${repetidas}`);

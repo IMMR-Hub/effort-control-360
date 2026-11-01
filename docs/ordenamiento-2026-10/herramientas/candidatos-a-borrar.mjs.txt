@@ -52,14 +52,15 @@ for (const f of plan.filter((x) => x.accion === 'DUPLICADO')) {
   else if (identico) { seguridad = 100; motivo = 'Duplicado: contenido idéntico byte por byte (misma huella de Microsoft) a la copia que se conservó'; }
   else if (mismaDecl) { seguridad = 99; motivo = `Duplicado: la misma declaración de la DNIT (${f.motivo.match(/número de orden \d+/)?.[0] ?? 'mismo número de orden'}) bajada otra vez; el PDF difiere solo en la fecha de impresión`; }
   else { seguridad = 50; motivo = 'El contenido ya no es igual al de la copia conservada (alguien cambió uno de los dos): revisar antes de borrar'; }
-  filas.push({ tipo: 'ARCHIVO DUPLICADO', cliente: f.cliente, nombre: it.nombre, donde: corta(r), corresponde: rc ? `Se conserva: ${corta(rc)}` : '—', motivo, seguridad, tamKB: Math.round((it.tam ?? 0) / 1024) });
+  filas.push({ tipo: 'ARCHIVO DUPLICADO', cliente: f.cliente, nombre: it.nombre, donde: corta(r), corresponde: rc ? `Se conserva: ${corta(rc)}` : '—', motivo, seguridad, tamKB: Math.round((it.tam ?? 0) / 1024), id: f.id, idConservado: f.idConservado, hash: it.hash, hashConservado: ic?.hash });
 }
 // 2. CARPETAS VIEJAS VACÍAS (en ZZ CARPETAS VACIAS PARA REVISAR)
-for (const d of diario.filter((x) => x.tipo === 'carpetaVaciaApartada')) {
+// (la revisión del 31-10 anotó como «movido» las carpetas vacías que apartó: se reconocen por su motivo)
+for (const d of diario.filter((x) => x.tipo === 'carpetaVaciaApartada' || x.motivo === 'carpeta vacía dentro del cliente')) {
   const it = items.get(d.id); const r = ruta(d.id);
   if (!it || !r?.includes('ZZ CARPETAS VACIAS PARA REVISAR')) continue;
   let archivosAdentro = 0; for (const [id, x] of items) if (!x.carpeta && ruta(id)?.startsWith(r + '/')) archivosAdentro++;
-  filas.push({ tipo: 'CARPETA VIEJA VACÍA', cliente: r.split('/')[3] ?? '', nombre: it.nombre, donde: corta(r), corresponde: 'Su contenido ya está en la estructura nueva del cliente (ver la bitácora)', motivo: archivosAdentro ? `NO borrar: tiene ${archivosAdentro} archivo(s) adentro` : 'Carpeta de la estructura vieja que quedó sin ningún archivo después del ordenamiento', seguridad: archivosAdentro ? 0 : 100, tamKB: 0 });
+  filas.push({ tipo: 'CARPETA VIEJA VACÍA', cliente: r.split('/')[3] ?? '', nombre: it.nombre, donde: corta(r), corresponde: 'Su contenido ya está en la estructura nueva del cliente (ver la bitácora)', motivo: archivosAdentro ? `NO borrar: tiene ${archivosAdentro} archivo(s) adentro` : 'Carpeta de la estructura vieja que quedó sin ningún archivo después del ordenamiento', seguridad: archivosAdentro ? 0 : 100, tamKB: 0, id: d.id });
 }
 // 3. NO se proponen para borrar (se listan para que se vea que se revisaron)
 const noBorrar = [];
@@ -102,4 +103,6 @@ const cuenta = (p) => filas.filter(p).length;
 [['Duplicados con 100 % de seguridad (idénticos)', cuenta((f) => f.tipo === 'ARCHIVO DUPLICADO' && f.seguridad === 100)], ['Duplicados con 99 % (misma declaración DNIT)', cuenta((f) => f.tipo === 'ARCHIVO DUPLICADO' && f.seguridad === 99)], ['Duplicados para revisar a mano (50 %)', cuenta((f) => f.seguridad === 50)], ['NO borrar (0 %)', cuenta((f) => f.seguridad === 0)], ['Carpetas viejas vacías (100 %)', cuenta((f) => f.tipo === 'CARPETA VIEJA VACÍA' && f.seguridad === 100)], ['Documentos A CLASIFICAR (no se borran)', noBorrar.filter((x) => x.tipo === 'A CLASIFICAR').length], ['Versiones anteriores (no se borran)', noBorrar.filter((x) => x.tipo === 'VERSIÓN ANTERIOR').length]].forEach(([q, n]) => res.addRow({ q, n }));
 const nombre = `CANDIDATOS A BORRAR - ${new Date().toLocaleDateString('es-PY', { timeZone: 'America/Asuncion' }).replace(/\//g, '-')}.xlsx`;
 for (const dir of process.argv.slice(2)) { fs.mkdirSync(dir, { recursive: true }); await wb.xlsx.writeFile(path.join(dir, nombre)); }
+// Lista con ids para la herramienta de borrado (las columnas id/hash no van al Excel: ws.columns solo toma las claves declaradas).
+fs.writeFileSync(path.join(AQUI, nombre.replace(/\.xlsx$/, '.json')), JSON.stringify(filas, null, 1));
 console.log(`LISTO · candidatos: ${filas.length} (100%: ${cuenta((f) => f.seguridad === 100)}, 99%: ${cuenta((f) => f.seguridad === 99)}, revisar: ${cuenta((f) => f.seguridad === 50)}, no borrar: ${cuenta((f) => f.seguridad === 0)}) · no se borran: ${noBorrar.length} · ${nombre}`);

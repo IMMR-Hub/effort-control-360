@@ -1,0 +1,87 @@
+// BORRADO A LA PAPELERA de los CANDIDATOS A BORRAR que Daniel autorizó el 2026-11-01 («hagamos el borrado de "todo" pero
+// mantenlo en la papelera de OneDrive por 93 días»), sobre la planilla «CANDIDATOS A BORRAR - 1-11-2026.xlsx».
+//  - Solo toca ítems que están en esa planilla (se compara por ruta con el Excel que se le mandó) y en su lista con ids.
+//  - Antes de cada borrado vuelve a comprobar en OneDrive: el ítem sigue dentro de «ZZ DUPLICADOS PARA REVISAR» o «ZZ CARPETAS
+//    VACIAS PARA REVISAR»; un duplicado tiene el mismo contenido que cuando se hizo la planilla y la copia que se conserva
+//    sigue existiendo (y, si era 100 %, sigue siendo idéntica); una carpeta no tiene ningún archivo adentro.
+//  - DELETE de Graph sobre un driveItem lo manda a la PAPELERA de OneDrive (recuperable 93 días). Nunca se usa
+//    permanentDelete ni se vacía la papelera. If-Match con el eTag leído.
+//  - Cada borrado queda en diario-onedrive.jsonl (tipo «borradoAPapelera») con la ruta, para restaurarlo desde la papelera.
+// Uso: node borrar-candidatos.mjs [--aplicar]   (sin --aplicar solo simula: GET, no borra nada)
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+import { createRequire } from 'node:module';
+const ExcelJS = createRequire('C:/Users/Daniel/NexusFlow AI/effort-control-360/package.json')('exceljs');
+const AQUI = path.dirname(fileURLToPath(import.meta.url));
+const APLICAR = process.argv.includes('--aplicar');
+const PLANILLA = 'C:/Users/Daniel/NexusFlow AI/effort-control-360/docs/ordenamiento-2026-10/CANDIDATOS A BORRAR - 1-11-2026.xlsx';
+const LISTA = path.join(AQUI, 'CANDIDATOS A BORRAR - 1-11-2026.json');
+const DIARIO = path.join(AQUI, 'diario-onedrive.jsonl');
+const LOG = path.join(AQUI, 'borrar-candidatos.log');
+const BASE = 'CLIENTES EFFORT E.A.S/CLIENTES/';
+const log = (t) => { const l = `${new Date().toLocaleString('es-PY', { timeZone: 'America/Asuncion' })}  ${t}`; fs.appendFileSync(LOG, l + '\n'); console.log(l); };
+for (const linea of fs.readFileSync('C:/Users/Daniel/NexusFlow AI/effort-control-360/.env', 'utf8').split('\n')) {
+  const m = linea.match(/^([A-Z_][A-Z0-9_]*)=(.*)$/);
+  if (m && !process.env[m[1]]) process.env[m[1]] = m[2].trim().replace(/^["']|["']$/g, '');
+}
+let token = null, vence = 0;
+async function tk() {
+  if (token && Date.now() < vence) return token;
+  const r = await fetch(`https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}/oauth2/v2.0/token`, { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ client_id: process.env.AZURE_CLIENT_ID, client_secret: process.env.AZURE_CLIENT_SECRET, scope: 'https://graph.microsoft.com/.default', grant_type: 'client_credentials' }) });
+  const j = await r.json(); token = j.access_token; vence = Date.now() + (j.expires_in - 300) * 1000; return token;
+}
+async function llamar(metodo, ruta, { ifMatch } = {}) {
+  for (let i = 0; i < 6; i++) {
+    try {
+      const h = { authorization: `Bearer ${await tk()}` }; if (ifMatch) h['if-match'] = ifMatch;
+      const r = await fetch(ruta.startsWith('http') ? ruta : `https://graph.microsoft.com/v1.0${ruta}`, { method: metodo, headers: h, signal: AbortSignal.timeout(120_000) });
+      if (r.status === 429 || r.status >= 500) { await new Promise((s) => setTimeout(s, (Number(r.headers.get('retry-after')) || 2 ** i * 2) * 1000)); continue; }
+      return r;
+    } catch { await new Promise((s) => setTimeout(s, 2 ** i * 2000)); }
+  }
+  throw new Error(`sin respuesta: ${metodo} ${ruta}`);
+}
+// 1. Lo autorizado: las rutas de la hoja «Candidatos a borrar» del Excel que se le mandó a Daniel.
+const wb = new ExcelJS.Workbook(); await wb.xlsx.readFile(PLANILLA);
+const autorizadas = new Set(); wb.getWorksheet('Candidatos a borrar').eachRow((row, i) => { if (i > 1) autorizadas.add(String(row.getCell(4).value)); });
+const lista = JSON.parse(fs.readFileSync(LISTA, 'utf8'));
+const fuera = lista.filter((f) => !autorizadas.has(f.donde));
+if (fuera.length || lista.length !== autorizadas.size) { log(`=== DETENIDO: la lista con ids (${lista.length}) no coincide con la planilla autorizada (${autorizadas.size}); fuera de la planilla: ${fuera.length} ===`); process.exit(1); }
+if (lista.some((f) => !f.id || f.seguridad < 99)) { log('=== DETENIDO: hay filas sin id o con seguridad menor a 99 % ==='); process.exit(1); }
+const hechos = new Set(fs.readFileSync(DIARIO, 'utf8').split('\n').filter((l) => l.includes('"borradoAPapelera"')).map((l) => JSON.parse(l).id));
+log(`=== BORRAR A LA PAPELERA ${APLICAR ? '(APLICANDO)' : '(simulación)'} · autorizados ${lista.length} · ya borrados antes ${hechos.size} ===`);
+// 2. Estado actual de OneDrive en una pasada.
+const driveId = process.env.AZURE_DRIVE_ID_ORIGEN ?? (await (await llamar('GET', `/users/${encodeURIComponent(process.env.ONEDRIVE_USUARIO_ORIGEN ?? 'lsosa@effort.com.py')}/drive?$select=id`)).json()).id;
+const items = new Map(); let url = `/drives/${driveId}/root/delta?$select=id,name,eTag,size,file,folder,parentReference,deleted,root`; let idRaiz = null;
+while (url) { const p = await (await llamar('GET', url)).json(); for (const it of p.value ?? []) { if (it.deleted) continue; if (it.root) idRaiz = it.id; items.set(it.id, it); } url = p['@odata.nextLink'] ?? null; }
+const rutas = new Map();
+const ruta = (id) => { if (rutas.has(id)) return rutas.get(id); const it = items.get(id); if (!it) return null; const r = it.parentReference?.id === idRaiz || !items.has(it.parentReference?.id) ? it.name : `${ruta(it.parentReference.id)}/${it.name}`; rutas.set(id, r); return r; };
+const hijosArchivos = (r) => { let n = 0; for (const [id, x] of items) if (x.file && ruta(id)?.startsWith(r + '/')) n++; return n; };
+log(`  OneDrive leído: ${items.size} ítems`);
+// 3. Comprobar y borrar. Primero los archivos, después las carpetas.
+const res = { borrados: 0, aBorrar: 0, yaNoEstan: 0, salteados: [], errores: [] };
+const orden = [...lista.filter((f) => f.tipo === 'ARCHIVO DUPLICADO'), ...lista.filter((f) => f.tipo !== 'ARCHIVO DUPLICADO')];
+for (const f of orden) {
+  if (hechos.has(f.id)) continue;
+  const it = items.get(f.id); const r = ruta(f.id);
+  if (!it) { res.yaNoEstan++; continue; }
+  const zona = f.tipo === 'ARCHIVO DUPLICADO' ? 'ZZ DUPLICADOS PARA REVISAR/' : 'ZZ CARPETAS VACIAS PARA REVISAR/';
+  if (!r?.startsWith(BASE + zona)) { res.salteados.push({ ...f, motivo: `ya no está en ${zona}: ${r}` }); continue; }
+  if (f.tipo === 'ARCHIVO DUPLICADO') {
+    const c = items.get(f.idConservado);
+    if (!c) { res.salteados.push({ ...f, motivo: 'la copia que se conserva ya no existe' }); continue; }
+    if ((it.file?.hashes?.quickXorHash ?? null) !== (f.hash ?? null)) { res.salteados.push({ ...f, motivo: 'el duplicado cambió desde la planilla' }); continue; }
+    if (f.seguridad === 100 && c.file?.hashes?.quickXorHash !== it.file?.hashes?.quickXorHash) { res.salteados.push({ ...f, motivo: 'la copia conservada ya no es idéntica' }); continue; }
+  } else if (hijosArchivos(r) > 0) { res.salteados.push({ ...f, motivo: 'la carpeta tiene archivos' }); continue; }
+  res.aBorrar++;
+  if (!APLICAR) continue;
+  const d = await llamar('DELETE', `/drives/${driveId}/items/${f.id}`, { ifMatch: it.eTag });
+  if (d.status === 404) { res.yaNoEstan++; continue; } // p. ej., subcarpeta vacía que se fue con su carpeta madre
+  if (d.status !== 204) { res.errores.push(`${r}: DELETE ${d.status}`); continue; }
+  fs.appendFileSync(DIARIO, JSON.stringify({ tipo: 'borradoAPapelera', id: f.id, clase: f.tipo, ruta: r, hash: it.file?.hashes?.quickXorHash ?? null, tam: it.size, idConservado: f.idConservado ?? null, ts: new Date().toISOString() }) + '\n');
+  res.borrados++;
+  if (res.borrados % 200 === 0) log(`  borrados ${res.borrados}`);
+}
+fs.writeFileSync(path.join(AQUI, `informe-borrado${APLICAR ? '' : '-simulacion'}.json`), JSON.stringify(res, null, 1));
+log(`LISTO · a borrar ${res.aBorrar} · borrados ${res.borrados} · ya no estaban ${res.yaNoEstan} · salteados ${res.salteados.length} · errores ${res.errores.length}`);

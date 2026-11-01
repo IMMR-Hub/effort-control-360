@@ -1,0 +1,27 @@
+// SOLO LECTURA (GET). ¿Mover/renombrar con PATCH cambió la fecha de modificación de OneDrive (lastModifiedDateTime)?
+// Compara, en una muestra de archivos movidos, la fecha del inventario del 30-10 (campo «mod» del plan) con la de hoy y con
+// fileSystemInfo.lastModifiedDateTime. Uso: node fechas-despues-de-mover.mjs [cantidad]
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const AQUI = path.dirname(fileURLToPath(import.meta.url));
+for (const linea of fs.readFileSync('C:/Users/Daniel/NexusFlow AI/effort-control-360/.env', 'utf8').split('\n')) {
+  const m = linea.match(/^([A-Z_][A-Z0-9_]*)=(.*)$/);
+  if (m && !process.env[m[1]]) process.env[m[1]] = m[2].trim().replace(/^["']|["']$/g, '');
+}
+const r0 = await fetch(`https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}/oauth2/v2.0/token`, { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ client_id: process.env.AZURE_CLIENT_ID, client_secret: process.env.AZURE_CLIENT_SECRET, scope: 'https://graph.microsoft.com/.default', grant_type: 'client_credentials' }) });
+const token = (await r0.json()).access_token;
+const get = async (u) => { const r = await fetch(`https://graph.microsoft.com/v1.0${u}`, { headers: { authorization: `Bearer ${token}` } }); if (!r.ok) throw new Error(`${r.status} ${u}`); return r.json(); };
+const driveId = process.env.AZURE_DRIVE_ID_ORIGEN ?? (await get(`/users/${encodeURIComponent(process.env.ONEDRIVE_USUARIO_ORIGEN ?? 'lsosa@effort.com.py')}/drive?$select=id`)).id;
+const plan = JSON.parse(fs.readFileSync(path.join(AQUI, '..', 'plan.json'), 'utf8'));
+const n = Number(process.argv[2] ?? 30);
+const renombrados = plan.filter((f) => f.accion === 'MOVER' && path.posix.basename(f.origen) !== path.posix.basename(f.destinoRel));
+const mismos = plan.filter((f) => f.accion === 'MOVER' && path.posix.basename(f.origen) === path.posix.basename(f.destinoRel));
+const muestra = [...renombrados.filter((_, i) => i % Math.ceil(renombrados.length / (n / 2)) === 0), ...mismos.filter((_, i) => i % Math.ceil(mismos.length / (n / 2)) === 0)];
+let igual = 0, cambio = 0; const ej = [];
+for (const f of muestra) {
+  const it = await get(`/drives/${driveId}/items/${f.id}?$select=id,name,lastModifiedDateTime,fileSystemInfo`);
+  const antes = new Date(f.mod).toISOString(), ahora = new Date(it.lastModifiedDateTime).toISOString(), fsi = new Date(it.fileSystemInfo?.lastModifiedDateTime).toISOString();
+  if (antes === ahora) igual++; else { cambio++; if (ej.length < 6) ej.push({ nombre: it.name, antes, ahora, fileSystemInfo: fsi }); }
+}
+console.log(JSON.stringify({ muestra: muestra.length, fechaIgual: igual, fechaCambio: cambio, ejemplos: ej }, null, 1));

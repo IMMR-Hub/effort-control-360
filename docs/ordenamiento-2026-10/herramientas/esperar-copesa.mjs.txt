@@ -1,0 +1,30 @@
+// Espera a que se libere el último archivo bloqueado (021 COPESA, FLUJO DE CAJA … (1).xlsx, abierto por alguien desde el
+// 30-10) y entonces termina: lo mueve con el aplicador (mismas protecciones: sin DELETE, If-Match, diario), corre el bucle
+// de revisión y regenera la planilla de candidatos a borrar. Reintenta cada 30 min durante 3 días como máximo.
+// Registro en esperar-copesa.log. Independiente de la sesión de Claude. Se lanza con esperar-copesa.ps1.
+import fs from 'node:fs';
+import path from 'node:path';
+import { spawnSync } from 'node:child_process';
+import { fileURLToPath } from 'node:url';
+const AQUI = path.dirname(fileURLToPath(import.meta.url));
+const LOG = path.join(AQUI, 'esperar-copesa.log');
+const log = (t) => fs.appendFileSync(LOG, `${new Date().toLocaleString('es-PY', { timeZone: 'America/Asuncion' })}  ${t}\n`);
+const esperar = (ms) => new Promise((s) => setTimeout(s, ms));
+const correr = (args) => { log(`→ node ${args.join(' ')}`); const r = spawnSync(process.execPath, args.map((a, i) => (i === 0 ? path.join(AQUI, a) : a)), { cwd: AQUI, encoding: 'utf8', maxBuffer: 1e9 }); log(`  código ${r.status} · ${(r.stdout ?? '').trim().split('\n').pop()}`); if (r.status !== 0 && r.stderr) log(`  ${r.stderr.slice(-500)}`); return r.status; };
+log(`=== ESPERANDO a que se libere el archivo de COPESA (pid ${process.pid}) ===`);
+let libre = false;
+for (let i = 1; i <= 144 && !libre; i++) {
+  correr(['aplicar-onedrive.mjs', '--clientes', '021', '--aplicar']);
+  const inf = JSON.parse(fs.readFileSync(path.join(AQUI, 'informe-021.json'), 'utf8'));
+  if (inf.errores?.length || inf.conflictos?.length || inf.cambiaronDesdeElPlan?.length) { log(`=== DETENIDO: el aplicador informó errores, conflictos o cambios: ver informe-021.json ===`); process.exit(1); }
+  libre = !inf.bloqueados?.length;
+  if (!libre) { log(`  sigue abierto por alguien (intento ${i}): espero 30 min`); await esperar(30 * 60_000); }
+}
+if (!libre) { log('=== DETENIDO: 3 días y el archivo sigue abierto ==='); process.exit(1); }
+log('  el archivo se movió: corro la revisión');
+const rev = correr(['revision.mjs']);
+log(`  revisión terminó con código ${rev} (0 = limpia; 2 = quedan casos para una persona; 3 = no quedó limpia en 8 rondas)`);
+correr(['candidatos-a-borrar.mjs', 'C:/Users/Daniel/NexusFlow AI/effort-control-360/docs/ordenamiento-2026-10', 'D:/DATOS ORDENAMIENTO 2026-10-20/onedrive', 'C:/Users/Daniel/DATOS ORDENAMIENTO EFFORT 2026-10/onedrive']);
+const destino = 'D:/DATOS ORDENAMIENTO 2026-10-20/onedrive';
+try { fs.mkdirSync(destino, { recursive: true }); for (const f of fs.readdirSync(AQUI).filter((x) => /\.(jsonl|json|log)$/.test(x))) fs.copyFileSync(path.join(AQUI, f), path.join(destino, f)); } catch (e) { log(`  no se pudo copiar a D: ${e.message}`); }
+log(`=== FINAL COPESA: revisión código ${rev}; planilla regenerada ===`);

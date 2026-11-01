@@ -13,6 +13,9 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const CORREGIR = !process.argv.includes('--solo-verificar');
+// --excluir id1,id2: archivos que una persona ya sabe que quedan pendientes (Daniel, 2026-10-31: el Excel de COPESA que
+// alguien dejó abierto se resuelve el lunes). No se cuentan ni se tocan; el registro los nombra en cada ronda.
+const EXCLUIR = new Set(process.argv.includes('--excluir') ? process.argv[process.argv.indexOf('--excluir') + 1].split(',') : []);
 const AQUI = path.dirname(fileURLToPath(import.meta.url));
 const DIARIO = path.join(AQUI, 'diario-onedrive.jsonl');
 const LOG = path.join(AQUI, 'revision.log');
@@ -52,10 +55,16 @@ const jget = async (ruta) => { const r = await llamar('GET', ruta); if (!r.ok) t
 const enc = (p) => p.split('/').map(encodeURIComponent).join('/');
 const driveId = process.env.AZURE_DRIVE_ID_ORIGEN ?? (await jget(`/users/${encodeURIComponent(process.env.ONEDRIVE_USUARIO_ORIGEN ?? 'lsosa@effort.com.py')}/drive?$select=id`)).id;
 
-const plan = JSON.parse(fs.readFileSync(path.join(AQUI, '..', 'plan.json'), 'utf8'));
+// Lo que se mandó a la papelera con autorización de Daniel (2026-11-01, planilla CANDIDATOS A BORRAR) ya no se espera en OneDrive.
+const borrados = new Set(fs.readFileSync(DIARIO, 'utf8').split('\n').filter((l) => l.includes('"borradoAPapelera"')).map((l) => JSON.parse(l).id));
+const plan = JSON.parse(fs.readFileSync(path.join(AQUI, '..', 'plan.json'), 'utf8')).filter((f) => !borrados.has(f.id));
+// Rutas acortadas (acortar-rutas.mjs → aplicar-acortar.mjs): si un archivo se acortó, su destino esperado es la ruta nueva.
+const RUTAS_FINALES = path.join(AQUI, 'rutas-finales-aplicadas.json');
+const rutasFinales = fs.existsSync(RUTAS_FINALES) ? JSON.parse(fs.readFileSync(RUTAS_FINALES, 'utf8')) : {};
+for (const f of plan) if (rutasFinales[f.id]) f.destinoRel = rutasFinales[f.id];
 const planPorId = new Map(plan.map((f) => [f.id, f]));
 const copia = JSON.parse(fs.readFileSync('D:/COPIA ONEDRIVE EFFORT 2026-10-19/_registro/estado-onedrive-2026-10-30.json', 'utf8'))
-  .filter((a) => /^CLIENTES EFFORT E\.A\.S\/CLIENTES\/\d{3}(?!\d)/.test(a.ruta) && !/\/999 /.test(a.ruta));
+  .filter((a) => /^CLIENTES EFFORT E\.A\.S\/CLIENTES\/\d{3}(?!\d)/.test(a.ruta) && !/\/999 /.test(a.ruta) && !borrados.has(a.id));
 
 async function inventario() {
   const items = new Map(); let url = `/drives/${driveId}/root/delta?$select=id,name,size,file,folder,parentReference,deleted,root,eTag`; let idRaiz = null;
@@ -80,7 +89,7 @@ async function carpeta(rel) {
   carpetasOk.add(id); idDe.set(rel, id); return id;
 }
 async function mover(id, rutaDestino, motivo, cod) {
-  const it = await jget(`/drives/${driveId}/items/${id}?$select=id,name,parentReference,eTag`);
+  const it = await jget(`/drives/${driveId}/items/${id}?$select=id,name,parentReference,eTag,folder`);
   const destinoId = await carpeta(path.posix.dirname(rutaDestino));
   permitidos.add(id);
   const nombre = path.posix.basename(rutaDestino);
@@ -120,6 +129,7 @@ async function ronda(numero) {
   // 1. contra el PLAN
   let enLugar = 0;
   for (const f of plan) {
+    if (EXCLUIR.has(f.id)) continue;
     const it = items.get(f.id);
     const esperado = `${BASE}/${f.destinoRel}`;
     if (!it) { pr.plan.push({ id: f.id, problema: 'ya no existe en OneDrive', esperado: f.destinoRel }); continue; }
@@ -140,7 +150,7 @@ async function ronda(numero) {
   for (const c of clientes) {
     const cod = c.nombre.slice(0, 3);
     for (const it of items.values()) {
-      if (!it.ruta.startsWith(c.ruta + '/')) continue;
+      if (!it.ruta.startsWith(c.ruta + '/') || EXCLUIR.has(it.id)) continue;
       const rel = it.ruta.slice(c.ruta.length + 1);
       if (it.carpeta && it.hijos === 0 && rel !== `${cod} ZZ A CLASIFICAR`) { pr.vacias.push({ id: it.id, ruta: it.ruta, cliente: c.nombre, cod }); continue; }
       const f = planPorId.get(it.id);
@@ -150,7 +160,9 @@ async function ronda(numero) {
       else if (mal && it.carpeta && !/^\d{3} ZZ A CLASIFICAR/.test(rel)) pr.estructura.push({ id: it.id, ruta: it.ruta, cliente: c.nombre, cod, motivo: mal, rel, carpeta: true });
     }
   }
-  const archivosMal = pr.estructura.filter((e) => !e.carpeta);
+  // Un archivo fuera de lugar según el plan también queda fuera de la estructura: se cuenta una sola vez.
+  const enPlan = new Set([...pr.plan, ...pr.duplicados].map((x) => x.id));
+  const archivosMal = pr.estructura.filter((e) => !e.carpeta && !enPlan.has(e.id));
   const total = pr.plan.length + pr.copia.length + archivosMal.length + pr.duplicados.length + pr.vacias.length;
   log(`RONDA ${numero}: en su lugar según el plan ${enLugar}/${plan.length} · fuera de lugar ${pr.plan.length} · duplicados aún dentro de clientes ${pr.duplicados.length} · faltan respecto de la copia ${pr.copia.length} · archivos fuera de la estructura del 999 ${archivosMal.length} · carpetas fuera del 999 ${pr.estructura.length - archivosMal.length} · carpetas vacías ${pr.vacias.length} · (modificados por EFFORT después: ${pr.modificadosPorEffort.length})`);
   fs.writeFileSync(path.join(AQUI, `revision-ronda-${numero}.json`), JSON.stringify(pr, null, 1));
@@ -177,7 +189,7 @@ async function ronda(numero) {
   return { total, corregidos, noSePudo: noSePudo.length, pr };
 }
 
-log(`=== REVISIÓN ${CORREGIR ? 'con correcciones' : 'solo verificación'} (mínimo 3 rondas) ===`);
+log(`=== REVISIÓN ${CORREGIR ? 'con correcciones' : 'solo verificación'} (mínimo 3 rondas)${EXCLUIR.size ? ` · EXCLUIDOS a pedido de Daniel: ${[...EXCLUIR].join(', ')}` : ''} ===`);
 let ultima = null;
 for (let r = 1; r <= 8; r++) {
   ultima = await ronda(r);

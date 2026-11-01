@@ -1,0 +1,9 @@
+# Revisión final SOLO DE VERIFICACIÓN (no corrige nada) después del borrado a la papelera y del acortado de rutas,
+# excluyendo solo el Excel bloqueado de COPESA. Registro en revision.log; resumen en revision-final.log.
+Add-Type -Namespace Energia7 -Name Windows -MemberDefinition '[System.Runtime.InteropServices.DllImport("kernel32.dll")] public static extern uint SetThreadExecutionState(uint flags);'
+[Energia7.Windows]::SetThreadExecutionState(0x80000001) | Out-Null
+Set-Location 'C:\Users\Daniel\DATOS ORDENAMIENTO EFFORT 2026-10\onedrive'
+Add-Content revision-final.log "$(Get-Date -Format 'dd/MM/yyyy HH:mm:ss')  === INICIO revisión final (solo verificación) ==="
+& node revision.mjs --solo-verificar --excluir 01256M3RFTP5ZFS3ZTUJFKNE5BD3XSIBUG
+Add-Content revision-final.log "$(Get-Date -Format 'dd/MM/yyyy HH:mm:ss')  revisión terminó con código $LASTEXITCODE (0 = limpia)"
+Add-Content revision-final.log "$(Get-Date -Format 'dd/MM/yyyy HH:mm:ss')  === FIN ==="

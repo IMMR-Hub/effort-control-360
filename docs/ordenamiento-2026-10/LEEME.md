@@ -57,6 +57,19 @@ no dicen qué documento son; 182 cuyo nombre o ubicación contradice lo que dice
 `5-bitacora <salida>`. `6-deshacer` vuelve todo atrás leyendo el diario; `comparar-con-foto` comprueba que quedó igual
 a la foto; `rucs` compara el RUC de la planilla con el nombre de las declaraciones.
 
+## Estado al 2026-11-01 — APLICADO EN EL ONEDRIVE REAL Y VERIFICADO (falta 1 archivo abierto)
+
+- 27.720 de 27.721 movidos según el plan v3; revisión final limpia (26.406 de 26.407 en su lugar después del borrado).
+  Falta `021 COPESA/…/FLUJO DE CAJA COPESA A JUNIO 2027  (1).xlsx` (bloqueado, 423): pasos en el HANDOFF del roadmap.
+- Fechas originales devueltas (`restaurar-fechas`), 1.742 candidatos a la papelera (`borrar-candidatos`, autorizado),
+  rutas largas acortadas (`acortar-rutas` + `aplicar-acortar`). Todo en `diario-onedrive.jsonl` y en `docs/BITACORA-ONEDRIVE.md`.
+- Entregables: `BITACORA DEL ORDENAMIENTO DEL ONEDRIVE - 01-11-2026.xlsx` (buscar cualquier archivo: ruta vieja → nueva),
+  `CANDIDATOS A BORRAR - 1-11-2026.xlsx` (la que autorizó Daniel), `VINCULOS DE EXCEL A ACTUALIZAR - 01-11-2026.xlsx`,
+  `DICCIONARIO DE ABREVIATURAS - EFFORT.docx`. La bitácora de prueba de `bitacora/` es la del disco (plan v3), no la real.
+- Herramientas nuevas en `herramientas/`: `restaurar-fechas`, `borrar-candidatos`, `acortar-rutas`, `aplicar-acortar`,
+  `fechas-despues-de-mover` (solo lectura), `esperar-copesa`, `bitacora-real.py`, `diccionario.py`; `revision.mjs` ahora
+  acepta `--excluir` y entiende lo borrado a la papelera y las rutas acortadas (`rutas-finales-aplicadas.json`).
+
 ## Estado al 2026-10-30 — COPIA Y ORDENADO AL DÍA CON EL ONEDRIVE
 
 - **Foto actualizada** con lo que cambió en OneDrive desde el 19-10 (449 nuevos, 31 modificados, 178 movidos o renombrados, 11 que ya no están): 36.926/36.926 verificados. Versiones viejas resguardadas en `_registro/versiones anteriores 2026-10-30/`. Ver `docs/BITACORA-ONEDRIVE.md`.

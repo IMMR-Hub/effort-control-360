@@ -1,0 +1,66 @@
+// Aplica plan-acortar.json (acortar-rutas.mjs) en el OneDrive real: solo RENOMBRA (PATCH de «name»), sin mover ni borrar,
+// con conflictBehavior=fail (nunca pisa un nombre que ya existe) e If-Match. Primero los archivos (por id) y después las
+// carpetas, de la más profunda a la más alta, para que las rutas de las que faltan sigan valiendo.
+// Cada cambio queda en diario-onedrive.jsonl (tipo «renombradoAcortar», con el nombre anterior para poder deshacerlo).
+// Al terminar sin errores escribe rutas-finales-aplicadas.json (lo usan revision.mjs y la bitácora).
+// Uso: node aplicar-acortar.mjs [--aplicar]   (sin --aplicar solo comprueba con GET)
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+const AQUI = path.dirname(fileURLToPath(import.meta.url));
+const APLICAR = process.argv.includes('--aplicar');
+const DIARIO = path.join(AQUI, 'diario-onedrive.jsonl');
+const LOG = path.join(AQUI, 'aplicar-acortar.log');
+const BASE = 'CLIENTES EFFORT E.A.S/CLIENTES';
+const log = (t) => { const l = `${new Date().toLocaleString('es-PY', { timeZone: 'America/Asuncion' })}  ${t}`; fs.appendFileSync(LOG, l + '\n'); console.log(l); };
+for (const linea of fs.readFileSync('C:/Users/Daniel/NexusFlow AI/effort-control-360/.env', 'utf8').split('\n')) {
+  const m = linea.match(/^([A-Z_][A-Z0-9_]*)=(.*)$/);
+  if (m && !process.env[m[1]]) process.env[m[1]] = m[2].trim().replace(/^["']|["']$/g, '');
+}
+let token = null, vence = 0;
+async function tk() {
+  if (token && Date.now() < vence) return token;
+  const r = await fetch(`https://login.microsoftonline.com/${process.env.AZURE_TENANT_ID}/oauth2/v2.0/token`, { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ client_id: process.env.AZURE_CLIENT_ID, client_secret: process.env.AZURE_CLIENT_SECRET, scope: 'https://graph.microsoft.com/.default', grant_type: 'client_credentials' }) });
+  const j = await r.json(); token = j.access_token; vence = Date.now() + (j.expires_in - 300) * 1000; return token;
+}
+async function llamar(metodo, ruta, { cuerpo, ifMatch } = {}) {
+  for (let i = 0; i < 6; i++) {
+    try {
+      const h = { authorization: `Bearer ${await tk()}`, 'content-type': 'application/json' }; if (ifMatch) h['if-match'] = ifMatch;
+      const r = await fetch(`https://graph.microsoft.com/v1.0${ruta}`, { method: metodo, headers: h, body: cuerpo ? JSON.stringify(cuerpo) : undefined, signal: AbortSignal.timeout(120_000) });
+      if (r.status === 429 || r.status >= 500) { await new Promise((s) => setTimeout(s, (Number(r.headers.get('retry-after')) || 2 ** i * 2) * 1000)); continue; }
+      return r;
+    } catch { await new Promise((s) => setTimeout(s, 2 ** i * 2000)); }
+  }
+  throw new Error(`sin respuesta: ${metodo} ${ruta}`);
+}
+const enc = (r) => r.split('/').map(encodeURIComponent).join('/');
+const driveId = process.env.AZURE_DRIVE_ID_ORIGEN ?? (await (await llamar('GET', `/users/${encodeURIComponent(process.env.ONEDRIVE_USUARIO_ORIGEN ?? 'lsosa@effort.com.py')}/drive?$select=id`)).json()).id;
+const plan = JSON.parse(fs.readFileSync(path.join(AQUI, 'plan-acortar.json'), 'utf8'));
+const hechos = new Set(fs.readFileSync(DIARIO, 'utf8').split('\n').filter((l) => l.includes('"renombradoAcortar"')).map((l) => { const d = JSON.parse(l); return `${d.clase}|${d.clave}`; }));
+log(`=== ACORTAR RUTAS ${APLICAR ? '(APLICANDO)' : '(comprobación)'} · archivos ${plan.archivos.length} · carpetas ${plan.carpetas.length} · ya hechos ${hechos.size} ===`);
+const res = { archivos: 0, carpetas: 0, yaHechos: 0, errores: [] };
+async function renombrar(clase, clave, id, nombreViejoEsperado, nombreNuevo) {
+  if (hechos.has(`${clase}|${clave}`)) { res.yaHechos++; return; }
+  const r = await llamar('GET', `/drives/${driveId}/items/${id}?$select=id,name,eTag`);
+  if (!r.ok) { res.errores.push(`${clave}: GET ${r.status}`); return; }
+  const it = await r.json();
+  if (it.name === nombreNuevo) { res.yaHechos++; return; }
+  if (it.name !== nombreViejoEsperado) { res.errores.push(`${clave}: se llama «${it.name}», se esperaba «${nombreViejoEsperado}»`); return; }
+  if (!APLICAR) { res[clase]++; return; }
+  const p = await llamar('PATCH', `/drives/${driveId}/items/${id}?@microsoft.graph.conflictBehavior=fail`, { cuerpo: { name: nombreNuevo }, ifMatch: it.eTag });
+  if (!p.ok) { res.errores.push(`${clave}: PATCH ${p.status}`); return; }
+  fs.appendFileSync(DIARIO, JSON.stringify({ tipo: 'renombradoAcortar', clase, clave, id, nombreAnterior: it.name, nombreNuevo, ts: new Date().toISOString() }) + '\n');
+  res[clase]++;
+}
+// 1. Archivos (por id).
+for (const a of plan.archivos) await renombrar('archivos', a.id, a.id, path.posix.basename(a.de), a.nombreNuevo);
+// 2. Carpetas, de la más profunda a la más alta (la ruta original sigue valiendo porque sus madres todavía no cambiaron).
+for (const c of [...plan.carpetas].sort((x, y) => y.de.split('/').length - x.de.split('/').length)) {
+  const r = await llamar('GET', `/drives/${driveId}/root:/${enc(`${BASE}/${c.de}`)}?$select=id`);
+  if (!r.ok) { if (hechos.has(`carpetas|${c.de}`)) { res.yaHechos++; continue; } res.errores.push(`${c.de}: GET ${r.status}`); continue; }
+  await renombrar('carpetas', c.de, (await r.json()).id, path.posix.basename(c.de), c.a);
+}
+if (APLICAR && !res.errores.length) fs.writeFileSync(path.join(AQUI, 'rutas-finales-aplicadas.json'), JSON.stringify(plan.rutasFinales, null, 1));
+fs.writeFileSync(path.join(AQUI, `informe-acortar${APLICAR ? '' : '-comprobacion'}.json`), JSON.stringify(res, null, 1));
+log(`LISTO · archivos ${res.archivos} · carpetas ${res.carpetas} · ya hechos ${res.yaHechos} · errores ${res.errores.length}${res.errores.length ? ' · ' + res.errores.slice(0, 5).join(' | ') : ''}`);
