@@ -1,0 +1,790 @@
+{
+ "leidoEn": "2026-11-01T17:09:47.126Z",
+ "base": "CLIENTES EFFORT E.A.S/CLIENTES",
+ "carpetas": [
+  {
+   "codigo": "001",
+   "nombre": "ELIAS EL KHOURY",
+   "carpeta": "001 ELIAS EL KHOURY",
+   "id": "01256M3RFJLVKBFSKNGFCYQZ7VZ6KHZL6A"
+  },
+  {
+   "codigo": "002",
+   "nombre": "FUMIPRO S.A",
+   "carpeta": "002 FUMIPRO S.A",
+   "id": "01256M3RBX5BKDBXM74NFKYN445ZET2OCR"
+  },
+  {
+   "codigo": "003",
+   "nombre": "GRETTA AL KHOURY",
+   "carpeta": "003 GRETTA AL KHOURY",
+   "id": "01256M3RHZUK3R6YNIIFFZN56D6BHMOIBA"
+  },
+  {
+   "codigo": "004",
+   "nombre": "HUMO EAS",
+   "carpeta": "004 HUMO EAS",
+   "id": "01256M3RGDCVCY67GYTBBY5XOK4B4EN452"
+  },
+  {
+   "codigo": "005",
+   "nombre": "ORGANIC GROUP EAS",
+   "carpeta": "005 ORGANIC GROUP EAS",
+   "id": "01256M3RCIVICD4EFJEVBYMNIBZXBB4TFM"
+  },
+  {
+   "codigo": "006",
+   "nombre": "RAYVAN EL KHOURY",
+   "carpeta": "006 RAYVAN EL KHOURY",
+   "id": "01256M3RA7K2CGM7PNYZC3M5C2BAYX65LO"
+  },
+  {
+   "codigo": "007",
+   "nombre": "RAMIRO GARCIA VARESINI",
+   "carpeta": "007 RAMIRO GARCIA VARESINI",
+   "id": "01256M3RHM3STXDSI42FG2RVUOHGZ3FL22"
+  },
+  {
+   "codigo": "008",
+   "nombre": "RAMIRO GARCIA MUÑOZ",
+   "carpeta": "008 RAMIRO GARCIA MUÑOZ",
+   "id": "01256M3RFZ47NWWV3XSRBL4H7QES424TX2"
+  },
+  {
+   "codigo": "009",
+   "nombre": "GANADERA DON KUKI EAS",
+   "carpeta": "009 GANADERA DON KUKI EAS",
+   "id": "01256M3RDTWPG3QYGBSRCZ4FP2SMBORJCJ"
+  },
+  {
+   "codigo": "010",
+   "nombre": "ALEJANDRA PICCHIONI",
+   "carpeta": "010 ALEJANDRA PICCHIONI",
+   "id": "01256M3RDEFYTK46UWOFDY7KVSWZ3BBLGO"
+  },
+  {
+   "codigo": "011",
+   "nombre": "LAURA SOSA ARGAÑA",
+   "carpeta": "011 LAURA SOSA ARGAÑA",
+   "id": "01256M3RFOZYZLWYIWLRAYMQXY3L5N4G3F"
+  },
+  {
+   "codigo": "012",
+   "nombre": "GARSO S.A",
+   "carpeta": "012 GARSO S.A",
+   "id": "01256M3RBOB2CRPORJOFCKATKFDPTF7VEZ"
+  },
+  {
+   "codigo": "013",
+   "nombre": "BAIRES EAS",
+   "carpeta": "013 BAIRES EAS",
+   "id": "01256M3RFV3GDD4RHWNNBK5RTE75RKDIJN"
+  },
+  {
+   "codigo": "014",
+   "nombre": "NEO HOLDING GROUP S.A",
+   "carpeta": "014 NEO HOLDING GROUP S.A",
+   "id": "01256M3RCPQIRKJOHOWJE3MGRKOX6ACSZP"
+  },
+  {
+   "codigo": "015",
+   "nombre": "SOMOS PIRI EAS",
+   "carpeta": "015 SOMOS PIRI EAS",
+   "id": "01256M3RFRFQ6A5DHYTJDL4GFC7P3UZWR6"
+  },
+  {
+   "codigo": "016",
+   "nombre": "VETERINARIA",
+   "carpeta": "016 VETERINARIA",
+   "id": "01256M3RHET6G5FTMNYVGI44V3NBFNPZXE"
+  },
+  {
+   "codigo": "017",
+   "nombre": "RITA GONZALEZ PRANTTE",
+   "carpeta": "017 RITA GONZALEZ PRANTTE",
+   "id": "01256M3RFM64CPP3IOERE35FR5RX4MZDXQ"
+  },
+  {
+   "codigo": "018",
+   "nombre": "AGROGRANJA KOE JU EAS",
+   "carpeta": "018 AGROGRANJA KOE JU EAS",
+   "id": "01256M3RGLJQDW74GZIRE23WSJRWQ3UCKA"
+  },
+  {
+   "codigo": "019",
+   "nombre": "ECOSUR EAS",
+   "carpeta": "019 ECOSUR EAS",
+   "id": "01256M3RAXHPE7WEBSKFF3YXLOGP6WJV3E"
+  },
+  {
+   "codigo": "020",
+   "nombre": "LILIAN LACONICH",
+   "carpeta": "020 LILIAN LACONICH",
+   "id": "01256M3RC2WWWZ7MF2OFEZJR2RNEZSHISN"
+  },
+  {
+   "codigo": "021",
+   "nombre": "COPESA",
+   "carpeta": "021 COPESA",
+   "id": "01256M3REYI7YSD4RO2BDZLOCVJVVQUYFF"
+  },
+  {
+   "codigo": "022",
+   "nombre": "EFFORT E.A.S",
+   "carpeta": "022 EFFORT E.A.S",
+   "id": "01256M3REFVOVYVWUH7BB34UMJAFMFS4HV"
+  },
+  {
+   "codigo": "023",
+   "nombre": "DIBEC UNIPERSONAL",
+   "carpeta": "023 DIBEC UNIPERSONAL",
+   "id": "01256M3RHQ4PJC56GP2ZCZ35XHKFXGOCYG"
+  },
+  {
+   "codigo": "024",
+   "nombre": "ALUSAN E.A.S",
+   "carpeta": "024 ALUSAN E.A.S",
+   "id": "01256M3RFYDUZ6KM2AA5CYPC5ZGMJOJSVB"
+  },
+  {
+   "codigo": "025",
+   "nombre": "MUNDO MOVIL S.A",
+   "carpeta": "025 MUNDO MOVIL S.A",
+   "id": "01256M3RB4PKARRTYDNRGLQFKYP4W7YVNQ"
+  },
+  {
+   "codigo": "026",
+   "nombre": "CUBICO METALURGICA EAS",
+   "carpeta": "026 CUBICO METALURGICA EAS",
+   "id": "01256M3RG75QSMV5I5WBF2VK77ZT4UGSML"
+  },
+  {
+   "codigo": "027",
+   "nombre": "MARIEL RODRIGUEZ",
+   "carpeta": "027 MARIEL RODRIGUEZ",
+   "id": "01256M3RHIPARZHKSKFVEYIFHX2WVDPACU"
+  },
+  {
+   "codigo": "028",
+   "nombre": "NEUMATICOS ASUNCION",
+   "carpeta": "028 NEUMATICOS ASUNCION",
+   "id": "01256M3RDDGUFVE3VZM5H2N3ERHVWILG7Z"
+  },
+  {
+   "codigo": "029",
+   "nombre": "ORL COMERCIAL E.A.S",
+   "carpeta": "029 ORL COMERCIAL E.A.S",
+   "id": "01256M3RAP7XIIKHQOWBGJPEV5HMW3GDGJ"
+  },
+  {
+   "codigo": "030",
+   "nombre": "AQUILA ENERGY E.A.S",
+   "carpeta": "030 AQUILA ENERGY E.A.S",
+   "id": "01256M3RASGPTCJINP25AI7DH2XJPVQR37"
+  },
+  {
+   "codigo": "031",
+   "nombre": "EVA MACIEL",
+   "carpeta": "031 EVA MACIEL",
+   "id": "01256M3RAMYML3BKVFIVHLEDG5BRCJNKV5"
+  },
+  {
+   "codigo": "032",
+   "nombre": "DIBEC S.A",
+   "carpeta": "032 DIBEC S.A",
+   "id": "01256M3RD7ACFZ7CM3UZAZ56XUFMUBGIGD"
+  },
+  {
+   "codigo": "033",
+   "nombre": "SAFARI RANCH S.A",
+   "carpeta": "033 SAFARI RANCH S.A",
+   "id": "01256M3RD5XFXM77TCB5DLTHPV5HKJTJOS"
+  },
+  {
+   "codigo": "034",
+   "nombre": "SIRACUA E.A.S",
+   "carpeta": "034 SIRACUA E.A.S",
+   "id": "01256M3RHXA6LMRXQNQBCLXKPNWBD7FTFJ"
+  },
+  {
+   "codigo": "035",
+   "nombre": "MA. ANGELICA PETTERS",
+   "carpeta": "035 MA. ANGELICA PETTERS",
+   "id": "01256M3RGQ4DZKFE7ALJF3WTJEAE2B56O5"
+  },
+  {
+   "codigo": "036",
+   "nombre": "FERNANDO HERREROS",
+   "carpeta": "036 FERNANDO HERREROS",
+   "id": "01256M3RHXJAJP3IFWRZC3APXH56N3GCER"
+  },
+  {
+   "codigo": "037",
+   "nombre": "BICLOPE S.A",
+   "carpeta": "037 BICLOPE S.A",
+   "id": "01256M3RFVHEEAZ5DMVRCLGZGH5NDFNTJ2"
+  },
+  {
+   "codigo": "038",
+   "nombre": "LUIS GONZALEZ",
+   "carpeta": "038 LUIS GONZALEZ",
+   "id": "01256M3RBEQUOGQH4CZBHINGQDAZNPZZDC"
+  },
+  {
+   "codigo": "039",
+   "nombre": "VERO EAS",
+   "carpeta": "039 VERO EAS",
+   "id": "01256M3RBMMORRVRJTXNAI7DDGQYENNO3X"
+  },
+  {
+   "codigo": "040",
+   "nombre": "GISSELLE FARIAS",
+   "carpeta": "040 GISSELLE FARIAS",
+   "id": "01256M3RHBGEYWX5MUMRDIWUIGDCURFXM5"
+  },
+  {
+   "codigo": "041",
+   "nombre": "GABRIELA GOSSEN",
+   "carpeta": "041 GABRIELA GOSSEN",
+   "id": "01256M3RAKNFL6WJBFHFB3JVNWZJ5MJODT"
+  },
+  {
+   "codigo": "042",
+   "nombre": "JAZMIN VILLAGRA",
+   "carpeta": "042 JAZMIN VILLAGRA",
+   "id": "01256M3RANSUAXCUQAJFDKHEO35IZOLRC5"
+  },
+  {
+   "codigo": "043",
+   "nombre": "SIPAR S.A",
+   "carpeta": "043 SIPAR S.A",
+   "id": "01256M3RFXWB7XYQBQTVGKS3TC2O4QHUHM"
+  },
+  {
+   "codigo": "044",
+   "nombre": "MARCO PENONI",
+   "carpeta": "044 MARCO PENONI",
+   "id": "01256M3RD6WYZEYQ764VGZDWDAHFC64PJS"
+  },
+  {
+   "codigo": "046",
+   "nombre": "MARGARITA RUIZ DIAZ",
+   "carpeta": "046 MARGARITA RUIZ DIAZ",
+   "id": "01256M3RFITGUQZ5SF7ZA3XHJPC3WJXWPE"
+  },
+  {
+   "codigo": "047",
+   "nombre": "CARLOS PENONI",
+   "carpeta": "047 CARLOS PENONI",
+   "id": "01256M3RECXCQKAOVASNCLO3JXDTI7Y7ID"
+  },
+  {
+   "codigo": "048",
+   "nombre": "JULIO VIZCONTI",
+   "carpeta": "048 JULIO VIZCONTI",
+   "id": "01256M3RDVHVAXAJ56MZAYFEH3U7CHY3GV"
+  },
+  {
+   "codigo": "049",
+   "nombre": "JOSE PENONI",
+   "carpeta": "049 JOSE PENONI",
+   "id": "01256M3RBHHP5Q6CD3WVHJQ2IARES4EHKE"
+  },
+  {
+   "codigo": "050",
+   "nombre": "MONICA LESME",
+   "carpeta": "050 MONICA LESME",
+   "id": "01256M3RB7SXXEA2K6XJELHBNJ6L4U2EOE"
+  },
+  {
+   "codigo": "051",
+   "nombre": "ISAAC WU",
+   "carpeta": "051 ISAAC WU",
+   "id": "01256M3RBEAVA25KKF5JCIXPKYH7EPSKAZ"
+  },
+  {
+   "codigo": "052",
+   "nombre": "JUANA RAFAELA TORRES",
+   "carpeta": "052 JUANA RAFAELA TORRES",
+   "id": "01256M3RGDOF3YB4NZCJCKTANS6N3TCVIM"
+  },
+  {
+   "codigo": "053",
+   "nombre": "DIANA HIDALGO",
+   "carpeta": "053 DIANA HIDALGO",
+   "id": "01256M3REEXWMEHHOP7RCI6YTPJTVDPT7G"
+  },
+  {
+   "codigo": "054",
+   "nombre": "FATIMA PEÑA",
+   "carpeta": "054 FATIMA PEÑA",
+   "id": "01256M3RFSGYRBTRRVM5DZWYPL2WTT54JQ"
+  },
+  {
+   "codigo": "055",
+   "nombre": "PAOLA MEZA",
+   "carpeta": "055 PAOLA MEZA",
+   "id": "01256M3RGMBRDMY3LSPJGIO62733ZE4ORG"
+  },
+  {
+   "codigo": "056",
+   "nombre": "FACUNDO CARRASCOSA",
+   "carpeta": "056 FACUNDO CARRASCOSA",
+   "id": "01256M3RDDOSYIWFTABRFLSJKSZZKIJIJG"
+  },
+  {
+   "codigo": "057",
+   "nombre": "MARCELO JAVIER GALVAN",
+   "carpeta": "057 MARCELO JAVIER GALVAN",
+   "id": "01256M3RFKB4GWW62IFBCIX3DVEU2KIRRF"
+  },
+  {
+   "codigo": "058",
+   "nombre": "MATIAS FLORES",
+   "carpeta": "058 MATIAS FLORES",
+   "id": "01256M3RB35SR77UYKAVG3M5TDZICXX7FX"
+  },
+  {
+   "codigo": "059",
+   "nombre": "MIRTA LACONICH",
+   "carpeta": "059 MIRTA LACONICH",
+   "id": "01256M3RFZTRPRZXQQZBCZBFZZEBR4QK5J"
+  },
+  {
+   "codigo": "060",
+   "nombre": "ALFADOC S.A",
+   "carpeta": "060 ALFADOC S.A",
+   "id": "01256M3RG2VYOMMWHCM5GISA3J2F6RE3DC"
+  },
+  {
+   "codigo": "061",
+   "nombre": "MARIA EUGENIA ESCOBAR",
+   "carpeta": "061 MARIA EUGENIA ESCOBAR",
+   "id": "01256M3RBBUASX2AZYUNHZZHCCR6P2WJVQ"
+  },
+  {
+   "codigo": "062",
+   "nombre": "EMPRENDIMIENTOS INMOBILIARIOS S.A",
+   "carpeta": "062 EMPRENDIMIENTOS INMOBILIARIOS S.A",
+   "id": "01256M3RADVEBDAQZCNNBIMDYUZIU7KOZE"
+  },
+  {
+   "codigo": "063",
+   "nombre": "ADRIANO BALBUENA",
+   "carpeta": "063 ADRIANO BALBUENA",
+   "id": "01256M3RDYM7O3KPI44BCLOCVP3RLW2YJJ"
+  },
+  {
+   "codigo": "064",
+   "nombre": "ANGELA MIGUELA FLORES",
+   "carpeta": "064 ANGELA MIGUELA FLORES",
+   "id": "01256M3RCFMXMTVS4V3FFZTTXGU7I7XL24"
+  },
+  {
+   "codigo": "065",
+   "nombre": "HECTOR MARTINEZ ROJAS",
+   "carpeta": "065 HECTOR MARTINEZ ROJAS",
+   "id": "01256M3RHGSF3ADLSDTZHK5PQUH2PKVT7W"
+  },
+  {
+   "codigo": "066",
+   "nombre": "SOCIEDAD PARAGUAYA DE RADIOLOGIA",
+   "carpeta": "066 SOCIEDAD PARAGUAYA DE RADIOLOGIA",
+   "id": "01256M3RCRJP5FSLPC7ZC3SFXUI55ZLLZB"
+  },
+  {
+   "codigo": "067",
+   "nombre": "LILCY S.A",
+   "carpeta": "067 LILCY S.A",
+   "id": "01256M3RAHXAMPE2IC7JAYMJO4G5HJGGVA"
+  },
+  {
+   "codigo": "068",
+   "nombre": "ECOAGRO S.A",
+   "carpeta": "068 ECOAGRO S.A",
+   "id": "01256M3REP73GCZZNFMFB2ZLZSVJSR7C7V"
+  },
+  {
+   "codigo": "069",
+   "nombre": "EDWIN SETRINI",
+   "carpeta": "069 EDWIN SETRINI",
+   "id": "01256M3REF7K6HUFQKFNAJZR4TQ3G5AAIR"
+  },
+  {
+   "codigo": "071",
+   "nombre": "NATALIA APONTE",
+   "carpeta": "071 NATALIA APONTE",
+   "id": "01256M3RESZ4U3P37AXRCY5FLMDPYDLTTR"
+  },
+  {
+   "codigo": "072",
+   "nombre": "HUAWEI",
+   "carpeta": "072 HUAWEI",
+   "id": "01256M3REY26DSSFAMTNF3QY65PS7KZFSC"
+  },
+  {
+   "codigo": "073",
+   "nombre": "E-SOLUTIONS S.A",
+   "carpeta": "073 E-SOLUTIONS S.A",
+   "id": "01256M3RBWO6USVKNTTRFJWWIFJCNVDDPF"
+  },
+  {
+   "codigo": "074",
+   "nombre": "PULIRE E.A.S",
+   "carpeta": "074 PULIRE E.A.S",
+   "id": "01256M3REGXE75IN3BWJHZZDMYOGUPMFVO"
+  },
+  {
+   "codigo": "075",
+   "nombre": "ANA CAMPUZANO",
+   "carpeta": "075 ANA CAMPUZANO",
+   "id": "01256M3RA4UE3EAULY2VHKB25O7HCL65Y4"
+  },
+  {
+   "codigo": "076",
+   "nombre": "ESTRELLA IBEROAMERICANA S.A",
+   "carpeta": "076 ESTRELLA IBEROAMERICANA S.A",
+   "id": "01256M3RH6VJSJLW7EYVBLOUGQX5FIKEDR"
+  },
+  {
+   "codigo": "077",
+   "nombre": "COLO E.A.S",
+   "carpeta": "077 COLO E.A.S",
+   "id": "01256M3REUSKNDWQK5YZHJ7RSP6SFOTBBO"
+  },
+  {
+   "codigo": "078",
+   "nombre": "MMG PARAGUAY E.A.S. UNIPERSONAL",
+   "carpeta": "078 MMG PARAGUAY E.A.S. UNIPERSONAL",
+   "id": "01256M3RH7VSYDALSPW5CIHJNRPNUBEHE3"
+  },
+  {
+   "codigo": "079",
+   "nombre": "MARIA VANESSA ACUÑA",
+   "carpeta": "079 MARIA VANESSA ACUÑA",
+   "id": "01256M3RCLYJUVYX7NIRGLAWOCIIM32QRE"
+  },
+  {
+   "codigo": "080",
+   "nombre": "QUALIA SRL",
+   "carpeta": "080 QUALIA SRL",
+   "id": "01256M3RAYK2FG3MUFB5C2C4GU5EWPHXOX"
+  },
+  {
+   "codigo": "081",
+   "nombre": "MARKELIER EAS UNIP",
+   "carpeta": "081 MARKELIER EAS UNIP",
+   "id": "01256M3RDJAGWF6NRTPFGK6HSCDOT4BT6G"
+  },
+  {
+   "codigo": "082",
+   "nombre": "FFV E.A.S",
+   "carpeta": "082 FFV E.A.S",
+   "id": "01256M3RE5YFFPLW522BGKWYFJKC3MW6ZI"
+  },
+  {
+   "codigo": "083",
+   "nombre": "NG EAS UNIPERSONAL",
+   "carpeta": "083 NG EAS UNIPERSONAL",
+   "id": "01256M3RFIFEN6PQ2FXBDIJNBRNQAG7JK6"
+  },
+  {
+   "codigo": "084",
+   "nombre": "R3J E.A.S",
+   "carpeta": "084 R3J E.A.S",
+   "id": "01256M3RD2D5LJPUZ235H2YSDXL5YITIVO"
+  },
+  {
+   "codigo": "085",
+   "nombre": "GESTION AGROPECUARIA SRL",
+   "carpeta": "085 GESTION AGROPECUARIA SRL",
+   "id": "01256M3REA2FZQPVA6E5CIR6NCZBEB4ZYI"
+  },
+  {
+   "codigo": "086",
+   "nombre": "BOU ASSI NAJI BAHIJ",
+   "carpeta": "086 BOU ASSI NAJI BAHIJ",
+   "id": "01256M3RBA5IYIUP5N7JBKX64V4VD2RIDR"
+  },
+  {
+   "codigo": "087",
+   "nombre": "NICODEMUS RUÍZ ORTÍZ",
+   "carpeta": "087 NICODEMUS RUÍZ ORTÍZ",
+   "id": "01256M3RF6IDTPATA6M5E2IJBAB6IVDBY3"
+  },
+  {
+   "codigo": "088",
+   "nombre": "NR REGISTROS GANADEROS EAS UNIPERSONAL",
+   "carpeta": "088 NR REGISTROS GANADEROS EAS UNIPERSONAL",
+   "id": "01256M3RG5IHRLCOZVR5B2UFOFQGJOCHGF"
+  },
+  {
+   "codigo": "089",
+   "nombre": "CRISTAL S.A",
+   "carpeta": "089 CRISTAL S.A",
+   "id": "01256M3RA75AZ5N4XB7ZF3SBVOZHNEULYO"
+  },
+  {
+   "codigo": "090",
+   "nombre": "RAPIGAS EAS",
+   "carpeta": "090 RAPIGAS EAS",
+   "id": "01256M3RFLNQVZIPHVCNDYEX5GVM7CCOSC"
+  },
+  {
+   "codigo": "091",
+   "nombre": "OSMAR MANUEL LOPEZ LESME",
+   "carpeta": "091 OSMAR MANUEL LOPEZ LESME",
+   "id": "01256M3RE7DITXRTRMFZE3YTGNGNPOLRPW"
+  },
+  {
+   "codigo": "092",
+   "nombre": "ANABELLA PINO",
+   "carpeta": "092 ANABELLA PINO",
+   "id": "01256M3RANXEFZNACGHBHJFCNDISMHQRQR"
+  },
+  {
+   "codigo": "093",
+   "nombre": "MERCEDES PETERS",
+   "carpeta": "093 MERCEDES PETERS",
+   "id": "01256M3RDDFXOFSN3DOJEJA6EJRQ6GRFDW"
+  },
+  {
+   "codigo": "094",
+   "nombre": "LARA ESTEFANIA BARRETO MEDINA",
+   "carpeta": "094 LARA ESTEFANIA BARRETO MEDINA",
+   "id": "01256M3RFUCUO537QZD5HI2F7YLMYFFDYZ"
+  },
+  {
+   "codigo": "095",
+   "nombre": "MACOMA SUCURSAL",
+   "carpeta": "095 MACOMA SUCURSAL",
+   "id": "01256M3RDTYO54CVYGEZA34KOEHFAWAFGA"
+  },
+  {
+   "codigo": "096",
+   "nombre": "DIEGO CAMPUZANO",
+   "carpeta": "096 DIEGO CAMPUZANO",
+   "id": "01256M3RF6IDWMGIBG3RGJ5DU33VUM5ZBG"
+  },
+  {
+   "codigo": "097",
+   "nombre": "DOMINI INMOBILIARIA E.A.S",
+   "carpeta": "097 DOMINI INMOBILIARIA E.A.S",
+   "id": "01256M3RBS3YO7ZSHSOBBJDON4YT4GQTCM"
+  },
+  {
+   "codigo": "098",
+   "nombre": "MARIA JOSE AGUAYO",
+   "carpeta": "098 MARIA JOSE AGUAYO",
+   "id": "01256M3RDWC2TUJZGUGFHZ4E7AKLHK2JZN"
+  },
+  {
+   "codigo": "100",
+   "nombre": "CONSORCIO GUASU",
+   "carpeta": "100 CONSORCIO GUASU",
+   "id": "01256M3RG72G66OCMJNZA2EPF4M3UVZDMT"
+  },
+  {
+   "codigo": "101",
+   "nombre": "GANADERA ALBORADA S.A",
+   "carpeta": "101 GANADERA ALBORADA S.A",
+   "id": "01256M3RD7KJ6HB6GU5BCLXGZOJS5GCE7T"
+  },
+  {
+   "codigo": "102",
+   "nombre": "HERREBAEZ EAS",
+   "carpeta": "102 HERREBAEZ EAS",
+   "id": "01256M3RDCRT4TDBRIYJBY3KAZZZJDIMIC"
+  },
+  {
+   "codigo": "103",
+   "nombre": "MJA E.A.S",
+   "carpeta": "103 MJA E.A.S",
+   "id": "01256M3RALX6CML4WVIJB3AYFC4R2BDFZU"
+  },
+  {
+   "codigo": "104",
+   "nombre": "ANALIA BAEZ JOHANNSEN",
+   "carpeta": "104 ANALIA BAEZ JOHANNSEN",
+   "id": "01256M3REUJ4YC2FFZPVHZQF3JJGNLTCMI"
+  },
+  {
+   "codigo": "105",
+   "nombre": "ALMA BENITEZ OVIEDO",
+   "carpeta": "105 ALMA BENITEZ OVIEDO",
+   "id": "01256M3RBH4YYJ6NRD65CK5ARQWT36NN6S"
+  },
+  {
+   "codigo": "106",
+   "nombre": "GANADERA INDIANA",
+   "carpeta": "106 GANADERA INDIANA",
+   "id": "01256M3RABKBYAMKRVXRCIGKQ2TSCXJCRY"
+  },
+  {
+   "codigo": "107",
+   "nombre": "AM Y ASOCIADOS EAS",
+   "carpeta": "107 AM Y ASOCIADOS EAS",
+   "id": "01256M3RAUGDRI75QARVGJBIWJGYWTPKWN"
+  },
+  {
+   "codigo": "108",
+   "nombre": "ANA CAMPUZANO-MTESS",
+   "carpeta": "108 ANA CAMPUZANO-MTESS",
+   "id": "01256M3RFUB3G2EVTZXRDKFNRQAXW7PF6L"
+  },
+  {
+   "codigo": "109",
+   "nombre": "GABRIEL CUBAS",
+   "carpeta": "109 GABRIEL CUBAS",
+   "id": "01256M3RDFHH7KMWREI5H25WGCQDTDAALZ"
+  },
+  {
+   "codigo": "110",
+   "nombre": "SOLEDAD JURE",
+   "carpeta": "110 SOLEDAD JURE",
+   "id": "01256M3RCY3RCTTYBJTRA3RR2EWOVQCNJM"
+  },
+  {
+   "codigo": "111",
+   "nombre": "ESTHER VIGNEAUX",
+   "carpeta": "111 ESTHER VIGNEAUX",
+   "id": "01256M3RAVKMB7LGDEXZFZI3QGMRP63EQC"
+  },
+  {
+   "codigo": "112",
+   "nombre": "DE ISAAK EAS",
+   "carpeta": "112 DE ISAAK EAS",
+   "id": "01256M3RC4H4K4PRYGMVHLOI5CO2V3H6BQ"
+  },
+  {
+   "codigo": "113",
+   "nombre": "CASA VIVA",
+   "carpeta": "113 CASA VIVA",
+   "id": "01256M3RAYIHFFVKSORJB34E2CO7UOB23B"
+  },
+  {
+   "codigo": "114",
+   "nombre": "GERARDO SOSA",
+   "carpeta": "114  GERARDO SOSA",
+   "id": "01256M3RHEVO6RTHT6CREIMIZOAVC66ZVG"
+  },
+  {
+   "codigo": "115",
+   "nombre": "GONZALO GIMENEZ",
+   "carpeta": "115 GONZALO GIMENEZ",
+   "id": "01256M3RB5KWFOKSFWDZD2TBPIASKPUDKA"
+  },
+  {
+   "codigo": "116",
+   "nombre": "QUIMECO E.A.S",
+   "carpeta": "116 QUIMECO E.A.S",
+   "id": "01256M3RHL4IL3ECYTLNGKMKJSAC7PGWQY"
+  },
+  {
+   "codigo": "117",
+   "nombre": "DIEGO NICOLAS VELAZQUEZ",
+   "carpeta": "117 DIEGO NICOLAS VELAZQUEZ",
+   "id": "01256M3RH43PRNORIMN5DKP2TPY6DOLKTG"
+  },
+  {
+   "codigo": "118",
+   "nombre": "MVB EAS",
+   "carpeta": "118 MVB EAS",
+   "id": "01256M3RBHWTXVEEWERBCIFPVYZDHJD4AE"
+  },
+  {
+   "codigo": "119",
+   "nombre": "ALISON BETTINA RAMIREZ",
+   "carpeta": "119 ALISON BETTINA RAMIREZ",
+   "id": "01256M3RCZRNPIWOPY5FD3V3BUKGBBDCLJ"
+  },
+  {
+   "codigo": "120",
+   "nombre": "CAMILO ACOSTA",
+   "carpeta": "120  CAMILO ACOSTA",
+   "id": "01256M3RET5MJ6FJBEJJEZZ4KDHLCXRJZD"
+  },
+  {
+   "codigo": "122",
+   "nombre": "ALT 240 S.A",
+   "carpeta": "122 ALT 240 S.A",
+   "id": "01256M3RDXBYZDJ62CMNDKJGHAANRII25X"
+  },
+  {
+   "codigo": "123",
+   "nombre": "AGRICOLA GANADERA LA FLORIDA S.A",
+   "carpeta": "123 AGRICOLA GANADERA LA FLORIDA S.A",
+   "id": "01256M3RDMPOYUTZKNGNBIJNOIJUOI5SYA"
+  },
+  {
+   "codigo": "124",
+   "nombre": "GESTION INTEGRAL DE CAMPOS EAS",
+   "carpeta": "124 GESTION INTEGRAL DE CAMPOS EAS",
+   "id": "01256M3REGN6XRWGK5CNDKAXCDABVYU5KB"
+  },
+  {
+   "codigo": "125",
+   "nombre": "SOCIEDAD PARAGUAYA DE ENDODONCIA",
+   "carpeta": "125 SOCIEDAD PARAGUAYA DE ENDODONCIA",
+   "id": "01256M3RAXBHDW66HFPBH3NMAOIXVBO52K"
+  },
+  {
+   "codigo": "126",
+   "nombre": "RRHH EFFORT",
+   "carpeta": "126 RRHH EFFORT",
+   "id": "01256M3RAVZMF3WEALKFA2CR5H4DSEH3HH"
+  },
+  {
+   "codigo": "127",
+   "nombre": "OPEN SISTEMAS SRL",
+   "carpeta": "127 OPEN SISTEMAS SRL",
+   "id": "01256M3RCVVILKR2DE4FHJUAEMWMMJL2DZ"
+  },
+  {
+   "codigo": "128",
+   "nombre": "ASOCIACION PARAGUAYA DE CRIADORES DE PAMPA CHAQUEÑO",
+   "carpeta": "128 ASOCIACION PARAGUAYA DE CRIADORES DE PAMPA CHAQUEÑO",
+   "id": "01256M3RG7XDKMWNBFMJAJDDNJCVRGHWYM"
+  },
+  {
+   "codigo": "129",
+   "nombre": "LILIAN CORTESE",
+   "carpeta": "129 LILIAN CORTESE",
+   "id": "01256M3RAWDGETZIC7E5GIXLYIYV522BFN"
+  },
+  {
+   "codigo": "130",
+   "nombre": "BV SOLUTIONS EAS-",
+   "carpeta": "130 BV SOLUTIONS EAS-",
+   "id": "01256M3RCELCK6TNRS5NCZ2QONEITTPIDX"
+  },
+  {
+   "codigo": "131",
+   "nombre": "COMPAÑIA 2B S.A",
+   "carpeta": "131 COMPAÑIA 2B S.A",
+   "id": "01256M3RGLDY6FIPVWUNEZFV4JFGGDTMEF"
+  },
+  {
+   "codigo": "132",
+   "nombre": "MAISON ELIXIR EAS",
+   "carpeta": "132 MAISON ELIXIR EAS",
+   "id": "01256M3RFZPU4BTUVOZ5EYOPIIUI5CFJCN"
+  }
+ ],
+ "ignoradas": [
+  "999 CLIENTE MUESTRA",
+  "ADMINISTRACION RUBRICAM S.A",
+  "CLIENTES A CONFIRMAR",
+  "CONTRATOS NATANIA",
+  "INFORMACION SOBRE EAS",
+  "materiales EFFORT",
+  "MTESS - LIBROS ANUALES",
+  "PLANTILLAS, WORD, EXCEL",
+  "PRESUPUESTOS EFFORT",
+  "PROCEDIMIENTOS TRIBUTARIOS, RUBRICA LIBROS, MODELOS",
+  "Rubrica de libros",
+  "ZZ A CLASIFICAR",
+  "ZZ CARPETAS VACIAS PARA REVISAR",
+  "ZZ DUPLICADOS PARA REVISAR"
+ ]
+}
