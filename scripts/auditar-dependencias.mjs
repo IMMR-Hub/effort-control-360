@@ -34,6 +34,20 @@ const EXCEPCIONES = {
     cierra: 'Cuando salga un parche en la línea 6, o cuando se migre a la 7 a propósito.',
   },
   '@prisma/config': { motivo: 'Viene con prisma. Misma situación.', cierra: 'Igual que prisma.' },
+  zod: {
+    motivo:
+      'GHSA-mrhx-c7xc-m3w5 (2026-11): validar una colección enorme con límites puede agotar memoria. El arreglo es ' +
+      'zod 4.6.6+, una major: cambia la API de todos los esquemas de packages/schema y de la API. Mientras tanto el ' +
+      'servidor corta cualquier cuerpo de más de 1 MB antes de validar (bodyLimit en apps/api/src/servidor.ts), así ' +
+      'que una colección «enorme» no llega a zod. Revisado el 2026-11-01.',
+    cierra: 'Migrar a zod 4 como tarea propia, con sus pruebas.',
+  },
+  tinypool: {
+    motivo:
+      'GHSA-5gmw-xhrv-c9v3 y GHSA-85c8-ppgw-ccpr: lo usa solo vitest (devDependency) para correr las pruebas en la ' +
+      'máquina de trabajo; no está en el servidor. El arreglo exige vitest 5, una major. Revisado el 2026-11-01.',
+    cierra: 'Cuando se actualice vitest a una versión que traiga tinypool 2.1.2 o posterior.',
+  },
   'deepmerge-ts': { motivo: 'Viene con prisma. Misma situación.', cierra: 'Igual que prisma.' },
   exceljs: {
     motivo:
