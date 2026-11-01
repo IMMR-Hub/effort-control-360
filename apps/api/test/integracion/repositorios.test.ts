@@ -447,7 +447,7 @@ describeSiHayBase('repositorios contra PostgreSQL real', () => {
     describe('alta y edición', () => {
       it('crea un cliente y lo encuentra después por RUC', async () => {
         const nuevo = await clientes.crear({
-          nombre: 'Nuevo Cliente Integración S.A.', ruc: '80030001-7', tipoPersona: 'JURIDICA',
+          codigo: '301', nombre: 'Nuevo Cliente Integración S.A.', ruc: '80030001-7', tipoPersona: 'JURIDICA',
           regimenTributario: null, email: null, telefono: null, canalPreferido: null,
           observaciones: null, creadoPorUsuarioId: idDireccion,
         });
@@ -461,14 +461,14 @@ describeSiHayBase('repositorios contra PostgreSQL real', () => {
 
       it('la base impide crear dos clientes con el mismo RUC', async () => {
         await clientes.crear({
-          nombre: 'Uno', ruc: '80066666-6', tipoPersona: 'JURIDICA',
+          codigo: '302', nombre: 'Uno', ruc: '80066666-6', tipoPersona: 'JURIDICA',
           regimenTributario: null, email: null, telefono: null, canalPreferido: null,
           observaciones: null, creadoPorUsuarioId: idDireccion,
         });
 
         await expect(
           clientes.crear({
-            nombre: 'Dos', ruc: '80066666-6', tipoPersona: 'JURIDICA',
+            codigo: '303', nombre: 'Dos', ruc: '80066666-6', tipoPersona: 'JURIDICA',
             regimenTributario: null, email: null, telefono: null, canalPreferido: null,
             observaciones: null, creadoPorUsuarioId: idDireccion,
           }),
@@ -481,7 +481,7 @@ describeSiHayBase('repositorios contra PostgreSQL real', () => {
 
       it('actualizar cambia solo los campos indicados', async () => {
         const cliente = await clientes.crear({
-          nombre: 'Editable Integración S.A.', ruc: '80022222-9', tipoPersona: 'JURIDICA',
+          codigo: '304', nombre: 'Editable Integración S.A.', ruc: '80022222-9', tipoPersona: 'JURIDICA',
           regimenTributario: null, email: null, telefono: null, canalPreferido: null,
           observaciones: null, creadoPorUsuarioId: idDireccion,
         });
@@ -498,7 +498,7 @@ describeSiHayBase('repositorios contra PostgreSQL real', () => {
 
       it('actualizar puede corregir el RUC', async () => {
         const cliente = await clientes.crear({
-          nombre: 'RUC a corregir S.A.', ruc: '80033333-0', tipoPersona: 'JURIDICA',
+          codigo: '305', nombre: 'RUC a corregir S.A.', ruc: '80033333-0', tipoPersona: 'JURIDICA',
           regimenTributario: null, email: null, telefono: null, canalPreferido: null,
           observaciones: null, creadoPorUsuarioId: idDireccion,
         });
@@ -507,6 +507,43 @@ describeSiHayBase('repositorios contra PostgreSQL real', () => {
 
         expect(actualizado.ruc).toBe('80044444-2');
         expect(await clientes.buscarPorRuc('80033333-0')).toBeNull();
+      });
+
+      // Código de cliente y RUC pendiente (migración 20261101120000). Lección
+      // 13: la unicidad con valores nulos se prueba contra PostgreSQL, no se
+      // razona.
+      describe('código de cliente y RUC pendiente', () => {
+        const alta = (codigo: string, ruc: string | null) =>
+          clientes.crear({
+            codigo, nombre: `Cliente ${codigo}`, ruc, tipoPersona: 'FISICA',
+            regimenTributario: null, email: null, telefono: null, canalPreferido: null,
+            observaciones: null, creadoPorUsuarioId: idDireccion,
+          });
+
+        it('dos clientes con el RUC pendiente conviven (el índice único admite varios NULL)', async () => {
+          const uno = await alta('311', null);
+          const dos = await alta('312', null);
+
+          expect(uno.ruc).toBeNull();
+          expect(dos.ruc).toBeNull();
+          expect((await clientes.buscarPorCodigo('312'))?.id).toBe(dos.id);
+        });
+
+        it('la base impide repetir un código', async () => {
+          await alta('313', null);
+          await expect(alta('313', '80055555-4')).rejects.toThrow();
+        });
+
+        it('la base impide un código que no sean tres cifras y un RUC vacío', async () => {
+          await expect(alta('31', null)).rejects.toThrow();
+          await expect(alta('314', '')).rejects.toThrow();
+        });
+
+        it('a un cliente pendiente se le carga el RUC después', async () => {
+          const cliente = await alta('315', null);
+          const actualizado = await clientes.actualizar(cliente.id, { ruc: '80077777-8' }, idDireccion);
+          expect(actualizado.ruc).toBe('80077777-8');
+        });
       });
     });
   });

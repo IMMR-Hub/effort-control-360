@@ -8,7 +8,7 @@
  */
 
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
-import { Pencil, Plus, Search } from 'lucide-react';
+import { AlertTriangle, Pencil, Plus, Search } from 'lucide-react';
 
 import {
   Badge,
@@ -54,6 +54,7 @@ const OPCIONES_CANAL = Object.entries(ETIQUETA_CANAL).map(([valor, etiqueta]) =>
 }));
 
 interface FormularioCliente {
+  readonly codigo: string;
   readonly nombre: string;
   readonly ruc: string;
   readonly tipoPersona: TipoPersona;
@@ -66,6 +67,7 @@ interface FormularioCliente {
 }
 
 const FORMULARIO_VACIO: FormularioCliente = {
+  codigo: '',
   nombre: '',
   ruc: '',
   tipoPersona: 'JURIDICA',
@@ -79,8 +81,9 @@ const FORMULARIO_VACIO: FormularioCliente = {
 
 function aFormulario(cliente: Cliente): FormularioCliente {
   return {
+    codigo: cliente.codigo ?? '',
     nombre: cliente.nombre,
-    ruc: cliente.ruc,
+    ruc: cliente.ruc ?? '',
     tipoPersona: cliente.tipoPersona as TipoPersona,
     regimenTributario: cliente.regimenTributario ?? '',
     email: cliente.email ?? '',
@@ -106,6 +109,13 @@ function normalizar(texto: string): string {
     .replace(/[̀-ͯ]/g, '')
     .toLowerCase();
 }
+
+/**
+ * Lo que se muestra (y se descarga) en la columna RUC de un cliente sin RUC.
+ * El cliente existe —tiene carpeta y código— pero el sistema no le calcula los
+ * vencimientos que dependen de la terminación del RUC.
+ */
+const TEXTO_RUC_PENDIENTE = 'RUC pendiente';
 
 /** La etiqueta que ve el usuario en la columna «Tipo». */
 function etiquetaDeTipoDePersona(tipoPersona: string): string {
@@ -151,7 +161,11 @@ export default function Clientes() {
   const coincidentes = useMemo(() => {
     const termino = normalizar(busqueda.trim());
     return clientes.filter(
-      (c) => !termino || normalizar(c.nombre).includes(termino) || normalizar(c.ruc).includes(termino),
+      (c) =>
+        !termino ||
+        normalizar(c.nombre).includes(termino) ||
+        normalizar(c.ruc ?? '').includes(termino) ||
+        (c.codigo ?? '').includes(termino),
     );
   }, [clientes, busqueda]);
   const clientesFiltrados = useMemo(
@@ -164,21 +178,25 @@ export default function Clientes() {
 
   const hayBusqueda = busqueda.trim() !== '';
   const activos = coincidentes.filter((c) => c.activo).length;
+  // Sobre la cartera completa, no sobre la búsqueda: el aviso es para que
+  // dirección sepa cuántos clientes no tienen vencimientos calculados.
+  const conRucPendiente = clientes.filter((c) => c.ruc === null && c.activo).length;
 
   /** Lo mismo que muestra la pantalla, con sus filtros: la cartera tal como queda en la tabla. */
   function reporte(): Reporte {
     return {
       titulo: 'Clientes',
       filtros: [
-        hayBusqueda ? `Cliente: nombre o RUC con «${busqueda.trim()}»` : 'Cliente: todos',
+        hayBusqueda ? `Cliente: nombre, código o RUC con «${busqueda.trim()}»` : 'Cliente: todos',
         `Estado: ${soloActivos ? 'solo activos' : 'activos e inactivos'}`,
       ],
       hojas: [
         hoja(
           'Cartera',
           [
-            { titulo: 'Nombre', valor: (c: Cliente) => c.nombre },
-            { titulo: 'RUC', valor: (c) => c.ruc },
+            { titulo: 'Código', valor: (c: Cliente) => c.codigo ?? '' },
+            { titulo: 'Nombre', valor: (c) => c.nombre },
+            { titulo: 'RUC', valor: (c) => c.ruc ?? TEXTO_RUC_PENDIENTE },
             { titulo: 'Tipo', valor: (c) => etiquetaDeTipoDePersona(c.tipoPersona) },
             {
               titulo: 'Canal preferido',
@@ -216,9 +234,10 @@ export default function Clientes() {
     setErrorFormulario(null);
     setGuardando(true);
     try {
+      const ruc = vacioANulo(formulario.ruc);
       const datosComunes = {
+        codigo: formulario.codigo.trim(),
         nombre: formulario.nombre.trim(),
-        ruc: formulario.ruc.trim(),
         tipoPersona: formulario.tipoPersona,
         regimenTributario: vacioANulo(formulario.regimenTributario),
         email: vacioANulo(formulario.email),
@@ -228,9 +247,15 @@ export default function Clientes() {
       };
 
       if (edicion) {
-        await actualizarCliente(edicion.id, { ...datosComunes, activo: formulario.activo });
+        // Un RUC vacío en la edición no se manda: se puede cargar o corregir,
+        // no borrar (el servidor lo rechazaría).
+        await actualizarCliente(edicion.id, {
+          ...datosComunes,
+          ...(ruc === null ? {} : { ruc }),
+          activo: formulario.activo,
+        });
       } else {
-        await crearCliente(datosComunes);
+        await crearCliente({ ...datosComunes, ruc });
       }
 
       cerrarFormulario();
@@ -287,6 +312,24 @@ export default function Clientes() {
           <Indicador etiqueta="Inactivos" valor={coincidentes.length - activos} tono="pendiente" />
         </section>
 
+        {puedeEditar && conRucPendiente > 0 && (
+          <div
+            role="status"
+            className="flex items-start gap-2 rounded border border-parcial-borde bg-parcial-fondo px-4 py-3 text-sm text-parcial"
+          >
+            <AlertTriangle size={16} className="mt-0.5 shrink-0" aria-hidden="true" />
+            <p>
+              <strong>
+                {conRucPendiente === 1
+                  ? '1 cliente activo con RUC pendiente.'
+                  : `${conRucPendiente} clientes activos con RUC pendiente.`}
+              </strong>{' '}
+              El sistema no les calcula los vencimientos que dependen de la terminación del RUC. Cargalo con
+              «Editar» apenas EFFORT lo confirme: nunca se usa un RUC inventado.
+            </p>
+          </div>
+        )}
+
         <Tarjeta>
           <EncabezadoTarjeta
             titulo="Cartera"
@@ -313,7 +356,7 @@ export default function Clientes() {
                     type="search"
                     value={busqueda}
                     onChange={(evento) => setBusqueda(evento.target.value)}
-                    placeholder="Buscar por nombre o RUC"
+                    placeholder="Buscar por nombre, código o RUC"
                     aria-label="Buscar cliente"
                     className="min-h-9 rounded border border-borde-fuerte bg-superficie py-1.5 pl-8 pr-3 text-sm text-tinta focus-visible:outline-none"
                   />
@@ -325,6 +368,7 @@ export default function Clientes() {
           <Tabla etiqueta="Cartera de clientes">
             <thead>
               <tr>
+                <Th>Código</Th>
                 <Th>Nombre</Th>
                 <Th>RUC</Th>
                 <Th>Tipo</Th>
@@ -336,8 +380,11 @@ export default function Clientes() {
             <tbody>
               {clientesFiltrados.map((cliente) => (
                 <tr key={cliente.id} className="hover:bg-superficie-tenue">
+                  <Td className="cifra text-tinta-suave">{cliente.codigo ?? '—'}</Td>
                   <Td className="font-medium">{cliente.nombre}</Td>
-                  <Td className="cifra text-tinta-suave">{cliente.ruc}</Td>
+                  <Td className="cifra text-tinta-suave">
+                    {cliente.ruc ?? <Badge tono="parcial">{TEXTO_RUC_PENDIENTE}</Badge>}
+                  </Td>
                   <Td className="text-tinta-suave">{etiquetaDeTipoDePersona(cliente.tipoPersona)}</Td>
                   <Td className="text-tinta-suave">
                     {cliente.canalPreferido
@@ -366,7 +413,7 @@ export default function Clientes() {
               {clientesFiltrados.length === 0 && (
                 <tr>
                   <td
-                    colSpan={puedeEditar ? 6 : 5}
+                    colSpan={puedeEditar ? 7 : 6}
                     className="px-4 py-8 text-center text-sm text-tinta-tenue"
                   >
                     Ningún cliente coincide con la búsqueda.
@@ -383,8 +430,8 @@ export default function Clientes() {
               titulo={edicion ? `Editar — ${edicion.nombre}` : 'Nuevo cliente'}
               descripcion={
                 edicion
-                  ? 'Todo campo es editable, incluido el RUC.'
-                  : 'El RUC se valida con dígito verificador antes de guardar.'
+                  ? 'Todo campo es editable, incluido el RUC. Un RUC ya cargado se corrige, no se borra.'
+                  : 'El código es el número de su carpeta. Sin RUC, el cliente queda «RUC pendiente»; con RUC, se valida el dígito verificador.'
               }
             />
             <form onSubmit={manejarEnvio} className="space-y-4 px-5 py-4">
@@ -395,6 +442,18 @@ export default function Clientes() {
               )}
 
               <div className="grid gap-4 sm:grid-cols-2">
+                <CampoTexto
+                  id="codigo"
+                  etiqueta="Código"
+                  required
+                  placeholder="002"
+                  inputMode="numeric"
+                  maxLength={3}
+                  value={formulario.codigo}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    setFormulario({ ...formulario, codigo: e.target.value })
+                  }
+                />
                 <CampoTexto
                   id="nombre"
                   etiqueta="Nombre / Razón social"
@@ -407,8 +466,7 @@ export default function Clientes() {
                 <CampoTexto
                   id="ruc"
                   etiqueta="RUC"
-                  required
-                  placeholder="80012345-6"
+                  placeholder="80012345-6 (vacío = pendiente)"
                   value={formulario.ruc}
                   onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                     setFormulario({ ...formulario, ruc: e.target.value })

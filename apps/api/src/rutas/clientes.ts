@@ -4,6 +4,12 @@
  * Alta y edición, además de la lectura que ya existía desde la Parte 1.6.
  * RBAC ya distinguía esto: `direccion` y `responsable` crean y editan,
  * el resto de los roles solo ve la cartera que le corresponde.
+ *
+ * Desde el 2026-11-01 todo cliente nuevo lleva su código de EFFORT (el número
+ * de su carpeta) y puede darse de alta con el RUC pendiente: Daniel ordenó dar
+ * de alta a todos los clientes que tienen carpeta, y 41 no tienen RUC todavía.
+ * Un RUC que llega se valida igual que siempre (formato y dígito verificador);
+ * lo que no se hace nunca es inventar uno.
  */
 
 import type { FastifyInstance } from 'fastify';
@@ -11,6 +17,7 @@ import { z } from 'zod';
 
 import {
   canalRecepcionSchema,
+  codigoClienteSchema,
   emailSchema,
   rucSchema,
   telefonoSchema,
@@ -27,8 +34,10 @@ const tipoPersonaSchema = z.enum(['FISICA', 'JURIDICA']);
 
 const altaSchema = z
   .object({
+    codigo: codigoClienteSchema,
     nombre: textoCorto,
-    ruc: rucSchema,
+    // Sin RUC (o null) el cliente queda «RUC pendiente».
+    ruc: rucSchema.nullable().default(null),
     tipoPersona: tipoPersonaSchema,
     regimenTributario: textoCorto.nullable().default(null),
     email: emailSchema.nullable().default(null),
@@ -40,7 +49,10 @@ const altaSchema = z
 
 const edicionSchema = z
   .object({
+    codigo: codigoClienteSchema.optional(),
     nombre: textoCorto.optional(),
+    // Se puede cargar o corregir el RUC, no borrarlo: un RUC ya cargado no
+    // vuelve a «pendiente» por una edición.
     ruc: rucSchema.optional(),
     tipoPersona: tipoPersonaSchema.optional(),
     regimenTributario: textoCorto.nullable().optional(),
@@ -78,12 +90,19 @@ export async function registrarRutasDeClientes(
     const sujeto = autorizar(peticion, 'cliente', 'crear');
     const cuerpo = altaSchema.parse(peticion.body);
 
-    const existente = await deps.clientes.buscarPorRuc(cuerpo.ruc);
-    if (existente) {
-      throw new ErrorDeAplicacion(409, 'Ya existe un cliente con ese RUC.', 'ruc_en_uso');
+    const conEseCodigo = await deps.clientes.buscarPorCodigo(cuerpo.codigo);
+    if (conEseCodigo) {
+      throw new ErrorDeAplicacion(409, 'Ya existe un cliente con ese código.', 'codigo_en_uso');
+    }
+    if (cuerpo.ruc !== null) {
+      const existente = await deps.clientes.buscarPorRuc(cuerpo.ruc);
+      if (existente) {
+        throw new ErrorDeAplicacion(409, 'Ya existe un cliente con ese RUC.', 'ruc_en_uso');
+      }
     }
 
     const cliente = await deps.clientes.crear({
+      codigo: cuerpo.codigo,
       nombre: cuerpo.nombre,
       ruc: cuerpo.ruc,
       tipoPersona: cuerpo.tipoPersona,
@@ -101,7 +120,12 @@ export async function registrarRutasDeClientes(
       entidad: 'cliente',
       entidadId: cliente.id,
       clienteId: cliente.id,
-      datosDespues: { nombre: cliente.nombre, ruc: cliente.ruc, tipoPersona: cliente.tipoPersona },
+      datosDespues: {
+        codigo: cliente.codigo,
+        nombre: cliente.nombre,
+        ruc: cliente.ruc,
+        tipoPersona: cliente.tipoPersona,
+      },
       ip: peticion.ip,
       agenteUsuario: peticion.headers['user-agent'] ?? null,
       peticionId: String(peticion.id),
@@ -120,6 +144,13 @@ export async function registrarRutasDeClientes(
       throw new ErrorDeAplicacion(404, 'Recurso inexistente.', 'no_encontrado');
     }
 
+    if (cuerpo.codigo && cuerpo.codigo !== previo.codigo) {
+      const conEseCodigo = await deps.clientes.buscarPorCodigo(cuerpo.codigo);
+      if (conEseCodigo && conEseCodigo.id !== id) {
+        throw new ErrorDeAplicacion(409, 'Ya existe un cliente con ese código.', 'codigo_en_uso');
+      }
+    }
+
     if (cuerpo.ruc && cuerpo.ruc !== previo.ruc) {
       const conEseRuc = await deps.clientes.buscarPorRuc(cuerpo.ruc);
       if (conEseRuc && conEseRuc.id !== id) {
@@ -135,8 +166,8 @@ export async function registrarRutasDeClientes(
       entidad: 'cliente',
       entidadId: id,
       clienteId: id,
-      datosAntes: { nombre: previo.nombre, ruc: previo.ruc, activo: previo.activo },
-      datosDespues: { nombre: cliente.nombre, ruc: cliente.ruc, activo: cliente.activo },
+      datosAntes: { codigo: previo.codigo, nombre: previo.nombre, ruc: previo.ruc, activo: previo.activo },
+      datosDespues: { codigo: cliente.codigo, nombre: cliente.nombre, ruc: cliente.ruc, activo: cliente.activo },
       ip: peticion.ip,
       agenteUsuario: peticion.headers['user-agent'] ?? null,
       peticionId: String(peticion.id),

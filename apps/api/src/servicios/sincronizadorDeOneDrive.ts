@@ -22,9 +22,10 @@
 
 import { createHash } from 'node:crypto';
 
-import { clasificarDocumento } from '@effort/core';
+import { clasificarDocumento, deducirPeriodo, type OrigenDelPeriodo } from '@effort/core';
 import type { ArchivoDrive, DriveDeArchivos } from '@effort/drive';
 
+import { ACCIONES, type EntradaDeBitacora } from '../bitacora.js';
 import type { RepositorioDeClientes } from '../puertos.js';
 import type { RepositorioDeDocumentos } from '../puertos-dominio.js';
 
@@ -91,9 +92,12 @@ export interface DependenciasDelSincronizador {
   readonly origen: DriveDeArchivos;
   /** Drive propio del sistema. Acá sí se escribe. */
   readonly destino: DriveDeArchivos;
-  readonly registrarEvidencia: (
-    datos: AltaDeEvidencia,
-  ) => Promise<{ evidencia: { id: string }; esNueva: boolean }>;
+  readonly registrarEvidencia: (datos: AltaDeEvidencia) => Promise<{
+    evidencia: { id: string };
+    esNueva: boolean;
+    /** Nombre y ruta que tenía la evidencia, si se le actualizaron (ver `ResultadoDeRegistro`). */
+    anterior?: { readonly nombreArchivo: string; readonly rutaOneDrive: string } | null;
+  }>;
   /** Qué archivos del origen ya tiene ese cliente, para no volver a bajarlos. */
   readonly huellasDeOrigen: (clienteId: string) => Promise<readonly HuellaDeOrigen[]>;
   /**
@@ -110,6 +114,12 @@ export interface DependenciasDelSincronizador {
     modificadoEnOrigen: Date | null;
     evidenciaId: string;
   }) => Promise<void>;
+  /**
+   * Rastro de lo que cambia al reconocer un archivo que ya estaba (nombre y
+   * ruta de la evidencia, tipo y período del documento). Quien conecta el
+   * servicio pasa `registrarEvento`, que no tumba la corrida si falla.
+   */
+  readonly registrarEnBitacora: (entrada: EntradaDeBitacora) => Promise<void>;
   readonly ahora: () => Date;
 }
 
@@ -129,6 +139,8 @@ export interface AltaDeEvidencia {
 export interface HuellaDeOrigen {
   readonly itemIdOrigen: string;
   readonly modificadoEnOrigen: Date | null;
+  /** Ver `HuellaDeOrigen.rutaRegistrada` en `puertos-dominio.ts`. */
+  readonly rutaRegistrada?: string | null;
 }
 
 export interface FalloDeSincronizacion {
@@ -199,17 +211,125 @@ export function detalleParaBitacora(
 }
 
 /**
- * Período al que pertenece un archivo, deducido de su fecha de modificación.
+ * Período al que pertenece un archivo: por su carpeta, si no por su nombre, y
+ * recién al final por una fecha (`deducirPeriodo` en `@effort/core`, donde está
+ * la regla y su prueba).
  *
- * Es una aproximación declarada, no un dato extraído del documento: sin leer el
- * contenido no se puede saber a qué mes fiscal corresponde una factura. Se usa
- * la fecha de modificación porque es lo único confiable que da OneDrive, y
- * queda anotado en `DISCREPANCIAS.md` para que nadie lo confunda con el período
- * real del comprobante.
+ * Hasta el 2026-11-01 salía solo de `lastModifiedDateTime`, y el ordenamiento
+ * de octubre de 2026 demostró que esa fecha no sirve: al renombrar pasó a ser la
+ * del día del ordenamiento. Sigue siendo una deducción sin leer el contenido —
+ * la carpeta y el nombre los pone una persona—, pero ya no la fecha en que
+ * alguien tocó el archivo. Para la fecha de último recurso se prefiere la del
+ * sistema de archivos (`fileSystemInfo`), si el adaptador la trae.
  */
-function periodoDe(archivo: ArchivoDrive): string {
-  const fecha = archivo.modificadoEn;
-  return `${fecha.getUTCFullYear()}-${String(fecha.getUTCMonth() + 1).padStart(2, '0')}`;
+function periodoDe(archivo: ArchivoDrive): { periodo: string; origen: OrigenDelPeriodo } {
+  return deducirPeriodo(
+    archivo.nombre,
+    archivo.rutaCarpeta,
+    archivo.modificadoEnSistemaDeArchivos ?? archivo.modificadoEn,
+  );
+}
+
+/** Dónde queda la copia de un archivo en la carpeta propia del sistema. */
+function rutaDeLaCopia(nombreCliente: string, archivo: ArchivoDrive): { carpeta: string; ruta: string } {
+  const carpeta = `${CARPETA_DEL_SISTEMA}/${nombreCliente}/${archivo.rutaCarpeta}`;
+  return { carpeta, ruta: `${carpeta}/${archivo.nombre}` };
+}
+
+/**
+ * Qué cambiar en un documento cuando la sincronización reconoce su archivo
+ * (mismo id o mismo contenido) con otro nombre o en otra carpeta. `null` si no
+ * cambia nada.
+ *
+ * Reglas, todas a favor de no perder información:
+ *
+ *  - Solo documentos que entraron por OneDrive (`canalRecepcion`): uno cargado
+ *    a mano lleva lo que escribió una persona.
+ *  - **El tipo nunca baja a `OTRO`.** Un archivo sin renombrar que pasó de
+ *    `RG 90 COMPRAS/` a `DOCUMENTOS CONTABLES/03 MARZO/` ya no tiene la pista de
+ *    la carpeta vieja, y el nombre (`03 MARZO.xlsx`) no dice nada: se conserva
+ *    el tipo que ya tenía, que es justamente esa pista.
+ *  - **El período cambia solo si lo dice la carpeta o el nombre.** La fecha no
+ *    alcanza para pisar uno que ya existe: es la base que se demostró poco
+ *    confiable (`periodoDe`).
+ */
+export function cambiosAlReconocer(
+  documento: { readonly tipo: string; readonly periodo: string; readonly canalRecepcion: string },
+  archivo: ArchivoDrive,
+): { tipo: string; periodo: string; origenDelPeriodo: OrigenDelPeriodo | null } | null {
+  if (documento.canalRecepcion !== 'ONEDRIVE') return null;
+
+  const tipoNuevo = clasificarDocumento(archivo.nombre, archivo.rutaCarpeta);
+  const tipo = tipoNuevo === 'OTRO' ? documento.tipo : tipoNuevo;
+
+  const deducido = periodoDe(archivo);
+  const periodoConfiable = deducido.origen !== 'FECHA';
+  const periodo = periodoConfiable ? deducido.periodo : documento.periodo;
+
+  if (tipo === documento.tipo && periodo === documento.periodo) return null;
+  return {
+    tipo,
+    periodo,
+    origenDelPeriodo: periodo === documento.periodo ? null : deducido.origen,
+  };
+}
+
+/**
+ * Un archivo que ya estaba volvió a pasar por la sincronización: deja rastro
+ * del nombre y la ruta nuevos, y recalcula tipo y período de sus documentos.
+ * Va ANTES de marcar el archivo como visto: si algo falla, la corrida siguiente
+ * lo vuelve a intentar en vez de saltearlo.
+ */
+async function reconocerArchivo(
+  deps: DependenciasDelSincronizador,
+  cliente: { readonly id: string },
+  archivo: ArchivoDrive,
+  rutaDeCopia: string,
+  evidencia: { readonly id: string },
+  anterior: { readonly nombreArchivo: string; readonly rutaOneDrive: string } | null,
+  usuarioId: string,
+): Promise<void> {
+  if (anterior && (anterior.nombreArchivo !== archivo.nombre || anterior.rutaOneDrive !== rutaDeCopia)) {
+    await deps.registrarEnBitacora({
+      usuarioId,
+      accion: ACCIONES.EVIDENCIA_RENOMBRADA_EN_ORIGEN,
+      entidad: 'evidencia',
+      entidadId: evidencia.id,
+      clienteId: cliente.id,
+      datosAntes: anterior,
+      datosDespues: { nombreArchivo: archivo.nombre, rutaOneDrive: rutaDeCopia, itemIdOrigen: archivo.itemId },
+    });
+  }
+
+  for (const documento of await deps.documentos.deEvidencia(evidencia.id, cliente.id)) {
+    const cambios = cambiosAlReconocer(documento, archivo);
+    if (!cambios) continue;
+
+    const aplicado = await deps.documentos.reclasificarDesdeOrigen(
+      documento.id,
+      { tipo: documento.tipo, periodo: documento.periodo },
+      { tipo: cambios.tipo, periodo: cambios.periodo },
+      usuarioId,
+    );
+    if (!aplicado) continue;
+
+    await deps.registrarEnBitacora({
+      usuarioId,
+      accion: ACCIONES.DOCUMENTO_RECLASIFICADO,
+      entidad: 'documento',
+      entidadId: documento.id,
+      clienteId: cliente.id,
+      datosAntes: { tipo: documento.tipo, periodo: documento.periodo },
+      datosDespues: {
+        tipo: cambios.tipo,
+        periodo: cambios.periodo,
+        origenDelPeriodo: cambios.origenDelPeriodo,
+        nombreArchivo: archivo.nombre,
+        rutaCarpeta: archivo.rutaCarpeta,
+        criterio: 'archivo reconocido por la sincronización de OneDrive (sincronizadorDeOneDrive.ts)',
+      },
+    });
+  }
 }
 
 function tipoMimeDe(archivo: ArchivoDrive): string {
@@ -263,9 +383,12 @@ export async function sincronizarDesdeOneDrive(
 
     // Lo que ya se tiene de este cliente, en una sola consulta. Es lo que
     // evita bajar cientos de archivos para descubrir que ya estaban.
-    const conocidos = new Map<string, number | null>();
+    const conocidos = new Map<string, { fecha: number | null; rutaRegistrada: string | null }>();
     for (const huella of await deps.huellasDeOrigen(cliente.id)) {
-      conocidos.set(huella.itemIdOrigen, huella.modificadoEnOrigen?.getTime() ?? null);
+      conocidos.set(huella.itemIdOrigen, {
+        fecha: huella.modificadoEnOrigen?.getTime() ?? null,
+        rutaRegistrada: huella.rutaRegistrada ?? null,
+      });
     }
 
     let nuevos = 0;
@@ -292,9 +415,17 @@ export async function sincronizarDesdeOneDrive(
       // El atajo que hace viable correr esto cada 15 minutos: mismo archivo,
       // misma fecha de modificación, no se toca. Si la fecha cambió sí se baja,
       // porque el contenido pudo haber cambiado.
-      if (conocidos.has(archivo.itemId)) {
-        const fechaConocida = conocidos.get(archivo.itemId);
-        if (fechaConocida === archivo.modificadoEn.getTime()) {
+      //
+      // Y si la evidencia de ESTE archivo tiene anotada otra ruta, también se
+      // baja aunque la fecha sea la misma: lo renombraron o lo movieron, y
+      // hay que actualizar nombre, ruta, tipo y período (2026-11-01). Converge:
+      // al reconocerlo la evidencia queda con la ruta actual y la corrida
+      // siguiente lo saltea.
+      const { ruta: rutaActual } = rutaDeLaCopia(cliente.nombre, archivo);
+      const conocido = conocidos.get(archivo.itemId);
+      if (conocido) {
+        const renombrado = conocido.rutaRegistrada !== null && conocido.rutaRegistrada !== rutaActual;
+        if (conocido.fecha === archivo.modificadoEn.getTime() && !renombrado) {
           sinCambios += 1;
           continue;
         }
@@ -325,13 +456,13 @@ export async function sincronizarDesdeOneDrive(
         // Se copia a la carpeta propia ANTES de registrar: si el registro
         // fallara, queda una copia de más (inofensiva), no un documento en la
         // base apuntando a un archivo que no existe.
-        const carpetaDestino = `${CARPETA_DEL_SISTEMA}/${cliente.nombre}/${archivo.rutaCarpeta}`;
+        const carpetaDestino = rutaDeLaCopia(cliente.nombre, archivo).carpeta;
         const copia = await deps.destino.escribir(carpetaDestino, archivo.nombre, contenido);
 
         const evidencia = await deps.registrarEvidencia({
           clienteId: cliente.id,
           nombreArchivo: archivo.nombre,
-          rutaOneDrive: `${carpetaDestino}/${archivo.nombre}`,
+          rutaOneDrive: rutaActual,
           itemIdOneDrive: copia.itemId,
           tipoMime: tipoMimeDe(archivo),
           tamanoBytes: BigInt(archivo.tamanoBytes),
@@ -340,6 +471,12 @@ export async function sincronizarDesdeOneDrive(
           itemIdOrigen: archivo.itemId,
           modificadoEnOrigen: archivo.modificadoEn,
         });
+
+        if (!evidencia.esNueva) {
+          await reconocerArchivo(
+            deps, cliente, archivo, rutaActual, evidencia.evidencia, evidencia.anterior ?? null, usuarioId,
+          );
+        }
 
         // Se anota el archivo ANTES de decidir si hay documento nuevo: lo que
         // importa para no volver a bajarlo es haberlo mirado, no que su
@@ -353,7 +490,8 @@ export async function sincronizarDesdeOneDrive(
 
         // Ese contenido ya estaba (mismo archivo con otro nombre, o importado
         // por el script viejo). Ya quedó anotado arriba, así que la próxima
-        // corrida lo saltea sin bajarlo.
+        // corrida lo saltea sin bajarlo; su documento se actualizó en
+        // `reconocerArchivo`.
         if (!evidencia.esNueva) {
           yaEstaban += 1;
           continue;
@@ -361,7 +499,7 @@ export async function sincronizarDesdeOneDrive(
 
         await deps.documentos.registrar({
           clienteId: cliente.id,
-          periodo: periodoDe(archivo),
+          periodo: periodoDe(archivo).periodo,
           tipo: clasificarDocumento(archivo.nombre, archivo.rutaCarpeta),
           canalRecepcion: 'ONEDRIVE',
           recibidoEn: archivo.modificadoEn,

@@ -18,6 +18,7 @@ import type { PrismaClient } from './prisma.js';
 
 const CAMPOS = {
   id: true,
+  codigo: true,
   nombre: true,
   ruc: true,
   tipoPersona: true,
@@ -75,9 +76,16 @@ export class ClientesPrisma implements RepositorioDeClientes {
     return fila as ClienteListado | null;
   }
 
+  /** Sin filtro de cartera: se usa para la comprobación de código único antes de crear. */
+  async buscarPorCodigo(codigo: string): Promise<ClienteListado | null> {
+    const fila = await this.prisma.cliente.findUnique({ where: { codigo }, select: CAMPOS });
+    return fila as ClienteListado | null;
+  }
+
   async crear(datos: AltaDeCliente): Promise<ClienteListado> {
     const fila = await this.prisma.cliente.create({
       data: {
+        codigo: datos.codigo,
         nombre: datos.nombre,
         ruc: datos.ruc,
         tipoPersona: datos.tipoPersona as never,

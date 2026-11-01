@@ -235,9 +235,10 @@ export class SesionesFalsas implements RepositorioDeSesiones {
  * no necesita variar, para no repetirlos en cada `push`.
  */
 export function clienteMinimo(
-  datos: Pick<ClienteListado, 'id' | 'nombre' | 'ruc' | 'activo'>,
+  datos: Pick<ClienteListado, 'id' | 'nombre' | 'ruc' | 'activo'> & { codigo?: string | null },
 ): ClienteListado {
   return {
+    codigo: null,
     ...datos,
     tipoPersona: 'JURIDICA',
     regimenTributario: null,
@@ -268,9 +269,14 @@ export class ClientesFalsos implements RepositorioDeClientes {
     return this.clientes.find((candidato) => candidato.ruc === ruc) ?? null;
   }
 
+  async buscarPorCodigo(codigo: string): Promise<ClienteListado | null> {
+    return this.clientes.find((candidato) => candidato.codigo === codigo) ?? null;
+  }
+
   async crear(datos: AltaDeCliente): Promise<ClienteListado> {
     const cliente: ClienteListado = {
       id: randomUUID(),
+      codigo: datos.codigo,
       nombre: datos.nombre,
       ruc: datos.ruc,
       tipoPersona: datos.tipoPersona,

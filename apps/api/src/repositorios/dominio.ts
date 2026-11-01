@@ -239,6 +239,31 @@ export class DocumentosPrisma implements RepositorioDeDocumentos {
 
     return Object.fromEntries(filas.map((fila) => [fila.clienteId, fila._count._all]));
   }
+
+  async deEvidencia(evidenciaId: string, clienteId: string): Promise<DocumentoAlmacenado[]> {
+    const filas = await this.prisma.documento.findMany({
+      where: { evidenciaId, clienteId },
+      select: CAMPOS_DOCUMENTO,
+    });
+
+    return filas as DocumentoAlmacenado[];
+  }
+
+  async reclasificarDesdeOrigen(
+    id: string,
+    anterior: { readonly tipo: string; readonly periodo: string },
+    nuevo: { readonly tipo: string; readonly periodo: string },
+    usuarioId: string,
+  ): Promise<boolean> {
+    // Los valores anteriores van en el `where`: si alguien cambió el documento
+    // entre la lectura y ahora, `count` es 0 y no se pisa nada.
+    const { count } = await this.prisma.documento.updateMany({
+      where: { id, tipo: anterior.tipo as never, periodo: anterior.periodo },
+      data: { tipo: nuevo.tipo as never, periodo: nuevo.periodo, actualizadoPorUsuarioId: usuarioId },
+    });
+
+    return count === 1;
+  }
 }
 
 /* ========================================================================== */
@@ -726,17 +751,42 @@ export class EvidenciasPrisma implements RepositorioDeEvidencias {
       return { evidencia: insertadas[0] as EvidenciaAlmacenada, esNueva: true };
     }
 
-    // Ese contenido ya estaba.
+    // Ese contenido ya estaba. Hasta el 2026-11-01 solo se le anotaba el
+    // origen, y el nombre y la ruta quedaban los de la primera vez aunque el
+    // archivo se hubiera renombrado o movido (el ordenamiento de octubre de
+    // 2026 renombró miles). Ahora se actualizan también, pero solo si la
+    // evidencia es de este mismo cliente: el mismo contenido en la carpeta de
+    // otro cliente no puede hacer que un documento ajeno muestre esa ruta. No
+    // se borra nada: la copia anterior sigue en la carpeta del sistema.
+    const previa = await this.prisma.evidencia.findUnique({
+      where: { sha256: datos.sha256 },
+      select: { clienteId: true, nombreArchivo: true, rutaOneDrive: true },
+    });
+    const mismoCliente = previa !== null && previa.clienteId === datos.clienteId;
+
     const existente = await this.prisma.evidencia.update({
       where: { sha256: datos.sha256 },
       data: {
         itemIdOrigen: datos.itemIdOrigen,
         modificadoEnOrigen: datos.modificadoEnOrigen,
+        ...(mismoCliente
+          ? {
+              nombreArchivo: datos.nombreArchivo,
+              rutaOneDrive: datos.rutaOneDrive,
+              itemIdOneDrive: datos.itemIdOneDrive,
+            }
+          : {}),
       },
       select: CAMPOS_EVIDENCIA,
     });
 
-    return { evidencia: existente as EvidenciaAlmacenada, esNueva: false };
+    return {
+      evidencia: existente as EvidenciaAlmacenada,
+      esNueva: false,
+      anterior: mismoCliente
+        ? { nombreArchivo: previa.nombreArchivo, rutaOneDrive: previa.rutaOneDrive }
+        : null,
+    };
   }
 }
 
@@ -779,9 +829,25 @@ export class ArchivosDeOrigenPrisma {
   async huellas(clienteId: string): Promise<HuellaDeOrigen[]> {
     const filas = await this.prisma.archivoDeOrigen.findMany({
       where: { clienteId },
-      select: { itemIdOrigen: true, modificadoEnOrigen: true },
+      select: {
+        itemIdOrigen: true,
+        modificadoEnOrigen: true,
+        evidencia: { select: { rutaOneDrive: true, itemIdOrigen: true, clienteId: true } },
+      },
     });
-    return filas;
+
+    // La ruta anotada solo cuenta si la evidencia describe a ESTE archivo: con
+    // cinco copias del mismo contenido, las otras cuatro no tienen por qué
+    // coincidir, y tomarlas como renombradas las bajaría en cada corrida (el
+    // bucle del 2026-09-14). Ver `rutaRegistrada` en `HuellaDeOrigen`.
+    return filas.map((f) => ({
+      itemIdOrigen: f.itemIdOrigen,
+      modificadoEnOrigen: f.modificadoEnOrigen,
+      rutaRegistrada:
+        f.evidencia.itemIdOrigen === f.itemIdOrigen && f.evidencia.clienteId === clienteId
+          ? f.evidencia.rutaOneDrive
+          : null,
+    }));
   }
 
   /**
@@ -1488,8 +1554,11 @@ export class DeclaracionesAjenasPrisma implements RepositorioDeDeclaracionesAjen
       },
     });
 
+    // Un cliente con «RUC pendiente» no tiene contra qué comparar: no se lo
+    // acusa de guardar declaraciones ajenas (sería una alerta falsa por cada
+    // declaración suya). Se revisa sola cuando se carga el RUC.
     return filas
-      .filter((fila) => rucBase(fila.ruc!) !== rucBase(fila.cliente.ruc))
+      .filter((fila) => fila.cliente.ruc !== null && rucBase(fila.ruc!) !== rucBase(fila.cliente.ruc))
       .map((fila) => ({
         evidenciaId: fila.evidenciaId,
         clienteId: fila.clienteId,

@@ -48,8 +48,12 @@ export interface PresentacionLeida extends DeclaracionDnit {
 export interface VencimientoPendiente {
   readonly id: string;
   readonly clienteId: string;
-  /** RUC del cliente tal como está cargado, con dígito verificador. */
-  readonly rucCliente: string;
+  /**
+   * RUC del cliente tal como está cargado, con dígito verificador. Null =
+   * «RUC pendiente»: no hay contra qué comparar el RUC del formulario, así que
+   * ninguna declaración marca ese vencimiento como presentado.
+   */
+  readonly rucCliente: string | null;
   readonly codigoObligacion: string;
   readonly periodo: string;
   /** `AAAA-MM-DD`. */
@@ -154,6 +158,11 @@ export async function detectarPresentaciones(
   let fueraDeTermino = 0;
 
   for (const vencimiento of pendientes) {
+    // Sin RUC del cliente no se puede saber si la declaración es suya o de otro
+    // contribuyente guardado en su carpeta: no se marca nada (se marcará sola
+    // cuando se cargue el RUC).
+    const rucDelCliente = vencimiento.rucCliente;
+    if (rucDelCliente === null) continue;
     const candidatas = presentaciones.filter(
       (p) =>
         p.clienteId === vencimiento.clienteId &&
@@ -162,7 +171,7 @@ export async function detectarPresentaciones(
         // En la carpeta de un cliente puede haber declaraciones de otro
         // contribuyente (un socio, la unipersonal del dueño). El RUC del
         // formulario manda.
-        p.ruc === rucBase(vencimiento.rucCliente),
+        p.ruc === rucBase(rucDelCliente),
     );
     if (candidatas.length === 0) continue;
 

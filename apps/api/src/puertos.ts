@@ -164,8 +164,20 @@ export interface RepositorioDeSesiones {
 
 export interface ClienteListado {
   readonly id: string;
+  /**
+   * Código de EFFORT (3 cifras), el número de su carpeta `CLIENTES/NNN NOMBRE`.
+   * Null solo en un cliente anterior a la columna que la migración no
+   * reconoció; todo cliente nuevo lo tiene.
+   */
+  readonly codigo: string | null;
   readonly nombre: string;
-  readonly ruc: string;
+  /**
+   * Null = «RUC pendiente». Sin RUC no se calcula ningún vencimiento que
+   * dependa de su terminación (`generadorDeVencimientos.ts`) ni se cruza una
+   * declaración con el cliente (`detectorDePresentaciones.ts`). Nunca se
+   * reemplaza por un RUC de relleno.
+   */
+  readonly ruc: string | null;
   readonly tipoPersona: string;
   readonly regimenTributario: string | null;
   readonly email: string | null;
@@ -177,8 +189,10 @@ export interface ClienteListado {
 }
 
 export interface AltaDeCliente {
+  readonly codigo: string;
   readonly nombre: string;
-  readonly ruc: string;
+  /** Null = «RUC pendiente» (todavía no lo dio EFFORT). */
+  readonly ruc: string | null;
   readonly tipoPersona: string;
   readonly regimenTributario: string | null;
   readonly email: string | null;
@@ -200,6 +214,7 @@ export interface AltaDeCliente {
  * desde acá — un solo lugar escribe `asignacion_cliente`.
  */
 export type CamposEditablesDeCliente = {
+  codigo?: string | undefined;
   nombre?: string | undefined;
   ruc?: string | undefined;
   tipoPersona?: string | undefined;
@@ -217,6 +232,8 @@ export interface RepositorioDeClientes {
   listar(filtro: readonly string[] | null): Promise<ClienteListado[]>;
   buscarPorId(id: string, filtro: readonly string[] | null): Promise<ClienteListado | null>;
   buscarPorRuc(ruc: string): Promise<ClienteListado | null>;
+  /** Sin filtro de cartera: para comprobar que el código no lo tiene otro cliente. */
+  buscarPorCodigo(codigo: string): Promise<ClienteListado | null>;
   crear(datos: AltaDeCliente): Promise<ClienteListado>;
   actualizar(
     id: string,

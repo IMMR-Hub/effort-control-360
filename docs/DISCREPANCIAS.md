@@ -2019,3 +2019,30 @@ declaraciones de ese RUC (`docs/ordenamiento-2026-10/herramientas/rucs.cjs.txt`)
 EFFORT si ya la están completando), y que EFFORT confirme el 113 y qué hacer con el 045 (ya está en la hoja «Dudas»).
 *Lección (refuerza la 22): un dato propuesto «de 1 de 1» documentos se verifica contra el nombre del propio documento
 antes de entregarlo.*
+
+## 45. Período y tipo de un documento después del ordenamiento — ABIERTO (2026-11-01)
+
+**Qué pasaba.** El período de un documento de OneDrive salía de `lastModifiedDateTime` (`periodoDe` en
+`apps/api/src/servicios/sincronizadorDeOneDrive.ts`). El comentario de esa función decía que quedaba anotado en este
+archivo: **no lo estaba** (lección 7). Al renombrar en el ordenamiento (tarea 164), esa fecha pasó a ser la del día del
+ordenamiento. Además, al reconocer un archivo ya conocido, el documento conservaba nombre, ruta, tipo y período viejos.
+
+**Qué hace el sistema desde el 2026-11-01** (`deducirPeriodo` en `packages/core/src/periodoDeDocumentos.ts`, con su test):
+1. Carpeta: `NNN PERIODO AAAA/DOCUMENTOS CONTABLES/MM MES` → `AAAA-MM`; `.../CIERRE AAAA` → `AAAA-12` (así modela el
+   sistema lo anual: `correspondeAlPeriodo` en `generadorDeVencimientos.ts`). Mes que no coincide con su número o
+   `CIERRE` de otro año que su `PERIODO`: no se adivina.
+2. Nombre: `MMAAAA` según la guía (un año suelto no alcanza).
+3. Fecha: último recurso; se prefiere `fileSystemInfo.lastModifiedDateTime`.
+
+Al reconocer un archivo, la evidencia toma el nombre y la ruta actuales (solo si es del mismo cliente) y el documento
+se recalcula **sin perder información**: el tipo nunca baja a `OTRO` (un archivo sin renombrar que pasó de
+`RG 90 COMPRAS/` a `03 MARZO/` conserva el tipo que le daba la carpeta vieja, porque eso no se puede deducir de la
+carpeta nueva) y el período solo cambia si lo dice la carpeta o el nombre. Cada cambio queda en la bitácora
+(`evidencia.renombrada_en_origen`, `documento.reclasificado`).
+
+**Lo que sigue sin verificar contra el OneDrive real** (verificación pendiente, no pregunta):
+- Que la consulta de cambios (`/delta`, sin `$select`) traiga `fileSystemInfo`, y que mover o renombrar no lo cambie.
+- La guía dice que `TALON RG 90` «ya funciona»: **el clasificador lo deja en `OTRO`** (probado el 2026-11-01). No se
+  le inventó un tipo; el detector de presentaciones no depende del tipo (lee el PDF). Falta que Daniel decida el tipo.
+- Los repositorios Prisma nuevos (`registrarOVincular`, `huellas` con la ruta anotada, `reclasificarDesdeOrigen`) no
+  tienen todavía su prueba contra PostgreSQL real (lección 13).

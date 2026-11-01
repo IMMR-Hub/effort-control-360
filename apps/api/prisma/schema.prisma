@@ -156,8 +156,14 @@ enum TipoPersona {
 
 model Cliente {
   id                String      @id @default(uuid()) @db.Uuid
+  /// Código de 3 cifras de EFFORT, igual al número de su carpeta `CLIENTES/NNN NOMBRE`.
+  /// Único; obligatorio para todo cliente nuevo (lo exige la API). Nullable solo por
+  /// los clientes anteriores a la columna: la migración les pone el suyo.
+  codigo            String?     @unique @db.VarChar(3)
   nombre            String      @db.VarChar(200)
-  ruc               String      @unique @db.VarChar(20)
+  /// Null = «RUC pendiente»: sin RUC no se calculan los vencimientos que dependen
+  /// de su terminación, y nunca se pone uno de relleno.
+  ruc               String?     @unique @db.VarChar(20)
   tipoPersona       TipoPersona @map("tipo_persona")
   regimenTributario String?     @map("regimen_tributario") @db.VarChar(200)
   email             String?     @db.VarChar(254)

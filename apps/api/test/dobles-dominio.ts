@@ -184,6 +184,24 @@ export class DocumentosFalsos implements RepositorioDeDocumentos {
     }
     return conteo;
   }
+
+  async deEvidencia(evidenciaId: string, clienteId: string): Promise<DocumentoAlmacenado[]> {
+    return this.documentos.filter((doc) => doc.evidenciaId === evidenciaId && doc.clienteId === clienteId);
+  }
+
+  /** Igual que la base: solo se aplica si el documento sigue con los valores `anterior`. */
+  async reclasificarDesdeOrigen(
+    id: string,
+    anterior: { tipo: string; periodo: string },
+    nuevo: { tipo: string; periodo: string },
+  ): Promise<boolean> {
+    const indice = this.documentos.findIndex(
+      (doc) => doc.id === id && doc.tipo === anterior.tipo && doc.periodo === anterior.periodo,
+    );
+    if (indice < 0) return false;
+    this.documentos[indice] = { ...this.documentos[indice]!, tipo: nuevo.tipo, periodo: nuevo.periodo };
+    return true;
+  }
 }
 
 function procesoVacio(clienteId: string, periodo: string): ProcesoMensualAlmacenado {

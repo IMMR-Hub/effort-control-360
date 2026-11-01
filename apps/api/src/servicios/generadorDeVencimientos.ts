@@ -40,6 +40,18 @@ export interface DependenciasDelGenerador {
   readonly vencimientos: RepositorioDeVencimientos;
 }
 
+/**
+ * Motivo de la omisión de un cliente sin RUC. Exportado para que la pantalla y
+ * las pruebas digan exactamente lo mismo.
+ *
+ * Todas las fechas del calendario salen de la terminación del RUC (cada
+ * obligación tiene un día por terminación: `fechaDeVencimiento` en
+ * `@effort/core`). Sin RUC no hay terminación, y un RUC de relleno daría una
+ * fecha falsa dicha con seguridad — peor que no decir nada.
+ */
+export const MOTIVO_RUC_PENDIENTE =
+  'RUC pendiente: sin RUC no se calcula este vencimiento, porque la fecha depende de la terminación del RUC.';
+
 /** Por qué un cliente y una obligación no produjeron vencimiento. */
 export interface Omision {
   readonly cliente: string;
@@ -149,6 +161,15 @@ export async function generarVencimientosDelPeriodo(
         obligacion: obligacion.codigo,
         motivo:
           'El calendario de la obligación no tiene los 10 días (uno por terminación de RUC).',
+      });
+      continue;
+    }
+
+    if (cliente.ruc === null) {
+      omitidos.push({
+        cliente: cliente.nombre,
+        obligacion: obligacion.codigo,
+        motivo: MOTIVO_RUC_PENDIENTE,
       });
       continue;
     }

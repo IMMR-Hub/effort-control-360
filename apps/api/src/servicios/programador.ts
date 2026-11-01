@@ -16,6 +16,7 @@ import type { FastifyBaseLogger } from 'fastify';
 
 import { crearCalendario, feriadosParaguay, hoyEnParaguay } from '@effort/core';
 
+import { registrarEvento } from '../bitacora.js';
 import type { Dependencias } from '../servidor.js';
 import { enviarAvisosDeAlertas, VENTANA_DE_AVISOS_MS } from './avisosPorCorreo.js';
 import { enviarRecordatorios } from './recordatorios.js';
@@ -317,6 +318,11 @@ export function programarSincronizacionDeOneDrive(
             registrarEvidencia: (datos) => deps.evidencias.registrarOVincular(datos),
             huellasDeOrigen: (clienteId) => deps.archivosDeOrigen.huellas(clienteId),
             marcarArchivoDeOrigen: (datos) => deps.archivosDeOrigen.marcar(datos),
+            registrarEnBitacora: (entrada) =>
+              registrarEvento(deps.bitacora, registrador, {
+                ...entrada,
+                agenteUsuario: 'sincronización automática',
+              }),
             ahora: deps.ahora,
           },
           usuario.id,

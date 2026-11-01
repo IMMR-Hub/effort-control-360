@@ -9,7 +9,10 @@
 
 import { describe, expect, it } from 'vitest';
 
-import { generarVencimientosDelPeriodo } from '../src/servicios/generadorDeVencimientos.js';
+import {
+  generarVencimientosDelPeriodo,
+  MOTIVO_RUC_PENDIENTE,
+} from '../src/servicios/generadorDeVencimientos.js';
 import type { ObligacionAlmacenada } from '../src/puertos-dominio.js';
 import { ClientesFalsos, clienteMinimo } from './dobles.js';
 import { ObligacionesFalsas, VencimientosFalsos } from './dobles-dominio.js';
@@ -144,6 +147,44 @@ describe('generador de vencimientos', () => {
     expect(resumen.omitidos).toHaveLength(1);
     expect(resumen.omitidos[0]!.cliente).toBe('FUMIPRO S.A.');
     expect(deps.vencimientos.vencimientos[0]!.clienteId).toBe(ECOAGRO);
+  });
+
+  // Alta de todos los clientes con carpeta (2026-11-01): 41 no tienen RUC
+  // todavía. Un RUC de relleno daría una fecha falsa; el cliente queda «RUC
+  // pendiente» y el motivo llega a quien genera.
+  describe('RUC pendiente', () => {
+    it('sin RUC no genera el vencimiento, lo dice, y no frena a los demás', async () => {
+      const deps = armar();
+      deps.clientes.clientes[0] = clienteMinimo({
+        id: FUMIPRO, nombre: 'FUMIPRO S.A.', ruc: null, activo: true,
+      });
+
+      const resumen = await generarVencimientosDelPeriodo(deps, '2026-03', USUARIO);
+
+      expect(resumen.creados).toBe(1);
+      expect(deps.vencimientos.vencimientos.map((v) => v.clienteId)).toEqual([ECOAGRO]);
+      expect(resumen.omitidos).toEqual([
+        { cliente: 'FUMIPRO S.A.', obligacion: 'IVA_GENERAL', motivo: MOTIVO_RUC_PENDIENTE },
+      ]);
+    });
+
+    it('apenas se carga el RUC, el mismo período se genera con la fecha de su terminación', async () => {
+      const deps = armar();
+      deps.clientes.clientes[0] = clienteMinimo({
+        id: FUMIPRO, nombre: 'FUMIPRO S.A.', ruc: null, activo: true,
+      });
+      await generarVencimientosDelPeriodo(deps, '2026-03', USUARIO);
+
+      deps.clientes.clientes[0] = clienteMinimo({
+        id: FUMIPRO, nombre: 'FUMIPRO S.A.', ruc: '80119631-0', activo: true,
+      });
+      const segunda = await generarVencimientosDelPeriodo(deps, '2026-03', USUARIO);
+
+      expect(segunda.creados).toBe(1);
+      expect(segunda.omitidos).toEqual([]);
+      const fumipro = deps.vencimientos.vencimientos.find((v) => v.clienteId === FUMIPRO)!;
+      expect(fumipro.fechaVencimiento.toISOString().slice(0, 10)).toBe('2026-04-09');
+    });
   });
 
   it('un calendario incompleto no genera fechas inventadas', async () => {

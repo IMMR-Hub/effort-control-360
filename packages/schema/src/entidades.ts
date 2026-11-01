@@ -19,6 +19,7 @@ import { z } from 'zod';
 import {
   auditoriaSchema,
   canalRecepcionSchema,
+  codigoClienteSchema,
   emailSchema,
   estadoGeneralSchema,
   fechaIsoSchema,
@@ -97,8 +98,11 @@ export const actualizarUsuarioSchema = crearUsuarioSchema.partial().strict();
 export const clienteSchema = z
   .object({
     id: idSchema,
+    codigo: codigoClienteSchema,
     nombre: textoCorto,
-    ruc: rucSchema,
+    // Null = «RUC pendiente»: el cliente existe (tiene carpeta y código) pero
+    // EFFORT todavía no dio su RUC. Cuando hay RUC, se valida igual que siempre.
+    ruc: rucSchema.nullable(),
     tipoPersona: z.enum(['FISICA', 'JURIDICA']),
     regimenTributario: textoCorto.nullable(),
     email: emailSchema.nullable(),

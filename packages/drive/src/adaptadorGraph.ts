@@ -76,6 +76,7 @@ interface ElementoGraph {
   readonly name: string;
   readonly size: number;
   readonly lastModifiedDateTime: string;
+  readonly fileSystemInfo?: { readonly lastModifiedDateTime?: string };
   readonly file?: { readonly mimeType?: string };
   readonly folder?: unknown;
   readonly deleted?: unknown;
@@ -121,6 +122,12 @@ function tokenDelEnlace(enlace: string): string {
   return token;
 }
 
+/** `fileSystemInfo.lastModifiedDateTime`, o `null` si Graph no la mandó. */
+function fechaDelSistemaDeArchivos(item: ElementoGraph): Date | null {
+  const valor = item.fileSystemInfo?.lastModifiedDateTime;
+  return valor ? new Date(valor) : null;
+}
+
 function aArchivoDrive(item: ElementoGraph, carpeta: string): ArchivoDrive {
   return {
     itemId: item.id,
@@ -128,6 +135,7 @@ function aArchivoDrive(item: ElementoGraph, carpeta: string): ArchivoDrive {
     rutaCarpeta: carpeta,
     tamanoBytes: item.size,
     modificadoEn: new Date(item.lastModifiedDateTime),
+    modificadoEnSistemaDeArchivos: fechaDelSistemaDeArchivos(item),
     tipoMime: item.file?.mimeType ?? null,
   };
 }
@@ -264,7 +272,7 @@ export class DriveGraph implements DriveDeArchivos, FuenteDeCambios {
 
       let url: string | null =
         `/drives/${drive}/items/${actual.id}/children` +
-        '?$top=200&$select=id,name,size,lastModifiedDateTime,file,folder';
+        '?$top=200&$select=id,name,size,lastModifiedDateTime,fileSystemInfo,file,folder';
 
       while (url) {
         const respuesta = await this.#peticion(url);
@@ -330,6 +338,10 @@ export class DriveGraph implements DriveDeArchivos, FuenteDeCambios {
           nombre: item.name,
           tamanoBytes: item.size ?? 0,
           modificadoEn: new Date(item.lastModifiedDateTime),
+          // La consulta de cambios no lleva `$select`: Graph manda el elemento
+          // con sus propiedades por defecto. Si no trae `fileSystemInfo`, queda
+          // en `null` y el período cae a `modificadoEn`, como antes.
+          modificadoEnSistemaDeArchivos: fechaDelSistemaDeArchivos(item),
           tipoMime: item.file?.mimeType ?? null,
           eliminado: item.deleted !== undefined,
           esCarpeta: item.folder !== undefined,

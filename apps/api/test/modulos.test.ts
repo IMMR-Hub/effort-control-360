@@ -147,7 +147,7 @@ async function montar(): Promise<Contexto> {
   usuarios.asignaciones.set('usr-direccion-acotada', [MIO]);
 
   clientes.clientes.push(
-    clienteMinimo({ id: MIO, nombre: 'GARSO S.A.', ruc: '80017726-6', activo: true }),
+    clienteMinimo({ id: MIO, codigo: '012', nombre: 'GARSO S.A.', ruc: '80017726-6', activo: true }),
     clienteMinimo({ id: AJENO, nombre: 'CLIENTE AJENO S.A.', ruc: '80019012-2', activo: true }),
   );
 
@@ -2512,6 +2512,7 @@ describe('eventos (event log)', () => {
 
 describe('clientes', () => {
   const altaValida = {
+    codigo: '201',
     nombre: 'Nuevo Cliente S.A.',
     ruc: '80099999-1',
     tipoPersona: 'JURIDICA',
@@ -2528,6 +2529,78 @@ describe('clientes', () => {
     const { cliente } = JSON.parse(respuesta.body);
     expect(cliente.ruc).toBe('80099999-1');
     expect(cliente.activo).toBe(true);
+  });
+
+  describe('código de cliente y RUC pendiente (2026-11-01)', () => {
+    it('sin código no hay alta: es el número de su carpeta y todo cliente nuevo lo lleva', async () => {
+      const { codigo: _sinCodigo, ...sinCodigo } = altaValida;
+      const respuesta = await darDeAlta(sinCodigo, direccion);
+      expect(respuesta.statusCode).toBe(400);
+    });
+
+    it('el código son exactamente 3 cifras', async () => {
+      for (const codigo of ['21', '0210', 'A21']) {
+        const respuesta = await darDeAlta({ ...altaValida, codigo }, direccion);
+        expect(respuesta.statusCode, codigo).toBe(400);
+      }
+    });
+
+    it('no se puede repetir el código de otro cliente', async () => {
+      // MIO (GARSO) está sembrado con el código 012.
+      const respuesta = await darDeAlta({ ...altaValida, codigo: '012' }, direccion);
+      expect(respuesta.statusCode).toBe(409);
+      expect(JSON.parse(respuesta.body).error).toBe('codigo_en_uso');
+    });
+
+    it('sin RUC el cliente se da de alta con el RUC pendiente, nunca con uno de relleno', async () => {
+      const { ruc: _sinRuc, ...sinRuc } = altaValida;
+      const respuesta = await darDeAlta(sinRuc, direccion);
+
+      expect(respuesta.statusCode).toBe(201);
+      const { cliente } = JSON.parse(respuesta.body);
+      expect(cliente.codigo).toBe('201');
+      expect(cliente.ruc).toBeNull();
+    });
+
+    it('un RUC explícitamente null también queda pendiente, y dos pendientes conviven', async () => {
+      const primero = await darDeAlta({ ...altaValida, ruc: null }, direccion);
+      const segundo = await darDeAlta({ ...altaValida, codigo: '202', ruc: null }, direccion);
+
+      expect(primero.statusCode).toBe(201);
+      expect(segundo.statusCode).toBe(201);
+    });
+
+    it('con RUC, el dígito verificador se sigue validando igual', async () => {
+      const respuesta = await darDeAlta({ ...altaValida, ruc: '80099999-2' }, direccion);
+      expect(respuesta.statusCode).toBe(400);
+    });
+
+    it('a un cliente con RUC pendiente se le carga el RUC después, validado', async () => {
+      const { ruc: _sinRuc, ...sinRuc } = altaValida;
+      const alta = await darDeAlta(sinRuc, direccion);
+      const { id } = JSON.parse(alta.body).cliente as { id: string };
+
+      const invalido = await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/clientes/${id}`,
+        headers: { cookie: direccion }, payload: { ruc: '80099999-2' },
+      });
+      expect(invalido.statusCode).toBe(400);
+
+      const valido = await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/clientes/${id}`,
+        headers: { cookie: direccion }, payload: { ruc: '80099999-1' },
+      });
+      expect(valido.statusCode).toBe(200);
+      expect(JSON.parse(valido.body).cliente.ruc).toBe('80099999-1');
+    });
+
+    it('una edición no puede borrar un RUC ya cargado (no vuelve a «pendiente»)', async () => {
+      const respuesta = await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/clientes/${MIO}`,
+        headers: { cookie: direccion }, payload: { ruc: null },
+      });
+      expect(respuesta.statusCode).toBe(400);
+    });
   });
 
   it('responsable ya no puede dar de alta: solo dirección (2026-09-24)', async () => {
@@ -2568,10 +2641,12 @@ describe('clientes', () => {
   });
 
   describe('edición', () => {
+    let siguienteCodigo = 300;
     async function clienteDePrueba() {
       const base = `800${Math.floor(Math.random() * 90000 + 10000)}`;
       const ruc = `${base}-${calcularDigitoVerificadorRuc(base)}`;
-      const alta = await darDeAlta({ ...altaValida, ruc }, direccion);
+      siguienteCodigo += 1;
+      const alta = await darDeAlta({ ...altaValida, codigo: String(siguienteCodigo), ruc }, direccion);
       return JSON.parse(alta.body).cliente as { id: string; ruc: string };
     }
 

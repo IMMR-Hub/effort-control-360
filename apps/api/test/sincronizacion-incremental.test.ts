@@ -85,6 +85,7 @@ function armar(inicio: Date = new Date('2026-09-24T12:00:00Z')) {
         modificadoEnOrigen: d.modificadoEnOrigen,
       });
     },
+    registrarEnBitacora: async () => {},
     ahora: () => ahora,
   };
 
