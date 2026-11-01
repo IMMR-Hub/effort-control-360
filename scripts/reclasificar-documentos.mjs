@@ -13,6 +13,16 @@
  *  - Cada cambio queda en la bitácora con el tipo anterior, así que se puede
  *    deshacer fila por fila si alguno resultara mal clasificado.
  *
+ * Nombre y ruta: los ACTUALES de la evidencia (`nombreArchivo`, `rutaOneDrive`).
+ * Hasta el 2026-11-01 eran los de la primera vez que el archivo entró, aunque
+ * después lo renombraran o lo movieran (el ordenamiento de octubre de 2026
+ * renombró miles). Desde ese día la sincronización los actualiza al reconocer
+ * el archivo (`registrarOVincular` en `apps/api/src/repositorios/dominio.ts`),
+ * y también vuelve a mirar los que tienen anotada una ruta que ya no existe
+ * (`rutaRegistrada`). Mientras la sincronización no haya pasado por un archivo
+ * renombrado, este script ve su nombre viejo: correrlo después de que la
+ * sincronización termine de recorrer todo (sin `quedaronPendientes`).
+ *
  * Uso:
  *   node scripts/reclasificar-documentos.mjs             → simula
  *   node scripts/reclasificar-documentos.mjs --aplicar   → escribe
@@ -49,6 +59,9 @@ const documentos = await prisma.documento.findMany({
 const cambios = [];
 for (const d of documentos) {
   if (!d.evidencia) continue;
+  // `rutaOneDrive` es la de la copia en `EFFORT Control 360/Entrada/<cliente>/`,
+  // que repite la ruta del original en la carpeta del cliente. Se le saca el
+  // nombre del archivo y queda la carpeta actual.
   const carpeta = (d.evidencia.rutaOneDrive ?? '').split('/').slice(0, -1).join('/');
   const nuevo = clasificarDocumento(d.evidencia.nombreArchivo, carpeta);
   if (nuevo !== 'OTRO') cambios.push({ ...d, nuevo });

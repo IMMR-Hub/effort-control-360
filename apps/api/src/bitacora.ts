@@ -163,8 +163,11 @@ export const ACCIONES = Object.freeze({
   DOCUMENTO_REGISTRADO: 'documento.registrado',
   DOCUMENTO_IMPORTADO_DESDE_ARCHIVO: 'documento.importado_desde_archivo',
   DOCUMENTO_CAMBIO_ESTADO: 'documento.cambio_estado',
+  /* Mismo nombre que ya usaba `scripts/reclasificar-documentos.mjs`. */
+  DOCUMENTO_RECLASIFICADO: 'documento.reclasificado',
   ARCHIVO_ABIERTO: 'evidencia.archivo_abierto',
   ONEDRIVE_SINCRONIZADO: 'evidencia.onedrive_sincronizado',
+  EVIDENCIA_RENOMBRADA_EN_ORIGEN: 'evidencia.renombrada_en_origen',
   PROCESO_MENSUAL_ACTUALIZADO: 'proceso_mensual.actualizado',
 
   VENCIMIENTO_REGISTRADO: 'vencimiento.registrado',
