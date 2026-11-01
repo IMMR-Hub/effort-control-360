@@ -534,3 +534,11 @@ En concreto:
 - **Abreviaturas:** `docs/ordenamiento-2026-10/DICCIONARIO DE ABREVIATURAS - EFFORT.docx`.
 - **Revisión final** (solo verificación, 2026-11-01 09:31): **limpia en 3 rondas, 26.406 de 26.407 en su lugar** (el que
   falta es el Excel bloqueado de COPESA).
+
+## 2026-11-01 — Lectura (solo GET): ids de las carpetas de clientes para el alta masiva
+
+- **Qué:** `node scripts/alta-masiva-clientes.mjs --leer-carpetas` listó las carpetas de primer nivel de
+  `CLIENTES EFFORT E.A.S/CLIENTES` (solo GET; el único POST es el del token). **Por qué:** dar de alta en EFFORT Control 360 a
+  todos los clientes con carpeta, conectados a su carpeta (Daniel, 2026-11-01). **Resultado:** 128 carpetas con código
+  guardadas en `docs/analisis-onedrive-2026-10/datos/carpetas-de-clientes.json`; 14 sin código (999, ZZ, plantillas,
+  etc.), que no son clientes. No se escribió nada en OneDrive.
