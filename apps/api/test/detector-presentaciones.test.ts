@@ -104,6 +104,16 @@ describe('detector de presentaciones', () => {
     expect(marcados).toEqual([]);
   });
 
+  it('con el RUC del cliente pendiente no marca nada: no hay contra qué comparar el del formulario', async () => {
+    const { deps, marcados } = armar({
+      presentaciones: [IVA_MARZO],
+      pendientes: [{ ...VENCE_IVA_MARZO, rucCliente: null }],
+    });
+
+    expect((await detectarPresentaciones(deps, 'usr')).vencimientosMarcados).toBe(0);
+    expect(marcados).toEqual([]);
+  });
+
   it('no cruza otro período ni otro impuesto', async () => {
     const { deps } = armar({
       presentaciones: [

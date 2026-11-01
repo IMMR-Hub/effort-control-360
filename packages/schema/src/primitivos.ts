@@ -95,6 +95,17 @@ export const rucSchema = z
     return calcularDigitoVerificadorRuc(base) === Number(verificador);
   }, 'El dígito verificador del RUC no corresponde.');
 
+/**
+ * Código de cliente de EFFORT: tres cifras, el mismo número que su carpeta
+ * `CLIENTES/NNN NOMBRE` en el OneDrive (002, 021, 132). Es la identidad del
+ * cliente para EFFORT; el RUC puede faltar un tiempo («RUC pendiente»), el
+ * código no.
+ */
+export const codigoClienteSchema = z
+  .string()
+  .trim()
+  .regex(/^\d{3}$/, 'El código de cliente son 3 cifras, el número de su carpeta (por ejemplo 002).');
+
 /* --- Contacto ------------------------------------------------------------- */
 
 export const emailSchema = z

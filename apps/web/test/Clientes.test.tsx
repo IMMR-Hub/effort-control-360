@@ -26,6 +26,7 @@ function celdas(hoja: HojaDeReporte): unknown[][] {
 
 const GARSO = {
   id: 'cli-garso',
+  codigo: '012',
   nombre: 'GARSO S.A.',
   ruc: '80017726-6',
   tipoPersona: 'JURIDICA',
@@ -108,6 +109,89 @@ describe('pantalla de clientes', () => {
     expect(screen.getByText('GARSO S.A.')).toBeVisible();
   });
 
+  it('la búsqueda también encuentra por el código del cliente (el número de su carpeta)', async () => {
+    const OTRO = { ...GARSO, id: 'cli-otro', codigo: '021', nombre: 'COPESA', ruc: '80003112-1' };
+    await montar('direccion', [GARSO, OTRO]);
+    const tabla = screen.getByRole('table', { name: 'Cartera de clientes' });
+
+    await usuario.type(screen.getByLabelText('Buscar cliente'), '021');
+
+    expect(within(tabla).getByText('COPESA')).toBeVisible();
+    expect(within(tabla).queryByText('GARSO S.A.')).not.toBeInTheDocument();
+  });
+
+  /*
+   * Alta de todos los clientes con carpeta (2026-11-01): los que todavía no
+   * tienen RUC quedan «RUC pendiente», y dirección tiene que verlo.
+   */
+  describe('RUC pendiente (2026-11-01)', () => {
+    const SIN_RUC = { ...GARSO, id: 'cli-humo', codigo: '004', nombre: 'HUMO EAS', ruc: null };
+
+    it('la fila dice «RUC pendiente» y dirección ve el aviso de que no se calculan sus vencimientos', async () => {
+      await montar('direccion', [GARSO, SIN_RUC]);
+      const tabla = screen.getByRole('table', { name: 'Cartera de clientes' });
+      const fila = within(tabla).getByText('HUMO EAS').closest('tr')!;
+
+      expect(within(fila).getByText('RUC pendiente')).toBeVisible();
+      expect(within(fila).getByText('004')).toBeVisible();
+      const aviso = screen.getByRole('status');
+      expect(aviso).toHaveTextContent('1 cliente activo con RUC pendiente.');
+      expect(aviso).toHaveTextContent(/no les calcula los vencimientos/);
+    });
+
+    it('sin clientes pendientes no hay aviso', async () => {
+      await montar('direccion', [GARSO]);
+      expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    });
+
+    it('un rol de solo lectura ve la marca en la fila, pero el aviso es para dirección', async () => {
+      await montar('auxiliar', [GARSO, SIN_RUC]);
+
+      expect(screen.getByText('RUC pendiente')).toBeVisible();
+      expect(screen.queryByRole('status')).not.toBeInTheDocument();
+    });
+
+    it('el alta sin RUC lo manda como null: el servidor lo guarda pendiente, nunca con uno de relleno', async () => {
+      await montar('direccion');
+
+      await usuario.click(screen.getByRole('button', { name: 'Nuevo cliente' }));
+      await usuario.type(screen.getByLabelText('Código'), '004');
+      await usuario.type(screen.getByLabelText('Nombre / Razón social'), 'HUMO EAS');
+
+      mock.mockDeRuta('POST /api/v1/clientes', () =>
+        respuestaJson({ cliente: SIN_RUC }, { status: 201 }),
+      );
+      mock.mockDeRuta('GET /api/v1/clientes', () =>
+        respuestaJson({ clientes: [GARSO, CLIENTE_INACTIVO, SIN_RUC] }),
+      );
+
+      await usuario.click(screen.getByRole('button', { name: 'Crear cliente' }));
+
+      await waitFor(() => expect(mock.llamadasA('POST /api/v1/clientes')).toHaveLength(1));
+      const [, opciones] = mock.llamadasA('POST /api/v1/clientes')[0]!;
+      const cuerpo = JSON.parse(String(opciones?.body));
+      expect(cuerpo.codigo).toBe('004');
+      expect(cuerpo.ruc).toBeNull();
+    });
+
+    it('editar un cliente sin RUC y dejarlo vacío no manda el RUC', async () => {
+      await montar('direccion', [GARSO, SIN_RUC]);
+
+      await usuario.click(screen.getByRole('button', { name: 'Editar HUMO EAS' }));
+      expect(screen.getByLabelText('RUC')).toHaveValue('');
+      await usuario.type(screen.getByLabelText('Observaciones'), 'Falta el RUC.');
+
+      mock.mockDeRuta('PATCH /api/v1/clientes/cli-humo', () => respuestaJson({ cliente: SIN_RUC }));
+      await usuario.click(screen.getByRole('button', { name: 'Guardar cambios' }));
+
+      await waitFor(() => expect(mock.llamadasA('PATCH /api/v1/clientes/cli-humo')).toHaveLength(1));
+      const [, opciones] = mock.llamadasA('PATCH /api/v1/clientes/cli-humo')[0]!;
+      const cuerpo = JSON.parse(String(opciones?.body));
+      expect('ruc' in cuerpo).toBe(false);
+      expect(cuerpo.codigo).toBe('004');
+    });
+  });
+
   /*
    * Daniel, 2026-10-02: el filtro por cliente en todas las pantallas. Acá la
    * pantalla ES la lista de clientes, así que el filtro es una búsqueda.
@@ -176,14 +260,14 @@ describe('pantalla de clientes', () => {
       await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(1));
       const [reporte] = descargarReporte.mock.calls[0] as unknown as [Reporte, string | null];
       expect(reporte.titulo).toBe('Clientes');
-      expect(reporte.filtros).toEqual(['Cliente: nombre o RUC con «gar»', 'Estado: solo activos']);
+      expect(reporte.filtros).toEqual(['Cliente: nombre, código o RUC con «gar»', 'Estado: solo activos']);
       expect(reporte.hojas.map((h) => h.nombre)).toEqual(['Cartera']);
       const [cartera] = reporte.hojas as [HojaDeReporte];
-      expect(cartera.columnas.map((c) => c.titulo)).toEqual(['Nombre', 'RUC', 'Tipo', 'Canal preferido', 'Estado']);
+      expect(cartera.columnas.map((c) => c.titulo)).toEqual(['Código', 'Nombre', 'RUC', 'Tipo', 'Canal preferido', 'Estado']);
       // Las mismas filas y el mismo orden que la tabla: sin el inactivo ni «OTRO».
       expect(celdas(cartera)).toEqual([
-        ['GARCÍA ÑANDÚ S.A.', '80000002-3', 'Física', '', 'Activo'],
-        ['GARSO S.A.', '80017726-6', 'Jurídica', 'WhatsApp', 'Activo'],
+        ['012', 'GARCÍA ÑANDÚ S.A.', '80000002-3', 'Física', '', 'Activo'],
+        ['012', 'GARSO S.A.', '80017726-6', 'Jurídica', 'WhatsApp', 'Activo'],
       ]);
     });
 
@@ -197,7 +281,7 @@ describe('pantalla de clientes', () => {
       const [reporte] = descargarReporte.mock.calls[0] as unknown as [Reporte, string | null];
       expect(reporte.filtros).toEqual(['Cliente: todos', 'Estado: activos e inactivos']);
       const [cartera] = reporte.hojas as [HojaDeReporte];
-      expect(celdas(cartera).map((fila) => [fila[0], fila[4]])).toEqual([
+      expect(celdas(cartera).map((fila) => [fila[1], fila[5]])).toEqual([
         ['CLIENTE VIEJO S.A.', 'Inactivo'],
         ['GARSO S.A.', 'Activo'],
       ]);
@@ -215,6 +299,7 @@ describe('pantalla de clientes', () => {
     await montar('direccion');
 
     await usuario.click(screen.getByRole('button', { name: 'Nuevo cliente' }));
+    await usuario.type(screen.getByLabelText('Código'), '133');
     await usuario.type(screen.getByLabelText('Nombre / Razón social'), 'CLIENTE NUEVO S.A.');
     await usuario.type(screen.getByLabelText('RUC'), '80019012-2');
 
@@ -232,6 +317,7 @@ describe('pantalla de clientes', () => {
     });
     const [, opciones] = mock.llamadasA('POST /api/v1/clientes')[0]!;
     const cuerpo = JSON.parse(String(opciones?.body));
+    expect(cuerpo.codigo).toBe('133');
     expect(cuerpo.nombre).toBe('CLIENTE NUEVO S.A.');
     expect(cuerpo.ruc).toBe('80019012-2');
     // Los campos vacíos del formulario se mandan como null, no como cadena vacía.
@@ -244,6 +330,7 @@ describe('pantalla de clientes', () => {
     await montar('direccion');
 
     await usuario.click(screen.getByRole('button', { name: 'Nuevo cliente' }));
+    await usuario.type(screen.getByLabelText('Código'), '133');
     await usuario.type(screen.getByLabelText('Nombre / Razón social'), 'GARSO DUPLICADO');
     await usuario.type(screen.getByLabelText('RUC'), '80017726-6');
 

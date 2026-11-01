@@ -73,8 +73,36 @@ describe('fechas', () => {
 });
 
 describe('rechazo de campos desconocidos', () => {
+  it('el alta de cliente exige el código de 3 cifras y acepta el RUC pendiente (null), pero no uno inválido', () => {
+    const base = {
+      codigo: '004',
+      nombre: 'HUMO EAS',
+      ruc: null,
+      tipoPersona: 'JURIDICA',
+      regimenTributario: null,
+      email: null,
+      telefono: null,
+      canalPreferido: null,
+      responsableId: null,
+      coordinadorId: null,
+      auxiliarId: null,
+      revisorBalanceId: null,
+      carpetaOneDriveId: null,
+      activo: true,
+      observaciones: null,
+    };
+    expect(crearClienteSchema.parse(base).ruc).toBeNull();
+    expect(crearClienteSchema.parse({ ...base, ruc: '80017726-6' }).ruc).toBe('80017726-6');
+    expect(() => crearClienteSchema.parse({ ...base, ruc: '80017726-1' })).toThrow();
+    expect(() => crearClienteSchema.parse({ ...base, ruc: '' })).toThrow();
+    expect(() => crearClienteSchema.parse({ ...base, codigo: '4' })).toThrow();
+    const { codigo: _codigo, ...sinCodigo } = base;
+    expect(() => crearClienteSchema.parse(sinCodigo)).toThrow();
+  });
+
   it('no deja colar un cambio de rol en un alta de cliente', () => {
     const cuerpoMalicioso = {
+      codigo: '012',
       nombre: 'GARSO S.A.',
       ruc: '80017726-6',
       tipoPersona: 'JURIDICA',
@@ -95,6 +123,9 @@ describe('rechazo de campos desconocidos', () => {
     };
 
     expect(() => crearClienteSchema.parse(cuerpoMalicioso)).toThrow();
+    // Sin el campo de más, el mismo cuerpo pasa: lo que se rechaza es el rol.
+    const { rol: _rol, ...legitimo } = cuerpoMalicioso;
+    expect(() => crearClienteSchema.parse(legitimo)).not.toThrow();
   });
 
   it('el alta de usuario no acepta campos que decide el servidor', () => {

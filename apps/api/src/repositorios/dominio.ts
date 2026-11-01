@@ -1554,8 +1554,11 @@ export class DeclaracionesAjenasPrisma implements RepositorioDeDeclaracionesAjen
       },
     });
 
+    // Un cliente con «RUC pendiente» no tiene contra qué comparar: no se lo
+    // acusa de guardar declaraciones ajenas (sería una alerta falsa por cada
+    // declaración suya). Se revisa sola cuando se carga el RUC.
     return filas
-      .filter((fila) => rucBase(fila.ruc!) !== rucBase(fila.cliente.ruc))
+      .filter((fila) => fila.cliente.ruc !== null && rucBase(fila.ruc!) !== rucBase(fila.cliente.ruc))
       .map((fila) => ({
         evidenciaId: fila.evidenciaId,
         clienteId: fila.clienteId,

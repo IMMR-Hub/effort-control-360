@@ -9,8 +9,11 @@ export type { CanalRecepcion };
 
 export interface Cliente {
   readonly id: string;
+  /** Código de EFFORT (3 cifras), el número de su carpeta. */
+  readonly codigo: string | null;
   readonly nombre: string;
-  readonly ruc: string;
+  /** Null = «RUC pendiente»: sin él no se calculan sus vencimientos. */
+  readonly ruc: string | null;
   readonly tipoPersona: string;
   readonly regimenTributario: string | null;
   readonly email: string | null;
@@ -28,8 +31,10 @@ export function listarClientes(): Promise<{ clientes: readonly Cliente[] }> {
 export type TipoPersona = 'FISICA' | 'JURIDICA';
 
 export interface AltaDeCliente {
+  readonly codigo: string;
   readonly nombre: string;
-  readonly ruc: string;
+  /** Null = se da de alta con el RUC pendiente. */
+  readonly ruc: string | null;
   readonly tipoPersona: TipoPersona;
   readonly regimenTributario?: string | null;
   readonly email?: string | null;
@@ -42,7 +47,9 @@ export function crearCliente(datos: AltaDeCliente): Promise<{ cliente: Cliente }
   return peticion('POST', '/api/v1/clientes', datos);
 }
 
-export type EdicionDeCliente = Partial<AltaDeCliente> & {
+export type EdicionDeCliente = Partial<Omit<AltaDeCliente, 'ruc'>> & {
+  /** Se carga o corrige; no se borra (el servidor rechaza `null`). */
+  readonly ruc?: string;
   readonly carpetaOneDriveId?: string | null;
   readonly activo?: boolean;
 };
