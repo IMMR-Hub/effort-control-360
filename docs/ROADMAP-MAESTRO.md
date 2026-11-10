@@ -45,16 +45,21 @@ todo; todo cambio queda en la bitácora del cliente. Respaldo `respaldos/respald
 - RUC cargados: 071 `2432482-5` y 128 `80022736-0`.
 - **Bitácora:** 43 eventos `cliente.actualizado` (uno por cliente), 59 `usuario.actualizado` con su `clienteId` (uno por
   cliente de cartera) y 8 por usuario. Verificado contra la base.
-- **Hueco de código encontrado:** la ruta PATCH de usuarios registra un cambio de cartera solo en la bitácora del usuario
-  (`clienteId: null`), no en la de cada cliente. Las horas sí van al cliente (`registro_de_horas.registradas`, que no tiene
-  ruta de borrado). Falta registrar también cada alta o baja de cartera en el cliente.
+- **Hueco de código encontrado y arreglado (commit f4bf0f6, falta desplegar):** la ruta PATCH de usuarios registraba un
+  cambio de cartera solo en la bitácora del usuario (`clienteId: null`). Ahora cada cliente que entra o sale de una cartera
+  deja `cartera.cliente_asignado` / `cartera.cliente_quitado` en la bitácora de ese cliente. Las horas ya iban al cliente
+  (`registro_de_horas.registradas`, que no tiene ruta de borrado).
 - **No se cargaron** obligaciones ni régimen. Cargarlos genera vencimientos para 81 clientes, y con el detector de
   presentaciones sin probar en ellos saldrían atrasos falsos. Faltan además las reglas de IRP, IRE SIMPLE, IDU, etc.
-- **Carpeta RRHH:** mover a `CLIENTES EFFORT E.A.S/RRHH EFFORT` dio 423, porque Ariana tiene archivos abiertos. Queda un
-  reintento cada 5 minutos por 4 horas (ver `docs/BITACORA-ONEDRIVE.md`). Mientras tanto la sincronización sigue copiando
-  RRHH dentro de 022, pero 022 hoy solo lo ve dirección. Los 51 documentos de RRHH siguen en 022: no se borran (Daniel).
+- **Carpeta RRHH — MOVIDA el 2026-11-10 a las 17:21 (Asunción):** ahora es `CLIENTES EFFORT E.A.S/RRHH EFFORT`, fuera de
+  toda carpeta de cliente, así que la sincronización deja de copiarla. Permisos verificados en la carpeta y sus 8 elementos:
+  solo Laura y effort360 (propietarios), Lili y Ariana (escritura). Antes dio 423 durante casi 3 horas porque Ariana tenía
+  archivos abiertos (detalle en `docs/BITACORA-ONEDRIVE.md`). Los 51 documentos de RRHH que ya entraron siguen en 022, que
+  solo ve dirección: no se borran (Daniel).
 
-**1. URGENTE — la carpeta de RRHH entra al sistema por el cliente 022.** El 2026-11-05 Ariana movió la carpeta de RRHH
+**1. ~~URGENTE~~ RESUELTO 2026-11-10 17:21 — la carpeta de RRHH entraba al sistema por el cliente 022.** Se movió fuera
+de 022 (ver arriba) y los responsables ya no ven 022: (a) ya no hace falta; (b) quedó descartado por Daniel («no borres»).
+Texto original: el 2026-11-05 Ariana movió la carpeta de RRHH
 (id `01256M3RAVZMF3WEALKFA2CR5H4DSEH3HH`) dentro de `022 EFFORT E.A.S`. La sincronización recorre la carpeta de cada cliente
 entera y con credenciales de aplicación (el cierre de permisos del 05-11 no la frena): desde el 03-11 copió **51 archivos de
 RRHH** (recibos de salario, liquidaciones de Jorge Barrios y Karina Medina, CI de Laura, fichas, vacaciones) a

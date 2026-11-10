@@ -603,3 +603,12 @@ En concreto:
   salario, contratos). **No se movió nada** y los permisos siguen cerrados: Laura, Lili, Ariana y effort360. Las subcarpetas
   nuevas (`LEGALES`, `SALARIO Y RECIBOS`) heredaron el cierre. Queda un reintento cada 5 minutos, por hasta 4 horas, que verifica
   los permisos apenas pasa.
+- **Reintentos:** 423 cada 5 minutos de 17:38 a 20:16 UTC (34 intentos); dos cortes de red con `login.microsoftonline.com`
+  (18:59 y ~19:25 UTC), el primero detuvo el reintento y se relanzó tolerando cortes. Ningún intento cambió nada.
+- **Resultado final, 2026-11-10 20:21:50 UTC (17:21 en Asunción): PATCH 200.** La carpeta ahora es
+  `/CLIENTES EFFORT E.A.S/RRHH EFFORT`, con sus 8 elementos. Sin borrar nada.
+- **Permisos verificados después de mover (GET):** en la carpeta y en cada uno de sus 8 elementos (`CONTRATOS Y REGLAMENTO`,
+  `EX FUNC`, `LEGALES`, `NOTAS Y SOLICITUDES`, `SALARIO Y RECIBOS`, `VACACIONES FUNCIONARIOS EFFORT`, `FUNCIONARIOS EFFORT.xlsx`,
+  `PLANILLA REOP - EFFORT.xlsx`): escritura llaconich y acampos, propietario lsosa y effort360. Nadie más, ningún vínculo.
+- **Efecto en el sistema:** la carpeta ya no está dentro de la de ningún cliente, así que la sincronización deja de copiarla.
+  Las 51 copias que ya entraron siguen registradas en el cliente 022 (solo las ve dirección); no se borran (Daniel).
