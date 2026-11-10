@@ -79,6 +79,8 @@ const ETIQUETA_ACCION: Record<string, string> = {
   'cliente.actualizado': 'Modificó un cliente',
   'usuario.creado': 'Dio de alta un usuario',
   'usuario.actualizado': 'Modificó un usuario',
+  'cartera.cliente_asignado': 'Asignó el cliente a una persona',
+  'cartera.cliente_quitado': 'Quitó el cliente de la cartera de una persona',
   'usuario.contrasena_cambiada': 'Cambió su contraseña',
   'usuario.segundo_factor_iniciado': 'Inició la configuración de su segundo factor',
   'usuario.segundo_factor_activado': 'Activó su verificación en dos pasos',

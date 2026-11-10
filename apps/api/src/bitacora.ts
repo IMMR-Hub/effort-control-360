@@ -196,4 +196,10 @@ export const ACCIONES = Object.freeze({
   ALERTA_CERRADA: 'alerta.cerrada',
 
   HORAS_REGISTRADAS: 'registro_de_horas.registradas',
+
+  // Uno por cliente que entra o sale de la cartera de alguien, con su `clienteId`: así el cambio figura en la bitácora
+  // del cliente y no solo en la del usuario (Daniel, 2026-11-10: «todo lo creado, modificado o borrado queda
+  // registrado en una bitácora por cliente»).
+  CARTERA_CLIENTE_ASIGNADO: 'cartera.cliente_asignado',
+  CARTERA_CLIENTE_QUITADO: 'cartera.cliente_quitado',
 } as const);

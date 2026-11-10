@@ -1897,6 +1897,31 @@ describe('usuarios (equipo)', () => {
       expect(await ctx.usuarios.clientesAsignados(usuario.id)).toEqual([AJENO]);
     });
 
+    it('cada cliente que entra o sale de la cartera queda en la bitácora de ESE cliente', async () => {
+      const usuario = await usuarioDePrueba({ clientesAsignados: [MIO] });
+      const deCartera = (accion: string, clienteId: string) =>
+        ctx.bitacora.filas.filter((f) => f.accion === accion && f.clienteId === clienteId && f.entidadId === usuario.id);
+      expect(deCartera('cartera.cliente_asignado', MIO)).toHaveLength(1);
+
+      await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/usuarios/${usuario.id}`,
+        headers: { cookie: direccion }, payload: { clientesAsignados: [AJENO] },
+      });
+
+      expect(deCartera('cartera.cliente_quitado', MIO)).toHaveLength(1);
+      const [asignado] = deCartera('cartera.cliente_asignado', AJENO);
+      expect((asignado?.datosDespues as Record<string, unknown>)['responsable']).toBeTruthy();
+
+      // La misma cartera otra vez: ningún evento de cartera nuevo.
+      const contar = () => ctx.bitacora.filas.filter((f) => f.accion.startsWith('cartera.') && f.entidadId === usuario.id).length;
+      const antes = contar();
+      await ctx.app.inject({
+        method: 'PATCH', url: `/api/v1/usuarios/${usuario.id}`,
+        headers: { cookie: direccion }, payload: { clientesAsignados: [AJENO] },
+      });
+      expect(contar()).toBe(antes);
+    });
+
     it('editar sin mencionar clientesAsignados no toca la cartera existente', async () => {
       const usuario = await usuarioDePrueba({ clientesAsignados: [MIO] });
 

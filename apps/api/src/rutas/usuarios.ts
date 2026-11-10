@@ -11,7 +11,7 @@
  * se construya.
  */
 
-import type { FastifyInstance } from 'fastify';
+import type { FastifyInstance, FastifyRequest } from 'fastify';
 import { z } from 'zod';
 
 import { emailSchema, guaraniesSchema, idSchema, rolSchema, telefonoSchema, textoCorto } from '@effort/schema';
@@ -95,6 +95,42 @@ const edicionSchema = z
   })
   .strict();
 
+/**
+ * Un evento por cada cliente que entra o sale de una cartera, en la bitácora DE ESE CLIENTE.
+ *
+ * El evento `usuario.actualizado` va a la bitácora del usuario (`clienteId: null`): sin esto, quien mira la historia
+ * de un cliente no ve quién lo llevaba ni desde cuándo.
+ */
+async function registrarCambiosDeCartera(
+  deps: Dependencias,
+  peticion: FastifyRequest,
+  actorId: string,
+  usuario: { id: string; nombre: string; apellido: string },
+  antes: readonly string[],
+  despues: readonly string[],
+): Promise<void> {
+  const persona = `${usuario.nombre} ${usuario.apellido}`;
+  const cambios = [
+    ...despues.filter((c) => !antes.includes(c)).map((clienteId) => ({ clienteId, accion: ACCIONES.CARTERA_CLIENTE_ASIGNADO })),
+    ...antes.filter((c) => !despues.includes(c)).map((clienteId) => ({ clienteId, accion: ACCIONES.CARTERA_CLIENTE_QUITADO })),
+  ];
+  for (const { clienteId, accion } of cambios) {
+    const asignado = accion === ACCIONES.CARTERA_CLIENTE_ASIGNADO;
+    await registrarEvento(deps.bitacora, peticion.log, {
+      usuarioId: actorId,
+      accion,
+      entidad: 'asignacion_cliente',
+      entidadId: usuario.id,
+      clienteId,
+      datosAntes: asignado ? null : { responsable: persona },
+      datosDespues: asignado ? { responsable: persona } : null,
+      ip: peticion.ip,
+      agenteUsuario: peticion.headers['user-agent'] ?? null,
+      peticionId: String(peticion.id),
+    });
+  }
+}
+
 export async function registrarRutasDeUsuarios(
   app: FastifyInstance,
   deps: Dependencias,
@@ -167,6 +203,7 @@ export async function registrarRutasDeUsuarios(
         rolEnClienteDe(cuerpo.rol),
         deps.ahora(),
       );
+      await registrarCambiosDeCartera(deps, peticion, sujeto.usuarioId, usuario, [], cuerpo.clientesAsignados);
     }
 
     await registrarEvento(deps.bitacora, peticion.log, {
@@ -221,12 +258,15 @@ export async function registrarRutasDeUsuarios(
         : previo;
 
     if (clientesAsignados !== undefined) {
+      const carteraAntes = await deps.usuarios.clientesAsignados(id);
+      const carteraNueva = veTodosFinal ? [] : clientesAsignados;
       await deps.usuarios.reemplazarCartera(
         id,
-        veTodosFinal ? [] : clientesAsignados,
+        carteraNueva,
         veTodosFinal ? null : rolEnClienteDe(rolFinal),
         deps.ahora(),
       );
+      await registrarCambiosDeCartera(deps, peticion, sujeto.usuarioId, usuario, carteraAntes, carteraNueva);
     }
 
     await registrarEvento(deps.bitacora, peticion.log, {
