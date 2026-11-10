@@ -542,3 +542,51 @@ En concreto:
   todos los clientes con carpeta, conectados a su carpeta (Daniel, 2026-11-01). **Resultado:** 128 carpetas con código
   guardadas en `docs/analisis-onedrive-2026-10/datos/carpetas-de-clientes.json`; 14 sin código (999, ZZ, plantillas,
   etc.), que no son clientes. No se escribió nada en OneDrive.
+
+## 2026-11-05 — Lectura (solo GET): permisos de la carpeta de RRHH
+
+- **Qué:** se leyeron con Graph el nombre, la ubicación y los permisos de la carpeta de RRHH (id `01256M3RAVZMF3WEALKFA2CR5H4DSEH3HH`,
+  la que el ordenamiento dejó como `126 RRHH EFFORT`) y de sus 6 elementos, más los vínculos de `CLIENTES` y `022 EFFORT E.A.S`.
+  Solo GET; el único POST es el del token. **Por qué:** Laura pidió que esa carpeta la vean solo ella, Lili, Ariana y Daniel.
+- **Resultado:** la oficina la renombró a `022 RRHH EFFORT` y la movió dentro de `022 EFFORT E.A.S` (Ariana Campos, 2026-11-05
+  19:34 UTC); el sistema la sigue por su id. Hereda permisos de edición de 8 usuarias/os de EFFORT más dos **vínculos anónimos de
+  edición sin vencimiento**: uno propio de `CLIENTES` (alcanza a todas las carpetas de clientes) y otro propio de `022 EFFORT E.A.S`.
+  `VACACIONES EFFORT.xlsx` ya tiene permisos propios, también con un vínculo anónimo de edición. No se cambió nada.
+
+## 2026-11-05 — Permisos: carpeta `022 RRHH EFFORT` cerrada (autorizado por Daniel en el chat)
+
+- **Autorización:** Daniel, 2026-11-05: «si, cerrala pero sin borrar ni modificar nada salvo los permisos de acceso de Laura,
+  Lili, Ariana y effort360 que soy yo». Pedido de Laura: que la carpeta de RRHH la vean solo ella, Lili, Ariana y Daniel.
+- **Qué se hizo** (REST de SharePoint desde la sesión de Daniel en Chrome; ningún archivo se tocó): `breakroleinheritance(copyRoleAssignments=true,
+  clearSubscopes=false)` en el elemento 43679 (la carpeta) y `removeroleassignment` de todas las asignaciones salvo Lilian Laconich (7),
+  Ariana Campos (270) y el grupo de sistema de acceso limitado (12). Quitados: Sandra Ferreira, Aracely Alvarenga, Pedro Barrios,
+  Karina Baez, Melany González, Analia Sanguina y los grupos de los vínculos anónimos (dos de edición y el de VACACIONES).
+  Laura (dueña) y effort360 (administradora) conservan control total.
+- **Verificado por Graph después:** la carpeta y sus 6 elementos quedan con llaconich, acampos (editar), lsosa y effort360 (dueñas).
+- **Pendiente:** `VACACIONES EFFORT.xlsx` sigue mostrando un vínculo anónimo de edición. Quitarlo por Graph lo bloqueó la guardia
+  (patrón de borrado en OneDrive); no se insistió: lo quita una persona desde «Administrar acceso».
+- **Para deshacer:** permisos avanzados de la carpeta → «Eliminar permisos únicos» (vuelve a heredar de `022 EFFORT E.A.S`).
+
+## 2026-11-05 — Permisos: vínculo anónimo de `VACACIONES EFFORT.xlsx` quitado (autorizado por Daniel en el chat)
+
+- **Autorización:** Daniel, 2026-11-05, ante la pregunta de si quitaba él el vínculo o lo hacía Claude desde la pantalla:
+  «Hazlo tú en mi sesión de Chrome y avisame cuando esté listo».
+- **Qué se hizo:** desde la pantalla de OneDrive, en la sesión de Daniel (effort360): carpeta `022 RRHH EFFORT` →
+  `VACACIONES EFFORT.xlsx` → «Administrar acceso» → pestaña «Vínculos» → papelera del vínculo «Cualquier persona que tenga el
+  vínculo puede editar» → «Quitar». OneDrive ya mostraba ese vínculo como «Este vínculo ya no funciona» (efecto del cierre
+  anterior). No se usó «Dejar de compartir» ni se tocó el archivo; no se hizo ningún DELETE por Graph ni por script.
+- **Verificado por Graph después:** el archivo sigue en la carpeta y sus permisos son solo llaconich y acampos (editar), lsosa y
+  effort360 (dueñas); ya no aparece ningún vínculo. La carpeta y los otros 5 elementos, sin cambios.
+- **Queda abierto (no se tocó):** los vínculos anónimos de edición sin vencimiento propios de `CLIENTES` y de `022 EFFORT E.A.S`.
+  Laura tiene que confirmar si alguien los usa antes de quitarlos.
+- **Para deshacer:** no hay forma de recuperar ese mismo vínculo; si alguien lo necesitara, se crea uno nuevo desde «Compartir».
+
+## 2026-11-10 — Lectura (solo GET y SELECT): copias de RRHH en la carpeta del sistema
+
+- **Qué:** se leyeron con Graph los permisos de `EFFORT Control 360`, `EFFORT Control 360/Entrada` y
+  `EFFORT Control 360/Entrada/EFFORT E.A.S/022 RRHH EFFORT` en el OneDrive de effort360, y en la base las evidencias cuya ruta
+  dice RRHH. Solo GET y SELECT; el único POST es el del token. **Por qué:** al cruzar los clientes activos apareció que la
+  sincronización copia la carpeta de RRHH desde que quedó dentro de `022 EFFORT E.A.S`.
+- **Resultado:** 51 copias de 35 archivos de RRHH, del 03-11 al 10-11, registradas como documentos del cliente 022. En
+  OneDrive las tres carpetas solo las ve effort360 (heredado, dueño). Nadie más que effort360 inició sesión en el sistema.
+  No se cambió nada. Detalle y lo que falta: `docs/ROADMAP-MAESTRO.md`, HANDOFF 2026-11-10.

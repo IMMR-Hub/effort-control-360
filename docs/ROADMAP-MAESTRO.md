@@ -30,7 +30,44 @@ skill global **`backend-datos-sensibles`**, reutilizable en otros proyectos.
 
 ---
 
-## ▶ HANDOFF — 2026-11-01 (MANDA SOBRE TODOS LOS DE ABAJO)
+## ▶ HANDOFF — 2026-11-10 (MANDA SOBRE TODOS LOS DE ABAJO)
+
+**1. URGENTE — la carpeta de RRHH entra al sistema por el cliente 022.** El 2026-11-05 Ariana movió la carpeta de RRHH
+(id `01256M3RAVZMF3WEALKFA2CR5H4DSEH3HH`) dentro de `022 EFFORT E.A.S`. La sincronización recorre la carpeta de cada cliente
+entera y con credenciales de aplicación (el cierre de permisos del 05-11 no la frena): desde el 03-11 copió **51 archivos de
+RRHH** (recibos de salario, liquidaciones de Jorge Barrios y Karina Medina, CI de Laura, fichas, vacaciones) a
+`EFFORT Control 360/Entrada/EFFORT E.A.S/022 RRHH EFFORT/` (OneDrive de effort360, solo lo ve effort360) y los registró como
+**51 documentos del cliente 022**, que en la app ve todo usuario con «ve todos los clientes» (los 8 responsables). Hasta hoy
+nadie más que effort360 inició sesión (tabla `sesion` y `event_log`), así que nadie los vio. **Antes de dar acceso al equipo:**
+(a) excluir esa carpeta de la sincronización (por id, en `sincronizadorDeOneDrive.ts`, con test), (b) quitar del sistema los
+51 documentos y sus copias — **borrado: necesita autorización expresa de Daniel (REGLA 0)**. Apagar `TRABAJOS_AUTOMATICOS` en
+DigitalOcean lo frena ya, pero apaga también vencimientos y alertas. El cliente `126 RRHH EFFORT` no es un cliente.
+
+**2. Clientes activos — cruce hecho, falta la respuesta de Laura y Lili.** `docs/clientes/CLIENTES ACTIVOS - CRUCE CON EL SISTEMA
+- 10-11-2026.xlsx` (de la planilla `CLIENTES - ARIANA CAMPOS DA ROSA.xlsx` que subió Daniel el 01-11 contra producción):
+- La planilla tiene 83 filas: 73 activos, 8 S/M, 2 en suspensión (EDWIN SETRINI y MARIEL RODRIGUEZ). 81 tienen carpeta y
+  están en el sistema; **AF Y RM ASOCIACIONES** y **DIEGO SOSA** no tienen carpeta, así que no están.
+- El sistema tiene 128 clientes, todos activos: **47 no figuran en la planilla** (6 aparecen en la lista IPS/REOP; 8 con
+  carpeta vacía; 126 es RRHH). Laura y Lili marcan en la hoja amarilla si siguen y quién los lleva.
+- 13 números de la planilla no son el de la carpeta (QUIMECO/R3J cruzados, LILCY/ECOAGRO/SETRINI corridos, etc.); el cruce
+  usa el de la carpeta. La cartera cargada el 01-11 coincide con la planilla: **0 diferencias**.
+- Se pueden cargar 2 RUC de la hoja de Ariana: 071 NATALIA APONTE `2432482-5` y 128 ASOCIACION PY CRIADORES DE PAMPA
+  `80022736-0` (los dos coinciden con su día de vencimiento). **119 ALISON RAMIREZ:** el RUC cargado vence el 23 y la planilla
+  dice 25.
+- **No se cambió nada en producción.**
+
+**3. Qué falta para tener todos los datos en el sistema (foto 10-11):**
+- Documentos: **listo** (27.325 archivos conocidos, 27.039 documentos, 0 errores). Faltan 24, los de más de 25 MB, a mano.
+- Obligaciones: **solo 5 de 128 clientes** → solo 150 vencimientos. La planilla trae las obligaciones de 81. El catálogo solo tiene
+  IVA, RG 90, IRE y EEFF; faltan IRP, IRE SIMPLE, IDU, retenciones, anticipos de IRE, AUD IMPO, INR, con su regla confirmada por
+  EFFORT (lección 22).
+- Régimen: 123 sin cargar. RUC: 39 pendientes (37 después de los 2 de arriba).
+- Cartera: 69 sin responsable (KARI 14, BEA 9, 47 fuera de la planilla). Sigue la pregunta de cuál Karina es «KARI».
+- Cuentas activas de personas que ya no trabajan: **jbarrios** y **kmedina** (sus renuncias están en RRHH). Desactivarlas es
+  un cambio de usuarios → con Daniel.
+- RG 90: 1.207 liquidaciones de 83 clientes ya leídas. Carga hacia SIGA: espera la plantilla (tarea 145).
+
+## ▶ HANDOFF — 2026-11-01 (reemplazado por el de arriba)
 
 **Tarea 164 — ordenamiento del OneDrive real: HECHO Y VERIFICADO salvo 1 archivo.** Detalle y números en `docs/BITACORA-ONEDRIVE.md` (entradas del 30-10 al 01-11) y `docs/ordenamiento-2026-10/LEEME.md`.
 - 27.720 de 27.721 archivos movidos/renombrados según el plan v3. **Falta 1:** `021 COPESA/PERIODO 2026/VARIOS/FLUJO DE CAJA COPESA A JUNIO 2027  (1).xlsx` (alguien lo tiene abierto, error 423). El lunes, cuando lo cierren: `node aplicar-onedrive.mjs --clientes 021 --aplicar` (carpeta de datos) → `node restaurar-fechas.mjs --ids 01256M3RFTP5ZFS3ZTUJFKNE5BD3XSIBUG --aplicar` → `node revision.mjs --solo-verificar` (sin `--excluir`: tiene que salir limpia) → marcar la 164 `[x]`.
