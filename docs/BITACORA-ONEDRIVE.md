@@ -590,3 +590,16 @@ En concreto:
 - **Resultado:** 51 copias de 35 archivos de RRHH, del 03-11 al 10-11, registradas como documentos del cliente 022. En
   OneDrive las tres carpetas solo las ve effort360 (heredado, dueño). Nadie más que effort360 inició sesión en el sistema.
   No se cambió nada. Detalle y lo que falta: `docs/ROADMAP-MAESTRO.md`, HANDOFF 2026-11-10.
+
+## 2026-11-10 — Escritura: mover la carpeta de RRHH fuera de `022` (autorizado por Daniel en el chat)
+
+- **Autorización:** Daniel, 2026-11-10: «no borres la carpeta con todo lo que incluye RRHH sino reubica la carpeta como
+  carpeta directamente de RRHH (Sin numero de cliente) y manten los permisos limitados para solamente los ususarios que
+  puedan acceder como ya habias hecho».
+- **Qué:** un solo PATCH de Graph sobre la carpeta (id `01256M3RAVZMF3WEALKFA2CR5H4DSEH3HH`): nombre `RRHH EFFORT`, padre
+  `CLIENTES EFFORT E.A.S` (al lado de `CLIENTES`, fuera de toda carpeta de cliente). Sin DELETE, con `If-Match` y
+  `conflictBehavior=fail`. Script: `mover-rrhh.mjs` (carpeta temporal de la sesión).
+- **Resultado a las 17:34 y 17:37 UTC:** 423 «resource locked». Ariana está trabajando hoy en archivos de adentro (recibos de
+  salario, contratos). **No se movió nada** y los permisos siguen cerrados: Laura, Lili, Ariana y effort360. Las subcarpetas
+  nuevas (`LEGALES`, `SALARIO Y RECIBOS`) heredaron el cierre. Queda un reintento cada 5 minutos, por hasta 4 horas, que verifica
+  los permisos apenas pasa.

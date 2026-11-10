@@ -32,6 +32,28 @@ skill global **`backend-datos-sensibles`**, reutilizable en otros proyectos.
 
 ## ▶ HANDOFF — 2026-11-10 (MANDA SOBRE TODOS LOS DE ABAJO)
 
+**ACTUALIZACIÓN 2026-11-10 14:40 — ajuste hecho en producción.** Pedido de Daniel: lo que no figura en el listado se toma
+como sin movimiento y no entra al sistema; cada colaborador accede solo a lo suyo según el Excel; Laura, Lili y Daniel ven
+todo; todo cambio queda en la bitácora del cliente. Respaldo `respaldos/respaldo-2026-11-10T17-34-31.json`. Script:
+`scripts/ajustar-clientes-y-accesos-2026-11-10.mjs`.
+- **41 clientes desactivados**, sin borrar nada: dejan de sincronizarse y de verse, y se reactivan desde Clientes. Quedan
+  **87 activos**: los 81 de la planilla más 6 que están en la lista IPS/REOP del mismo archivo (001, 014 NEO, 015, 108, 109,
+  110). El 126 RRHH queda inactivo.
+- **Acceso:** los 8 colaboradores dejaron de ver todos los clientes. Analía ve 11, Aracely 22, Ariana 12 y Sandra 14; Jorge,
+  Karina Baez, Karina Medina y Melany, 0. Dirección sigue viendo todo. **28 activos sin responsable**: KARI 14, BEA 8 e
+  IPS/REOP 6; hoy los ve solo dirección.
+- RUC cargados: 071 `2432482-5` y 128 `80022736-0`.
+- **Bitácora:** 43 eventos `cliente.actualizado` (uno por cliente), 59 `usuario.actualizado` con su `clienteId` (uno por
+  cliente de cartera) y 8 por usuario. Verificado contra la base.
+- **Hueco de código encontrado:** la ruta PATCH de usuarios registra un cambio de cartera solo en la bitácora del usuario
+  (`clienteId: null`), no en la de cada cliente. Las horas sí van al cliente (`registro_de_horas.registradas`, que no tiene
+  ruta de borrado). Falta registrar también cada alta o baja de cartera en el cliente.
+- **No se cargaron** obligaciones ni régimen. Cargarlos genera vencimientos para 81 clientes, y con el detector de
+  presentaciones sin probar en ellos saldrían atrasos falsos. Faltan además las reglas de IRP, IRE SIMPLE, IDU, etc.
+- **Carpeta RRHH:** mover a `CLIENTES EFFORT E.A.S/RRHH EFFORT` dio 423, porque Ariana tiene archivos abiertos. Queda un
+  reintento cada 5 minutos por 4 horas (ver `docs/BITACORA-ONEDRIVE.md`). Mientras tanto la sincronización sigue copiando
+  RRHH dentro de 022, pero 022 hoy solo lo ve dirección. Los 51 documentos de RRHH siguen en 022: no se borran (Daniel).
+
 **1. URGENTE — la carpeta de RRHH entra al sistema por el cliente 022.** El 2026-11-05 Ariana movió la carpeta de RRHH
 (id `01256M3RAVZMF3WEALKFA2CR5H4DSEH3HH`) dentro de `022 EFFORT E.A.S`. La sincronización recorre la carpeta de cada cliente
 entera y con credenciales de aplicación (el cierre de permisos del 05-11 no la frena): desde el 03-11 copió **51 archivos de
