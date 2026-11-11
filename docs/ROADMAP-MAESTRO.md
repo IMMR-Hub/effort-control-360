@@ -45,7 +45,7 @@ todo; todo cambio queda en la bitácora del cliente. Respaldo `respaldos/respald
 - RUC cargados: 071 `2432482-5` y 128 `80022736-0`.
 - **Bitácora:** 43 eventos `cliente.actualizado` (uno por cliente), 59 `usuario.actualizado` con su `clienteId` (uno por
   cliente de cartera) y 8 por usuario. Verificado contra la base.
-- **Hueco de código encontrado y arreglado (commit f4bf0f6, falta desplegar):** la ruta PATCH de usuarios registraba un
+- **Hueco de código encontrado y arreglado (commit f4bf0f6, desplegado 2026-11-11 17:49 Asunción; falta verlo en pantalla con el primer cambio real de cartera):** la ruta PATCH de usuarios registraba un
   cambio de cartera solo en la bitácora del usuario (`clienteId: null`). Ahora cada cliente que entra o sale de una cartera
   deja `cartera.cliente_asignado` / `cartera.cliente_quitado` en la bitácora de ese cliente. Las horas ya iban al cliente
   (`registro_de_horas.registradas`, que no tiene ruta de borrado).
