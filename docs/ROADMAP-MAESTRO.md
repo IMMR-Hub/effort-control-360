@@ -41,9 +41,17 @@ filas). Por eso Panel, notificaciones y Vencimientos muestran solo el piloto. He
 - [ ] Documentos abre en el mes anterior (en el mes en curso solo 26 clientes tenían documentos). **Falta verlo en pantalla.**
 - Los 114 documentos con período 2026-12 NO son error: están en carpetas «CIERRE 2026» y el período por carpeta los
   manda al cierre del ejercicio, a propósito.
-- **Siguiente (necesita OK de Daniel, escribe en producción):** `scripts/asignar-obligaciones-por-evidencia.mjs`.
-  Simulado: 71 clientes reciben IVA 54 · RG 90 68 · IRE 24 · EEFF 23, desde 2026-10-01; 16 para que decidan Laura y
-  Lili (1–2 meses de 120 o de libros); 12 sin ninguna. Pide respaldo del día, solo inserta. Fable 5.2, esfuerzo alto.
+- **HECHO en producción 13:15 UTC (respaldo `respaldo-2026-11-12T13-11-02.json`):** Daniel: «Solo lo que está en el
+  Excel» (`CLIENTES - ARIANA CAMPOS DA ROSA.xlsx`). `scripts/asignar-obligaciones-segun-planilla.mjs`: **122 obligaciones
+  en 69 clientes** (IVA 69, IRE 38, EEFF 15) desde 2026-10-01; con el piloto, 73 con IVA. RG 90 NO (no figura en el Excel).
+  Cruce rehecho nombre por nombre (el del 10-11 tenía ALMA BENITEZ→104, MBV→117, AF Y RM y AM Y ASOC→107). Los 87
+  activos = 81 de la lista principal + 6 de la lista IPS/REOP (hoja ARIANA): no hubo que desactivar a nadie.
+  `scripts/ajustar-cartera-segun-planilla-2026-11-12.mjs`: 006 y 038 pasan de Sandra a Analía.
+- **Pendiente:** IRP (28), IRE SIMPLE (11), IDU (13), anticipos IRE (13, vencen mayo/jul/sep/NOV), retenciones: no tienen
+  regla en el catálogo (Fable 5.2, alto). PEDRO (`pbarrios@`, 14 clientes) sin cuenta; BEA (`kbaez@`, 9 clientes):
+  Daniel dice «pbarrios entra por kbaez» — falta saber a quién pasan los 9 de BEA. Columna «incompleto» en Clientes.
+  Solicitudes a clientes: construidas pero apagadas (`RECORDATORIOS_AUTOMATICOS=no`), 0 de 87 clientes con correo,
+  0 reglas de notificación, sin paso de aprobación previa por envío.
 - **Cuentas del equipo:** las 10 existen desde el 2026-09-20 y nadie entró. `scripts/restablecer-contrasena-inicial.mjs`
   (lo corre Daniel; mínimo 12 caracteres; no toca jbarrios ni kmedina, que ya no están en EFFORT y siguen activas).
 - **Lentitud:** sigue siendo la distancia (API en Nueva York, base en São Paulo, ~310 ms por consulta). Arreglo de
