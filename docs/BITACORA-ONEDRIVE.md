@@ -612,3 +612,13 @@ En concreto:
   `PLANILLA REOP - EFFORT.xlsx`): escritura llaconich y acampos, propietario lsosa y effort360. Nadie más, ningún vínculo.
 - **Efecto en el sistema:** la carpeta ya no está dentro de la de ningún cliente, así que la sincronización deja de copiarla.
   Las 51 copias que ya entraron siguen registradas en el cliente 022 (solo las ve dirección); no se borran (Daniel).
+
+## 2026-11-11 — Lectura (solo GET y SELECT): qué archivos de OneDrive no entraron al sistema
+
+- **Pedido:** Daniel, 2026-11-11: «Sí, armala» (la lista completa de los archivos que la sincronización no pudo copiar).
+- **Qué:** se recorrió con Graph (GET, el mismo `DriveGraph.listarRecursivoPorId` que usa la sincronización) la carpeta de
+  OneDrive de cada uno de los 87 clientes activos, en el drive de lsosa, y se cruzó con `archivo_de_origen` (SELECT). Solo
+  lectura; el único POST es el del token. Script: `faltantes-onedrive.mjs` (carpeta temporal de la sesión).
+- **Resultado:** 25.423 archivos en las 87 carpetas, ninguna carpeta con error. Faltan **49**, los 49 por pesar más de 25 MB
+  (31 PDF, 14 ZIP, 1 RAR, 1 PPTX, 1 MP4, 1 XLSX; 3,5 GB en total, el mayor 252 MB). Ninguno cambió de versión sin
+  actualizarse. Lista en `docs/clientes/ARCHIVOS QUE NO ENTRARON AL SISTEMA - 11-11-2026.xlsx`.
