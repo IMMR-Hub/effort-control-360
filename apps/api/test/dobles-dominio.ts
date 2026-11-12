@@ -480,6 +480,13 @@ export class VencimientosFalsos implements RepositorioDeVencimientos {
     this.vencimientos[indice] = actualizado;
     return actualizado;
   }
+
+  async marcarNoAplica(id: string): Promise<VencimientoAlmacenado> {
+    const indice = this.vencimientos.findIndex((venc) => venc.id === id);
+    const actualizado: VencimientoAlmacenado = { ...this.vencimientos[indice]!, estado: 'NO_APLICA' };
+    this.vencimientos[indice] = actualizado;
+    return actualizado;
+  }
 }
 
 export class SolicitudesFalsas implements RepositorioDeSolicitudes {

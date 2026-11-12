@@ -55,10 +55,13 @@ filas). Por eso Panel, notificaciones y Vencimientos muestran solo el piloto. He
   (09-11 al 25-11); lo demás se genera en diciembre y vence en 2027. Clientes completos: 19 → 51.
   - [ ] Verlo en pantalla (Vencimientos y Clientes) — falta.
   - Siguen sin regla: RETENCION_IDU 8, RETENCION_IVA 2, RETENCION_IRE_IRP_INR 1, AUDITORIA_IMPOSITIVA 1.
-  - **Pendientes que salieron de esto (DISCREPANCIAS 46):** acción «No aplica» para un vencimiento (no existe en
-    pantalla; un anticipo puede no corresponder); el detector no reconoce los formularios de IRP ni IRE SIMPLE (se
-    registran a mano); EEFF en el catálogo con días 7–25 y la norma dice 8–26 (decide Daniel); anticipos de IRE SIMPLE
-    no están en la planilla (no cargados); cuatro clientes SIMPLE con «abril» en la planilla.
+  - **EEFF corregido a 8–26** (Daniel, 2026-11-12; `scripts/corregir-dias-de-estados-financieros.mjs`): catálogo y los
+    dos vencimientos de abril de 2027 que cambiaban (FUMIPRO, DIBEC S.A.).
+  - [ ] **Acción «No aplica»** en Vencimientos (ruta `…/vencimientos/:id/no-aplica`, `DialogoDeNoAplica.tsx`, solo
+    dirección, motivo obligatorio en la bitácora). Programada y con pruebas; **falta desplegar y verla en pantalla**.
+  - **Pendientes que quedan (DISCREPANCIAS 46):** el detector no reconoce los formularios de IRP ni IRE SIMPLE (se
+    registran a mano); anticipos de IRE SIMPLE no están en la planilla (no cargados); cuatro clientes SIMPLE con «abril»
+    en la planilla; «No aplica» no tiene «deshacer» en pantalla; retenciones y auditoría sin regla.
 - **Columna «Datos» en Clientes** (`GET /api/v1/clientes/faltantes`, `servicios/faltantesDeClientes.ts`): Completo /
   Incompleto + qué falta (RUC, responsable con cuenta, regla de vencimiento). Con datos reales: 19 completos, 68
   incompletos (28 sin responsable, 51 con regla faltante, 7 sin RUC).

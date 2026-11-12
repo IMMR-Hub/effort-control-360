@@ -766,6 +766,74 @@ describe('radar de vencimientos', () => {
   });
 
   /*
+   * «No aplica» (2026-11-12). El caso real: los anticipos de IRE. La planilla de
+   * EFFORT dice que «depende de la liquidación del IRE para quedar o no obligado
+   * a pagar», y sin esta acción la única salida era «Presentar» algo que nunca se
+   * presentó, o dejarlo vencido para siempre.
+   */
+  describe('marcar que un vencimiento no corresponde', () => {
+    async function crear() {
+      const alta = await ctx.app.inject({
+        method: 'POST', url: `/api/v1/clientes/${MIO}/vencimientos`,
+        headers: { cookie: direccionAcotada }, payload: abogacia,
+      });
+      return JSON.parse(alta.body).vencimiento as { id: string };
+    }
+    const noAplica = (id: string, cookie: string, payload: unknown) =>
+      ctx.app.inject({ method: 'POST', url: `/api/v1/vencimientos/${id}/no-aplica`, headers: { cookie }, payload: payload as never });
+
+    it('sale del radar, y el motivo queda en la bitácora del cliente', async () => {
+      const vencimiento = await crear();
+
+      const respuesta = await noAplica(vencimiento.id, direccionAcotada, { motivo: 'El IRE 2025 no dejó impuesto a pagar: sin anticipo.' });
+      expect(respuesta.statusCode).toBe(200);
+      expect(JSON.parse(respuesta.body).vencimiento.estado).toBe('NO_APLICA');
+
+      const radar = await ctx.app.inject({ method: 'GET', url: '/api/v1/vencimientos', headers: { cookie: direccionAcotada } });
+      expect(JSON.parse(radar.body).vencimientos).toHaveLength(0);
+
+      const entrada = ctx.bitacora.filas.find((f) => f.accion === 'vencimiento.no_aplica');
+      expect(entrada?.clienteId).toBe(MIO);
+      expect(entrada?.usuarioId).toBe('usr-direccion-acotada');
+      expect((entrada?.datosDespues as Record<string, unknown>)['motivo']).toBe('El IRE 2025 no dejó impuesto a pagar: sin anticipo.');
+    });
+
+    it('sin motivo no se puede: sacar algo del radar sin decir por qué es perderlo', async () => {
+      const vencimiento = await crear();
+
+      for (const payload of [{}, { motivo: '' }, { motivo: '   ' }, { motivo: 'no' }]) {
+        const respuesta = await noAplica(vencimiento.id, direccionAcotada, payload);
+        expect(respuesta.statusCode).toBe(400);
+      }
+      const radar = await ctx.app.inject({ method: 'GET', url: '/api/v1/vencimientos', headers: { cookie: direccionAcotada } });
+      expect(JSON.parse(radar.body).vencimientos).toHaveLength(1);
+    });
+
+    it('no se marca dos veces, ni sobre algo ya presentado', async () => {
+      const uno = await crear();
+      await noAplica(uno.id, direccionAcotada, { motivo: 'No corresponde este período.' });
+      expect((await noAplica(uno.id, direccionAcotada, { motivo: 'No corresponde este período.' })).statusCode).toBe(409);
+
+      const otro = await crear();
+      await ctx.app.inject({
+        method: 'POST', url: `/api/v1/vencimientos/${otro.id}/presentar`,
+        headers: { cookie: direccionAcotada }, payload: { fechaPresentacion: '2026-04-20' },
+      });
+      expect((await noAplica(otro.id, direccionAcotada, { motivo: 'No corresponde este período.' })).statusCode).toBe(409);
+    });
+
+    it('solo dirección: un responsable o un auxiliar no pueden sacar un vencimiento del radar', async () => {
+      const vencimiento = await crear();
+
+      for (const cookie of [responsable, auxiliar, soloLectura]) {
+        const respuesta = await noAplica(vencimiento.id, cookie, { motivo: 'No corresponde este período.' });
+        expect(respuesta.statusCode).toBe(403);
+      }
+      expect(ctx.bitacora.filas.some((f) => f.accion === 'vencimiento.no_aplica')).toBe(false);
+    });
+  });
+
+  /*
    * Prórroga (tarea 146). El caso real: la RG 50/2026 corrió los estados
    * financieros del ejercicio 2025 de abril al 30/06/2026, y por no tenerlo
    * cargado el sistema mostraba tres clientes con 60 días de atraso que en

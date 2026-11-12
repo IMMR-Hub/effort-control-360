@@ -298,6 +298,14 @@ export interface RepositorioDeVencimientos {
     evidenciaId: string | null,
     usuarioId: string,
   ): Promise<VencimientoAlmacenado>;
+  /**
+   * Deja el vencimiento en `NO_APLICA`: a ese cliente, ese período, la
+   * obligación no le corresponde (un anticipo de IRE que la liquidación no
+   * obliga a pagar). Sale del radar y de las alertas, igual que lo presentado.
+   * El motivo no va acá: queda en la bitácora del cliente, que es donde se
+   * busca por qué una fila dejó de aparecer.
+   */
+  marcarNoAplica(id: string, usuarioId: string): Promise<VencimientoAlmacenado>;
 }
 
 /* ========================================================================== */

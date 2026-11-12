@@ -6,7 +6,7 @@
  * mockear una fecha "de hoy".
  */
 
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -194,6 +194,61 @@ describe('radar de vencimientos', () => {
       fechaPresentacion: '2026-04-20',
       evidenciaId: null,
     });
+  });
+
+  /*
+   * «No aplica» (2026-11-12): un anticipo de IRE puede no corresponder. Es un
+   * formulario de la pantalla con el motivo obligatorio, no un prompt.
+   */
+  describe('marcar que un vencimiento no corresponde', () => {
+    it('pide el motivo, lo manda al servidor y la fila sale del radar', async () => {
+      await montar();
+      mock.mockDeRuta('POST /api/v1/vencimientos/venc-1/no-aplica', () =>
+        respuestaJson({ vencimiento: { ...VENCIMIENTO_ABOGACIA, estado: 'NO_APLICA' } }),
+      );
+
+      await usuario.click(screen.getByRole('button', { name: 'No aplica: Presentación anual ante Abogacía' }));
+      const dialogo = await screen.findByRole('dialog', { name: /No aplica/ });
+      expect(within(dialogo).getByText(/dejar de aparecer en Vencimientos y en las alertas/)).toBeVisible();
+
+      await usuario.type(within(dialogo).getByLabelText('Por qué no corresponde'), 'No le corresponde este año');
+      mock.mockDeRuta('GET /api/v1/vencimientos', () =>
+        respuestaJson({ hoy: { anio: 2026, mes: 4, dia: 26 }, resumen: RESUMEN, vencimientos: [] }),
+      );
+      await usuario.click(within(dialogo).getByRole('button', { name: 'Marcar «No aplica»' }));
+
+      await waitFor(() => expect(mock.llamadasA('POST /api/v1/vencimientos/venc-1/no-aplica')).toHaveLength(1));
+      const [, opciones] = mock.llamadasA('POST /api/v1/vencimientos/venc-1/no-aplica')[0]!;
+      expect(JSON.parse(String(opciones!.body))).toEqual({ motivo: 'No le corresponde este año' });
+      await waitFor(() => expect(screen.queryByRole('dialog', { name: /No aplica/ })).not.toBeInTheDocument());
+      expect(screen.queryByText('Presentación anual ante Abogacía')).not.toBeInTheDocument();
+    });
+
+    it('sin motivo no llama al servidor y dice qué falta', async () => {
+      await montar();
+      mock.mockDeRuta('POST /api/v1/vencimientos/venc-1/no-aplica', () => respuestaJson({ vencimiento: VENCIMIENTO_ABOGACIA }));
+
+      await usuario.click(screen.getByRole('button', { name: 'No aplica: Presentación anual ante Abogacía' }));
+      const dialogo = await screen.findByRole('dialog', { name: /No aplica/ });
+      await usuario.click(within(dialogo).getByRole('button', { name: 'Marcar «No aplica»' }));
+
+      expect(await within(dialogo).findByRole('alert')).toHaveTextContent(/por qué no corresponde/i);
+      expect(mock.llamadasA('POST /api/v1/vencimientos/venc-1/no-aplica')).toHaveLength(0);
+    });
+
+    it('cancelar no llama al servidor', async () => {
+      await montar();
+      mock.mockDeRuta('POST /api/v1/vencimientos/venc-1/no-aplica', () => respuestaJson({ vencimiento: VENCIMIENTO_ABOGACIA }));
+      await usuario.click(screen.getByRole('button', { name: 'No aplica: Presentación anual ante Abogacía' }));
+      await usuario.click(within(await screen.findByRole('dialog', { name: /No aplica/ })).getByRole('button', { name: 'Cancelar' }));
+      expect(screen.queryByRole('dialog', { name: /No aplica/ })).not.toBeInTheDocument();
+      expect(mock.llamadasA('POST /api/v1/vencimientos/venc-1/no-aplica')).toHaveLength(0);
+    });
+  });
+
+  it('un rol sin edición no ve «No aplica»', async () => {
+    await montar('responsable');
+    expect(screen.queryByRole('button', { name: /^No aplica/ })).not.toBeInTheDocument();
   });
 
   it('cancelar el prompt de presentar (sin fecha) no llama al servidor', async () => {

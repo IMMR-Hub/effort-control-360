@@ -127,6 +127,14 @@ export function marcarPresentado(
 }
 
 /**
+ * Marca que la obligación no le corresponde a ese cliente en ese período. El
+ * motivo es obligatorio: queda en los eventos del cliente.
+ */
+export function marcarNoAplica(id: string, motivo: string): Promise<{ vencimiento: Vencimiento }> {
+  return peticion('POST', `/api/v1/vencimientos/${id}/no-aplica`, { motivo });
+}
+
+/**
  * Corre la fecha de vencimiento por una resolución de prórroga.
  *
  * El motivo no es opcional: una fecha que no sigue la regla del calendario y

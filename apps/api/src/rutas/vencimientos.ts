@@ -59,6 +59,16 @@ const presentarSchema = z
   .strict();
 
 /**
+ * «No aplica»: solo el motivo, y obligatorio. Sacar un vencimiento del radar
+ * sin decir por qué es la forma más fácil de perder uno que sí correspondía.
+ */
+const noAplicaSchema = z
+  .object({
+    motivo: z.string().trim().min(5, 'Escribí por qué no corresponde.').max(500),
+  })
+  .strict();
+
+/**
  * Prórroga: la fecha nueva y por qué.
  *
  * El motivo es obligatorio y no tiene valor por defecto a propósito. Una fecha
@@ -384,6 +394,57 @@ export async function registrarRutasDeVencimientos(
         estado: 'PRESENTADO',
         fechaPresentacion: cuerpo.fechaPresentacion,
         evidenciaId: cuerpo.evidenciaId,
+      },
+      ip: peticion.ip,
+      agenteUsuario: peticion.headers['user-agent'] ?? null,
+      peticionId: String(peticion.id),
+    });
+
+    return { vencimiento: aSalida(conAlerta(vencimiento, deps.ahora())) };
+  });
+
+  /**
+   * Marca que una obligación NO le corresponde a ese cliente en ese período.
+   *
+   * Daniel, 2026-11-12, al cargar los anticipos de IRE: la planilla de EFFORT
+   * avisa que el anticipo «depende de la liquidación del IRE para quedar o no
+   * obligado a pagar». Sin esto, la única salida era «Presentar» algo que nunca
+   * se presentó, o dejarlo vencido para siempre — las dos cosas son mentira.
+   *
+   * No es «presentado»: no hay fecha ni evidencia. Sale del radar y de las
+   * alertas (que ya ignoraban `NO_APLICA`), y el motivo —obligatorio— queda en
+   * la bitácora del cliente. Solo dirección (regla 12: `vencimiento.editar`).
+   */
+  app.post('/api/v1/vencimientos/:id/no-aplica', async (peticion) => {
+    const { id } = paramsId.parse(peticion.params);
+    const sujeto = autorizar(peticion, 'vencimiento', 'editar');
+    const cuerpo = noAplicaSchema.parse(peticion.body);
+
+    const previo = await deps.vencimientos.buscarPorId(id, filtroDeClientes(sujeto));
+    if (!previo) {
+      throw new ErrorDeAplicacion(404, 'Recurso inexistente.', 'no_encontrado');
+    }
+    if (previo.estado === 'PRESENTADO') {
+      throw new ErrorDeAplicacion(409, 'Esta obligación ya figura como presentada.', 'ya_presentado');
+    }
+    if (previo.estado === 'NO_APLICA') {
+      throw new ErrorDeAplicacion(409, 'Esta obligación ya figura como «No aplica».', 'ya_no_aplica');
+    }
+
+    const vencimiento = await deps.vencimientos.marcarNoAplica(id, sujeto.usuarioId);
+
+    await registrarEvento(deps.bitacora, peticion.log, {
+      usuarioId: sujeto.usuarioId,
+      accion: ACCIONES.VENCIMIENTO_NO_APLICA,
+      entidad: 'vencimiento',
+      entidadId: id,
+      clienteId: previo.clienteId,
+      datosAntes: { estado: previo.estado },
+      datosDespues: {
+        estado: 'NO_APLICA',
+        motivo: cuerpo.motivo,
+        descripcion: previo.descripcion,
+        fechaVencimiento: previo.fechaVencimiento.toISOString().slice(0, 10),
       },
       ip: peticion.ip,
       agenteUsuario: peticion.headers['user-agent'] ?? null,

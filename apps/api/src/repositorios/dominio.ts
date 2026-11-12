@@ -573,6 +573,16 @@ export class VencimientosPrisma implements RepositorioDeVencimientos {
 
     return fila as VencimientoAlmacenado;
   }
+
+  async marcarNoAplica(id: string, usuarioId: string): Promise<VencimientoAlmacenado> {
+    const fila = await this.prisma.vencimiento.update({
+      where: { id },
+      data: { estado: 'NO_APLICA', actualizadoPorUsuarioId: usuarioId },
+      select: CAMPOS_VENCIMIENTO,
+    });
+
+    return fila as VencimientoAlmacenado;
+  }
 }
 
 /* ========================================================================== */

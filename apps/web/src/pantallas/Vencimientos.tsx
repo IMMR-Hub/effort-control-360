@@ -8,7 +8,7 @@
  */
 
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
-import { CalendarCheck, CalendarClock, Plus } from 'lucide-react';
+import { Ban, CalendarCheck, CalendarClock, Plus } from 'lucide-react';
 
 import {
   dentroDelRango,
@@ -58,6 +58,7 @@ import {
   type VencimientoPresentado,
 } from '../api/vencimientos.js';
 import { useSesion } from '../contexts/SesionContext.js';
+import { DialogoDeNoAplica } from './DialogoDeNoAplica.js';
 import { DialogoDeProrroga, type VencimientoProrrogable } from './DialogoDeProrroga.js';
 import VencimientosPresentados from './VencimientosPresentados.js';
 import { FiltroDeFechasSelector } from '../ui/FiltroDeFechas.js';
@@ -317,6 +318,8 @@ export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nive
    * una persona: una resolución es algo que alguien leyó y verificó.
    */
   const [prorrogando, setProrrogando] = useState<VencimientoProrrogable | null>(null);
+  /** «No aplica»: la obligación no le corresponde a ese cliente (un anticipo de IRE sin impuesto que anticipar). */
+  const [descartando, setDescartando] = useState<Vencimiento | null>(null);
 
   if (cargando) {
     return (
@@ -495,6 +498,14 @@ export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nive
                     >
                       Prórroga
                     </Boton>
+                    <Boton
+                      variante="fantasma"
+                      icono={Ban}
+                      aria-label={`No aplica: ${v.descripcion}`}
+                      onClick={() => setDescartando(v)}
+                    >
+                      No aplica
+                    </Boton>
                   </Td>
                 )}
               </tr>
@@ -522,6 +533,15 @@ export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nive
         <DialogoDeProrroga
           vencimiento={prorrogando}
           alCerrar={() => setProrrogando(null)}
+          alAplicar={recargar}
+        />
+      )}
+
+      {descartando && puedeEditar && (
+        <DialogoDeNoAplica
+          vencimiento={descartando}
+          cliente={nombreDeCliente(descartando.clienteId)}
+          alCerrar={() => setDescartando(null)}
           alAplicar={recargar}
         />
       )}
