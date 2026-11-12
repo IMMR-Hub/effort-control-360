@@ -86,6 +86,11 @@ export interface RepositorioDeUsuarios {
   buscarPorEmail(email: string): Promise<UsuarioConCredenciales | null>;
   buscarPorId(id: string): Promise<UsuarioConCredenciales | null>;
   clientesAsignados(usuarioId: string): Promise<string[]>;
+  /**
+   * Clientes que algún colaborador activo que no es de dirección tiene hoy en
+   * su cartera, en una sola consulta (antes era una por colaborador).
+   */
+  clientesConResponsable(): Promise<string[]>;
   registrarAcceso(usuarioId: string, momento: Date): Promise<void>;
 
   /** El equipo completo, para la pantalla de dirección. */
@@ -147,6 +152,22 @@ export interface RepositorioDeUsuarios {
   cambiarContrasena(usuarioId: string, hashContrasena: string, momento: Date): Promise<void>;
 }
 
+/**
+ * Todo lo que hace falta para identificar una petición: la sesión, lo que se
+ * usa del usuario y su cartera vigente.
+ */
+export interface ContextoDeSesion {
+  readonly sesion: Sesion;
+  readonly usuario: {
+    readonly id: string;
+    readonly rol: Rol;
+    readonly activo: boolean;
+    readonly veTodosLosClientes: boolean;
+    readonly debeCambiarContrasena: boolean;
+  };
+  readonly clientesAsignados: readonly string[];
+}
+
 export interface RepositorioDeSesiones {
   crear(datos: {
     hashDelToken: string;
@@ -156,6 +177,17 @@ export interface RepositorioDeSesiones {
     agenteUsuario: string | null;
   }): Promise<Sesion>;
   buscarPorHash(hashDelToken: string): Promise<Sesion | null>;
+  /**
+   * Sesión, usuario y cartera en UN solo viaje a la base.
+   *
+   * Corre en cada petición, y cada viaje cuesta ~130 ms desde producción (la
+   * API está en Atlanta y la base en São Paulo): pedirlos por separado eran
+   * tres viajes y 0,4 s antes de empezar a atender nada (medido el
+   * 2026-11-12). Opcional: quien no lo implemente (los dobles de prueba) se
+   * resuelve con las tres consultas de siempre, y el resultado tiene que ser
+   * el mismo — lo fija la prueba de integración.
+   */
+  contextoPorHash?(hashDelToken: string): Promise<ContextoDeSesion | null>;
   marcarSegundoFactorSuperado(sesionId: string): Promise<void>;
   tocar(sesionId: string, momento: Date): Promise<void>;
   revocar(sesionId: string, momento: Date, motivo: string): Promise<void>;

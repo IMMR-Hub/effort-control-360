@@ -308,6 +308,83 @@ describeSiHayBase('repositorios contra PostgreSQL real', () => {
       expect(recuperada?.rol).toBe('solo_lectura');
     });
 
+    /*
+     * 2026-11-12: el hook de sesión corre en cada petición y cada viaje a la
+     * base cuesta ~130 ms desde producción. `contextoPorHash` trae sesión,
+     * usuario y cartera en una sola sentencia SQL escrita a mano; lo que tiene
+     * que quedar fijo es que devuelve EXACTAMENTE lo mismo que las tres
+     * consultas de siempre (lección 13: lo razonado sobre la base se prueba
+     * contra la base).
+     */
+    it('contextoPorHash trae en un viaje lo mismo que las tres consultas por separado', async () => {
+      const usuario = await entorno.prisma.usuario.create({
+        data: {
+          nombre: 'Con', apellido: 'Cartera', email: 'contexto@effort.com.py',
+          rol: 'responsable', hashContrasena: '$argon2id$prueba', veTodosLosClientes: false,
+        },
+      });
+      const vencido = await entorno.prisma.cliente.create({
+        data: { nombre: 'YA NO LO LLEVA S.A.', ruc: '80099999-1', tipoPersona: 'JURIDICA' },
+      });
+      // Una vigente, una cerrada ayer y una con fin a futuro: la regla de vigencia completa.
+      await entorno.prisma.asignacionCliente.createMany({
+        data: [
+          { clienteId: idClienteAsignado, usuarioId: usuario.id, rol: 'responsable' },
+          { clienteId: vencido.id, usuarioId: usuario.id, rol: 'responsable', hasta: new Date(Date.now() - 86_400_000) },
+          { clienteId: idClienteAjeno, usuarioId: usuario.id, rol: 'responsable', hasta: new Date(Date.now() + 86_400_000) },
+        ],
+      });
+      const hash = '7'.repeat(64);
+      await sesiones.crear({
+        hashDelToken: hash, usuarioId: usuario.id,
+        segundoFactorSuperado: true, ipTruncada: '190.128.50.0', agenteUsuario: 'prueba',
+      });
+
+      const contexto = await sesiones.contextoPorHash(hash);
+      const [sesion, porId, cartera] = await Promise.all([
+        sesiones.buscarPorHash(hash),
+        usuarios.buscarPorId(usuario.id),
+        usuarios.clientesAsignados(usuario.id),
+      ]);
+
+      expect(contexto?.sesion).toEqual(sesion);
+      expect(contexto?.usuario).toEqual({
+        id: porId!.id, rol: porId!.rol, activo: porId!.activo,
+        veTodosLosClientes: porId!.veTodosLosClientes, debeCambiarContrasena: porId!.debeCambiarContrasena,
+      });
+      expect([...contexto!.clientesAsignados].sort()).toEqual([...cartera].sort());
+      expect([...contexto!.clientesAsignados].sort()).toEqual([idClienteAsignado, idClienteAjeno].sort());
+    });
+
+    it('contextoPorHash: sin cartera devuelve lista vacía, y un token desconocido, nada', async () => {
+      const hash = '8'.repeat(64);
+      await sesiones.crear({
+        hashDelToken: hash, usuarioId: idDireccion,
+        segundoFactorSuperado: true, ipTruncada: null, agenteUsuario: null,
+      });
+
+      const contexto = await sesiones.contextoPorHash(hash);
+      expect(contexto?.clientesAsignados).toEqual([]);
+      expect(contexto?.usuario.rol).toBe('direccion');
+      expect(contexto?.usuario.veTodosLosClientes).toBe(true);
+      expect(await sesiones.contextoPorHash('0'.repeat(64))).toBeNull();
+    });
+
+    it('clientesConResponsable: solo carteras vigentes de colaboradores activos que no son dirección', async () => {
+      const deDireccion = await entorno.prisma.cliente.create({
+        data: { nombre: 'SOLO DIRECCION S.A.', ruc: '80088888-2', tipoPersona: 'JURIDICA' },
+      });
+      await entorno.prisma.asignacionCliente.create({
+        data: { clienteId: deDireccion.id, usuarioId: idDireccion, rol: 'coordinador' },
+      });
+
+      const conResponsable = await usuarios.clientesConResponsable();
+
+      expect(conResponsable).toContain(idClienteAsignado);
+      expect(conResponsable).not.toContain(deDireccion.id);
+      expect(new Set(conResponsable).size).toBe(conResponsable.length);
+    });
+
     it('el hash del token es único: no puede haber dos sesiones con el mismo', async () => {
       const hash = 'c'.repeat(64);
       await sesiones.crear({

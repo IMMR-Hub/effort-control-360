@@ -32,6 +32,7 @@ import { mensajePublicoDeError, sanear, truncarIp } from './seguridad/privacidad
 import { AlmacenEnMemoria } from './seguridad/limites.js';
 import type { RepositorioDeBitacora } from './bitacora.js';
 import type {
+  ContextoDeSesion,
   RepositorioDeClientes,
   RepositorioDeContactos,
   RepositorioDeHoras,
@@ -184,6 +185,31 @@ export class ErrorDeAplicacion extends Error {
 function rutaSinConsulta(url: string): string {
   const corte = url.indexOf('?');
   return corte === -1 ? url : url.slice(0, corte);
+}
+
+/**
+ * El mismo contexto que `contextoPorHash`, con las consultas de siempre. Es el
+ * camino de los repositorios que no tienen la consulta única.
+ */
+async function contextoDeSesionEnPasos(deps: Dependencias, hash: string): Promise<ContextoDeSesion | null> {
+  const sesion = await deps.sesiones.buscarPorHash(hash);
+  if (!sesion) return null;
+  const [usuario, clientesAsignados] = await Promise.all([
+    deps.usuarios.buscarPorId(sesion.usuarioId),
+    deps.usuarios.clientesAsignados(sesion.usuarioId),
+  ]);
+  if (!usuario) return null;
+  return {
+    sesion,
+    usuario: {
+      id: usuario.id,
+      rol: usuario.rol,
+      activo: usuario.activo,
+      veTodosLosClientes: usuario.veTodosLosClientes,
+      debeCambiarContrasena: usuario.debeCambiarContrasena,
+    },
+    clientesAsignados,
+  };
 }
 
 /** Cada cuánto se renueva `ultimo_uso_en` de una sesión en uso (la ventana de inactividad es de 8 horas). */
@@ -345,23 +371,22 @@ export async function construirServidor(deps: Dependencias): Promise<FastifyInst
     if (!token) return;
     const inicioDeSesion = performance.now();
 
-    const sesion = await deps.sesiones.buscarPorHash(hashDelToken(token));
-    if (!sesion) return;
+    // Sesión, usuario y cartera en un solo viaje a la base cuando el
+    // repositorio lo permite: este hook corre en TODA petición y cada viaje
+    // cuesta ~130 ms desde producción (2026-11-12).
+    const hash = hashDelToken(token);
+    const contexto = deps.sesiones.contextoPorHash
+      ? await deps.sesiones.contextoPorHash(hash)
+      : await contextoDeSesionEnPasos(deps, hash);
+    if (!contexto) return;
+    const { sesion, usuario } = contexto;
+    const cartera = [...contexto.clientesAsignados];
 
     const momento = deps.ahora();
     const estado = evaluarSesion(sesion, momento);
     if (estado !== 'VIGENTE' && estado !== 'SEGUNDO_FACTOR_PENDIENTE') return;
+    if (!usuario.activo) return;
 
-    // El usuario y su cartera se piden a la vez y no uno detrás del otro: cada
-    // viaje a la base cuesta cientos de milisegundos (la API está en Nueva York
-    // y la base en São Paulo) y este hook corre en TODA petición. Pedir la
-    // cartera de más (a quien ve todos los clientes) es una consulta barata en
-    // paralelo; esperarla en serie era un viaje entero (2026-11-12).
-    const [usuario, cartera] = await Promise.all([
-      deps.usuarios.buscarPorId(sesion.usuarioId),
-      estado === 'VIGENTE' ? deps.usuarios.clientesAsignados(sesion.usuarioId) : Promise.resolve([] as string[]),
-    ]);
-    if (!usuario || !usuario.activo) return;
 
     peticion.sesionId = sesion.id;
 

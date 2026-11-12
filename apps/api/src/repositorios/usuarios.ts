@@ -119,6 +119,19 @@ export class UsuariosPrisma implements RepositorioDeUsuarios {
     return filas.map((fila) => fila.clienteId);
   }
 
+  async clientesConResponsable(): Promise<string[]> {
+    const filas = await this.prisma.asignacionCliente.findMany({
+      where: {
+        OR: [{ hasta: null }, { hasta: { gt: new Date() } }],
+        usuario: { activo: true, rol: { not: 'direccion' } },
+      },
+      select: { clienteId: true },
+      distinct: ['clienteId'],
+    });
+
+    return filas.map((fila) => fila.clienteId);
+  }
+
   async registrarAcceso(usuarioId: string, momento: Date): Promise<void> {
     await this.prisma.usuario.update({
       where: { id: usuarioId },

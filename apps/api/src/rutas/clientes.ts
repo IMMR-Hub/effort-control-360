@@ -79,20 +79,19 @@ export async function registrarRutasDeClientes(
   /** Qué le falta a cada cliente visible (servicios/faltantesDeClientes.ts). Solo lectura. */
   app.get('/api/v1/clientes/faltantes', async (peticion) => {
     const sujeto = autorizar(peticion, 'cliente', 'ver');
-    const [clientes, obligaciones, asignaciones, usuarios] = await Promise.all([
+    // Las cuatro a la vez y ninguna en serie: cada viaje a la base es caro.
+    const [clientes, obligaciones, asignaciones, conResponsable] = await Promise.all([
       deps.clientes.listar(filtroDeClientes(sujeto)),
       deps.obligaciones.listar(),
       deps.obligaciones.asignacionesDeClientes(),
-      deps.usuarios.listar(),
+      deps.usuarios.clientesConResponsable(),
     ]);
-    const colaboradores = usuarios.filter((u) => u.activo && u.rol !== 'direccion');
-    const carteras = await Promise.all(colaboradores.map((u) => deps.usuarios.clientesAsignados(u.id)));
     return {
       faltantes: faltantesDeClientes({
         clientes,
         obligaciones,
         asignaciones,
-        conResponsable: new Set(carteras.flat()),
+        conResponsable: new Set(conResponsable),
         ahora: deps.ahora(),
       }),
     };

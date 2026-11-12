@@ -4,7 +4,7 @@
 
 import type { Rol } from '@effort/schema';
 
-import type { RepositorioDeSesiones } from '../puertos.js';
+import type { ContextoDeSesion, RepositorioDeSesiones } from '../puertos.js';
 import type { Sesion } from '../seguridad/sesiones.js';
 import type { PrismaClient } from './prisma.js';
 
@@ -29,6 +29,24 @@ type FilaSesion = {
   agenteUsuario: string | null;
   revocadaEn: Date | null;
   usuario: { rol: string };
+};
+
+/** La fila de `contextoPorHash`, con los nombres de columna de la base. */
+type FilaDeContexto = {
+  id: string;
+  hash_del_token: string;
+  usuario_id: string;
+  creada_en: Date;
+  ultimo_uso_en: Date;
+  segundo_factor_superado: boolean;
+  ip_truncada: string | null;
+  agente_usuario: string | null;
+  revocada_en: Date | null;
+  rol: string;
+  activo: boolean;
+  ve_todos_los_clientes: boolean;
+  debe_cambiar_contrasena: boolean;
+  clientes: string[];
 };
 
 function aDominio(fila: FilaSesion): Sesion {
@@ -77,6 +95,55 @@ export class SesionesPrisma implements RepositorioDeSesiones {
     });
 
     return fila ? aDominio(fila) : null;
+  }
+
+  /**
+   * Una sola sentencia y no un `include` de Prisma: con `include`, Prisma manda
+   * una consulta por tabla, una detrás de otra, y acá cada una es un viaje al
+   * otro continente. La cartera usa la misma regla de vigencia que
+   * `UsuariosPrisma.clientesAsignados` (sin fecha de fin, o con fecha futura).
+   */
+  async contextoPorHash(hashDelToken: string): Promise<ContextoDeSesion | null> {
+    const filas = await this.prisma.$queryRaw<FilaDeContexto[]>`
+      SELECT s.id::text AS id, s.hash_del_token, s.usuario_id::text AS usuario_id, s.creada_en, s.ultimo_uso_en,
+             s.segundo_factor_superado, s.ip_truncada, s.agente_usuario, s.revocada_en,
+             u.rol::text AS rol, u.activo, u.ve_todos_los_clientes, u.debe_cambiar_contrasena,
+             COALESCE(
+               (SELECT array_agg(DISTINCT a.cliente_id::text)
+                  FROM asignacion_cliente a
+                 WHERE a.usuario_id = u.id AND (a.hasta IS NULL OR a.hasta > now())),
+               ARRAY[]::text[]
+             ) AS clientes
+        FROM sesion s
+        JOIN usuario u ON u.id = s.usuario_id
+       WHERE s.hash_del_token = ${hashDelToken}
+       LIMIT 1`;
+
+    const fila = filas[0];
+    if (!fila) return null;
+
+    return {
+      sesion: {
+        id: fila.id,
+        hashDelToken: fila.hash_del_token,
+        usuarioId: fila.usuario_id,
+        rol: fila.rol as Rol,
+        creadaEn: fila.creada_en,
+        ultimoUsoEn: fila.ultimo_uso_en,
+        segundoFactorSuperado: fila.segundo_factor_superado,
+        ipTruncada: fila.ip_truncada,
+        agenteUsuario: fila.agente_usuario,
+        revocadaEn: fila.revocada_en,
+      },
+      usuario: {
+        id: fila.usuario_id,
+        rol: fila.rol as Rol,
+        activo: fila.activo,
+        veTodosLosClientes: fila.ve_todos_los_clientes,
+        debeCambiarContrasena: fila.debe_cambiar_contrasena,
+      },
+      clientesAsignados: fila.clientes,
+    };
   }
 
   async marcarSegundoFactorSuperado(sesionId: string): Promise<void> {

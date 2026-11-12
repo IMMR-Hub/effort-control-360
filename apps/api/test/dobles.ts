@@ -93,6 +93,11 @@ export class UsuariosFalsos implements RepositorioDeUsuarios {
     return this.asignaciones.get(usuarioId) ?? [];
   }
 
+  async clientesConResponsable(): Promise<string[]> {
+    const colaboradores = this.usuarios.filter((u) => u.activo && u.rol !== 'direccion');
+    return [...new Set(colaboradores.flatMap((u) => this.asignaciones.get(u.id) ?? []))];
+  }
+
   async registrarAcceso(usuarioId: string, momento: Date): Promise<void> {
     this.accesos.push({ usuarioId, momento });
   }

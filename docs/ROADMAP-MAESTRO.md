@@ -79,10 +79,20 @@ filas). Por eso Panel, notificaciones y Vencimientos muestran solo el piloto. He
   sumadas: (1) la aplicación entraba por el pooler de **transacciones** (6543, `pgbouncer=true`), con el que Prisma
   hace ~5 idas y vueltas por consulta; medido con las mismas credenciales, `SELECT 1` en ~220 ms contra ~45 ms por el
   de **sesión** (5432); (2) el hook de sesión hacía hasta 4 consultas en serie en CADA petición. Hecho:
-  - [ ] `repositorios/conexion.ts`: la app deriva de `DATABASE_URL` la entrada de sesión (mismo usuario y clave),
-    con `connection_limit=5`. Interruptor: `CONEXION_A_LA_BASE=transacciones`. **Falta desplegar y medir.**
-  - [ ] Hook de sesión: usuario y cartera en paralelo, la sesión se renueva una vez por minuto y `/yo` no vuelve a
-    pedir el usuario. Encabezado `Server-Timing` en cada respuesta para medir desde el navegador.
+  - [x] `repositorios/conexion.ts`: la app deriva de `DATABASE_URL` la entrada de sesión (mismo usuario y clave),
+    con `connection_limit=5`. Interruptor: `CONEXION_A_LA_BASE=transacciones`. **Desplegado 17:30 UTC (`26146a2`) y
+    MEDIDO en el Chrome de Daniel:** `/yo` 3,2 s → 0,59 s · clientes 3,4 → 1,1 s · vencimientos 4,1 → 2,0 s ·
+    alertas 4,6 → 2,5 s. Cada viaje a la base quedó en ~130 ms (la distancia Atlanta–São Paulo, ya sin el recargo
+    del pooler). Sin errores de conexiones en los registros.
+  - [x] Hook de sesión: la sesión se renueva una vez por minuto y `/yo` no vuelve a pedir el usuario. Encabezado
+    `Server-Timing` (`sesion;dur`, `total;dur`) en cada respuesta para medir desde el navegador.
+  - [ ] **Segunda vuelta (programada, falta desplegar y medir):** `SesionesPrisma.contextoPorHash` trae sesión,
+    usuario y cartera en UNA sentencia (el hook costaba 0,4 s por petición, 3 viajes), con prueba de integración que
+    fija que devuelve lo mismo que las tres consultas; `clientesConResponsable` reemplaza una consulta por
+    colaborador en `/clientes/faltantes` (2,7 s en el servidor).
+  - **Corrección de una medición mía:** dije que el servidor respondía «en 24 ms cuando no toca la base» por
+    `/salud`; esa ruta la contesta el sitio estático con un 404, no la API. Lo que sí vale es el 5 % de CPU de
+    DigitalOcean y el `Server-Timing`.
   - **Riesgo a vigilar:** en modo sesión cada conexión ocupa un lugar real en Supabase (15 por usuario y base). Si
     aparece «max clients reached», subir el «Pool Size» en Supabase o volver con el interruptor.
   - **Lo que queda de fondo:** servidor y base siguen en continentes distintos (~130 ms por ida y vuelta). Juntarlos
