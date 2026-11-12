@@ -86,16 +86,47 @@ if (!/^\d{4}-\d{2}-\d{2}$/.test(DESDE)) {
 
 export const MESES_MINIMOS = 3;
 
-/** Qué obligaciones demuestra la evidencia de un cliente. Pura: se prueba sin base. */
-export function obligacionesDemostradas(evidencia) {
+/**
+ * **Fuente principal: la planilla de EFFORT** (`CLIENTES - ARIANA CAMPOS DA
+ * ROSA.xlsx`, columna OBLIGACIONES), pasada a
+ * `docs/clientes/obligaciones-segun-planilla-ariana-2026-11-12.json` con el
+ * código de carpeta corregido (13 números de la planilla no son el de la
+ * carpeta: cruce del 2026-11-10). Daniel, 2026-11-12: «Acá está todo lo que debe
+ * presentar cada cliente». Lo que la planilla dice manda sobre la evidencia.
+ *
+ * - IVA_GENERAL, IRE (general) y EEFF: según la planilla.
+ * - PLANILLA_RG90: la planilla no la nombra; se asigna si hay libros de compras o
+ *   ventas de al menos 3 meses de 2026 (evidencia propia).
+ * - Un cliente activo sin fila en la planilla: solo por evidencia, con el mismo
+ *   umbral, y se lista para que Laura y Lili confirmen.
+ * - IRE SIMPLE, IRP, IDU, anticipos y retenciones: la planilla los marca pero el
+ *   catálogo todavía no tiene su regla de vencimiento; se informan, no se asignan.
+ */
+export const RUTA_PLANILLA = 'docs/clientes/obligaciones-segun-planilla-ariana-2026-11-12.json';
+
+const SIN_REGLA_TODAVIA = ['IRE_SIMPLE', 'IRP', 'IDU', 'ANT_IRE', 'RET_IDU', 'RET_IVA', 'RET_IRE', 'AUDITORIA'];
+
+/** Qué obligaciones corresponden a un cliente. Pura: se prueba sin base. */
+export function obligacionesDemostradas(evidencia, filaDePlanilla) {
   const asignar = [];
   const revisar = [];
-  if (evidencia.mesesIva2026 >= MESES_MINIMOS) asignar.push('IVA_GENERAL');
-  else if (evidencia.mesesIva2026 > 0) revisar.push(`IVA: formulario 120 en solo ${evidencia.mesesIva2026} mes(es) de 2026`);
+  if (filaDePlanilla) {
+    const dice = new Set(filaDePlanilla.obligaciones);
+    if (dice.has('IVA')) asignar.push('IVA_GENERAL');
+    if (dice.has('IRE_GRAL')) asignar.push('IRE');
+    if (dice.has('EEFF')) asignar.push('EEFF');
+    else if (evidencia.formularios158 > 0) revisar.push('EEFF: presentó formulario 158 pero la planilla no lo marca');
+    if (!dice.has('IRE_GRAL') && evidencia.formularios500 > 0) revisar.push('IRE: presentó formulario 500 pero la planilla no marca IRE general');
+    const sinRegla = SIN_REGLA_TODAVIA.filter((o) => dice.has(o));
+    if (sinRegla.length > 0) revisar.push(`sin regla en el sistema todavía: ${sinRegla.join(', ')}`);
+  } else {
+    if (evidencia.mesesIva2026 >= MESES_MINIMOS) asignar.push('IVA_GENERAL');
+    if (evidencia.formularios500 > 0) asignar.push('IRE');
+    if (evidencia.formularios158 > 0) asignar.push('EEFF');
+    revisar.push('no está en la planilla: asignado solo por lo que presentó');
+  }
   if (evidencia.mesesLibros2026 >= MESES_MINIMOS) asignar.push('PLANILLA_RG90');
   else if (evidencia.mesesLibros2026 > 0) revisar.push(`RG 90: libros en solo ${evidencia.mesesLibros2026} mes(es) de 2026`);
-  if (evidencia.formularios500 > 0) asignar.push('IRE');
-  if (evidencia.formularios158 > 0) asignar.push('EEFF');
   return { asignar, revisar };
 }
 
@@ -153,12 +184,13 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
     );
     const operador = await prisma.usuario.findUnique({ where: { email: 'effort360@effort.com.py' }, select: { id: true } });
 
+    const planilla = JSON.parse(readFileSync(`${RAIZ}${RUTA_PLANILLA}`, 'utf8'));
     const plan = [];
     const paraRevisar = [];
     const sinNada = [];
     for (const f of filas) {
       if (CODIGOS && !CODIGOS.includes(f.codigo)) continue;
-      const { asignar, revisar } = obligacionesDemostradas(f);
+      const { asignar, revisar } = obligacionesDemostradas(f, planilla[f.codigo]);
       const nuevas = asignar.filter((codigo) => !yaAsignadas.has(`${f.id}|${catalogo.get(codigo)}`));
       if (nuevas.length > 0) plan.push({ cliente: f, nuevas });
       if (revisar.length > 0) paraRevisar.push(`${f.codigo} ${f.nombre}: ${revisar.join('; ')}`);
@@ -203,7 +235,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
                   datosDespues: {
                     obligacionAsignada: codigo,
                     desde: DESDE,
-                    criterio: 'evidencia propia del cliente (scripts/asignar-obligaciones-por-evidencia.mjs)',
+                    criterio: planilla[cliente.codigo] ? 'planilla de clientes de EFFORT (Ariana), columna OBLIGACIONES; RG 90 por libros propios' : 'evidencia propia del cliente (no figura en la planilla)',
                   },
                 },
               }),
