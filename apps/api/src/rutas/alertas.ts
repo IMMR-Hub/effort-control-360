@@ -18,7 +18,7 @@ import { periodoSchema, textoLargo } from '@effort/schema';
 import { ACCIONES, registrarEvento } from '../bitacora.js';
 import { ErrorDeAplicacion, type Dependencias } from '../servidor.js';
 import { filtroDeClientes } from '../seguridad/rbac.js';
-import { autorizar, paramsId } from './comun.js';
+import { autorizar, paramsId, soloDeClientesActivos } from './comun.js';
 import { evaluarAlertas } from '../servicios/motorDeAlertas.js';
 
 const cerrarSchema = z
@@ -58,6 +58,8 @@ export async function registrarRutasDeAlertas(
           porPeriodo: async () => deps.libroRg90?.riesgoPorPeriodo() ?? [],
         },
         declaracionesAjenas: deps.declaracionesAjenas ?? undefined,
+        clientesInactivos: async () =>
+          new Set((await deps.clientes.listar(null)).filter((c) => !c.activo).map((c) => c.id)),
       },
       deps.ahora(),
       periodo,
@@ -88,7 +90,9 @@ export async function registrarRutasDeAlertas(
   app.get('/api/v1/alertas', async (peticion) => {
     const sujeto = autorizar(peticion, 'alerta', 'ver');
 
-    const alertas = await deps.alertas.listar(filtroDeClientes(sujeto));
+    const filtro = filtroDeClientes(sujeto);
+    const [todas, clientes] = await Promise.all([deps.alertas.listar(filtro), deps.clientes.listar(filtro)]);
+    const alertas = soloDeClientesActivos(todas, clientes);
 
     const resumen: Record<Criticidad, number> = {
       CRITICA: 0,

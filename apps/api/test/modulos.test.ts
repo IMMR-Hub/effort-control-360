@@ -91,11 +91,14 @@ interface Contexto {
   usuarios: UsuariosFalsos;
   reglasImpositivas: ReglasImpositivasFalsas;
   reglasDeNotificacion: ReglasDeNotificacionFalsas;
+  clientes: ClientesFalsos;
+  sesiones: SesionesFalsas;
 }
 
 async function montar(): Promise<Contexto> {
   const usuarios = new UsuariosFalsos();
   const clientes = new ClientesFalsos();
+  const sesiones = new SesionesFalsas();
   const bitacora = new BitacoraFalsa();
   const documentos = new DocumentosFalsos();
   const procesoMensual = new ProcesoMensualFalso();
@@ -154,7 +157,7 @@ async function montar(): Promise<Contexto> {
   const deps: Dependencias = {
     configuracion,
     usuarios,
-    sesiones: new SesionesFalsas(),
+    sesiones,
     clientes,
     contactos: new ContactosFalsos(),
     bitacora,
@@ -194,7 +197,7 @@ async function montar(): Promise<Contexto> {
 
   return {
     app, bitacora, documentos, procesoMensual, vencimientos, obligaciones, evidencias, drive, solicitudes, balances, alertas,
-    usuarios, reglasImpositivas, reglasDeNotificacion,
+    usuarios, reglasImpositivas, reglasDeNotificacion, clientes, sesiones,
   };
 }
 
@@ -251,6 +254,45 @@ afterEach(async () => {
 });
 
 /* ========================================================================== */
+
+/*
+ * Velocidad (2026-11-12): cada viaje a la base cuesta cientos de milisegundos
+ * desde producción, y el hook de sesión corre en toda petición.
+ */
+describe('identificación en cada petición', () => {
+  /** La sesión de dirección abierta en `beforeEach`. */
+  function sesionDeDireccion() {
+    return ctx.sesiones.sesiones.find((s) => s.usuarioId === 'usr-direccion' && !s.revocadaEn)!;
+  }
+
+  it('no reescribe la sesión en cada petición: la renueva una vez por minuto', async () => {
+    const sesion = sesionDeDireccion();
+    const reciente = new Date(HOY.getTime() - 30 * 1000);
+    const vieja = new Date(HOY.getTime() - 2 * 60 * 1000);
+
+    ctx.sesiones.sesiones[ctx.sesiones.sesiones.indexOf(sesion)] = { ...sesion, ultimoUsoEn: reciente };
+    await ctx.app.inject({ method: 'GET', url: '/api/v1/yo', headers: { cookie: direccion } });
+    expect(sesionDeDireccion().ultimoUsoEn).toEqual(reciente);
+
+    const actual = sesionDeDireccion();
+    ctx.sesiones.sesiones[ctx.sesiones.sesiones.indexOf(actual)] = { ...actual, ultimoUsoEn: vieja };
+    await ctx.app.inject({ method: 'GET', url: '/api/v1/yo', headers: { cookie: direccion } });
+    expect(sesionDeDireccion().ultimoUsoEn).toEqual(HOY);
+  });
+
+  it('cada respuesta dice cuánto tardó, y cuánto de eso fue identificar al usuario', async () => {
+    const respuesta = await ctx.app.inject({ method: 'GET', url: '/api/v1/yo', headers: { cookie: direccion } });
+    expect(respuesta.headers['server-timing']).toMatch(/^sesion;dur=\d+, total;dur=\d+$/);
+
+    const anonima = await ctx.app.inject({ method: 'GET', url: '/salud' });
+    expect(anonima.headers['server-timing']).toMatch(/^total;dur=\d+$/);
+  });
+
+  it('un responsable sigue viendo solo su cartera (usuario y cartera se piden a la vez)', async () => {
+    const respuesta = await ctx.app.inject({ method: 'GET', url: '/api/v1/yo', headers: { cookie: auxiliar } });
+    expect(JSON.parse(respuesta.body)).toMatchObject({ veTodosLosClientes: false, cantidadDeClientesAsignados: 1, debeCambiarContrasena: false });
+  });
+});
 
 describe('documentos', () => {
   const comprobante = {
@@ -724,6 +766,31 @@ describe('radar de vencimientos', () => {
       presentados.map((p: { descripcion: string; diasDeAtraso: number }) => [p.descripcion, p.diasDeAtraso]),
     );
     expect(dias).toEqual({ 'A tiempo': 0, 'Diez días tarde': 10 });
+  });
+
+  it('un cliente dado de baja no aparece en el radar ni en los presentados', async () => {
+    for (const cookie of [direccionAcotada]) {
+      const alta = await ctx.app.inject({
+        method: 'POST', url: `/api/v1/clientes/${MIO}/vencimientos`, headers: { cookie }, payload: abogacia,
+      });
+      expect(alta.statusCode).toBe(201);
+    }
+    const otro = await ctx.app.inject({
+      method: 'POST', url: `/api/v1/clientes/${MIO}/vencimientos`, headers: { cookie: direccionAcotada }, payload: { ...abogacia, descripcion: 'Ya presentado' },
+    });
+    await ctx.app.inject({
+      method: 'POST', url: `/api/v1/vencimientos/${JSON.parse(otro.body).vencimiento.id}/presentar`,
+      headers: { cookie: direccionAcotada }, payload: { fechaPresentacion: '2026-04-20' },
+    });
+    const indice = ctx.clientes.clientes.findIndex((c) => c.id === MIO);
+    ctx.clientes.clientes[indice] = { ...ctx.clientes.clientes[indice]!, activo: false };
+
+    const radar = await ctx.app.inject({ method: 'GET', url: '/api/v1/vencimientos', headers: { cookie: direccionAcotada } });
+    const presentados = await ctx.app.inject({ method: 'GET', url: '/api/v1/vencimientos/presentados', headers: { cookie: direccionAcotada } });
+
+    expect(JSON.parse(radar.body).vencimientos).toHaveLength(0);
+    expect(JSON.parse(radar.body).resumen.VENCIDO + JSON.parse(radar.body).resumen.SIN_ALERTA + JSON.parse(radar.body).resumen.INFORMATIVA).toBe(0);
+    expect(JSON.parse(presentados.body).presentados).toHaveLength(0);
   });
 
   it('no se puede presentar dos veces la misma obligación', async () => {
@@ -1690,6 +1757,28 @@ describe('alertas', () => {
       ...overrides,
     };
   }
+
+  /*
+   * Daniel, 2026-11-12: un cliente que no está en la lista de EFFORT no es
+   * activo y no aparece. SIPAR, dado de baja el 2026-11-10, seguía en el Panel,
+   * Vencimientos y Alertas por lo que tenía cargado de antes.
+   */
+  it('un cliente dado de baja no aparece en alertas; una alerta general sin cliente sí', async () => {
+    ctx.alertas.alertas.push(
+      fixture({ titulo: 'de un cliente activo' }),
+      fixture({ clienteId: AJENO, titulo: 'de un cliente dado de baja' }),
+      fixture({ clienteId: null, titulo: 'general' }),
+    );
+    const indice = ctx.clientes.clientes.findIndex((c) => c.id === AJENO);
+    ctx.clientes.clientes[indice] = { ...ctx.clientes.clientes[indice]!, activo: false };
+
+    const respuesta = await ctx.app.inject({ method: 'GET', url: '/api/v1/alertas', headers: { cookie: direccion } });
+
+    const titulos = JSON.parse(respuesta.body).alertas.map((a: { titulo: string }) => a.titulo);
+    expect(titulos).toContain('de un cliente activo');
+    expect(titulos).toContain('general');
+    expect(titulos).not.toContain('de un cliente dado de baja');
+  });
 
   it('la vista consolidada ordena por criticidad, más urgente primero', async () => {
     ctx.alertas.alertas.push(

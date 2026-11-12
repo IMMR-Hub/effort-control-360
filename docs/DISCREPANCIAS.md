@@ -979,6 +979,18 @@ problema persistente que necesite acción inmediata. Sigue valiendo medir de
 nuevo alguna vez más, pero no urge.
 
 
+**2026-11-12 — la causa principal no era la distancia sola: era el pooler de transacciones.** Medido con la sesión de
+Daniel (Chrome en producción y panel de DigitalOcean): servidor en **Atlanta** (ATL1), 5 % de CPU y 8 % de RAM, `/salud`
+en 24 ms; `/api/v1/yo` en 3,1–3,3 s sin ninguna carga, y los registros de DigitalOcean muestran el mismo tiempo del
+lado del servidor (`responseTime` 3.221–4.663 ms). Con las mismas credenciales, desde la máquina de trabajo: por el
+puerto 6543 (`pgbouncer=true`) `SELECT 1` tarda 187–266 ms y 30 consultas a la vez 1.677 ms; por el 5432 (sesión),
+38–52 ms y 646 ms. Prisma en modo `pgbouncer` hace varias idas y vueltas por consulta; multiplicado por la distancia
+Atlanta–São Paulo da ~600 ms por consulta. **Cambio:** la aplicación entra por la sesión (`repositorios/conexion.ts`,
+interruptor `CONEXION_A_LA_BASE`), y el hook de sesión dejó de hacer 4 consultas en serie por petición. La decisión de
+mover la base cerca del servidor sigue abierta y sigue siendo de Daniel, pero ya no es la única forma de que deje de
+tardar segundos. **Riesgo nuevo:** en modo sesión las conexiones se cuentan contra el «Pool Size» de Supabase (15 por
+defecto); la aplicación usa hasta 5.
+
 **2026-09-21 — otra cosa, distinta de la latencia:** la conexión al Session pooler (5432) desde la máquina de trabajo fue **intermitente** todo el día. Ver el punto 34.
 
 ---

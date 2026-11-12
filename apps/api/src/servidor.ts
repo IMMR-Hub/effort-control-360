@@ -142,6 +142,10 @@ declare module 'fastify' {
     sujeto: SujetoAutenticado | null;
     sesionId: string | null;
     sesionEnConfiguracion: SesionEnConfiguracion | null;
+    /** Lo trae el hook de sesión, para que `/yo` no vuelva a pedir el usuario a la base. */
+    debeCambiarContrasena?: boolean;
+    /** Milisegundos que tardó identificar al usuario (encabezado `Server-Timing`). */
+    msDeSesion?: number;
   }
 }
 
@@ -181,6 +185,9 @@ function rutaSinConsulta(url: string): string {
   const corte = url.indexOf('?');
   return corte === -1 ? url : url.slice(0, corte);
 }
+
+/** Cada cuánto se renueva `ultimo_uso_en` de una sesión en uso (la ventana de inactividad es de 8 horas). */
+export const RENOVAR_SESION_CADA_MS = 60 * 1000;
 
 export async function construirServidor(deps: Dependencias): Promise<FastifyInstance> {
   const produccion = esProduccion(deps.configuracion);
@@ -336,6 +343,7 @@ export async function construirServidor(deps: Dependencias): Promise<FastifyInst
   app.addHook('preHandler', async (peticion) => {
     const token = peticion.cookies[nombreCookieSesion(produccion)];
     if (!token) return;
+    const inicioDeSesion = performance.now();
 
     const sesion = await deps.sesiones.buscarPorHash(hashDelToken(token));
     if (!sesion) return;
@@ -344,7 +352,15 @@ export async function construirServidor(deps: Dependencias): Promise<FastifyInst
     const estado = evaluarSesion(sesion, momento);
     if (estado !== 'VIGENTE' && estado !== 'SEGUNDO_FACTOR_PENDIENTE') return;
 
-    const usuario = await deps.usuarios.buscarPorId(sesion.usuarioId);
+    // El usuario y su cartera se piden a la vez y no uno detrás del otro: cada
+    // viaje a la base cuesta cientos de milisegundos (la API está en Nueva York
+    // y la base en São Paulo) y este hook corre en TODA petición. Pedir la
+    // cartera de más (a quien ve todos los clientes) es una consulta barata en
+    // paralelo; esperarla en serie era un viaje entero (2026-11-12).
+    const [usuario, cartera] = await Promise.all([
+      deps.usuarios.buscarPorId(sesion.usuarioId),
+      estado === 'VIGENTE' ? deps.usuarios.clientesAsignados(sesion.usuarioId) : Promise.resolve([] as string[]),
+    ]);
     if (!usuario || !usuario.activo) return;
 
     peticion.sesionId = sesion.id;
@@ -362,10 +378,9 @@ export async function construirServidor(deps: Dependencias): Promise<FastifyInst
       rol: usuario.rol,
       activo: usuario.activo,
       veTodosLosClientes: usuario.veTodosLosClientes,
-      clientesAsignados: usuario.veTodosLosClientes
-        ? []
-        : await deps.usuarios.clientesAsignados(usuario.id),
+      clientesAsignados: usuario.veTodosLosClientes ? [] : cartera,
     };
+    peticion.debeCambiarContrasena = usuario.debeCambiarContrasena;
 
     // Contraseña por cambiar: la sesión es válida, pero lo único que habilita
     // es cambiarla. Va como guarda global y no ruta por ruta, por el mismo
@@ -380,8 +395,27 @@ export async function construirServidor(deps: Dependencias): Promise<FastifyInst
     }
 
     // Renueva la ventana de inactividad. Sin esto, alguien trabajando ocho
-    // horas seguidas se quedaría afuera a mitad de la jornada.
-    await deps.sesiones.tocar(sesion.id, momento);
+    // horas seguidas se quedaría afuera a mitad de la jornada. Una vez por
+    // minuto alcanza: la ventana es de 8 horas, y escribir en la base en cada
+    // petición era un viaje más en el camino de todas (2026-11-12).
+    if (momento.getTime() - sesion.ultimoUsoEn.getTime() >= RENOVAR_SESION_CADA_MS) {
+      await deps.sesiones.tocar(sesion.id, momento);
+    }
+    peticion.msDeSesion = performance.now() - inicioDeSesion;
+  });
+
+  /**
+   * Cuánto tardó cada respuesta, y cuánto de eso fue identificar al usuario,
+   * visible en las herramientas del navegador (`Server-Timing`). Existe para
+   * medir la lentitud desde la pantalla real sin acceso a los registros del
+   * servidor (2026-11-12). No expone datos: solo milisegundos.
+   */
+  app.addHook('onSend', async (peticion, respuesta, cuerpo) => {
+    const total = respuesta.elapsedTime;
+    const partes = [`total;dur=${total.toFixed(0)}`];
+    if (peticion.msDeSesion !== undefined) partes.unshift(`sesion;dur=${peticion.msDeSesion.toFixed(0)}`);
+    respuesta.header('Server-Timing', partes.join(', '));
+    return cuerpo;
   });
 
   /* --- Manejo de errores --------------------------------------------------- */

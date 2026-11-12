@@ -191,6 +191,8 @@ export async function ejecutarCicloDeCalculo(
       procesoMensual: deps.procesoMensual,
       riesgoDeLibro: { porPeriodo: async () => deps.libroRg90?.riesgoPorPeriodo() ?? [] },
       declaracionesAjenas: deps.declaracionesAjenas ?? undefined,
+      clientesInactivos: async () =>
+        new Set((await deps.clientes.listar(null)).filter((c) => !c.activo).map((c) => c.id)),
     },
     deps.ahora(),
     periodo,

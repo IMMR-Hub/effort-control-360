@@ -50,6 +50,16 @@ export interface DependenciasDelMotorDeAlertas {
    * que es lo que más caro sale no tener — el mismo criterio que `riesgoDeLibro`.
    */
   readonly declaracionesAjenas?: RepositorioDeDeclaracionesAjenas | undefined;
+  /**
+   * Los clientes dados de baja, para no levantarles alertas nuevas.
+   *
+   * Daniel, 2026-11-12: «cuando se da de baja a un cliente, ya no deberá
+   * aparecer para no crear todas las alertas». Lo que ya tenía abierto no se
+   * cierra ni se borra — deja de mostrarse (las rutas filtran por cliente
+   * activo) y vuelve a verse si el cliente se reactiva. Opcional por el mismo
+   * motivo que los dos de arriba.
+   */
+  readonly clientesInactivos?: (() => Promise<ReadonlySet<string>>) | undefined;
 }
 
 /** Resumen de lo que hay que revisar en el libro de un cliente y período. */
@@ -408,8 +418,11 @@ export async function evaluarAlertas(
     });
   }
 
+  const inactivos = (await deps.clientesInactivos?.()) ?? new Set<string>();
   const nuevas = candidatas.filter(
-    (alta) => !yaAbiertas.has(`${alta.origen}|${alta.entidadRelacionadaId ?? ''}`),
+    (alta) =>
+      !yaAbiertas.has(`${alta.origen}|${alta.entidadRelacionadaId ?? ''}`) &&
+      !(alta.clienteId !== null && inactivos.has(alta.clienteId)),
   );
 
   const creadas = await deps.alertas.crear(nuevas);

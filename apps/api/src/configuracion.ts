@@ -49,6 +49,21 @@ const camposDeConfiguracion = z
     DATABASE_URL: z.string().min(1, 'Falta DATABASE_URL.'),
 
     /**
+     * Por dónde entra la aplicación a la base: `sesion` (por defecto) usa la
+     * entrada de sesión de Supabase, una ida y vuelta por consulta;
+     * `transacciones` deja `DATABASE_URL` tal cual (cinco idas y vueltas con
+     * Prisma). Es el interruptor para volver atrás sin desplegar. Ver
+     * `repositorios/conexion.ts`.
+     */
+    CONEXION_A_LA_BASE: z.enum(['sesion', 'transacciones']).default('sesion'),
+    /**
+     * Conexiones que abre la aplicación en modo sesión. Cada una ocupa un lugar
+     * real en Supabase (15 por usuario y base): 5 deja margen para dos
+     * instancias durante un despliegue y para las herramientas de trabajo.
+     */
+    CONEXIONES_A_LA_BASE: z.coerce.number().int().min(1).max(20).default(5),
+
+    /**
      * Secreto para firmar cookies. 32 caracteres como mínimo: por debajo de eso
      * la firma se puede atacar por fuerza bruta con hardware común.
      */

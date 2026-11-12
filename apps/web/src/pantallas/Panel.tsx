@@ -322,8 +322,29 @@ export default function Panel({
     };
   }
 
+  /*
+   * «Más urgente» = lo más cerca de hoy, no lo más atrasado. Daniel,
+   * 2026-11-12: el Panel mostraba solo los clientes del piloto porque arriba
+   * quedaban sus RG 90 vencidas hace 300 días, y lo que vencía esa semana para
+   * los otros 80 clientes no se veía. Lo viejo sigue contado en el indicador
+   * «Vencimientos vencidos» y completo en la pantalla Vencimientos; acá van las
+   * cinco cosas que hay que mirar hoy. A igual distancia, primero lo vencido.
+   */
+  const hoyIso = `${hoy.anio}-${String(hoy.mes).padStart(2, '0')}-${String(hoy.dia).padStart(2, '0')}`;
+  const distanciaAHoy = (fecha: string | null): number =>
+    fecha === null ? Number.POSITIVE_INFINITY : Math.abs(Date.parse(`${fecha.slice(0, 10)}T00:00:00Z`) - Date.parse(`${hoyIso}T00:00:00Z`));
+  const ORDEN_CRITICIDAD: Record<string, number> = { CRITICA: 0, ALTA: 1 };
+
   const alertasUrgentes = useMemo(
-    () => [...alertasEnRango].filter((a) => a.criticidad === 'CRITICA' || a.criticidad === 'ALTA').slice(0, MAXIMO_EN_LISTAS),
+    () =>
+      [...alertasEnRango]
+        .filter((a) => a.criticidad === 'CRITICA' || a.criticidad === 'ALTA')
+        .sort(
+          (a, b) =>
+            ORDEN_CRITICIDAD[a.criticidad]! - ORDEN_CRITICIDAD[b.criticidad]! ||
+            distanciaAHoy(a.fechaLimite) - distanciaAHoy(b.fechaLimite),
+        )
+        .slice(0, MAXIMO_EN_LISTAS),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [alertas, rango, filtroDeCliente],
   );
@@ -332,7 +353,7 @@ export default function Panel({
     () =>
       [...vencimientosEnRango]
         .filter((v) => v.nivelAlerta !== 'SIN_ALERTA')
-        .sort((a, b) => a.diasRestantes - b.diasRestantes)
+        .sort((a, b) => Math.abs(a.diasRestantes) - Math.abs(b.diasRestantes) || a.diasRestantes - b.diasRestantes)
         .slice(0, MAXIMO_EN_LISTAS),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [vencimientos, rango, filtroDeCliente],

@@ -30,7 +30,7 @@ import { ErrorDeAplicacion, type Dependencias } from '../servidor.js';
 import { filtroDeClientes } from '../seguridad/rbac.js';
 import type { VencimientoAlmacenado } from '../puertos-dominio.js';
 import { generarVencimientosDelPeriodo } from '../servicios/generadorDeVencimientos.js';
-import { autorizar, paramsCliente, paramsId } from './comun.js';
+import { autorizar, paramsCliente, paramsId, soloDeClientesActivos } from './comun.js';
 
 const crearVencimientoSchema = z
   .object({
@@ -156,7 +156,9 @@ export async function registrarRutasDeVencimientos(
     const sujeto = autorizar(peticion, 'vencimiento', 'ver');
     const ahora = deps.ahora();
 
-    const filas = await deps.vencimientos.listar(filtroDeClientes(sujeto));
+    const filtro = filtroDeClientes(sujeto);
+    const [todas, clientes] = await Promise.all([deps.vencimientos.listar(filtro), deps.clientes.listar(filtro)]);
+    const filas = soloDeClientesActivos(todas, clientes);
     const conAlertas = filas.map((fila) => conAlerta(fila, ahora));
 
     const resumen: Record<NivelAlerta, number> = {
@@ -192,11 +194,12 @@ export async function registrarRutasDeVencimientos(
     const ahora = deps.ahora();
     const filtro = filtroDeClientes(sujeto);
 
-    const [filas, clientes, liquidaciones] = await Promise.all([
+    const [todas, clientes, liquidaciones] = await Promise.all([
       deps.vencimientos.listar(filtro),
       deps.clientes.listar(filtro),
       deps.libroRg90?.comprobantesPorClientePeriodo(filtro) ?? Promise.resolve([]),
     ]);
+    const filas = soloDeClientesActivos(todas, clientes);
 
     const nombrePorCliente = new Map(clientes.map((c) => [c.id, c.nombre]));
 
@@ -229,7 +232,9 @@ export async function registrarRutasDeVencimientos(
    */
   app.get('/api/v1/vencimientos/presentados', async (peticion) => {
     const sujeto = autorizar(peticion, 'vencimiento', 'ver');
-    const filas = await deps.vencimientos.listarPresentados(filtroDeClientes(sujeto));
+    const filtro = filtroDeClientes(sujeto);
+    const [todas, clientes] = await Promise.all([deps.vencimientos.listarPresentados(filtro), deps.clientes.listar(filtro)]);
+    const filas = soloDeClientesActivos(todas, clientes);
     const aproximadas =
       (await deps.declaraciones?.conFechaAproximada(
         filas.map((v) => v.evidenciaId).filter((id): id is string => id !== null),

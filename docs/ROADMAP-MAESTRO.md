@@ -73,8 +73,28 @@ filas). Por eso Panel, notificaciones y Vencimientos muestran solo el piloto. He
   «para no bombardear a los clientes con cosas que ya se presentaron pero no se cargaron». Recordatorios siguen apagados.
 - **Cuentas del equipo:** las 10 existen desde el 2026-09-20 y nadie entró. `scripts/restablecer-contrasena-inicial.mjs`
   (lo corre Daniel; mínimo 12 caracteres; no toca jbarrios ni kmedina, que ya no están en EFFORT y siguen activas).
-- **Lentitud:** sigue siendo la distancia (API en Nueva York, base en São Paulo, ~310 ms por consulta). Arreglo de
-  fondo: mover la base a us-east, con respaldo y autorización de Daniel.
+- **Lentitud — CAUSA ENCONTRADA Y MEDIDA el 2026-11-12 (con la sesión de Daniel en Chrome y en DigitalOcean).**
+  El servidor (DigitalOcean **Atlanta**, no Nueva York; 2 GB) está ocioso: 5 % de CPU, 8 % de RAM, `/salud` en 24 ms.
+  Pero `/api/v1/yo` tardaba **3,1–3,3 s** y el Panel **10,5 s**: todo el tiempo es espera de la base. Dos causas
+  sumadas: (1) la aplicación entraba por el pooler de **transacciones** (6543, `pgbouncer=true`), con el que Prisma
+  hace ~5 idas y vueltas por consulta; medido con las mismas credenciales, `SELECT 1` en ~220 ms contra ~45 ms por el
+  de **sesión** (5432); (2) el hook de sesión hacía hasta 4 consultas en serie en CADA petición. Hecho:
+  - [ ] `repositorios/conexion.ts`: la app deriva de `DATABASE_URL` la entrada de sesión (mismo usuario y clave),
+    con `connection_limit=5`. Interruptor: `CONEXION_A_LA_BASE=transacciones`. **Falta desplegar y medir.**
+  - [ ] Hook de sesión: usuario y cartera en paralelo, la sesión se renueva una vez por minuto y `/yo` no vuelve a
+    pedir el usuario. Encabezado `Server-Timing` en cada respuesta para medir desde el navegador.
+  - **Riesgo a vigilar:** en modo sesión cada conexión ocupa un lugar real en Supabase (15 por usuario y base). Si
+    aparece «max clients reached», subir el «Pool Size» en Supabase o volver con el interruptor.
+  - **Lo que queda de fondo:** servidor y base siguen en continentes distintos (~130 ms por ida y vuelta). Juntarlos
+    (base en us-east, cerca de Atlanta) llevaría cada consulta a pocos milisegundos; es una migración con respaldo y
+    autorización de Daniel. La tarea 116 (medir el pooler) queda cerrada con esto.
+- **Cliente dado de baja = no aparece ni genera alertas** (Daniel, 2026-11-12). SIPAR, inactivo desde el 10-11, seguía
+  en Panel, Vencimientos y Alertas: las rutas `GET /vencimientos`, `/vencimientos/presentados`, `/vencimientos/faltantes`
+  y `/alertas` muestran solo clientes activos (`soloDeClientesActivos`), y el motor no levanta alertas nuevas a un
+  inactivo (`clientesInactivos`). Nada se borra ni se cierra: si se reactiva, vuelve todo. **Daniel va a preguntar si
+  SIPAR se olvidó en el Excel**; si es activo, se reactiva desde Clientes y se le cargan obligaciones.
+- **Panel, «más urgentes»:** ordena por cercanía a hoy, no por más atrasado (antes solo se veían las RG 90 del piloto
+  vencidas hace 300 días).
 
 **ACTUALIZACIÓN 2026-11-10 14:40 — ajuste hecho en producción.** Pedido de Daniel: lo que no figura en el listado se toma
 como sin movimiento y no entra al sistema; cada colaborador accede solo a lo suyo según el Excel; Laura, Lili y Daniel ven

@@ -260,14 +260,17 @@ export async function registrarRutasDeAutenticacion(
     // necesita al cargar — si alguien recarga la página con la contraseña
     // pendiente, tiene que volver a la pantalla de cambio y no al panel, que
     // le rechazaría todas las llamadas.
-    const usuario = await deps.usuarios.buscarPorId(sujeto.usuarioId);
+    // El hook de sesión ya lo leyó: volver a pedir el usuario era un viaje más
+    // a la base en la primera petición de cada pantalla (2026-11-12).
+    const debeCambiarContrasena =
+      peticion.debeCambiarContrasena ?? (await deps.usuarios.buscarPorId(sujeto.usuarioId))?.debeCambiarContrasena ?? false;
 
     return {
       usuarioId: sujeto.usuarioId,
       rol: sujeto.rol,
       veTodosLosClientes: sujeto.veTodosLosClientes,
       cantidadDeClientesAsignados: sujeto.clientesAsignados.length,
-      debeCambiarContrasena: usuario?.debeCambiarContrasena ?? false,
+      debeCambiarContrasena,
     };
   });
 }

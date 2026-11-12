@@ -86,3 +86,24 @@ export function importesASalida<T extends object>(
 
   return salida;
 }
+
+/**
+ * Lo que se muestra en pantalla es solo de clientes activos.
+ *
+ * Daniel, 2026-11-12: «los clientes que NO aparecen en esa lista no presentan
+ * NADA porque no son activos, no deben estar entre clientes que aparezcan en el
+ * sistema». Un cliente dado de baja (SIPAR, 2026-11-10) seguía apareciendo en
+ * el Panel, Vencimientos y Alertas por lo que tenía cargado de antes. Se filtra
+ * en las RUTAS y no en el repositorio a propósito: el motor de alertas lee el
+ * mismo repositorio y, si dejara de ver esos vencimientos, cerraría solas sus
+ * alertas — una escritura que nadie pidió. Lo que no tiene cliente (una alerta
+ * general) se deja pasar.
+ */
+export function soloDeClientesActivos<T extends { readonly clienteId: string | null }>(
+  filas: readonly T[],
+  clientes: readonly { readonly id: string; readonly activo: boolean }[],
+): T[] {
+  const inactivos = new Set(clientes.filter((c) => !c.activo).map((c) => c.id));
+  return filas.filter((f) => f.clienteId === null || !inactivos.has(f.clienteId));
+}
+

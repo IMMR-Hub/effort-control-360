@@ -16,6 +16,7 @@ import { registrarRutasDeHoras } from './rutas/horas.js';
 import { AlmacenEnMemoria } from './seguridad/limites.js';
 import { Prisma } from '@prisma/client';
 
+import { conexionDeLaApp } from './repositorios/conexion.js';
 import { comprobarConexion, crearClientePrisma } from './repositorios/prisma.js';
 import { UsuariosPrisma } from './repositorios/usuarios.js';
 import { SesionesPrisma } from './repositorios/sesiones.js';
@@ -128,8 +129,12 @@ function crearCorreo(configuracion: Configuracion): CorreoGraph | null {
  * conexiones, que en Supabase Nano es de 15 y se agota rápido si cada
  * repositorio abre el suyo.
  */
+function conexionDe(configuracion: Configuracion) {
+  return conexionDeLaApp(configuracion.DATABASE_URL, configuracion.CONEXION_A_LA_BASE, configuracion.CONEXIONES_A_LA_BASE);
+}
+
 export function construirDependencias(configuracion: Configuracion): DependenciasReales {
-  const prisma = crearClientePrisma();
+  const prisma = crearClientePrisma({ urlDeConexion: conexionDe(configuracion).url });
 
   return {
     configuracion,
@@ -252,12 +257,17 @@ export async function principal(): Promise<void> {
   const configuracion = cargarConfiguracion();
   const dependencias = construirDependencias(configuracion);
 
-  const prisma = crearClientePrisma();
+  // Con la MISMA cadena que va a usar la aplicación: comprobar otra no prueba nada.
+  const conexion = conexionDe(configuracion);
+  const prisma = crearClientePrisma({ urlDeConexion: conexion.url });
   try {
     await comprobarConexion(prisma);
   } finally {
     await prisma.$disconnect();
   }
+  // Al log, y sin la cadena: si la aplicación va lenta, lo primero que hay que
+  // poder saber es por dónde está entrando a la base.
+  console.log(JSON.stringify({ level: 30, time: Date.now(), msg: `Conexión a la base: ${conexion.descripcion}.` }));
 
   await arrancar(dependencias);
 }

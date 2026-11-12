@@ -310,6 +310,46 @@ describe('panel general', () => {
     expect(tablaVencimientos.getByText('-2')).toBeVisible();
   });
 
+  /*
+   * Daniel, 2026-11-12: el Panel mostraba solo los clientes del piloto porque
+   * arriba quedaban sus vencimientos de hace 300 días. «Más urgente» es lo más
+   * cerca de hoy; lo viejo sigue en el indicador y en la pantalla Vencimientos.
+   */
+  it('«más urgentes» pone primero lo más cercano a hoy, no lo más atrasado', async () => {
+    const venc = (id: string, descripcion: string, diasRestantes: number, nivelAlerta: string) => ({
+      ...VENCIMIENTO_VENCIDO, id, descripcion, diasRestantes, nivelAlerta,
+    });
+    const alerta = (id: string, titulo: string, fechaLimite: string) => ({ ...ALERTA_CRITICA, id, titulo, fechaLimite });
+    await montar('direccion', {
+      vencimientos: [
+        venc('v-viejo', 'RG 90 de hace un año', -300, 'VENCIDO'),
+        venc('v-mes', 'Vencido hace un mes', -30, 'VENCIDO'),
+        venc('v-hoy', 'Vence hoy', 0, 'CRITICA'),
+        venc('v-ayer', 'Venció ayer', -1, 'VENCIDO'),
+        venc('v-semana', 'Vence en 5 días', 5, 'ALTA'),
+        venc('v-dos', 'Vence en 2 días', 2, 'CRITICA'),
+        venc('v-lejos', 'Vence en 60 días', 60, 'SIN_ALERTA'),
+      ],
+      alertas: [
+        alerta('a-vieja', 'Alerta de hace un año', '2025-04-22'),
+        alerta('a-hoy', 'Alerta de hoy', '2026-04-22'),
+        alerta('a-ayer', 'Alerta de ayer', '2026-04-21'),
+      ],
+    });
+
+    const filasDe = (nombre: string) =>
+      within(screen.getByRole('table', { name: nombre })).getAllByRole('row').slice(1).map((f) => f.textContent ?? '');
+    const vencimientos = filasDe('Vencimientos más urgentes');
+    expect(vencimientos).toHaveLength(5);
+    expect(vencimientos.map((t) => ['Vence hoy', 'Venció ayer', 'Vence en 2 días', 'Vence en 5 días', 'Vencido hace un mes'].findIndex((d) => t.includes(d)))).toEqual([0, 1, 2, 3, 4]);
+    expect(vencimientos.join(' ')).not.toContain('RG 90 de hace un año');
+
+    const alertas = filasDe('Alertas más urgentes');
+    expect(alertas[0]).toContain('Alerta de hoy');
+    expect(alertas[1]).toContain('Alerta de ayer');
+    expect(alertas[2]).toContain('Alerta de hace un año');
+  });
+
   it('cambiar el período vuelve a pedir solicitudes, balances y liquidaciones de ese período', async () => {
     await montar();
 

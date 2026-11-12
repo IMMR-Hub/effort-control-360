@@ -80,6 +80,31 @@ describe('motor de alertas', () => {
   });
 
   /*
+   * Daniel, 2026-11-12: «cuando se da de baja a un cliente, ya no deberá
+   * aparecer para no crear todas las alertas». SIPAR, inactivo desde el 10-11,
+   * seguía sumando alertas por lo que tenía cargado de antes.
+   */
+  it('a un cliente dado de baja no le levanta alertas nuevas, y las que tenía no las toca', async () => {
+    const deps = armar();
+    await agregarVencimiento(deps, '2026-04-13');
+    await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+    expect(deps.alertas.alertas).toHaveLength(1);
+
+    // Se da de baja, y aparece otro vencimiento suyo ya vencido.
+    await agregarVencimiento(deps, '2026-04-15');
+    const conBaja = { ...deps, clientesInactivos: async () => new Set([CLIENTE]) };
+    const resumen = await evaluarAlertas(conBaja, HOY, '2026-03', 'usr-1');
+
+    expect(resumen.creadas).toBe(0);
+    expect(deps.alertas.alertas).toHaveLength(1);
+    expect(deps.alertas.alertas[0]!.estado).toBe('ABIERTA');
+
+    // Reactivado, la que faltaba se levanta.
+    const otra = await evaluarAlertas(deps, HOY, '2026-03', 'usr-1');
+    expect(otra.creadas).toBe(1);
+  });
+
+  /*
    * B4 del roadmap y Daniel, 2026-09-22: «todo está presentado, solo que no
    * subieron al OneDrive». Lo que el sistema sabe es que NO HAY comprobante
    * archivado, no que no se presentó. El texto no puede afirmar lo segundo,
