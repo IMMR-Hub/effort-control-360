@@ -32,6 +32,23 @@ skill global **`backend-datos-sensibles`**, reutilizable en otros proyectos.
 
 ## ▶ HANDOFF — 2026-11-10 (MANDA SOBRE TODOS LOS DE ABAJO)
 
+**ACTUALIZACIÓN 2026-11-12 — reclamo de Daniel antes de una reunión: «no aparece NADA de los clientes nuevos».**
+Diagnóstico contra la base real: los archivos de los 87 sí están (25.677 documentos; 426 alertas de libros en 61
+clientes), pero **vencimientos solo hay para 4–5 clientes** porque `obligacion_de_cliente` solo tiene al piloto (20
+filas). Por eso Panel, notificaciones y Vencimientos muestran solo el piloto. Hecho hoy (commit `3f8fb6e`, verify 21/21):
+- [ ] Sincronizar: la pasada por cambios pedía las huellas de los 87 clientes aunque no tuvieran cambios (~90 s por
+  vuelta con 1 archivo). Ahora se saltean. **Desplegado; falta medir en producción.**
+- [ ] Documentos abre en el mes anterior (en el mes en curso solo 26 clientes tenían documentos). **Falta verlo en pantalla.**
+- Los 114 documentos con período 2026-12 NO son error: están en carpetas «CIERRE 2026» y el período por carpeta los
+  manda al cierre del ejercicio, a propósito.
+- **Siguiente (necesita OK de Daniel, escribe en producción):** `scripts/asignar-obligaciones-por-evidencia.mjs`.
+  Simulado: 71 clientes reciben IVA 54 · RG 90 68 · IRE 24 · EEFF 23, desde 2026-10-01; 16 para que decidan Laura y
+  Lili (1–2 meses de 120 o de libros); 12 sin ninguna. Pide respaldo del día, solo inserta. Fable 5.2, esfuerzo alto.
+- **Cuentas del equipo:** las 10 existen desde el 2026-09-20 y nadie entró. `scripts/restablecer-contrasena-inicial.mjs`
+  (lo corre Daniel; mínimo 12 caracteres; no toca jbarrios ni kmedina, que ya no están en EFFORT y siguen activas).
+- **Lentitud:** sigue siendo la distancia (API en Nueva York, base en São Paulo, ~310 ms por consulta). Arreglo de
+  fondo: mover la base a us-east, con respaldo y autorización de Daniel.
+
 **ACTUALIZACIÓN 2026-11-10 14:40 — ajuste hecho en producción.** Pedido de Daniel: lo que no figura en el listado se toma
 como sin movimiento y no entra al sistema; cada colaborador accede solo a lo suyo según el Excel; Laura, Lili y Daniel ven
 todo; todo cambio queda en la bitácora del cliente. Respaldo `respaldos/respaldo-2026-11-10T17-34-31.json`. Script:
