@@ -86,10 +86,22 @@ filas). Por eso Panel, notificaciones y Vencimientos muestran solo el piloto. He
     del pooler). Sin errores de conexiones en los registros.
   - [x] Hook de sesión: la sesión se renueva una vez por minuto y `/yo` no vuelve a pedir el usuario. Encabezado
     `Server-Timing` (`sesion;dur`, `total;dur`) en cada respuesta para medir desde el navegador.
-  - [ ] **Segunda vuelta (programada, falta desplegar y medir):** `SesionesPrisma.contextoPorHash` trae sesión,
-    usuario y cartera en UNA sentencia (el hook costaba 0,4 s por petición, 3 viajes), con prueba de integración que
-    fija que devuelve lo mismo que las tres consultas; `clientesConResponsable` reemplaza una consulta por
-    colaborador en `/clientes/faltantes` (2,7 s en el servidor).
+  - [x] **Segunda vuelta — desplegada 17:55 UTC (`4aa5961`) y medida:** `SesionesPrisma.contextoPorHash` trae sesión,
+    usuario y cartera en UNA sentencia, con prueba de integración que fija que devuelve lo mismo que las tres
+    consultas; `clientesConResponsable` reemplaza una consulta por colaborador. Identificar la petición: 399 ms →
+    135 ms (`Server-Timing`). `/yo`: 0,52 s en el navegador, 0,136 s en el servidor. `/clientes/faltantes`: 2,7 s →
+    1,2 s en el servidor. **Panel completo: 10,5 s → 5,0 s**, medido DURANTE la pasada completa de OneDrive que sigue
+    a cada despliegue (compite por las 5 conexiones): falta medirlo en reposo.
+  - **Visto en pantalla (Chrome de Daniel, 17:58 UTC):** SIPAR ya no aparece (vencidos 78 → 55, alertas activas 612 →
+    577) y «más urgentes» muestra lo de hoy de COPESA, RAMIRO GARCIA, MACOMA y ESTHER VIGNEAUX.
+  - **Lo que todavía se puede ganar en código (sin migrar nada):** (a) el Panel espera `/yo` antes de pedir lo demás
+    (0,8 s en serie); (b) `/vencimientos/presentados` hace una consulta más después de listar; (c) **cada despliegue
+    dispara una pasada completa de 22 min** porque el token de cambios vive en memoria — guardarlo en la base evitaría
+    que el sistema quede lento después de cada push (hoy hubo seis).
+  - **Lo que no se arregla en código:** ~130 ms por viaje servidor↔base (Atlanta–São Paulo) y ~190 ms por pedido
+    navegador↔servidor (Paraguay–Atlanta). Opción 1: base en Estados Unidos, cerca del servidor (misma gente,
+    mismos proveedores; queda la segunda distancia). Opción 2: servidor en São Paulo, junto a la base y cerca de los
+    usuarios (lo más rápido, pero DigitalOcean no tiene región ahí: es cambiar de proveedor). Decide Daniel.
   - **Corrección de una medición mía:** dije que el servidor respondía «en 24 ms cuando no toca la base» por
     `/salud`; esa ruta la contesta el sitio estático con un 404, no la API. Lo que sí vale es el 5 % de CPU de
     DigitalOcean y el `Server-Timing`.
