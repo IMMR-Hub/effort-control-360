@@ -58,18 +58,37 @@ import { fileURLToPath } from 'node:url';
 const RAIZ = fileURLToPath(new URL('..', import.meta.url));
 export const RUTA_PLANILLA = 'docs/clientes/obligaciones-segun-planilla-ariana-2026-11-12.json';
 
-/** De la planilla al catálogo. Lo que no está acá no tiene regla todavía. */
+/** De la planilla al catálogo: estas tres tienen calendario confirmado y generan vencimientos. */
 export const CATALOGO_POR_MARCA = { IVA: 'IVA_GENERAL', IRE_GRAL: 'IRE', EEFF: 'EEFF' };
-const NOMBRE_SIN_REGLA = {
-  IRP: 'IRP', IRE_SIMPLE: 'IRE SIMPLE', IDU: 'IDU', ANT_IRE: 'anticipos de IRE', RET_IDU: 'retención de IDU',
-  RET_IVA: 'retención de IVA', RET_IRE: 'retenciones IRE/IRP/INR', AUDITORIA: 'auditoría impositiva',
+
+/**
+ * Lo que la planilla marca y el catálogo no tiene con calendario. Se cargan en el
+ * catálogo con `confirmadaPorEffort = false` y SIN días de vencimiento: el
+ * generador las ignora (no hay una sola fecha inventada), pero quedan asignadas
+ * al cliente y la pantalla de Clientes lo muestra como «falta la regla de
+ * vencimiento de …». La periodicidad es la que dice la leyenda de la planilla
+ * (IRP, IRE e IDU anuales; anticipos de IRE, 4 vencimientos al año); la de las
+ * retenciones es provisoria y se confirma al cargar la regla.
+ */
+export const SIN_REGLA = {
+  IRP: { codigo: 'IRP', nombre: 'IRP', periodicidad: 'ANUAL' },
+  IRE_SIMPLE: { codigo: 'IRE_SIMPLE', nombre: 'IRE SIMPLE', periodicidad: 'ANUAL' },
+  IDU: { codigo: 'IDU', nombre: 'IDU', periodicidad: 'ANUAL' },
+  ANT_IRE: { codigo: 'ANTICIPO_IRE', nombre: 'anticipos de IRE', periodicidad: 'ANUAL' },
+  RET_IDU: { codigo: 'RETENCION_IDU', nombre: 'retención de IDU', periodicidad: 'MENSUAL' },
+  RET_IVA: { codigo: 'RETENCION_IVA', nombre: 'retención de IVA', periodicidad: 'MENSUAL' },
+  RET_IRE: { codigo: 'RETENCION_IRE_IRP_INR', nombre: 'retenciones IRE/IRP/INR', periodicidad: 'MENSUAL' },
+  AUDITORIA: { codigo: 'AUDITORIA_IMPOSITIVA', nombre: 'auditoría impositiva', periodicidad: 'ANUAL' },
 };
+const FUENTE_SIN_REGLA =
+  'Planilla de clientes de EFFORT (CLIENTES - ARIANA CAMPOS DA ROSA.xlsx, columna OBLIGACIONES), 2026-11-12. ' +
+  'SIN calendario: no genera vencimientos hasta cargar y confirmar su regla (días por terminación de RUC y mes).';
 
 /** Qué se asigna y qué queda como faltante, para una fila de la planilla. Pura. */
 export function planDeLaFila(fila) {
   if (!fila) return { asignar: [], sinRegla: [], nota: 'no está en la planilla' };
   const asignar = fila.obligaciones.filter((m) => CATALOGO_POR_MARCA[m]).map((m) => CATALOGO_POR_MARCA[m]);
-  const sinRegla = fila.obligaciones.filter((m) => !CATALOGO_POR_MARCA[m]).map((m) => NOMBRE_SIN_REGLA[m] ?? m);
+  const sinRegla = fila.obligaciones.filter((m) => SIN_REGLA[m]).map((m) => SIN_REGLA[m].codigo);
   const nota = fila.estado === 'SUSPENSIÓN' ? 'en suspensión' : fila.obligaciones.length === 0 ? (fila.texto || 'sin obligaciones marcadas') : null;
   return { asignar, sinRegla, nota };
 }
@@ -120,12 +139,24 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
   const planilla = JSON.parse(readFileSync(`${RAIZ}${RUTA_PLANILLA}`, 'utf8'));
   const prisma = new PrismaClient({ datasourceUrl: url });
   try {
-    const catalogo = new Map(
-      (await prisma.obligacionTributaria.findMany({ where: { activa: true, confirmadaPorEffort: true }, select: { id: true, codigo: true } }))
-        .map((o) => [o.codigo, o.id]),
-    );
+    const enCatalogo = await prisma.obligacionTributaria.findMany({ where: { activa: true }, select: { id: true, codigo: true, confirmadaPorEffort: true } });
+    const catalogo = new Map(enCatalogo.map((o) => [o.codigo, o.id]));
     for (const codigo of Object.values(CATALOGO_POR_MARCA)) {
-      if (!catalogo.has(codigo)) throw new Error(`La obligación ${codigo} no está activa y confirmada en el catálogo.`);
+      if (!enCatalogo.some((o) => o.codigo === codigo && o.confirmadaPorEffort)) throw new Error(`La obligación ${codigo} no está activa y confirmada en el catálogo.`);
+    }
+    const aCrearEnCatalogo = Object.values(SIN_REGLA).filter((o) => !catalogo.has(o.codigo));
+    console.log(`Obligaciones sin regla a crear en el catálogo (sin confirmar, no generan fechas): ${aCrearEnCatalogo.map((o) => o.codigo).join(', ') || 'ninguna'}`);
+    if (APLICAR) {
+      for (const o of aCrearEnCatalogo) {
+        const creada = await prisma.obligacionTributaria.create({
+          data: { codigo: o.codigo, nombre: o.nombre, entidad: 'DNIT', formulario: null, periodicidad: o.periodicidad,
+            diasPorTerminacionRuc: [], confirmadaPorEffort: false, activa: true, fuente: FUENTE_SIN_REGLA },
+          select: { id: true },
+        });
+        catalogo.set(o.codigo, creada.id);
+        await prisma.eventLog.create({ data: { accion: 'obligacion.creada', entidad: 'obligacion_tributaria', entidadId: creada.id,
+          datosDespues: { codigo: o.codigo, confirmadaPorEffort: false, fuente: FUENTE_SIN_REGLA } } });
+      }
     }
     const clientes = await prisma.cliente.findMany({ where: { activo: true }, select: { id: true, codigo: true, nombre: true, ruc: true }, orderBy: { codigo: 'asc' } });
     const yaAsignadas = new Set(
@@ -137,7 +168,8 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
     const faltantes = [];
     for (const c of clientes) {
       const { asignar, sinRegla, nota } = planDeLaFila(planilla[c.codigo]);
-      const nuevas = asignar.filter((codigo) => !yaAsignadas.has(`${c.id}|${catalogo.get(codigo)}`));
+      const todas = [...asignar, ...sinRegla];
+      const nuevas = todas.filter((codigo) => !catalogo.has(codigo) || !yaAsignadas.has(`${c.id}|${catalogo.get(codigo)}`));
       if (nuevas.length > 0) plan.push({ cliente: c, nuevas });
       const falta = [];
       if (!c.ruc && asignar.length > 0) falta.push('RUC (sin RUC no hay fecha de vencimiento)');
@@ -149,6 +181,7 @@ if (process.argv[1] && fileURLToPath(import.meta.url) === process.argv[1]) {
     const cuenta = (codigo) => plan.filter((p) => p.nuevas.includes(codigo)).length;
     console.log(`\n${APLICAR ? 'APLICANDO' : 'SIMULACIÓN (no escribe nada)'} · desde ${DESDE}`);
     console.log(`Clientes que reciben obligaciones nuevas: ${plan.length} · IVA_GENERAL ${cuenta('IVA_GENERAL')} · IRE ${cuenta('IRE')} · EEFF ${cuenta('EEFF')}`);
+    console.log(`  sin regla (no generan fechas): ${Object.values(SIN_REGLA).map((o) => `${o.codigo} ${cuenta(o.codigo)}`).join(' · ')}`);
     console.log(`\nIncompletos y lo que les falta: ${faltantes.length}`);
     for (const linea of faltantes) console.log(`  ${linea}`);
     if (sinFila.length) console.log(`\nEn la planilla pero no activos en el sistema: ${sinFila.join(', ')}`);

@@ -56,6 +56,7 @@ de Lili o Laura), **Daniel** (decisión o acción en una cuenta), **Claude**
 | 40 | Planilla de clientes para el alta masiva: supuestos no validados | **Abierto 2026-10-05** | EFFORT | Completar la planilla de 132 filas (régimen, obligaciones, RUC) y contestar sobre 045, 070, 099. Ver el punto |
 | 41 | Criterio para los archivos repetidos (1.068 copias en 52 clientes) | **Abierto 2026-10-06** | Daniel y EFFORT | Confirmar «se conserva el más antiguo» y decidir qué hacer con las copias (borrar es REGLA 0). Ver el punto |
 | 42 | Copia de seguridad del OneDrive de EFFORT en disco externo | **Terminada y verificada 2026-10-20; el disco FALLÓ OTRA VEZ el 2026-10-22** | Daniel (disco) y Claude (reverificar) | 36.488/36.488 verificados el 20-10. El 22-10 15:45 el disco dio errores (disk 51, ntfs 140, ntfs 50) y desapareció: segunda falla en 3 días. **Reconectado el mismo día: chkdsk sin problemas y foto reverificada 36.488/36.488 (0 dañados).** Falta: cambiar cable/puerto (o el disco si vuelve a fallar), segunda copia en otro lugar, cifrado |
+| 46 | Reglas de IRP, IRE SIMPLE, IDU y anticipos de IRE (cargadas 2026-11-12) | **Cargadas y verificadas contra la norma. Abiertos 46(a)–(f)** | Daniel y EFFORT | 46(a) cuatro clientes SIMPLE con «abril» en la planilla; 46(b) anticipos de IRE SIMPLE no marcados en la planilla; 46(c) EEFF en el catálogo con días 7–25 y la norma dice 8–26; 46(d) retenciones y auditoría sin regla; 46(e) el detector no reconoce los formularios de IRP ni de IRE SIMPLE; 46(f) el anticipo puede no corresponder y falta la acción «No aplica». |
 | 44 | RUC propuestos en la planilla de clientes que no son del cliente | **Abierto 2026-10-22** | Daniel y EFFORT | **056 FACUNDO CARRASCOSA:** la planilla propone 1300663-0, que es de DAVID TADEO FRANCISCO ROMERO CABALLERO (la carpeta «045 DAVID ROMERO» está dentro del 056 y era la única declaración). Corregir la planilla y avisar a EFFORT. **113 CASA VIVA:** sus declaraciones dicen «PAVISA SOCIEDAD ANONIMA» (¿nombre de fantasía?): confirmar. Ver el punto |
 | 43 | Plan de infraestructura y precio para 132 clientes | **Abierto 2026-10-06** | Daniel | Decidir y pagar DigitalOcean 2 GB + Supabase Pro antes de la carga masiva; región de la base; precio de mantenimiento. Ver el punto |
 
@@ -2046,3 +2047,60 @@ carpeta nueva) y el período solo cambia si lo dice la carpeta o el nombre. Cada
   le inventó un tipo; el detector de presentaciones no depende del tipo (lee el PDF). Falta que Daniel decida el tipo.
 - Los repositorios Prisma nuevos (`registrarOVincular`, `huellas` con la ruta anotada, `reclasificarDesdeOrigen`) no
   tienen todavía su prueba contra PostgreSQL real (lección 13).
+
+## 46. Reglas de IRP, IRE SIMPLE, IDU y anticipos de IRE — CARGADAS 2026-11-12, con seis puntos abiertos
+
+Daniel, 2026-11-12: «Cargá las reglas de IRP, IRE SIMPLE, IDU y anticipos». Script:
+`scripts/cargar-reglas-irp-simple-idu-anticipos.mjs`; respaldo `respaldos/respaldo-2026-11-12T14-29-32.json`.
+
+**Cada regla tiene dos fuentes que coinciden**: la norma, leída en el sitio de la DNIT el 2026-11-12, y la planilla de
+clientes de EFFORT (`CLIENTES - ARIANA CAMPOS DA ROSA.xlsx`). Nada se cargó de memoria (lección 22).
+
+| Obligación | Mes | Días por terminación | Norma (dnit.gov.py) | Planilla de EFFORT |
+|---|---|---|---|---|
+| IRP | marzo | 7 a 25 | RG 38/2020 art. 2° («hasta el día del vencimiento del tercer mes después de finalizado el ejercicio fiscal») y art. 3° | columna IRP: «marzo» en los 28 |
+| IRE SIMPLE | marzo | 7 a 25 | RG 38/2020 art. 2° (SIMPLE: tercer mes) y art. 3° | «marzo» en la mayoría; ver 46(a) |
+| Anticipos de IRE (régimen general) | mayo, julio, setiembre, noviembre | 7 a 25 | RG 38/2020 art. 4° («primer, tercer, quinto y séptimo mes siguientes al vencimiento del plazo de presentación de la declaración jurada (…) de acuerdo al Calendario Perpetuo (…) artículo 3°») | leyenda: «son 4 vencimientos mayo/julio/setiembre/noviembre» |
+| IDU, declaración informativa (DJI) | junio | 8 a 26 | RG 70/2020 art. 2° («dentro del sexto mes posterior al cierre del ejercicio fiscal, de acuerdo con el Calendario de Vencimientos de DJI previsto en el artículo 6° de la Resolución General N° 38/2020») | leyenda: «IDU anual, vence en junio» |
+
+Páginas: `dnit.gov.py/web/portal-institucional/w/resolucion-general-n-38-20`, `…/w/resolucion-general-n-70-20` y
+`…/w/vencimiento-ley-n-6380/19`. Las citas se obtuvieron en fragmentos (la herramienta de lectura no devuelve el
+artículo entero de una vez): conviene que alguien de EFFORT las vea una vez en el PDF de la resolución.
+
+**Cómo quedó en la base.** `IRP`, `IRE_SIMPLE` e `IDU` pasaron a `confirmadaPorEffort = true` con su mes y sus días.
+Los anticipos son cuatro obligaciones anuales (`ANTICIPO_IRE_1` a `_4`, meses 5, 7, 9 y 11): el generador conoce
+«anual con un mes de presentación», y un anticipo es eso; así no hubo que tocar el esquema. La genérica `ANTICIPO_IRE`
+quedó `activa = false`, sin borrar. Todas rigen desde 2026-10-01 (lo del ejercicio 2026 se genera en diciembre y vence
+en 2027), salvo `ANTICIPO_IRE_4`, que rige desde 2025-12-01 para que exista el de **noviembre de 2026**: 13
+vencimientos, del 09-11 al 25-11, con el generador de siempre acotado a esa obligación. Las 13 fechas coinciden con la
+columna de día de la planilla. Clientes completos: de 19 a 51.
+
+**Abiertos:**
+
+- **46(a) IRE SIMPLE, «abril» en cuatro filas.** ORL COMERCIAL, MARCO PENONI, FATIMA PEÑA y RAMIRO GARCIA tienen «abril»
+  en la columna IRE de la planilla siendo SIMPLE. La norma dice tercer mes (marzo) y es lo cargado. Puede ser un error
+  de tipeo o que esos clientes hayan cambiado de régimen: lo confirma EFFORT antes de marzo de 2027.
+- **46(b) Anticipos de IRE SIMPLE.** El art. 4° de la RG 38/2020 también fija anticipos para el SIMPLE (cierre a
+  diciembre: abril, junio, agosto y octubre). La planilla no marca «ANT IRE» en ningún cliente SIMPLE, así que **no se
+  cargaron** (Daniel: «Solo lo que está en el Excel»). Si EFFORT los lleva, se cargan igual que los del régimen general.
+- **46(c) Estados financieros: el catálogo dice 7 a 25 y la norma 8 a 26.** RG 38/2020 art. 8°: los EEFF vencen el
+  cuarto mes por el calendario de DJI (art. 6°, días 8 a 26). La fila `EEFF` del catálogo tiene los días del calendario
+  determinativo (7 a 25), que es lo que este mismo documento advertía como «el error fácil de cometer» (punto 19). Hoy
+  el sistema avisa un día ANTES de lo legal, que es el lado seguro, y coincide con lo que dio EFFORT el 2026-09-11
+  («EEFF IRE 25/04»). **No se cambió**: decide Daniel si se corrige a 8–26.
+- **46(d) Sin regla todavía:** `RETENCION_IDU` (8 clientes), `RETENCION_IVA` (2), `RETENCION_IRE_IRP_INR` (1) y
+  `AUDITORIA_IMPOSITIVA` (1). De la auditoría la norma es conocida (RG 38/2020 art. 9°: octavo mes, calendario de
+  DJI), pero no se pidió y aplica «para los casos listados en el artículo». De las retenciones no se verificó el
+  calendario: las declaraciones leídas (formularios 122, 525 y 526) traen siempre el mismo día para clientes de
+  terminación distinta, lo que sugiere un plazo fijo y no por terminación. Verificación pendiente.
+- **46(e) El detector de presentaciones no conoce estos formularios.** `OBLIGACION_POR_FORMULARIO` solo tiene 120,
+  500, 158 y 241. Un IRP o un IRE SIMPLE presentado no se va a marcar solo como «Presentado»: lo registra una persona.
+  Para automatizarlo hay que leer un PDF real de cada formulario (501 del SIMPLE; los del IRP no están verificados) y
+  agregarlos también a `ANUALES`. No hay ninguno leído hoy en el sistema.
+- **46(f) El anticipo puede no corresponder, y la pantalla no tiene cómo decirlo.** La planilla: «depende de la
+  liquidación del IRE para quedar o no obligado a pagar». El estado `NO_APLICA` existe en la base, pero **ninguna ruta ni
+  pantalla permite marcar un vencimiento así**: hoy solo se puede «Presentar». Falta construir esa acción (con motivo
+  obligatorio y solo para dirección, regla 12). Cuatro de los 13 de noviembre (CONSORCIO GUASU, QUIMECO, SOCIEDAD
+  PARAGUAYA DE ENDODONCIA, BV SOLUTIONS) vencieron el 09-11, antes de cargar la regla: van a figurar vencidos hasta que
+  alguien registre el pago.
+

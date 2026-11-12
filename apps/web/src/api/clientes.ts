@@ -28,6 +28,11 @@ export function listarClientes(): Promise<{ clientes: readonly Cliente[] }> {
   return peticion('GET', '/api/v1/clientes');
 }
 
+/** Lo que le falta a cada cliente activo incompleto, por id. Un cliente completo no figura. */
+export function listarFaltantesDeClientes(): Promise<{ faltantes: Readonly<Record<string, readonly string[]>> }> {
+  return peticion('GET', '/api/v1/clientes/faltantes');
+}
+
 export type TipoPersona = 'FISICA' | 'JURIDICA';
 
 export interface AltaDeCliente {

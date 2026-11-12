@@ -46,6 +46,14 @@ const ETIQUETA_OBLIGACION: Record<string, string> = {
   PLANILLA_RG90: 'RG 90',
   IRE: 'IRE',
   EEFF: 'Estados financieros',
+  // Reglas cargadas el 2026-11-12 (scripts/cargar-reglas-irp-simple-idu-anticipos.mjs).
+  IRP: 'IRP',
+  IRE_SIMPLE: 'IRE SIMPLE',
+  IDU: 'IDU (informativa)',
+  ANTICIPO_IRE_1: 'Anticipo de IRE',
+  ANTICIPO_IRE_2: 'Anticipo de IRE',
+  ANTICIPO_IRE_3: 'Anticipo de IRE',
+  ANTICIPO_IRE_4: 'Anticipo de IRE',
 };
 
 /** Etiqueta del tipo de un vencimiento: documento, obligación, o el código tal cual. */

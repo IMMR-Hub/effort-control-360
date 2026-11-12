@@ -47,11 +47,27 @@ filas). Por eso Panel, notificaciones y Vencimientos muestran solo el piloto. He
   Cruce rehecho nombre por nombre (el del 10-11 tenía ALMA BENITEZ→104, MBV→117, AF Y RM y AM Y ASOC→107). Los 87
   activos = 81 de la lista principal + 6 de la lista IPS/REOP (hoja ARIANA): no hubo que desactivar a nadie.
   `scripts/ajustar-cartera-segun-planilla-2026-11-12.mjs`: 006 y 038 pasan de Sandra a Analía.
-- **Pendiente:** IRP (28), IRE SIMPLE (11), IDU (13), anticipos IRE (13, vencen mayo/jul/sep/NOV), retenciones: no tienen
-  regla en el catálogo (Fable 5.2, alto). PEDRO (`pbarrios@`, 14 clientes) sin cuenta; BEA (`kbaez@`, 9 clientes):
-  Daniel dice «pbarrios entra por kbaez» — falta saber a quién pasan los 9 de BEA. Columna «incompleto» en Clientes.
-  Solicitudes a clientes: construidas pero apagadas (`RECORDATORIOS_AUTOMATICOS=no`), 0 de 87 clientes con correo,
-  0 reglas de notificación, sin paso de aprobación previa por envío.
+- **Reglas de IRP, IRE SIMPLE, IDU y anticipos de IRE — CARGADAS 14:35 UTC** (respaldo
+  `respaldo-2026-11-12T14-29-32.json`; `scripts/cargar-reglas-irp-simple-idu-anticipos.mjs`; detalle y fuentes en
+  `docs/DISCREPANCIAS.md` punto 46). Verificadas contra la norma en dnit.gov.py y contra la planilla de EFFORT: IRP e
+  IRE SIMPLE en marzo (días 7–25), IDU informativa en junio (días 8–26), anticipos en mayo/julio/setiembre/noviembre
+  (días 7–25) como cuatro obligaciones `ANTICIPO_IRE_1`…`_4`. Generados los **13 anticipos de noviembre de 2026**
+  (09-11 al 25-11); lo demás se genera en diciembre y vence en 2027. Clientes completos: 19 → 51.
+  - [ ] Verlo en pantalla (Vencimientos y Clientes) — falta.
+  - Siguen sin regla: RETENCION_IDU 8, RETENCION_IVA 2, RETENCION_IRE_IRP_INR 1, AUDITORIA_IMPOSITIVA 1.
+  - **Pendientes que salieron de esto (DISCREPANCIAS 46):** acción «No aplica» para un vencimiento (no existe en
+    pantalla; un anticipo puede no corresponder); el detector no reconoce los formularios de IRP ni IRE SIMPLE (se
+    registran a mano); EEFF en el catálogo con días 7–25 y la norma dice 8–26 (decide Daniel); anticipos de IRE SIMPLE
+    no están en la planilla (no cargados); cuatro clientes SIMPLE con «abril» en la planilla.
+- **Columna «Datos» en Clientes** (`GET /api/v1/clientes/faltantes`, `servicios/faltantesDeClientes.ts`): Completo /
+  Incompleto + qué falta (RUC, responsable con cuenta, regla de vencimiento). Con datos reales: 19 completos, 68
+  incompletos (28 sin responsable, 51 con regla faltante, 7 sin RUC).
+- **Pedro Barrios** (`pbarrios@`) entra por Karina Baez y lleva sus 14 clientes y los 9 de BEA (22 con carpeta). Daniel
+  crea la cuenta con `node scripts/crear-equipo.mjs` (ahora crea cuentas que NO ven todos los clientes) y después
+  `node scripts/ajustar-cartera-segun-planilla-2026-11-12.mjs --aplicar`. Cuenta kbaez a desactivar (con jbarrios y kmedina).
+- **Decisiones de Daniel 2026-11-12:** el correo de los clientes lo cargan solo Laura, Lili y Daniel (regla 12, sin
+  excepción). La aprobación previa de solicitudes a clientes queda **en pausa** hasta que todo esté al día y cargado,
+  «para no bombardear a los clientes con cosas que ya se presentaron pero no se cargaron». Recordatorios siguen apagados.
 - **Cuentas del equipo:** las 10 existen desde el 2026-09-20 y nadie entró. `scripts/restablecer-contrasena-inicial.mjs`
   (lo corre Daniel; mínimo 12 caracteres; no toca jbarrios ni kmedina, que ya no están en EFFORT y siguen activas).
 - **Lentitud:** sigue siendo la distancia (API en Nueva York, base en São Paulo, ~310 ms por consulta). Arreglo de

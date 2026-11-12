@@ -28,6 +28,7 @@ import {
 import { ACCIONES, registrarEvento } from '../bitacora.js';
 import { ErrorDeAplicacion, type Dependencias } from '../servidor.js';
 import { filtroDeClientes } from '../seguridad/rbac.js';
+import { faltantesDeClientes } from '../servicios/faltantesDeClientes.js';
 import { autorizar, paramsId } from './comun.js';
 
 const tipoPersonaSchema = z.enum(['FISICA', 'JURIDICA']);
@@ -73,6 +74,28 @@ export async function registrarRutasDeClientes(
     const sujeto = autorizar(peticion, 'cliente', 'ver');
     const clientes = await deps.clientes.listar(filtroDeClientes(sujeto));
     return { clientes };
+  });
+
+  /** Qué le falta a cada cliente visible (servicios/faltantesDeClientes.ts). Solo lectura. */
+  app.get('/api/v1/clientes/faltantes', async (peticion) => {
+    const sujeto = autorizar(peticion, 'cliente', 'ver');
+    const [clientes, obligaciones, asignaciones, usuarios] = await Promise.all([
+      deps.clientes.listar(filtroDeClientes(sujeto)),
+      deps.obligaciones.listar(),
+      deps.obligaciones.asignacionesDeClientes(),
+      deps.usuarios.listar(),
+    ]);
+    const colaboradores = usuarios.filter((u) => u.activo && u.rol !== 'direccion');
+    const carteras = await Promise.all(colaboradores.map((u) => deps.usuarios.clientesAsignados(u.id)));
+    return {
+      faltantes: faltantesDeClientes({
+        clientes,
+        obligaciones,
+        asignaciones,
+        conResponsable: new Set(carteras.flat()),
+        ahora: deps.ahora(),
+      }),
+    };
   });
 
   app.get('/api/v1/clientes/:id', async (peticion) => {

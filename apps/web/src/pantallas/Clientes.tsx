@@ -27,6 +27,7 @@ import {
   actualizarCliente,
   crearCliente,
   listarClientes,
+  listarFaltantesDeClientes,
   type CanalRecepcion,
   type Cliente,
   type TipoPersona,
@@ -129,6 +130,7 @@ export default function Clientes() {
   const [cargando, setCargando] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [clientes, setClientes] = useState<readonly Cliente[]>([]);
+  const [faltantes, setFaltantes] = useState<Readonly<Record<string, readonly string[]>> | null>(null);
   const [busqueda, setBusqueda] = useState('');
   const [soloActivos, setSoloActivos] = useState(true);
 
@@ -144,6 +146,10 @@ export default function Clientes() {
     try {
       const { clientes: lista } = await listarClientes();
       setClientes(lista);
+      // Aparte y sin frenar la tabla: si falla, la cartera se ve igual, sin la columna de faltantes llena.
+      listarFaltantesDeClientes()
+        .then(({ faltantes: f }) => setFaltantes(f))
+        .catch(() => setFaltantes(null));
     } catch (motivo) {
       setError(motivo instanceof ErrorDeApi ? motivo.message : 'No se pudo conectar con el servidor.');
     } finally {
@@ -181,6 +187,13 @@ export default function Clientes() {
   // Sobre la cartera completa, no sobre la búsqueda: el aviso es para que
   // dirección sepa cuántos clientes no tienen vencimientos calculados.
   const conRucPendiente = clientes.filter((c) => c.ruc === null && c.activo).length;
+  const incompletos = faltantes ? coincidentes.filter((c) => c.activo && faltantes[c.id]).length : null;
+  const textoDeDatos = (c: Cliente): string => {
+    if (!c.activo) return '';
+    if (!faltantes) return '';
+    const falta = faltantes[c.id];
+    return falta ? `Incompleto: falta ${falta.join('; ')}` : 'Completo';
+  };
 
   /** Lo mismo que muestra la pantalla, con sus filtros: la cartera tal como queda en la tabla. */
   function reporte(): Reporte {
@@ -203,6 +216,7 @@ export default function Clientes() {
               valor: (c) => (c.canalPreferido ? ETIQUETA_CANAL[c.canalPreferido as CanalRecepcion] : ''),
             },
             { titulo: 'Estado', valor: (c) => (c.activo ? 'Activo' : 'Inactivo') },
+            { titulo: 'Datos', valor: (c) => textoDeDatos(c) },
           ],
           clientesFiltrados,
         ),
@@ -310,6 +324,14 @@ export default function Clientes() {
           />
           <Indicador etiqueta="Activos" valor={activos} tono="completo" />
           <Indicador etiqueta="Inactivos" valor={coincidentes.length - activos} tono="pendiente" />
+          {incompletos !== null && (
+            <Indicador
+              etiqueta="Incompletos"
+              valor={incompletos}
+              detalle="activos a los que les falta algún dato"
+              tono="parcial"
+            />
+          )}
         </section>
 
         {puedeEditar && conRucPendiente > 0 && (
@@ -374,6 +396,7 @@ export default function Clientes() {
                 <Th>Tipo</Th>
                 <Th>Canal preferido</Th>
                 <Th>Estado</Th>
+                <Th>Datos</Th>
                 {puedeEditar && <Th>Acciones</Th>}
               </tr>
             </thead>
@@ -396,6 +419,18 @@ export default function Clientes() {
                       {cliente.activo ? 'Activo' : 'Inactivo'}
                     </Badge>
                   </Td>
+                  <Td>
+                    {cliente.activo && faltantes && (
+                      faltantes[cliente.id] ? (
+                        <div className="flex flex-col items-start gap-1">
+                          <Badge tono="parcial">Incompleto</Badge>
+                          <span className="text-xs text-tinta-suave">Falta: {faltantes[cliente.id]!.join('; ')}</span>
+                        </div>
+                      ) : (
+                        <Badge tono="completo">Completo</Badge>
+                      )
+                    )}
+                  </Td>
                   {puedeEditar && (
                     <Td>
                       <Boton
@@ -413,7 +448,7 @@ export default function Clientes() {
               {clientesFiltrados.length === 0 && (
                 <tr>
                   <td
-                    colSpan={puedeEditar ? 7 : 6}
+                    colSpan={puedeEditar ? 8 : 7}
                     className="px-4 py-8 text-center text-sm text-tinta-tenue"
                   >
                     Ningún cliente coincide con la búsqueda.

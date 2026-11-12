@@ -55,7 +55,12 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-async function montar(rol: string = 'direccion', clientes: readonly unknown[] = [GARSO, CLIENTE_INACTIVO]) {
+async function montar(
+  rol: string = 'direccion',
+  clientes: readonly unknown[] = [GARSO, CLIENTE_INACTIVO],
+  faltantes: Readonly<Record<string, readonly string[]>> = {},
+) {
+  mock.mockDeRuta('GET /api/v1/clientes/faltantes', () => respuestaJson({ faltantes }));
   mock.mockDeRuta('GET /api/v1/yo', () =>
     respuestaJson({ usuarioId: 'u1', rol, veTodosLosClientes: true, cantidadDeClientesAsignados: 0 }),
   );
@@ -248,6 +253,19 @@ describe('pantalla de clientes', () => {
     });
   });
 
+  // Daniel, 2026-11-12: «deben aparecer como incompletos y mencionar lo que le falta».
+  it('un cliente incompleto dice qué le falta, y el indicador los cuenta', async () => {
+    await montar('direccion', [GARSO, { ...GARSO, id: 'cli-sinruc', nombre: 'SIN RUC S.A.', ruc: null }], {
+      'cli-sinruc': ['RUC', 'regla de vencimiento de IRP'],
+    });
+
+    expect(await screen.findByText('Falta: RUC; regla de vencimiento de IRP')).toBeVisible();
+    const fila = screen.getByText('SIN RUC S.A.').closest('tr')!;
+    expect(within(fila).getByText('Incompleto')).toBeVisible();
+    expect(within(screen.getByText('GARSO S.A.').closest('tr')!).getByText('Completo')).toBeVisible();
+    expect(screen.getByText('Incompletos')).toBeVisible();
+  });
+
   describe('Excel (2026-10-02)', () => {
     const GARCIA = { ...GARSO, id: 'cli-garcia', nombre: 'GARCÍA ÑANDÚ S.A.', ruc: '80000002-3', tipoPersona: 'FISICA', canalPreferido: null };
 
@@ -263,11 +281,11 @@ describe('pantalla de clientes', () => {
       expect(reporte.filtros).toEqual(['Cliente: nombre, código o RUC con «gar»', 'Estado: solo activos']);
       expect(reporte.hojas.map((h) => h.nombre)).toEqual(['Cartera']);
       const [cartera] = reporte.hojas as [HojaDeReporte];
-      expect(cartera.columnas.map((c) => c.titulo)).toEqual(['Código', 'Nombre', 'RUC', 'Tipo', 'Canal preferido', 'Estado']);
+      expect(cartera.columnas.map((c) => c.titulo)).toEqual(['Código', 'Nombre', 'RUC', 'Tipo', 'Canal preferido', 'Estado', 'Datos']);
       // Las mismas filas y el mismo orden que la tabla: sin el inactivo ni «OTRO».
       expect(celdas(cartera)).toEqual([
-        ['012', 'GARCÍA ÑANDÚ S.A.', '80000002-3', 'Física', '', 'Activo'],
-        ['012', 'GARSO S.A.', '80017726-6', 'Jurídica', 'WhatsApp', 'Activo'],
+        ['012', 'GARCÍA ÑANDÚ S.A.', '80000002-3', 'Física', '', 'Activo', 'Completo'],
+        ['012', 'GARSO S.A.', '80017726-6', 'Jurídica', 'WhatsApp', 'Activo', 'Completo'],
       ]);
     });
 
