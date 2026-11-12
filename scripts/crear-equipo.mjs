@@ -55,6 +55,9 @@ const EQUIPO = [
   { nombre: 'Karina', apellido: 'Medina', email: 'kmedina@effort.com.py', rol: 'responsable' },
   { nombre: 'Melany', apellido: 'González', email: 'mgonzalez@effort.com.py', rol: 'responsable' },
   { nombre: 'Sandra', apellido: 'Ferreira', email: 'sferreira@effort.com.py', rol: 'responsable' },
+  // Entra en lugar de Karina Baez (Daniel, 2026-11-12: «pbarrios entra por kbaez»). Lleva sus clientes de la
+  // planilla (PEDRO) y los de BEA. La cartera la carga `ajustar-cartera-segun-planilla-2026-11-12.mjs`.
+  { nombre: 'Pedro', apellido: 'Barrios', email: 'pbarrios@effort.com.py', rol: 'responsable' },
 ];
 
 /**
@@ -68,7 +71,9 @@ const EQUIPO = [
  *
  * **Cuando el piloto crezca, esto se cambia a `false` y se cargan las carteras.**
  */
-const VE_TODOS_LOS_CLIENTES = true;
+const VE_TODOS_LOS_CLIENTES = false;
+// 2026-11-10: el piloto creció a 87 clientes y cada colaborador ve solo su cartera (Daniel). Una cuenta nueva
+// creada con `true` vería a todos: por eso ahora es `false`.
 
 function cargarEntorno(ruta) {
   try {

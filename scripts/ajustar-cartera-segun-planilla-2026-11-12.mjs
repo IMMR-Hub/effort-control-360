@@ -8,12 +8,11 @@
  * y cada cliente que entra o sale deja `cartera.cliente_asignado` /
  * `cartera.cliente_quitado` en la bitácora de ese cliente.
  *
- * Quedan afuera a propósito:
- * - PEDRO (`pbarrios@`): todavía no tiene cuenta. Sus clientes los ve dirección
- *   hasta que se cree.
- * - BEA (`kbaez@` en la planilla): Daniel, 2026-11-12, «pbarrios entra por kbaez
- *   ahora (creo que fue una salida/entrada de personal)». No se le asigna nada a
- *   la cuenta de kbaez hasta aclarar a quién pasan esos clientes.
+ * PEDRO (`pbarrios@`) entra en lugar de Karina Baez: Daniel, 2026-11-12, «pbarrios
+ * entra por kbaez ahora» y, preguntado a quién pasan los clientes de BEA
+ * (`kbaez@` en la planilla), «A Pedro Barrios». Lleva los suyos y los de BEA. Si
+ * su cuenta todavía no existe, se lo saltea y se puede volver a correr después
+ * de `crear-equipo.mjs`: repetirlo no cambia lo que ya está bien.
  *
  * Simula por defecto; `--aplicar` exige respaldo de hoy. Solo toca a las personas
  * de `PERSONAS`.
@@ -28,7 +27,13 @@ for (const linea of readFileSync(join(RAIZ, '.env'), 'utf8').split('\n')) {
   if (m && !process.env[m[1]]) process.env[m[1]] = m[2].trim().replace(/^["']|["']$/g, '');
 }
 const APLICAR = process.argv.includes('--aplicar');
-const PERSONAS = ['aalvarenga@effort.com.py', 'asanguina@effort.com.py', 'acampos@effort.com.py', 'sferreira@effort.com.py'];
+const PERSONAS = ['aalvarenga@effort.com.py', 'asanguina@effort.com.py', 'acampos@effort.com.py', 'sferreira@effort.com.py', 'pbarrios@effort.com.py'];
+/** Responsable de la planilla → quién lo lleva hoy. */
+const REEMPLAZOS = { 'kbaez@effort.com.py': 'pbarrios@effort.com.py' };
+const responsableDe = (codigo) => {
+  const email = planilla[codigo]?.email_responsable ?? null;
+  return REEMPLAZOS[email] ?? email;
+};
 const planilla = JSON.parse(readFileSync(join(RAIZ, 'docs/clientes/obligaciones-segun-planilla-ariana-2026-11-12.json'), 'utf8'));
 
 const { PrismaClient } = await import('@effort/api/node_modules/@prisma/client/default.js').catch(() => import('@prisma/client'));
@@ -50,8 +55,12 @@ try {
   const porId = new Map(clientes.map((c) => [c.id, c]));
   for (const email of PERSONAS) {
     const u = await prisma.usuario.findUnique({ where: { email }, select: { id: true, nombre: true, apellido: true } });
-    if (!u) { console.log(`${email}: no existe`); continue; }
-    const deseados = clientes.filter((c) => planilla[c.codigo]?.email_responsable === email).map((c) => c.id);
+    if (!u) {
+      const pendientes = clientes.filter((c) => responsableDe(c.codigo) === email).map((c) => c.codigo);
+      console.log(`${email}: todavía no tiene cuenta (le corresponden ${pendientes.length}: ${pendientes.join(', ')})`);
+      continue;
+    }
+    const deseados = clientes.filter((c) => responsableDe(c.codigo) === email).map((c) => c.id);
     const antes = await usuarios.clientesAsignados(u.id);
     const entran = deseados.filter((id) => !antes.includes(id));
     const salen = antes.filter((id) => !deseados.includes(id));
