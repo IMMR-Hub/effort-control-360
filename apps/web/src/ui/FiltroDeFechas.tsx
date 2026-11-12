@@ -35,6 +35,22 @@ export function filtroDelMesActual(): FiltroDeFechas {
   return { tipo: 'mes', periodo: hoyIso().slice(0, 7) };
 }
 
+/** `AAAA-MM` del mes anterior a `periodo`. */
+export function periodoAnterior(periodo: string): string {
+  const [anio, mes] = periodo.split('-').map(Number) as [number, number];
+  return mes === 1 ? `${anio - 1}-12` : `${anio}-${String(mes - 1).padStart(2, '0')}`;
+}
+
+/**
+ * El mes anterior al actual, en Paraguay: el que se está trabajando. En
+ * noviembre la oficina recibe y procesa los documentos de octubre, así que una
+ * pantalla que abre en el mes en curso aparece casi vacía (Daniel, 2026-11-12:
+ * «la mayoría en la columna de Recibidos está en 0»).
+ */
+export function filtroDelMesAnterior(): FiltroDeFechas {
+  return { tipo: 'mes', periodo: periodoAnterior(hoyIso().slice(0, 7)) };
+}
+
 interface Props {
   readonly id: string;
   readonly valor: FiltroDeFechas;

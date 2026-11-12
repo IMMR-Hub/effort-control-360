@@ -281,6 +281,35 @@ describe('sincronización desde OneDrive', () => {
     expect(resumen.clientes.map((c) => c.cliente)).toEqual(['FUMIPRO S.A.']);
   });
 
+  // En la pasada por cambios casi todos los clientes llegan sin archivos. Pedir
+  // sus huellas igual costaba un viaje a la base por cliente: ~90 s con 87
+  // clientes para traer un solo archivo (producción, 2026-11-12).
+  it('un cliente sin archivos que mirar no consulta sus huellas a la base', async () => {
+    const ctx = armar();
+    const consultados: string[] = [];
+    const deps = {
+      ...ctx.deps,
+      huellasDeOrigen: (clienteId: string) => {
+        consultados.push(clienteId);
+        return ctx.registro.huellas(clienteId);
+      },
+    };
+    ctx.clientes.clientes.push({
+      ...clienteMinimo({ id: 'vacio', nombre: 'VACIO S.A.', ruc: '80000000-1', activo: true }),
+      carpetaOneDriveId: 'carpeta-vacia',
+    });
+    ctx.origen.registrarCarpeta('carpeta-vacia', 'CLIENTES/099 VACIO');
+    ctx.origen.sembrar('CLIENTES/002 FUMIPRO', 'contrato.pdf', Buffer.from('uno'));
+
+    const resumen = await sincronizarDesdeOneDrive(deps, USUARIO);
+
+    expect(resumen.nuevosEnTotal).toBe(1);
+    expect(consultados).toEqual([FUMIPRO]);
+    expect(resumen.clientes.find((c) => c.cliente === 'VACIO S.A.')).toEqual({
+      cliente: 'VACIO S.A.', revisados: 0, nuevos: 0, yaEstaban: 0, sinCambios: 0,
+    });
+  });
+
   it('un cliente dado de baja no se sincroniza', async () => {
     const ctx = armar();
     ctx.clientes.clientes[0] = {

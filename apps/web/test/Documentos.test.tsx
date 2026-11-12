@@ -1,9 +1,9 @@
 /**
  * Pantalla Documentos / IVA (tarea 104, pantalla 3 de 12).
  *
- * El período por defecto se calcula con `hoyEnParaguay(new Date())`, igual
- * que en la pantalla real — se usa la misma función acá para saber qué ruta
- * mockear sin depender de una fecha fija que se desactualice.
+ * El período por defecto es el MES ANTERIOR al actual en Paraguay (el que la
+ * oficina está trabajando, 2026-11-12) — se calcula con la misma función que
+ * la pantalla real para saber qué ruta mockear sin una fecha fija.
  */
 
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
@@ -14,6 +14,7 @@ import { describirFiltro, hoyEnParaguay } from '@effort/core';
 
 import { crearFetchMock, respuestaJson } from './ayuda-fetch-mock.js';
 import type { HojaDeReporte, Reporte } from '../src/ui/reporteExcel.js';
+import { periodoAnterior } from '../src/ui/FiltroDeFechas.js';
 
 // La descarga real necesita un navegador; acá se mira QUÉ se iba a descargar.
 const { descargarReporte } = vi.hoisted(() => ({ descargarReporte: vi.fn(async () => {}) }));
@@ -28,7 +29,7 @@ function celdas(hoja: HojaDeReporte): unknown[][] {
 }
 
 const HOY = hoyEnParaguay(new Date());
-const PERIODO = `${HOY.anio}-${String(HOY.mes).padStart(2, '0')}`;
+const PERIODO = periodoAnterior(`${HOY.anio}-${String(HOY.mes).padStart(2, '0')}`);
 
 const GARSO = {
   id: 'cli-garso',
@@ -359,6 +360,11 @@ describe('pantalla de documentos / IVA', () => {
    */
   it('con "últimos 30 días" los documentos se piden sin período y se filtran por fecha de recepción', async () => {
     await montar();
+    // Un rango termina hoy: el tablero pasa al mes en curso.
+    const mesEnCurso = `${HOY.anio}-${String(HOY.mes).padStart(2, '0')}`;
+    mock.mockDeRuta(`GET /api/v1/proceso-mensual/${mesEnCurso}`, () =>
+      respuestaJson({ periodo: mesEnCurso, procesos: [PROCESO_GARSO], documentosReales: { 'cli-garso': 12 } }),
+    );
     await usuario.click(filaDelTablero('GARSO S.A.'));
 
     fireEvent.change(screen.getByLabelText('Mostrar'), { target: { value: 'ultimos-30' } });

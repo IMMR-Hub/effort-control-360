@@ -381,6 +381,16 @@ export async function sincronizarDesdeOneDrive(
       continue;
     }
 
+    // Sin archivos que mirar no hace falta pedir las huellas. En la pasada por
+    // cambios casi todos los clientes llegan con la lista vacía, y pedir las
+    // huellas de los 87 —cada una un viaje a la base, que está en otro
+    // continente— hacía tardar ~90 s una vuelta con un solo archivo nuevo
+    // (medido en producción, 2026-11-12).
+    if (archivos.length === 0) {
+      porCliente.push({ cliente: cliente.nombre, revisados: 0, nuevos: 0, yaEstaban: 0, sinCambios: 0 });
+      continue;
+    }
+
     // Lo que ya se tiene de este cliente, en una sola consulta. Es lo que
     // evita bajar cientos de archivos para descubrir que ya estaban.
     const conocidos = new Map<string, { fecha: number | null; rutaRegistrada: string | null }>();

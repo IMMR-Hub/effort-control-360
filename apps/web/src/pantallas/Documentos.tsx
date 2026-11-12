@@ -33,7 +33,7 @@ import {
 } from '@effort/core';
 import { periodoSchema } from '@effort/schema';
 
-import { FiltroDeFechasSelector, filtroDelMesActual } from '../ui/FiltroDeFechas.js';
+import { FiltroDeFechasSelector, filtroDelMesAnterior } from '../ui/FiltroDeFechas.js';
 
 import {
   Badge,
@@ -264,7 +264,7 @@ export default function Documentos() {
    * exacta, desde–hasta, últimos N días) filtra los documentos por la fecha en
    * que se RECIBIERON, y el tablero muestra el período del último día del rango.
    */
-  const [filtro, setFiltro] = useState<FiltroDeFechas>(filtroDelMesActual);
+  const [filtro, setFiltro] = useState<FiltroDeFechas>(filtroDelMesAnterior);
   const rango = useMemo(() => rangoDelFiltro(filtro, hoyEnParaguay(new Date())), [filtro]);
   const periodo = filtro.tipo === 'mes' ? filtro.periodo : (rango?.hasta ?? '').slice(0, 7);
   const porFechaDeRecepcion = filtro.tipo !== 'mes';
