@@ -27,7 +27,7 @@ import Equipo from './pantallas/Equipo.js';
 import Reglas from './pantallas/Reglas.js';
 import Eventos from './pantallas/Eventos.js';
 import LiquidacionIva from './pantallas/LiquidacionIva.js';
-import Panel from './pantallas/Panel.js';
+import Panel, { precargarPanel } from './pantallas/Panel.js';
 import Horas from './pantallas/Horas.js';
 
 /**
@@ -118,7 +118,9 @@ function Enrutador() {
 
 export function Aplicacion() {
   return (
-    <ProveedorDeSesion>
+    // La primera pantalla siempre es el Panel: sus datos se piden mientras se
+    // comprueba la sesión, no después.
+    <ProveedorDeSesion precarga={precargarPanel}>
       <Enrutador />
     </ProveedorDeSesion>
   );

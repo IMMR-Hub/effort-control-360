@@ -6,8 +6,9 @@
  * solo de datos del sistema, sin suponer nada:
  *
  * - **RUC**: sin él no se calcula ninguna fecha (depende de la terminación).
- * - **Responsable**: ningún colaborador con cuenta lo tiene en su cartera; lo
- *   ve solo dirección.
+ * - **Responsable**: nadie con cuenta activa lo tiene en su cartera. Que lo vea
+ *   dirección no alcanza —dirección ve todos—; que lo LLEVE alguien de dirección,
+ *   sí (Lili lleva clientes: Daniel, 2026-11-12).
  * - **Regla de vencimiento**: tiene asignada una obligación que la planilla de
  *   EFFORT marca (IRP, IRE SIMPLE, IDU…) pero cuyo calendario todavía no está
  *   confirmado en el catálogo (`confirmadaPorEffort = false`): el generador la
@@ -23,7 +24,7 @@ export interface EntradaDeFaltantes {
   readonly clientes: readonly { readonly id: string; readonly ruc: string | null; readonly activo: boolean }[];
   readonly obligaciones: readonly ObligacionAlmacenada[];
   readonly asignaciones: readonly ObligacionDeClienteAlmacenada[];
-  /** Clientes que algún colaborador (no dirección) tiene en su cartera. */
+  /** Clientes que alguien con cuenta activa (dirección incluida) tiene en su cartera. */
   readonly conResponsable: ReadonlySet<string>;
   readonly ahora: Date;
 }

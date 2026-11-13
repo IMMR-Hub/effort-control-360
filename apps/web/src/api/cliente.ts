@@ -123,13 +123,87 @@ async function ejecutarFetch(
  * éxito — la tipa quien llama, contra los tipos ya definidos en
  * `@effort/schema`/`@effort/core` o específicos de cada pantalla.
  */
-export async function peticion<TRespuesta>(
+export function peticion<TRespuesta>(
   metodo: string,
   ruta: string,
   cuerpo?: unknown,
   query?: QueryParams,
 ): Promise<TRespuesta> {
   const metodoMayuscula = metodo.toUpperCase();
+  const pedir = () => pedirAlServidor<TRespuesta>(metodoMayuscula, ruta, cuerpo, query);
+  if (metodoMayuscula !== 'GET' || cuerpo !== undefined) return pedir();
+
+  const clave = construirUrl(ruta, query);
+  if (anotandoPrecarga) {
+    const promesa = pedir();
+    // Si nadie la llega a usar (no había sesión), su error no es de nadie.
+    promesa.catch(() => undefined);
+    precargas.set(clave, { promesa, pedidaEn: Date.now() });
+    return promesa;
+  }
+
+  const adelantada = precargas.get(clave);
+  if (adelantada) {
+    // Se usa una sola vez: la segunda vez que alguien pide lo mismo quiere el
+    // dato de ahora, no el de cuando se abrió la página.
+    precargas.delete(clave);
+    if (Date.now() - adelantada.pedidaEn <= VIDA_DE_PRECARGA_MS) {
+      // Una precarga que falló nunca le muestra un error a nadie: se pide de nuevo.
+      return (adelantada.promesa as Promise<TRespuesta>).catch(pedir);
+    }
+  }
+  return pedir();
+}
+
+/*
+ * Precarga (2026-11-12). Al abrir la página, lo primero que se hacía era
+ * preguntar «quién soy» y recién con la respuesta se pedían los datos del
+ * Panel: dos tandas en fila, y cada pedido a producción cuesta ~0,2 s de ida y
+ * vuelta más lo que tarde el servidor. Con la precarga las dos tandas salen
+ * juntas: los GET que se piden dentro de `precargar` quedan anotados por su
+ * dirección exacta, y el primer pedido igual que llegue después usa esa misma
+ * respuesta en vez de volver al servidor.
+ *
+ * Lo que la hace segura:
+ *  - solo GET, que no cambian nada;
+ *  - el servidor decide con la cookie, como siempre: sin sesión responde 401 y
+ *    la precarga se descarta sin que nadie vea el error;
+ *  - cada respuesta se usa una sola vez y vence a los 15 s;
+ *  - `descartarPrecargas` se llama cuando no hay sesión y cada vez que alguien
+ *    ingresa o sale, para que nunca se le muestre a una persona lo que se pidió
+ *    con la sesión de otra.
+ */
+const VIDA_DE_PRECARGA_MS = 15_000;
+const precargas = new Map<string, { promesa: Promise<unknown>; pedidaEn: number }>();
+let anotandoPrecarga = false;
+
+/**
+ * Adelanta los GET que `pedir` dispare. `pedir` tiene que hacer los pedidos en
+ * el momento (sin esperar nada antes): lo que pida después de un `await` ya no
+ * queda anotado.
+ */
+export function precargar(pedir: () => unknown): void {
+  anotandoPrecarga = true;
+  try {
+    const resultado = pedir();
+    if (resultado instanceof Promise) resultado.catch(() => undefined);
+  } catch {
+    // Una precarga que no se pudo armar no rompe nada: se pedirá normalmente.
+  } finally {
+    anotandoPrecarga = false;
+  }
+}
+
+export function descartarPrecargas(): void {
+  precargas.clear();
+}
+
+async function pedirAlServidor<TRespuesta>(
+  metodoMayuscula: string,
+  ruta: string,
+  cuerpo: unknown,
+  query: QueryParams | undefined,
+): Promise<TRespuesta> {
   const respuesta = await ejecutarFetch(metodoMayuscula, ruta, cuerpo, query, false);
 
   if (!respuesta.ok) {

@@ -370,18 +370,38 @@ describeSiHayBase('repositorios contra PostgreSQL real', () => {
       expect(await sesiones.contextoPorHash('0'.repeat(64))).toBeNull();
     });
 
-    it('clientesConResponsable: solo carteras vigentes de colaboradores activos que no son dirección', async () => {
+    // Daniel, 2026-11-12: «Sipar, Neo y Somos Piri EAS son clientes de Lili». Un
+    // cliente que lleva alguien de dirección tiene responsable, como cualquier otro.
+    it('clientesConResponsable: carteras vigentes de personas activas, dirección incluida', async () => {
       const deDireccion = await entorno.prisma.cliente.create({
-        data: { nombre: 'SOLO DIRECCION S.A.', ruc: '80088888-2', tipoPersona: 'JURIDICA' },
+        data: { nombre: 'LO LLEVA DIRECCION S.A.', ruc: '80088888-2', tipoPersona: 'JURIDICA' },
       });
-      await entorno.prisma.asignacionCliente.create({
-        data: { clienteId: deDireccion.id, usuarioId: idDireccion, rol: 'coordinador' },
+      const deNadie = await entorno.prisma.cliente.create({
+        data: { nombre: 'YA NO LO LLEVA NADIE S.A.', ruc: '80077777-3', tipoPersona: 'JURIDICA' },
+      });
+      const deUnaBaja = await entorno.prisma.cliente.create({
+        data: { nombre: 'LO LLEVABA ALGUIEN QUE SE FUE S.A.', ruc: '80066666-4', tipoPersona: 'JURIDICA' },
+      });
+      const baja = await entorno.prisma.usuario.create({
+        data: {
+          nombre: 'Se', apellido: 'Fue', email: 'baja@effort.com.py',
+          rol: 'responsable', hashContrasena: '$argon2id$prueba', activo: false,
+        },
+      });
+      await entorno.prisma.asignacionCliente.createMany({
+        data: [
+          { clienteId: deDireccion.id, usuarioId: idDireccion, rol: 'responsable' },
+          { clienteId: deNadie.id, usuarioId: idDireccion, rol: 'responsable', hasta: new Date(Date.now() - 86_400_000) },
+          { clienteId: deUnaBaja.id, usuarioId: baja.id, rol: 'responsable' },
+        ],
       });
 
       const conResponsable = await usuarios.clientesConResponsable();
 
       expect(conResponsable).toContain(idClienteAsignado);
-      expect(conResponsable).not.toContain(deDireccion.id);
+      expect(conResponsable).toContain(deDireccion.id);
+      expect(conResponsable).not.toContain(deNadie.id);
+      expect(conResponsable).not.toContain(deUnaBaja.id);
       expect(new Set(conResponsable).size).toBe(conResponsable.length);
     });
 

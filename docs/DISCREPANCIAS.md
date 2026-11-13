@@ -57,6 +57,7 @@ de Lili o Laura), **Daniel** (decisión o acción en una cuenta), **Claude**
 | 41 | Criterio para los archivos repetidos (1.068 copias en 52 clientes) | **Abierto 2026-10-06** | Daniel y EFFORT | Confirmar «se conserva el más antiguo» y decidir qué hacer con las copias (borrar es REGLA 0). Ver el punto |
 | 42 | Copia de seguridad del OneDrive de EFFORT en disco externo | **Terminada y verificada 2026-10-20; el disco FALLÓ OTRA VEZ el 2026-10-22** | Daniel (disco) y Claude (reverificar) | 36.488/36.488 verificados el 20-10. El 22-10 15:45 el disco dio errores (disk 51, ntfs 140, ntfs 50) y desapareció: segunda falla en 3 días. **Reconectado el mismo día: chkdsk sin problemas y foto reverificada 36.488/36.488 (0 dañados).** Falta: cambiar cable/puerto (o el disco si vuelve a fallar), segunda copia en otro lugar, cifrado |
 | 46 | Reglas de IRP, IRE SIMPLE, IDU y anticipos de IRE (cargadas 2026-11-12) | **Cargadas y verificadas contra la norma. Abiertos 46(a)–(f)** | Daniel y EFFORT | 46(a) cuatro clientes SIMPLE con «abril» en la planilla; 46(b) anticipos de IRE SIMPLE no marcados en la planilla; 46(c) EEFF corregido a 8–26; 46(d) retenciones y auditoría sin regla; 46(e) el detector no reconoce los formularios de IRP ni de IRE SIMPLE; 46(f) acción «No aplica» construida, sin «deshacer» en pantalla. |
+| 47 | SIPAR, NEO HOLDING GROUP y SOMOS PIRI EAS son clientes de Lili (Daniel, 2026-11-12) | **Cargado. Abierto: qué presentan NEO y SOMOS PIRI** | EFFORT (Lili) | SIPAR vuelve a estar activo con sus obligaciones del piloto; NEO y SOMOS PIRI siguen sin ninguna obligación cargada (la planilla solo los trae en la lista de IPS). |
 | 44 | RUC propuestos en la planilla de clientes que no son del cliente | **Abierto 2026-10-22** | Daniel y EFFORT | **056 FACUNDO CARRASCOSA:** la planilla propone 1300663-0, que es de DAVID TADEO FRANCISCO ROMERO CABALLERO (la carpeta «045 DAVID ROMERO» está dentro del 056 y era la única declaración). Corregir la planilla y avisar a EFFORT. **113 CASA VIVA:** sus declaraciones dicen «PAVISA SOCIEDAD ANONIMA» (¿nombre de fantasía?): confirmar. Ver el punto |
 | 43 | Plan de infraestructura y precio para 132 clientes | **Abierto 2026-10-06** | Daniel | Decidir y pagar DigitalOcean 2 GB + Supabase Pro antes de la carga masiva; región de la base; precio de mantenimiento. Ver el punto |
 
@@ -2120,4 +2121,25 @@ columna de día de la planilla. Clientes completos: de 19 a 51.
   Claude con un script; si pasa, se construye. Cuatro de los 13 anticipos de noviembre (CONSORCIO GUASU, QUIMECO,
   SOCIEDAD PARAGUAYA DE ENDODONCIA, BV SOLUTIONS) vencieron el 09-11, antes de cargar la regla: figuran vencidos hasta
   que dirección registre el pago («Presentar») o el «No aplica».
+
+## 47. Tres clientes de Lili que la planilla no trae completos — CARGADOS 2026-11-12 por palabra de Daniel
+
+Daniel, 2026-11-12: «Sipar, Neo y Somos Piri EAS son clientes de Lili». La planilla
+`CLIENTES - ARIANA CAMPOS DA ROSA.xlsx` sigue siendo la única fuente de clientes, obligaciones y responsables; estos
+tres son la excepción, y vienen de Daniel, no de una deducción:
+
+- **043 SIPAR** no figura en la planilla y por eso se había dado de baja el 2026-11-10. Daniel confirmó que fue un olvido
+  de la planilla. **Vuelve a estar activo** con las cuatro obligaciones que ya tenía cargadas desde el piloto (IVA
+  General, IRE, estados financieros y planilla RG 90, desde 2025-01-01). No se le agregó ni se le quitó ninguna. Sus 30
+  vencimientos y sus alertas vuelven a verse.
+- **014 NEO HOLDING GROUP** y **015 SOMOS PIRI EAS** ya estaban activos: figuran en la planilla, pero solo en la lista
+  «IPS REI / REOP» de la hoja ARIANA, sin columna de obligaciones ni de responsable. **Siguen sin ninguna obligación
+  cargada**: el sistema no les controla ningún vencimiento. No se les inventó ninguna.
+- Los tres quedaron en la cartera de Lilian Laconich (`scripts/asignar-clientes-de-lili-2026-11-12.mjs`, con su evento en
+  la bitácora de cada cliente). Para que no figuren como «falta responsable», un cliente que lleva alguien de dirección
+  ahora cuenta como cliente con responsable (`UsuariosPrisma.clientesConResponsable`).
+
+**Abierto, lo responde EFFORT (Lili):** qué presentan NEO HOLDING GROUP y SOMOS PIRI EAS. Hasta que lo digan aparecen
+como «Completo» sin obligaciones, igual que los otros cuatro que solo están en la lista de IPS (001, 108, 109 y 110):
+el criterio vigente es que no tener obligaciones no es un dato que falte (puede ser un cliente solo de IPS).
 

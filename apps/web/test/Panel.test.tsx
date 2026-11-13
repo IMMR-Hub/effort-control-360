@@ -131,6 +131,7 @@ afterEach(() => {
 async function montar(
   rol: string = 'direccion',
   datos: { vencimientos?: readonly unknown[]; alertas?: readonly unknown[]; clientes?: readonly unknown[] } = {},
+  opciones: { conPrecarga?: boolean } = {},
 ) {
   mock.mockDeRuta('GET /api/v1/yo', () =>
     respuestaJson({ usuarioId: 'u1', rol, veTodosLosClientes: true, cantidadDeClientesAsignados: 0 }),
@@ -164,11 +165,17 @@ async function montar(
 
   vi.resetModules();
   const { ProveedorDeSesion } = await import('../src/contexts/SesionContext.js');
-  const Panel = (await import('../src/pantallas/Panel.js')).default;
+  const { default: Panel, precargarPanel } = await import('../src/pantallas/Panel.js');
+  const { useSesion } = await import('../src/contexts/SesionContext.js');
+  // Como en la aplicación: el Panel recién se monta con la sesión confirmada.
+  function ConSesion() {
+    const { sesion } = useSesion();
+    return sesion ? <Panel /> : null;
+  }
 
   render(
-    <ProveedorDeSesion>
-      <Panel />
+    <ProveedorDeSesion {...(opciones.conPrecarga ? { precarga: precargarPanel } : {})}>
+      {opciones.conPrecarga ? <ConSesion /> : <Panel />}
     </ProveedorDeSesion>,
   );
 
@@ -178,7 +185,77 @@ async function montar(
   });
 }
 
+const RUTAS_DEL_PANEL = [
+  'GET /api/v1/clientes',
+  'GET /api/v1/vencimientos',
+  'GET /api/v1/alertas',
+  'GET /api/v1/solicitudes-documentacion',
+  'GET /api/v1/balances',
+  'GET /api/v1/liquidaciones',
+  'GET /api/v1/vencimientos/presentados',
+] as const;
+
 describe('panel general', () => {
+  /*
+   * 2026-11-12: el Panel esperaba a «quién soy» antes de pedir sus datos (dos
+   * tandas en fila contra un servidor lejano). Ahora salen juntas. Lo que estas
+   * pruebas fijan: no se pide nada dos veces, y lo adelantado sin sesión no le
+   * llega a quien ingrese después.
+   */
+  describe('precarga al abrir la página', () => {
+    it('los datos se piden mientras se comprueba la sesión, y una sola vez', async () => {
+      await montar('direccion', {}, { conPrecarga: true });
+
+      await waitFor(() => {
+        expect(screen.getByText('Vencimientos vencidos').closest('div')!.textContent).toContain('1');
+      });
+      for (const ruta of RUTAS_DEL_PANEL) {
+        expect(mock.llamadasA(ruta), ruta).toHaveLength(1);
+      }
+    });
+
+    it('sin la precarga pide exactamente lo mismo: la precarga no agrega ni saca pedidos', async () => {
+      await montar();
+
+      await waitFor(() => {
+        expect(screen.getByText('Vencimientos vencidos').closest('div')!.textContent).toContain('1');
+      });
+      for (const ruta of RUTAS_DEL_PANEL) {
+        expect(mock.llamadasA(ruta), ruta).toHaveLength(1);
+      }
+    });
+
+    it('sin sesión, lo adelantado se descarta: el pedido siguiente vuelve al servidor', async () => {
+      for (const ruta of RUTAS_DEL_PANEL) {
+        mock.mockDeRuta(ruta, () => respuestaJson({ error: 'no_autenticado', mensaje: 'Sin sesión.' }, { status: 401 }));
+      }
+      mock.mockDeRuta('GET /api/v1/yo', () =>
+        respuestaJson({ error: 'no_autenticado', mensaje: 'Sin sesión.' }, { status: 401 }),
+      );
+      vi.resetModules();
+      const { ProveedorDeSesion, useSesion } = await import('../src/contexts/SesionContext.js');
+      const { precargarPanel } = await import('../src/pantallas/Panel.js');
+      const { listarClientes } = await import('../src/api/clientes.js');
+      function Estado() {
+        const { sesion } = useSesion();
+        return <p>{sesion === undefined ? 'comprobando' : sesion === null ? 'sin sesión' : 'con sesión'}</p>;
+      }
+
+      render(
+        <ProveedorDeSesion precarga={precargarPanel}>
+          <Estado />
+        </ProveedorDeSesion>,
+      );
+      await screen.findByText('sin sesión');
+      expect(mock.llamadasA('GET /api/v1/clientes')).toHaveLength(1);
+
+      // Alguien ingresa: lo que pida ahora tiene que salir del servidor, con su sesión.
+      mock.mockDeRuta('GET /api/v1/clientes', () => respuestaJson({ clientes: [GARSO] }));
+      expect(await listarClientes()).toEqual({ clientes: [GARSO] });
+      expect(mock.llamadasA('GET /api/v1/clientes')).toHaveLength(2);
+    });
+  });
+
   describe('filtro por cliente y Excel (2026-10-02)', () => {
     const OTRO = { ...GARSO, id: 'cli-otro', nombre: 'OTRO S.A.', ruc: '80000001-1' };
     const DATOS = {

@@ -20,7 +20,9 @@ import {
   sincronizarConCambios,
   sincronizarOneDrive,
   MAXIMO_DE_CAMBIOS_INCREMENTALES,
+  type AlmacenDelPuntoDeSincronizacion,
   type DependenciasIncrementales,
+  type PuntoDeSincronizacion,
 } from '../src/servicios/sincronizacionIncremental.js';
 import type { AltaDeEvidencia } from '../src/servicios/sincronizadorDeOneDrive.js';
 import { ClientesFalsos, clienteMinimo } from './dobles.js';
@@ -31,12 +33,33 @@ const NUEVO = '22222222-2222-4222-8222-222222222222';
 const RAIZ = 'CLIENTES/002 FUMIPRO';
 const USUARIO = 'usr-sistema';
 
-function armar(inicio: Date = new Date('2026-09-24T12:00:00Z')) {
+/** El punto guardado «en la base», en memoria, con forma de fallar a pedido. */
+function almacenEnMemoria() {
+  const almacen = {
+    guardado: null as PuntoDeSincronizacion | null,
+    guardados: 0,
+    fallarAlLeer: false,
+    fallarAlGuardar: false,
+    async leer() {
+      if (almacen.fallarAlLeer) throw new Error('la tabla no existe');
+      return almacen.guardado;
+    },
+    async guardar(punto: PuntoDeSincronizacion) {
+      if (almacen.fallarAlGuardar) throw new Error('sin conexión a la base');
+      almacen.guardado = punto;
+      almacen.guardados += 1;
+    },
+  };
+  return almacen satisfies AlmacenDelPuntoDeSincronizacion;
+}
+
+function armar(inicio: Date = new Date('2026-09-24T12:00:00Z'), opciones: { conAlmacen?: boolean } = {}) {
   const clientes = new ClientesFalsos();
   const documentos = new DocumentosFalsos();
   const origen = new DriveFalso();
   const destino = new DriveFalso();
-  const estado = crearEstadoDeSincronizacion();
+  let estado = crearEstadoDeSincronizacion();
+  const almacen = almacenEnMemoria();
   let ahora = inicio;
 
   const porSha = new Map<string, { id: string }>();
@@ -87,11 +110,16 @@ function armar(inicio: Date = new Date('2026-09-24T12:00:00Z')) {
     },
     registrarEnBitacora: async () => {},
     ahora: () => ahora,
+    ...(opciones.conAlmacen ? { almacenDelPunto: almacen } : {}),
   };
 
   return {
-    clientes, documentos, origen, destino, estado, deps, altas,
+    clientes, documentos, origen, destino, estado, deps, altas, almacen,
     correr: () => sincronizarConCambios(deps, USUARIO, estado),
+    /** El servidor se reinicia: lo que había en memoria se pierde, la base queda. */
+    reiniciarServidor: () => {
+      estado = crearEstadoDeSincronizacion();
+    },
     avanzarHoras: (horas: number) => {
       ahora = new Date(ahora.getTime() + horas * 3_600_000);
     },
@@ -346,6 +374,165 @@ describe('sincronización de OneDrive por cambios', () => {
     const b = estadoDeSincronizacion(new DriveFalso());
     a.token = 'x';
     expect(b.token).toBeNull();
+  });
+});
+
+/*
+ * 2026-11-12. El punto vivía solo en memoria y cada despliegue arrancaba con
+ * una pasada completa de 22 minutos. Ahora se guarda en la base. Cada prueba de
+ * acá es una forma en que retomar podría hacer perder un cambio, o en que una
+ * falla del guardado podría pasar en silencio.
+ */
+describe('el punto de sincronización sobrevive a un reinicio del servidor', () => {
+  it('con el punto guardado, después de reiniciar NO recorre todo y trae lo que cambió mientras estuvo apagado', async () => {
+    const ctx = armar(undefined, { conAlmacen: true });
+    ctx.origen.sembrar(`${RAIZ}/PERIODO 2026`, 'a.pdf', Buffer.from('a'));
+    expect((await ctx.correr()).modo).toBe('completa');
+    expect(ctx.origen.recorridosCompletos).toBe(1);
+
+    ctx.reiniciarServidor();
+    ctx.origen.sembrar(`${RAIZ}/PERIODO 2026`, 'subido-durante-el-despliegue.pdf', Buffer.from('b'));
+    const despues = await ctx.correr();
+
+    expect(despues.modo).toBe('incremental');
+    expect(despues.cambiosRecibidos).toBe(1);
+    expect(despues.nuevosEnTotal).toBe(1);
+    expect(despues.avisoDelPunto).toBeNull();
+    expect(ctx.origen.recorridosCompletos).toBe(1);
+    expect(ctx.documentos.documentos).toHaveLength(2);
+  });
+
+  it('sin almacén se comporta como siempre: cada arranque recorre todo', async () => {
+    const ctx = armar();
+    ctx.origen.sembrar(`${RAIZ}/PERIODO 2026`, 'a.pdf', Buffer.from('a'));
+    await ctx.correr();
+
+    ctx.reiniciarServidor();
+    const despues = await ctx.correr();
+
+    expect(despues.modo).toBe('completa');
+    expect(ctx.origen.recorridosCompletos).toBe(2);
+  });
+
+  it('sin punto guardado todavía, recorre todo y dice por qué', async () => {
+    const ctx = armar(undefined, { conAlmacen: true });
+
+    const primera = await ctx.correr();
+
+    expect(primera.modo).toBe('completa');
+    expect(primera.motivoDePasadaCompleta).toMatch(/no había un punto de sincronización guardado/);
+    expect(ctx.almacen.guardado?.token).not.toBeNull();
+    expect(ctx.almacen.guardado?.rutasDeClientes).toEqual({ 'carpeta-fumipro': RAIZ });
+  });
+
+  it('el punto guardado avanza con cada vuelta limpia', async () => {
+    const ctx = armar(undefined, { conAlmacen: true });
+    await ctx.correr();
+    const alArrancar = ctx.almacen.guardado!.token;
+
+    ctx.origen.sembrar(`${RAIZ}/PERIODO 2026`, 'b.pdf', Buffer.from('b'));
+    await ctx.correr();
+
+    expect(ctx.almacen.guardado!.token).not.toBe(alArrancar);
+  });
+
+  it('si un archivo falló al copiarse, el punto guardado NO avanza: tras reiniciar se vuelve a pedir ese cambio', async () => {
+    const ctx = armar(undefined, { conAlmacen: true });
+    await ctx.correr();
+    const antes = ctx.almacen.guardado!.token;
+
+    ctx.origen.sembrar(`${RAIZ}/PERIODO 2026`, 'se-corta.pdf', Buffer.from('c'));
+    ctx.fallarLaProximaCopia();
+    const conFallo = await ctx.correr();
+    expect(conFallo.errores).toBe(1);
+    expect(ctx.almacen.guardado!.token).toBe(antes);
+
+    ctx.reiniciarServidor();
+    const reintento = await ctx.correr();
+
+    expect(reintento.modo).toBe('incremental');
+    expect(reintento.nuevosEnTotal).toBe(1);
+    expect(ctx.documentos.documentos).toHaveLength(1);
+  });
+
+  it('si la pasada completa no terminó limpia, lo guardado queda sin punto y tras reiniciar se recorre todo', async () => {
+    const ctx = armar(undefined, { conAlmacen: true });
+    ctx.origen.sembrar(`${RAIZ}/PERIODO 2026`, 'a.pdf', Buffer.from('a'));
+    ctx.fallarLaProximaCopia();
+    const primera = await ctx.correr();
+    expect(primera.errores).toBe(1);
+    expect(ctx.almacen.guardado).toMatchObject({ token: null });
+
+    ctx.reiniciarServidor();
+    const segunda = await ctx.correr();
+
+    expect(segunda.modo).toBe('completa');
+    expect(segunda.motivoDePasadaCompleta).toMatch(/no terminó limpia/);
+    expect(segunda.nuevosEnTotal).toBe(1);
+  });
+
+  it('la pasada de medianoche sigue valiendo después de un reinicio', async () => {
+    const ctx = armar(new Date('2026-09-24T12:00:00Z'), { conAlmacen: true });
+    await ctx.correr();
+
+    ctx.reiniciarServidor();
+    ctx.avanzarHoras(24);
+    const alOtroDia = await ctx.correr();
+
+    expect(alOtroDia.modo).toBe('completa');
+    expect(alOtroDia.motivoDePasadaCompleta).toMatch(/medianoche/);
+  });
+
+  it('un cliente que el punto guardado no conocía obliga a recorrer todo, también después de reiniciar', async () => {
+    const ctx = armar(undefined, { conAlmacen: true });
+    await ctx.correr();
+
+    ctx.reiniciarServidor();
+    ctx.origen.registrarCarpeta('carpeta-nuevo', 'CLIENTES/003 NUEVO');
+    ctx.origen.sembrar('CLIENTES/003 NUEVO', 'viejo.pdf', Buffer.from('v'));
+    ctx.clientes.clientes.push({
+      ...clienteMinimo({ id: NUEVO, nombre: 'NUEVO S.A.', ruc: '80000001-1', activo: true }),
+      carpetaOneDriveId: 'carpeta-nuevo',
+    });
+    const despues = await ctx.correr();
+
+    expect(despues.modo).toBe('completa');
+    expect(despues.motivoDePasadaCompleta).toMatch(/todavía no se conocía/);
+    expect(despues.nuevosEnTotal).toBe(1);
+  });
+
+  it('si el punto no se puede leer, no se adivina: recorre todo y dice por qué', async () => {
+    const ctx = armar(undefined, { conAlmacen: true });
+    ctx.origen.sembrar(`${RAIZ}/PERIODO 2026`, 'a.pdf', Buffer.from('a'));
+    await ctx.correr();
+
+    ctx.reiniciarServidor();
+    ctx.almacen.fallarAlLeer = true;
+    const despues = await ctx.correr();
+
+    expect(despues.modo).toBe('completa');
+    expect(despues.motivoDePasadaCompleta).toMatch(/no se pudo leer el punto de sincronización guardado \(la tabla no existe\)/);
+    expect(ctx.origen.recorridosCompletos).toBe(2);
+  });
+
+  it('si el punto no se puede guardar, la sincronización sigue y el resultado lo avisa', async () => {
+    const ctx = armar(undefined, { conAlmacen: true });
+    ctx.origen.sembrar(`${RAIZ}/PERIODO 2026`, 'a.pdf', Buffer.from('a'));
+    ctx.almacen.fallarAlGuardar = true;
+
+    const primera = await ctx.correr();
+    expect(primera.nuevosEnTotal).toBe(1);
+    expect(primera.avisoDelPunto).toMatch(/no se pudo guardar el punto de sincronización \(sin conexión a la base\)/);
+
+    // En memoria el punto sí quedó: mientras el servidor no se reinicie, sigue por cambios.
+    const segunda = await ctx.correr();
+    expect(segunda.modo).toBe('incremental');
+    expect(segunda.avisoDelPunto).toMatch(/no se pudo guardar/);
+
+    // Y cuando la base vuelve, el aviso se va.
+    ctx.almacen.fallarAlGuardar = false;
+    expect((await ctx.correr()).avisoDelPunto).toBeNull();
+    expect(ctx.almacen.guardado?.token).not.toBeNull();
   });
 });
 

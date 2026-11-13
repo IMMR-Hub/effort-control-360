@@ -318,6 +318,7 @@ export function programarSincronizacionDeOneDrive(
             registrarEvidencia: (datos) => deps.evidencias.registrarOVincular(datos),
             huellasDeOrigen: (clienteId) => deps.archivosDeOrigen.huellas(clienteId),
             marcarArchivoDeOrigen: (datos) => deps.archivosDeOrigen.marcar(datos),
+            almacenDelPunto: deps.puntoDeSincronizacion ?? null,
             registrarEnBitacora: (entrada) =>
               registrarEvento(deps.bitacora, registrador, {
                 ...entrada,
@@ -344,6 +345,11 @@ export function programarSincronizacionDeOneDrive(
           },
           'Sincronización de OneDrive terminada.',
         );
+        // Sin el punto guardado, el próximo reinicio recorre todo (22 minutos):
+        // no rompe nada, pero tiene que verse.
+        if (resumen.avisoDelPunto !== null) {
+          registrador.warn({ aviso: resumen.avisoDelPunto }, 'Sincronización de OneDrive: el punto no quedó guardado.');
+        }
 
         // Solo se escribe en la bitácora cuando hubo algo que contar.
         if (resumen.nuevosEnTotal > 0 || resumen.fallos.length > 0) {

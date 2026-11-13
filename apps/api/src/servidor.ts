@@ -20,6 +20,7 @@ import { esProduccion, type Configuracion } from './configuracion.js';
 import type { LibroRg90Prisma } from './repositorios/libroRg90.js';
 import type { DeclaracionesPrisma } from './repositorios/declaraciones.js';
 import type { ArchivosDeOrigenPrisma } from './repositorios/dominio.js';
+import type { AlmacenDelPuntoDeSincronizacion } from './servicios/sincronizacionIncremental.js';
 import type { RepositorioDeDeclaracionesAjenas } from './servicios/motorDeAlertas.js';
 import type { LectorDeTablas } from './servicios/respaldoAutomatico.js';
 import { ErrorDeAutorizacion, type SujetoAutenticado } from './seguridad/rbac.js';
@@ -71,6 +72,11 @@ export interface Dependencias {
   readonly evidencias: RepositorioDeEvidencias;
   /** Qué archivos del OneDrive de EFFORT ya se miraron. Ver `ArchivosDeOrigenPrisma`. */
   readonly archivosDeOrigen: ArchivosDeOrigenPrisma;
+  /**
+   * Dónde se guarda hasta dónde llegó la sincronización con OneDrive, para que
+   * un reinicio no obligue a recorrer todo. Sin esto vive solo en memoria.
+   */
+  readonly puntoDeSincronizacion?: AlmacenDelPuntoDeSincronizacion | null;
   /**
    * Acceso de solo lectura a todas las tablas, para el respaldo diario.
    *

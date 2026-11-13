@@ -94,8 +94,8 @@ export class UsuariosFalsos implements RepositorioDeUsuarios {
   }
 
   async clientesConResponsable(): Promise<string[]> {
-    const colaboradores = this.usuarios.filter((u) => u.activo && u.rol !== 'direccion');
-    return [...new Set(colaboradores.flatMap((u) => this.asignaciones.get(u.id) ?? []))];
+    const activos = this.usuarios.filter((u) => u.activo);
+    return [...new Set(activos.flatMap((u) => this.asignaciones.get(u.id) ?? []))];
   }
 
   async registrarAcceso(usuarioId: string, momento: Date): Promise<void> {

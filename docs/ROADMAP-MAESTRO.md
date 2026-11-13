@@ -94,10 +94,39 @@ filas). Por eso Panel, notificaciones y Vencimientos muestran solo el piloto. He
     a cada despliegue (compite por las 5 conexiones): falta medirlo en reposo.
   - **Visto en pantalla (Chrome de Daniel, 17:58 UTC):** SIPAR ya no aparece (vencidos 78 → 55, alertas activas 612 →
     577) y «más urgentes» muestra lo de hoy de COPESA, RAMIRO GARCIA, MACOMA y ESTHER VIGNEAUX.
-  - **Lo que todavía se puede ganar en código (sin migrar nada):** (a) el Panel espera `/yo` antes de pedir lo demás
-    (0,8 s en serie); (b) `/vencimientos/presentados` hace una consulta más después de listar; (c) **cada despliegue
-    dispara una pasada completa de 22 min** porque el token de cambios vive en memoria — guardarlo en la base evitaría
-    que el sistema quede lento después de cada push (hoy hubo seis).
+  - [x] **Clientes de Lili (Daniel, 2026-11-12: «Sipar, Neo y Somos Piri EAS son clientes de Lili») — aplicado en la
+    base 20:20 UTC, con respaldo `respaldo-2026-11-12T20-11-24.json`:** 043 SIPAR vuelve a estar activo (con sus cuatro
+    obligaciones del piloto); 014 NEO HOLDING GROUP y 015 SOMOS PIRI EAS quedan como estaban (activos, sin
+    obligaciones: la planilla solo los trae en la lista de IPS); los tres en la cartera de Lilian Laconich. Activos:
+    88. Un cliente que lleva alguien de dirección cuenta como «con responsable» (falta desplegar para verlo en la
+    columna «Datos»). DISCREPANCIAS 47.
+  - [ ] **Tercera vuelta (Daniel: «Sí, seguí») — programada y probada; falta desplegar y medir en producción:**
+    - **Migración `20261112190000_estado_del_sistema` APLICADA en producción 20:15 UTC** (respaldo previo
+      `respaldo-2026-11-12T20-11-24.json`, 124.489 filas). Comprobado en la base: la tabla existe, RLS activo,
+      política `app_acceso` para `effort_app` con SELECT/INSERT/UPDATE, cero filas hasta el primer despliegue.
+    - (a) **El Panel ya no espera a «quién soy».** `precargar` (`apps/web/src/api/cliente.ts`) deja pedidos los GET
+      del Panel mientras se comprueba la sesión (`ProveedorDeSesion precarga={precargarPanel}`), y el Panel usa esas
+      mismas respuestas. Solo GET, una sola vez, vence a los 15 s, y se descarta si no hay sesión o cuando alguien
+      ingresa o sale (nunca se muestra lo pedido con la sesión de otra persona). Si la precarga falló, se pide de
+      nuevo: no cambia lo que se ve. Pruebas: `cliente.test.ts` → «precarga» y `Panel.test.tsx` → «precarga al abrir
+      la página» (cada ruta se pide exactamente una vez).
+    - (b) **`/vencimientos/presentados` pide sus tres consultas juntas** (`evidenciasConFechaAproximada` ya no
+      espera a la lista). Prueba contra PostgreSQL real en `integracion/declaraciones.test.ts`.
+    - (c) **El punto de sincronización de OneDrive se guarda en la base** (tabla nueva `estado_del_sistema`,
+      migración `20261112190000_estado_del_sistema`: solo crea una tabla). Un despliegue ya no arranca con la pasada
+      completa de 22 min: retoma desde el punto guardado y pide a Graph lo que cambió mientras estuvo apagado. Las
+      salidas de seguridad siguen igual después de reiniciar (medianoche de lunes a sábado, cliente nuevo, token
+      vencido, más de 300 cambios) porque se guardan las mismas tres cosas que las deciden. Si el punto no se puede
+      leer o guardar, se recorre todo como antes y queda en el registro del servidor («el punto no quedó guardado»).
+      **Mientras la migración no esté aplicada el sistema se comporta exactamente como hoy** (probado: «si el punto
+      no se puede leer…»). `estadoDelSistema` queda FUERA del respaldo a propósito: restaurar una base vieja con un
+      punto más nuevo se saltearía archivos; sin la fila se recorre todo, que es lo correcto después de restaurar.
+      **Ojo si alguna vez se restaura la base:** la fila `onedrive` de `estado_del_sistema` sobrevive a la
+      restauración; la pasada completa de la medianoche lo cubre, pero hasta entonces puede faltar lo que entró
+      entre el respaldo y el punto. Pruebas: `sincronizacion-incremental.test.ts` → «el punto de sincronización
+      sobrevive a un reinicio» (10 casos) e `integracion/punto-de-sincronizacion.test.ts` (5 casos).
+    - **Lo que se pierde a cambio (decirlo):** el arranque ya no es una revisión completa «gratis». Un cambio en las
+      reglas de importación recién se aplica a los archivos viejos en la pasada de la medianoche siguiente.
   - **Lo que no se arregla en código:** ~130 ms por viaje servidor↔base (Atlanta–São Paulo) y ~190 ms por pedido
     navegador↔servidor (Paraguay–Atlanta). Opción 1: base en Estados Unidos, cerca del servidor (misma gente,
     mismos proveedores; queda la segunda distancia). Opción 2: servidor en São Paulo, junto a la base y cerca de los

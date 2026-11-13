@@ -139,11 +139,15 @@ export class DeclaracionesPrisma {
     };
   }
 
-  /** De estas evidencias, cuáles prueban una presentación con fecha aproximada. */
-  async conFechaAproximada(evidenciaIds: readonly string[]): Promise<Set<string>> {
-    if (evidenciaIds.length === 0) return new Set();
+  /**
+   * Las evidencias que prueban una presentación con fecha aproximada (un aviso
+   * de Marangatú impreso). Son pocas y no dicen nada por sí solas —solo marcan
+   * filas que la persona ya ve—, así que se traen todas en vez de esperar a la
+   * lista de presentados para preguntar por las suyas.
+   */
+  async evidenciasConFechaAproximada(): Promise<Set<string>> {
     const filas = await this.prisma.lecturaDeDeclaracion.findMany({
-      where: { evidenciaId: { in: [...evidenciaIds] }, fechaAproximada: true },
+      where: { fechaAproximada: true },
       select: { evidenciaId: true },
     });
     return new Set(filas.map((f) => f.evidenciaId));

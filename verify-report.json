@@ -1,13 +1,13 @@
 {
-  "generado_en": "2026-11-12T17:48:56.321Z",
-  "commit": "26146a215646de8cfe1a50113575b48a00518f1b",
+  "generado_en": "2026-11-13T10:27:37.014Z",
+  "commit": "b17d99b02725bf5526b2a7cd95c1bc2044d385ce",
   "checks": [
     {
       "nombre": "typecheck",
       "comando": "npx tsc --build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 6418,
+      "duracion_ms": 4612,
       "detalle": ""
     },
     {
@@ -15,23 +15,23 @@
       "comando": "npm run typecheck --workspace @effort/web",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 7968,
+      "duracion_ms": 17489,
       "detalle": ""
     },
     {
       "nombre": "test:unit",
       "comando": "npx vitest run",
-      "estado": "OK",
-      "exit_code": 0,
-      "duracion_ms": 118380,
-      "detalle": ""
+      "estado": "FALLO",
+      "exit_code": 1,
+      "duracion_ms": 149054,
+      "detalle": "ler option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:22716) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:22716) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:22716) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:22716) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:22716) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n(node:22716) [FSTDEP023] FastifyDeprecation: disableRequestLogging option is deprecated. Use the logController option with disableRequestLogging or isLogDisabled override instead. The disableRequestLogging top-level option will be removed in `fastify@6`.\n\n\u001b[31m⎯⎯⎯⎯⎯⎯\u001b[39m\u001b[1m\u001b[41m Failed Suites 1 \u001b[49m\u001b[22m\u001b[31m⎯⎯⎯⎯⎯⎯⎯\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[42m integracion \u001b[49m\u001b[39m test/integracion/punto-de-sincronizacion.test.ts\u001b[2m > \u001b[22mpunto de sincronización en la base\n\u001b[31m\u001b[1mPrismaClientInitializationError\u001b[22m: \nInvalid `prisma.$executeRawUnsafe()` invocation:\n\n\nCan't reach database server at `aws-0-sa-east-1.pooler.supabase.com:5432`\n\nPlease make sure your database server is running at `aws-0-sa-east-1.pooler.supabase.com:5432`.\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m242:13\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.handleAndLogRequestError node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m174:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ei.request node_modules/@prisma/client/src/runtime/RequestHandler.ts:\u001b[2m143:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m a node_modules/@prisma/client/src/runtime/getPrismaClient.ts:\u001b[2m833:24\u001b[22m\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m crearEntorno test/integracion/entorno.ts:\u001b[2m161:3\u001b[22m\u001b[39m\n    \u001b[90m159| \u001b[39m  // Cliente sobre `public` solo para crear y destruir el esquema de p…\n    \u001b[90m160| \u001b[39m  \u001b[35mconst\u001b[39m administrador \u001b[33m=\u001b[39m \u001b[35mnew\u001b[39m \u001b[33mPrismaClient\u001b[39m({ datasourceUrl\u001b[33m:\u001b[39m \u001b[33mURL_BASE\u001b[39m })\u001b[33m;\u001b[39m\n    \u001b[90m161| \u001b[39m  await administrador.$executeRawUnsafe(`CREATE SCHEMA IF NOT EXISTS \"…\n    \u001b[90m   | \u001b[39m  \u001b[31m^\u001b[39m\n    \u001b[90m162| \u001b[39m  \u001b[35mawait\u001b[39m administrador\u001b[33m.\u001b[39m\u001b[34m$disconnect\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m163| \u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m test/integracion/punto-de-sincronizacion.test.ts:\u001b[2m20:15\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯\u001b[22m\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m \u001b[30m\u001b[42m integracion \u001b[49m\u001b[39m test/integracion/punto-de-sincronizacion.test.ts\u001b[2m > \u001b[22mpunto de sincronización en la base\n\u001b[31m\u001b[1mTypeError\u001b[22m: Cannot read properties of undefined (reading 'destruir')\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m test/integracion/punto-de-sincronizacion.test.ts:\u001b[2m25:19\u001b[22m\u001b[39m\n    \u001b[90m 23| \u001b[39m\n    \u001b[90m 24| \u001b[39m  \u001b[34mafterAll\u001b[39m(\u001b[35masync\u001b[39m () \u001b[33m=>\u001b[39m {\n    \u001b[90m 25| \u001b[39m    \u001b[35mawait\u001b[39m entorno\u001b[33m.\u001b[39m\u001b[34mdestruir\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m   | \u001b[39m                  \u001b[31m^\u001b[39m\n    \u001b[90m 26| \u001b[39m  })\u001b[33m;\u001b[39m\n    \u001b[90m 27| \u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯\u001b[22m\u001b[39m"
     },
     {
       "nombre": "verify:accounting",
       "comando": "npx vitest run packages/core/test/golden.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4435,
+      "duracion_ms": 5243,
       "detalle": ""
     },
     {
@@ -39,7 +39,7 @@
       "comando": "npx eslint .",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 9602,
+      "duracion_ms": 57705,
       "detalle": ""
     },
     {
@@ -47,7 +47,7 @@
       "comando": "npx vitest run apps/api/test/rbac.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4315,
+      "duracion_ms": 4554,
       "detalle": ""
     },
     {
@@ -55,7 +55,7 @@
       "comando": "npx vitest run apps/api/test/seguridad.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4359,
+      "duracion_ms": 4432,
       "detalle": ""
     },
     {
@@ -63,7 +63,7 @@
       "comando": "npx vitest run packages/schema/test/contratos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4429,
+      "duracion_ms": 4461,
       "detalle": ""
     },
     {
@@ -71,7 +71,7 @@
       "comando": "npx vitest run apps/api/test/servidor.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 8642,
+      "duracion_ms": 7585,
       "detalle": ""
     },
     {
@@ -79,7 +79,7 @@
       "comando": "npx vitest run apps/api/test/modulos.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 44720,
+      "duracion_ms": 46871,
       "detalle": ""
     },
     {
@@ -87,7 +87,7 @@
       "comando": "npx vitest run apps/api/test/siga.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 9563,
+      "duracion_ms": 9409,
       "detalle": ""
     },
     {
@@ -95,7 +95,7 @@
       "comando": "npx vitest run apps/api/test/importaciones.test.ts",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 9419,
+      "duracion_ms": 9162,
       "detalle": ""
     },
     {
@@ -103,7 +103,7 @@
       "comando": "npx vitest run --project integracion",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 38319,
+      "duracion_ms": 38641,
       "detalle": ""
     },
     {
@@ -111,7 +111,7 @@
       "comando": "npx vitest run --project drive",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 3299,
+      "duracion_ms": 3287,
       "detalle": ""
     },
     {
@@ -119,23 +119,23 @@
       "comando": "npx vitest run --project importers",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4940,
+      "duracion_ms": 5661,
       "detalle": ""
     },
     {
       "nombre": "verify:web",
       "comando": "npx vitest run --project web",
-      "estado": "OK",
-      "exit_code": 0,
-      "duracion_ms": 49882,
-      "detalle": ""
+      "estado": "FALLO",
+      "exit_code": 1,
+      "duracion_ms": 73660,
+      "detalle": "m>\u001b[39m\n                  \u001b[0mTodos los clientes\u001b[0m\n                \u001b[36m</option>\u001b[39m\n                \u001b[36m<option\u001b[39m\n                  \u001b[33mvalue\u001b[39m=\u001b[32m\"cli-garso\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mGARSO S.A.\u001b[0m\n                \u001b[36m</option>\u001b[39m\n                \u001b[36m<option\u001b[39m\n                  \u001b[33mvalue\u001b[39m=\u001b[32m\"cli-otro\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[0mOTRO S.A.\u001b[0m\n                \u001b[36m</option>\u001b[39m\n              \u001b[36m</select>\u001b[39m\n            \u001b[36m</div>\u001b[39m\n            \u001b[36m<div\u001b[39m\n              \u001b[33mclass\u001b[39m=\u001b[32m\"flex flex-col items-start gap-1\"\u001b[39m\n            \u001b[36m>\u001b[39m\n              \u001b[36m<button\u001b[39m\n                \u001b[33mclass\u001b[39m=\u001b[32m\"inline-flex min-h-9 items-center justify-center gap-2 rounded border px-3 py-1.5 text-sm font-medium transition-colors focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50 bg-superficie text-tinta border-borde-fuerte hover:bg-superficie-hundida active:bg-superficie-tenue \"\u001b[39m\n                \u001b[33mtype\u001b[39m=\u001b[32m\"button\"\u001b[39m\n              \u001b[36m>\u001b[39m\n                \u001b[36m<svg\u001b[39m\n                  \u001b[33maria-hidden\u001b[39m=\u001b[32m\"true\"\u001b[39m\n                  \u001b[33mclass\u001b[39m=\u001b[32m\"lucide lucide-file-spreadsheet\"\u001b[39m\n                  \u001b[33mfill\u001b[39m=\u001b[32m\"none\"\u001b[39m\n                  \u001b[33mheight\u001b[39m=\u001b[32m\"15\"\u001b[39m\n                  \u001b[33mstroke\u001b[39m=\u001b[32m\"currentColor\"\u001b[39m\n                  \u001b[33mstroke-linecap\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                  \u001b[33mstroke-linejoin\u001b[39m=\u001b[32m\"round\"\u001b[39m\n                  \u001b[33mstroke-width\u001b[39m=\u001b[32m\"2\"\u001b[39m\n                  \u001b[33mviewBox\u001b[39m=\u001b[32m\"0 0 24 24\"\u001b[39m\n                  \u001b[33mwidth\u001b[39m=\u001b[32m\"15\"\u001b[39m\n                  \u001b[33mxmlns\u001b[39m=\u001b[32m\"http://www.w3.org/2000/svg\"\u001b[39m\n                \u001b[36m>\u001b[39m\n                  \u001b[36m<path\u001b[39m\n                    \u001b[33md\u001b[39m=\u001b[32m\"M15 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7Z\"\u001b[39m\n                  \u001b[36m/>\u001b[39m\n                  \u001b[36m<path\u001b[39m\n                    \u001b[33md\u001b[39m=\u001b[32m\"M14 2v4a2 2 0 0 0 2 2h4\"\u001b[39m\n                  \u001b[36m/>\u001b[39m\n                  \u001b[36m<path\u001b[39m\n                    \u001b[33md\u001b[39m=\u001b[32m\"M8 13h2\"\u001b[39m\n                  \u001b[36m/>\u001b[39m\n                  \u001b[36m<path\u001b[39m\n                    \u001b[33md\u001b[39m=\u001b[32m\"M14 13h2\"\u001b[39m\n                  \u001b[36m/>\u001b[39m\n                  \u001b[36m<path\u001b[39m\n                    \u001b[33md\u001b[39m=\u001b[32m\"M8 17h2\"\u001b[39m\n                  \u001b[36m/>\u001b[39m\n                  \u001b[36m<...\n\nExpected: \u001b[32m\"1\"\u001b[39m\nReceived: \u001b[31m\"Vencimientos vencidos3202\"\u001b[39m\n\n\u001b[36m \u001b[2m❯\u001b[22m test/Panel.test.tsx:\u001b[2m282:87\u001b[22m\u001b[39m\n    \u001b[90m280| \u001b[39m      // Los números se animan hasta el valor nuevo: se espera a que l…\n    \u001b[90m281| \u001b[39m      \u001b[35mawait\u001b[39m \u001b[34mwaitFor\u001b[39m(() \u001b[33m=>\u001b[39m {\n    \u001b[90m282| \u001b[39m        expect(screen.getByText('Vencimientos vencidos').closest('div'…\n    \u001b[90m   | \u001b[39m                                                                                      \u001b[31m^\u001b[39m\n    \u001b[90m283| \u001b[39m        expect(screen.getByText('Vencimientos próximos').closest('div'…\n    \u001b[90m284| \u001b[39m        expect(screen.getByText('Clientes activos').closest('div')!.te…\n\u001b[90m \u001b[2m❯\u001b[22m runWithExpensiveErrorDiagnosticsDisabled ../../node_modules/@testing-library/dom/dist/config.js:\u001b[2m47:12\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m checkCallback ../../node_modules/@testing-library/dom/dist/wait-for.js:\u001b[2m124:77\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m MutationObserver.checkRealTimersCallback ../../node_modules/@testing-library/dom/dist/wait-for.js:\u001b[2m118:16\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m MutationObserver.invokeTheCallbackFunction ../../node_modules/jsdom/lib/generated/idl/MutationCallback.js:\u001b[2m19:26\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m notifyMutationObservers ../../node_modules/jsdom/lib/jsdom/living/helpers/mutation-observers.js:\u001b[2m160:22\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m ../../node_modules/jsdom/lib/jsdom/living/helpers/mutation-observers.js:\u001b[2m133:5\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯\u001b[22m\u001b[39m"
     },
     {
       "nombre": "verify:no-hardcoded-kpi",
       "comando": "node scripts/verificar-kpi.mjs",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 197,
+      "duracion_ms": 406,
       "detalle": ""
     },
     {
@@ -143,7 +143,7 @@
       "comando": "npm run typecheck:e2e",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 4100,
+      "duracion_ms": 5664,
       "detalle": ""
     },
     {
@@ -151,7 +151,7 @@
       "comando": "npx playwright test",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 39209,
+      "duracion_ms": 52444,
       "detalle": ""
     },
     {
@@ -159,7 +159,7 @@
       "comando": "node scripts/auditar-dependencias.mjs",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 10098,
+      "duracion_ms": 13142,
       "detalle": ""
     },
     {
@@ -167,12 +167,12 @@
       "comando": "npm run build",
       "estado": "OK",
       "exit_code": 0,
-      "duracion_ms": 12639,
+      "duracion_ms": 15302,
       "detalle": ""
     }
   ],
-  "checks_ok": 21,
+  "checks_ok": 19,
   "checks_pendientes": 0,
-  "checks_fallidos": 0,
-  "todo_verde": true
+  "checks_fallidos": 2,
+  "todo_verde": false
 }

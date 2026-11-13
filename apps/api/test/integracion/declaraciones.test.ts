@@ -82,6 +82,39 @@ describeSiHayBase('saldo de IVA declarado contra PostgreSQL real', () => {
     expect(saldo?.saldoDePeriodoAnterior).toBe(717945n);
   });
 
+  // 2026-11-12: la lista de presentados la pide junto con sus otras consultas,
+  // sin esperar a saber qué evidencias tiene. Tiene que traer solo las aproximadas.
+  it('evidenciasConFechaAproximada trae las de fecha aproximada y ninguna otra', async () => {
+    const exacta = await evidencia('120-06-2026-exacta.pdf');
+    const impresa = await evidencia('aviso-impreso-06-2026.pdf');
+    const sinDeclaracion = await evidencia('contrato.pdf');
+    const lectura = (numeroDeOrden: string, fechaAproximada: boolean) => ({
+      declaracion: {
+        formulario: '120', ruc: '80003112', periodo: '2026-06',
+        numeroDeOrden, fechaDePresentacion: '2026-07-11', fechaAproximada,
+      },
+      error: null,
+    });
+    await declaraciones.guardarLectura(
+      { evidenciaId: exacta.id, clienteId, itemIdOneDrive: 'x', nombreArchivo: exacta.nombreArchivo },
+      lectura('12000000091', false),
+    );
+    await declaraciones.guardarLectura(
+      { evidenciaId: impresa.id, clienteId, itemIdOneDrive: 'x', nombreArchivo: impresa.nombreArchivo },
+      lectura('12000000092', true),
+    );
+    await declaraciones.guardarLectura(
+      { evidenciaId: sinDeclaracion.id, clienteId, itemIdOneDrive: 'x', nombreArchivo: sinDeclaracion.nombreArchivo },
+      { declaracion: null, error: null },
+    );
+
+    const aproximadas = await declaraciones.evidenciasConFechaAproximada();
+
+    expect(aproximadas.has(impresa.id)).toBe(true);
+    expect(aproximadas.has(exacta.id)).toBe(false);
+    expect(aproximadas.has(sinDeclaracion.id)).toBe(false);
+  });
+
   it('sin lectura de ese cliente y período, no hay saldo que mostrar', async () => {
     expect(await declaraciones.saldoDeIvaDeclarado(clienteId, '2099-01')).toBeNull();
   });

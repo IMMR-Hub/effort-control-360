@@ -119,11 +119,18 @@ export class UsuariosPrisma implements RepositorioDeUsuarios {
     return filas.map((fila) => fila.clienteId);
   }
 
+  /**
+   * Clientes que alguien con cuenta activa tiene hoy en su cartera.
+   *
+   * Dirección cuenta igual que cualquiera (Daniel, 2026-11-12: «Sipar, Neo y
+   * Somos Piri EAS son clientes de Lili»): dirección VE todos los clientes, pero
+   * llevar uno es tenerlo asignado, y eso es lo que se pregunta acá.
+   */
   async clientesConResponsable(): Promise<string[]> {
     const filas = await this.prisma.asignacionCliente.findMany({
       where: {
         OR: [{ hasta: null }, { hasta: { gt: new Date() } }],
-        usuario: { activo: true, rol: { not: 'direccion' } },
+        usuario: { activo: true },
       },
       select: { clienteId: true },
       distinct: ['clienteId'],

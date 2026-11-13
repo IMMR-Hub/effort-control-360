@@ -73,6 +73,11 @@ export const EXCLUIDOS_DEL_RESPALDO_A_PROPOSITO: Readonly<Record<string, string>
   codigoRecuperacion:
     'Hash de un código de recuperación de contraseña, de un solo uso. Igual ' +
     'que la sesión: efímero, sensible, y sin ningún valor para restaurar.',
+  estadoDelSistema:
+    'El punto de sincronización con OneDrive. No es un dato del negocio y ' +
+    'restaurarlo sería peligroso: una base vuelta atrás con un punto más ' +
+    'nuevo se saltearía los archivos que entraron entre medio. Sin la fila, ' +
+    'la sincronización recorre todo, que es lo correcto después de restaurar.',
 };
 
 export type ModeloDelRespaldo = (typeof MODELOS_DEL_RESPALDO)[number];

@@ -49,6 +49,7 @@ export async function registrarRutasDeActualizarAhora(
           registrarEvidencia: (datos) => deps.evidencias.registrarOVincular(datos),
           huellasDeOrigen: (clienteId) => deps.archivosDeOrigen.huellas(clienteId),
           marcarArchivoDeOrigen: (datos) => deps.archivosDeOrigen.marcar(datos),
+          almacenDelPunto: deps.puntoDeSincronizacion ?? null,
           registrarEnBitacora: (entrada) => registrarEvento(deps.bitacora, peticion.log, entrada),
           ahora: deps.ahora,
         },

@@ -16,6 +16,7 @@ import { registrarRutasDeHoras } from './rutas/horas.js';
 import { AlmacenEnMemoria } from './seguridad/limites.js';
 import { Prisma } from '@prisma/client';
 
+import { PuntoDeSincronizacionPrisma } from './repositorios/puntoDeSincronizacion.js';
 import { conexionDeLaApp } from './repositorios/conexion.js';
 import { comprobarConexion, crearClientePrisma } from './repositorios/prisma.js';
 import { UsuariosPrisma } from './repositorios/usuarios.js';
@@ -150,6 +151,7 @@ export function construirDependencias(configuracion: Configuracion): Dependencia
     obligaciones: new ObligacionesPrisma(prisma),
     evidencias: new EvidenciasPrisma(prisma),
     archivosDeOrigen: new ArchivosDeOrigenPrisma(prisma),
+    puntoDeSincronizacion: new PuntoDeSincronizacionPrisma(prisma),
     // Con SQL crudo, no con el cliente tipado: si el código va adelante del
     // esquema desplegado, el respaldo del día tiene que salir igual (tarea 150).
     lectorParaRespaldo: crearLectorCrudo(prisma, Prisma.dmmf.datamodel.models),

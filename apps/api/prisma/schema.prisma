@@ -1149,6 +1149,20 @@ model ArchivoDeOrigen {
   @@map("archivo_de_origen")
 }
 
+/// Lo que el sistema necesita recordar entre un reinicio y el siguiente, que
+/// no es un dato del negocio. Hoy una sola fila, `onedrive`: hasta dónde llegó
+/// la sincronización con el OneDrive de EFFORT (el token de cambios de Graph,
+/// las carpetas de clientes que cubre y cuándo fue la última pasada completa).
+/// Sin esto, cada despliegue arrancaba con una pasada completa de 22 minutos.
+/// Ver `servicios/sincronizacionIncremental.ts`.
+model EstadoDelSistema {
+  clave         String   @id @db.VarChar(50)
+  valor         Json
+  actualizadoEn DateTime @default(now()) @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+
+  @@map("estado_del_sistema")
+}
+
 /// Qué PDFs ya se leyeron buscando presentaciones ante la DNIT, y qué se encontró.
 /// Un PDF se lee una sola vez: lo que dice no cambia. Todo NULL = no es una presentación.
 model LecturaDeDeclaracion {

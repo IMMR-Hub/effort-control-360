@@ -18,7 +18,8 @@
  * **Perder un cambio en silencio es la peor forma de fallar una importación**
  * (`CLAUDE.md`, lección 2), así que el atajo tiene salidas a la pasada completa:
  *
- *  - al arrancar el servidor (el token vive en memoria);
+ *  - al arrancar el servidor, SOLO si no hay un punto guardado en la base o no
+ *    se pudo leer (ver «El punto se guarda en la base», más abajo);
  *  - a la medianoche de lunes a sábado (hora de Paraguay), por si alguien se olvidó
  *    de actualizar algo o un cambio se escapó (Daniel, 2026-09-24): a esa hora
  *    nadie está mirando, así que no importa que tarde, y hace de respaldo;
@@ -30,6 +31,24 @@
  * **El token solo avanza si todo salió bien.** Si un archivo falló al copiarse por
  * algo pasajero, el mismo cambio se vuelve a pedir en la vuelta siguiente: los
  * archivos ya copiados se saltean por su huella, así que repetir es inofensivo.
+ *
+ * **El punto se guarda en la base (2026-11-12).** Hasta ese día el token vivía
+ * solo en memoria, así que cada despliegue arrancaba con una pasada completa: 22
+ * minutos con los 87 clientes, compitiendo con las pantallas por las conexiones
+ * a la base, seis veces en un día de seis despliegues. Ahora cada vez que el
+ * punto cambia se anota (`AlmacenDelPuntoDeSincronizacion`) y al arrancar se
+ * retoma desde ahí. Por qué no se pierde nada:
+ *
+ *  - lo que se guarda es siempre un punto LIMPIO (el token solo avanza si todo
+ *    salió bien), junto con las carpetas de clientes que ese punto cubre y la
+ *    fecha de la última pasada completa: las mismas tres cosas que deciden si
+ *    hay que recorrer todo, así que las salidas de arriba siguen valiendo igual
+ *    después de un reinicio;
+ *  - retomar desde un punto viejo es inofensivo: Graph devuelve todo lo que
+ *    cambió desde entonces y lo ya copiado se saltea por su huella;
+ *  - si no se puede leer o guardar el punto, no se adivina: se recorre todo,
+ *    como antes, y el resultado lo dice (`avisoDelPunto`) para que quede en el
+ *    registro del servidor.
  *
  * Todo es de solo lectura sobre el drive de origen. El origen que se le pasa al
  * sincronizador ni siquiera tiene forma de escribir (`CLAUDE.md`, regla 5).
@@ -96,18 +115,92 @@ export interface ResultadoDeSincronizacion extends ResumenDeSincronizacion {
   /** Archivos que Graph informó como cambiados (solo en las incrementales). */
   readonly cambiosRecibidos: number;
   readonly duracionMs: number;
+  /** Si el punto de sincronización no se pudo leer o guardar en la base, por qué. */
+  readonly avisoDelPunto: string | null;
 }
 
-/** Lo que se recuerda entre una vuelta y la siguiente. Vive en memoria del proceso. */
+/** Lo que se recuerda entre una vuelta y la siguiente. */
 export interface EstadoDeSincronizacion {
   token: string | null;
   /** Ruta, desde la raíz del drive, de la carpeta de cada cliente (por id de carpeta). */
   rutasDeClientes: Map<string, string>;
   ultimaPasadaCompletaEn: Date | null;
+  /** Si ya se buscó en la base el punto guardado. Se busca una sola vez por proceso. */
+  puntoBuscado: boolean;
+  /** Por qué se arrancó sin punto, para decirlo en el motivo de la pasada completa. */
+  motivoSinPunto: string | null;
+  avisoDelPunto: string | null;
 }
 
 export function crearEstadoDeSincronizacion(): EstadoDeSincronizacion {
-  return { token: null, rutasDeClientes: new Map(), ultimaPasadaCompletaEn: null };
+  return {
+    token: null, rutasDeClientes: new Map(), ultimaPasadaCompletaEn: null,
+    puntoBuscado: false, motivoSinPunto: null, avisoDelPunto: null,
+  };
+}
+
+/** El punto de sincronización tal como se guarda en la base. */
+export interface PuntoDeSincronizacion {
+  /** `null`: la última pasada no terminó limpia y hay que recorrer todo. */
+  readonly token: string | null;
+  readonly rutasDeClientes: Readonly<Record<string, string>>;
+  readonly ultimaPasadaCompletaEn: Date | null;
+}
+
+/** Dónde se guarda el punto entre un reinicio del servidor y el siguiente. */
+export interface AlmacenDelPuntoDeSincronizacion {
+  leer(): Promise<PuntoDeSincronizacion | null>;
+  guardar(punto: PuntoDeSincronizacion): Promise<void>;
+}
+
+function textoDelError(error: unknown): string {
+  return error instanceof Error ? error.message.split('\n')[0]!.slice(0, 200) : 'error desconocido';
+}
+
+/** Al primer uso en este proceso, retoma el punto guardado. Sin punto, se recorre todo. */
+async function retomarPunto(
+  almacen: AlmacenDelPuntoDeSincronizacion | null | undefined,
+  estado: EstadoDeSincronizacion,
+): Promise<void> {
+  if (estado.puntoBuscado) return;
+  estado.puntoBuscado = true;
+  if (!almacen || estado.token !== null) return;
+
+  try {
+    const punto = await almacen.leer();
+    if (punto === null) {
+      estado.motivoSinPunto = 'no había un punto de sincronización guardado';
+    } else if (punto.token === null) {
+      estado.motivoSinPunto = 'la última pasada antes del reinicio no terminó limpia';
+    } else {
+      estado.token = punto.token;
+      estado.rutasDeClientes = new Map(Object.entries(punto.rutasDeClientes));
+      estado.ultimaPasadaCompletaEn = punto.ultimaPasadaCompletaEn;
+    }
+  } catch (error) {
+    estado.motivoSinPunto = `no se pudo leer el punto de sincronización guardado (${textoDelError(error)})`;
+    estado.avisoDelPunto = estado.motivoSinPunto;
+  }
+}
+
+/** Deja en la base lo mismo que hay en memoria. Si falla, la sincronización sigue. */
+async function anotarPunto(
+  almacen: AlmacenDelPuntoDeSincronizacion | null | undefined,
+  estado: EstadoDeSincronizacion,
+): Promise<void> {
+  if (!almacen) return;
+  try {
+    await almacen.guardar({
+      token: estado.token,
+      rutasDeClientes: Object.fromEntries(estado.rutasDeClientes),
+      ultimaPasadaCompletaEn: estado.ultimaPasadaCompletaEn,
+    });
+    estado.avisoDelPunto = null;
+  } catch (error) {
+    // Lo guardado queda viejo, no falso: retomar desde un punto anterior solo
+    // hace que se vuelvan a pedir cambios que ya se copiaron.
+    estado.avisoDelPunto = `no se pudo guardar el punto de sincronización (${textoDelError(error)})`;
+  }
 }
 
 const estados = new WeakMap<object, EstadoDeSincronizacion>();
@@ -129,6 +222,8 @@ export function estadoDeSincronizacion(origen: object): EstadoDeSincronizacion {
 
 export type DependenciasIncrementales = Omit<DependenciasDelSincronizador, 'origen'> & {
   readonly origen: DriveDeArchivos & FuenteDeCambios;
+  /** Sin almacén el punto vive solo en memoria, como hasta el 2026-11-12. */
+  readonly almacenDelPunto?: AlmacenDelPuntoDeSincronizacion | null;
 };
 
 export function admiteCambios(origen: DriveDeArchivos): origen is DriveDeArchivos & FuenteDeCambios {
@@ -162,7 +257,13 @@ function motivoDePasadaCompleta(
   carpetasDeClientes: readonly string[],
   ahora: Date,
 ): string | null {
-  if (estado.token === null) return 'primera pasada desde que arrancó el servidor, o la anterior no terminó limpia';
+  if (estado.token === null) {
+    const sinPunto = estado.motivoSinPunto;
+    estado.motivoSinPunto = null; // vale solo para la primera pasada después de arrancar
+    return sinPunto === null
+      ? 'primera pasada desde que arrancó el servidor, o la anterior no terminó limpia'
+      : `primera pasada desde que arrancó el servidor: ${sinPunto}`;
+  }
   if (estado.ultimaPasadaCompletaEn === null || estado.ultimaPasadaCompletaEn < ultimaMedianocheProgramada(ahora)) {
     return 'pasada completa de la medianoche (lunes a sábado): revisa todo por si alguien se olvidó de actualizar';
   }
@@ -206,8 +307,12 @@ async function pasadaCompleta(
       estado.token = null;
     }
   }
+  await anotarPunto(deps.almacenDelPunto, estado);
 
-  return { ...resumen, modo: 'completa', motivoDePasadaCompleta: motivo, cambiosRecibidos: 0, duracionMs: Date.now() - inicio };
+  return {
+    ...resumen, modo: 'completa', motivoDePasadaCompleta: motivo, cambiosRecibidos: 0,
+    duracionMs: Date.now() - inicio, avisoDelPunto: estado.avisoDelPunto,
+  };
 }
 
 /** Prefijo que compara sin distinguir mayúsculas: OneDrive tampoco las distingue. */
@@ -226,6 +331,7 @@ export async function sincronizarConCambios(
   const clientes = (await deps.clientes.listar(null)).filter((c) => c.activo && c.carpetaOneDriveId);
   const carpetasDeClientes = clientes.map((c) => c.carpetaOneDriveId!);
 
+  await retomarPunto(deps.almacenDelPunto, estado);
   const motivo = motivoDePasadaCompleta(estado, carpetasDeClientes, deps.ahora());
   if (motivo !== null) {
     return pasadaCompleta(deps, usuarioId, estado, carpetasDeClientes, motivo, inicio);
@@ -284,7 +390,10 @@ export async function sincronizarConCambios(
 
   // El token avanza solo si nada quedó a medias: si no, la vuelta siguiente
   // vuelve a pedir estos mismos cambios (los ya copiados se saltean por huella).
-  if (resumen.errores === 0 && !resumen.quedaronPendientes) estado.token = tokenSiguiente;
+  if (resumen.errores === 0 && !resumen.quedaronPendientes) {
+    estado.token = tokenSiguiente;
+    await anotarPunto(deps.almacenDelPunto, estado);
+  }
 
   return {
     ...resumen,
@@ -292,6 +401,7 @@ export async function sincronizarConCambios(
     motivoDePasadaCompleta: null,
     cambiosRecibidos,
     duracionMs: Date.now() - inicio,
+    avisoDelPunto: estado.avisoDelPunto,
   };
 }
 
@@ -300,7 +410,7 @@ export async function sincronizarConCambios(
  * antes. Es el único punto de entrada que usan el trabajo automático y el botón.
  */
 export async function sincronizarOneDrive(
-  deps: DependenciasDelSincronizador,
+  deps: DependenciasDelSincronizador & { readonly almacenDelPunto?: AlmacenDelPuntoDeSincronizacion | null },
   usuarioId: string,
   estado: EstadoDeSincronizacion = estadoDeSincronizacion(deps.origen),
 ): Promise<ResultadoDeSincronizacion> {
@@ -315,6 +425,7 @@ export async function sincronizarOneDrive(
     motivoDePasadaCompleta: 'el origen no admite consulta de cambios',
     cambiosRecibidos: 0,
     duracionMs: Date.now() - inicio,
+    avisoDelPunto: null,
   };
 }
 

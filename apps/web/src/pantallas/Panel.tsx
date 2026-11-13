@@ -48,7 +48,7 @@ import { useConteoAnimado } from '../ui/useConteoAnimado.js';
 import type { Pantalla } from '../layout/Encabezado.js';
 import { FiltroDeFechasSelector } from '../ui/FiltroDeFechas.js';
 import { ETIQUETA_NIVEL_ALERTA, ETIQUETA_CRITICIDAD, TONO_NIVEL_ALERTA, TONO_CRITICIDAD, coincideConNivel } from '../ui/etiquetas.js';
-import { ErrorDeApi } from '../api/cliente.js';
+import { ErrorDeApi, precargar } from '../api/cliente.js';
 import { listarClientes, type Cliente } from '../api/clientes.js';
 import { obtenerAlertas, type Alerta } from '../api/alertas.js';
 import {
@@ -154,6 +154,33 @@ function estiloRetardo(ms: number): CSSProperties {
   return { '--retardo-entrada': `${ms}ms` } as CSSProperties;
 }
 
+/** Todo lo que el Panel le pide al servidor, de una sola vez. */
+function pedirDatosDelPanel(periodos: readonly string[]) {
+  return Promise.all([
+    listarClientes(),
+    obtenerRadar(),
+    obtenerAlertas(),
+    // La API de estos tres es por período: se pide cada período que toca el
+    // rango y se juntan. Un rango de 90 días son a lo sumo cuatro.
+    Promise.all(
+      periodos.map((p) =>
+        Promise.all([listarSolicitudesPorPeriodo(p), listarBalances(p), listarLiquidaciones(p)]),
+      ),
+    ),
+    listarPresentados(),
+  ]);
+}
+
+/**
+ * Pide los datos con los que abre el Panel —sin filtro: el mes en curso—
+ * mientras todavía se está comprobando la sesión. Ver `precargar`.
+ */
+export function precargarPanel(ahora: Date = new Date()): void {
+  const hoy = hoyEnParaguay(ahora);
+  const mesActual = `${hoy.anio}-${String(hoy.mes).padStart(2, '0')}`;
+  precargar(() => pedirDatosDelPanel([mesActual]));
+}
+
 export default function Panel({
   irA,
 }: {
@@ -193,19 +220,7 @@ export default function Panel({
         { alertas: listaDeAlertas },
         porPeriodo,
         { presentados: listaDePresentados },
-      ] = await Promise.all([
-        listarClientes(),
-        obtenerRadar(),
-        obtenerAlertas(),
-        // La API de estos tres es por período: se pide cada período que toca el
-        // rango y se juntan. Un rango de 90 días son a lo sumo cuatro.
-        Promise.all(
-          periodos.map((p) =>
-            Promise.all([listarSolicitudesPorPeriodo(p), listarBalances(p), listarLiquidaciones(p)]),
-          ),
-        ),
-        listarPresentados(),
-      ]);
+      ] = await pedirDatosDelPanel(periodos);
       setClientes(listaDeClientes);
       setVencimientos(radar.vencimientos);
       setAlertas(listaDeAlertas);

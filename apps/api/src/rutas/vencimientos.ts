@@ -233,12 +233,15 @@ export async function registrarRutasDeVencimientos(
   app.get('/api/v1/vencimientos/presentados', async (peticion) => {
     const sujeto = autorizar(peticion, 'vencimiento', 'ver');
     const filtro = filtroDeClientes(sujeto);
-    const [todas, clientes] = await Promise.all([deps.vencimientos.listarPresentados(filtro), deps.clientes.listar(filtro)]);
+    // Las tres consultas salen juntas. Antes la de fechas aproximadas esperaba a
+    // la lista para preguntar solo por sus evidencias: un viaje más a la base, en
+    // fila (~130 ms desde producción), para ahorrar unas pocas filas.
+    const [todas, clientes, aproximadas] = await Promise.all([
+      deps.vencimientos.listarPresentados(filtro),
+      deps.clientes.listar(filtro),
+      deps.declaraciones?.evidenciasConFechaAproximada() ?? new Set<string>(),
+    ]);
     const filas = soloDeClientesActivos(todas, clientes);
-    const aproximadas =
-      (await deps.declaraciones?.conFechaAproximada(
-        filas.map((v) => v.evidenciaId).filter((id): id is string => id !== null),
-      )) ?? new Set<string>();
 
     return {
       presentados: filas.map((v) => {
