@@ -55,8 +55,9 @@ const EQUIPO = [
   { nombre: 'Karina', apellido: 'Medina', email: 'kmedina@effort.com.py', rol: 'responsable' },
   { nombre: 'Melany', apellido: 'González', email: 'mgonzalez@effort.com.py', rol: 'responsable' },
   { nombre: 'Sandra', apellido: 'Ferreira', email: 'sferreira@effort.com.py', rol: 'responsable' },
-  // Entra en lugar de Karina Baez (Daniel, 2026-11-12: «pbarrios entra por kbaez»). Lleva sus clientes de la
-  // planilla (PEDRO) y los de BEA. La cartera la carga `ajustar-cartera-segun-planilla-2026-11-12.mjs`.
+  // PEDRO en la planilla de clientes de EFFORT (2026-11-12). Lleva solo los suyos; los de BEA van a `kbaez@`,
+  // que es la cuenta que usa BEA (Daniel, 2026-11-14). La cartera la carga
+  // `ajustar-cartera-segun-planilla-2026-11-12.mjs`.
   { nombre: 'Pedro', apellido: 'Barrios', email: 'pbarrios@effort.com.py', rol: 'responsable' },
 ];
 

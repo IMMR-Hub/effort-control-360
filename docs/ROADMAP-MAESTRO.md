@@ -94,6 +94,18 @@ filas). Por eso Panel, notificaciones y Vencimientos muestran solo el piloto. He
     a cada despliegue (compite por las 5 conexiones): falta medirlo en reposo.
   - **Visto en pantalla (Chrome de Daniel, 17:58 UTC):** SIPAR ya no aparece (vencidos 78 → 55, alertas activas 612 →
     577) y «más urgentes» muestra lo de hoy de COPESA, RAMIRO GARCIA, MACOMA y ESTHER VIGNEAUX.
+  - [x] **BEA usa la cuenta `kbaez@` — CORRECCIÓN aplicada 2026-11-14 13:35 UTC** (respaldo
+    `respaldo-2026-11-14T13-33-02.json`). Daniel: «¿por qué las vas a desactivar? ¿No revisaste el Excel de los
+    usuarios? Hay un solo cambio pero mantiene el correo viejo». En la columna «CLIENTE DE» de la planilla hay seis
+    responsables: ANALIA, ARA, ARI, SANDRA, PEDRO y BEA, y BEA figura con `kbaez@effort.com.py`. Yo había leído
+    «pbarrios entra por kbaez» como que Karina Baez se había ido y había mandado los clientes de BEA a Pedro (nunca se
+    aplicó: la cuenta de Pedro no existía) y propuesto desactivar `kbaez`. Ahora: los 8 clientes de BEA (021, 052, 080,
+    086, 089, 095, 102, 115) están en la cartera de `kbaez`; Pedro lleva solo los suyos (14), pendientes de que exista
+    su cuenta; `kbaez` vuelve al script de contraseña inicial. La novena fila de BEA, «AF Y RM ASOCIACIONES - ALISON»
+    (carpeta 121, sin movimiento), no tiene carpeta en OneDrive y no está en el sistema: pendiente desde el 10/11.
+    **Abierto (lo responde Daniel):** el nombre completo de BEA (la cuenta todavía dice «Karina Baez») y si Jorge
+    Barrios, Karina Medina y Melany González siguen en EFFORT: no figuran en la planilla como responsables de ningún
+    cliente, pero eso no dice que se hayan ido. No se desactiva ninguna cuenta.
   - [x] **Clientes de Lili (Daniel, 2026-11-12: «Sipar, Neo y Somos Piri EAS son clientes de Lili») — aplicado en la
     base 20:20 UTC, con respaldo `respaldo-2026-11-12T20-11-24.json`:** 043 SIPAR vuelve a estar activo (con sus cuatro
     obligaciones del piloto); 014 NEO HOLDING GROUP y 015 SOMOS PIRI EAS quedan como estaban (activos, sin

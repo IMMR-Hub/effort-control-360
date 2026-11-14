@@ -8,11 +8,14 @@
  * y cada cliente que entra o sale deja `cartera.cliente_asignado` /
  * `cartera.cliente_quitado` en la bitácora de ese cliente.
  *
- * PEDRO (`pbarrios@`) entra en lugar de Karina Baez: Daniel, 2026-11-12, «pbarrios
- * entra por kbaez ahora» y, preguntado a quién pasan los clientes de BEA
- * (`kbaez@` en la planilla), «A Pedro Barrios». Lleva los suyos y los de BEA. Si
- * su cuenta todavía no existe, se lo saltea y se puede volver a correr después
- * de `crear-equipo.mjs`: repetirlo no cambia lo que ya está bien.
+ * BEA usa el correo viejo `kbaez@` (Daniel, 2026-11-14: «Hay un solo cambio pero
+ * mantiene el correo viejo»): sus clientes van a la cuenta `kbaez`, tal cual dice
+ * la planilla. CORRECCIÓN: hasta el 2026-11-14 este script mandaba los clientes
+ * de BEA a Pedro, por una lectura mía de «pbarrios entra por kbaez» que Daniel
+ * corrigió; nunca llegó a aplicarse porque la cuenta de Pedro no existía.
+ * PEDRO (`pbarrios@`) lleva solo los suyos. Si su cuenta todavía no existe, se lo
+ * saltea y se puede volver a correr después de `crear-equipo.mjs`: repetirlo no
+ * cambia lo que ya está bien.
  *
  * Simula por defecto; `--aplicar` exige respaldo de hoy. Solo toca a las personas
  * de `PERSONAS`.
@@ -27,9 +30,9 @@ for (const linea of readFileSync(join(RAIZ, '.env'), 'utf8').split('\n')) {
   if (m && !process.env[m[1]]) process.env[m[1]] = m[2].trim().replace(/^["']|["']$/g, '');
 }
 const APLICAR = process.argv.includes('--aplicar');
-const PERSONAS = ['aalvarenga@effort.com.py', 'asanguina@effort.com.py', 'acampos@effort.com.py', 'sferreira@effort.com.py', 'pbarrios@effort.com.py'];
-/** Responsable de la planilla → quién lo lleva hoy. */
-const REEMPLAZOS = { 'kbaez@effort.com.py': 'pbarrios@effort.com.py' };
+const PERSONAS = ['aalvarenga@effort.com.py', 'asanguina@effort.com.py', 'acampos@effort.com.py', 'sferreira@effort.com.py', 'kbaez@effort.com.py', 'pbarrios@effort.com.py'];
+/** Responsable de la planilla → quién lo lleva hoy. Vacío: la planilla manda tal cual. */
+const REEMPLAZOS = {};
 const responsableDe = (codigo) => {
   const email = planilla[codigo]?.email_responsable ?? null;
   return REEMPLAZOS[email] ?? email;
