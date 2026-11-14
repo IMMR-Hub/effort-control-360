@@ -21,8 +21,6 @@
  * - `jbarrios` y `kmedina`: ya no trabajan en EFFORT (sus liquidaciones están en
  *   RRHH). Darles una contraseña conocida sería abrirles la puerta. Quedan
  *   pendientes de desactivar.
- * - `kbaez`: tampoco (Daniel, 2026-11-12: «pbarrios entra por kbaez»). Pedro
- *   recibe su contraseña inicial con `crear-equipo.mjs`, que crea su cuenta.
  *
  * Mínimo 12 caracteres, igual que la pantalla de Usuarios: el sistema está en
  * internet y QUIEN ENTRA PRIMERO con la contraseña inicial configura su propio
@@ -49,6 +47,7 @@ const CUENTAS = [
   'asanguina@effort.com.py',
   'aalvarenga@effort.com.py',
   'acampos@effort.com.py',
+  'kbaez@effort.com.py',
   'mgonzalez@effort.com.py',
   'sferreira@effort.com.py',
 ];
