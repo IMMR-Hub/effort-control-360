@@ -29,6 +29,7 @@ import { registrarRutasDeReglasDeNotificacion } from '../src/rutas/reglas-notifi
 import { registrarRutasDeEventos } from '../src/rutas/eventos.js';
 import { registrarRutasDeClientes } from '../src/rutas/clientes.js';
 import { registrarRutasDeActualizarAhora } from '../src/rutas/actualizar-ahora.js';
+import { registrarRutasDeOneDrive } from '../src/rutas/onedrive.js';
 import { hashearContrasena } from '../src/seguridad/credenciales.js';
 import { AlmacenEnMemoria } from '../src/seguridad/limites.js';
 import { nombreCookieSesion } from '../src/seguridad/sesiones.js';
@@ -192,6 +193,7 @@ async function montar(): Promise<Contexto> {
   await registrarRutasDeEventos(app, deps);
   await registrarRutasDeClientes(app, deps);
   await registrarRutasDeActualizarAhora(app, deps);
+  await registrarRutasDeOneDrive(app, deps);
   await app.ready();
   await activarCsrfEnInject(app);
 
@@ -286,6 +288,38 @@ describe('identificación en cada petición', () => {
 
     const anonima = await ctx.app.inject({ method: 'GET', url: '/salud' });
     expect(anonima.headers['server-timing']).toMatch(/^total;dur=\d+$/);
+  });
+
+  // 2026-11-13: el Panel abre con 8 pedidos juntos y cada uno identificaba la
+  // sesión por su cuenta, compitiendo por las conexiones a la base.
+  it('pedidos simultáneos de la misma sesión comparten una sola consulta; uno posterior consulta de nuevo', async () => {
+    const original = ctx.sesiones.buscarPorHash.bind(ctx.sesiones);
+    let consultas = 0;
+    ctx.sesiones.buscarPorHash = async (hash: string) => {
+      consultas += 1;
+      await new Promise((r) => setTimeout(r, 20));
+      return original(hash);
+    };
+
+    const respuestas = await Promise.all(
+      Array.from({ length: 6 }, () => ctx.app.inject({ method: 'GET', url: '/api/v1/yo', headers: { cookie: direccion } })),
+    );
+    expect(respuestas.map((r) => r.statusCode)).toEqual([200, 200, 200, 200, 200, 200]);
+    expect(consultas).toBe(1);
+
+    await ctx.app.inject({ method: 'GET', url: '/api/v1/yo', headers: { cookie: direccion } });
+    expect(consultas).toBe(2);
+  });
+
+  it('una sesión revocada deja de valer en el pedido siguiente aunque antes hubo pedidos simultáneos', async () => {
+    await Promise.all(
+      Array.from({ length: 3 }, () => ctx.app.inject({ method: 'GET', url: '/api/v1/yo', headers: { cookie: direccion } })),
+    );
+    const sesion = sesionDeDireccion();
+    ctx.sesiones.sesiones[ctx.sesiones.sesiones.indexOf(sesion)] = { ...sesion, revocadaEn: HOY };
+
+    const despues = await ctx.app.inject({ method: 'GET', url: '/api/v1/yo', headers: { cookie: direccion } });
+    expect(despues.statusCode).toBe(401);
   });
 
   it('un responsable sigue viendo solo su cartera (usuario y cartera se piden a la vez)', async () => {
@@ -1373,6 +1407,72 @@ describe('actualizar ahora (tarea 152-bis)', () => {
 });
 
 /* ========================================================================== */
+
+describe('sincronizar OneDrive a pedido (2026-11-13)', () => {
+  it('sin cliente, sincroniza lo que cambió de todos', async () => {
+    const respuesta = await ctx.app.inject({
+      method: 'POST', url: '/api/v1/onedrive/sincronizar', headers: { cookie: direccion },
+    });
+    expect(respuesta.statusCode).toBe(200);
+  });
+
+  it('con un cliente, intenta solo ese cliente y lo deja en su bitácora', async () => {
+    const indice = ctx.clientes.clientes.findIndex((c) => c.id === MIO);
+    ctx.clientes.clientes[indice] = { ...ctx.clientes.clientes[indice]!, carpetaOneDriveId: 'carpeta-garso' };
+    const otro = ctx.clientes.clientes.findIndex((c) => c.id === AJENO);
+    ctx.clientes.clientes[otro] = { ...ctx.clientes.clientes[otro]!, carpetaOneDriveId: 'carpeta-ajeno' };
+
+    const respuesta = await ctx.app.inject({
+      method: 'POST', url: '/api/v1/onedrive/sincronizar', headers: { cookie: direccion }, payload: { clienteId: MIO },
+    });
+
+    expect(respuesta.statusCode).toBe(200);
+    // El drive de esta prueba no sabe listar carpetas: el fallo dice QUÉ cliente se intentó.
+    const cuerpo = JSON.parse(respuesta.body);
+    expect(cuerpo.modo).toBe('cliente');
+    expect(cuerpo.fallos.map((f: { cliente: string }) => f.cliente)).toEqual(['GARSO S.A.']);
+    const entrada = ctx.bitacora.filas.find((e) => e.accion === 'evidencia.onedrive_sincronizado' && e.clienteId === MIO);
+    expect((entrada?.datosDespues as { disparo?: string } | null)?.disparo).toBe('manual, un cliente');
+  });
+
+  it('un cliente fuera de la cartera de quien lo pide no se sincroniza', async () => {
+    const respuesta = await ctx.app.inject({
+      method: 'POST', url: '/api/v1/onedrive/sincronizar', headers: { cookie: direccionAcotada }, payload: { clienteId: AJENO },
+    });
+    expect([403, 404]).toContain(respuesta.statusCode);
+  });
+
+  it('un cliente sin carpeta conectada responde 409 y lo dice', async () => {
+    const respuesta = await ctx.app.inject({
+      method: 'POST', url: '/api/v1/onedrive/sincronizar', headers: { cookie: direccion }, payload: { clienteId: MIO },
+    });
+    expect(respuesta.statusCode).toBe(409);
+    expect(JSON.parse(respuesta.body).error).toBe('sin_carpeta');
+  });
+
+  it('un cliente que no existe responde 404', async () => {
+    const respuesta = await ctx.app.inject({
+      method: 'POST', url: '/api/v1/onedrive/sincronizar', headers: { cookie: direccion },
+      payload: { clienteId: '99999999-9999-4999-8999-999999999999' },
+    });
+    expect(respuesta.statusCode).toBe(404);
+  });
+
+  it('un campo de más en el pedido se rechaza', async () => {
+    const respuesta = await ctx.app.inject({
+      method: 'POST', url: '/api/v1/onedrive/sincronizar', headers: { cookie: direccion },
+      payload: { clienteId: MIO, todo: true },
+    });
+    expect(respuesta.statusCode).toBe(400);
+  });
+
+  it('solo lectura no puede sincronizar', async () => {
+    const respuesta = await ctx.app.inject({
+      method: 'POST', url: '/api/v1/onedrive/sincronizar', headers: { cookie: soloLectura }, payload: { clienteId: MIO },
+    });
+    expect(respuesta.statusCode).toBe(403);
+  });
+});
 
 describe('solicitudes de documentación', () => {
   const PERIODO = '2026-03';

@@ -100,7 +100,52 @@ filas). Por eso Panel, notificaciones y Vencimientos muestran solo el piloto. He
     obligaciones: la planilla solo los trae en la lista de IPS); los tres en la cartera de Lilian Laconich. Activos:
     88. Un cliente que lleva alguien de dirección cuenta como «con responsable» (falta desplegar para verlo en la
     columna «Datos»). DISCREPANCIAS 47.
-  - [ ] **Tercera vuelta (Daniel: «Sí, seguí») — programada y probada; falta desplegar y medir en producción:**
+  - [ ] **Sincronización por cliente (Daniel, 2026-11-13: «solo se hace la sincro a pedido y solo el archivo que se
+    pide o la carpeta de ese cliente para no hacer los 22 min cada vez. Imagínate si todos los usuarios al mismo
+    tiempo piden la sincro, colapsa todo») — programada y probada; falta desplegar y verla en pantalla:**
+    - **Cómo queda la sincronización:** pasada completa a la medianoche (lunes a sábado); durante el día, cada 15 min,
+      solo lo que Microsoft informa como cambiado (segundos); un solo candado para todo el proceso, así que aunque
+      todos aprieten a la vez corre una y el resto recibe «ya hay una en curso».
+    - **Un cliente nuevo ya no obliga a recorrer a todos:** en la misma vuelta por cambios se lista entera solo su
+      carpeta. La carpeta se lista DESPUÉS de pedir los cambios a Graph (lo que cambie en ella a partir del token
+      nuevo llega en la vuelta siguiente) y su ruta se anota solo si la vuelta terminó limpia. Más de 10 clientes
+      nuevos juntos (una carga masiva): pasada completa, como antes.
+    - **Botón «Sincronizar este cliente»** en Documentos cuando hay un cliente elegido en el filtro
+      (`POST /api/v1/onedrive/sincronizar {clienteId}`): lista solo la carpeta de ese cliente, no toca el punto de las
+      vueltas por cambios, respeta la cartera (alguien con cartera solo trae los suyos), 404 / 409 si no existe, está
+      de baja o no tiene carpeta. El error «ya hay una en curso» ya no reemplaza toda la pantalla por un mensaje.
+    - **Revisión con varios agentes (ultracode, 8 agentes: 3 revisores con lentes distintos + 1 escéptico por
+      hallazgo).** Confirmados y corregidos: (1) **media** — si a un cliente le reemplazaban la carpeta por otra con la
+      misma ruta, un archivo subido después caía en la carpeta vieja, se descartaba y el token avanzaba igual (se
+      perdía hasta la medianoche). Ahora las raíces son solo las de clientes activos, gana la ruta más larga y el mapa
+      se poda como en la pasada completa; con prueba. (2) **baja** — repetir sin parar «sincronizar un cliente» podía
+      dejar sin correr la vuelta general de los otros 86: ahora, si la general está esperando, los pedidos de un
+      cliente ceden el turno y el programador reintenta en un minuto en vez de esperar 15; con prueba. (3) **baja** —
+      el resumen dice de qué cliente es, porque el filtro puede cambiar mientras corre. Confirmado y NO corregido
+      (no es de este cambio): después de una pasada completa con pendientes, la siguiente vuelve a ser completa y el
+      botón puede dar 409 un buen rato. Descartado por el escéptico: que el pedido de un cliente grande supere el
+      corte del proxy de DigitalOcean (el roadmap ya midió pedidos más largos sin corte).
+  - [ ] **Tercera vuelta (Daniel: «Sí, seguí») — DESPLEGADA 2026-11-13 ~10:56 UTC (`3fb2886`, bundle
+    `index-Bq5Y3Izt.js`); falta medir el Panel con sesión y ver el primer despliegue sin pasada completa:**
+    - **Comprobado en producción (Chrome de Daniel, sin sesión: había vencido):** los siete pedidos del Panel salen
+      en el mismo instante que `/yo` (todos a los 1,675 s de abrir la página; antes esperaban la respuesta de `/yo`).
+      Sin sesión responden 401, se descartan y aparece la pantalla de ingreso sin ningún error.
+    - **MEDIDO 2026-11-13 ~11:45 UTC con la sesión de Daniel (Chrome), en reposo:** el Panel tiene todos sus datos
+      a los **2,96 s** de abrir la página (antes 5,0 s durante la pasada de OneDrive y 10,5 s al empezar el día 12);
+      `/yo` 0,47 s. Muestra 88 clientes activos, SIPAR incluido. Cuello que queda: 5 de los 8 pedidos esperaban
+      ~1,1 s solo para identificar la sesión (`Server-Timing` sesion=1109–1191) porque los 8 compiten por las 5
+      conexiones a la base → arreglado en el commit siguiente (pedidos simultáneos de la misma sesión comparten una
+      sola consulta) y «quién soy» sale antes que la precarga (con la base lenta, el ingreso quedaba >15 s en
+      «Ingresando…»: lo atrapó la prueba de punta a punta).
+    - **Punto de OneDrive guardado en producción:** fila `onedrive` de `estado_del_sistema` escrita 11:25:03 UTC, con
+      token y las 88 carpetas, al terminar limpia la pasada completa de este despliegue (~28 min). Falta ver que el
+      despliegue siguiente arranque por cambios.
+    - **NO comprobado todavía:** la columna «Datos» de 014, 015 y 043.
+    - **Verificación:** con el código final los 21 controles pasaron, pero NO en una sola corrida: cinco corridas
+      completas dieron 21, 20, 20, 19 y 19 de 21, cada vez con un fallo distinto y siempre de tiempo de espera o de
+      conexión (Horas, transacción de 5 s contra Supabase, preparación de importaciones, «Can't reach database
+      server», Panel). Cada control que falló pasó corrido solo (`test:unit` 1.359 pruebas, web 256, dominio 59).
+      La máquina y la conexión estuvieron lentas toda la noche; no es un 21/21 limpio y se dice así (lección 15).
     - **Migración `20261112190000_estado_del_sistema` APLICADA en producción 20:15 UTC** (respaldo previo
       `respaldo-2026-11-12T20-11-24.json`, 124.489 filas). Comprobado en la base: la tabla existe, RLS activo,
       política `app_acceso` para `effort_app` con SELECT/INSERT/UPDATE, cero filas hasta el primer despliegue.

@@ -26,6 +26,7 @@ import { ejecutarCicloDeCalculo } from './cicloDeCalculo.js';
 
 /** Cada cuánto se revisa la carpeta de EFFORT. Confirmado con Daniel. */
 const CADA_15_MINUTOS = 15 * 60 * 1000;
+const UN_MINUTO = 60 * 1000;
 
 /**
  * Cada cuánto se generan vencimientos y se evalúan alertas.
@@ -382,9 +383,22 @@ export function programarSincronizacionDeOneDrive(
     });
 
     if (intento.ocupado) {
-      registrador.info('Sincronización de OneDrive salteada: la anterior sigue corriendo.');
+      // Lo más probable es que sea un pedido de un solo cliente, que dura segundos:
+      // se reintenta en un minuto en vez de esperar la vuelta de 15. Mientras tanto
+      // `intentarSincronizar` no acepta otros pedidos de un cliente, así que este
+      // reintento consigue el turno (revisión del 2026-11-13).
+      registrador.info('Sincronización de OneDrive salteada: la anterior sigue corriendo. Se reintenta en un minuto.');
+      if (!reintentoProgramado) {
+        reintentoProgramado = true;
+        const reintento = setTimeout(() => {
+          reintentoProgramado = false;
+          void correr();
+        }, UN_MINUTO);
+        reintento.unref();
+      }
     }
   }
+  let reintentoProgramado = false;
 
   const primera = setTimeout(() => {
     void correr();

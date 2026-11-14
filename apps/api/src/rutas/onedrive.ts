@@ -4,14 +4,28 @@
  * Una sola ruta: disparar la sincronización a mano. La automática corre sola
  * cada 15 minutos (ver `index.ts`) y usa exactamente el mismo servicio — el
  * botón no es un camino paralelo, es el mismo con otro disparador.
+ *
+ * Con `clienteId` (2026-11-13) trae solo ese cliente: lista su carpeta entera y
+ * ninguna otra. Es para cuando alguien acaba de subir algo de un cliente y no
+ * quiere esperar la vuelta de 15 minutos.
  */
 
 import type { FastifyInstance } from 'fastify';
+import { z } from 'zod';
+
+import { idSchema } from '@effort/schema';
 
 import { ACCIONES, registrarEvento } from '../bitacora.js';
+import { filtroDeClientes } from '../seguridad/rbac.js';
 import { ErrorDeAplicacion, type Dependencias } from '../servidor.js';
-import { intentarSincronizar, sincronizarOneDrive } from '../servicios/sincronizacionIncremental.js';
+import {
+  intentarSincronizar,
+  sincronizarOneDrive,
+  sincronizarUnCliente,
+} from '../servicios/sincronizacionIncremental.js';
 import { autorizar, paramsId } from './comun.js';
+
+const cuerpoDeSincronizar = z.object({ clienteId: idSchema.optional() }).strict();
 
 export async function registrarRutasDeOneDrive(
   app: FastifyInstance,
@@ -48,7 +62,10 @@ export async function registrarRutasDeOneDrive(
   });
 
   app.post('/api/v1/onedrive/sincronizar', async (peticion) => {
-    const sujeto = autorizar(peticion, 'actualizacion', 'crear');
+    const { clienteId } = cuerpoDeSincronizar.parse(peticion.body ?? {});
+    // Con un cliente, el permiso se pide sobre ESE cliente: alguien con cartera
+    // solo puede traer los suyos (rbac.ts, capa 2).
+    const sujeto = autorizar(peticion, 'actualizacion', 'crear', clienteId ?? null);
 
     if (!deps.drive || !deps.driveDeOrigen) {
       throw new ErrorDeAplicacion(
@@ -58,24 +75,41 @@ export async function registrarRutasDeOneDrive(
       );
     }
 
+    if (clienteId) {
+      const cliente = await deps.clientes.buscarPorId(clienteId, filtroDeClientes(sujeto));
+      if (!cliente) throw new ErrorDeAplicacion(404, 'No existe ese cliente.', 'no_encontrado');
+      if (!cliente.activo) {
+        throw new ErrorDeAplicacion(409, 'Ese cliente está dado de baja: no se sincroniza.', 'cliente_inactivo');
+      }
+      if (!cliente.carpetaOneDriveId) {
+        throw new ErrorDeAplicacion(409, 'Ese cliente no tiene una carpeta de OneDrive conectada.', 'sin_carpeta');
+      }
+    }
+
     const origen = deps.driveDeOrigen;
     const destino = deps.drive;
-    const intento = await intentarSincronizar(() =>
-      sincronizarOneDrive(
-        {
-          clientes: deps.clientes,
-          documentos: deps.documentos,
-          origen,
-          destino,
-          registrarEvidencia: (datos) => deps.evidencias.registrarOVincular(datos),
-          huellasDeOrigen: (clienteId) => deps.archivosDeOrigen.huellas(clienteId),
-          marcarArchivoDeOrigen: (datos) => deps.archivosDeOrigen.marcar(datos),
-          almacenDelPunto: deps.puntoDeSincronizacion ?? null,
-          registrarEnBitacora: (entrada) => registrarEvento(deps.bitacora, peticion.log, entrada),
-          ahora: deps.ahora,
-        },
-        sujeto.usuarioId,
-      ),
+    const dependencias = {
+      clientes: deps.clientes,
+      documentos: deps.documentos,
+      origen,
+      destino,
+      registrarEvidencia: (datos: Parameters<typeof deps.evidencias.registrarOVincular>[0]) =>
+        deps.evidencias.registrarOVincular(datos),
+      huellasDeOrigen: (id: string) => deps.archivosDeOrigen.huellas(id),
+      marcarArchivoDeOrigen: (datos: Parameters<typeof deps.archivosDeOrigen.marcar>[0]) =>
+        deps.archivosDeOrigen.marcar(datos),
+      almacenDelPunto: deps.puntoDeSincronizacion ?? null,
+      registrarEnBitacora: (entrada: Parameters<typeof registrarEvento>[2]) =>
+        registrarEvento(deps.bitacora, peticion.log, entrada),
+      ahora: deps.ahora,
+    };
+    const intento = await intentarSincronizar(
+      () =>
+        clienteId
+          ? sincronizarUnCliente(dependencias, sujeto.usuarioId, clienteId)
+          : sincronizarOneDrive(dependencias, sujeto.usuarioId),
+      // Un pedido de un cliente cede el turno si la vuelta general está esperando.
+      { alcance: clienteId ? 'cliente' : 'general' },
     );
     if (intento.ocupado) {
       throw new ErrorDeAplicacion(
@@ -91,14 +125,14 @@ export async function registrarRutasDeOneDrive(
       accion: ACCIONES.ONEDRIVE_SINCRONIZADO,
       entidad: 'evidencia',
       entidadId: null,
-      clienteId: null,
+      clienteId: clienteId ?? null,
       datosDespues: {
         nuevos: resumen.nuevosEnTotal,
         fallos: resumen.fallos.length,
         quedaronPendientes: resumen.quedaronPendientes,
         modo: resumen.modo,
         duracionMs: resumen.duracionMs,
-        disparo: 'manual',
+        disparo: clienteId ? 'manual, un cliente' : 'manual',
       },
       ip: peticion.ip,
       agenteUsuario: peticion.headers['user-agent'] ?? null,

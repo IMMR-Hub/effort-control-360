@@ -224,6 +224,27 @@ export const RENOVAR_SESION_CADA_MS = 60 * 1000;
 export async function construirServidor(deps: Dependencias): Promise<FastifyInstance> {
   const produccion = esProduccion(deps.configuracion);
 
+  /*
+   * Pedidos simultáneos de la misma sesión comparten UNA consulta (2026-11-13).
+   * Al abrir el Panel salen 8 pedidos juntos; cada uno identificaba la sesión por
+   * su cuenta y los 8 competían por las 5 conexiones a la base: medido en
+   * producción, 5 de los 8 esperaban ~1,1 s solo para eso. No es un caché: la
+   * consulta compartida es la que está en vuelo en ese momento y se olvida apenas
+   * responde, así que nada se lee más viejo que si cada pedido la hubiera hecho
+   * a la vez. Una sesión revocada deja de valer en el pedido siguiente, igual que
+   * antes.
+   */
+  const contextosEnVuelo = new Map<string, Promise<ContextoDeSesion | null>>();
+  function contextoCompartido(hash: string): Promise<ContextoDeSesion | null> {
+    const enVuelo = contextosEnVuelo.get(hash);
+    if (enVuelo) return enVuelo;
+    const consulta = (
+      deps.sesiones.contextoPorHash ? deps.sesiones.contextoPorHash(hash) : contextoDeSesionEnPasos(deps, hash)
+    ).finally(() => contextosEnVuelo.delete(hash));
+    contextosEnVuelo.set(hash, consulta);
+    return consulta;
+  }
+
   const app = Fastify({
     logger: {
       level: deps.configuracion.NIVEL_LOG,
@@ -381,9 +402,7 @@ export async function construirServidor(deps: Dependencias): Promise<FastifyInst
     // repositorio lo permite: este hook corre en TODA petición y cada viaje
     // cuesta ~130 ms desde producción (2026-11-12).
     const hash = hashDelToken(token);
-    const contexto = deps.sesiones.contextoPorHash
-      ? await deps.sesiones.contextoPorHash(hash)
-      : await contextoDeSesionEnPasos(deps, hash);
+    const contexto = await contextoCompartido(hash);
     if (!contexto) return;
     const { sesion, usuario } = contexto;
     const cartera = [...contexto.clientesAsignados];

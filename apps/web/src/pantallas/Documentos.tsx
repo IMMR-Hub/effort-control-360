@@ -292,22 +292,31 @@ export default function Documentos() {
 
   const [sincronizando, setSincronizando] = useState(false);
   const [resumenSync, setResumenSync] = useState<ResumenDeSincronizacion | null>(null);
+  // Aparte del error de la pantalla: «ya hay una sincronización en curso» no
+  // puede reemplazar toda la pantalla por un mensaje.
+  const [errorSync, setErrorSync] = useState<string | null>(null);
+  // De quién es el resumen: el filtro puede cambiar mientras la sincronización corre.
+  const [alcanceSync, setAlcanceSync] = useState<string>('');
 
   /**
    * Adelanta la sincronización que igual corre sola cada 15 minutos.
    *
    * Existe porque esperar hasta un cuarto de hora para ver si un archivo que
-   * acabás de subir llegó al sistema vuelve imposible comprobar nada.
+   * acabás de subir llegó al sistema vuelve imposible comprobar nada. Con un
+   * cliente elegido en el filtro trae solo ese cliente (2026-11-13).
    */
   async function sincronizarAhora() {
     setSincronizando(true);
-    setError(null);
+    setErrorSync(null);
+    setResumenSync(null);
+    const pedido = filtroDeCliente === TODOS_LOS_CLIENTES ? undefined : filtroDeCliente;
+    setAlcanceSync(pedido ? `${nombreDelClienteFiltrado(pedido, clientes) ?? pedido}: ` : '');
     try {
-      setResumenSync(await sincronizarOneDrive());
+      setResumenSync(await sincronizarOneDrive(pedido));
       await cargarTablero();
       if (clienteSeleccionado) await cargarDocumentos(clienteSeleccionado);
     } catch (motivo) {
-      setError(motivo instanceof ErrorDeApi ? motivo.message : 'No se pudo conectar con el servidor.');
+      setErrorSync(motivo instanceof ErrorDeApi ? motivo.message : 'No se pudo conectar con el servidor.');
     } finally {
       setSincronizando(false);
     }
@@ -636,7 +645,11 @@ export default function Documentos() {
               onClick={() => void sincronizarAhora()}
               disabled={sincronizando}
             >
-              {sincronizando ? 'Sincronizando…' : 'Sincronizar OneDrive'}
+              {sincronizando
+                ? 'Sincronizando…'
+                : filtroDeCliente === TODOS_LOS_CLIENTES
+                  ? 'Sincronizar OneDrive'
+                  : 'Sincronizar este cliente'}
             </Boton>
           )}
           <FiltroDeFechasSelector id="filtroDocumentos" valor={filtro} onCambiar={setFiltro} />
@@ -653,12 +666,20 @@ export default function Documentos() {
         </div>
       </div>
 
+      {errorSync && (
+        <p role="alert" className="rounded border border-critico px-4 py-3 text-sm text-critico">
+          {alcanceSync}
+          {errorSync}
+        </p>
+      )}
+
       {resumenSync && (
         <div
           role="status"
           className="rounded border border-borde-marca bg-superficie-tenue px-4 py-3 text-sm text-tinta-suave"
         >
           <p>
+            {alcanceSync}
             {resumenSync.nuevosEnTotal === 0
               ? 'No había documentos nuevos en OneDrive.'
               : `${resumenSync.nuevosEnTotal} documentos nuevos traídos de OneDrive.`}

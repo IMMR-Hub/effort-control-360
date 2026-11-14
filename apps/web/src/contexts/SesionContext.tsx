@@ -48,9 +48,14 @@ const Contexto = createContext<ContextoSesion | null>(null);
  */
 async function sesionConPrecarga(precarga: (() => void) | undefined): Promise<SesionActual | null> {
   descartarPrecargas();
+  // «Quién soy» sale PRIMERO: es lo que decide si se entra, y en el servidor los
+  // pedidos esperan su conexión a la base en el orden en que llegan. Al revés,
+  // con la base lenta, el ingreso quedaba más de 15 s en «Ingresando…» detrás de
+  // los siete pedidos del Panel (prueba de punta a punta, 2026-11-13).
+  const pedidoDeSesion = obtenerSesionActual();
   precarga?.();
   try {
-    const sesion = await obtenerSesionActual();
+    const sesion = await pedidoDeSesion;
     if (sesion === null || sesion.debeCambiarContrasena) descartarPrecargas();
     return sesion;
   } catch (error) {

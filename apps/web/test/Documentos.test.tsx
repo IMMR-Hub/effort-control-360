@@ -390,6 +390,56 @@ describe('pantalla de documentos / IVA', () => {
     expect(mock.llamadasA('PATCH /api/v1/documentos/doc-1/estado')).toHaveLength(0);
   });
 
+  /*
+   * 2026-11-13, Daniel: la sincronización a pedido trae solo el cliente que se
+   * pide. Con un cliente elegido en el filtro, el botón lo dice y manda su id.
+   */
+  describe('sincronizar a pedido', () => {
+    const RESUMEN = { clientes: [], nuevosEnTotal: 2, fallos: [], quedaronPendientes: false };
+
+    function cuerpoDe(llamada: unknown[]): unknown {
+      const cuerpo = (llamada[1] as RequestInit | undefined)?.body;
+      return typeof cuerpo === 'string' ? JSON.parse(cuerpo) : null;
+    }
+
+    it('sin cliente elegido sincroniza todos, sin mandar ningún cliente', async () => {
+      mock.mockDeRuta('POST /api/v1/onedrive/sincronizar', () => respuestaJson(RESUMEN));
+      await montar();
+
+      await usuario.click(screen.getByRole('button', { name: 'Sincronizar OneDrive' }));
+
+      await screen.findByText('2 documentos nuevos traídos de OneDrive.');
+      expect(cuerpoDe(mock.llamadasA('POST /api/v1/onedrive/sincronizar')[0]!)).toBeNull();
+    });
+
+    it('con un cliente elegido, el botón dice «Sincronizar este cliente» y manda solo ese', async () => {
+      mock.mockDeRuta('POST /api/v1/onedrive/sincronizar', () => respuestaJson(RESUMEN));
+      await montar();
+
+      await usuario.selectOptions(selectorDeCliente('filtroDeClienteDocumentos'), 'cli-garso');
+      await usuario.click(screen.getByRole('button', { name: 'Sincronizar este cliente' }));
+
+      // El resumen dice de quién es: el filtro puede haber cambiado mientras corría.
+      await screen.findByText('GARSO S.A.: 2 documentos nuevos traídos de OneDrive.');
+      expect(cuerpoDe(mock.llamadasA('POST /api/v1/onedrive/sincronizar')[0]!)).toEqual({ clienteId: 'cli-garso' });
+    });
+
+    it('«ya hay una en curso» se muestra como aviso y la pantalla sigue en pie', async () => {
+      mock.mockDeRuta('POST /api/v1/onedrive/sincronizar', () =>
+        respuestaJson(
+          { error: 'sincronizacion_en_curso', mensaje: 'Ya hay una sincronización en curso. Esperá un momento y volvé a intentar.' },
+          { status: 409 },
+        ),
+      );
+      await montar();
+
+      await usuario.click(screen.getByRole('button', { name: 'Sincronizar OneDrive' }));
+
+      expect(await screen.findByRole('alert')).toHaveTextContent('Ya hay una sincronización en curso');
+      expect(screen.getByRole('table', { name: 'Proceso mensual por cliente' })).toBeVisible();
+    });
+  });
+
   describe('filtro por cliente (2026-10-02)', () => {
     it('elegir un cliente deja solo su fila y sus indicadores, lleva sus documentos a la tarjeta y «Todos los clientes» lo revierte', async () => {
       await montar();

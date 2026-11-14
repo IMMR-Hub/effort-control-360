@@ -19,7 +19,9 @@ import {
   intentarSincronizar,
   sincronizarConCambios,
   sincronizarOneDrive,
+  sincronizarUnCliente,
   MAXIMO_DE_CAMBIOS_INCREMENTALES,
+  MAXIMO_DE_CLIENTES_NUEVOS_INCREMENTALES,
   type AlmacenDelPuntoDeSincronizacion,
   type DependenciasIncrementales,
   type PuntoDeSincronizacion,
@@ -127,6 +129,13 @@ function armar(inicio: Date = new Date('2026-09-24T12:00:00Z'), opciones: { conA
       fallarLaProximaCopia = true;
     },
   };
+}
+
+function agregarCliente(ctx: ReturnType<typeof armar>, id: string, nombre: string, carpeta: string) {
+  ctx.clientes.clientes.push({
+    ...clienteMinimo({ id, nombre, ruc: '80000001-1', activo: true }),
+    carpetaOneDriveId: carpeta,
+  });
 }
 
 describe('sincronización de OneDrive por cambios', () => {
@@ -310,22 +319,110 @@ describe('sincronización de OneDrive por cambios', () => {
     expect(ultimaMedianocheProgramada(new Date('2026-09-28T03:10:00Z')).toISOString()).toBe('2026-09-28T03:00:00.000Z');
   });
 
-  it('un cliente que todavía no se conocía obliga a la pasada completa', async () => {
+  /*
+   * 2026-11-13: antes un cliente nuevo obligaba a recorrer las carpetas de
+   * TODOS (22 minutos con 87). Sus archivos viejos no están en ningún cambio, así
+   * que hay que listar su carpeta entera — pero solo la suya.
+   */
+  it('un cliente que todavía no se conocía: se lista entera SU carpeta y las demás siguen por cambios', async () => {
+    const ctx = armar();
+    await ctx.correr();
+    const recorridosAntes = ctx.origen.recorridosCompletos;
+
+    ctx.origen.registrarCarpeta('carpeta-nuevo', 'CLIENTES/003 NUEVO');
+    ctx.origen.sembrar('CLIENTES/003 NUEVO', 'viejo.pdf', Buffer.from('v'));
+    agregarCliente(ctx, NUEVO, 'NUEVO S.A.', 'carpeta-nuevo');
+
+    const resumen = await ctx.correr();
+
+    expect(resumen.modo).toBe('incremental');
+    expect(resumen.clientesNuevosRecorridos).toBe(1);
+    expect(resumen.nuevosEnTotal).toBe(1);
+    // Una sola carpeta recorrida: la del cliente nuevo, no la de FUMIPRO.
+    expect(ctx.origen.recorridosCompletos).toBe(recorridosAntes + 1);
+
+    // Ya es conocido: la vuelta siguiente no lo vuelve a listar, y un archivo
+    // suyo subido después llega por cambios.
+    ctx.origen.sembrar('CLIENTES/003 NUEVO/PERIODO 2026', 'despues.pdf', Buffer.from('d'));
+    const siguiente = await ctx.correr();
+    expect(siguiente.modo).toBe('incremental');
+    expect(siguiente.clientesNuevosRecorridos).toBe(0);
+    expect(siguiente.nuevosEnTotal).toBe(1);
+    expect(ctx.origen.recorridosCompletos).toBe(recorridosAntes + 1);
+  });
+
+  it('cliente nuevo: si la vuelta no terminó limpia, sigue siendo nuevo y se lo vuelve a listar entero', async () => {
     const ctx = armar();
     await ctx.correr();
 
     ctx.origen.registrarCarpeta('carpeta-nuevo', 'CLIENTES/003 NUEVO');
-    ctx.origen.sembrar('CLIENTES/003 NUEVO', 'viejo.pdf', Buffer.from('v'));
-    ctx.clientes.clientes.push({
-      ...clienteMinimo({ id: NUEVO, nombre: 'NUEVO S.A.', ruc: '80000001-1', activo: true }),
-      carpetaOneDriveId: 'carpeta-nuevo',
-    });
+    ctx.origen.sembrar('CLIENTES/003 NUEVO', 'a.pdf', Buffer.from('a'));
+    ctx.origen.sembrar('CLIENTES/003 NUEVO', 'b.pdf', Buffer.from('b'));
+    agregarCliente(ctx, NUEVO, 'NUEVO S.A.', 'carpeta-nuevo');
+    ctx.fallarLaProximaCopia();
 
+    const conFallo = await ctx.correr();
+    expect(conFallo.errores).toBe(1);
+    expect(conFallo.nuevosEnTotal).toBe(1);
+
+    const reintento = await ctx.correr();
+    expect(reintento.clientesNuevosRecorridos).toBe(1);
+    expect(reintento.nuevosEnTotal).toBe(1);
+    expect(ctx.documentos.documentos.filter((d) => d.clienteId === NUEVO)).toHaveLength(2);
+
+    expect((await ctx.correr()).clientesNuevosRecorridos).toBe(0);
+  });
+
+  /*
+   * Revisión del 2026-11-13 (hallazgo confirmado): a FUMIPRO le reemplazan la
+   * carpeta por otra con la MISMA ruta. Con «la primera raíz que coincide», un
+   * archivo subido después caía en la carpeta vieja, nadie lo listaba, y el
+   * token avanzaba igual: se perdía hasta la medianoche.
+   */
+  it('si a un cliente le reemplazan la carpeta por otra con la misma ruta, lo que se sube después llega igual', async () => {
+    const ctx = armar();
+    ctx.origen.sembrar(`${RAIZ}/PERIODO 2026`, 'a.pdf', Buffer.from('a'));
+    await ctx.correr();
+
+    ctx.origen.registrarCarpeta('carpeta-fumipro-2', RAIZ);
+    ctx.clientes.clientes[0] = { ...ctx.clientes.clientes[0]!, carpetaOneDriveId: 'carpeta-fumipro-2' };
+    expect((await ctx.correr()).clientesNuevosRecorridos).toBe(1);
+
+    ctx.origen.sembrar(`${RAIZ}/PERIODO 2026`, 'subido-despues.pdf', Buffer.from('nuevo'));
     const resumen = await ctx.correr();
 
-    // Sus archivos anteriores no están en ningún cambio: solo una pasada completa los ve.
-    expect(resumen.modo).toBe('completa');
+    expect(resumen.modo).toBe('incremental');
     expect(resumen.nuevosEnTotal).toBe(1);
+    expect([...ctx.estado.rutasDeClientes.keys()]).toEqual(['carpeta-fumipro-2']);
+  });
+
+  it('con una carpeta de cliente dentro de otra, el cambio va a la más específica', async () => {
+    const ctx = armar();
+    ctx.origen.registrarCarpeta('carpeta-anidada', `${RAIZ}/SUCURSAL`);
+    agregarCliente(ctx, NUEVO, 'SUCURSAL S.A.', 'carpeta-anidada');
+    await ctx.correr();
+
+    ctx.origen.sembrar(`${RAIZ}/SUCURSAL/PERIODO 2026`, 'de-la-sucursal.pdf', Buffer.from('s'));
+    const resumen = await ctx.correr();
+
+    expect(resumen.modo).toBe('incremental');
+    expect(resumen.nuevosEnTotal).toBe(1);
+    expect(ctx.documentos.documentos.at(-1)?.clienteId).toBe(NUEVO);
+  });
+
+  it(`con más de ${MAXIMO_DE_CLIENTES_NUEVOS_INCREMENTALES} clientes nuevos juntos (una carga masiva), recorre todo`, async () => {
+    const ctx = armar();
+    await ctx.correr();
+
+    for (let i = 0; i <= MAXIMO_DE_CLIENTES_NUEVOS_INCREMENTALES; i += 1) {
+      const carpeta = `carpeta-masiva-${i}`;
+      ctx.origen.registrarCarpeta(carpeta, `CLIENTES/${200 + i} MASIVO ${i}`);
+      agregarCliente(ctx, `33333333-3333-4333-8333-${String(i).padStart(12, '0')}`, `MASIVO ${i} S.A.`, carpeta);
+    }
+
+    const resumen = await ctx.correr();
+    expect(resumen.modo).toBe('completa');
+    expect(resumen.motivoDePasadaCompleta).toMatch(/todos juntos/);
   });
 
   it('con demasiados cambios juntos, recorre todo en vez de resolver rutas una por una', async () => {
@@ -483,22 +580,25 @@ describe('el punto de sincronización sobrevive a un reinicio del servidor', () 
     expect(alOtroDia.motivoDePasadaCompleta).toMatch(/medianoche/);
   });
 
-  it('un cliente que el punto guardado no conocía obliga a recorrer todo, también después de reiniciar', async () => {
+  it('un cliente que el punto guardado no conocía: después de reiniciar se lista solo su carpeta, y queda guardado', async () => {
     const ctx = armar(undefined, { conAlmacen: true });
     await ctx.correr();
+    const recorridosAntes = ctx.origen.recorridosCompletos;
 
     ctx.reiniciarServidor();
     ctx.origen.registrarCarpeta('carpeta-nuevo', 'CLIENTES/003 NUEVO');
     ctx.origen.sembrar('CLIENTES/003 NUEVO', 'viejo.pdf', Buffer.from('v'));
-    ctx.clientes.clientes.push({
-      ...clienteMinimo({ id: NUEVO, nombre: 'NUEVO S.A.', ruc: '80000001-1', activo: true }),
-      carpetaOneDriveId: 'carpeta-nuevo',
-    });
+    agregarCliente(ctx, NUEVO, 'NUEVO S.A.', 'carpeta-nuevo');
     const despues = await ctx.correr();
 
-    expect(despues.modo).toBe('completa');
-    expect(despues.motivoDePasadaCompleta).toMatch(/todavía no se conocía/);
+    expect(despues.modo).toBe('incremental');
+    expect(despues.clientesNuevosRecorridos).toBe(1);
     expect(despues.nuevosEnTotal).toBe(1);
+    expect(ctx.origen.recorridosCompletos).toBe(recorridosAntes + 1);
+    expect(ctx.almacen.guardado?.rutasDeClientes).toEqual({
+      'carpeta-fumipro': RAIZ,
+      'carpeta-nuevo': 'CLIENTES/003 NUEVO',
+    });
   });
 
   it('si el punto no se puede leer, no se adivina: recorre todo y dice por qué', async () => {
@@ -536,6 +636,66 @@ describe('el punto de sincronización sobrevive a un reinicio del servidor', () 
   });
 });
 
+/*
+ * 2026-11-13, Daniel: «solo se hace la sincro a pedido y solo el archivo que se
+ * pide o la carpeta de ese cliente». Lo que tiene que quedar fijo: recorre UNA
+ * carpeta, no toca el punto de las vueltas por cambios, y no trae nada de otro
+ * cliente.
+ */
+describe('sincronizar un solo cliente a pedido', () => {
+  it('lista entera la carpeta de ese cliente y ninguna otra', async () => {
+    const ctx = armar();
+    ctx.origen.registrarCarpeta('carpeta-nuevo', 'CLIENTES/003 NUEVO');
+    agregarCliente(ctx, NUEVO, 'NUEVO S.A.', 'carpeta-nuevo');
+    ctx.origen.sembrar(`${RAIZ}/PERIODO 2026`, 'de-fumipro.pdf', Buffer.from('f'));
+    ctx.origen.sembrar('CLIENTES/003 NUEVO', 'del-nuevo.pdf', Buffer.from('n'));
+
+    const resumen = await sincronizarUnCliente(ctx.deps, USUARIO, NUEVO);
+
+    expect(resumen.modo).toBe('cliente');
+    expect(resumen.nuevosEnTotal).toBe(1);
+    expect(ctx.origen.recorridosCompletos).toBe(1);
+    expect(ctx.documentos.documentos.map((d) => d.clienteId)).toEqual([NUEVO]);
+  });
+
+  it('no toca el punto de las vueltas por cambios', async () => {
+    const ctx = armar();
+    await ctx.correr();
+    const token = ctx.estado.token;
+    const rutas = new Map(ctx.estado.rutasDeClientes);
+
+    await sincronizarUnCliente(ctx.deps, USUARIO, FUMIPRO);
+
+    expect(ctx.estado.token).toBe(token);
+    expect(ctx.estado.rutasDeClientes).toEqual(rutas);
+    expect((await ctx.correr()).modo).toBe('incremental');
+  });
+
+  it('lo que trajo a pedido no se vuelve a copiar en la vuelta por cambios', async () => {
+    const ctx = armar();
+    await ctx.correr();
+    ctx.origen.sembrar(`${RAIZ}/PERIODO 2026`, 'recien-subido.pdf', Buffer.from('r'));
+
+    expect((await sincronizarUnCliente(ctx.deps, USUARIO, FUMIPRO)).nuevosEnTotal).toBe(1);
+    const vuelta = await ctx.correr();
+
+    expect(vuelta.cambiosRecibidos).toBe(1);
+    expect(vuelta.nuevosEnTotal).toBe(0);
+    expect(ctx.documentos.documentos).toHaveLength(1);
+  });
+
+  it('un cliente dado de baja no se sincroniza aunque se lo pida', async () => {
+    const ctx = armar();
+    ctx.clientes.clientes[0] = { ...ctx.clientes.clientes[0]!, activo: false };
+    ctx.origen.sembrar(`${RAIZ}/PERIODO 2026`, 'a.pdf', Buffer.from('a'));
+
+    const resumen = await sincronizarUnCliente(ctx.deps, USUARIO, FUMIPRO);
+
+    expect(resumen.nuevosEnTotal).toBe(0);
+    expect(ctx.origen.recorridosCompletos).toBe(0);
+  });
+});
+
 describe('una sola sincronización a la vez', () => {
   it('mientras una corre, otra no arranca y lo dice', async () => {
     let liberar!: () => void;
@@ -548,6 +708,23 @@ describe('una sola sincronización a la vez', () => {
     expect(await larga).toEqual({ ocupado: false, valor: 'ok' });
     // Y al terminar, se puede volver a correr.
     expect(await intentarSincronizar(async () => 'de nuevo')).toEqual({ ocupado: false, valor: 'de nuevo' });
+  });
+
+  // Revisión del 2026-11-13: repetir sin parar «sincronizar un cliente» no puede
+  // dejar a los demás clientes sin sincronizar.
+  it('si una vuelta general está esperando, un pedido de un cliente cede el turno', async () => {
+    let liberar!: () => void;
+    const deUnCliente = intentarSincronizar(() => new Promise<string>((r) => { liberar = () => r('cliente'); }), { alcance: 'cliente' });
+
+    expect(await intentarSincronizar(async () => 'general')).toEqual({ ocupado: true });
+    // La general quedó esperando: otro pedido de un cliente no le gana el turno.
+    liberar();
+    await deUnCliente;
+    expect(await intentarSincronizar(async () => 'otro cliente', { alcance: 'cliente' })).toEqual({ ocupado: true });
+
+    // La general corre, y después los pedidos de un cliente vuelven a entrar.
+    expect(await intentarSincronizar(async () => 'general')).toEqual({ ocupado: false, valor: 'general' });
+    expect(await intentarSincronizar(async () => 'cliente', { alcance: 'cliente' })).toEqual({ ocupado: false, valor: 'cliente' });
   });
 
   it('si la tarea falla, el candado se libera', async () => {

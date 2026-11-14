@@ -150,7 +150,9 @@ describe('planilla de horas', () => {
 
     const porCliente = screen.getByRole('table', { name: 'Horas por cliente' });
     // GARSO: 150 + 90 = 240 min = 4 h; COPESA: 240 min = 4 h; interno: 30 min.
-    expect(within(porCliente).getByText('Tiempo interno (sin cliente)')).toBeVisible();
+    // `findBy` y no `getBy`: el resumen llega después de montar, y con la máquina
+    // cargada (`npm run verify`) buscarlo de golpe falló el 2026-11-12 y el 13.
+    expect(await within(porCliente).findByText('Tiempo interno (sin cliente)')).toBeVisible();
 
     const porPersona = screen.getByRole('table', { name: 'Horas por colaborador' });
     // Ana: 150 + 30 = 180 min = 3 h; Sandra: 90 + 240 = 330 min = 5 h 30 min.
@@ -179,7 +181,7 @@ describe('planilla de horas', () => {
     ]);
 
     const porCliente = screen.getByRole('table', { name: 'Horas por cliente' });
-    expect(within(porCliente).getByText('—')).toBeVisible();
+    expect(await within(porCliente).findByText('—')).toBeVisible();
   });
 
   it('cargar horas manda los minutos enteros, el cliente y null en lo que quedó vacío', async () => {

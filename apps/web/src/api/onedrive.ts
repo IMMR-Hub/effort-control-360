@@ -27,8 +27,14 @@ export interface ResumenDeSincronizacion {
   readonly quedaronPendientes: boolean;
 }
 
-export function sincronizarOneDrive(): Promise<ResumenDeSincronizacion> {
-  return peticion('POST', '/api/v1/onedrive/sincronizar');
+/**
+ * Con `clienteId`, trae solo ese cliente (su carpeta entera, ninguna otra).
+ * Sin él, lo que cambió en OneDrive desde la última vuelta, de todos.
+ */
+export function sincronizarOneDrive(clienteId?: string): Promise<ResumenDeSincronizacion> {
+  return clienteId
+    ? peticion('POST', '/api/v1/onedrive/sincronizar', { clienteId })
+    : peticion('POST', '/api/v1/onedrive/sincronizar');
 }
 
 /**

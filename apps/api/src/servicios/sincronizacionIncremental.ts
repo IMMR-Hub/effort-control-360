@@ -24,9 +24,27 @@
  *    de actualizar algo o un cambio se escapó (Daniel, 2026-09-24): a esa hora
  *    nadie está mirando, así que no importa que tarde, y hace de respaldo;
  *  - si Graph responde 410 o falla la consulta de cambios;
- *  - si aparece un cliente que todavía no se conocía;
+ *  - si aparecen más de `MAXIMO_DE_CLIENTES_NUEVOS_INCREMENTALES` clientes que el
+ *    punto todavía no conocía, todos juntos (una carga masiva);
  *  - si hay demasiados cambios juntos (una pasada completa sale más barata y más
  *    segura que resolver cientos de rutas una por una).
+ *
+ * **Un cliente nuevo recorre solo SU carpeta (2026-11-13).** Hasta ese día un
+ * cliente que el punto no conocía obligaba a recorrer las carpetas de todos (22
+ * minutos con 87 clientes) para ver los archivos viejos de uno solo. Ahora, en la
+ * misma vuelta por cambios, la carpeta del cliente nuevo se lista entera y las
+ * demás siguen por cambios. No se pierde nada por el orden: primero se le piden a
+ * Graph los cambios (y con ellos el token siguiente) y DESPUÉS se lista la
+ * carpeta nueva; lo que cambie en ella a partir de ese token lo trae la vuelta
+ * siguiente, porque su ruta ya quedó anotada. La ruta se anota solo si la vuelta
+ * terminó limpia: si no, el cliente sigue «nuevo» y se lo vuelve a listar entero
+ * (lo ya copiado se saltea por su huella).
+ *
+ * **Sincronizar un solo cliente a pedido (2026-11-13).** `sincronizarUnCliente`
+ * lista entera la carpeta de un cliente y nada más, sin tocar el punto: es el
+ * botón para cuando alguien acaba de subir algo y no quiere esperar. Comparte el
+ * candado con todo lo demás (`intentarSincronizar`), así que aunque lo aprieten
+ * todos a la vez corre de a una y el resto recibe «ya hay una en curso».
  *
  * **El token solo avanza si todo salió bien.** Si un archivo falló al copiarse por
  * algo pasajero, el mismo cambio se vuelve a pedir en la vuelta siguiente: los
@@ -106,7 +124,14 @@ export function ultimaMedianocheProgramada(ahora: Date): Date {
 /** Con más cambios que esto juntos, se hace la pasada completa. */
 export const MAXIMO_DE_CAMBIOS_INCREMENTALES = 300;
 
-export type ModoDeSincronizacion = 'completa' | 'incremental';
+/**
+ * Con más clientes nuevos que esto juntos, se hace la pasada completa: es una
+ * carga masiva, no un alta suelta, y recorrer todo de una vez es lo más simple.
+ */
+export const MAXIMO_DE_CLIENTES_NUEVOS_INCREMENTALES = 10;
+
+/** `cliente`: un solo cliente, a pedido (`sincronizarUnCliente`). */
+export type ModoDeSincronizacion = 'completa' | 'incremental' | 'cliente';
 
 export interface ResultadoDeSincronizacion extends ResumenDeSincronizacion {
   readonly modo: ModoDeSincronizacion;
@@ -114,6 +139,11 @@ export interface ResultadoDeSincronizacion extends ResumenDeSincronizacion {
   readonly motivoDePasadaCompleta: string | null;
   /** Archivos que Graph informó como cambiados (solo en las incrementales). */
   readonly cambiosRecibidos: number;
+  /**
+   * Carpetas de clientes listadas enteras en una vuelta por cambios: los clientes
+   * que el punto todavía no conocía. Cero en las pasadas completas.
+   */
+  readonly clientesNuevosRecorridos: number;
   readonly duracionMs: number;
   /** Si el punto de sincronización no se pudo leer o guardar en la base, por qué. */
   readonly avisoDelPunto: string | null;
@@ -236,14 +266,19 @@ export function admiteCambios(origen: DriveDeArchivos): origen is DriveDeArchivo
   );
 }
 
-/** Un origen que solo «ve» los archivos cambiados, y al que no se puede escribir. */
+/**
+ * Un origen que solo «ve» los archivos cambiados —y, entera, la carpeta de cada
+ * cliente nuevo—, y al que no se puede escribir.
+ */
 function origenSoloConCambios(
   origen: DriveDeArchivos,
   porCarpeta: ReadonlyMap<string, readonly ArchivoDrive[]>,
+  carpetasEnteras: ReadonlySet<string> = new Set(),
 ): DriveDeArchivos {
   return {
     listar: (carpeta) => origen.listar(carpeta),
-    listarRecursivoPorId: async (itemId) => [...(porCarpeta.get(itemId) ?? [])],
+    listarRecursivoPorId: async (itemId) =>
+      carpetasEnteras.has(itemId) ? origen.listarRecursivoPorId(itemId) : [...(porCarpeta.get(itemId) ?? [])],
     leer: (itemId) => origen.leer(itemId),
     escribir: () => {
       throw new Error('El drive de origen es de solo lectura: el sistema nunca escribe ahí.');
@@ -267,8 +302,9 @@ function motivoDePasadaCompleta(
   if (estado.ultimaPasadaCompletaEn === null || estado.ultimaPasadaCompletaEn < ultimaMedianocheProgramada(ahora)) {
     return 'pasada completa de la medianoche (lunes a sábado): revisa todo por si alguien se olvidó de actualizar';
   }
-  if (carpetasDeClientes.some((id) => !estado.rutasDeClientes.has(id))) {
-    return 'hay un cliente cuya carpeta todavía no se conocía';
+  const nuevas = carpetasDeClientes.filter((id) => !estado.rutasDeClientes.has(id)).length;
+  if (nuevas > MAXIMO_DE_CLIENTES_NUEVOS_INCREMENTALES) {
+    return `${nuevas} clientes cuya carpeta todavía no se conocía, todos juntos: es más simple recorrer todo`;
   }
   return null;
 }
@@ -310,7 +346,7 @@ async function pasadaCompleta(
   await anotarPunto(deps.almacenDelPunto, estado);
 
   return {
-    ...resumen, modo: 'completa', motivoDePasadaCompleta: motivo, cambiosRecibidos: 0,
+    ...resumen, modo: 'completa', motivoDePasadaCompleta: motivo, cambiosRecibidos: 0, clientesNuevosRecorridos: 0,
     duracionMs: Date.now() - inicio, avisoDelPunto: estado.avisoDelPunto,
   };
 }
@@ -337,6 +373,11 @@ export async function sincronizarConCambios(
     return pasadaCompleta(deps, usuarioId, estado, carpetasDeClientes, motivo, inicio);
   }
 
+  // Clientes que el punto todavía no conoce: su carpeta se lista entera en esta
+  // misma vuelta, después de pedir los cambios (ver el encabezado).
+  const carpetasNuevas = carpetasDeClientes.filter((id) => !estado.rutasDeClientes.has(id));
+  const rutasNuevas = new Map<string, string>();
+
   // Preparar los cambios: si algo de esto falla, no se pierde nada, se hace la
   // pasada completa.
   const porCarpeta = new Map<string, ArchivoDrive[]>();
@@ -355,7 +396,16 @@ export async function sincronizarConCambios(
       );
     }
 
-    const raices = [...estado.rutasDeClientes];
+    // Solo las carpetas de clientes activos de hoy, y la ruta más larga primero:
+    // si a un cliente le cambiaron la carpeta por otra con la misma ruta, o hay una
+    // carpeta de cliente dentro de otra, el cambio va a la carpeta que se va a
+    // listar, no a una vieja que ya nadie mira (revisión del 2026-11-13: con
+    // «la primera que coincide» el cambio caía en la carpeta vieja, se descartaba
+    // y el token avanzaba igual).
+    const activas = new Set(carpetasDeClientes);
+    const raices = [...estado.rutasDeClientes]
+      .filter(([id]) => activas.has(id))
+      .sort(([, a], [, b]) => b.length - a.length);
     for (const cambio of archivos) {
       const ruta = await deps.origen.rutaDeLaCarpetaDe(cambio.itemId);
       if (ruta === null) continue; // ya no existe: se borró o se movió afuera
@@ -374,6 +424,10 @@ export async function sincronizarConCambios(
       });
       porCarpeta.set(raiz[0], lista);
     }
+
+    // Después de la consulta de cambios, nunca antes: así lo que cambie en la
+    // carpeta nueva desde `tokenSiguiente` lo trae la vuelta que sigue.
+    for (const id of carpetasNuevas) rutasNuevas.set(id, await deps.origen.rutaDeCarpetaPorId(id));
   } catch (error) {
     const razon =
       error instanceof TokenDeCambiosVencido
@@ -384,14 +438,21 @@ export async function sincronizarConCambios(
   }
 
   const resumen = await sincronizarDesdeOneDrive(
-    { ...deps, origen: origenSoloConCambios(deps.origen, porCarpeta) },
+    { ...deps, origen: origenSoloConCambios(deps.origen, porCarpeta, new Set(carpetasNuevas)) },
     usuarioId,
   );
 
   // El token avanza solo si nada quedó a medias: si no, la vuelta siguiente
   // vuelve a pedir estos mismos cambios (los ya copiados se saltean por huella).
+  // Las carpetas nuevas se dan por conocidas recién acá, por el mismo motivo.
   if (resumen.errores === 0 && !resumen.quedaronPendientes) {
     estado.token = tokenSiguiente;
+    // Igual que la pasada completa: el mapa queda con las carpetas de los clientes
+    // activos de hoy, ni una más (una carpeta reemplazada no puede seguir
+    // «atrapando» cambios).
+    const activas = new Set(carpetasDeClientes);
+    for (const id of [...estado.rutasDeClientes.keys()]) if (!activas.has(id)) estado.rutasDeClientes.delete(id);
+    for (const [id, ruta] of rutasNuevas) estado.rutasDeClientes.set(id, ruta);
     await anotarPunto(deps.almacenDelPunto, estado);
   }
 
@@ -400,8 +461,45 @@ export async function sincronizarConCambios(
     modo: 'incremental',
     motivoDePasadaCompleta: null,
     cambiosRecibidos,
+    clientesNuevosRecorridos: carpetasNuevas.length,
     duracionMs: Date.now() - inicio,
     avisoDelPunto: estado.avisoDelPunto,
+  };
+}
+
+/**
+ * Trae lo que haya en la carpeta de UN cliente, a pedido. Lista esa carpeta
+ * entera (no por cambios) y ninguna otra, y no toca el punto de sincronización:
+ * lo que traiga ya queda con su huella, y la vuelta por cambios lo saltea.
+ *
+ * Quien llama decide si la persona puede ver ese cliente (su cartera) y lo
+ * corre dentro de `intentarSincronizar`.
+ */
+export async function sincronizarUnCliente(
+  deps: DependenciasDelSincronizador,
+  usuarioId: string,
+  clienteId: string,
+): Promise<ResultadoDeSincronizacion> {
+  const inicio = Date.now();
+  // `Object.create` y no `{ ...deps.clientes }`: el repositorio es una clase y
+  // el spread perdería sus métodos. Así todo sigue igual salvo `listar`.
+  const original = deps.clientes;
+  const soloEste: DependenciasDelSincronizador['clientes'] = Object.assign(
+    Object.create(original) as DependenciasDelSincronizador['clientes'],
+    {
+      listar: async (filtro: readonly string[] | null) =>
+        (await original.listar(filtro)).filter((c) => c.id === clienteId),
+    },
+  );
+  const resumen = await sincronizarDesdeOneDrive({ ...deps, clientes: soloEste }, usuarioId);
+  return {
+    ...resumen,
+    modo: 'cliente',
+    motivoDePasadaCompleta: null,
+    cambiosRecibidos: 0,
+    clientesNuevosRecorridos: 0,
+    duracionMs: Date.now() - inicio,
+    avisoDelPunto: null,
   };
 }
 
@@ -424,12 +522,20 @@ export async function sincronizarOneDrive(
     modo: 'completa',
     motivoDePasadaCompleta: 'el origen no admite consulta de cambios',
     cambiosRecibidos: 0,
+    clientesNuevosRecorridos: 0,
     duracionMs: Date.now() - inicio,
     avisoDelPunto: null,
   };
 }
 
 let sincronizando = false;
+/**
+ * Una vuelta general (automática, «Actualizar», el botón sin cliente) encontró
+ * el candado tomado y está esperando. Mientras tanto no se acepta ningún pedido
+ * de un solo cliente: si no, repetir ese pedido sin parar dejaría a los otros 86
+ * clientes sin sincronizar (revisión del 2026-11-13).
+ */
+let vueltaGeneralEsperando = false;
 
 /**
  * Una sola sincronización a la vez, entre el trabajo automático y el botón.
@@ -441,9 +547,16 @@ let sincronizando = false;
  */
 export async function intentarSincronizar<T>(
   tarea: () => Promise<T>,
+  opciones: { readonly alcance?: 'general' | 'cliente' } = {},
 ): Promise<{ readonly ocupado: true } | { readonly ocupado: false; readonly valor: T }> {
-  if (sincronizando) return { ocupado: true };
+  const general = opciones.alcance !== 'cliente';
+  if (!general && vueltaGeneralEsperando) return { ocupado: true };
+  if (sincronizando) {
+    if (general) vueltaGeneralEsperando = true;
+    return { ocupado: true };
+  }
   sincronizando = true;
+  if (general) vueltaGeneralEsperando = false;
   try {
     return { ocupado: false, valor: await tarea() };
   } finally {
