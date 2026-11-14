@@ -18,9 +18,10 @@
  * - una cuenta que ya entró alguna vez (`ultimo_acceso_en` con fecha): esa
  *   persona ya eligió su contraseña y su Authenticator, y pisarlos la dejaría
  *   afuera;
- * - `jbarrios` y `kmedina`: ya no trabajan en EFFORT (sus liquidaciones están en
- *   RRHH). Darles una contraseña conocida sería abrirles la puerta. Quedan
- *   pendientes de desactivar.
+ * - `jbarrios`, `kmedina` y `mgonzalez`: no figuran en la planilla de clientes de
+ *   EFFORT y se desactivaron el 2026-11-14 (Daniel: «Desactiva a los que no están
+ *   en el Excel»). Pedro Barrios entra en lugar de Karina Medina y recibe su
+ *   contraseña inicial con `crear-equipo.mjs`, que crea su cuenta.
  *
  * Mínimo 12 caracteres, igual que la pantalla de Usuarios: el sistema está en
  * internet y QUIEN ENTRA PRIMERO con la contraseña inicial configura su propio
@@ -47,8 +48,7 @@ const CUENTAS = [
   'asanguina@effort.com.py',
   'aalvarenga@effort.com.py',
   'acampos@effort.com.py',
-  'kbaez@effort.com.py',
-  'mgonzalez@effort.com.py',
+  'kbaez@effort.com.py', // la usa BEA (correo viejo): Daniel, 2026-11-14
   'sferreira@effort.com.py',
 ];
 

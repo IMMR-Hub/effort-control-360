@@ -622,3 +622,18 @@ En concreto:
 - **Resultado:** 25.423 archivos en las 87 carpetas, ninguna carpeta con error. Faltan **49**, los 49 por pesar más de 25 MB
   (31 PDF, 14 ZIP, 1 RAR, 1 PPTX, 1 MP4, 1 XLSX; 3,5 GB en total, el mayor 252 MB). Ninguno cambió de versión sin
   actualizarse. Lista en `docs/clientes/ARCHIVOS QUE NO ENTRARON AL SISTEMA - 11-11-2026.xlsx`.
+
+## 2026-11-14 — Lectura (solo GET): dónde están AF Y RM ASOCIADOS (121) y DIEGO SOSA
+
+- **Pedido:** Daniel, 2026-11-14: «¿Cómo es que existen Diego Sosa y AF Y RM pero no tienen carpetas? ¿Tienen archivos
+  sueltos?».
+- **Qué:** con el lector de Graph de `alta-masiva-clientes.mjs` (solo GET; el único POST es el del token) se listó la raíz
+  de `CLIENTES EFFORT E.A.S`, la carpeta `CLIENTES` y se recorrieron enteras las 13 carpetas sin código de `CLIENTES` y
+  `RRHH EFFORT` (842 carpetas), buscando nombres con «AF Y RM» o «DIEGO» + «SOSA». La búsqueda general de Graph
+  (`search`) respondió 403 para la aplicación y no se insistió. Script: `buscar-onedrive.mjs` (carpeta temporal de la
+  sesión). Además se buscó en la base (SELECT) las rutas de la copia del sistema, y se abrió desde esa copia
+  (`EFFORT Control 360/Entrada`, la carpeta del proyecto) un PDF: `DDJJ SETIEMBRE 2026 DIEGO SOSA.pdf`, para leer su RUC.
+- **Resultado:** ninguna coincidencia en el OneDrive de EFFORT fuera de las carpetas de clientes; `CLIENTES` tiene 144
+  elementos y ninguno es la carpeta 121. Los archivos de DIEGO SOSA están dentro de `096 DIEGO CAMPUZANO` (RUC 2036307-9,
+  «SOSA ARGAÑA CAMPUZANO, DIEGO MARTIN JOSE»). Nada se escribió, movió ni borró.
+

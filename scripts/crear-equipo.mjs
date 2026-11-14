@@ -55,8 +55,10 @@ const EQUIPO = [
   { nombre: 'Karina', apellido: 'Medina', email: 'kmedina@effort.com.py', rol: 'responsable' },
   { nombre: 'Melany', apellido: 'González', email: 'mgonzalez@effort.com.py', rol: 'responsable' },
   { nombre: 'Sandra', apellido: 'Ferreira', email: 'sferreira@effort.com.py', rol: 'responsable' },
-  // PEDRO en la planilla de clientes de EFFORT (2026-11-12). Lleva solo los suyos; los de BEA van a `kbaez@`,
-  // que es la cuenta que usa BEA (Daniel, 2026-11-14). La cartera la carga
+  // PEDRO en la planilla de clientes de EFFORT. Entra en lugar de Karina Medina (Daniel, 2026-11-14: «kmedina es
+  // ahora pbarrios (con su correo)»). Los de BEA van a `kbaez@`, la cuenta que usa BEA. Jorge Barrios, Karina
+  // Medina y Melany González se desactivaron el 2026-11-14 (no están en la planilla): este script solo crea las
+  // cuentas que faltan, así que no las vuelve a crear. La cartera de Pedro la carga
   // `ajustar-cartera-segun-planilla-2026-11-12.mjs`.
   { nombre: 'Pedro', apellido: 'Barrios', email: 'pbarrios@effort.com.py', rol: 'responsable' },
 ];

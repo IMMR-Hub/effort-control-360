@@ -1,1070 +1,1082 @@
 {
- "002": {
-  "nombre_excel": "FUMIPRO S.A",
-  "obligaciones": [
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA, IRE GRAL",
-  "estado": "",
-  "dia_vencimiento_excel": 9,
-  "responsable": "SANDRA",
-  "email_responsable": "sferreira@effort.com.py"
- },
- "003": {
-  "nombre_excel": "GRETTA HAMID AL KHOURY",
-  "obligaciones": [
-   "IRE_SIMPLE",
-   "IVA"
-  ],
-  "texto": "IVA - IRE SIMPLE",
-  "estado": "",
-  "dia_vencimiento_excel": 11,
-  "responsable": "PEDRO",
-  "email_responsable": "pbarrios@effort.com.py"
- },
- "005": {
-  "nombre_excel": "ORGANIC GROUP E.A.S",
-  "obligaciones": [],
-  "texto": "S/M",
-  "estado": "S/M",
-  "dia_vencimiento_excel": 17,
-  "responsable": "PEDRO",
-  "email_responsable": "pbarrios@effort.com.py"
- },
- "006": {
-  "nombre_excel": "RAYVAN EL KHOURY",
-  "obligaciones": [
-   "IRE_GRAL",
-   "IRP",
-   "IVA"
-  ],
-  "texto": "IVA, IRP, IRE GRAL",
-  "estado": "",
-  "dia_vencimiento_excel": 9,
-  "responsable": "ANALIA",
-  "email_responsable": "asanguina@effort.com.py"
- },
- "008": {
-  "nombre_excel": "RAMIRO GARCIA",
-  "obligaciones": [
-   "IRE_SIMPLE",
-   "IRP",
-   "IVA"
-  ],
-  "texto": "IVA, IRE SIMPLE, IRP",
-  "estado": "",
-  "dia_vencimiento_excel": 11,
-  "responsable": "ARA",
-  "email_responsable": "aalvarenga@effort.com.py"
- },
- "010": {
-  "nombre_excel": "ALEJANDRA PICCHIONI -MMG",
-  "obligaciones": [
-   "IRP",
-   "IVA"
-  ],
-  "texto": "IVA S/M, IRP",
-  "estado": "",
-  "dia_vencimiento_excel": 25,
-  "responsable": "ARI",
-  "email_responsable": "acampos@effort.com.py"
- },
- "011": {
-  "nombre_excel": "LAURA SOSA  ARGAÑA",
-  "obligaciones": [
-   "IRE_GRAL",
-   "IRP",
-   "IVA"
-  ],
-  "texto": "IVA, IRE GRAL, IRP",
-  "estado": "",
-  "dia_vencimiento_excel": 13,
-  "responsable": "ARA",
-  "email_responsable": "aalvarenga@effort.com.py"
- },
- "012": {
-  "nombre_excel": "GARSO S.A",
-  "obligaciones": [
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA, IRE GRAL",
-  "estado": "",
-  "dia_vencimiento_excel": 7,
-  "responsable": "ARA",
-  "email_responsable": "aalvarenga@effort.com.py"
- },
- "013": {
-  "nombre_excel": "BAIRES EAS",
-  "obligaciones": [
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA, IRE GRAL",
-  "estado": "",
-  "dia_vencimiento_excel": 19,
-  "responsable": "SANDRA",
-  "email_responsable": "sferreira@effort.com.py"
- },
- "017": {
-  "nombre_excel": "RITA GONZALEZ",
-  "obligaciones": [
-   "IRP",
-   "IVA"
-  ],
-  "texto": "IVA, IRP RSP - RGC",
-  "estado": "",
-  "dia_vencimiento_excel": 13,
-  "responsable": "SANDRA",
-  "email_responsable": "sferreira@effort.com.py"
- },
- "018": {
-  "nombre_excel": "AGROGRANJA KO'EJU E.A.S",
-  "obligaciones": [
-   "ANT_IRE",
-   "EEFF",
-   "IRE_GRAL",
-   "IVA",
-   "RET_IDU"
-  ],
-  "texto": "IVA- IRE GRAL - ANT IRE- EEFF- RET IDU",
-  "estado": "",
-  "dia_vencimiento_excel": 23,
-  "responsable": "ARI",
-  "email_responsable": "acampos@effort.com.py"
- },
- "020": {
-  "nombre_excel": "LILIAN LACONICH",
-  "obligaciones": [
-   "IRE_SIMPLE",
-   "IRP",
-   "IVA"
-  ],
-  "texto": "IVA, IRP, IRE SIMPLE",
-  "estado": "",
-  "dia_vencimiento_excel": 19,
-  "responsable": "ARA",
-  "email_responsable": "aalvarenga@effort.com.py"
- },
- "021": {
-  "nombre_excel": "COPESA S.A.",
-  "obligaciones": [
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA, IRE GRAL",
-  "estado": "",
-  "dia_vencimiento_excel": 11,
-  "responsable": "BEA",
-  "email_responsable": "kbaez@effort.com.py"
- },
- "022": {
-  "nombre_excel": "EFFORT CONSULTORA E.A.S",
-  "obligaciones": [
-   "ANT_IRE",
-   "EEFF",
-   "IDU",
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA-IRE GRAL-ANT IRE- EEFF - IDU",
-  "estado": "",
-  "dia_vencimiento_excel": 25,
-  "responsable": "PEDRO",
-  "email_responsable": "pbarrios@effort.com.py"
- },
- "023": {
-  "nombre_excel": "DIEGO BECONI IRP",
-  "obligaciones": [
-   "ANT_IRE",
-   "EEFF",
-   "IDU",
-   "IRE_GRAL",
-   "IRP",
-   "IVA"
-  ],
-  "texto": "IVA - IRE GRAL - IRP RSP - IDU - ANT IRE - EEFF",
-  "estado": "",
-  "dia_vencimiento_excel": 19,
-  "responsable": "PEDRO",
-  "email_responsable": "pbarrios@effort.com.py"
- },
- "024": {
-  "nombre_excel": "ALUSAN",
-  "obligaciones": [
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA, IRE GRAL",
-  "estado": "",
-  "dia_vencimiento_excel": 13,
-  "responsable": "ARA",
-  "email_responsable": "aalvarenga@effort.com.py"
- },
- "025": {
-  "nombre_excel": "MUNDO MOVIL - RAYVEN",
-  "obligaciones": [
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA, IRE GRAL",
-  "estado": "",
-  "dia_vencimiento_excel": 23,
-  "responsable": "SANDRA",
-  "email_responsable": "sferreira@effort.com.py"
- },
- "026": {
-  "nombre_excel": "CÚBICO METALÚRGICA",
-  "obligaciones": [
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA, IRE GRAL",
-  "estado": "",
-  "dia_vencimiento_excel": 9,
-  "responsable": "ANALIA",
-  "email_responsable": "asanguina@effort.com.py"
- },
- "027": {
-  "nombre_excel": "MARIEL RODRIGUEZ - SUSPENSIÓN",
-  "obligaciones": [],
-  "texto": "IVA, IRE SIMPLE",
-  "estado": "SUSPENSIÓN",
-  "dia_vencimiento_excel": 9,
-  "responsable": "ARA",
-  "email_responsable": "aalvarenga@effort.com.py"
- },
- "029": {
-  "nombre_excel": "ORL COMERCIAL E.A.S UNIPERSONAL",
-  "obligaciones": [
-   "IRE_SIMPLE",
-   "IVA"
-  ],
-  "texto": "IVA, IRE SIMPLE",
-  "estado": "",
-  "dia_vencimiento_excel": 25,
-  "responsable": "SANDRA",
-  "email_responsable": "sferreira@effort.com.py"
- },
- "031": {
-  "nombre_excel": "DRA EVA MACIEL",
-  "obligaciones": [
-   "IRP",
-   "IVA"
-  ],
-  "texto": "IVA, IRP, RSP-RGC",
-  "estado": "",
-  "dia_vencimiento_excel": 19,
-  "responsable": "ANALIA",
-  "email_responsable": "asanguina@effort.com.py"
- },
- "032": {
-  "nombre_excel": "DIBEC S.A",
-  "obligaciones": [
-   "ANT_IRE",
-   "EEFF",
-   "IDU",
-   "IRE_GRAL",
-   "IVA",
-   "RET_IDU"
-  ],
-  "texto": "IVA - IRE GRAL - RET IDU- ANT IRE - EEFF - IDU",
-  "estado": "",
-  "dia_vencimiento_excel": 19,
-  "responsable": "PEDRO",
-  "email_responsable": "pbarrios@effort.com.py"
- },
- "035": {
-  "nombre_excel": "MARIA ANGELICA PETTERS",
-  "obligaciones": [
-   "IRE_SIMPLE",
-   "IVA"
-  ],
-  "texto": "IVA, IRE SIMPLE",
-  "estado": "",
-  "dia_vencimiento_excel": 11,
-  "responsable": "ANALIA",
-  "email_responsable": "asanguina@effort.com.py"
- },
- "036": {
-  "nombre_excel": "FERNANDO HERREROS - ANALIA BAEZ",
-  "obligaciones": [
-   "IRP",
-   "IVA"
-  ],
-  "texto": "IVA, IRP",
-  "estado": "",
-  "dia_vencimiento_excel": 25,
-  "responsable": "ARA",
-  "email_responsable": "aalvarenga@effort.com.py"
- },
- "037": {
-  "nombre_excel": "BICLOPE S.A",
-  "obligaciones": [
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA, IRE GRAL",
-  "estado": "",
-  "dia_vencimiento_excel": 19,
-  "responsable": "ARA",
-  "email_responsable": "aalvarenga@effort.com.py"
- },
- "038": {
-  "nombre_excel": "LUIS GONZÁLEZ",
-  "obligaciones": [
-   "IRP",
-   "IVA"
-  ],
-  "texto": "IVA IRP",
-  "estado": "",
-  "dia_vencimiento_excel": 9,
-  "responsable": "ANALIA",
-  "email_responsable": "asanguina@effort.com.py"
- },
- "040": {
-  "nombre_excel": "GISSEL FARÍAS",
-  "obligaciones": [
-   "IRP",
-   "IVA"
-  ],
-  "texto": "IVA, IRP, RSP-RGC",
-  "estado": "",
-  "dia_vencimiento_excel": 23,
-  "responsable": "ARA",
-  "email_responsable": "aalvarenga@effort.com.py"
- },
- "041": {
-  "nombre_excel": "MARIA GABRIELA GOSSEN",
-  "obligaciones": [
-   "IRP",
-   "IVA"
-  ],
-  "texto": "IVA S/M, IRP",
-  "estado": "S/M",
-  "dia_vencimiento_excel": 19,
-  "responsable": "ARA",
-  "email_responsable": "aalvarenga@effort.com.py"
- },
- "042": {
-  "nombre_excel": "JAZMIN VILLAGRA",
-  "obligaciones": [
-   "IRP",
-   "IVA"
-  ],
-  "texto": "IVA, IRP RSP - RGC",
-  "estado": "",
-  "dia_vencimiento_excel": 15,
-  "responsable": "ARA",
-  "email_responsable": "aalvarenga@effort.com.py"
- },
- "044": {
-  "nombre_excel": "MARCO PENONI",
-  "obligaciones": [
-   "IRE_SIMPLE",
-   "IVA"
-  ],
-  "texto": "IVA, IRE SIMPLE",
-  "estado": "",
-  "dia_vencimiento_excel": 7,
-  "responsable": "SANDRA",
-  "email_responsable": "sferreira@effort.com.py"
- },
- "046": {
-  "nombre_excel": "MARGARITA RUIZ",
-  "obligaciones": [
-   "IRP",
-   "IVA"
-  ],
-  "texto": "IVA, IRP RSP - RGC",
-  "estado": "",
-  "dia_vencimiento_excel": 13,
-  "responsable": "SANDRA",
-  "email_responsable": "sferreira@effort.com.py"
- },
- "047": {
-  "nombre_excel": "CARLOS PENONI",
-  "obligaciones": [
-   "IRE_GRAL",
-   "IRP",
-   "IVA"
-  ],
-  "texto": "IVA, IRP-RPS, IRE GRAL",
-  "estado": "",
-  "dia_vencimiento_excel": 19,
-  "responsable": "ANALIA",
-  "email_responsable": "asanguina@effort.com.py"
- },
- "048": {
-  "nombre_excel": "JULIO VIZCONTI",
-  "obligaciones": [
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA, IRE GRAL",
-  "estado": "",
-  "dia_vencimiento_excel": 19,
-  "responsable": "SANDRA",
-  "email_responsable": "sferreira@effort.com.py"
- },
- "049": {
-  "nombre_excel": "JOSÉ PENONI",
-  "obligaciones": [
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA, IRE GRAL",
-  "estado": "",
-  "dia_vencimiento_excel": 21,
-  "responsable": "ANALIA",
-  "email_responsable": "asanguina@effort.com.py"
- },
- "050": {
-  "nombre_excel": "MONICA LESME",
-  "obligaciones": [
-   "IRP",
-   "IVA"
-  ],
-  "texto": "IVA, IRP, S/M",
-  "estado": "S/M",
-  "dia_vencimiento_excel": 21,
-  "responsable": "SANDRA",
-  "email_responsable": "sferreira@effort.com.py"
- },
- "051": {
-  "nombre_excel": "ISAAC WU CHOU",
-  "obligaciones": [
-   "EEFF",
-   "IDU",
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA, IRE GRAL, EEFF, IDU",
-  "estado": "",
-  "dia_vencimiento_excel": 23,
-  "responsable": "SANDRA",
-  "email_responsable": "sferreira@effort.com.py"
- },
- "052": {
-  "nombre_excel": "JUANA TORRES",
-  "obligaciones": [
-   "IRP",
-   "IVA"
-  ],
-  "texto": "IVA, IRP",
-  "estado": "",
-  "dia_vencimiento_excel": 25,
-  "responsable": "BEA",
-  "email_responsable": "kbaez@effort.com.py"
- },
- "053": {
-  "nombre_excel": "DIANA HIDALGO",
-  "obligaciones": [
-   "IRP",
-   "IVA"
-  ],
-  "texto": "IVA, IRP",
-  "estado": "",
-  "dia_vencimiento_excel": 25,
-  "responsable": "ARI",
-  "email_responsable": "acampos@effort.com.py"
- },
- "054": {
-  "nombre_excel": "FATIMA PEÑA - MARKELIER",
-  "obligaciones": [
-   "IRE_SIMPLE",
-   "IVA"
-  ],
-  "texto": "IVA, IRE SIMPLE",
-  "estado": "",
-  "dia_vencimiento_excel": 25,
-  "responsable": "ARA",
-  "email_responsable": "aalvarenga@effort.com.py"
- },
- "055": {
-  "nombre_excel": "PAOLA MEZA",
-  "obligaciones": [
-   "IRP"
-  ],
-  "texto": "SOLO IRP",
-  "estado": "",
-  "dia_vencimiento_excel": 7,
-  "responsable": "ARA",
-  "email_responsable": "aalvarenga@effort.com.py"
- },
- "065": {
-  "nombre_excel": "HECTOR MARTINEZ",
-  "obligaciones": [
-   "IVA"
-  ],
-  "texto": "IVA",
-  "estado": "",
-  "dia_vencimiento_excel": 23,
-  "responsable": "PEDRO",
-  "email_responsable": "pbarrios@effort.com.py"
- },
- "067": {
-  "nombre_excel": "LILCY S.A",
-  "obligaciones": [
-   "ANT_IRE",
-   "EEFF",
-   "IDU",
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA - IRE GRAL - ANT IRE - EEFF - IDU",
-  "estado": "",
-  "dia_vencimiento_excel": 25,
-  "responsable": "PEDRO",
-  "email_responsable": "pbarrios@effort.com.py"
- },
- "068": {
-  "nombre_excel": "ECOAGRO S.A",
-  "obligaciones": [
-   "ANT_IRE",
-   "AUDITORIA",
-   "EEFF",
-   "IDU",
-   "IRE_GRAL",
-   "IVA",
-   "RET_IVA"
-  ],
-  "texto": "IVA - RET IVA - IRE GRAL - ANT IRE - AUD IMPO - EEFF - IDU",
-  "estado": "",
-  "dia_vencimiento_excel": 25,
-  "responsable": "PEDRO",
-  "email_responsable": "pbarrios@effort.com.py"
- },
- "069": {
-  "nombre_excel": "EDWIN SETRINI",
-  "obligaciones": [],
-  "texto": "SUSPENSIÓN",
-  "estado": "SUSPENSIÓN",
-  "dia_vencimiento_excel": 25,
-  "responsable": "PEDRO",
-  "email_responsable": "pbarrios@effort.com.py"
- },
- "071": {
-  "nombre_excel": "NATALIA APONTE IRP",
-  "obligaciones": [
-   "IRP"
-  ],
-  "texto": "SOLO IRP",
-  "estado": "",
-  "dia_vencimiento_excel": 11,
-  "responsable": "ARI",
-  "email_responsable": "acampos@effort.com.py"
- },
- "073": {
-  "nombre_excel": "E SOLUTIONS",
-  "obligaciones": [
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA, IRE GRAL",
-  "estado": "",
-  "dia_vencimiento_excel": 15,
-  "responsable": "SANDRA",
-  "email_responsable": "sferreira@effort.com.py"
- },
- "075": {
-  "nombre_excel": "ANA EMILIANA CAMPUZANO",
-  "obligaciones": [
-   "IRP",
-   "IVA"
-  ],
-  "texto": "IVA, IRP",
-  "estado": "",
-  "dia_vencimiento_excel": 23,
-  "responsable": "ARA",
-  "email_responsable": "aalvarenga@effort.com.py"
- },
- "078": {
-  "nombre_excel": "MMG E.A.S UNIPERSONAL",
-  "obligaciones": [
-   "ANT_IRE",
-   "EEFF",
-   "IDU",
-   "IRE_GRAL",
-   "IVA",
-   "RET_IDU"
-  ],
-  "texto": "IVA - IRE GRAL - RET IDU - ANT IRE - EEFF - IDU",
-  "estado": "",
-  "dia_vencimiento_excel": 23,
-  "responsable": "PEDRO",
-  "email_responsable": "pbarrios@effort.com.py"
- },
- "079": {
-  "nombre_excel": "VANESSA ACUÑA",
-  "obligaciones": [
-   "IRP",
-   "IVA"
-  ],
-  "texto": "IVA, IRP",
-  "estado": "",
-  "dia_vencimiento_excel": 25,
-  "responsable": "ARI",
-  "email_responsable": "acampos@effort.com.py"
- },
- "080": {
-  "nombre_excel": "QUALIA SRL",
-  "obligaciones": [
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA, IRE GRAL",
-  "estado": "",
-  "dia_vencimiento_excel": 19,
-  "responsable": "BEA",
-  "email_responsable": "kbaez@effort.com.py"
- },
- "081": {
-  "nombre_excel": "MARKELIER EAS UNIPERSONAL",
-  "obligaciones": [
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA, IRE GRAL",
-  "estado": "",
-  "dia_vencimiento_excel": 7,
-  "responsable": "ARA",
-  "email_responsable": "aalvarenga@effort.com.py"
- },
- "083": {
-  "nombre_excel": "NG EAS",
-  "obligaciones": [
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA, IRE GRAL",
-  "estado": "",
-  "dia_vencimiento_excel": 11,
-  "responsable": "ANALIA",
-  "email_responsable": "asanguina@effort.com.py"
- },
- "084": {
-  "nombre_excel": "R3J E.A.S",
-  "obligaciones": [
-   "EEFF",
-   "IDU",
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA-IRE-IDU-EEFF",
-  "estado": "",
-  "dia_vencimiento_excel": 7,
-  "responsable": "PEDRO",
-  "email_responsable": "pbarrios@effort.com.py"
- },
- "085": {
-  "nombre_excel": "GESTION AGROPECUARIA SRL",
-  "obligaciones": [
-   "ANT_IRE",
-   "EEFF",
-   "IDU",
-   "IRE_GRAL",
-   "IVA",
-   "RET_IDU"
-  ],
-  "texto": "IVA - IRE GRAL - RET IDU - ANT IRER - EEFF - IDU",
-  "estado": "",
-  "dia_vencimiento_excel": 15,
-  "responsable": "PEDRO",
-  "email_responsable": "pbarrios@effort.com.py"
- },
- "086": {
-  "nombre_excel": "BOU ASSI NAJI BAHIJ",
-  "obligaciones": [
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA, IRE GRAL",
-  "estado": "",
-  "dia_vencimiento_excel": 21,
-  "responsable": "BEA",
-  "email_responsable": "kbaez@effort.com.py"
- },
- "087": {
-  "nombre_excel": "NICODEMUS",
-  "obligaciones": [
-   "IRP",
-   "IVA"
-  ],
-  "texto": "IVA, IRP",
-  "estado": "",
-  "dia_vencimiento_excel": 25,
-  "responsable": "ARA",
-  "email_responsable": "aalvarenga@effort.com.py"
- },
- "088": {
-  "nombre_excel": "NR GANADERA  - NICODEMUS",
-  "obligaciones": [
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA, IRE GRAL",
-  "estado": "",
-  "dia_vencimiento_excel": 15,
-  "responsable": "ARA",
-  "email_responsable": "aalvarenga@effort.com.py"
- },
- "089": {
-  "nombre_excel": "CRISTAL SA",
-  "obligaciones": [
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA, IRE GRAL",
-  "estado": "",
-  "dia_vencimiento_excel": 19,
-  "responsable": "BEA",
-  "email_responsable": "kbaez@effort.com.py"
- },
- "090": {
-  "nombre_excel": "RAPIGAS EAS",
-  "obligaciones": [
-   "EEFF",
-   "IDU",
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA, IRE GRAL, EEFF, IDU",
-  "estado": "",
-  "dia_vencimiento_excel": 19,
-  "responsable": "ARA",
-  "email_responsable": "aalvarenga@effort.com.py"
- },
- "091": {
-  "nombre_excel": "OSMAR LOPEZ",
-  "obligaciones": [
-   "IRE_SIMPLE",
-   "IVA"
-  ],
-  "texto": "IVA, IRE SIMPLE",
-  "estado": "",
-  "dia_vencimiento_excel": 7,
-  "responsable": "ANALIA",
-  "email_responsable": "asanguina@effort.com.py"
- },
- "095": {
-  "nombre_excel": "MACOMA ENVIRONMENTAL",
-  "obligaciones": [
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA, IRE GRAL",
-  "estado": "",
-  "dia_vencimiento_excel": 11,
-  "responsable": "BEA",
-  "email_responsable": "kbaez@effort.com.py"
- },
- "100": {
-  "nombre_excel": "CONSORCIO GUASU",
-  "obligaciones": [
-   "ANT_IRE",
-   "EEFF",
-   "IRE_GRAL",
-   "IVA",
-   "RET_IDU"
-  ],
-  "texto": "IVA- IRE GRAL - ANT IRE- EEFF- RET IDU",
-  "estado": "",
-  "dia_vencimiento_excel": 7,
-  "responsable": "ARI",
-  "email_responsable": "acampos@effort.com.py"
- },
- "102": {
-  "nombre_excel": "HERREBAEZ EAS",
-  "obligaciones": [
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA, IRE GRAL",
-  "estado": "S/M",
-  "dia_vencimiento_excel": 7,
-  "responsable": "BEA",
-  "email_responsable": "kbaez@effort.com.py"
- },
- "103": {
-  "nombre_excel": "MJA E.A.S",
-  "obligaciones": [
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA, IRE GRAL",
-  "estado": "",
-  "dia_vencimiento_excel": 25,
-  "responsable": "ANALIA",
-  "email_responsable": "asanguina@effort.com.py"
- },
- "104": {
-  "nombre_excel": "ANALIA BAEZ JOHANNSEN",
-  "obligaciones": [],
-  "texto": "S/M",
-  "estado": "S/M",
-  "dia_vencimiento_excel": 15,
-  "responsable": "PEDRO",
-  "email_responsable": "pbarrios@effort.com.py"
- },
- "105": {
-  "nombre_excel": "ALMA BENITEZ OVIEDO",
-  "obligaciones": [
-   "IRP",
-   "IVA"
-  ],
-  "texto": "IVA - IRP",
-  "estado": "",
-  "dia_vencimiento_excel": 15,
-  "responsable": "ARI",
-  "email_responsable": "acampos@effort.com.py"
- },
- "106": {
-  "nombre_excel": "GANADERA INDIANA",
-  "obligaciones": [
-   "ANT_IRE",
-   "EEFF",
-   "IDU",
-   "IRE_GRAL",
-   "IRP",
-   "IVA",
-   "RET_IDU",
-   "RET_IRE",
-   "RET_IVA"
-  ],
-  "texto": "IVA - RET IVA - IRE GRAL - RET IRE/IRP/INR - RET IDU - ANT IRE - EEFF - DDJJ IDU",
-  "estado": "",
-  "dia_vencimiento_excel": 23,
-  "responsable": "ARI",
-  "email_responsable": "acampos@effort.com.py"
- },
- "107": {
-  "nombre_excel": "AM Y ASOCIADOS - TADEO",
-  "obligaciones": [
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA, IRE GRAL",
-  "estado": "",
-  "dia_vencimiento_excel": 17,
-  "responsable": "ANALIA",
-  "email_responsable": "asanguina@effort.com.py"
- },
- "111": {
-  "nombre_excel": "ESTHER VIGNEAUX",
-  "obligaciones": [
-   "IRP",
-   "IVA"
-  ],
-  "texto": "SOLO IVA, IRP",
-  "estado": "",
-  "dia_vencimiento_excel": 11,
-  "responsable": "ARA",
-  "email_responsable": "aalvarenga@effort.com.py"
- },
- "114": {
-  "nombre_excel": "GERARDO SOSA",
-  "obligaciones": [
-   "IRP"
-  ],
-  "texto": "SOLO IRP",
-  "estado": "",
-  "dia_vencimiento_excel": 23,
-  "responsable": "ARA",
-  "email_responsable": "aalvarenga@effort.com.py"
- },
- "115": {
-  "nombre_excel": "GONZALO GIMENEZ",
-  "obligaciones": [
-   "IRE_SIMPLE",
-   "IVA"
-  ],
-  "texto": "IVA, IRE SIMPLE",
-  "estado": "",
-  "dia_vencimiento_excel": 15,
-  "responsable": "BEA",
-  "email_responsable": "kbaez@effort.com.py"
- },
- "116": {
-  "nombre_excel": "QUIMECO E.A.S.",
-  "obligaciones": [
-   "ANT_IRE",
-   "EEFF",
-   "IDU",
-   "IRE_GRAL",
-   "IVA",
-   "RET_IDU"
-  ],
-  "texto": "IVA - IRE GRAL - RET IDU - ANT IRE - EEFF - IDU - chica de Diego Beconi",
-  "estado": "",
-  "dia_vencimiento_excel": 7,
-  "responsable": "PEDRO",
-  "email_responsable": "pbarrios@effort.com.py"
- },
- "117": {
-  "nombre_excel": "DIEGO VELAZQUEZ",
-  "obligaciones": [
-   "IRE_SIMPLE",
-   "IVA"
-  ],
-  "texto": "IVA, IRE SIMPLE",
-  "estado": "",
-  "dia_vencimiento_excel": 15,
-  "responsable": "ANALIA",
-  "email_responsable": "asanguina@effort.com.py"
- },
- "118": {
-  "nombre_excel": "MBV E.A.S. - DIEGO",
-  "obligaciones": [
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA, IRE GRAL",
-  "estado": "",
-  "dia_vencimiento_excel": 19,
-  "responsable": "ANALIA",
-  "email_responsable": "asanguina@effort.com.py"
- },
- "119": {
-  "nombre_excel": "ALISON RAMÍREZ",
-  "obligaciones": [
-   "IRP",
-   "IVA"
-  ],
-  "texto": "IVA, IRP",
-  "estado": "",
-  "dia_vencimiento_excel": 25,
-  "responsable": "SANDRA",
-  "email_responsable": "sferreira@effort.com.py"
- },
- "120": {
-  "nombre_excel": "CAMILO FABIAN ACOSTA ESCOBAR",
-  "obligaciones": [
-   "IRE_SIMPLE",
-   "IVA"
-  ],
-  "texto": "IVA, IRE SIMPLE",
-  "estado": "",
-  "dia_vencimiento_excel": 15,
-  "responsable": "ARA",
-  "email_responsable": "aalvarenga@effort.com.py"
- },
- "124": {
-  "nombre_excel": "CLAUDIO - GESTION INTEGRAL DE CAMPOS",
-  "obligaciones": [
-   "EEFF",
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA, IRE GRAL EEFF",
-  "estado": "",
-  "dia_vencimiento_excel": 15,
-  "responsable": "ARA",
-  "email_responsable": "aalvarenga@effort.com.py"
- },
- "125": {
-  "nombre_excel": "SOCIEDAD PARAGUAYA DE ENDODONCIA",
-  "obligaciones": [
-   "ANT_IRE",
-   "EEFF",
-   "IRE_GRAL",
-   "IVA"
-  ],
-  "texto": "IVA - IRE GRAL - ANT IRE - EEFF",
-  "estado": "S/M",
-  "dia_vencimiento_excel": 9,
-  "responsable": "ARI",
-  "email_responsable": "acampos@effort.com.py"
- },
- "128": {
-  "nombre_excel": "ASOCIACION PY CRIADORES DE PAMPA",
-  "obligaciones": [],
-  "texto": "S/M",
-  "estado": "S/M",
-  "dia_vencimiento_excel": 19,
-  "responsable": "ARI",
-  "email_responsable": "acampos@effort.com.py"
- },
- "129": {
-  "nombre_excel": "LILIAN CORTESE",
-  "obligaciones": [
-   "IVA"
-  ],
-  "texto": "SOLO IVA",
-  "estado": "",
-  "dia_vencimiento_excel": 21,
-  "responsable": "ARI",
-  "email_responsable": "acampos@effort.com.py"
- },
- "130": {
-  "nombre_excel": "BV SOLUTIONS EAS",
-  "obligaciones": [
-   "ANT_IRE",
-   "EEFF",
-   "IDU",
-   "IRE_GRAL",
-   "IVA",
-   "RET_IDU"
-  ],
-  "texto": "IVA - IRE GRAL - RET IDU - ANT IRE - EEFF - IDU",
-  "estado": "",
-  "dia_vencimiento_excel": 7,
-  "responsable": "ARI",
-  "email_responsable": "acampos@effort.com.py"
- },
- "001": {
-  "nombre_excel": null,
-  "obligaciones": [],
-  "texto": "solo lista IPS REI / REOP (hoja ARIANA)",
-  "estado": "",
-  "dia_vencimiento_excel": null,
-  "responsable": null,
-  "email_responsable": null
- },
- "014": {
-  "nombre_excel": null,
-  "obligaciones": [],
-  "texto": "solo lista IPS REI / REOP (hoja ARIANA)",
-  "estado": "",
-  "dia_vencimiento_excel": null,
-  "responsable": null,
-  "email_responsable": null
- },
- "015": {
-  "nombre_excel": null,
-  "obligaciones": [],
-  "texto": "solo lista IPS REI / REOP (hoja ARIANA)",
-  "estado": "",
-  "dia_vencimiento_excel": null,
-  "responsable": null,
-  "email_responsable": null
- },
- "108": {
-  "nombre_excel": null,
-  "obligaciones": [],
-  "texto": "solo lista IPS REI / REOP (hoja ARIANA)",
-  "estado": "",
-  "dia_vencimiento_excel": null,
-  "responsable": null,
-  "email_responsable": null
- },
- "109": {
-  "nombre_excel": null,
-  "obligaciones": [],
-  "texto": "solo lista IPS REI / REOP (hoja ARIANA)",
-  "estado": "",
-  "dia_vencimiento_excel": null,
-  "responsable": null,
-  "email_responsable": null
- },
- "110": {
-  "nombre_excel": null,
-  "obligaciones": [],
-  "texto": "solo lista IPS REI / REOP (hoja ARIANA)",
-  "estado": "",
-  "dia_vencimiento_excel": null,
-  "responsable": null,
-  "email_responsable": null
- }
+  "001": {
+    "nombre_excel": null,
+    "obligaciones": [],
+    "texto": "solo lista IPS REI / REOP (hoja ARIANA)",
+    "estado": "",
+    "dia_vencimiento_excel": null,
+    "responsable": null,
+    "email_responsable": null
+  },
+  "002": {
+    "nombre_excel": "FUMIPRO S.A",
+    "obligaciones": [
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA, IRE GRAL",
+    "estado": "",
+    "dia_vencimiento_excel": 9,
+    "responsable": "SANDRA",
+    "email_responsable": "sferreira@effort.com.py"
+  },
+  "003": {
+    "nombre_excel": "GRETTA HAMID AL KHOURY",
+    "obligaciones": [
+      "IRE_SIMPLE",
+      "IVA"
+    ],
+    "texto": "IVA - IRE SIMPLE",
+    "estado": "",
+    "dia_vencimiento_excel": 11,
+    "responsable": "PEDRO",
+    "email_responsable": "pbarrios@effort.com.py"
+  },
+  "005": {
+    "nombre_excel": "ORGANIC GROUP E.A.S",
+    "obligaciones": [],
+    "texto": "S/M",
+    "estado": "S/M",
+    "dia_vencimiento_excel": 17,
+    "responsable": "PEDRO",
+    "email_responsable": "pbarrios@effort.com.py"
+  },
+  "006": {
+    "nombre_excel": "RAYVAN EL KHOURY",
+    "obligaciones": [
+      "IRE_GRAL",
+      "IRP",
+      "IVA"
+    ],
+    "texto": "IVA, IRP, IRE GRAL",
+    "estado": "",
+    "dia_vencimiento_excel": 9,
+    "responsable": "ANALIA",
+    "email_responsable": "asanguina@effort.com.py"
+  },
+  "008": {
+    "nombre_excel": "RAMIRO GARCIA",
+    "obligaciones": [
+      "IRE_SIMPLE",
+      "IRP",
+      "IVA"
+    ],
+    "texto": "IVA, IRE SIMPLE, IRP",
+    "estado": "",
+    "dia_vencimiento_excel": 11,
+    "responsable": "ARA",
+    "email_responsable": "aalvarenga@effort.com.py"
+  },
+  "010": {
+    "nombre_excel": "ALEJANDRA PICCHIONI -MMG",
+    "obligaciones": [
+      "IRP",
+      "IVA"
+    ],
+    "texto": "IVA S/M, IRP",
+    "estado": "",
+    "dia_vencimiento_excel": 25,
+    "responsable": "ARI",
+    "email_responsable": "acampos@effort.com.py"
+  },
+  "011": {
+    "nombre_excel": "LAURA SOSA  ARGAÑA",
+    "obligaciones": [
+      "IRE_GRAL",
+      "IRP",
+      "IVA"
+    ],
+    "texto": "IVA, IRE GRAL, IRP",
+    "estado": "",
+    "dia_vencimiento_excel": 13,
+    "responsable": "ARA",
+    "email_responsable": "aalvarenga@effort.com.py"
+  },
+  "012": {
+    "nombre_excel": "GARSO S.A",
+    "obligaciones": [
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA, IRE GRAL",
+    "estado": "",
+    "dia_vencimiento_excel": 7,
+    "responsable": "ARA",
+    "email_responsable": "aalvarenga@effort.com.py"
+  },
+  "013": {
+    "nombre_excel": "BAIRES EAS",
+    "obligaciones": [
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA, IRE GRAL",
+    "estado": "",
+    "dia_vencimiento_excel": 19,
+    "responsable": "SANDRA",
+    "email_responsable": "sferreira@effort.com.py"
+  },
+  "014": {
+    "nombre_excel": null,
+    "obligaciones": [],
+    "texto": "solo lista IPS REI / REOP (hoja ARIANA)",
+    "estado": "",
+    "dia_vencimiento_excel": null,
+    "responsable": null,
+    "email_responsable": null
+  },
+  "015": {
+    "nombre_excel": null,
+    "obligaciones": [],
+    "texto": "solo lista IPS REI / REOP (hoja ARIANA)",
+    "estado": "",
+    "dia_vencimiento_excel": null,
+    "responsable": null,
+    "email_responsable": null
+  },
+  "017": {
+    "nombre_excel": "RITA GONZALEZ",
+    "obligaciones": [
+      "IRP",
+      "IVA"
+    ],
+    "texto": "IVA, IRP RSP - RGC",
+    "estado": "",
+    "dia_vencimiento_excel": 13,
+    "responsable": "SANDRA",
+    "email_responsable": "sferreira@effort.com.py"
+  },
+  "018": {
+    "nombre_excel": "AGROGRANJA KO'EJU E.A.S",
+    "obligaciones": [
+      "ANT_IRE",
+      "EEFF",
+      "IRE_GRAL",
+      "IVA",
+      "RET_IDU"
+    ],
+    "texto": "IVA- IRE GRAL - ANT IRE- EEFF- RET IDU",
+    "estado": "",
+    "dia_vencimiento_excel": 23,
+    "responsable": "ARI",
+    "email_responsable": "acampos@effort.com.py"
+  },
+  "020": {
+    "nombre_excel": "LILIAN LACONICH",
+    "obligaciones": [
+      "IRE_SIMPLE",
+      "IRP",
+      "IVA"
+    ],
+    "texto": "IVA, IRP, IRE SIMPLE",
+    "estado": "",
+    "dia_vencimiento_excel": 19,
+    "responsable": "ARA",
+    "email_responsable": "aalvarenga@effort.com.py"
+  },
+  "021": {
+    "nombre_excel": "COPESA S.A.",
+    "obligaciones": [
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA, IRE GRAL",
+    "estado": "",
+    "dia_vencimiento_excel": 11,
+    "responsable": "BEA",
+    "email_responsable": "kbaez@effort.com.py"
+  },
+  "022": {
+    "nombre_excel": "EFFORT CONSULTORA E.A.S",
+    "obligaciones": [
+      "ANT_IRE",
+      "EEFF",
+      "IDU",
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA-IRE GRAL-ANT IRE- EEFF - IDU",
+    "estado": "",
+    "dia_vencimiento_excel": 25,
+    "responsable": "PEDRO",
+    "email_responsable": "pbarrios@effort.com.py"
+  },
+  "023": {
+    "nombre_excel": "DIEGO BECONI IRP",
+    "obligaciones": [
+      "ANT_IRE",
+      "EEFF",
+      "IDU",
+      "IRE_GRAL",
+      "IRP",
+      "IVA"
+    ],
+    "texto": "IVA - IRE GRAL - IRP RSP - IDU - ANT IRE - EEFF",
+    "estado": "",
+    "dia_vencimiento_excel": 19,
+    "responsable": "PEDRO",
+    "email_responsable": "pbarrios@effort.com.py"
+  },
+  "024": {
+    "nombre_excel": "ALUSAN",
+    "obligaciones": [
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA, IRE GRAL",
+    "estado": "",
+    "dia_vencimiento_excel": 13,
+    "responsable": "ARA",
+    "email_responsable": "aalvarenga@effort.com.py"
+  },
+  "025": {
+    "nombre_excel": "MUNDO MOVIL - RAYVEN",
+    "obligaciones": [
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA, IRE GRAL",
+    "estado": "",
+    "dia_vencimiento_excel": 23,
+    "responsable": "SANDRA",
+    "email_responsable": "sferreira@effort.com.py"
+  },
+  "026": {
+    "nombre_excel": "CÚBICO METALÚRGICA",
+    "obligaciones": [
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA, IRE GRAL",
+    "estado": "",
+    "dia_vencimiento_excel": 9,
+    "responsable": "ANALIA",
+    "email_responsable": "asanguina@effort.com.py"
+  },
+  "027": {
+    "nombre_excel": "MARIEL RODRIGUEZ - SUSPENSIÓN",
+    "obligaciones": [],
+    "texto": "IVA, IRE SIMPLE",
+    "estado": "SUSPENSIÓN",
+    "dia_vencimiento_excel": 9,
+    "responsable": "ARA",
+    "email_responsable": "aalvarenga@effort.com.py"
+  },
+  "029": {
+    "nombre_excel": "ORL COMERCIAL E.A.S UNIPERSONAL",
+    "obligaciones": [
+      "IRE_SIMPLE",
+      "IVA"
+    ],
+    "texto": "IVA, IRE SIMPLE",
+    "estado": "",
+    "dia_vencimiento_excel": 25,
+    "responsable": "SANDRA",
+    "email_responsable": "sferreira@effort.com.py"
+  },
+  "031": {
+    "nombre_excel": "DRA EVA MACIEL",
+    "obligaciones": [
+      "IRP",
+      "IVA"
+    ],
+    "texto": "IVA, IRP, RSP-RGC",
+    "estado": "",
+    "dia_vencimiento_excel": 19,
+    "responsable": "ANALIA",
+    "email_responsable": "asanguina@effort.com.py"
+  },
+  "032": {
+    "nombre_excel": "DIBEC S.A",
+    "obligaciones": [
+      "ANT_IRE",
+      "EEFF",
+      "IDU",
+      "IRE_GRAL",
+      "IVA",
+      "RET_IDU"
+    ],
+    "texto": "IVA - IRE GRAL - RET IDU- ANT IRE - EEFF - IDU",
+    "estado": "",
+    "dia_vencimiento_excel": 19,
+    "responsable": "PEDRO",
+    "email_responsable": "pbarrios@effort.com.py"
+  },
+  "035": {
+    "nombre_excel": "MARIA ANGELICA PETTERS",
+    "obligaciones": [
+      "IRE_SIMPLE",
+      "IVA"
+    ],
+    "texto": "IVA, IRE SIMPLE",
+    "estado": "",
+    "dia_vencimiento_excel": 11,
+    "responsable": "ANALIA",
+    "email_responsable": "asanguina@effort.com.py"
+  },
+  "036": {
+    "nombre_excel": "FERNANDO HERREROS - ANALIA BAEZ",
+    "obligaciones": [
+      "IRP",
+      "IVA"
+    ],
+    "texto": "IVA, IRP",
+    "estado": "",
+    "dia_vencimiento_excel": 25,
+    "responsable": "ARA",
+    "email_responsable": "aalvarenga@effort.com.py"
+  },
+  "037": {
+    "nombre_excel": "BICLOPE S.A",
+    "obligaciones": [
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA, IRE GRAL",
+    "estado": "",
+    "dia_vencimiento_excel": 19,
+    "responsable": "ARA",
+    "email_responsable": "aalvarenga@effort.com.py"
+  },
+  "038": {
+    "nombre_excel": "LUIS GONZÁLEZ",
+    "obligaciones": [
+      "IRP",
+      "IVA"
+    ],
+    "texto": "IVA IRP",
+    "estado": "",
+    "dia_vencimiento_excel": 9,
+    "responsable": "ANALIA",
+    "email_responsable": "asanguina@effort.com.py"
+  },
+  "040": {
+    "nombre_excel": "GISSEL FARÍAS",
+    "obligaciones": [
+      "IRP",
+      "IVA"
+    ],
+    "texto": "IVA, IRP, RSP-RGC",
+    "estado": "",
+    "dia_vencimiento_excel": 23,
+    "responsable": "ARA",
+    "email_responsable": "aalvarenga@effort.com.py"
+  },
+  "041": {
+    "nombre_excel": "MARIA GABRIELA GOSSEN",
+    "obligaciones": [
+      "IRP",
+      "IVA"
+    ],
+    "texto": "IVA S/M, IRP",
+    "estado": "S/M",
+    "dia_vencimiento_excel": 19,
+    "responsable": "ARA",
+    "email_responsable": "aalvarenga@effort.com.py"
+  },
+  "042": {
+    "nombre_excel": "JAZMIN VILLAGRA",
+    "obligaciones": [
+      "IRP",
+      "IVA"
+    ],
+    "texto": "IVA, IRP RSP - RGC",
+    "estado": "",
+    "dia_vencimiento_excel": 15,
+    "responsable": "ARA",
+    "email_responsable": "aalvarenga@effort.com.py"
+  },
+  "044": {
+    "nombre_excel": "MARCO PENONI",
+    "obligaciones": [
+      "IRE_SIMPLE",
+      "IVA"
+    ],
+    "texto": "IVA, IRE SIMPLE",
+    "estado": "",
+    "dia_vencimiento_excel": 7,
+    "responsable": "SANDRA",
+    "email_responsable": "sferreira@effort.com.py"
+  },
+  "046": {
+    "nombre_excel": "MARGARITA RUIZ",
+    "obligaciones": [
+      "IRP",
+      "IVA"
+    ],
+    "texto": "IVA, IRP RSP - RGC",
+    "estado": "",
+    "dia_vencimiento_excel": 13,
+    "responsable": "SANDRA",
+    "email_responsable": "sferreira@effort.com.py"
+  },
+  "047": {
+    "nombre_excel": "CARLOS PENONI",
+    "obligaciones": [
+      "IRE_GRAL",
+      "IRP",
+      "IVA"
+    ],
+    "texto": "IVA, IRP-RPS, IRE GRAL",
+    "estado": "",
+    "dia_vencimiento_excel": 19,
+    "responsable": "ANALIA",
+    "email_responsable": "asanguina@effort.com.py"
+  },
+  "048": {
+    "nombre_excel": "JULIO VIZCONTI",
+    "obligaciones": [
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA, IRE GRAL",
+    "estado": "",
+    "dia_vencimiento_excel": 19,
+    "responsable": "SANDRA",
+    "email_responsable": "sferreira@effort.com.py"
+  },
+  "049": {
+    "nombre_excel": "JOSÉ PENONI",
+    "obligaciones": [
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA, IRE GRAL",
+    "estado": "",
+    "dia_vencimiento_excel": 21,
+    "responsable": "ANALIA",
+    "email_responsable": "asanguina@effort.com.py"
+  },
+  "050": {
+    "nombre_excel": "MONICA LESME",
+    "obligaciones": [
+      "IRP",
+      "IVA"
+    ],
+    "texto": "IVA, IRP, S/M",
+    "estado": "S/M",
+    "dia_vencimiento_excel": 21,
+    "responsable": "SANDRA",
+    "email_responsable": "sferreira@effort.com.py"
+  },
+  "051": {
+    "nombre_excel": "ISAAC WU CHOU",
+    "obligaciones": [
+      "EEFF",
+      "IDU",
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA, IRE GRAL, EEFF, IDU",
+    "estado": "",
+    "dia_vencimiento_excel": 23,
+    "responsable": "SANDRA",
+    "email_responsable": "sferreira@effort.com.py"
+  },
+  "052": {
+    "nombre_excel": "JUANA TORRES",
+    "obligaciones": [
+      "IRP",
+      "IVA"
+    ],
+    "texto": "IVA, IRP",
+    "estado": "",
+    "dia_vencimiento_excel": 25,
+    "responsable": "BEA",
+    "email_responsable": "kbaez@effort.com.py"
+  },
+  "053": {
+    "nombre_excel": "DIANA HIDALGO",
+    "obligaciones": [
+      "IRP",
+      "IVA"
+    ],
+    "texto": "IVA, IRP",
+    "estado": "",
+    "dia_vencimiento_excel": 25,
+    "responsable": "ARI",
+    "email_responsable": "acampos@effort.com.py"
+  },
+  "054": {
+    "nombre_excel": "FATIMA PEÑA - MARKELIER",
+    "obligaciones": [
+      "IRE_SIMPLE",
+      "IVA"
+    ],
+    "texto": "IVA, IRE SIMPLE",
+    "estado": "",
+    "dia_vencimiento_excel": 25,
+    "responsable": "ARA",
+    "email_responsable": "aalvarenga@effort.com.py"
+  },
+  "055": {
+    "nombre_excel": "PAOLA MEZA",
+    "obligaciones": [
+      "IRP"
+    ],
+    "texto": "SOLO IRP",
+    "estado": "",
+    "dia_vencimiento_excel": 7,
+    "responsable": "ARA",
+    "email_responsable": "aalvarenga@effort.com.py"
+  },
+  "065": {
+    "nombre_excel": "HECTOR MARTINEZ",
+    "obligaciones": [
+      "IVA"
+    ],
+    "texto": "IVA",
+    "estado": "",
+    "dia_vencimiento_excel": 23,
+    "responsable": "PEDRO",
+    "email_responsable": "pbarrios@effort.com.py"
+  },
+  "067": {
+    "nombre_excel": "LILCY S.A",
+    "obligaciones": [
+      "ANT_IRE",
+      "EEFF",
+      "IDU",
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA - IRE GRAL - ANT IRE - EEFF - IDU",
+    "estado": "",
+    "dia_vencimiento_excel": 25,
+    "responsable": "PEDRO",
+    "email_responsable": "pbarrios@effort.com.py"
+  },
+  "068": {
+    "nombre_excel": "ECOAGRO S.A",
+    "obligaciones": [
+      "ANT_IRE",
+      "AUDITORIA",
+      "EEFF",
+      "IDU",
+      "IRE_GRAL",
+      "IVA",
+      "RET_IVA"
+    ],
+    "texto": "IVA - RET IVA - IRE GRAL - ANT IRE - AUD IMPO - EEFF - IDU",
+    "estado": "",
+    "dia_vencimiento_excel": 25,
+    "responsable": "PEDRO",
+    "email_responsable": "pbarrios@effort.com.py"
+  },
+  "069": {
+    "nombre_excel": "EDWIN SETRINI",
+    "obligaciones": [],
+    "texto": "SUSPENSIÓN",
+    "estado": "SUSPENSIÓN",
+    "dia_vencimiento_excel": 25,
+    "responsable": "PEDRO",
+    "email_responsable": "pbarrios@effort.com.py"
+  },
+  "071": {
+    "nombre_excel": "NATALIA APONTE IRP",
+    "obligaciones": [
+      "IRP"
+    ],
+    "texto": "SOLO IRP",
+    "estado": "",
+    "dia_vencimiento_excel": 11,
+    "responsable": "ARI",
+    "email_responsable": "acampos@effort.com.py"
+  },
+  "073": {
+    "nombre_excel": "E SOLUTIONS",
+    "obligaciones": [
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA, IRE GRAL",
+    "estado": "",
+    "dia_vencimiento_excel": 15,
+    "responsable": "SANDRA",
+    "email_responsable": "sferreira@effort.com.py"
+  },
+  "075": {
+    "nombre_excel": "ANA EMILIANA CAMPUZANO",
+    "obligaciones": [
+      "IRP",
+      "IVA"
+    ],
+    "texto": "IVA, IRP",
+    "estado": "",
+    "dia_vencimiento_excel": 23,
+    "responsable": "ARA",
+    "email_responsable": "aalvarenga@effort.com.py"
+  },
+  "078": {
+    "nombre_excel": "MMG E.A.S UNIPERSONAL",
+    "obligaciones": [
+      "ANT_IRE",
+      "EEFF",
+      "IDU",
+      "IRE_GRAL",
+      "IVA",
+      "RET_IDU"
+    ],
+    "texto": "IVA - IRE GRAL - RET IDU - ANT IRE - EEFF - IDU",
+    "estado": "",
+    "dia_vencimiento_excel": 23,
+    "responsable": "PEDRO",
+    "email_responsable": "pbarrios@effort.com.py"
+  },
+  "079": {
+    "nombre_excel": "VANESSA ACUÑA",
+    "obligaciones": [
+      "IRP",
+      "IVA"
+    ],
+    "texto": "IVA, IRP",
+    "estado": "",
+    "dia_vencimiento_excel": 25,
+    "responsable": "ARI",
+    "email_responsable": "acampos@effort.com.py"
+  },
+  "080": {
+    "nombre_excel": "QUALIA SRL",
+    "obligaciones": [
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA, IRE GRAL",
+    "estado": "",
+    "dia_vencimiento_excel": 19,
+    "responsable": "BEA",
+    "email_responsable": "kbaez@effort.com.py"
+  },
+  "081": {
+    "nombre_excel": "MARKELIER EAS UNIPERSONAL",
+    "obligaciones": [
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA, IRE GRAL",
+    "estado": "",
+    "dia_vencimiento_excel": 7,
+    "responsable": "ARA",
+    "email_responsable": "aalvarenga@effort.com.py"
+  },
+  "083": {
+    "nombre_excel": "NG EAS",
+    "obligaciones": [
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA, IRE GRAL",
+    "estado": "",
+    "dia_vencimiento_excel": 11,
+    "responsable": "ANALIA",
+    "email_responsable": "asanguina@effort.com.py"
+  },
+  "084": {
+    "nombre_excel": "R3J E.A.S",
+    "obligaciones": [
+      "EEFF",
+      "IDU",
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA-IRE-IDU-EEFF",
+    "estado": "",
+    "dia_vencimiento_excel": 7,
+    "responsable": "PEDRO",
+    "email_responsable": "pbarrios@effort.com.py"
+  },
+  "085": {
+    "nombre_excel": "GESTION AGROPECUARIA SRL",
+    "obligaciones": [
+      "ANT_IRE",
+      "EEFF",
+      "IDU",
+      "IRE_GRAL",
+      "IVA",
+      "RET_IDU"
+    ],
+    "texto": "IVA - IRE GRAL - RET IDU - ANT IRER - EEFF - IDU",
+    "estado": "",
+    "dia_vencimiento_excel": 15,
+    "responsable": "PEDRO",
+    "email_responsable": "pbarrios@effort.com.py"
+  },
+  "086": {
+    "nombre_excel": "BOU ASSI NAJI BAHIJ",
+    "obligaciones": [
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA, IRE GRAL",
+    "estado": "",
+    "dia_vencimiento_excel": 21,
+    "responsable": "BEA",
+    "email_responsable": "kbaez@effort.com.py"
+  },
+  "087": {
+    "nombre_excel": "NICODEMUS",
+    "obligaciones": [
+      "IRP",
+      "IVA"
+    ],
+    "texto": "IVA, IRP",
+    "estado": "",
+    "dia_vencimiento_excel": 25,
+    "responsable": "ARA",
+    "email_responsable": "aalvarenga@effort.com.py"
+  },
+  "088": {
+    "nombre_excel": "NR GANADERA  - NICODEMUS",
+    "obligaciones": [
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA, IRE GRAL",
+    "estado": "",
+    "dia_vencimiento_excel": 15,
+    "responsable": "ARA",
+    "email_responsable": "aalvarenga@effort.com.py"
+  },
+  "089": {
+    "nombre_excel": "CRISTAL SA",
+    "obligaciones": [
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA, IRE GRAL",
+    "estado": "",
+    "dia_vencimiento_excel": 19,
+    "responsable": "BEA",
+    "email_responsable": "kbaez@effort.com.py"
+  },
+  "090": {
+    "nombre_excel": "RAPIGAS EAS",
+    "obligaciones": [
+      "EEFF",
+      "IDU",
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA, IRE GRAL, EEFF, IDU",
+    "estado": "",
+    "dia_vencimiento_excel": 19,
+    "responsable": "ARA",
+    "email_responsable": "aalvarenga@effort.com.py"
+  },
+  "091": {
+    "nombre_excel": "OSMAR LOPEZ",
+    "obligaciones": [
+      "IRE_SIMPLE",
+      "IVA"
+    ],
+    "texto": "IVA, IRE SIMPLE",
+    "estado": "",
+    "dia_vencimiento_excel": 7,
+    "responsable": "ANALIA",
+    "email_responsable": "asanguina@effort.com.py"
+  },
+  "095": {
+    "nombre_excel": "MACOMA ENVIRONMENTAL",
+    "obligaciones": [
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA, IRE GRAL",
+    "estado": "",
+    "dia_vencimiento_excel": 11,
+    "responsable": "BEA",
+    "email_responsable": "kbaez@effort.com.py"
+  },
+  "096": {
+    "nombre_excel": "DIEGO SOSA",
+    "obligaciones": [
+      "IVA"
+    ],
+    "texto": "SOLO IVA",
+    "estado": "",
+    "dia_vencimiento_excel": 21,
+    "responsable": "ARA",
+    "email_responsable": "aalvarenga@effort.com.py",
+    "nota": "Agregado 2026-11-14: la fila «DIEGO SOSA» no trae número de carpeta; es el 096 (RUC 2036307-9, verificado en su declaración de IVA de setiembre 2026)."
+  },
+  "100": {
+    "nombre_excel": "CONSORCIO GUASU",
+    "obligaciones": [
+      "ANT_IRE",
+      "EEFF",
+      "IRE_GRAL",
+      "IVA",
+      "RET_IDU"
+    ],
+    "texto": "IVA- IRE GRAL - ANT IRE- EEFF- RET IDU",
+    "estado": "",
+    "dia_vencimiento_excel": 7,
+    "responsable": "ARI",
+    "email_responsable": "acampos@effort.com.py"
+  },
+  "102": {
+    "nombre_excel": "HERREBAEZ EAS",
+    "obligaciones": [
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA, IRE GRAL",
+    "estado": "S/M",
+    "dia_vencimiento_excel": 7,
+    "responsable": "BEA",
+    "email_responsable": "kbaez@effort.com.py"
+  },
+  "103": {
+    "nombre_excel": "MJA E.A.S",
+    "obligaciones": [
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA, IRE GRAL",
+    "estado": "",
+    "dia_vencimiento_excel": 25,
+    "responsable": "ANALIA",
+    "email_responsable": "asanguina@effort.com.py"
+  },
+  "104": {
+    "nombre_excel": "ANALIA BAEZ JOHANNSEN",
+    "obligaciones": [],
+    "texto": "S/M",
+    "estado": "S/M",
+    "dia_vencimiento_excel": 15,
+    "responsable": "PEDRO",
+    "email_responsable": "pbarrios@effort.com.py"
+  },
+  "105": {
+    "nombre_excel": "ALMA BENITEZ OVIEDO",
+    "obligaciones": [
+      "IRP",
+      "IVA"
+    ],
+    "texto": "IVA - IRP",
+    "estado": "",
+    "dia_vencimiento_excel": 15,
+    "responsable": "ARI",
+    "email_responsable": "acampos@effort.com.py"
+  },
+  "106": {
+    "nombre_excel": "GANADERA INDIANA",
+    "obligaciones": [
+      "ANT_IRE",
+      "EEFF",
+      "IDU",
+      "IRE_GRAL",
+      "IRP",
+      "IVA",
+      "RET_IDU",
+      "RET_IRE",
+      "RET_IVA"
+    ],
+    "texto": "IVA - RET IVA - IRE GRAL - RET IRE/IRP/INR - RET IDU - ANT IRE - EEFF - DDJJ IDU",
+    "estado": "",
+    "dia_vencimiento_excel": 23,
+    "responsable": "ARI",
+    "email_responsable": "acampos@effort.com.py"
+  },
+  "107": {
+    "nombre_excel": "AM Y ASOCIADOS - TADEO",
+    "obligaciones": [
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA, IRE GRAL",
+    "estado": "",
+    "dia_vencimiento_excel": 17,
+    "responsable": "ANALIA",
+    "email_responsable": "asanguina@effort.com.py"
+  },
+  "108": {
+    "nombre_excel": null,
+    "obligaciones": [],
+    "texto": "solo lista IPS REI / REOP (hoja ARIANA)",
+    "estado": "",
+    "dia_vencimiento_excel": null,
+    "responsable": null,
+    "email_responsable": null
+  },
+  "109": {
+    "nombre_excel": null,
+    "obligaciones": [],
+    "texto": "solo lista IPS REI / REOP (hoja ARIANA)",
+    "estado": "",
+    "dia_vencimiento_excel": null,
+    "responsable": null,
+    "email_responsable": null
+  },
+  "110": {
+    "nombre_excel": null,
+    "obligaciones": [],
+    "texto": "solo lista IPS REI / REOP (hoja ARIANA)",
+    "estado": "",
+    "dia_vencimiento_excel": null,
+    "responsable": null,
+    "email_responsable": null
+  },
+  "111": {
+    "nombre_excel": "ESTHER VIGNEAUX",
+    "obligaciones": [
+      "IRP",
+      "IVA"
+    ],
+    "texto": "SOLO IVA, IRP",
+    "estado": "",
+    "dia_vencimiento_excel": 11,
+    "responsable": "ARA",
+    "email_responsable": "aalvarenga@effort.com.py"
+  },
+  "114": {
+    "nombre_excel": "GERARDO SOSA",
+    "obligaciones": [
+      "IRP"
+    ],
+    "texto": "SOLO IRP",
+    "estado": "",
+    "dia_vencimiento_excel": 23,
+    "responsable": "ARA",
+    "email_responsable": "aalvarenga@effort.com.py"
+  },
+  "115": {
+    "nombre_excel": "GONZALO GIMENEZ",
+    "obligaciones": [
+      "IRE_SIMPLE",
+      "IVA"
+    ],
+    "texto": "IVA, IRE SIMPLE",
+    "estado": "",
+    "dia_vencimiento_excel": 15,
+    "responsable": "BEA",
+    "email_responsable": "kbaez@effort.com.py"
+  },
+  "116": {
+    "nombre_excel": "QUIMECO E.A.S.",
+    "obligaciones": [
+      "ANT_IRE",
+      "EEFF",
+      "IDU",
+      "IRE_GRAL",
+      "IVA",
+      "RET_IDU"
+    ],
+    "texto": "IVA - IRE GRAL - RET IDU - ANT IRE - EEFF - IDU - chica de Diego Beconi",
+    "estado": "",
+    "dia_vencimiento_excel": 7,
+    "responsable": "PEDRO",
+    "email_responsable": "pbarrios@effort.com.py"
+  },
+  "117": {
+    "nombre_excel": "DIEGO VELAZQUEZ",
+    "obligaciones": [
+      "IRE_SIMPLE",
+      "IVA"
+    ],
+    "texto": "IVA, IRE SIMPLE",
+    "estado": "",
+    "dia_vencimiento_excel": 15,
+    "responsable": "ANALIA",
+    "email_responsable": "asanguina@effort.com.py"
+  },
+  "118": {
+    "nombre_excel": "MBV E.A.S. - DIEGO",
+    "obligaciones": [
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA, IRE GRAL",
+    "estado": "",
+    "dia_vencimiento_excel": 19,
+    "responsable": "ANALIA",
+    "email_responsable": "asanguina@effort.com.py"
+  },
+  "119": {
+    "nombre_excel": "ALISON RAMÍREZ",
+    "obligaciones": [
+      "IRP",
+      "IVA"
+    ],
+    "texto": "IVA, IRP",
+    "estado": "",
+    "dia_vencimiento_excel": 25,
+    "responsable": "SANDRA",
+    "email_responsable": "sferreira@effort.com.py"
+  },
+  "120": {
+    "nombre_excel": "CAMILO FABIAN ACOSTA ESCOBAR",
+    "obligaciones": [
+      "IRE_SIMPLE",
+      "IVA"
+    ],
+    "texto": "IVA, IRE SIMPLE",
+    "estado": "",
+    "dia_vencimiento_excel": 15,
+    "responsable": "ARA",
+    "email_responsable": "aalvarenga@effort.com.py"
+  },
+  "124": {
+    "nombre_excel": "CLAUDIO - GESTION INTEGRAL DE CAMPOS",
+    "obligaciones": [
+      "EEFF",
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA, IRE GRAL EEFF",
+    "estado": "",
+    "dia_vencimiento_excel": 15,
+    "responsable": "ARA",
+    "email_responsable": "aalvarenga@effort.com.py"
+  },
+  "125": {
+    "nombre_excel": "SOCIEDAD PARAGUAYA DE ENDODONCIA",
+    "obligaciones": [
+      "ANT_IRE",
+      "EEFF",
+      "IRE_GRAL",
+      "IVA"
+    ],
+    "texto": "IVA - IRE GRAL - ANT IRE - EEFF",
+    "estado": "S/M",
+    "dia_vencimiento_excel": 9,
+    "responsable": "ARI",
+    "email_responsable": "acampos@effort.com.py"
+  },
+  "128": {
+    "nombre_excel": "ASOCIACION PY CRIADORES DE PAMPA",
+    "obligaciones": [],
+    "texto": "S/M",
+    "estado": "S/M",
+    "dia_vencimiento_excel": 19,
+    "responsable": "ARI",
+    "email_responsable": "acampos@effort.com.py"
+  },
+  "129": {
+    "nombre_excel": "LILIAN CORTESE",
+    "obligaciones": [
+      "IVA"
+    ],
+    "texto": "SOLO IVA",
+    "estado": "",
+    "dia_vencimiento_excel": 21,
+    "responsable": "ARI",
+    "email_responsable": "acampos@effort.com.py"
+  },
+  "130": {
+    "nombre_excel": "BV SOLUTIONS EAS",
+    "obligaciones": [
+      "ANT_IRE",
+      "EEFF",
+      "IDU",
+      "IRE_GRAL",
+      "IVA",
+      "RET_IDU"
+    ],
+    "texto": "IVA - IRE GRAL - RET IDU - ANT IRE - EEFF - IDU",
+    "estado": "",
+    "dia_vencimiento_excel": 7,
+    "responsable": "ARI",
+    "email_responsable": "acampos@effort.com.py"
+  }
 }

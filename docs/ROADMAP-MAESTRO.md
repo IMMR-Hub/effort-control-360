@@ -103,9 +103,28 @@ filas). Por eso Panel, notificaciones y Vencimientos muestran solo el piloto. He
     086, 089, 095, 102, 115) están en la cartera de `kbaez`; Pedro lleva solo los suyos (14), pendientes de que exista
     su cuenta; `kbaez` vuelve al script de contraseña inicial. La novena fila de BEA, «AF Y RM ASOCIACIONES - ALISON»
     (carpeta 121, sin movimiento), no tiene carpeta en OneDrive y no está en el sistema: pendiente desde el 10/11.
-    **Abierto (lo responde Daniel):** el nombre completo de BEA (la cuenta todavía dice «Karina Baez») y si Jorge
-    Barrios, Karina Medina y Melany González siguen en EFFORT: no figuran en la planilla como responsables de ningún
-    cliente, pero eso no dice que se hayan ido. No se desactiva ninguna cuenta.
+    **Abierto (lo responde Daniel):** el nombre completo de BEA (la cuenta todavía dice «Karina Baez»).
+  - [x] **Equipo según la planilla y Diego Sosa — aplicado 2026-11-14 ~14:25 UTC** (respaldo
+    `respaldo-2026-11-14T13-33-02.json`; `scripts/correcciones-equipo-y-clientes-2026-11-14.mjs`). Daniel: «kmedina es
+    ahora pbarrios (con su correo)», «Desactiva a los que no están en el Excel, pero no te olvides de agregar a Laura y a
+    Lili también y obvia a mí también». **Desactivadas** (sin borrar nada, sesiones cerradas): Jorge Barrios, Karina
+    Medina y Melany González — venían de la lista de septiembre de `crear-equipo.mjs`, no de la planilla. **Quedan:**
+    ANALIA, ARA, ARI, SANDRA, BEA (`kbaez@`), PEDRO (`pbarrios@`, cuenta por crear), Laura y Lili (dirección, ven todo;
+    Lili lleva SIPAR, NEO y SOMOS PIRI) y Daniel. `mgonzalez` sale del script de contraseña inicial.
+    **096 vuelve a estar activo: es DIEGO SOSA.** La fila «DIEGO SOSA» de la planilla (ARA, SOLO IVA, vence el 21) no
+    trae carpeta; el 10/11 di de baja el 096 «DIEGO CAMPUZANO» por no encontrarlo por nombre. Su declaración de IVA de
+    setiembre 2026 (formulario 120, PDF escaneado, leído a ojo desde la copia del sistema) es de «SOSA ARGAÑA CAMPUZANO,
+    DIEGO MARTIN JOSE», RUC 2036307-9: el del 096, terminación 7 → día 21. Queda activo, en la cartera de Aracely, con IVA
+    desde 2026-10-01 (agregado a `docs/clientes/obligaciones-segun-planilla-ariana-2026-11-12.json`).
+    **No usar `asignar-obligaciones-segun-planilla.mjs --aplicar` entero:** volvería a crear el anticipo genérico
+    `ANTICIPO_IRE` (desactivado el 12/11 al cargar ANTICIPO_IRE_1..4) y a asignarlo a 13 clientes.
+    **AF Y RM ASOCIADOS (121, de BEA) — corrección de lo que dije el 10/11:** SÍ tenía carpeta, «121 AF Y RM ASOCIADOS»
+    con 11 archivos (último del 07/09), en el análisis del 06/10. Ya no estaba en la lectura de CLIENTES del 01/11 ni en
+    el plan del ordenamiento, y el ordenamiento no la movió (no está en su bitácora). Leído hoy (GET): no está en
+    CLIENTES (144 elementos), ni en las 13 carpetas sin código, ni en RRHH, ni dentro de la carpeta de ningún cliente
+    (copia del sistema). Desapareció entre el 06/10 y el 01/11 por fuera del sistema: hay que preguntarle a EFFORT si
+    la movieron o borraron (la papelera de OneDrive guarda 93 días). En la raíz apareció
+    `CLIENTES EFFORT - ARIANA ACTUAL.xlsx`, que puede ser una versión más nueva de la planilla (no se leyó).
   - [x] **Clientes de Lili (Daniel, 2026-11-12: «Sipar, Neo y Somos Piri EAS son clientes de Lili») — aplicado en la
     base 20:20 UTC, con respaldo `respaldo-2026-11-12T20-11-24.json`:** 043 SIPAR vuelve a estar activo (con sus cuatro
     obligaciones del piloto); 014 NEO HOLDING GROUP y 015 SOMOS PIRI EAS quedan como estaban (activos, sin
