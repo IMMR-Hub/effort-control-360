@@ -104,6 +104,12 @@ filas). Por eso Panel, notificaciones y Vencimientos muestran solo el piloto. He
     su cuenta; `kbaez` vuelve al script de contraseña inicial. La novena fila de BEA, «AF Y RM ASOCIACIONES - ALISON»
     (carpeta 121, sin movimiento), no tiene carpeta en OneDrive y no está en el sistema: pendiente desde el 10/11.
     **Abierto (lo responde Daniel):** el nombre completo de BEA (la cuenta todavía dice «Karina Baez»).
+  - [x] **Cuentas listas para el primer acceso — 2026-11-14 14:29–14:31 UTC.** Daniel corrió `crear-equipo.mjs` (creó
+    a Pedro Barrios) y `restablecer-contrasena-inicial.mjs` (7 cuentas: Laura, Lili, Analía, Aracely, Ariana, BEA,
+    Sandra), con la misma contraseña provisoria; la cuenta de Daniel no se tocó. Claude cargó la cartera de Pedro: 14
+    clientes. Activos: 89; con responsable: 85; sin responsable: 001 ELIAS EL KHOURY, 108 ANA CAMPUZANO-MTESS, 109
+    GABRIEL CUBAS y 110 SOLEDAD JURE (solo están en la lista IPS de la hoja ARIANA, sin responsable; los ve dirección).
+    Hueco: `crear-equipo.mjs` no deja evento en la bitácora al crear una cuenta (la creación de Pedro no figura ahí).
   - [x] **Equipo según la planilla y Diego Sosa — aplicado 2026-11-14 ~14:25 UTC** (respaldo
     `respaldo-2026-11-14T13-33-02.json`; `scripts/correcciones-equipo-y-clientes-2026-11-14.mjs`). Daniel: «kmedina es
     ahora pbarrios (con su correo)», «Desactiva a los que no están en el Excel, pero no te olvides de agregar a Laura y a
