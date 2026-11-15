@@ -104,6 +104,20 @@ filas). Por eso Panel, notificaciones y Vencimientos muestran solo el piloto. He
     su cuenta; `kbaez` vuelve al script de contraseña inicial. La novena fila de BEA, «AF Y RM ASOCIACIONES - ALISON»
     (carpeta 121, sin movimiento), no tiene carpeta en OneDrive y no está en el sistema: pendiente desde el 10/11.
     **Abierto (lo responde Daniel):** el nombre completo de BEA (la cuenta todavía dice «Karina Baez»).
+  - [x] **Manual y guía de primer ingreso — 2026-11-15** (Daniel: reunión con el equipo el martes 17/11).
+    `docs/manual/Guía de primer ingreso - EFFORT Control 360.pdf` (4 páginas: Google Authenticator, clave, cambio de
+    contraseña, problemas frecuentes) y `docs/manual/Manual de uso - EFFORT Control 360.pdf` (23 páginas: de dónde salen
+    los datos, quién ve qué, filtros y colores, cada pantalla con captura, diccionario de vencimientos y alertas,
+    calendario DNIT, pausar/reactivar clientes, glosario, preguntas frecuentes). Capturas del entorno de prueba con
+    datos de ejemplo (nunca de producción); textos de la interfaz relevados del código. Se regeneran con
+    `docs/manual/herramientas/` (LEEME). Discrepancias que encontró el relevamiento (no afectan al equipo actual, que es
+    dirección y responsables): Seguimiento, Equipo y Reglas dan error de permisos a auxiliar, revisor y solo lectura
+    aunque figuran en el menú; el botón «Sincronizar OneDrive» solo lo ve dirección aunque la API lo permite a todos
+    menos solo lectura; Liquidaciones no tiene botón para «Reclamada» ni «Confirmada»; el texto de Seguimiento dice que
+    los recordatorios «salen solos» pero están apagados.
+  - [x] **001 ELIAS EL KHOURY inactivo — 2026-11-15 ~20:00 UTC.** Daniel: «Elias queda inactivo por estar sin
+    movimiento temporalmente». Pausado desde el mismo campo que usa la pantalla (Clientes → Editar → «Cliente activo»),
+    con el motivo en observaciones; se reactiva igual. Activos: 88, todos con responsable.
   - [x] **Los 4 de la lista IPS a Ariana — aplicado 2026-11-15 19:50 UTC** (respaldo
     `respaldo-2026-11-15T19-49-07.json`). Daniel: «Elias está sin movimiento, el resto: El Khoury, Ana Campuzano-MTESS,
     Gabriel Cubas y Soledad Jure con acampos». 001 ELIAS EL KHOURY, 108 ANA CAMPUZANO-MTESS, 109 GABRIEL CUBAS y 110
