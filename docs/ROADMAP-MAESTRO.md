@@ -104,6 +104,13 @@ filas). Por eso Panel, notificaciones y Vencimientos muestran solo el piloto. He
     su cuenta; `kbaez` vuelve al script de contraseña inicial. La novena fila de BEA, «AF Y RM ASOCIACIONES - ALISON»
     (carpeta 121, sin movimiento), no tiene carpeta en OneDrive y no está en el sistema: pendiente desde el 10/11.
     **Abierto (lo responde Daniel):** el nombre completo de BEA (la cuenta todavía dice «Karina Baez»).
+  - [x] **Los 4 de la lista IPS a Ariana — aplicado 2026-11-15 19:50 UTC** (respaldo
+    `respaldo-2026-11-15T19-49-07.json`). Daniel: «Elias está sin movimiento, el resto: El Khoury, Ana Campuzano-MTESS,
+    Gabriel Cubas y Soledad Jure con acampos». 001 ELIAS EL KHOURY, 108 ANA CAMPUZANO-MTESS, 109 GABRIEL CUBAS y 110
+    SOLEDAD JURE pasan a la cartera de Ariana (16 clientes), cargados en
+    `docs/clientes/obligaciones-segun-planilla-ariana-2026-11-12.json` para que el script de carteras no los saque. Leí
+    que Elias también va con Ariana y marcado «sin movimiento» (como los S/M de la planilla, que siguen activos y con
+    responsable): queda activo, con la nota en sus observaciones. **Ahora los 89 clientes activos tienen responsable.**
   - [x] **Cuentas listas para el primer acceso — 2026-11-14 14:29–14:31 UTC.** Daniel corrió `crear-equipo.mjs` (creó
     a Pedro Barrios) y `restablecer-contrasena-inicial.mjs` (7 cuentas: Laura, Lili, Analía, Aracely, Ariana, BEA,
     Sandra), con la misma contraseña provisoria; la cuenta de Daniel no se tocó. Claude cargó la cartera de Pedro: 14

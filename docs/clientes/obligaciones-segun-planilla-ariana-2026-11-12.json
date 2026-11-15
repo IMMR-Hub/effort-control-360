@@ -3,10 +3,11 @@
     "nombre_excel": null,
     "obligaciones": [],
     "texto": "solo lista IPS REI / REOP (hoja ARIANA)",
-    "estado": "",
+    "estado": "S/M",
     "dia_vencimiento_excel": null,
-    "responsable": null,
-    "email_responsable": null
+    "responsable": "ARI",
+    "email_responsable": "acampos@effort.com.py",
+    "nota": "Responsable agregado 2026-11-14 (Daniel: «Elias está sin movimiento, el resto: El Khoury, Ana Campuzano-MTESS, Gabriel Cubas y Soledad Jure con acampos»); en la planilla solo figuraba en la lista IPS de la hoja ARIANA."
   },
   "002": {
     "nombre_excel": "FUMIPRO S.A",
@@ -896,8 +897,9 @@
     "texto": "solo lista IPS REI / REOP (hoja ARIANA)",
     "estado": "",
     "dia_vencimiento_excel": null,
-    "responsable": null,
-    "email_responsable": null
+    "responsable": "ARI",
+    "email_responsable": "acampos@effort.com.py",
+    "nota": "Responsable agregado 2026-11-14 (Daniel: «Elias está sin movimiento, el resto: El Khoury, Ana Campuzano-MTESS, Gabriel Cubas y Soledad Jure con acampos»); en la planilla solo figuraba en la lista IPS de la hoja ARIANA."
   },
   "109": {
     "nombre_excel": null,
@@ -905,8 +907,9 @@
     "texto": "solo lista IPS REI / REOP (hoja ARIANA)",
     "estado": "",
     "dia_vencimiento_excel": null,
-    "responsable": null,
-    "email_responsable": null
+    "responsable": "ARI",
+    "email_responsable": "acampos@effort.com.py",
+    "nota": "Responsable agregado 2026-11-14 (Daniel: «Elias está sin movimiento, el resto: El Khoury, Ana Campuzano-MTESS, Gabriel Cubas y Soledad Jure con acampos»); en la planilla solo figuraba en la lista IPS de la hoja ARIANA."
   },
   "110": {
     "nombre_excel": null,
@@ -914,8 +917,9 @@
     "texto": "solo lista IPS REI / REOP (hoja ARIANA)",
     "estado": "",
     "dia_vencimiento_excel": null,
-    "responsable": null,
-    "email_responsable": null
+    "responsable": "ARI",
+    "email_responsable": "acampos@effort.com.py",
+    "nota": "Responsable agregado 2026-11-14 (Daniel: «Elias está sin movimiento, el resto: El Khoury, Ana Campuzano-MTESS, Gabriel Cubas y Soledad Jure con acampos»); en la planilla solo figuraba en la lista IPS de la hoja ARIANA."
   },
   "111": {
     "nombre_excel": "ESTHER VIGNEAUX",
