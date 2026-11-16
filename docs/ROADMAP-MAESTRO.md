@@ -104,6 +104,14 @@ filas). Por eso Panel, notificaciones y Vencimientos muestran solo el piloto. He
     su cuenta; `kbaez` vuelve al script de contraseña inicial. La novena fila de BEA, «AF Y RM ASOCIACIONES - ALISON»
     (carpeta 121, sin movimiento), no tiene carpeta en OneDrive y no está en el sistema: pendiente desde el 10/11.
     **Abierto (lo responde Daniel):** el nombre completo de BEA (la cuenta todavía dice «Karina Baez»).
+  - [x] **Decisión de Daniel, 2026-11-16: la sincronización con OneDrive queda como está** (cada 15 min por cambios + pasada
+    completa a la medianoche de lunes a sábado). Motivo: no son lo mismo. Medido en la bitácora, 8 días: 124 vueltas por
+    cambios, promedio 79 s incluyendo las lentas, típicas de 5 a 20 s (tope 164 s); 17 pasadas completas, promedio 22 min
+    (19,5 a 26). La de medianoche la pidió Daniel el 24/09 como red de seguridad. «Solo a pedido» se descartó: sin
+    sincronizar, una declaración subida a OneDrive figura como «vencido sin comprobante» (alertas críticas falsas) y el
+    marcado automático de presentados no corre. Costo: el código no usa ningún servicio de IA y no hay cargo por uso que yo
+    haya visto; **no verificado** que no sume transferencia en DigitalOcean (no se vio la factura ni el plan). Los 49 archivos
+    de más de 25 MB (3,5 GB, 15 clientes) siguen afuera, en OneDrive.
   - [x] **Manual y guía de primer ingreso — 2026-11-15** (Daniel: reunión con el equipo el martes 17/11).
     `docs/manual/Guía de primer ingreso - EFFORT Control 360.pdf` (4 páginas: Google Authenticator, clave, cambio de
     contraseña, problemas frecuentes) y `docs/manual/Manual de uso - EFFORT Control 360.pdf` (23 páginas: de dónde salen
