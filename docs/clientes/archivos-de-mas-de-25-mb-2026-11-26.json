@@ -1,0 +1,431 @@
+{
+ "leidoEn": "2026-11-26T13:58:14.979Z",
+ "clientes": 88,
+ "grandes": [
+  {
+   "codigo": "014",
+   "cliente": "NEO HOLDING GROUP S.A",
+   "carpeta": "014 ZZ A CLASIFICAR/DOC/NEO HOLDING",
+   "archivo": "2022 NEO HOLDING.rar",
+   "mb": 60.4,
+   "modificado": "2022-09-08"
+  },
+  {
+   "codigo": "014",
+   "cliente": "NEO HOLDING GROUP S.A",
+   "carpeta": "014 ZZ A CLASIFICAR/DOC/NEO HOLDING/2025",
+   "archivo": "Rocas Presentacion 2 trimestre 2025 Py.pptx",
+   "mb": 26.6,
+   "modificado": "2025-07-18"
+  },
+  {
+   "codigo": "014",
+   "cliente": "NEO HOLDING GROUP S.A",
+   "carpeta": "014 PERIODO 2025/DOCUMENTOS CONTABLES/11 NOVIEMBRE",
+   "archivo": "NEO HOLDING 1205.mp4",
+   "mb": 30.1,
+   "modificado": "2025-12-05"
+  },
+  {
+   "codigo": "014",
+   "cliente": "NEO HOLDING GROUP S.A",
+   "carpeta": "014 PERIODO 2024/DOCUMENTOS CONTABLES/12 DICIEMBRE",
+   "archivo": "rendicion reembolso 1.pdf",
+   "mb": 25.3,
+   "modificado": "2025-01-06"
+  },
+  {
+   "codigo": "014",
+   "cliente": "NEO HOLDING GROUP S.A",
+   "carpeta": "014 PERIODO 2024/DOCUMENTOS CONTABLES/12 DICIEMBRE",
+   "archivo": "rendicion reembolso 1.zip",
+   "mb": 46.9,
+   "modificado": "2025-01-06"
+  },
+  {
+   "codigo": "021",
+   "cliente": "COPESA CONSTRUCCIONES SA",
+   "carpeta": "021 ZZ A CLASIFICAR/PERIODO 2026/DOCUMENTOS CONTABLES/RECTIFICATIVA",
+   "archivo": "DOCUMENTOSJUNIO.pdf",
+   "mb": 61.7,
+   "modificado": "2026-10-06"
+  },
+  {
+   "codigo": "021",
+   "cliente": "COPESA CONSTRUCCIONES SA",
+   "carpeta": "021 ZZ A CLASIFICAR/PERIODO 2023",
+   "archivo": "TRABAJOS KARI HASTA EL 2023.zip",
+   "mb": 143.5,
+   "modificado": "2024-03-27"
+  },
+  {
+   "codigo": "021",
+   "cliente": "COPESA CONSTRUCCIONES SA",
+   "carpeta": "021 PERIODO 2025/DOCUMENTOS CONTABLES/12 DICIEMBRE",
+   "archivo": "Facturas diciembre COPESA REC.pdf",
+   "mb": 107,
+   "modificado": "2026-02-12"
+  },
+  {
+   "codigo": "021",
+   "cliente": "COPESA CONSTRUCCIONES SA",
+   "carpeta": "021 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE",
+   "archivo": "DNIT.zip",
+   "mb": 218.3,
+   "modificado": "2026-02-20"
+  },
+  {
+   "codigo": "021",
+   "cliente": "COPESA CONSTRUCCIONES SA",
+   "carpeta": "021 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE",
+   "archivo": "FACTURAS COPESA 09-25.pdf",
+   "mb": 35.3,
+   "modificado": "2026-02-02"
+  },
+  {
+   "codigo": "021",
+   "cliente": "COPESA CONSTRUCCIONES SA",
+   "carpeta": "021 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE",
+   "archivo": "FACTURAS ELECTRONICAS 09-25.pdf",
+   "mb": 89.4,
+   "modificado": "2026-02-19"
+  },
+  {
+   "codigo": "021",
+   "cliente": "COPESA CONSTRUCCIONES SA",
+   "carpeta": "021 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE",
+   "archivo": "FACTURAS PREIMPRESAS 09-25.pdf",
+   "mb": 142.2,
+   "modificado": "2026-02-19"
+  },
+  {
+   "codigo": "021",
+   "cliente": "COPESA CONSTRUCCIONES SA",
+   "carpeta": "021 PERIODO 2025/DOCUMENTOS CONTABLES/09 SETIEMBRE",
+   "archivo": "FACTURAS PREIMPRESAS 09-25.zip",
+   "mb": 134,
+   "modificado": "2026-02-23"
+  },
+  {
+   "codigo": "021",
+   "cliente": "COPESA CONSTRUCCIONES SA",
+   "carpeta": "021 PERIODO 2025/DOCUMENTOS CONTABLES/05 MAYO",
+   "archivo": "FACTURAS COPESA-2.pdf",
+   "mb": 36,
+   "modificado": "2025-10-14"
+  },
+  {
+   "codigo": "021",
+   "cliente": "COPESA CONSTRUCCIONES SA",
+   "carpeta": "021 PERIODO 2025/DOCUMENTOS CONTABLES/05 MAYO",
+   "archivo": "FACTURAS COPESA-4.pdf",
+   "mb": 28.9,
+   "modificado": "2025-10-14"
+  },
+  {
+   "codigo": "021",
+   "cliente": "COPESA CONSTRUCCIONES SA",
+   "carpeta": "021 PERIODO 2025/DOCUMENTOS CONTABLES/05 MAYO",
+   "archivo": "RECTIFICATIVA.zip",
+   "mb": 112.1,
+   "modificado": "2025-10-14"
+  },
+  {
+   "codigo": "023",
+   "cliente": "DIBEC UNIPERSONAL",
+   "carpeta": "023 ZZ A CLASIFICAR/PERIODO 2025/DOCUMENTOS CONTABLES/13 BANCO",
+   "archivo": "Liquidacion de prestamos DIBEC .pdf",
+   "mb": 32.2,
+   "modificado": "2026-01-19"
+  },
+  {
+   "codigo": "023",
+   "cliente": "DIBEC UNIPERSONAL",
+   "carpeta": "023 PERIODO 2026/DOCUMENTOS CONTABLES/07 JULIO",
+   "archivo": "Facturas julio que faltaron.pdf",
+   "mb": 54.3,
+   "modificado": "2026-08-25"
+  },
+  {
+   "codigo": "023",
+   "cliente": "DIBEC UNIPERSONAL",
+   "carpeta": "023 PERIODO 2025/DOCUMENTOS VARIOS/AUDIT 2025",
+   "archivo": "CARPETA 3.zip",
+   "mb": 61.7,
+   "modificado": "2026-08-13"
+  },
+  {
+   "codigo": "023",
+   "cliente": "DIBEC UNIPERSONAL",
+   "carpeta": "023 PERIODO 2025/DOCUMENTOS VARIOS/AUDIT 2025/CARPETA 3/COMPRAS",
+   "archivo": "fact- compras 2025.pdf",
+   "mb": 27.2,
+   "modificado": "2026-08-13"
+  },
+  {
+   "codigo": "023",
+   "cliente": "DIBEC UNIPERSONAL",
+   "carpeta": "023 PERIODO 2024/DOCUMENTOS VARIOS/AUDIT 2024/ENVIADO",
+   "archivo": "REQUERIMIENTO DE AUDITORIA 3.zip",
+   "mb": 76.9,
+   "modificado": "2025-08-01"
+  },
+  {
+   "codigo": "025",
+   "cliente": "MUNDO MOVIL S.A",
+   "carpeta": "025 LEGAL Y SOCIETARIO",
+   "archivo": "CONSTITUCION AUTENTICADA MUNDO MOVIL S.A. - DOCUMENTOS LEGALES Y SOCIETARIOS.pdf",
+   "mb": 31.3,
+   "modificado": "2024-01-30"
+  },
+  {
+   "codigo": "031",
+   "cliente": "EVA MACIEL",
+   "carpeta": "031 PERIODO 2024/DOCUMENTOS CONTABLES/06 JUNIO",
+   "archivo": "Compras-20240716T141645Z-001.zip",
+   "mb": 95.1,
+   "modificado": "2024-07-16"
+  },
+  {
+   "codigo": "031",
+   "cliente": "EVA MACIEL",
+   "carpeta": "031 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO",
+   "archivo": "FACTURA COMPRA 052024 EVA MACIEL.zip",
+   "mb": 124.9,
+   "modificado": "2024-06-14"
+  },
+  {
+   "codigo": "031",
+   "cliente": "EVA MACIEL",
+   "carpeta": "031 PERIODO 2024/DOCUMENTOS CONTABLES/05 MAYO",
+   "archivo": "FACTURA VENTA 052024 EVA MACIEL.zip",
+   "mb": 125.4,
+   "modificado": "2024-06-18"
+  },
+  {
+   "codigo": "031",
+   "cliente": "EVA MACIEL",
+   "carpeta": "031 PERIODO 2024/DOCUMENTOS CONTABLES/01 ENERO",
+   "archivo": "Compra-20240219T120211Z-001.zip",
+   "mb": 139.3,
+   "modificado": "2024-02-19"
+  },
+  {
+   "codigo": "031",
+   "cliente": "EVA MACIEL",
+   "carpeta": "031 PERIODO 2023/DOCUMENTOS CONTABLES/12 DICIEMBRE",
+   "archivo": "Diciembre 2023-20240119T114615Z-001.zip",
+   "mb": 252.2,
+   "modificado": "2024-01-19"
+  },
+  {
+   "codigo": "037",
+   "cliente": "BICLOPE S.A",
+   "carpeta": "037 LEGAL Y SOCIETARIO",
+   "archivo": "Constitucion Biclope - (signed 1).pdf",
+   "mb": 80.7,
+   "modificado": "2026-04-22"
+  },
+  {
+   "codigo": "037",
+   "cliente": "BICLOPE S.A",
+   "carpeta": "037 LEGAL Y SOCIETARIO",
+   "archivo": "Constitucion Biclope.pdf",
+   "mb": 80.5,
+   "modificado": "2025-05-13"
+  },
+  {
+   "codigo": "037",
+   "cliente": "BICLOPE S.A",
+   "carpeta": "037 LEGAL Y SOCIETARIO",
+   "archivo": "DOCUMENTOS BICLOPE.zip",
+   "mb": 171.2,
+   "modificado": "2025-06-26"
+  },
+  {
+   "codigo": "037",
+   "cliente": "BICLOPE S.A",
+   "carpeta": "037 LEGAL Y SOCIETARIO",
+   "archivo": "Estatutos- Biclope.pdf",
+   "mb": 62.7,
+   "modificado": "2025-06-26"
+  },
+  {
+   "codigo": "043",
+   "cliente": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+   "carpeta": "043 LEGAL Y SOCIETARIO",
+   "archivo": "Constitucion de la firma silicatos paraguayos sa - SIARA.pdf",
+   "mb": 36.9,
+   "modificado": "2026-04-17"
+  },
+  {
+   "codigo": "043",
+   "cliente": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+   "carpeta": "043 LEGAL Y SOCIETARIO",
+   "archivo": "estatuto mas modificacion n°26.pdf",
+   "mb": 27.5,
+   "modificado": "2025-08-11"
+  },
+  {
+   "codigo": "043",
+   "cliente": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+   "carpeta": "043 LEGAL Y SOCIETARIO",
+   "archivo": "registro de accionistas sipar.pdf",
+   "mb": 33.3,
+   "modificado": "2026-07-29"
+  },
+  {
+   "codigo": "043",
+   "cliente": "SILICATOS PARAGUAYOS SA (SIPAR S.A.)",
+   "carpeta": "043 LEGAL Y SOCIETARIO/ASAMBLEA 2025",
+   "archivo": "ACTA DE ASAMBLEA 2025 - SIARA.pdf",
+   "mb": 46.4,
+   "modificado": "2026-04-17"
+  },
+  {
+   "codigo": "044",
+   "cliente": "MARCO PENONI",
+   "carpeta": "044 PERIODO 2025/DOCUMENTOS VARIOS",
+   "archivo": "Marco Penoni - Recibos 2025.pdf",
+   "mb": 28.7,
+   "modificado": "2026-04-29"
+  },
+  {
+   "codigo": "052",
+   "cliente": "JUANA RAFAELA TORRES",
+   "carpeta": "052 PERIODO 2025/DOCUMENTOS CONTABLES/CIERRE 2025",
+   "archivo": "LIQ IRP 2025 - JUANA TORRES.xlsx",
+   "mb": 44.5,
+   "modificado": "2026-03-25"
+  },
+  {
+   "codigo": "067",
+   "cliente": "LILCY S.A",
+   "carpeta": "067 PERIODO 2024/DOCUMENTOS CONTABLES/CIERRE 2024",
+   "archivo": "CONSULTAS SOBRE CUENTAS DEL BALANCE.pdf",
+   "mb": 27.2,
+   "modificado": "2025-04-08"
+  },
+  {
+   "codigo": "068",
+   "cliente": "ECOAGRO SA",
+   "carpeta": "068 PERIODO 2025/DOCUMENTOS VARIOS/AUDITORIA",
+   "archivo": "SOLICITUDES VARIAS.zip",
+   "mb": 71.1,
+   "modificado": "2026-07-16"
+  },
+  {
+   "codigo": "068",
+   "cliente": "ECOAGRO SA",
+   "carpeta": "068 LEGAL Y SOCIETARIO",
+   "archivo": "ACTA DE ASAMBLEA NRO 24 ECOAGRO.pdf",
+   "mb": 56.7,
+   "modificado": "2026-03-20"
+  },
+  {
+   "codigo": "068",
+   "cliente": "ECOAGRO SA",
+   "carpeta": "068 LEGAL Y SOCIETARIO",
+   "archivo": "CONSTITUCION SOCIEDAD ECOAGRO.pdf",
+   "mb": 28.7,
+   "modificado": "2026-03-20"
+  },
+  {
+   "codigo": "079",
+   "cliente": "MARIA VANESSA ACUÑA",
+   "carpeta": "079 PERIODO 2025/DOCUMENTOS CONTABLES/08 AGOSTO",
+   "archivo": "CamScanner 25-09-2025 15.11 agosto.pdf",
+   "mb": 36.8,
+   "modificado": "2025-09-25"
+  },
+  {
+   "codigo": "079",
+   "cliente": "MARIA VANESSA ACUÑA",
+   "carpeta": "079 PERIODO 2025/DOCUMENTOS CONTABLES/06 JUNIO",
+   "archivo": "CamScanner 24-07-2025 09.25.pdf",
+   "mb": 37.1,
+   "modificado": "2025-08-05"
+  },
+  {
+   "codigo": "084",
+   "cliente": "R3J E.A.S",
+   "carpeta": "084 ZZ A CLASIFICAR/PLAN DE NEGOCIOS",
+   "archivo": "Aprobacion de Fraccionamiento.pdf",
+   "mb": 31,
+   "modificado": "2025-01-16"
+  },
+  {
+   "codigo": "086",
+   "cliente": "BOU ASSI NAJI BAHIJ",
+   "carpeta": "086 ZZ A CLASIFICAR/PERIODO 2024/DOCUMENTOS CONTABLES/UNIDAD 16A",
+   "archivo": "Contrato compra venta.pdf",
+   "mb": 63.2,
+   "modificado": "2024-11-19"
+  },
+  {
+   "codigo": "086",
+   "cliente": "BOU ASSI NAJI BAHIJ",
+   "carpeta": "086 ZZ A CLASIFICAR/PERIODO 2024/DOCUMENTOS CONTABLES/UNIDAD 16A",
+   "archivo": "FACTURAS.pdf",
+   "mb": 38.7,
+   "modificado": "2024-11-19"
+  },
+  {
+   "codigo": "086",
+   "cliente": "BOU ASSI NAJI BAHIJ",
+   "carpeta": "086 PERIODO 2025/DOCUMENTOS CONTABLES/04 ABRIL",
+   "archivo": "Departamento 16-D.pdf",
+   "mb": 47.1,
+   "modificado": "2025-04-28"
+  },
+  {
+   "codigo": "089",
+   "cliente": "CRISTAL S.A",
+   "carpeta": "089 PERIODO 2025/DOCUMENTOS CONTABLES/10 OCTUBRE",
+   "archivo": "Ventas octubre 2025.pdf",
+   "mb": 30.6,
+   "modificado": "2025-11-06"
+  },
+  {
+   "codigo": "089",
+   "cliente": "CRISTAL S.A",
+   "carpeta": "089 PERIODO 2025/DOCUMENTOS CONTABLES/04 ABRIL",
+   "archivo": "Facturas CRISTAL SA VENTAS 04.pdf",
+   "mb": 26.5,
+   "modificado": "2025-05-09"
+  },
+  {
+   "codigo": "089",
+   "cliente": "CRISTAL S.A",
+   "carpeta": "089 PERIODO 2025/DOCUMENTOS CONTABLES/03 MARZO",
+   "archivo": "Ventas y Compras.pdf",
+   "mb": 34.6,
+   "modificado": "2025-04-09"
+  },
+  {
+   "codigo": "089",
+   "cliente": "CRISTAL S.A",
+   "carpeta": "089 PERIODO 2025/DOCUMENTOS CONTABLES/02 FEBRERO",
+   "archivo": "facturas CRISTAL SA FEBRERO.pdf",
+   "mb": 91.3,
+   "modificado": "2025-03-19"
+  },
+  {
+   "codigo": "089",
+   "cliente": "CRISTAL S.A",
+   "carpeta": "089 LEGAL Y SOCIETARIO",
+   "archivo": "ESTATUTO CRISTAL S.A..pdf",
+   "mb": 56.5,
+   "modificado": "2025-02-04"
+  },
+  {
+   "codigo": "111",
+   "cliente": "ESTHER VIGNEAUX",
+   "carpeta": "111 ZZ A CLASIFICAR",
+   "archivo": "e387ce-PERMANENTEENERO2026.pdf",
+   "mb": 28.6,
+   "modificado": "2026-08-11"
+  }
+ ],
+ "errores": []
+}

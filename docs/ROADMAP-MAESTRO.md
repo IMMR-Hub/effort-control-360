@@ -104,6 +104,30 @@ filas). Por eso Panel, notificaciones y Vencimientos muestran solo el piloto. He
     su cuenta; `kbaez` vuelve al script de contraseña inicial. La novena fila de BEA, «AF Y RM ASOCIACIONES - ALISON»
     (carpeta 121, sin movimiento), no tiene carpeta en OneDrive y no está en el sistema: pendiente desde el 10/11.
     **Abierto (lo responde Daniel):** el nombre completo de BEA (la cuenta todavía dice «Karina Baez»).
+  - [ ] **▶ HANDOFF 2026-11-26 (después de la reunión de Daniel con el equipo) — EMPEZAR ACÁ.**
+    **Estado verificado hoy:** producción sana (web y API responden, versión `index-DGpv2woh.js`); 88 clientes activos,
+    todos con responsable y carpeta; sincronización cada 15 min + completa a medianoche (decisión de Daniel 2026-11-16),
+    limpia. Ninguna de las 8 cuentas del equipo entró todavía: el primer ingreso se hace en la reunión de hoy
+    (guía y manual en `docs/manual/`). Commits locales de documentación pueden estar sin subir: `git log origin/main..HEAD`.
+    **Lo que se hizo hoy:** (a) `docs/clientes/REUNION 26-11-2026 - ARCHIVOS GRANDES, SIN RUC Y FALLOS.xlsx`: los 53 archivos
+    de más de 25 MB con su ruta (recorrido real de las 88 carpetas; los 4 de más sobre los 49 del 11/11 son de SIPAR), los
+    7 clientes sin RUC (055 PAOLA MEZA, 108 ANA CAMPUZANO-MTESS, 109 GABRIEL CUBAS, 110 SOLEDAD JURE, 114 GERARDO SOSA,
+    120 CAMILO ACOSTA, 124 GESTION INTEGRAL DE CAMPOS; la planilla nueva trae RUC para 055 `2525200-3` y 114 `1538948-0`,
+    sin verificar ni cargar) y las 11 vueltas con «fallos» (todas son la pasada de medianoche: los «fallos» son los
+    archivos grandes, no errores). (b) Se leyó la planilla nueva `CLIENTES EFFORT - ARIANA ACTUAL.xlsx` (25/11, Ariana),
+    solo la hoja DOCUMENTOS; comparación con la del 12/11 en
+    `docs/clientes/comparacion-planilla-ariana-actual-2026-11-26.json`: 86 filas (antes 82), **4 clientes nuevos**
+    (121 FFV EAS - ALISON → BEA; 131 COMPAÑÍA 2B SA → SANDRA; 112 ISAAK EAS → ARA; 15 SOMOS PIRI EAS → SANDRA, que hoy
+    está en la cartera de Lili por palabra de Daniel) y **71 filas con cambios** en obligaciones o estado. **Ojo:** la
+    columna ESTADO parece haber cambiado de significado (ahora trae PREIMPRESA, F/ ELECTR, S/M, SUSPENSION, LIQ.SALARIO…):
+    no aplicar nada sin entenderla y sin confirmarlo con Daniel. Las hojas IPS/REOP tienen contraseñas de clientes: no se
+    leen. (c) El Panel con la sesión de Daniel NO se revisó: en el Chrome 1 effort360 estaba en «Ingresar» (sin sesión).
+    **Siguiente (en orden):** 1) revisar el Panel con la sesión de Daniel (que él ingrese; Claude no escribe contraseñas ni
+    entra a las cuentas del equipo); 2) analizar los 71 cambios y los 4 clientes nuevos de la planilla nueva, mostrarle a
+    Daniel qué cambiaría en el sistema y aplicar solo lo confirmado (respaldo antes; la planilla es la fuente:
+    `feedback_excel_de_clientes_es_la_fuente`); 3) cargar los RUC de 055 y 114 si Daniel confirma; 4) revisión de
+    feriados: Daniel dijo que en noviembre no hay feriados → actualizar `REVISION_DE_FERIADOS[2026]` y en diciembre los
+    móviles de 2027; 5) seguir el punto 46 de `docs/DISCREPANCIAS.md` (retenciones, auditoría, detector de IRP/IRE SIMPLE).
   - [x] **Revisión de producción el día de la reunión — 2026-11-26 ~13:00 UTC (solo lectura, nada se tocó).** Web y API
     responden (0,5 s y 0,3 s), misma versión desplegada (`index-DGpv2woh.js`). 88 clientes activos, 0 sin responsable, 0 sin
     carpeta, 7 sin RUC. Sincronización sana: vueltas por cambios cada 15 min de 5 a 8 s sin fallos; la pasada completa de la

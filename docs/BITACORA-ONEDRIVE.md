@@ -637,3 +637,16 @@ En concreto:
   elementos y ninguno es la carpeta 121. Los archivos de DIEGO SOSA están dentro de `096 DIEGO CAMPUZANO` (RUC 2036307-9,
   «SOSA ARGAÑA CAMPUZANO, DIEGO MARTIN JOSE»). Nada se escribió, movió ni borró.
 
+## 2026-11-26 — Lectura (solo GET): planilla «ARIANA ACTUAL» y archivos de más de 25 MB
+
+- **Pedido:** Daniel, 2026-11-26 (día de la reunión con el equipo): «Leé la planilla nueva de OneDrive. Dime en una lista
+  cuáles son los 53 archivos de más de 25 MB».
+- **Qué:** `scripts/revision-reunion-2026-11-26.mjs` (GET con el lector de Graph de `alta-masiva-clientes.mjs` y
+  `DriveGraph.listarRecursivoPorId`, el mismo que usa la sincronización; el único POST es el del token).
+  1. Bajó `CLIENTES EFFORT E.A.S/CLIENTES EFFORT - ARIANA ACTUAL.xlsx` (35 KB, modificada el 2026-11-25 por Ariana
+     Campos) a la carpeta temporal de la sesión. **Se leyó solo la hoja DOCUMENTOS.** Las hojas IPS y REOP tienen
+     usuarios y contraseñas de clientes en texto plano: no se abrieron, no se copiaron, y la copia temporal se borró.
+  2. Recorrió las 88 carpetas de clientes activos (13:20–13:58 UTC), sin errores: 53 archivos de más de 25 MB
+     (3,6 GB). Lista en `docs/clientes/archivos-de-mas-de-25-mb-2026-11-26.json` y en
+     `docs/clientes/REUNION 26-11-2026 - ARCHIVOS GRANDES, SIN RUC Y FALLOS.xlsx`.
+- **Nada se escribió, movió ni borró en OneDrive.**

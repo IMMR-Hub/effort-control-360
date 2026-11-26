@@ -1,0 +1,659 @@
+{
+ "filas_nuevas": 86,
+ "filas_12_11": 82,
+ "solo_en_la_nueva": [
+  {
+   "drive": "121",
+   "cliente": "FFV EAS - ALISON",
+   "vto": 7,
+   "ruc": "80084460-2",
+   "doc": "OK",
+   "obligaciones": "IVA, IREL GRAL",
+   "estado": "PREIMPRESA",
+   "responsable": "BEA"
+  },
+  {
+   "drive": "131",
+   "cliente": "COMPAÑIA 2B SA",
+   "vto": 19,
+   "ruc": "80139886",
+   "doc": "OK",
+   "obligaciones": "",
+   "estado": "PREIMPRESA",
+   "responsable": "SANDRA"
+  },
+  {
+   "drive": "15",
+   "cliente": "SOMOS PIRI EAS",
+   "vto": 19,
+   "ruc": "80139266-7",
+   "doc": "OK",
+   "obligaciones": "",
+   "estado": "PREIMPRESA",
+   "responsable": "SANDRA"
+  },
+  {
+   "drive": "112",
+   "cliente": "ISAAK EAS",
+   "vto": 23,
+   "ruc": "80165318-5",
+   "doc": "",
+   "obligaciones": "IVA,IRE GRAL, EE FF, IDU",
+   "estado": "S/M",
+   "responsable": "ARA"
+  }
+ ],
+ "ya_no_estan": [],
+ "cambios": [
+  {
+   "codigo": "084",
+   "cliente": "R3J E.A.S",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "091",
+   "cliente": "OSMAR LOPEZ",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "081",
+   "cliente": "MARKELIER EAS UNIPERSONAL",
+   "cambios": [
+    "estado «» → «S/M»"
+   ]
+  },
+  {
+   "codigo": "130",
+   "cliente": "BV SOLUTIONS EAS",
+   "cambios": [
+    "estado «» → «F/ ELECTR»"
+   ]
+  },
+  {
+   "codigo": "116",
+   "cliente": "QUIMECO E.A.S.",
+   "cambios": [
+    "obligaciones «IVA - IRE GRAL - RET IDU - ANT IRE - EEFF - IDU - chica de Diego Beconi» → «IVA - IRE GRAL - RET IDU - ANT IRE - EEFF - IDU»"
+   ]
+  },
+  {
+   "codigo": "012",
+   "cliente": "GARSO S.A",
+   "cambios": [
+    "estado «» → «PREIMPRESOS»"
+   ]
+  },
+  {
+   "codigo": "055",
+   "cliente": "PAOLA MEZA",
+   "cambios": [
+    "estado «» → «LIQ.SALARIO»"
+   ]
+  },
+  {
+   "codigo": "100",
+   "cliente": "CONSORCIO GUASU",
+   "cambios": [
+    "estado «» → «F/ ELECTR»"
+   ]
+  },
+  {
+   "codigo": "044",
+   "cliente": "MARCO PENONI",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "038",
+   "cliente": "LUIS GONZÁLEZ",
+   "cambios": [
+    "estado «» → «FACT/ELECT»"
+   ]
+  },
+  {
+   "codigo": "026",
+   "cliente": "CÚBICO METALÚRGICA",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "006",
+   "cliente": "RAYVAN EL KHOURY",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "002",
+   "cliente": "FUMIPRO S.A",
+   "cambios": [
+    "estado «» → «FACT/ELECT»"
+   ]
+  },
+  {
+   "codigo": "027",
+   "cliente": "MARIEL RODRIGUEZ - SUSPENSIÓN",
+   "cambios": [
+    "estado «SUSPENSIÓN» → «S/M»"
+   ]
+  },
+  {
+   "codigo": "083",
+   "cliente": "NG EAS",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "035",
+   "cliente": "MARIA ANGELICA PETTERS",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "003",
+   "cliente": "GRETTA HAMID AL KHOURY",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "111",
+   "cliente": "ESTHER VIGNEAUX",
+   "cambios": [
+    "estado «» → «FACTURA ELEC.»"
+   ]
+  },
+  {
+   "codigo": "008",
+   "cliente": "RAMIRO GARCIA",
+   "cambios": [
+    "estado «» → «PREIMPRESOS»"
+   ]
+  },
+  {
+   "codigo": "095",
+   "cliente": "MACOMA ENVIRONMENTAL",
+   "cambios": [
+    "estado «» → «S/M»"
+   ]
+  },
+  {
+   "codigo": "024",
+   "cliente": "ALUSAN",
+   "cambios": [
+    "estado «» → «PREIMPRESOS»"
+   ]
+  },
+  {
+   "codigo": "011",
+   "cliente": "LAURA SOSA  ARGAÑA",
+   "cambios": [
+    "estado «» → «PREIMPRESOS»"
+   ]
+  },
+  {
+   "codigo": "046",
+   "cliente": "MARGARITA RUIZ",
+   "cambios": [
+    "estado «» → «FACT/ELECT»"
+   ]
+  },
+  {
+   "codigo": "017",
+   "cliente": "RITA GONZALEZ",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "073",
+   "cliente": "E SOLUTIONS",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "117",
+   "cliente": "DIEGO VELAZQUEZ",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "085",
+   "cliente": "GESTION AGROPECUARIA SRL",
+   "cambios": [
+    "estado «» → «FACT/ELECT»"
+   ]
+  },
+  {
+   "codigo": "124",
+   "cliente": "CLAUDIO - GESTION INTEGRAL DE CAMPOS",
+   "cambios": [
+    "estado «» → «FACTURA ELEC.»"
+   ]
+  },
+  {
+   "codigo": "105",
+   "cliente": "ALMA BENITEZ OVIEDO",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "088",
+   "cliente": "NR GANADERA  - NICODEMUS",
+   "cambios": [
+    "estado «» → «PREIMPRESOS»"
+   ]
+  },
+  {
+   "codigo": "042",
+   "cliente": "JAZMIN VILLAGRA",
+   "cambios": [
+    "estado «» → «PREIMPRESOS»"
+   ]
+  },
+  {
+   "codigo": "120",
+   "cliente": "CAMILO FABIAN ACOSTA ESCOBAR",
+   "cambios": [
+    "estado «» → «FACT/ELECT»"
+   ]
+  },
+  {
+   "codigo": "115",
+   "cliente": "GONZALO GIMENEZ",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "107",
+   "cliente": "AM Y ASOCIADOS - TADEO",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "005",
+   "cliente": "ORGANIC GROUP E.A.S",
+   "cambios": [
+    "obligaciones «S/M» → «SUSPENSION TEMPORAL»"
+   ]
+  },
+  {
+   "codigo": "118",
+   "cliente": "MBV E.A.S. - DIEGO",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "048",
+   "cliente": "JULIO VIZCONTI",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "031",
+   "cliente": "DRA EVA MACIEL",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "023",
+   "cliente": "DIEGO BECONI IRP",
+   "cambios": [
+    "estado «» → «VA A LA OFI»"
+   ]
+  },
+  {
+   "codigo": "032",
+   "cliente": "DIBEC S.A",
+   "cambios": [
+    "estado «» → «VA A LA OFI»"
+   ]
+  },
+  {
+   "codigo": "013",
+   "cliente": "BAIRES EAS",
+   "cambios": [
+    "estado «» → «FACT/ELECT»"
+   ]
+  },
+  {
+   "codigo": "090",
+   "cliente": "RAPIGAS EAS",
+   "cambios": [
+    "estado «» → «FACT/ELECT»"
+   ]
+  },
+  {
+   "codigo": "037",
+   "cliente": "BICLOPE S.A",
+   "cambios": [
+    "estado «» → «S/M»"
+   ]
+  },
+  {
+   "codigo": "020",
+   "cliente": "LILIAN LACONICH",
+   "cambios": [
+    "estado «» → «FACTURA ELEC.»"
+   ]
+  },
+  {
+   "codigo": "080",
+   "cliente": "QUALIA SRL",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "089",
+   "cliente": "CRISTAL SA",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "086",
+   "cliente": "BOU ASSI NAJI BAHIJ",
+   "cambios": [
+    "estado «» → «FACT/ ELECT»"
+   ]
+  },
+  {
+   "codigo": "129",
+   "cliente": "LILIAN CORTESE",
+   "cambios": [
+    "estado «» → «F/ ELECTR»"
+   ]
+  },
+  {
+   "codigo": "096",
+   "cliente": "DIEGO SOSA",
+   "cambios": [
+    "estado «» → «PREIMPRESOS»"
+   ]
+  },
+  {
+   "codigo": "025",
+   "cliente": "MUNDO MOVIL - RAYVEN",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "051",
+   "cliente": "ISAAC WU CHOU",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "106",
+   "cliente": "GANADERA INDIANA",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "018",
+   "cliente": "AGROGRANJA KO'EJU E.A.S",
+   "cambios": [
+    "responsable ARI → PEDRO/ARI",
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "065",
+   "cliente": "HECTOR MARTINEZ",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "078",
+   "cliente": "MMG E.A.S UNIPERSONAL",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "075",
+   "cliente": "ANA EMILIANA CAMPUZANO",
+   "cambios": [
+    "estado «» → «PREIMPRESOS»"
+   ]
+  },
+  {
+   "codigo": "040",
+   "cliente": "GISSEL FARÍAS",
+   "cambios": [
+    "estado «» → «FACTURA VIRTUAL»"
+   ]
+  },
+  {
+   "codigo": "114",
+   "cliente": "GERARDO SOSA",
+   "cambios": [
+    "estado «» → «LIQ.SALARIO»"
+   ]
+  },
+  {
+   "codigo": "119",
+   "cliente": "ALISON RAMIREZ",
+   "cambios": [
+    "obligaciones «IVA, IRP» → «»",
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "103",
+   "cliente": "MJA E.A.S",
+   "cambios": [
+    "estado «» → «FACT/ELECT»"
+   ]
+  },
+  {
+   "codigo": "029",
+   "cliente": "ORL COMERCIAL E.A.S UNIPERSONAL",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "052",
+   "cliente": "JUANA TORRES",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "079",
+   "cliente": "VANESSA ACUÑA",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "053",
+   "cliente": "DIANA HIDALGO",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "068",
+   "cliente": "ECOAGRO S.A",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  },
+  {
+   "codigo": "087",
+   "cliente": "NICODEMUS",
+   "cambios": [
+    "estado «» → «S/M»"
+   ]
+  },
+  {
+   "codigo": "067",
+   "cliente": "LILCY S.A",
+   "cambios": [
+    "estado «» → «FACT/ELECT»"
+   ]
+  },
+  {
+   "codigo": "054",
+   "cliente": "FATIMA PEÑA - MARKELIER",
+   "cambios": [
+    "estado «» → «PREIMPRESOS»"
+   ]
+  },
+  {
+   "codigo": "036",
+   "cliente": "FERNANDO HERREROS - ANALIA BAEZ",
+   "cambios": [
+    "estado «» → «FACTURA VIRTUAL»"
+   ]
+  },
+  {
+   "codigo": "022",
+   "cliente": "EFFORT CONSULTORA E.A.S",
+   "cambios": [
+    "estado «» → «FACT/ELECT»"
+   ]
+  },
+  {
+   "codigo": "010",
+   "cliente": "ALEJANDRA PICCHIONI -MMG",
+   "cambios": [
+    "estado «» → «PREIMPRESA»"
+   ]
+  }
+ ],
+ "estados": [
+  "",
+  "F/ ELECTR",
+  "FACT/ ELECT",
+  "FACT/ELECT",
+  "FACTURA ELEC.",
+  "FACTURA VIRTUAL",
+  "LIQ.SALARIO",
+  "PREIMPRESA",
+  "PREIMPRESOS",
+  "S/M",
+  "SUSPENSION",
+  "VA A LA OFI"
+ ],
+ "responsables": [
+  "ANALIA",
+  "ARA",
+  "ARI",
+  "BEA",
+  "PEDRO",
+  "PEDRO/ARI",
+  "SANDRA"
+ ],
+ "rucs": {
+  "R3J E A S": "80149740-0",
+  "OSMAR LOPEZ": "1680680-8",
+  "MARKELIER EAS UNIPERSONAL": "80145650-9",
+  "BV SOLUTIONS EAS": "80173390-0",
+  "QUIMECO E A S": "80171980-1",
+  "GARSO S A": "80129190-9",
+  "PAOLA MEZA": "2525200-3",
+  "CONSORCIO GUASU": "80157340-8",
+  "MARCO PENONI": "3451720-0",
+  "HERREBAEZ EAS": "80160530",
+  "FFV EAS ALISON": "80084460-2",
+  "LUIS GONZALEZ": "2178071-4",
+  "CUBICO METALURGICA": "80134961-3",
+  "RAYVAN EL KHOURY": "4263631-0",
+  "FUMIPRO S A": "80119631-0",
+  "MARIEL RODRIGUEZ SUSPENSION": "4178951-2",
+  "SOCIEDAD PARAGUAYA DE ENDODONCIA": "80028891-2",
+  "NG EAS": "80146642-3",
+  "MARIA ANGELICA PETTERS": "1254832-4",
+  "GRETTA HAMID AL KHOURY": "4416002-0",
+  "ESTHER VIGNEAUX": "4832651-6",
+  "RAMIRO GARCIA": "1043432-1",
+  "NATALIA APONTE IRP": "2432482-5",
+  "COPESA S A": "80003112-1",
+  "MACOMA ENVIRONMENTAL": "80135322-0",
+  "ALUSAN": "80138933-0",
+  "LAURA SOSA ARGANA": "3170633-9",
+  "MARGARITA RUIZ": "1295563-9",
+  "RITA GONZALEZ": "1043543-3",
+  "E SOLUTIONS": "80048954-3",
+  "DIEGO VELAZQUEZ": "1140364-0",
+  "GESTION AGROPECUARIA SRL": "80112294-5",
+  "CLAUDIO GESTION INTEGRAL DE CAMPOS": "80172614-0",
+  "ALMA BENITEZ OVIEDO": "5718664-2",
+  "NR GANADERA NICODEMUS": "80152614-0",
+  "JAZMIN VILLAGRA": "1439704-8",
+  "ANALIA BAEZ JOHANNSEN": "2320164-9",
+  "CAMILO FABIAN ACOSTA ESCOBAR": "2314684-2",
+  "GONZALO GIMENEZ": "4749524",
+  "AM Y ASOCIADOS TADEO": "80161935-1",
+  "ORGANIC GROUP E A S": "80132565-0",
+  "MBV E A S DIEGO": "80170026-4",
+  "JULIO VIZCONTI": "8875886-9",
+  "DRA EVA MACIEL": "2098326-3",
+  "COMPANIA 2B SA": "80139886",
+  "CARLOS PENONI": "365006-5",
+  "DIEGO BECONI IRP": "2464976-7",
+  "DIBEC S A": "80082006-1",
+  "SOMOS PIRI EAS": "80139266-7",
+  "BAIRES EAS": "80130276-5",
+  "RAPIGAS EAS": "80153456-9",
+  "ASOCIACION PY CRIADORES DE PAMPA": "80022736-0",
+  "MARIA GABRIELA GOSSEN": "3401606-5",
+  "BICLOPE S A": "80069996-3",
+  "LILIAN LACONICH": "4761106-5",
+  "QUALIA SRL": "80145556-1",
+  "CRISTAL SA": "80153246-9",
+  "JOSE PENONI": "365007-5",
+  "BOU ASSI NAJI BAHIJ": "5177877-7",
+  "LILIAN CORTESE": "9374717-9",
+  "DIEGO SOSA": "2036307-9",
+  "MONICA LESME": "2160127-5",
+  "MUNDO MOVIL RAYVEN": "80138328-5",
+  "ISAAC WU CHOU": "1862938-5",
+  "GANADERA INDIANA": "80005098-3",
+  "AGROGRANJA KO EJU E A S": "80135488-9",
+  "HECTOR MARTINEZ": "3274838-8",
+  "MMG E A S UNIPERSONAL": "",
+  "ANA EMILIANA CAMPUZANO": "155828-5",
+  "GISSEL FARIAS": "4647288-6",
+  "GERARDO SOSA": "1538948-0",
+  "ISAAK EAS": "80165318-5",
+  "ALISON RAMIREZ": "3209988-6",
+  "MJA E A S": "80158459-1",
+  "ORL COMERCIAL E A S UNIPERSONAL": "80137909-1",
+  "JUANA TORRES": "703239-0",
+  "VANESSA ACUNA": "1981119-5",
+  "DIANA HIDALGO": "2526159-2",
+  "ECOAGRO S A": "",
+  "NICODEMUS": "2928009-5",
+  "EDWIN SETRINI": "",
+  "LILCY S A": "",
+  "FATIMA PENA MARKELIER": "2071279-0",
+  "FERNANDO HERREROS ANALIA BAEZ": "1573829-9",
+  "EFFORT CONSULTORA E A S": "80130279-0",
+  "ALEJANDRA PICCHIONI MMG": "3622439-1"
+ }
+}
