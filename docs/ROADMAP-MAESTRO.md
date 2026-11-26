@@ -104,6 +104,21 @@ filas). Por eso Panel, notificaciones y Vencimientos muestran solo el piloto. He
     su cuenta; `kbaez` vuelve al script de contraseña inicial. La novena fila de BEA, «AF Y RM ASOCIACIONES - ALISON»
     (carpeta 121, sin movimiento), no tiene carpeta en OneDrive y no está en el sistema: pendiente desde el 10/11.
     **Abierto (lo responde Daniel):** el nombre completo de BEA (la cuenta todavía dice «Karina Baez»).
+  - [x] **Revisión de producción el día de la reunión — 2026-11-26 ~13:00 UTC (solo lectura, nada se tocó).** Web y API
+    responden (0,5 s y 0,3 s), misma versión desplegada (`index-DGpv2woh.js`). 88 clientes activos, 0 sin responsable, 0 sin
+    carpeta, 7 sin RUC. Sincronización sana: vueltas por cambios cada 15 min de 5 a 8 s sin fallos; la pasada completa de la
+    noche (03:23 UTC) tardó 20 min y dejó el punto limpio; 105 archivos nuevos en 24 h, 27.833 registrados. Los «53 fallos»
+    de cada pasada completa son archivos de más de 25 MB (estable todas las noches; de los 53 la bitácora guarda el detalle
+    de los primeros 30, todos por peso; los 4 de más sobre los 49 del 11/11 se suponen de clientes reactivados después —
+    SIPAR y Diego Sosa—, **no verificado**). Cero accesos fallidos o rechazados en 10 días. El detector sigue marcando
+    presentados solo (29 en 10 días). **Pendientes:** (1) las 8 cuentas NUNCA entraron: todas siguen con la clave
+    provisoria y sin Authenticator (solo Daniel entró); (2) **revisión mensual de feriados de NOVIEMBRE sin hacer** (la última
+    es del 2026-10-01; búsqueda en prensa del 26/11: ningún decreto de traslado ni feriado extraordinario para nov–dic
+    2026; falta actualizar `REVISION_DE_FERIADOS[2026]` y en diciembre revisar los móviles de 2027); (3) leer
+    `CLIENTES EFFORT - ARIANA ACTUAL.xlsx` (raíz de OneDrive), que puede ser una planilla más nueva; (4) 7 clientes sin RUC,
+    nombre real de BEA, carpeta 121 AF Y RM desaparecida, 49 archivos de más de 25 MB. Panel: 107 vencimientos vencidos sin
+    presentar (39 IVA de octubre, 13 anticipos 4/4 de IRE, el resto RG 90 de los 5 clientes del piloto) y 451 de las alertas
+    críticas son «Libro RG 90» (IVA declarado que no coincide con la regla): son datos, no un error.
   - [x] **Decisión de Daniel, 2026-11-16: la sincronización con OneDrive queda como está** (cada 15 min por cambios + pasada
     completa a la medianoche de lunes a sábado). Motivo: no son lo mismo. Medido en la bitácora, 8 días: 124 vueltas por
     cambios, promedio 79 s incluyendo las lentas, típicas de 5 a 20 s (tope 164 s); 17 pasadas completas, promedio 22 min
