@@ -104,6 +104,18 @@ filas). Por eso Panel, notificaciones y Vencimientos muestran solo el piloto. He
     su cuenta; `kbaez` vuelve al script de contraseña inicial. La novena fila de BEA, «AF Y RM ASOCIACIONES - ALISON»
     (carpeta 121, sin movimiento), no tiene carpeta en OneDrive y no está en el sistema: pendiente desde el 10/11.
     **Abierto (lo responde Daniel):** el nombre completo de BEA (la cuenta todavía dice «Karina Baez»).
+  - [ ] **Filtro «Colaborador» y filtros que viajan desde el Panel — 2026-11-26 (pedido de EFFORT en la reunión).**
+    (a) Al lado de «Cliente», en Panel, Vencimientos (y sus presentados), Alertas, Documentos, Faltantes, Seguimiento,
+    Liquidaciones y Balances: elegir a una persona deja solo sus clientes (su cartera vigente,
+    `GET /usuarios/:id/clientes`), y el filtro de cliente ofrece solo esos. **Solo lo ve dirección** (el resto ya ve
+    solo su cartera). Si el cliente elegido no es de esa persona, vuelve a «Todos». El Excel lleva «Colaborador: …».
+    `apps/web/src/ui/FiltroDeColaborador.tsx`. (b) En **Horas** recorta el resumen del equipo por QUIÉN cargó las
+    horas (no por cartera); en **Eventos** el campo «Id de usuario» pasó a ser la lista «Colaborador (quién lo hizo)».
+    (c) Arreglo pedido por Daniel en la misma charla: con un cliente elegido en el Panel, «Vencimientos próximos» (y
+    los demás indicadores) abrían la pantalla con todos los clientes; ahora llevan el cliente y el colaborador.
+    (d) `npm audit` trajo un aviso nuevo (effect, GHSA-7589-6fvf-x4pw, viene fijado por prisma): excepción escrita en
+    `scripts/auditar-dependencias.mjs`. Pruebas nuevas en Vencimientos, Horas, Eventos y Panel.
+    **Falta:** verlo en pantalla en producción con la sesión de Daniel (lección 14: hasta entonces `[ ]`).
   - [ ] **▶ HANDOFF 2026-11-26 (después de la reunión de Daniel con el equipo) — EMPEZAR ACÁ.**
     **Estado verificado hoy:** producción sana (web y API responden, versión `index-DGpv2woh.js`); 88 clientes activos,
     todos con responsable y carpeta; sincronización cada 15 min + completa a medianoche (decisión de Daniel 2026-11-16),

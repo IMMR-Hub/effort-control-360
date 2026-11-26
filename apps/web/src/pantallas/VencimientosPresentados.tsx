@@ -49,9 +49,12 @@ export default function VencimientosPresentados({
   clientes,
   rango = null,
   clienteId = '',
+  cartera = null,
   puedeEditar = false,
   alCambiarVisibles,
 }: {
+  /** El mismo filtro de colaborador de la lista de arriba. `null` = todo el equipo. */
+  readonly cartera?: ReadonlySet<string> | null;
   readonly clientes: readonly Cliente[];
   /** Muestra «Prórroga»: la DNIT corre plazos de lo ya presentado también. */
   readonly puedeEditar?: boolean;
@@ -66,9 +69,12 @@ export default function VencimientosPresentados({
   const presentados = useMemo(
     () =>
       todos.filter(
-        (p) => dentroDelRango(p.fechaPresentacion, rango) && (clienteId === '' || p.clienteId === clienteId),
+        (p) =>
+          dentroDelRango(p.fechaPresentacion, rango) &&
+          (clienteId === '' || p.clienteId === clienteId) &&
+          (cartera === null || cartera.has(p.clienteId)),
       ),
-    [todos, rango, clienteId],
+    [todos, rango, clienteId, cartera],
   );
   useEffect(() => {
     alCambiarVisibles?.(presentados);

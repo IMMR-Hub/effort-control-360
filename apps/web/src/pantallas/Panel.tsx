@@ -69,6 +69,13 @@ import {
   nombreDelClienteFiltrado,
   type FiltroDeCliente,
 } from '../ui/FiltroDeCliente.js';
+import {
+  FiltroDeColaboradorSelector,
+  coincideConColaborador,
+  filtroDeColaboradorEnPalabras,
+  sufijoDeColaborador,
+  useFiltroDeColaborador,
+} from '../ui/FiltroDeColaborador.js';
 import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
 import { hoja, type Reporte } from '../ui/reporteExcel.js';
 
@@ -184,7 +191,10 @@ export function precargarPanel(ahora: Date = new Date()): void {
 export default function Panel({
   irA,
 }: {
-  irA?: (pantalla: Pantalla, opciones?: { nivel: FiltroDeNivel }) => void;
+  irA?: (
+    pantalla: Pantalla,
+    opciones?: { readonly nivel?: FiltroDeNivel; readonly clienteId?: string; readonly colaboradorId?: string },
+  ) => void;
 }) {
   const hoy = useMemo(() => hoyEnParaguay(new Date()), []);
   const mesActual = `${hoy.anio}-${String(hoy.mes).padStart(2, '0')}`;
@@ -246,10 +256,13 @@ export default function Panel({
   }, [clientes]);
 
   const [filtroDeCliente, setFiltroDeCliente] = useState<FiltroDeCliente>(TODOS_LOS_CLIENTES);
+  const colaborador = useFiltroDeColaborador(filtroDeCliente, setFiltroDeCliente);
   const delFiltro = <T extends { readonly clienteId: string | null }>(lista: readonly T[]) =>
-    lista.filter((x) => coincideConCliente(x.clienteId, filtroDeCliente));
+    lista.filter((x) => coincideConCliente(x.clienteId, filtroDeCliente) && coincideConColaborador(x.clienteId, colaborador));
 
-  const clientesVisibles = clientes.filter((c) => c.activo && coincideConCliente(c.id, filtroDeCliente));
+  const clientesVisibles = clientes.filter(
+    (c) => c.activo && coincideConCliente(c.id, filtroDeCliente) && coincideConColaborador(c.id, colaborador),
+  );
   const clientesActivos = clientesVisibles.length;
   const vencimientosEnRango = delFiltro(vencimientos).filter((v) => dentroDelRango(v.fechaVencimiento, rango));
   const alertasEnRango = delFiltro(alertas).filter((a) => dentroDelRango(a.creadoEn ?? null, rango));
@@ -274,6 +287,12 @@ export default function Panel({
   } = indicadoresDe(datosVisibles);
   const detallePeriodos = periodos.length === 1 ? `Período ${periodos[0]}` : `Períodos ${periodos[0]} a ${periodos[periodos.length - 1]}`;
   const clienteFiltrado = nombreDelClienteFiltrado(filtroDeCliente, clientes);
+  // Daniel, 2026-11-26: con un cliente elegido, «Vencimientos próximos» abría la lista de todos. Los
+  // indicadores llevan a su pantalla con el mismo cliente y el mismo colaborador que se ven acá.
+  const filtrosDelPanel = {
+    ...(filtroDeCliente !== TODOS_LOS_CLIENTES ? { clienteId: filtroDeCliente } : {}),
+    ...(colaborador.cartera !== null ? { colaboradorId: colaborador.colaboradorId } : {}),
+  };
 
   /**
    * El reporte general: los indicadores de arriba, y los mismos cliente por
@@ -300,13 +319,17 @@ export default function Panel({
     }));
     // Una alerta puede no tener cliente (p. ej. una tasa de IVA nueva): sin esta
     // fila, la suma de la columna no daría el total de la hoja «Resumen».
-    if (filtroDeCliente === TODOS_LOS_CLIENTES) {
+    if (filtroDeCliente === TODOS_LOS_CLIENTES && colaborador.cartera === null) {
       const sinCliente = indicadoresDe(deCliente(datosVisibles, null));
       if (sinCliente.alertasCriticas > 0) porCliente.push({ nombre: '(alertas sin cliente)', indicadores: sinCliente });
     }
     return {
       titulo: 'Panel general',
-      filtros: [filtroDeClienteEnPalabras(filtroDeCliente, clientes), `Fechas: ${describirFiltro(filtro)}`],
+      filtros: [
+        ...filtroDeColaboradorEnPalabras(colaborador),
+        filtroDeClienteEnPalabras(filtroDeCliente, clientes),
+        `Fechas: ${describirFiltro(filtro)}`,
+      ],
       hojas: [
         hoja(
           'Resumen',
@@ -361,7 +384,7 @@ export default function Panel({
         )
         .slice(0, MAXIMO_EN_LISTAS),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [alertas, rango, filtroDeCliente],
+    [alertas, rango, filtroDeCliente, colaborador.cartera],
   );
 
   const vencimientosUrgentes = useMemo(
@@ -371,7 +394,7 @@ export default function Panel({
         .sort((a, b) => Math.abs(a.diasRestantes) - Math.abs(b.diasRestantes) || a.diasRestantes - b.diasRestantes)
         .slice(0, MAXIMO_EN_LISTAS),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [vencimientos, rango, filtroDeCliente],
+    [vencimientos, rango, filtroDeCliente, colaborador.cartera],
   );
 
   if (cargando) {
@@ -410,16 +433,19 @@ export default function Panel({
           </p>
           <p className="mt-1 text-xs text-tinta-tenue">
             Mostrando: {describirFiltro(filtro)}
+            {sufijoDeColaborador(colaborador)}
             {clienteFiltrado ? ` · cliente: ${clienteFiltrado}` : ''}.
           </p>
         </div>
         <div className="flex flex-wrap items-end gap-3">
           <FiltroDeFechasSelector id="filtroPanel" valor={filtro} onCambiar={setFiltro} permitirTodo />
+          <FiltroDeColaboradorSelector id="filtroDeColaboradorPanel" filtro={colaborador} />
           <FiltroDeClienteSelector
             id="filtroDeClientePanel"
             clientes={clientes}
             valor={filtroDeCliente}
             onCambiar={setFiltroDeCliente}
+            cartera={colaborador.cartera}
           />
           <BotonDescargarExcel reporte={reporte} detalleDelNombre={clienteFiltrado} />
         </div>
@@ -431,7 +457,7 @@ export default function Panel({
           irEtiqueta="Ver los clientes" valor={clientesActivos} tono="proceso" icono={Users} retardoMs={0} />
         <IndicadorAnimado
           etiqueta="Vencimientos vencidos"
-          onIr={irA ? () => irA('vencimientos', { nivel: 'VENCIDO' }) : null}
+          onIr={irA ? () => irA('vencimientos', { ...filtrosDelPanel, nivel: 'VENCIDO' }) : null}
           irEtiqueta="Ver los vencimientos vencidos"
           valor={vencidos}
           tono="critico"
@@ -440,11 +466,11 @@ export default function Panel({
           retardoMs={40}
         />
         <IndicadorAnimado etiqueta="Vencimientos próximos"
-          onIr={irA ? () => irA('vencimientos', { nivel: 'PROXIMOS' }) : null}
+          onIr={irA ? () => irA('vencimientos', { ...filtrosDelPanel, nivel: 'PROXIMOS' }) : null}
           irEtiqueta="Ver los vencimientos próximos" valor={proximos} tono="parcial" icono={Clock} retardoMs={80} />
         <IndicadorAnimado
           etiqueta="Alertas críticas"
-          onIr={irA ? () => irA('alertas') : null}
+          onIr={irA ? () => irA('alertas', filtrosDelPanel) : null}
           irEtiqueta="Ver las alertas críticas"
           valor={alertasCriticas}
           tono="critico"
@@ -454,7 +480,7 @@ export default function Panel({
         />
         <IndicadorAnimado
           etiqueta="Documentación pendiente"
-          onIr={irA ? () => irA('seguimiento') : null}
+          onIr={irA ? () => irA('seguimiento', filtrosDelPanel) : null}
           irEtiqueta="Ver el seguimiento de documentación"
           valor={documentacionPendiente}
           detalle={detallePeriodos}
@@ -464,7 +490,7 @@ export default function Panel({
         />
         <IndicadorAnimado
           etiqueta="Balances sin aprobar"
-          onIr={irA ? () => irA('balances') : null}
+          onIr={irA ? () => irA('balances', filtrosDelPanel) : null}
           irEtiqueta="Ver los balances"
           valor={balancesPendientes}
           detalle={detallePeriodos}
@@ -474,7 +500,7 @@ export default function Panel({
         />
         <IndicadorAnimado
           etiqueta="Liquidaciones sin enviar"
-          onIr={irA ? () => irA('liquidaciones') : null}
+          onIr={irA ? () => irA('liquidaciones', filtrosDelPanel) : null}
           irEtiqueta="Ver las liquidaciones"
           valor={liquidacionesSinEnviar}
           detalle={detallePeriodos}
@@ -484,7 +510,7 @@ export default function Panel({
         />
         <IndicadorAnimado
           etiqueta="Presentadas con atraso"
-          onIr={irA ? () => irA('vencimientos') : null}
+          onIr={irA ? () => irA('vencimientos', filtrosDelPanel) : null}
           irEtiqueta="Ver las presentaciones con atraso"
           valor={conAtraso}
           detalle={

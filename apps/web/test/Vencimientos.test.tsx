@@ -77,6 +77,7 @@ async function montar(
   rol: string = 'direccion',
   opciones: {
     nivelInicial?: 'TODOS' | 'PROXIMOS' | 'VENCIDO';
+    clienteInicial?: string;
     vencimientos?: readonly unknown[];
     clientes?: readonly unknown[];
   } = {},
@@ -100,7 +101,10 @@ async function montar(
 
   render(
     <ProveedorDeSesion>
-      <Vencimientos {...(opciones.nivelInicial ? { nivelInicial: opciones.nivelInicial } : {})} />
+      <Vencimientos
+        {...(opciones.nivelInicial ? { nivelInicial: opciones.nivelInicial } : {})}
+        {...(opciones.clienteInicial ? { clienteInicial: opciones.clienteInicial } : {})}
+      />
     </ProveedorDeSesion>,
   );
 
@@ -484,6 +488,103 @@ describe('radar de vencimientos', () => {
 
       expect(screen.getByText('Presentación anual ante Abogacía')).toBeVisible();
       expect(screen.getByText('Patente municipal')).toBeVisible();
+    });
+  });
+
+  it('llegar desde el Panel con un cliente elegido abre la lista ya filtrada por ese cliente (2026-11-26)', async () => {
+    const OTRO = { ...GARSO, id: 'cli-otro', nombre: 'OTRO S.A.', ruc: '80000001-1' };
+    await montar('direccion', {
+      clientes: [GARSO, OTRO],
+      clienteInicial: 'cli-otro',
+      vencimientos: [
+        VENCIMIENTO_ABOGACIA,
+        { ...VENCIMIENTO_ABOGACIA, id: 'venc-2', clienteId: 'cli-otro', descripcion: 'Patente municipal' },
+      ],
+    });
+
+    expect(screen.getByLabelText('Cliente')).toHaveValue('cli-otro');
+    expect(await screen.findByText('Patente municipal')).toBeVisible();
+    expect(screen.queryByText('Presentación anual ante Abogacía')).not.toBeInTheDocument();
+  });
+
+  describe('filtro por colaborador (2026-11-26)', () => {
+    const OTRO = { ...GARSO, id: 'cli-otro', nombre: 'OTRO S.A.', ruc: '80000001-1' };
+    const DOS = [
+      VENCIMIENTO_ABOGACIA,
+      { ...VENCIMIENTO_ABOGACIA, id: 'venc-2', clienteId: 'cli-otro', descripcion: 'Patente municipal' },
+    ];
+    const ARIANA = {
+      id: 'u-ariana',
+      nombre: 'Ariana',
+      apellido: 'Campos',
+      email: 'ariana@example.com',
+      telefono: null,
+      cargo: null,
+      rol: 'responsable',
+      activo: true,
+      veTodosLosClientes: false,
+      ultimoAccesoEn: null,
+    };
+    const INACTIVA = { ...ARIANA, id: 'u-inactiva', nombre: 'Elias', apellido: 'Pausado', activo: false };
+
+    function mockDelEquipo() {
+      mock.mockDeRuta('GET /api/v1/usuarios', () => respuestaJson({ usuarios: [ARIANA, INACTIVA] }));
+      mock.mockDeRuta('GET /api/v1/usuarios/u-ariana/clientes', () => respuestaJson({ clienteIds: ['cli-otro'] }));
+    }
+
+    it('elegir a una persona deja solo los vencimientos de sus clientes, y «Todo el equipo» los vuelve a mostrar', async () => {
+      mockDelEquipo();
+      await montar('direccion', { clientes: [GARSO, OTRO], vencimientos: DOS });
+      const selector = await screen.findByLabelText('Colaborador');
+      // Solo personas activas: una cuenta pausada no tiene cartera que mirar.
+      expect(within(selector).queryByRole('option', { name: 'Elias Pausado' })).not.toBeInTheDocument();
+
+      await usuario.selectOptions(selector, 'u-ariana');
+
+      await waitFor(() => expect(screen.queryByText('Presentación anual ante Abogacía')).not.toBeInTheDocument());
+      expect(screen.getByText('Patente municipal')).toBeVisible();
+      expect(screen.getByText(/1 obligaciones activas .*colaborador: Ariana Campos/)).toBeVisible();
+      // El filtro de cliente ofrece solo los clientes de esa persona.
+      const opcionesDeCliente = within(screen.getByLabelText('Cliente')).getAllByRole('option').map((o) => o.textContent);
+      expect(opcionesDeCliente).toEqual(['Todos los clientes', 'OTRO S.A.']);
+
+      await usuario.selectOptions(selector, '');
+
+      expect(screen.getByText('Presentación anual ante Abogacía')).toBeVisible();
+      expect(screen.getByText('Patente municipal')).toBeVisible();
+    });
+
+    it('si el cliente elegido no es de esa persona, el filtro de cliente vuelve a «Todos»', async () => {
+      mockDelEquipo();
+      await montar('direccion', { clientes: [GARSO, OTRO], vencimientos: DOS });
+      await usuario.selectOptions(screen.getByLabelText('Cliente'), 'cli-garso');
+
+      await usuario.selectOptions(await screen.findByLabelText('Colaborador'), 'u-ariana');
+
+      await waitFor(() => expect(screen.getByLabelText('Cliente')).toHaveValue(''));
+      expect(screen.getByText('Patente municipal')).toBeVisible();
+    });
+
+    it('el Excel dice qué colaborador se eligió', async () => {
+      mockDelEquipo();
+      await montar('direccion', { clientes: [GARSO, OTRO], vencimientos: DOS });
+      await usuario.selectOptions(await screen.findByLabelText('Colaborador'), 'u-ariana');
+      await screen.findByText(/colaborador: Ariana Campos/);
+
+      await usuario.click(screen.getByRole('button', { name: /Descargar Excel/ }));
+
+      await waitFor(() => expect(descargarReporte).toHaveBeenCalledTimes(1));
+      const reporte = (descargarReporte.mock.calls[0] as unknown as [Reporte])[0];
+      expect(reporte.filtros).toContain('Colaborador: Ariana Campos');
+      expect(celdas(reporte.hojas[0]!).map((fila) => fila).flat()).not.toContain('Presentación anual ante Abogacía');
+    });
+
+    it('quien no es dirección no ve el filtro: ya ve solo su propia cartera', async () => {
+      mockDelEquipo();
+      await montar('responsable', { clientes: [GARSO, OTRO], vencimientos: DOS });
+
+      expect(screen.queryByLabelText('Colaborador')).not.toBeInTheDocument();
+      expect(mock.llamadasA('GET /api/v1/usuarios')).toHaveLength(0);
     });
   });
 

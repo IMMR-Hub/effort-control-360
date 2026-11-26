@@ -182,12 +182,34 @@ export default function Horas() {
 
   /* --- Resumen del equipo: se deriva de `totales`, nunca se calcula aparte --- */
 
+  // «Colaborador» (Daniel, 2026-11-26): acá recorta por QUIÉN cargó las horas, no por su cartera —
+  // una persona puede dedicarle tiempo a un cliente que no es suyo, y esas horas también son de ella.
+  const [colaboradorDeHoras, setColaboradorDeHoras] = useState('');
+  const equipoActivo = useMemo(
+    () =>
+      equipo
+        .filter((u) => u.activo)
+        .slice()
+        .sort((a, b) => `${a.nombre} ${a.apellido}`.localeCompare(`${b.nombre} ${b.apellido}`, 'es')),
+    [equipo],
+  );
   const totalesVisibles = useMemo(
-    () => totales.filter((t) => coincideConCliente(t.clienteId, filtroDeCliente)),
-    [totales, filtroDeCliente],
+    () =>
+      totales.filter(
+        (t) =>
+          coincideConCliente(t.clienteId, filtroDeCliente) &&
+          (colaboradorDeHoras === '' || t.usuarioId === colaboradorDeHoras),
+      ),
+    [totales, filtroDeCliente, colaboradorDeHoras],
   );
   const mensajeSinHoras =
-    totales.length === 0 ? 'Nadie cargó horas en este período.' : 'Nadie cargó horas para este cliente en este período.';
+    totales.length === 0
+      ? 'Nadie cargó horas en este período.'
+      : colaboradorDeHoras !== ''
+        ? filtroDeCliente === TODOS_LOS_CLIENTES
+          ? 'Esta persona no cargó horas en este período.'
+          : 'Esta persona no cargó horas para este cliente en este período.'
+        : 'Nadie cargó horas para este cliente en este período.';
 
   /**
    * Agrupa minutos y costo juntos, por la clave que sea (cliente o persona).
@@ -305,6 +327,9 @@ export default function Horas() {
       titulo: 'Horas',
       filtros: [
         filtroDeClienteEnPalabras(filtroDeCliente, clientes),
+        ...(esDireccion && colaboradorDeHoras !== ''
+          ? [`Resumen del equipo, colaborador: ${nombreDePersona(colaboradorDeHoras)}`]
+          : []),
         `Período/Fechas: ${describirFiltro(filtro)}`,
         ...(esDireccion
           ? ['Resumen del equipo: horas autoreportadas, solo totales del período (nunca el día a día de una persona)']
@@ -567,6 +592,19 @@ export default function Horas() {
               trae solo totales del período, nunca el día a día de una persona. El costo usa un
               valor por hora nominal, configurado por persona — se edita en Equipo.
             </p>
+            {equipoActivo.length > 0 && (
+              <CampoSelect
+                id="filtroDeColaboradorHoras"
+                etiqueta="Colaborador"
+                value={colaboradorDeHoras}
+                onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setColaboradorDeHoras(e.target.value)}
+                opciones={[
+                  { valor: '', etiqueta: 'Todo el equipo' },
+                  ...equipoActivo.map((u) => ({ valor: u.id, etiqueta: `${u.nombre} ${u.apellido}` })),
+                ]}
+                className="mt-3 w-56"
+              />
+            )}
           </div>
 
           <section className="grid gap-3 sm:grid-cols-4" aria-label="Indicadores del equipo">

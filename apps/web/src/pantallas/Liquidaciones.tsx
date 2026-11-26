@@ -33,6 +33,13 @@ import {
   nombreDelClienteFiltrado,
   type FiltroDeCliente,
 } from '../ui/FiltroDeCliente.js';
+import {
+  FiltroDeColaboradorSelector,
+  coincideConColaborador,
+  filtroDeColaboradorEnPalabras,
+  sufijoDeColaborador,
+  useFiltroDeColaborador,
+} from '../ui/FiltroDeColaborador.js';
 import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
 import { hoja, type Reporte } from '../ui/reporteExcel.js';
 import { describirFiltro, type FiltroDeFechas } from '@effort/core';
@@ -85,7 +92,10 @@ type Panel =
   | { tipo: 'enviar'; liquidacion: Liquidacion }
   | { tipo: 'responder'; liquidacion: Liquidacion };
 
-export default function Liquidaciones() {
+export default function Liquidaciones({
+  clienteInicial = TODOS_LOS_CLIENTES,
+  colaboradorInicial,
+}: { readonly clienteInicial?: string; readonly colaboradorInicial?: string } = {}) {
   const { sesion } = useSesion();
   const puedeEditar = ROLES_QUE_EDITAN.has(sesion?.rol ?? '');
 
@@ -99,11 +109,15 @@ export default function Liquidaciones() {
   const [error, setError] = useState<string | null>(null);
   const [clientes, setClientes] = useState<readonly Cliente[]>([]);
   const [todasLasLiquidaciones, setLiquidaciones] = useState<readonly Liquidacion[]>([]);
-  const [filtroDeCliente, setFiltroDeCliente] = useState<FiltroDeCliente>(TODOS_LOS_CLIENTES);
+  const [filtroDeCliente, setFiltroDeCliente] = useState<FiltroDeCliente>(clienteInicial);
+  const colaborador = useFiltroDeColaborador(filtroDeCliente, setFiltroDeCliente, colaboradorInicial);
   // Lo que se muestra y se cuenta: los indicadores tienen que decir lo mismo que la tabla.
   const liquidaciones = useMemo(
-    () => todasLasLiquidaciones.filter((l) => coincideConCliente(l.clienteId, filtroDeCliente)),
-    [todasLasLiquidaciones, filtroDeCliente],
+    () =>
+      todasLasLiquidaciones.filter(
+        (l) => coincideConCliente(l.clienteId, filtroDeCliente) && coincideConColaborador(l.clienteId, colaborador),
+      ),
+    [todasLasLiquidaciones, filtroDeCliente, colaborador.cartera],
   );
 
   const [panel, setPanel] = useState<Panel | null>(null);
@@ -161,6 +175,7 @@ export default function Liquidaciones() {
     return {
       titulo: 'Liquidaciones',
       filtros: [
+        ...filtroDeColaboradorEnPalabras(colaborador),
         filtroDeClienteEnPalabras(filtroDeCliente, clientes),
         `Fechas: ${describirFiltro(filtro)}`,
         `Período: ${periodo}`,
@@ -288,11 +303,13 @@ export default function Liquidaciones() {
             <FiltroDeFechasSelector id="filtroPeriodo" valor={filtro} onCambiar={setFiltro} />
             <PeriodosDelRango periodos={periodos} periodo={periodo} onElegir={elegirPeriodo} />
           </div>
+          <FiltroDeColaboradorSelector id="filtroDeColaboradorLiquidaciones" filtro={colaborador} />
           <FiltroDeClienteSelector
             id="filtroDeClienteLiquidaciones"
             clientes={clientes}
             valor={filtroDeCliente}
             onCambiar={setFiltroDeCliente}
+            cartera={colaborador.cartera}
           />
           <BotonDescargarExcel reporte={reporte} detalleDelNombre={nombreDelClienteFiltrado(filtroDeCliente, clientes)} />
           {puedeEditar && (
@@ -313,7 +330,7 @@ export default function Liquidaciones() {
       <Tarjeta>
         <EncabezadoTarjeta
           titulo="Liquidaciones del período"
-          descripcion={`Período ${periodo}${
+          descripcion={`Período ${periodo}${sufijoDeColaborador(colaborador)}${
             filtroDeCliente === TODOS_LOS_CLIENTES ? '' : ` · cliente: ${nombreDeCliente(filtroDeCliente)}`
           }`}
         />
@@ -375,7 +392,9 @@ export default function Liquidaciones() {
             {liquidaciones.length === 0 && (
               <tr>
                 <td colSpan={puedeEditar ? 6 : 5} className="px-4 py-8 text-center text-sm text-tinta-tenue">
-                  {filtroDeCliente === TODOS_LOS_CLIENTES
+                  {colaborador.cartera !== null && filtroDeCliente === TODOS_LOS_CLIENTES
+                    ? 'Los clientes de esta persona no tienen liquidaciones en este período.'
+                    : filtroDeCliente === TODOS_LOS_CLIENTES
                     ? 'Todavía no hay liquidaciones para este período.'
                     : 'Este cliente no tiene liquidaciones en este período.'}
                 </td>

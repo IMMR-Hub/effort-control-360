@@ -299,6 +299,20 @@ describe('pantalla de eventos', () => {
     expect(url.searchParams.has('clienteId')).toBe(false);
   });
 
+  it('el colaborador (2026-11-26) se elige de la lista del equipo y viaja como usuarioId', async () => {
+    await montar();
+
+    const selector = await screen.findByLabelText('Colaborador (quién lo hizo)');
+    await usuario.selectOptions(selector, 'usr-1');
+    await usuario.click(screen.getByRole('button', { name: 'Buscar' }));
+
+    await waitFor(() => {
+      expect(mock.llamadasA('GET /api/v1/eventos')).toHaveLength(2);
+    });
+    const [ultimaUrl] = mock.llamadasA('GET /api/v1/eventos').at(-1)!;
+    expect(new URL(String(ultimaUrl)).searchParams.get('usuarioId')).toBe('usr-1');
+  });
+
   it('limpiar filtros vuelve a buscar sin ningún filtro', async () => {
     await montar();
 

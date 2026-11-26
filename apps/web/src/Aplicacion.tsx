@@ -40,11 +40,19 @@ export interface PropsDePantalla {
   readonly irA: (pantalla: Pantalla, opciones?: OpcionesDeNavegacion) => void;
   /** Filtro con el que abre la pantalla si se llegó desde un indicador del Panel. */
   readonly nivelInicial?: FiltroDeNivel;
+  /** El cliente y el colaborador elegidos en el Panel, para no perderlos al seguir un indicador. */
+  readonly clienteInicial?: string;
+  readonly colaboradorInicial?: string;
 }
 
-/** Lo que un indicador del Panel le pide a la pantalla a la que lleva. */
+/**
+ * Lo que un indicador del Panel le pide a la pantalla a la que lleva. Daniel, 2026-11-26: con un cliente
+ * elegido en el Panel, «Vencimientos próximos» abría la lista de todos los clientes.
+ */
 export interface OpcionesDeNavegacion {
   readonly nivel?: FiltroDeNivel;
+  readonly clienteId?: string;
+  readonly colaboradorId?: string;
 }
 
 const PANTALLAS: Record<Pantalla, (props: PropsDePantalla) => JSX.Element> = {
@@ -67,13 +75,14 @@ const PANTALLAS: Record<Pantalla, (props: PropsDePantalla) => JSX.Element> = {
 
 function AppShell() {
   const [pantallaActiva, setPantallaActiva] = useState<Pantalla>('panel');
-  const [nivelInicial, setNivelInicial] = useState<FiltroDeNivel | undefined>(undefined);
+  const [opcionesDeLlegada, setOpcionesDeLlegada] = useState<OpcionesDeNavegacion>({});
   const PantallaActual = PANTALLAS[pantallaActiva];
+  const { nivel: nivelInicial, clienteId: clienteInicial, colaboradorId: colaboradorInicial } = opcionesDeLlegada;
 
   // Un filtro pedido por un indicador vale solo para esa llegada: entrar
   // después por el menú tiene que abrir la pantalla completa.
   const irA = (pantalla: Pantalla, opciones?: OpcionesDeNavegacion) => {
-    setNivelInicial(opciones?.nivel);
+    setOpcionesDeLlegada(opciones ?? {});
     setPantallaActiva(pantalla);
   };
 
@@ -86,7 +95,12 @@ function AppShell() {
       {/* Un único scroll, el de esta columna — no el de toda la página — para
           que la barra lateral quede fija en vez de irse con el contenido. */}
       <div className="min-w-0 flex-1 lg:overflow-y-auto">
-        <PantallaActual irA={irA} {...(nivelInicial ? { nivelInicial } : {})} />
+        <PantallaActual
+          irA={irA}
+          {...(nivelInicial ? { nivelInicial } : {})}
+          {...(clienteInicial ? { clienteInicial } : {})}
+          {...(colaboradorInicial ? { colaboradorInicial } : {})}
+        />
       </div>
     </div>
   );

@@ -36,6 +36,13 @@ import {
   nombreDelClienteFiltrado,
   type FiltroDeCliente,
 } from '../ui/FiltroDeCliente.js';
+import {
+  FiltroDeColaboradorSelector,
+  coincideConColaborador,
+  filtroDeColaboradorEnPalabras,
+  sufijoDeColaborador,
+  useFiltroDeColaborador,
+} from '../ui/FiltroDeColaborador.js';
 import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
 import { hoja, type Reporte } from '../ui/reporteExcel.js';
 import {
@@ -89,7 +96,10 @@ function ofreceRegistrarPresentacion(alerta: Alerta): boolean {
   );
 }
 
-export default function Alertas() {
+export default function Alertas({
+  clienteInicial = TODOS_LOS_CLIENTES,
+  colaboradorInicial,
+}: { readonly clienteInicial?: string; readonly colaboradorInicial?: string } = {}) {
   const { sesion } = useSesion();
   const puedeCerrar = ROLES_QUE_CIERRAN.has(sesion?.rol ?? '');
 
@@ -104,21 +114,25 @@ export default function Alertas() {
   // Por fecha en que se levantó la alerta. Arranca en "todas": el radar
   // existe para mostrar todo lo abierto.
   const [filtro, setFiltro] = useState<FiltroDeFechas>({ tipo: 'todo' });
-  const [filtroDeCliente, setFiltroDeCliente] = useState<FiltroDeCliente>(TODOS_LOS_CLIENTES);
+  const [filtroDeCliente, setFiltroDeCliente] = useState<FiltroDeCliente>(clienteInicial);
+  const colaborador = useFiltroDeColaborador(filtroDeCliente, setFiltroDeCliente, colaboradorInicial);
   const rango = useMemo(() => rangoDelFiltro(filtro, hoyEnParaguay(new Date())), [filtro]);
   const alertasVisibles = useMemo(
     () =>
       alertas.filter(
-        (a) => dentroDelRango(a.creadoEn ?? null, rango) && coincideConCliente(a.clienteId, filtroDeCliente),
+        (a) =>
+          dentroDelRango(a.creadoEn ?? null, rango) &&
+          coincideConCliente(a.clienteId, filtroDeCliente) &&
+          coincideConColaborador(a.clienteId, colaborador),
       ),
-    [alertas, rango, filtroDeCliente],
+    [alertas, rango, filtroDeCliente, colaborador.cartera],
   );
   const resumenVisible = useMemo(() => {
-    if (rango === null && filtroDeCliente === TODOS_LOS_CLIENTES) return resumen;
+    if (rango === null && filtroDeCliente === TODOS_LOS_CLIENTES && colaborador.cartera === null) return resumen;
     const cuenta = { ...RESUMEN_VACIO };
     for (const a of alertasVisibles) cuenta[a.criticidad] += 1;
     return cuenta;
-  }, [rango, resumen, alertasVisibles, filtroDeCliente]);
+  }, [rango, resumen, alertasVisibles, filtroDeCliente, colaborador.cartera]);
 
   const puedeEvaluar = ROLES_QUE_EVALUAN.has(sesion?.rol ?? '');
 
@@ -169,6 +183,7 @@ export default function Alertas() {
     return {
       titulo: 'Alertas',
       filtros: [
+        ...filtroDeColaboradorEnPalabras(colaborador),
         filtroDeClienteEnPalabras(filtroDeCliente, clientes),
         `Fechas (cuando se levantó la alerta): ${describirFiltro(filtro)}`,
       ],
@@ -254,11 +269,13 @@ export default function Alertas() {
           </p>
           <div className="mt-3 flex flex-wrap items-end gap-3">
             <FiltroDeFechasSelector id="filtroAlertas" valor={filtro} onCambiar={setFiltro} permitirTodo />
+            <FiltroDeColaboradorSelector id="filtroDeColaboradorAlertas" filtro={colaborador} />
             <FiltroDeClienteSelector
               id="filtroDeClienteAlertas"
               clientes={clientes}
               valor={filtroDeCliente}
               onCambiar={setFiltroDeCliente}
+              cartera={colaborador.cartera}
             />
             <BotonDescargarExcel reporte={reporte} detalleDelNombre={nombreDelClienteFiltrado(filtroDeCliente, clientes)} />
           </div>
@@ -298,7 +315,7 @@ export default function Alertas() {
       <Tarjeta>
         <EncabezadoTarjeta
           titulo="Radar de alertas"
-          descripcion={`${alertasVisibles.length} alertas activas · levantadas: ${describirFiltro(filtro)}${
+          descripcion={`${alertasVisibles.length} alertas activas · levantadas: ${describirFiltro(filtro)}${sufijoDeColaborador(colaborador)}${
             filtroDeCliente === TODOS_LOS_CLIENTES ? '' : ` · cliente: ${nombreDeCliente(filtroDeCliente)}`
           }`}
         />

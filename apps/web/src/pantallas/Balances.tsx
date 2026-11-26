@@ -41,6 +41,13 @@ import {
   nombreDelClienteFiltrado,
   type FiltroDeCliente,
 } from '../ui/FiltroDeCliente.js';
+import {
+  FiltroDeColaboradorSelector,
+  coincideConColaborador,
+  filtroDeColaboradorEnPalabras,
+  sufijoDeColaborador,
+  useFiltroDeColaborador,
+} from '../ui/FiltroDeColaborador.js';
 import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
 import { hoja, type Reporte } from '../ui/reporteExcel.js';
 
@@ -128,7 +135,10 @@ function aFormulario(balance: Balance): FormularioBalance {
   };
 }
 
-export default function Balances() {
+export default function Balances({
+  clienteInicial = TODOS_LOS_CLIENTES,
+  colaboradorInicial,
+}: { readonly clienteInicial?: string; readonly colaboradorInicial?: string } = {}) {
   const { sesion } = useSesion();
   const rol = sesion?.rol ?? '';
   const puedeEditar = ROLES_QUE_EDITAN.has(rol);
@@ -162,11 +172,12 @@ export default function Balances() {
   const [clientes, setClientes] = useState<readonly Cliente[]>([]);
   const [balances, setBalances] = useState<readonly Balance[]>([]);
 
-  const [filtroDeCliente, setFiltroDeCliente] = useState<FiltroDeCliente>(TODOS_LOS_CLIENTES);
+  const [filtroDeCliente, setFiltroDeCliente] = useState<FiltroDeCliente>(clienteInicial);
   const [clienteSeleccionado, setClienteSeleccionado] = useState<string | null>(null);
   const [balanceSeleccionado, setBalanceSeleccionado] = useState<Balance | null>(null);
   const [revisionPrevia, setRevisionPrevia] = useState<RevisionPrevia | null>(null);
   const [formulario, setFormulario] = useState<FormularioBalance>(FORMULARIO_VACIO);
+  const colaborador = useFiltroDeColaborador(filtroDeCliente, cambiarFiltroDeCliente, colaboradorInicial);
 
   const [guardando, setGuardando] = useState(false);
   const [errorPanel, setErrorPanel] = useState<string | null>(null);
@@ -205,13 +216,13 @@ export default function Balances() {
     () =>
       clientes
         .filter((c) => c.activo)
-        .filter((c) => coincideConCliente(c.id, filtroDeCliente))
+        .filter((c) => coincideConCliente(c.id, filtroDeCliente) && coincideConColaborador(c.id, colaborador))
         .map((cliente) => ({
           cliente,
           balance: balances.find((b) => b.clienteId === cliente.id) ?? null,
         }))
         .sort((a, b) => a.cliente.nombre.localeCompare(b.cliente.nombre, 'es')),
-    [clientes, balances, filtroDeCliente],
+    [clientes, balances, filtroDeCliente, colaborador.cartera],
   );
 
   // El mismo texto encabeza la tabla y la línea de filtros del Excel.
@@ -225,6 +236,7 @@ export default function Balances() {
     return {
       titulo: 'Balances',
       filtros: [
+        ...filtroDeColaboradorEnPalabras(colaborador),
         filtroDeClienteEnPalabras(filtroDeCliente, clientes),
         modoBalance === 'ejercicio'
           ? descripcionDelPeriodo
@@ -361,11 +373,13 @@ export default function Balances() {
             persona identificada, nunca el sistema.
           </p>
           <div className="mt-3 flex flex-wrap items-end gap-3">
+            <FiltroDeColaboradorSelector id="filtroDeColaboradorBalances" filtro={colaborador} />
             <FiltroDeClienteSelector
               id="filtroDeClienteBalances"
               clientes={clientes}
               valor={filtroDeCliente}
               onCambiar={cambiarFiltroDeCliente}
+              cartera={colaborador.cartera}
             />
             <BotonDescargarExcel reporte={reporte} detalleDelNombre={nombreDelClienteFiltrado(filtroDeCliente, clientes)} />
           </div>
@@ -412,7 +426,7 @@ export default function Balances() {
       <Tarjeta>
         <EncabezadoTarjeta
           titulo="Balances por cliente"
-          descripcion={`${descripcionDelPeriodo}${
+          descripcion={`${descripcionDelPeriodo}${sufijoDeColaborador(colaborador)}${
             filtroDeCliente === TODOS_LOS_CLIENTES ? '' : ` · cliente: ${nombreDelClienteFiltrado(filtroDeCliente, clientes)}`
           }`}
         />
@@ -462,7 +476,11 @@ export default function Balances() {
             {filas.length === 0 && (
               <tr>
                 <td colSpan={7} className="px-4 py-8 text-center text-sm text-tinta-tenue">
-                  {filtroDeCliente === TODOS_LOS_CLIENTES
+                  {colaborador.cargando
+                    ? 'Cargando los clientes de esta persona…'
+                    : colaborador.cartera !== null && filtroDeCliente === TODOS_LOS_CLIENTES
+                    ? 'Esta persona no tiene clientes activos asignados.'
+                    : filtroDeCliente === TODOS_LOS_CLIENTES
                     ? 'No hay clientes activos.'
                     : 'Este cliente no está entre los clientes activos.'}
                 </td>

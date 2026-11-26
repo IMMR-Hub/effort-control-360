@@ -31,6 +31,13 @@ import {
   nombreDelClienteFiltrado,
   type FiltroDeCliente,
 } from '../ui/FiltroDeCliente.js';
+import {
+  FiltroDeColaboradorSelector,
+  coincideConColaborador,
+  filtroDeColaboradorEnPalabras,
+  sufijoDeColaborador,
+  useFiltroDeColaborador,
+} from '../ui/FiltroDeColaborador.js';
 import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
 import { hoja, type Reporte } from '../ui/reporteExcel.js';
 
@@ -106,6 +113,7 @@ export default function Faltantes() {
   const [faltantes, setFaltantes] = useState<readonly FaltanteDeClientePeriodo[]>([]);
   const [clientes, setClientes] = useState<readonly Cliente[]>([]);
   const [filtroDeCliente, setFiltroDeCliente] = useState<FiltroDeCliente>(TODOS_LOS_CLIENTES);
+  const colaborador = useFiltroDeColaborador(filtroDeCliente, setFiltroDeCliente);
 
   const [actualizando, setActualizando] = useState(false);
   const [resumenActualizacion, setResumenActualizacion] = useState<ResumenDeActualizacion | null>(null);
@@ -155,8 +163,11 @@ export default function Faltantes() {
 
   // Lo que se ve (tabla, indicadores, CSV y Excel) es siempre lo del cliente elegido.
   const filas = useMemo(
-    () => faltantes.filter((f) => coincideConCliente(f.clienteId, filtroDeCliente)),
-    [faltantes, filtroDeCliente],
+    () =>
+      faltantes.filter(
+        (f) => coincideConCliente(f.clienteId, filtroDeCliente) && coincideConColaborador(f.clienteId, colaborador),
+      ),
+    [faltantes, filtroDeCliente, colaborador.cartera],
   );
   const totalObligaciones = useMemo(
     () => filas.reduce((total, f) => total + f.obligaciones.length, 0),
@@ -174,7 +185,7 @@ export default function Faltantes() {
   function reporte(): Reporte {
     return {
       titulo: 'Faltantes',
-      filtros: [filtroDeClienteEnPalabras(filtroDeCliente, clientes)],
+      filtros: [...filtroDeColaboradorEnPalabras(colaborador), filtroDeClienteEnPalabras(filtroDeCliente, clientes)],
       hojas: [
         hoja(
           'Lo que falta subir',
@@ -220,11 +231,13 @@ export default function Faltantes() {
             si las planillas RG 90 de compras y ventas ya se cargaron. Lo que no aparece acá está al día.
           </p>
           <div className="mt-3 flex flex-wrap items-end gap-3">
+            <FiltroDeColaboradorSelector id="filtroDeColaboradorFaltantes" filtro={colaborador} />
             <FiltroDeClienteSelector
               id="filtroDeClienteFaltantes"
               clientes={clientes}
               valor={filtroDeCliente}
               onCambiar={setFiltroDeCliente}
+              cartera={colaborador.cartera}
             />
             <BotonDescargarExcel reporte={reporte} detalleDelNombre={nombreDelClienteFiltrado(filtroDeCliente, clientes)} />
           </div>
@@ -301,7 +314,7 @@ export default function Faltantes() {
       <Tarjeta>
         <EncabezadoTarjeta
           titulo="Lo que falta subir"
-          descripcion={`${filas.length} fila(s) — cliente y período con algo pendiente${
+          descripcion={`${filas.length} fila(s) — cliente y período con algo pendiente${sufijoDeColaborador(colaborador)}${
             filtroDeCliente === TODOS_LOS_CLIENTES ? '' : ` · cliente: ${nombreDelClienteFiltrado(filtroDeCliente, clientes)}`
           }`}
           acciones={
@@ -354,7 +367,9 @@ export default function Faltantes() {
             {filas.length === 0 && (
               <tr>
                 <td colSpan={4} className="px-4 py-8 text-center text-sm text-tinta-tenue">
-                  {filtroDeCliente === TODOS_LOS_CLIENTES
+                  {colaborador.cartera !== null && filtroDeCliente === TODOS_LOS_CLIENTES
+                    ? 'No hay nada pendiente en los clientes de esta persona.'
+                    : filtroDeCliente === TODOS_LOS_CLIENTES
                     ? 'No hay nada pendiente: todo lo vencido tiene su comprobante y sus planillas RG 90.'
                     : 'No hay nada pendiente para este cliente: todo lo vencido tiene su comprobante y sus planillas RG 90.'}
                 </td>

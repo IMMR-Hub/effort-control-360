@@ -43,11 +43,14 @@ export function FiltroDeClienteSelector({
   clientes,
   valor,
   onCambiar,
+  cartera = null,
 }: {
   readonly id: string;
   readonly clientes: readonly { readonly id: string; readonly nombre: string; readonly activo: boolean }[];
   readonly valor: FiltroDeCliente;
   readonly onCambiar: (valor: FiltroDeCliente) => void;
+  /** Con un colaborador elegido (`FiltroDeColaborador.cartera`), solo se ofrecen sus clientes. */
+  readonly cartera?: ReadonlySet<string> | null;
 }) {
   return (
     <CampoSelect
@@ -57,7 +60,7 @@ export function FiltroDeClienteSelector({
       onChange={(e: React.ChangeEvent<HTMLSelectElement>) => onCambiar(e.target.value)}
       opciones={[
         { valor: TODOS_LOS_CLIENTES, etiqueta: 'Todos los clientes' },
-        ...clientes.filter((c) => c.activo).map((c) => ({ valor: c.id, etiqueta: c.nombre })),
+        ...clientes.filter((c) => c.activo && (cartera === null || cartera.has(c.id))).map((c) => ({ valor: c.id, etiqueta: c.nombre })),
       ]}
       className="w-64"
     />

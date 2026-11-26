@@ -72,6 +72,13 @@ import {
   nombreDelClienteFiltrado,
   type FiltroDeCliente,
 } from '../ui/FiltroDeCliente.js';
+import {
+  FiltroDeColaboradorSelector,
+  coincideConColaborador,
+  filtroDeColaboradorEnPalabras,
+  sufijoDeColaborador,
+  useFiltroDeColaborador,
+} from '../ui/FiltroDeColaborador.js';
 import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
 import { hoja, type HojaDeReporte, type Reporte } from '../ui/reporteExcel.js';
 
@@ -234,7 +241,10 @@ function proximaAccionEnTexto(fila: FilaDeSeguimiento): string {
   return 'Avisos agotados — decidir';
 }
 
-export default function Seguimiento() {
+export default function Seguimiento({
+  clienteInicial = TODOS_LOS_CLIENTES,
+  colaboradorInicial,
+}: { readonly clienteInicial?: string; readonly colaboradorInicial?: string } = {}) {
   // Hasta el 2026-09-15 el período estaba fijo en el mes en curso y no se podía
   // elegir. Ahora usa el filtro común; el seguimiento es por período, así que
   // con un rango se elige cuál de los que toca.
@@ -254,8 +264,11 @@ export default function Seguimiento() {
   const [contactosPorCliente, setContactosPorCliente] = useState<
     Readonly<Record<string, readonly Contacto[]>>
   >({});
-  const [clienteSeleccionado, setClienteSeleccionado] = useState<string | null>(null);
-  const [filtroDeCliente, setFiltroDeCliente] = useState<FiltroDeCliente>(TODOS_LOS_CLIENTES);
+  const [clienteSeleccionado, setClienteSeleccionado] = useState<string | null>(
+    clienteInicial === TODOS_LOS_CLIENTES ? null : clienteInicial,
+  );
+  const [filtroDeCliente, setFiltroDeCliente] = useState<FiltroDeCliente>(clienteInicial);
+  const colaborador = useFiltroDeColaborador(filtroDeCliente, setFiltroDeCliente, colaboradorInicial);
 
   const [altaAbierta, setAltaAbierta] = useState(false);
   const [guardando, setGuardando] = useState(false);
@@ -461,8 +474,13 @@ export default function Seguimiento() {
 
   // Tabla e indicadores cuentan lo mismo: lo del cliente elegido (o todos).
   const filasVisibles = useMemo(
-    () => filas.filter((f) => coincideConCliente(f.solicitud.clienteId, filtroDeCliente)),
-    [filas, filtroDeCliente],
+    () =>
+      filas.filter(
+        (f) =>
+          coincideConCliente(f.solicitud.clienteId, filtroDeCliente) &&
+          coincideConColaborador(f.solicitud.clienteId, colaborador),
+      ),
+    [filas, filtroDeCliente, colaborador.cartera],
   );
 
   /**
@@ -498,6 +516,7 @@ export default function Seguimiento() {
     ];
 
     const filtros = [
+      ...filtroDeColaboradorEnPalabras(colaborador),
       filtroDeClienteEnPalabras(filtroDeCliente, clientes),
       `Período: ${periodoActivo}${filtro.tipo === 'mes' ? '' : ` (rango elegido: ${describirFiltro(filtro)})`}`,
     ];
@@ -583,11 +602,13 @@ export default function Seguimiento() {
             según la regla configurada; cada intento queda registrado para poder demostrarlo después.
           </p>
           <div className="mt-3 flex flex-wrap items-end gap-3">
+            <FiltroDeColaboradorSelector id="filtroDeColaboradorSeguimiento" filtro={colaborador} />
             <FiltroDeClienteSelector
               id="filtroDeClienteSeguimiento"
               clientes={clientes}
               valor={filtroDeCliente}
               onCambiar={cambiarFiltroDeCliente}
+              cartera={colaborador.cartera}
             />
             <BotonDescargarExcel reporte={reporte} detalleDelNombre={nombreDelClienteFiltrado(filtroDeCliente, clientes)} />
           </div>
@@ -645,7 +666,7 @@ export default function Seguimiento() {
               regla
                 ? `Plazo: ${regla.diasHabilesDePlazo}º día hábil · Aviso ${regla.horaDeEnvio} · Insiste cada ${regla.reintentarCadaDiasHabiles} días hábiles`
                 : 'Sin regla de "Entrega de documentación" configurada todavía.'
-            }${filtroDeCliente === TODOS_LOS_CLIENTES ? '' : ` · cliente: ${nombreDelClienteFiltrado(filtroDeCliente, clientes)}`}`}
+            }${sufijoDeColaborador(colaborador)}${filtroDeCliente === TODOS_LOS_CLIENTES ? '' : ` · cliente: ${nombreDelClienteFiltrado(filtroDeCliente, clientes)}`}`}
           />
           <Tabla etiqueta="Estado de entrega de documentación por cliente">
             <thead>

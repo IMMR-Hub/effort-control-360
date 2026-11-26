@@ -49,6 +49,14 @@ const EXCEPCIONES = {
     cierra: 'Cuando se actualice vitest a una versión que traiga tinypool 2.1.2 o posterior.',
   },
   'deepmerge-ts': { motivo: 'Viene con prisma. Misma situación.', cierra: 'Igual que prisma.' },
+  effect: {
+    motivo:
+      'GHSA-7589-6fvf-x4pw (2026-11): ReDoS en Schema.TemplateLiteral. Viene con prisma: @prisma/config 6.19.3 fija ' +
+      'effect en 3.21.0 exacto, y la versión corregida (3.22.1+) queda fuera de esa fijación; npm solo ofrece bajar ' +
+      'prisma a 6.12.0 (ver prisma). Lo usa el CLI de migraciones al leer su configuración, que corre en el ' +
+      'despliegue con un archivo nuestro, no al atender una petición con datos de afuera. Revisado el 2026-11-26.',
+    cierra: 'Igual que prisma.',
+  },
   exceljs: {
     motivo:
       'El "arreglo" es bajar a exceljs 3.4.0, una major anterior. Se usa para leer ' +

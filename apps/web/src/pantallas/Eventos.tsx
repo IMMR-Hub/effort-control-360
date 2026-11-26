@@ -16,7 +16,7 @@
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { Search } from 'lucide-react';
 
-import { Boton, CampoTexto, EncabezadoTarjeta, Tabla, Tarjeta, Td, Th } from '../ui/Primitivos.jsx';
+import { Boton, CampoSelect, CampoTexto, EncabezadoTarjeta, Tabla, Tarjeta, Td, Th } from '../ui/Primitivos.jsx';
 import { ErrorDeApi } from '../api/cliente.js';
 import { listarClientes, type Cliente } from '../api/clientes.js';
 import { listarEventos, type Evento } from '../api/eventos.js';
@@ -250,7 +250,7 @@ export default function Eventos() {
         `Fechas: ${fechasEnPalabras(f)}`,
         ...(f.entidad.trim() ? [`Entidad: ${f.entidad.trim()}`] : []),
         ...(f.entidadId.trim() ? [`Id de la entidad: ${f.entidadId.trim()}`] : []),
-        ...(f.usuarioId.trim() ? [`Id de usuario: ${f.usuarioId.trim()}`] : []),
+        ...(f.usuarioId.trim() ? [`Colaborador: ${nombreDeUsuario(f.usuarioId.trim())}`] : []),
         ...(hayMas ? [`Solo los ${eventos.length} eventos cargados en pantalla; hay más`] : []),
       ],
       hojas: [
@@ -388,12 +388,35 @@ export default function Eventos() {
             value={filtro.entidadId}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFiltro({ ...filtro, entidadId: e.target.value })}
           />
-          <CampoTexto
-            id="filtroUsuarioId"
-            etiqueta="Id de usuario"
-            value={filtro.usuarioId}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFiltro({ ...filtro, usuarioId: e.target.value })}
-          />
+          {/*
+            Daniel, 2026-11-26: buscar por colaborador. Acá «colaborador» es QUIÉN hizo la acción — en un
+            historial eso es lo que se busca —, elegido de la lista en vez de pegar un id. Si la lista del
+            equipo no llegó, queda el campo de texto de antes.
+          */}
+          {usuarios.length > 0 ? (
+            <CampoSelect
+              id="filtroUsuarioId"
+              etiqueta="Colaborador (quién lo hizo)"
+              value={filtro.usuarioId}
+              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setFiltro({ ...filtro, usuarioId: e.target.value })}
+              opciones={[
+                { valor: '', etiqueta: 'Todo el equipo' },
+                ...[...usuarios]
+                  .sort((a, b) => `${a.nombre} ${a.apellido}`.localeCompare(`${b.nombre} ${b.apellido}`, 'es'))
+                  .map((u) => ({
+                    valor: u.id,
+                    etiqueta: `${u.nombre} ${u.apellido}`.trim() + (u.activo ? '' : ' (inactivo)'),
+                  })),
+              ]}
+            />
+          ) : (
+            <CampoTexto
+              id="filtroUsuarioId"
+              etiqueta="Id de usuario"
+              value={filtro.usuarioId}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFiltro({ ...filtro, usuarioId: e.target.value })}
+            />
+          )}
           <FiltroDeClienteSelector
             id="filtroCliente"
             clientes={clientesDelFiltro}

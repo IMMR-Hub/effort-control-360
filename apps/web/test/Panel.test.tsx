@@ -575,7 +575,20 @@ describe('panel general', () => {
 
       fireEvent.click(await screen.findByRole('button', { name: 'Ver las alertas críticas' }));
 
-      expect(irA).toHaveBeenCalledWith('alertas');
+      expect(irA).toHaveBeenCalledWith('alertas', {});
+    });
+
+    // Daniel, 2026-11-26: con un cliente elegido, «Vencimientos próximos» abría la lista de todos.
+    it('con un cliente elegido, el indicador lleva a su pantalla con ese mismo cliente', async () => {
+      const irA = vi.fn();
+      await montarConNavegacion(irA);
+      fireEvent.change(screen.getByLabelText('Cliente'), { target: { value: 'cli-garso' } });
+
+      fireEvent.click(await screen.findByRole('button', { name: 'Ver los vencimientos próximos' }));
+      expect(irA).toHaveBeenLastCalledWith('vencimientos', { clienteId: 'cli-garso', nivel: 'PROXIMOS' });
+
+      fireEvent.click(screen.getByRole('button', { name: 'Ver las alertas críticas' }));
+      expect(irA).toHaveBeenLastCalledWith('alertas', { clienteId: 'cli-garso' });
     });
 
     it('sin navegación disponible no finge ser un botón', async () => {

@@ -82,6 +82,13 @@ import {
   nombreDelClienteFiltrado,
   type FiltroDeCliente,
 } from '../ui/FiltroDeCliente.js';
+import {
+  FiltroDeColaboradorSelector,
+  coincideConColaborador,
+  filtroDeColaboradorEnPalabras,
+  sufijoDeColaborador,
+  useFiltroDeColaborador,
+} from '../ui/FiltroDeColaborador.js';
 import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
 import { hoja, type HojaDeReporte, type Reporte } from '../ui/reporteExcel.js';
 
@@ -277,6 +284,7 @@ export default function Documentos() {
 
   const [clienteSeleccionado, setClienteSeleccionado] = useState<string | null>(null);
   const [filtroDeCliente, setFiltroDeCliente] = useState<FiltroDeCliente>(TODOS_LOS_CLIENTES);
+  const colaborador = useFiltroDeColaborador(filtroDeCliente, setFiltroDeCliente);
   const [documentos, setDocumentos] = useState<readonly Documento[]>([]);
   // Una fila por archivo, la versión más reciente (2026-09-30: un Excel editado
   // dos días aparecía 20 veces). Las anteriores se pueden ver con un clic.
@@ -405,13 +413,13 @@ export default function Documentos() {
     () =>
       clientes
         .filter((c) => c.activo)
-        .filter((c) => coincideConCliente(c.id, filtroDeCliente))
+        .filter((c) => coincideConCliente(c.id, filtroDeCliente) && coincideConColaborador(c.id, colaborador))
         .map((cliente) => ({
           cliente,
           proceso: procesos.find((p) => p.clienteId === cliente.id) ?? null,
         }))
         .sort((a, b) => a.cliente.nombre.localeCompare(b.cliente.nombre, 'es')),
-    [clientes, procesos, filtroDeCliente],
+    [clientes, procesos, filtroDeCliente, colaborador.cartera],
   );
 
   // Los indicadores cuentan `filas`, o sea lo filtrado: si no, dirían una cosa y la tabla otra.
@@ -597,6 +605,7 @@ export default function Documentos() {
     return {
       titulo: 'Documentos / IVA',
       filtros: [
+        ...filtroDeColaboradorEnPalabras(colaborador),
         filtroDeClienteEnPalabras(filtroDeCliente, clientes),
         `Período/Fechas: ${describirFiltro(filtro)}`,
         `Proceso mensual: período ${periodo}`,
@@ -653,11 +662,13 @@ export default function Documentos() {
             </Boton>
           )}
           <FiltroDeFechasSelector id="filtroDocumentos" valor={filtro} onCambiar={setFiltro} />
+          <FiltroDeColaboradorSelector id="filtroDeColaboradorDocumentos" filtro={colaborador} />
           <FiltroDeClienteSelector
             id="filtroDeClienteDocumentos"
             clientes={clientes}
             valor={filtroDeCliente}
             onCambiar={cambiarFiltroDeCliente}
+            cartera={colaborador.cartera}
           />
           <BotonDescargarExcel
             reporte={reporte}
@@ -707,7 +718,7 @@ export default function Documentos() {
       <Tarjeta>
         <EncabezadoTarjeta
           titulo="Proceso mensual"
-          descripcion={`Período ${periodo} · ${filas.length} clientes${
+          descripcion={`Período ${periodo} · ${filas.length} clientes${sufijoDeColaborador(colaborador)}${
             filtroDeCliente === TODOS_LOS_CLIENTES ? '' : ` · cliente: ${nombreDelClienteFiltrado(filtroDeCliente, clientes)}`
           } · hacé clic en un cliente para ver sus documentos`}
         />

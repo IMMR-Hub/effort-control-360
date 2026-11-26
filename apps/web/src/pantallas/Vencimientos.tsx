@@ -70,6 +70,13 @@ import {
   nombreDelClienteFiltrado,
   type FiltroDeCliente,
 } from '../ui/FiltroDeCliente.js';
+import {
+  FiltroDeColaboradorSelector,
+  coincideConColaborador,
+  filtroDeColaboradorEnPalabras,
+  sufijoDeColaborador,
+  useFiltroDeColaborador,
+} from '../ui/FiltroDeColaborador.js';
 import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
 import { hoja, type Reporte } from '../ui/reporteExcel.js';
 
@@ -108,7 +115,15 @@ function formularioVacio(clienteId: string): FormularioAlta {
   };
 }
 
-export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nivelInicial?: FiltroDeNivel } = {}) {
+export default function Vencimientos({
+  nivelInicial = 'TODOS',
+  clienteInicial = TODOS_LOS_CLIENTES,
+  colaboradorInicial,
+}: {
+  readonly nivelInicial?: FiltroDeNivel;
+  readonly clienteInicial?: string;
+  readonly colaboradorInicial?: string;
+} = {}) {
   const { sesion } = useSesion();
   const puedeEditar = ROLES_QUE_EDITAN.has(sesion?.rol ?? '');
 
@@ -185,7 +200,8 @@ export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nive
   );
 
   const [filtroDeNivel, setFiltroDeNivel] = useState<FiltroDeNivel>(nivelInicial);
-  const [filtroDeCliente, setFiltroDeCliente] = useState<FiltroDeCliente>(TODOS_LOS_CLIENTES);
+  const [filtroDeCliente, setFiltroDeCliente] = useState<FiltroDeCliente>(clienteInicial);
+  const colaborador = useFiltroDeColaborador(filtroDeCliente, setFiltroDeCliente, colaboradorInicial);
   // Los presentados los trae su propia tarjeta; los guarda acá solo para el Excel.
   const [presentadosVisibles, setPresentadosVisibles] = useState<readonly VencimientoPresentado[]>([]);
 
@@ -195,9 +211,9 @@ export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nive
     () =>
       [...vencimientos]
         .filter((v) => dentroDelRango(v.fechaVencimiento, rango))
-        .filter((v) => coincideConCliente(v.clienteId, filtroDeCliente))
+        .filter((v) => coincideConCliente(v.clienteId, filtroDeCliente) && coincideConColaborador(v.clienteId, colaborador))
         .sort((a, b) => a.fechaVencimiento.localeCompare(b.fechaVencimiento)),
-    [vencimientos, rango, filtroDeCliente],
+    [vencimientos, rango, filtroDeCliente, colaborador.cartera],
   );
   const filas = useMemo(
     () => filasDelRango.filter((v) => coincideConNivel(v.nivelAlerta, filtroDeNivel)),
@@ -207,11 +223,11 @@ export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nive
   // Con filtro, el resumen se cuenta sobre lo filtrado: si no, los indicadores
   // dirían una cosa y la tabla otra.
   const resumenVisible: ResumenPorNivel = useMemo(() => {
-    if (rango === null && filtroDeCliente === TODOS_LOS_CLIENTES) return resumen;
+    if (rango === null && filtroDeCliente === TODOS_LOS_CLIENTES && colaborador.cartera === null) return resumen;
     const cuenta = { ...RESUMEN_VACIO };
     for (const v of filasDelRango) cuenta[v.nivelAlerta] += 1;
     return cuenta;
-  }, [rango, resumen, filasDelRango, filtroDeCliente]);
+  }, [rango, resumen, filasDelRango, filtroDeCliente, colaborador.cartera]);
 
   const etiquetaDelNivel = OPCIONES_FILTRO_DE_NIVEL.find((o) => o.valor === filtroDeNivel)?.etiqueta ?? '';
 
@@ -220,6 +236,7 @@ export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nive
     return {
       titulo: 'Vencimientos',
       filtros: [
+        ...filtroDeColaboradorEnPalabras(colaborador),
         filtroDeClienteEnPalabras(filtroDeCliente, clientes),
         `Fechas: ${describirFiltro(filtro)} (el radar, por fecha de vencimiento; los presentados, por fecha de presentación)`,
         `Nivel de alerta: ${etiquetaDelNivel}`,
@@ -358,11 +375,13 @@ export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nive
               opciones={OPCIONES_FILTRO_DE_NIVEL}
               className="w-56"
             />
+            <FiltroDeColaboradorSelector id="filtroDeColaboradorVencimientos" filtro={colaborador} />
             <FiltroDeClienteSelector
               id="filtroDeClienteVencimientos"
               clientes={clientes}
               valor={filtroDeCliente}
               onCambiar={setFiltroDeCliente}
+              cartera={colaborador.cartera}
             />
             <BotonDescargarExcel reporte={reporte} detalleDelNombre={nombreDelClienteFiltrado(filtroDeCliente, clientes)} />
           </div>
@@ -435,7 +454,7 @@ export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nive
             filtroDeNivel === 'TODOS'
               ? ''
               : ` · nivel: ${etiquetaDelNivel}`
-          }${filtroDeCliente === TODOS_LOS_CLIENTES ? '' : ` · cliente: ${nombreDeCliente(filtroDeCliente)}`}`}
+          }${sufijoDeColaborador(colaborador)}${filtroDeCliente === TODOS_LOS_CLIENTES ? '' : ` · cliente: ${nombreDeCliente(filtroDeCliente)}`}`}
         />
         <Tabla etiqueta="Radar de vencimientos">
           <thead>
@@ -525,6 +544,7 @@ export default function Vencimientos({ nivelInicial = 'TODOS' }: { readonly nive
         clientes={clientes}
         rango={rango}
         clienteId={filtroDeCliente}
+        cartera={colaborador.cartera}
         puedeEditar={puedeEditar}
         alCambiarVisibles={setPresentadosVisibles}
       />

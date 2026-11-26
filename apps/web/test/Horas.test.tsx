@@ -162,6 +162,22 @@ describe('planilla de horas', () => {
     expect(screen.getByText(/autoreportadas/)).toBeVisible();
   });
 
+  it('el filtro «Colaborador» (2026-11-26) recorta el resumen del equipo a las horas que cargó esa persona', async () => {
+    await montar('direccion');
+    expect(await screen.findByText('Gs. 1.700.000')).toBeVisible();
+
+    await usuario.selectOptions(screen.getByLabelText('Colaborador'), 'usr-sandra');
+
+    // Sandra: 90 (GARSO) + 240 (COPESA) = 330 min; costo 300.000 + 800.000.
+    expect(await screen.findByText('Gs. 1.100.000', { selector: 'p, span, div, dd, strong' })).toBeVisible();
+    const porPersona = screen.getByRole('table', { name: 'Horas por colaborador' });
+    expect(within(porPersona).queryByText('Ana Martínez')).not.toBeInTheDocument();
+    const porCliente = screen.getByRole('table', { name: 'Horas por cliente' });
+    expect(within(porCliente).queryByText('Tiempo interno (sin cliente)')).not.toBeInTheDocument();
+    // «Mis horas» no cambia: el filtro es del resumen del equipo.
+    expect(within(screen.getByRole('table', { name: 'Mis horas del período' })).getByText('Carga de documentos')).toBeVisible();
+  });
+
   it('el resumen muestra el costo en guaraníes, sumado sin perder precisión', async () => {
     await montar('direccion');
 
