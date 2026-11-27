@@ -8,7 +8,9 @@
 -- `recordar_el` es SOLO una marca visual: nunca dispara un correo ni un
 -- WhatsApp (REGLA 0-bis).
 --
--- SOLO CREA TABLAS Y AGREGA COLUMNAS CON DEFAULT. No toca datos existentes.
+-- CREA dos tablas, tipos, índices, funciones y disparadores (triggers),
+-- políticas de RLS y permisos (grants), y AGREGA COLUMNAS CON DEFAULT a
+-- `solicitud_documentacion`. No modifica ni elimina datos existentes.
 
 CREATE TYPE "Prioridad" AS ENUM ('BAJA', 'MEDIA', 'ALTA', 'CRITICA');
 
@@ -120,7 +122,10 @@ CREATE TRIGGER mensaje_de_pedido_sin_truncate
 
 -- UPDATE: solo se admite que `corregido_por_id` pase de NULL a un valor.
 -- Cualquier otro cambio (texto, autor, fecha, nota interna, o volver a
--- corregir un mensaje ya corregido) se rechaza, incluso a un superusuario.
+-- corregir un mensaje ya corregido) se rechaza. Protege contra la aplicación
+-- y contra cualquier rol normal; el dueño de la tabla o un superusuario
+-- todavía puede saltearlo a propósito (apagando el disparador o con
+-- session_replication_role): para eso están el respaldo y la REGLA 0.
 CREATE OR REPLACE FUNCTION rechazar_edicion_mensaje_de_pedido()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -164,6 +169,10 @@ BEGIN
   IF EXISTS (SELECT 1 FROM pg_roles WHERE rolname = 'effort_app') THEN
     GRANT SELECT, INSERT, UPDATE ON "pedido_del_equipo" TO effort_app;
     GRANT SELECT, INSERT ON "mensaje_de_pedido" TO effort_app;
+    -- `20260722180000_rol_aplicacion_y_rls` dejó privilegios por defecto
+    -- (SELECT, INSERT, UPDATE en toda tabla nueva), así que la tabla ya nace
+    -- con UPDATE completo: se quita antes de dar solo la columna.
+    REVOKE UPDATE, DELETE, TRUNCATE ON "mensaje_de_pedido" FROM effort_app;
     GRANT UPDATE ("corregido_por_id") ON "mensaje_de_pedido" TO effort_app;
 
     DROP POLICY IF EXISTS app_acceso ON "pedido_del_equipo";

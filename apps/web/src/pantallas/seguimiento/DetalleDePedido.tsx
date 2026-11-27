@@ -29,6 +29,7 @@ import {
   ETIQUETA_PRIORIDAD,
   OPCIONES_CANAL,
   OPCIONES_PRIORIDAD,
+  formatearDia,
   formatearFechaHora,
   horaDeParaguayParaCampo,
   instanteDesdeHoraDeParaguay,
@@ -184,8 +185,15 @@ export function DetalleDePedido({
   readonly clientes: readonly Cliente[];
   readonly alCambiar: () => void;
 }) {
-  const [datos, setDatos] = useState<{ pedido: PedidoDelEquipo; mensajes: readonly MensajeDePedido[] } | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  // Lo cargado y el error se guardan con el pedido al que pertenecen: al pasar
+  // de un pedido a otro no se confunden, y un error se ve aunque haya datos viejos.
+  const [carga, setCarga] = useState<{
+    readonly pedidoId: string;
+    readonly datos: { pedido: PedidoDelEquipo; mensajes: readonly MensajeDePedido[] } | null;
+    readonly error: string | null;
+  } | null>(null);
+  const datos = carga?.pedidoId === pedidoId ? carga.datos : null;
+  const error = carga?.pedidoId === pedidoId ? carga.error : null;
   const [edicion, setEdicion] = useState<Edicion>(null);
   const [errorDeCambio, setErrorDeCambio] = useState<string | null>(null);
 
@@ -193,12 +201,16 @@ export function DetalleDePedido({
     let vigente = true;
     obtenerPedido(pedidoId)
       .then((respuesta) => {
-        if (!vigente) return;
-        setDatos(respuesta);
-        setError(null);
+        if (vigente) setCarga({ pedidoId, datos: respuesta, error: null });
       })
       .catch((motivo: unknown) => {
-        if (vigente) setError(mensajeDeError(motivo));
+        if (!vigente) return;
+        const mensaje = mensajeDeError(motivo);
+        setCarga((previa) => ({
+          pedidoId,
+          datos: previa?.pedidoId === pedidoId ? previa.datos : null,
+          error: mensaje,
+        }));
       });
     return () => {
       vigente = false;
@@ -214,14 +226,14 @@ export function DetalleDePedido({
     return [solicitante, ...deDireccion];
   }, [datos, usuarios]);
 
-  if (error && !datos) {
+  if (!datos && error) {
     return (
       <Tarjeta>
-        <p className="px-5 py-8 text-center text-sm text-critico">{error}</p>
+        <p role="alert" className="px-5 py-8 text-center text-sm text-critico">{error}</p>
       </Tarjeta>
     );
   }
-  if (!datos || datos.pedido.id !== pedidoId) {
+  if (!datos) {
     return (
       <Tarjeta>
         <p className="px-5 py-8 text-center text-sm text-tinta-tenue">Cargando el pedido…</p>
@@ -256,8 +268,7 @@ export function DetalleDePedido({
           cliente ? ` · cliente: ${cliente}` : ''
         }`}
         acciones={
-          puedeEscribir &&
-          abierto && (
+          puedeEscribir && (
             <Boton variante="primario" icono={MessageSquarePlus} onClick={() => setEdicion({ corrige: null })}>
               Agregar mensaje
             </Boton>
@@ -268,7 +279,7 @@ export function DetalleDePedido({
       <div className="flex flex-wrap items-end gap-3 border-b border-borde px-5 py-3">
         <Badge tono={estado.tono}>{estado.texto}</Badge>
         <Badge tono={prioridad.tono} conIcono={false}>Prioridad {prioridad.texto.toLowerCase()}</Badge>
-        {pedido.recordarEl && <Badge tono="pendiente" conIcono={false}>Recordar el {pedido.recordarEl}</Badge>}
+        {pedido.recordarEl && <Badge tono="pendiente" conIcono={false}>Recordar el {formatearDia(pedido.recordarEl)}</Badge>}
         {pedido.derivadoASoporte && <Badge tono="proceso" conIcono={false}>Derivado a soporte</Badge>}
         {puedeEscribir && abierto && (
           <>
@@ -296,6 +307,7 @@ export function DetalleDePedido({
           Motivo de la cancelación: {pedido.motivoDeCancelacion}
         </p>
       )}
+      {error && <p role="alert" className="border-b border-borde px-5 py-2 text-sm text-critico">{error}</p>}
       {errorDeCambio && <p className="border-b border-borde px-5 py-2 text-sm text-critico">{errorDeCambio}</p>}
 
       {puedeEscribir && edicion && (
@@ -326,7 +338,7 @@ export function DetalleDePedido({
                 {mensaje.notaInterna && <Badge tono="parcial">Nota interna</Badge>}
                 {fueCorregido && <Badge tono="pendiente" conIcono={false}>Corregido</Badge>}
                 {correcciones.has(mensaje.id) && <Badge tono="proceso" conIcono={false}>Corrección</Badge>}
-                {puedeEscribir && abierto && !fueCorregido && (
+                {puedeEscribir && !fueCorregido && (
                   <Boton variante="fantasma" className="ml-auto" onClick={() => setEdicion({ corrige: mensaje })}>
                     Corregir
                   </Boton>

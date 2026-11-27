@@ -93,6 +93,7 @@ function unItem(datos: Record<string, unknown> = {}) {
     clienteId: null,
     periodo: null,
     solicitanteUsuarioId: 'u-ana',
+    derivadoASoporte: false,
     ...datos,
   };
 }
@@ -228,7 +229,7 @@ describe('pestaña Pendientes', () => {
     // Mañana todavía no.
     expect(filaDe('Revisar planilla')).not.toHaveClass('bg-critico-fondo');
     expect(within(filaDe('Revisar planilla')).queryByText('Vencido')).not.toBeInTheDocument();
-    expect(within(filaDe('Revisar planilla')).getByText(diaDesdeHoy(1))).toBeVisible();
+    expect(within(filaDe('Revisar planilla')).getByText(diaDesdeHoy(1).split('-').reverse().join('/'))).toBeVisible();
   });
 
   it('tildar manda {accion:"tildar"} y el pedido sale de Pendientes', async () => {
@@ -532,5 +533,146 @@ describe('pestaña Equipo', () => {
     await usuario.click(within(fila).getByRole('button', { name: 'Reabrir' }));
     await waitFor(() => expect(mock.llamadasA('PATCH /api/v1/seguimiento/pedidos-equipo/p1')).toHaveLength(1));
     expect(cuerpoDe('PATCH /api/v1/seguimiento/pedidos-equipo/p1')).toEqual({ accion: 'reabrir' });
+  });
+});
+
+describe('ajustes de la revisión final', () => {
+  it('una solicitud a un cliente cambia de prioridad desde Pendientes y se recarga del servidor', async () => {
+    mock.mockDeRuta('GET /api/v1/seguimiento/pendientes', () =>
+      bandeja([unaSolicitud('sol-1', 'cli-garso', 'GARSO S.A.')]),
+    );
+    mock.mockDeRuta('PATCH /api/v1/seguimiento/solicitudes/sol-1/prioridad', () => respuestaJson({ solicitud: {} }));
+    await montar();
+    await screen.findByText('Documentación 2026-11 de GARSO S.A.');
+    const antes = mock.llamadasA('GET /api/v1/seguimiento/pendientes').length;
+
+    const fila = filaDe('Documentación 2026-11 de GARSO S.A.');
+    await usuario.selectOptions(within(fila).getByLabelText('Cambiar prioridad'), 'CRITICA');
+
+    await waitFor(() =>
+      expect(mock.llamadasA('PATCH /api/v1/seguimiento/solicitudes/sol-1/prioridad')).toHaveLength(1),
+    );
+    expect(cuerpoDe('PATCH /api/v1/seguimiento/solicitudes/sol-1/prioridad')).toEqual({ prioridad: 'CRITICA' });
+    await waitFor(() =>
+      expect(mock.llamadasA('GET /api/v1/seguimiento/pendientes').length).toBeGreaterThan(antes),
+    );
+  });
+
+  it('un responsable no ve el selector de prioridad de las solicitudes', async () => {
+    mock.mockDeRuta('GET /api/v1/seguimiento/pendientes', () =>
+      bandeja([unaSolicitud('sol-1', 'cli-garso', 'GARSO S.A.')]),
+    );
+    await montar({ rol: 'responsable' });
+    await screen.findByText('Documentación 2026-11 de GARSO S.A.');
+    expect(screen.queryByLabelText('Cambiar prioridad')).not.toBeInTheDocument();
+  });
+
+  it('«Derivar a soporte» pide confirmación antes de mandar nada y no aparece si ya está derivado', async () => {
+    mock.mockDeRuta('GET /api/v1/seguimiento/pendientes', () =>
+      bandeja([unItem(), unItem({ id: 'p2', titulo: 'Ya derivado', derivadoASoporte: true })]),
+    );
+    mock.mockDeRuta('PATCH /api/v1/seguimiento/pedidos-equipo/p1', () =>
+      respuestaJson({ pedido: unPedido({ derivadoASoporte: true }) }),
+    );
+    await montar();
+    await screen.findByText('No me aparece el cliente nuevo');
+
+    expect(within(filaDe('Ya derivado')).queryByRole('button', { name: 'Derivar a soporte' })).not.toBeInTheDocument();
+
+    const fila = filaDe('No me aparece el cliente nuevo');
+    await usuario.click(within(fila).getByRole('button', { name: 'Derivar a soporte' }));
+    expect(mock.llamadasA('PATCH /api/v1/seguimiento/pedidos-equipo/p1')).toHaveLength(0);
+    expect(within(fila).getByText(/no se puede deshacer/)).toBeVisible();
+
+    await usuario.click(within(fila).getByRole('button', { name: 'Confirmar derivación a soporte' }));
+    await waitFor(() => expect(mock.llamadasA('PATCH /api/v1/seguimiento/pedidos-equipo/p1')).toHaveLength(1));
+    expect(cuerpoDe('PATCH /api/v1/seguimiento/pedidos-equipo/p1')).toEqual({ accion: 'derivar_a_soporte' });
+  });
+
+  it('«Recordar el» se ve como dd/mm/aaaa en Pendientes, Equipo y el detalle', async () => {
+    mock.mockDeRuta('GET /api/v1/seguimiento/pendientes', () =>
+      bandeja([unItem({ recordarEl: '2099-12-31' })]),
+    );
+    mock.mockDeRuta('GET /api/v1/seguimiento/pedidos-equipo', () =>
+      respuestaJson({ pedidos: [unPedido({ recordarEl: '2099-12-31' })] }),
+    );
+    mock.mockDeRuta('GET /api/v1/seguimiento/pedidos-equipo/p1', () =>
+      respuestaJson({ pedido: unPedido({ recordarEl: '2099-12-31' }), mensajes: [unMensaje()] }),
+    );
+    await montar();
+    await screen.findByText('31/12/2099');
+    expect(screen.queryByText('2099-12-31')).not.toBeInTheDocument();
+
+    await usuario.click(screen.getByRole('tab', { name: 'Equipo' }));
+    const tabla = await screen.findByRole('table', { name: 'Pedidos del equipo' });
+    expect(within(tabla).getByText('31/12/2099')).toBeVisible();
+
+    await usuario.click(within(tabla).getByRole('button', { name: 'No me aparece el cliente nuevo' }));
+    expect(await screen.findByText('Recordar el 31/12/2099')).toBeVisible();
+    expect(screen.queryByText(/2099-12-31/)).not.toBeInTheDocument();
+  });
+
+  it('en Equipo, «Derivar» abre con los destinatarios actuales tildados', async () => {
+    mock.mockDeRuta('GET /api/v1/seguimiento/pedidos-equipo', () =>
+      respuestaJson({
+        pedidos: [unPedido({ destinatarioUsuarioIds: ['u-lili'], destinatarioNombres: ['Lili Benítez'] })],
+      }),
+    );
+    await montar({ pestana: 'equipo' });
+    const tabla = await screen.findByRole('table', { name: 'Pedidos del equipo' });
+
+    await usuario.click(within(tabla).getByRole('button', { name: 'Derivar' }));
+
+    expect(screen.getByRole('checkbox', { name: 'Lili Benítez' })).toBeChecked();
+    expect(screen.getByRole('checkbox', { name: 'Laura Pérez' })).not.toBeChecked();
+  });
+
+  it('el detalle muestra el error de otro pedido en vez de quedarse cargando, y el de una recarga fallida', async () => {
+    mock.mockDeRuta('GET /api/v1/seguimiento/pedidos-equipo', () =>
+      respuestaJson({ pedidos: [unPedido(), unPedido({ id: 'p2', asunto: 'Segundo pedido' })] }),
+    );
+    mock.mockDeRuta('GET /api/v1/seguimiento/pedidos-equipo/p1', () =>
+      respuestaJson({ pedido: unPedido(), mensajes: [unMensaje()] }),
+    );
+    mock.mockDeRuta('GET /api/v1/seguimiento/pedidos-equipo/p2', () =>
+      respuestaJson({ error: 'caido', mensaje: 'No se pudo abrir el segundo pedido.' }, { status: 500 }),
+    );
+    mock.mockDeRuta('PATCH /api/v1/seguimiento/pedidos-equipo/p1', () =>
+      respuestaJson({ pedido: unPedido({ estado: 'EN_CURSO' }) }),
+    );
+    await montar({ pestana: 'equipo' });
+
+    await usuario.click(await screen.findByRole('button', { name: 'No me aparece el cliente nuevo' }));
+    expect(await screen.findByText('Cargué el cliente ayer y no aparece en la lista.')).toBeVisible();
+
+    // De A a B, y B falla: se ve el error, no «Cargando…» para siempre.
+    await usuario.click(screen.getByRole('button', { name: 'Segundo pedido' }));
+    expect(await screen.findByText('No se pudo abrir el segundo pedido.')).toBeVisible();
+    expect(screen.queryByText('Cargando el pedido…')).not.toBeInTheDocument();
+
+    // Vuelve a A (carga bien) y después una recarga falla: el mensaje se ve.
+    await usuario.click(screen.getByRole('button', { name: 'No me aparece el cliente nuevo' }));
+    expect(await screen.findByText('Cargué el cliente ayer y no aparece en la lista.')).toBeVisible();
+    mock.mockDeRuta('GET /api/v1/seguimiento/pedidos-equipo/p1', () =>
+      respuestaJson({ error: 'caido', mensaje: 'El servidor no respondió.' }, { status: 500 }),
+    );
+    await usuario.click(screen.getByRole('button', { name: 'Marcar en curso' }));
+    expect(await screen.findByText('El servidor no respondió.')).toBeVisible();
+  });
+
+  it('dirección puede agregar y corregir mensajes en un pedido cerrado', async () => {
+    const cerrado = unPedido({ estado: 'RESUELTO' });
+    mock.mockDeRuta('GET /api/v1/seguimiento/pedidos-equipo', () => respuestaJson({ pedidos: [] }));
+    mock.mockDeRuta('GET /api/v1/seguimiento/pedidos-equipo/p1', () =>
+      respuestaJson({ pedido: cerrado, mensajes: [unMensaje()] }),
+    );
+    await montar({ pestana: 'equipo' });
+    await screen.findByText('No hay pedidos abiertos');
+    mock.mockDeRuta('GET /api/v1/seguimiento/pedidos-equipo', () => respuestaJson({ pedidos: [cerrado] }));
+    await usuario.click(screen.getByRole('button', { name: 'Cerrados' }));
+    await usuario.click(await screen.findByRole('button', { name: 'No me aparece el cliente nuevo' }));
+
+    expect(await screen.findByRole('button', { name: 'Agregar mensaje' })).toBeVisible();
+    expect(screen.getByRole('button', { name: 'Corregir' })).toBeVisible();
   });
 });

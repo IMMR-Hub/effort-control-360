@@ -401,7 +401,9 @@ export class PedidosDelEquipoFalsos implements RepositorioDePedidosDelEquipo {
   }
 
   async agregarMensaje(pedidoId: string, datos: DatosDeMensaje): Promise<MensajeAlmacenado> {
-    // El repositorio real falla (404) si el pedido no existe: el doble no puede mentir.
+    // La ruta real comprueba antes que el pedido exista (el repositorio real, sin esa
+    // comprobación, fallaría con un error de clave foránea). El doble falla igual para
+    // que un olvido en la ruta no pase desapercibido en los tests.
     if (!this.pedidos.some((p) => p.id === pedidoId)) {
       throw new ErrorDeAplicacion(404, 'Recurso inexistente.', 'no_encontrado');
     }

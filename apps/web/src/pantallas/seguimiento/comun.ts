@@ -140,6 +140,12 @@ export function instanteDesdeHoraDeParaguay(valor: string): string {
   return new Date(instante).toISOString();
 }
 
+/** 'AAAA-MM-DD' (fecha civil) como dd/mm/aaaa, sin pasar por `Date`: un día no tiene huso. */
+export function formatearDia(dia: string): string {
+  const [anio, mes, diaDelMes] = dia.slice(0, 10).split('-');
+  return anio && mes && diaDelMes ? `${diaDelMes}/${mes}/${anio}` : dia;
+}
+
 export function formatearFechaHora(fechaIso: string): string {
   return new Intl.DateTimeFormat('es-PY', {
     timeZone: ZONA_PARAGUAY,

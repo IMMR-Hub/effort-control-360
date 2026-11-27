@@ -36,6 +36,7 @@ import {
   antiguedad,
   destinatariosPosibles,
   etiquetaDeEstado,
+  formatearDia,
   mensajeDeError,
 } from './comun.js';
 
@@ -206,7 +207,7 @@ export default function Pendientes({
                   <Td className="whitespace-nowrap text-tinta-suave">
                     {item.recordarEl ? (
                       <span className="inline-flex items-center gap-1.5">
-                        <span>{item.recordarEl}</span>
+                        <span>{formatearDia(item.recordarEl)}</span>
                         {vencido && <Badge tono="critico">Vencido</Badge>}
                       </span>
                     ) : (
@@ -221,11 +222,12 @@ export default function Pendientes({
                         <AccionesDePedido
                           id={item.id}
                           estado={item.estado as EstadoDePedido}
+                          derivadoASoporte={item.derivadoASoporte}
                           destinatarios={destinatarios}
                           alCambiar={recargar}
                         />
                       ) : (
-                        <AccionesDeSolicitud id={item.id} alCambiar={recargar} />
+                        <AccionesDeSolicitud id={item.id} prioridad={item.prioridad} alCambiar={recargar} />
                       )}
                     </Td>
                   )}

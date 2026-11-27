@@ -24,6 +24,7 @@ import {
   ETIQUETA_PRIORIDAD,
   ROLES_QUE_ABREN,
   destinatariosPosibles,
+  formatearDia,
   mensajeDeError,
 } from './comun.js';
 import { useUsuarios } from './useUsuarios.js';
@@ -209,7 +210,7 @@ export default function Equipo({ pedidoInicial }: { readonly pedidoInicial?: str
                     <Td className="whitespace-nowrap text-tinta-suave">
                       {pedido.recordarEl ? (
                         <span className="inline-flex items-center gap-1.5">
-                          <span>{pedido.recordarEl}</span>
+                          <span>{formatearDia(pedido.recordarEl)}</span>
                           {vencido && <Badge tono="critico">Vencido</Badge>}
                         </span>
                       ) : (
@@ -223,6 +224,7 @@ export default function Equipo({ pedidoInicial }: { readonly pedidoInicial?: str
                           id={pedido.id}
                           estado={pedido.estado}
                           derivadoASoporte={pedido.derivadoASoporte}
+                          destinatariosActuales={pedido.destinatarioUsuarioIds}
                           destinatarios={destinatarios}
                           alCambiar={recargar}
                         />

@@ -152,34 +152,32 @@ export class PedidosDelEquipoPrisma implements RepositorioDePedidosDelEquipo {
   }
 
   async corregirMensaje(mensajeId: string, datos: DatosDeMensaje): Promise<MensajeAlmacenado> {
-    try {
-      return await this.prisma.$transaction(async (tx) => {
-        const viejo = await tx.mensajeDePedido.findUnique({
-          where: { id: mensajeId },
-          select: { id: true, pedidoId: true, corregidoPorId: true },
-        });
-        if (!viejo) throw new ErrorDeAplicacion(404, 'Recurso inexistente.', 'no_encontrado');
-        if (viejo.corregidoPorId) throw yaCorregido();
-
-        const nuevo = await tx.mensajeDePedido.create({
-          data: datosDeMensaje(viejo.pedidoId, datos),
-          select: CAMPOS_DE_MENSAJE,
-        });
-        // La única columna que la base deja tocar, y solo de NULL a un valor.
-        await tx.mensajeDePedido.update({
-          where: { id: viejo.id },
-          data: { corregidoPorId: nuevo.id },
-          select: { id: true },
-        });
-        return nuevo;
+    return this.prisma.$transaction(async (tx) => {
+      // Se bloquea la fila del mensaje antes de leerla: dos correcciones
+      // simultáneas se turnan, y la segunda ve `corregido_por_id` ya marcado y
+      // responde 409. Sin el bloqueo, las dos pasarían la lectura y la segunda
+      // recién chocaría con el disparador de la base (que rechaza el segundo
+      // UPDATE con un error genérico de permisos, no con un 409).
+      await tx.$queryRaw`SELECT id FROM mensaje_de_pedido WHERE id = ${mensajeId}::uuid FOR UPDATE`;
+      const viejo = await tx.mensajeDePedido.findUnique({
+        where: { id: mensajeId },
+        select: { id: true, pedidoId: true, corregidoPorId: true },
       });
-    } catch (error) {
-      // Dos correcciones simultáneas: la segunda choca con el índice único.
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
-        throw yaCorregido();
-      }
-      throw error;
-    }
+      if (!viejo) throw new ErrorDeAplicacion(404, 'Recurso inexistente.', 'no_encontrado');
+      if (viejo.corregidoPorId) throw yaCorregido();
+
+      const nuevo = await tx.mensajeDePedido.create({
+        data: datosDeMensaje(viejo.pedidoId, datos),
+        select: CAMPOS_DE_MENSAJE,
+      });
+      // La única columna que la base deja tocar, y solo de NULL a un valor.
+      await tx.mensajeDePedido.update({
+        where: { id: viejo.id },
+        data: { corregidoPorId: nuevo.id },
+        select: { id: true },
+      });
+      return nuevo;
+    });
   }
 
   async cambiar(id: string, cambio: CambioDePedido, usuarioId: string): Promise<PedidoAlmacenado> {

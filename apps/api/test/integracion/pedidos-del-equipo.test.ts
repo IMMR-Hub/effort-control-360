@@ -222,6 +222,30 @@ describeSiHayBase('pedidos del equipo contra PostgreSQL real', () => {
     expect((await repo.buscar(pedido.id, ALCANCE_DIRECCION))!.mensajes).toHaveLength(2);
   });
 
+  it('dos correcciones simultáneas del mismo mensaje: una se aplica y la otra recibe 409', async () => {
+    const pedido = await crearPedido(ANA, 'Corrección simultánea');
+    const original = (await repo.buscar(pedido.id, ALCANCE_DIRECCION))!.mensajes[0]!;
+    const datos = {
+      autorUsuarioId: ANA,
+      canal: 'PRESENCIAL',
+      ocurridoEn: original.ocurridoEn,
+      texto: 'Corrección',
+      notaInterna: false,
+      registradoPorUsuarioId: LAURA,
+    } as const;
+
+    const resultados = await Promise.allSettled([
+      repo.corregirMensaje(original.id, { ...datos, texto: 'Corrección A' }),
+      repo.corregirMensaje(original.id, { ...datos, texto: 'Corrección B' }),
+    ]);
+
+    expect(resultados.filter((r) => r.status === 'fulfilled')).toHaveLength(1);
+    const rechazado = resultados.find((r) => r.status === 'rejected') as PromiseRejectedResult;
+    expect(rechazado.reason).toBeInstanceOf(ErrorDeAplicacion);
+    expect(rechazado.reason).toMatchObject({ codigoHttp: 409, codigo: 'ya_corregido' });
+    expect((await repo.buscar(pedido.id, ALCANCE_DIRECCION))!.mensajes).toHaveLength(2);
+  }, 60_000);
+
   it('como rol de la aplicación: inserta, marca corregido_por_id y no puede borrar', async (contexto) => {
     const { prisma } = entorno;
     const rol = await prisma.$queryRawUnsafe<{ rolname: string }[]>(
@@ -231,6 +255,24 @@ describeSiHayBase('pedidos del equipo contra PostgreSQL real', () => {
       contexto.skip('el rol effort_app no existe en esta base de pruebas');
       return;
     }
+
+    // Permisos de la tabla: solo la columna corregido_por_id se puede actualizar,
+    // aunque los privilegios por defecto del esquema dieran UPDATE completo.
+    const tabla = `"${entorno.esquema}".mensaje_de_pedido`;
+    const permisos = await prisma.$queryRawUnsafe<
+      { update_tabla: boolean; delete_tabla: boolean; update_columna: boolean; update_texto: boolean }[]
+    >(
+      `SELECT has_table_privilege('effort_app', '${tabla}', 'UPDATE') AS update_tabla,
+              has_table_privilege('effort_app', '${tabla}', 'DELETE') AS delete_tabla,
+              has_column_privilege('effort_app', '${tabla}', 'corregido_por_id', 'UPDATE') AS update_columna,
+              has_column_privilege('effort_app', '${tabla}', 'texto', 'UPDATE') AS update_texto`,
+    );
+    expect(permisos[0]).toEqual({
+      update_tabla: false,
+      delete_tabla: false,
+      update_columna: true,
+      update_texto: false,
+    });
 
     const pedido = await crearPedido(ANA, 'Como rol de la aplicación');
     const original = (await repo.buscar(pedido.id, ALCANCE_DIRECCION))!.mensajes[0]!;

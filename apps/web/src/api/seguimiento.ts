@@ -69,6 +69,8 @@ export interface ItemDeBandeja {
   readonly periodo: string | null;
   /** El solicitante en un pedido del equipo; null en una solicitud a un cliente. */
   readonly solicitanteUsuarioId: string | null;
+  /** Solo en EQUIPO: ya se derivó a soporte. */
+  readonly derivadoASoporte: boolean;
 }
 
 export interface ResumenDePendientes {

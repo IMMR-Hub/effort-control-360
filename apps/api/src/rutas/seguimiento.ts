@@ -73,7 +73,11 @@ const prioridadDeSolicitudSchema = z
     message: 'No hay nada que cambiar.',
   });
 
-const destinatariosSchema = z.array(idSchema).min(1).max(20);
+const destinatariosSchema = z
+  .array(idSchema)
+  .min(1)
+  .max(20)
+  .refine((ids) => new Set(ids).size === ids.length, { message: 'Hay destinatarios repetidos.' });
 
 const consultaSchema = z
   .object({
@@ -229,6 +233,8 @@ interface ItemDeBandeja extends ItemPendiente {
   readonly periodo: string | null;
   /** Quién lo pidió, para el filtro por colaborador: el solicitante en EQUIPO, null en CLIENTE. */
   readonly solicitanteUsuarioId: string | null;
+  /** Solo en EQUIPO: ya se derivó a soporte (false en CLIENTE). */
+  readonly derivadoASoporte: boolean;
 }
 
 /* --- Utilidades ----------------------------------------------------------- */
@@ -529,6 +535,7 @@ export async function registrarRutasDeSeguimiento(
         clienteId: p.clienteId,
         periodo: null,
         solicitanteUsuarioId: p.solicitanteUsuarioId,
+        derivadoASoporte: p.derivadoASoporte,
       })),
       ...solicitudes.map((sol): ItemDeBandeja => ({
         tipo: 'CLIENTE',
@@ -542,6 +549,7 @@ export async function registrarRutasDeSeguimiento(
         clienteId: sol.clienteId,
         periodo: sol.periodo,
         solicitanteUsuarioId: null,
+        derivadoASoporte: false,
       })),
     ];
 

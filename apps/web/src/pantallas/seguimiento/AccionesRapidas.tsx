@@ -11,17 +11,18 @@
 import { useState } from 'react';
 import { CalendarClock, Check, LifeBuoy, RotateCcw, Share2, X } from 'lucide-react';
 
-import { Boton, CampoTexto } from '../../ui/Primitivos.jsx';
+import { Boton, CampoSelect, CampoTexto } from '../../ui/Primitivos.jsx';
 import {
   cambiarPedido,
   cambiarPrioridadDeSolicitud,
   type AccionDePedido,
   type EstadoDePedido,
+  type Prioridad,
 } from '../../api/seguimiento.js';
 import { cerrarSolicitud } from '../../api/solicitudes.js';
-import { fechaDeReagenda, mensajeDeError, type OpcionDeReagenda } from './comun.js';
+import { OPCIONES_PRIORIDAD, fechaDeReagenda, mensajeDeError, type OpcionDeReagenda } from './comun.js';
 
-type Panel = 'reagendar' | 'cancelar' | 'derivar' | 'cerrar' | null;
+type Panel = 'reagendar' | 'cancelar' | 'derivar' | 'soporte' | 'cerrar' | null;
 
 /** Corre una escritura, avisa a la pantalla para que recargue, y deja el error del servidor a la vista. */
 function useEscritura(alCambiar: () => void | Promise<void>) {
@@ -118,12 +119,15 @@ export function AccionesDePedido({
   estado,
   derivadoASoporte = false,
   destinatarios,
+  destinatariosActuales = [],
   alCambiar,
 }: {
   readonly id: string;
   readonly estado: EstadoDePedido;
   readonly derivadoASoporte?: boolean;
   readonly destinatarios: readonly OpcionDeDestinatario[];
+  /** Los «Para» actuales del pedido: «Derivar» los abre ya tildados. Sin dato, ninguno. */
+  readonly destinatariosActuales?: readonly string[];
   readonly alCambiar: () => void | Promise<void>;
 }) {
   const [panel, setPanel] = useState<Panel>(null);
@@ -134,7 +138,10 @@ export function AccionesDePedido({
   const aplicar = async (accion: AccionDePedido) => {
     if (await ejecutar(() => cambiarPedido(id, accion))) setPanel(null);
   };
-  const alternar = (siguiente: Panel) => setPanel((actual) => (actual === siguiente ? null : siguiente));
+  const alternar = (siguiente: Panel) => {
+    if (siguiente === 'derivar' && panel !== 'derivar') setElegidos(destinatariosActuales);
+    setPanel((actual) => (actual === siguiente ? null : siguiente));
+  };
 
   if (estado === 'RESUELTO' || estado === 'CANCELADO') {
     return (
@@ -168,11 +175,31 @@ export function AccionesDePedido({
           Derivar
         </Boton>
         {!derivadoASoporte && (
-          <Boton icono={LifeBuoy} disabled={ocupado} onClick={() => void aplicar({ accion: 'derivar_a_soporte' })}>
+          <Boton icono={LifeBuoy} disabled={ocupado} aria-expanded={panel === 'soporte'} onClick={() => alternar('soporte')}>
             Derivar a soporte
           </Boton>
         )}
       </div>
+
+      {panel === 'soporte' && (
+        <div className="flex flex-col gap-2" role="group" aria-label="Confirmar derivación a soporte">
+          <p className="text-xs text-tinta-suave">
+            Queda marcado como derivado a soporte y desde esta pantalla no se puede deshacer.
+          </p>
+          <div className="flex gap-1.5">
+            <Boton
+              variante="primario"
+              disabled={ocupado}
+              onClick={() => void aplicar({ accion: 'derivar_a_soporte' })}
+            >
+              Confirmar derivación a soporte
+            </Boton>
+            <Boton variante="fantasma" disabled={ocupado} onClick={() => setPanel(null)}>
+              Volver
+            </Boton>
+          </div>
+        </div>
+      )}
 
       {panel === 'reagendar' && (
         <MenuDeReagendar
@@ -254,14 +281,16 @@ export function AccionesDePedido({
 }
 
 /**
- * Acciones de una solicitud a un cliente: solo reagendar y cerrar (el cierre a
- * mano que ya existía, `CERRADA_MANUALMENTE`).
+ * Acciones de una solicitud a un cliente: cambiar la prioridad, reagendar y
+ * cerrar (el cierre a mano que ya existía, `CERRADA_MANUALMENTE`).
  */
 export function AccionesDeSolicitud({
   id,
+  prioridad,
   alCambiar,
 }: {
   readonly id: string;
+  readonly prioridad: Prioridad;
   readonly alCambiar: () => void | Promise<void>;
 }) {
   const [panel, setPanel] = useState<Panel>(null);
@@ -270,6 +299,16 @@ export function AccionesDeSolicitud({
 
   return (
     <div className="flex flex-col gap-2">
+      <CampoSelect
+        id={`solicitud-${id}-prioridad`}
+        etiqueta="Cambiar prioridad"
+        opciones={OPCIONES_PRIORIDAD}
+        value={prioridad}
+        disabled={ocupado}
+        onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
+          void ejecutar(() => cambiarPrioridadDeSolicitud(id, { prioridad: e.target.value as Prioridad }))
+        }
+      />
       <div className="flex flex-wrap gap-1.5">
         <Boton icono={CalendarClock} disabled={ocupado} aria-expanded={panel === 'reagendar'} onClick={() => alternar('reagendar')}>
           Reagendar

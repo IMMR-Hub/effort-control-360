@@ -294,6 +294,21 @@ describe('pedidos del equipo', () => {
     expect(JSON.parse(bien.body).pedido.destinatarioNombres).toEqual(['Lili Paz']);
   });
 
+  it('destinatarios repetidos se rechazan con 400 al crear y al derivar', async () => {
+    const pedido = await crearPedido();
+
+    const crear = await ctx.app.inject({
+      method: 'POST', url: `${BASE}/pedidos-equipo`, headers: { cookie: direccion },
+      payload: cuerpoDePedido({ destinatarioUsuarioIds: [LAURA, LAURA] }),
+    });
+    expect(crear.statusCode).toBe(400);
+
+    const derivar = await patch(pedido.id, { accion: 'derivar', destinatarioUsuarioIds: [LILI, LILI] });
+    expect(derivar.statusCode).toBe(400);
+    expect(ctx.pedidos.pedidos).toHaveLength(1);
+    expect(ctx.pedidos.pedidos[0]!.destinatarioUsuarioIds).toEqual([LAURA]);
+  });
+
   it('tildar deja RESUELTO, destildar lo reabre, y cada cambio guarda antes y después', async () => {
     const pedido = await crearPedido();
 
@@ -566,7 +581,7 @@ describe('bandeja de pendientes y prioridad de solicitudes', () => {
       items: {
         tipo: string; id: string; prioridad: string; titulo: string; deQuien: string; estado: string;
         clienteId: string | null; periodo: string | null; creadoEn: string;
-        solicitanteUsuarioId: string | null;
+        solicitanteUsuarioId: string | null; derivadoASoporte: boolean;
       }[];
       resumen: { total: number; criticos: number; vencidos: number };
     };
@@ -598,6 +613,19 @@ describe('bandeja de pendientes y prioridad de solicitudes', () => {
 
     expect(items.find((i) => i.id === deBeto.id)).toHaveProperty('solicitanteUsuarioId', BETO);
     expect(items.find((i) => i.id === solicitud.id)).toHaveProperty('solicitanteUsuarioId', null);
+  });
+
+  it('cada fila dice si el pedido ya se derivó a soporte', async () => {
+    const derivado = await crearPedido({ asunto: 'Derivado' });
+    const normal = await crearPedido({ asunto: 'Normal' });
+    const solicitud = sembrarSolicitud();
+    expect((await patch(derivado.id, { accion: 'derivar_a_soporte' })).statusCode).toBe(200);
+
+    const { items } = await bandeja();
+
+    expect(items.find((i) => i.id === derivado.id)).toHaveProperty('derivadoASoporte', true);
+    expect(items.find((i) => i.id === normal.id)).toHaveProperty('derivadoASoporte', false);
+    expect(items.find((i) => i.id === solicitud.id)).toHaveProperty('derivadoASoporte', false);
   });
 
   it('el resumen cuenta vencidos con el reloj inyectado (hoy en Paraguay)', async () => {
