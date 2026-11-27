@@ -352,6 +352,49 @@ describe('pedidos del equipo', () => {
     expect(ctx.pedidos.pedidos[0]!.clienteId).toBeNull();
   });
 
+  it('un responsable recibe 403 aunque el cuerpo sea inválido (el permiso se revisa antes que el cuerpo)', async () => {
+    const respuesta = await ctx.app.inject({
+      method: 'POST', url: `${BASE}/pedidos-equipo`, headers: { cookie: ana }, payload: { asunto: '' },
+    });
+    expect(respuesta.statusCode).toBe(403);
+    expect(respuesta.body).not.toContain('asunto');
+  });
+
+  it('un responsable no puede agregar mensajes ni corregirlos (403)', async () => {
+    const pedido = await crearPedido();
+    const mensajeId = ctx.pedidos.mensajes[0]!.id;
+    const payloadMensaje = { autorUsuarioId: ANA, canal: 'MENSAJE', ocurridoEn: '2026-11-27T11:00:00.000Z', texto: 'intento' };
+
+    const agregar = await ctx.app.inject({
+      method: 'POST', url: `${BASE}/pedidos-equipo/${pedido.id}/mensajes`, headers: { cookie: ana }, payload: payloadMensaje,
+    });
+    expect(agregar.statusCode).toBe(403);
+    const invalido = await ctx.app.inject({
+      method: 'POST', url: `${BASE}/pedidos-equipo/${pedido.id}/mensajes`, headers: { cookie: ana }, payload: {},
+    });
+    expect(invalido.statusCode).toBe(403);
+
+    const corregir = await ctx.app.inject({
+      method: 'POST', url: `${BASE}/mensajes/${mensajeId}/correccion`, headers: { cookie: ana },
+      payload: { pedidoId: pedido.id, ...payloadMensaje },
+    });
+    expect(corregir.statusCode).toBe(403);
+    expect(ctx.pedidos.mensajes).toHaveLength(1);
+  });
+
+  it('una corrección con un pedidoId que no es el del mensaje devuelve 404', async () => {
+    const uno = await crearPedido();
+    const otro = await crearPedido({ asunto: 'Otro pedido' });
+    const mensajeDeUno = ctx.pedidos.mensajes.find((m) => m.pedidoId === uno.id)!;
+
+    const respuesta = await ctx.app.inject({
+      method: 'POST', url: `${BASE}/mensajes/${mensajeDeUno.id}/correccion`, headers: { cookie: direccion },
+      payload: { pedidoId: otro.id, autorUsuarioId: LAURA, canal: 'MENSAJE', ocurridoEn: '2026-11-27T11:00:00.000Z', texto: 'cruzada' },
+    });
+    expect(respuesta.statusCode).toBe(404);
+    expect(ctx.pedidos.mensajes.find((m) => m.id === mensajeDeUno.id)!.corregidoPorId).toBeNull();
+  });
+
   it('un responsable no puede cambiar un pedido (403)', async () => {
     const pedido = await crearPedido();
     const respuesta = await patch(pedido.id, { accion: 'tildar' }, ana);

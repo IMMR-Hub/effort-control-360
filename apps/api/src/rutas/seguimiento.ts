@@ -305,8 +305,10 @@ export async function registrarRutasDeSeguimiento(
   });
 
   app.post('/api/v1/seguimiento/pedidos-equipo', async (peticion, respuesta) => {
+    // Primero el permiso: quien no puede escribir recibe 403, no los detalles de validación.
+    const sujeto = autorizar(peticion, 'pedido_equipo', 'crear');
     const cuerpo = altaSchema.parse(peticion.body);
-    const sujeto = autorizar(peticion, 'pedido_equipo', 'crear', cuerpo.clienteId);
+    if (cuerpo.clienteId) exigirPermiso(sujeto, 'pedido_equipo', 'crear', cuerpo.clienteId);
 
     const usuarios = await cargarUsuarios(deps);
     validarPersona(usuarios, cuerpo.solicitanteUsuarioId, 'El solicitante');
