@@ -8,6 +8,34 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { crearFetchMock, respuestaJson } from './ayuda-fetch-mock.js';
 
+// Seguimiento de verdad, más dos botones que repiten la llamada `irA` con otra pestaña mientras está montada.
+vi.mock('../src/pantallas/Seguimiento.js', async () => {
+  // Importada al renderizar (no al definir el mock): así comparte los módulos —y el contexto de sesión— de esta
+  // aplicación y no los de antes de `vi.resetModules()`.
+  const { lazy, Suspense, useState } = await import('react');
+  function ConBotonesDeNavegacion(props: Record<string, unknown> & { irA: (p: 'seguimiento', o: { pestana: 'pendientes' | 'clientes' }) => void }) {
+    const { irA, ...resto } = props;
+    // Uno por montaje: tras `vi.resetModules()` el módulo real de otro test traería otro contexto de sesión.
+    const [Real] = useState(() =>
+      lazy(() => vi.importActual<typeof import('../src/pantallas/Seguimiento.js')>('../src/pantallas/Seguimiento.js')),
+    );
+    return (
+      <>
+        <button type="button" onClick={() => irA('seguimiento', { pestana: 'pendientes' })}>
+          Prueba: ir a pendientes
+        </button>
+        <button type="button" onClick={() => irA('seguimiento', { pestana: 'clientes' })}>
+          Prueba: ir a clientes
+        </button>
+        <Suspense fallback={null}>
+          <Real {...resto} />
+        </Suspense>
+      </>
+    );
+  }
+  return { default: ConBotonesDeNavegacion };
+});
+
 let mock: ReturnType<typeof crearFetchMock>;
 
 beforeEach(() => {
@@ -49,19 +77,29 @@ async function montarAplicacion() {
 }
 
 describe('navegación del Panel a Seguimiento', () => {
-  it('«Pendientes de seguimiento» abre Seguimiento en la pestaña Pendientes', async () => {
-    await montarAplicacion();
-
-    fireEvent.click(await screen.findByRole('button', { name: 'Ver los pendientes de seguimiento' }));
-
-    expect(await screen.findByRole('tab', { name: 'Pendientes' })).toHaveAttribute('aria-selected', 'true');
-  });
-
   it('«Documentación pendiente» abre Seguimiento en la pestaña Clientes', async () => {
     await montarAplicacion();
 
     fireEvent.click(await screen.findByRole('button', { name: 'Ver el seguimiento de documentación' }));
 
+    await waitFor(() => {
+      expect(screen.getByRole('tab', { name: 'Clientes' })).toHaveAttribute('aria-selected', 'true');
+    });
+  });
+
+  it('con Seguimiento ya abierto, una nueva navegación con pestaña la cambia', async () => {
+    await montarAplicacion();
+    fireEvent.click(await screen.findByRole('button', { name: 'Ver el seguimiento de documentación' }));
+    await waitFor(() => {
+      expect(screen.getByRole('tab', { name: 'Clientes' })).toHaveAttribute('aria-selected', 'true');
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Prueba: ir a pendientes' }));
+    await waitFor(() => {
+      expect(screen.getByRole('tab', { name: 'Pendientes' })).toHaveAttribute('aria-selected', 'true');
+    });
+
+    fireEvent.click(screen.getByRole('button', { name: 'Prueba: ir a clientes' }));
     await waitFor(() => {
       expect(screen.getByRole('tab', { name: 'Clientes' })).toHaveAttribute('aria-selected', 'true');
     });

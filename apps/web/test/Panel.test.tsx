@@ -640,8 +640,16 @@ describe('panel general', () => {
       expect(tarjeta.textContent).toContain('—');
       expect(tarjeta.textContent).not.toContain('críticos');
       await waitFor(() => {
-        expect(screen.getByText('Vencimientos vencidos').closest('div')!.textContent).toContain('1');
+        expect(screen.getByText('Vencimientos vencidos').closest('div')!.textContent).toBe('Vencimientos vencidos1');
       });
+    });
+
+    it('con un solo crítico usa el singular', async () => {
+      conPendientes({ total: 1, criticos: 1, vencidos: 1 });
+      await montar();
+      const tarjeta = (await screen.findByText('Pendientes de seguimiento')).closest('div')!;
+      expect(tarjeta.textContent).toContain('1 crítico · 1 con recordatorio vencido');
+      expect(tarjeta.textContent).not.toContain('críticos');
     });
 
     it('«Documentación pendiente» sigue abriendo Seguimiento en la tabla de clientes', async () => {

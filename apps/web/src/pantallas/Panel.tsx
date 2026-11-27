@@ -513,7 +513,9 @@ export default function Panel({
           irEtiqueta="Ver los pendientes de seguimiento"
           valor={pendientes ? pendientes.total : null}
           detalle={
-            pendientes ? `${pendientes.criticos} críticos · ${pendientes.vencidos} con recordatorio vencido` : null
+            pendientes
+              ? `${pendientes.criticos} ${pendientes.criticos === 1 ? 'crítico' : 'críticos'} · ${pendientes.vencidos} con recordatorio vencido`
+              : null
           }
           tono={pendientes && pendientes.criticos > 0 ? 'critico' : 'pendiente'}
           destacado={pendientes !== null && pendientes.criticos > 0}
