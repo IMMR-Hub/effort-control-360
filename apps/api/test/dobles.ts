@@ -20,6 +20,16 @@ import type {
 } from '../src/bitacora.js';
 import type { Sesion } from '../src/seguridad/sesiones.js';
 import type {
+  AlcanceDePedidos,
+  AltaDePedido,
+  CambioDePedido,
+  DatosDeMensaje,
+  MensajeAlmacenado,
+  PedidoAlmacenado,
+  RepositorioDePedidosDelEquipo,
+} from '../src/puertos-dominio.js';
+import { ErrorDeAplicacion } from '../src/servidor.js';
+import type {
   AltaDeCliente,
   AltaDeRegistroDeHoras,
   AltaDeUsuario,
@@ -327,6 +337,110 @@ export class ContactosFalsos implements RepositorioDeContactos {
     const contacto: ContactoAlmacenado = { id: randomUUID(), ...datos };
     this.contactos.push(contacto);
     return contacto;
+  }
+}
+
+/** Doble en memoria de los pedidos del equipo: mismo filtrado por alcance que el repositorio real. */
+export class PedidosDelEquipoFalsos implements RepositorioDePedidosDelEquipo {
+  readonly pedidos: PedidoAlmacenado[] = [];
+  readonly mensajes: MensajeAlmacenado[] = [];
+
+  async crear(alta: AltaDePedido): Promise<PedidoAlmacenado> {
+    const ahora = new Date();
+    const pedido: PedidoAlmacenado = {
+      id: randomUUID(),
+      solicitanteUsuarioId: alta.solicitanteUsuarioId,
+      destinatarioUsuarioIds: [...alta.destinatarioUsuarioIds],
+      clienteId: alta.clienteId,
+      asunto: alta.asunto,
+      prioridad: alta.prioridad,
+      estado: 'ABIERTO',
+      recordarEl: alta.recordarEl,
+      motivoDeCancelacion: null,
+      derivadoASoporte: false,
+      derivadoASoporteEn: null,
+      creadoEn: ahora,
+      actualizadoEn: ahora,
+    };
+    this.pedidos.push(pedido);
+    await this.agregarMensaje(pedido.id, {
+      autorUsuarioId: alta.solicitanteUsuarioId,
+      canal: alta.primerMensaje.canal,
+      ocurridoEn: alta.primerMensaje.ocurridoEn,
+      texto: alta.primerMensaje.texto,
+      notaInterna: false,
+      registradoPorUsuarioId: alta.registradoPorUsuarioId,
+    });
+    return pedido;
+  }
+
+  private visible(pedido: PedidoAlmacenado, alcance: AlcanceDePedidos): boolean {
+    return 'todo' in alcance || pedido.solicitanteUsuarioId === alcance.soloDe;
+  }
+
+  async listar(
+    alcance: AlcanceDePedidos,
+    filtro: { estados?: readonly string[] },
+  ): Promise<PedidoAlmacenado[]> {
+    return this.pedidos
+      .filter((p) => this.visible(p, alcance))
+      .filter((p) => !filtro.estados?.length || filtro.estados.includes(p.estado))
+      .sort((a, b) => b.creadoEn.getTime() - a.creadoEn.getTime());
+  }
+
+  async buscar(
+    id: string,
+    alcance: AlcanceDePedidos,
+  ): Promise<{ pedido: PedidoAlmacenado; mensajes: MensajeAlmacenado[] } | null> {
+    const pedido = this.pedidos.find((p) => p.id === id);
+    if (!pedido || !this.visible(pedido, alcance)) return null;
+    const mensajes = this.mensajes
+      .filter((m) => m.pedidoId === id && ('todo' in alcance || !m.notaInterna))
+      .sort((a, b) => a.ocurridoEn.getTime() - b.ocurridoEn.getTime());
+    return { pedido, mensajes };
+  }
+
+  async agregarMensaje(pedidoId: string, datos: DatosDeMensaje): Promise<MensajeAlmacenado> {
+    const mensaje: MensajeAlmacenado = {
+      id: randomUUID(),
+      pedidoId,
+      ...datos,
+      corregidoPorId: null,
+      creadoEn: new Date(),
+    };
+    this.mensajes.push(mensaje);
+    return mensaje;
+  }
+
+  async corregirMensaje(mensajeId: string, datos: DatosDeMensaje): Promise<MensajeAlmacenado> {
+    const indice = this.mensajes.findIndex((m) => m.id === mensajeId);
+    const viejo = this.mensajes[indice];
+    if (!viejo) throw new ErrorDeAplicacion(404, 'Recurso inexistente.', 'no_encontrado');
+    if (viejo.corregidoPorId) {
+      throw new ErrorDeAplicacion(409, 'Ese mensaje ya fue corregido.', 'ya_corregido');
+    }
+    const nuevo = await this.agregarMensaje(viejo.pedidoId, datos);
+    this.mensajes[indice] = { ...viejo, corregidoPorId: nuevo.id };
+    return nuevo;
+  }
+
+  async cambiar(id: string, cambio: CambioDePedido, _usuarioId: string): Promise<PedidoAlmacenado> {
+    const indice = this.pedidos.findIndex((p) => p.id === id);
+    const actual = this.pedidos[indice];
+    if (!actual) throw new ErrorDeAplicacion(404, 'Recurso inexistente.', 'no_encontrado');
+    const nuevo: PedidoAlmacenado = {
+      ...actual,
+      ...cambio,
+      derivadoASoporteEn:
+        cambio.derivadoASoporte && !actual.derivadoASoporte ? new Date() : actual.derivadoASoporteEn,
+      actualizadoEn: new Date(),
+    };
+    this.pedidos[indice] = nuevo;
+    return nuevo;
+  }
+
+  async listarDerivadosASoporte(): Promise<PedidoAlmacenado[]> {
+    return this.pedidos.filter((p) => p.derivadoASoporte);
   }
 }
 

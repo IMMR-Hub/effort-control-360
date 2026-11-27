@@ -10,6 +10,8 @@
  * la cartera completa.
  */
 
+import type { Prioridad } from '@effort/core';
+
 export type FiltroDeCartera = readonly string[] | null;
 
 /* ========================================================================== */
@@ -960,4 +962,87 @@ export interface RepositorioDeReglasDeNotificacion {
     cambios: CamposEditablesDeReglaDeNotificacion,
     usuarioId: string,
   ): Promise<ReglaDeNotificacionAlmacenada>;
+}
+
+/* ========================================================================== */
+/* Pedidos del equipo (Seguimiento)                                           */
+/* ========================================================================== */
+
+export type EstadoDePedido = 'ABIERTO' | 'EN_CURSO' | 'RESUELTO' | 'CANCELADO';
+
+export interface PedidoAlmacenado {
+  readonly id: string;
+  readonly solicitanteUsuarioId: string;
+  readonly destinatarioUsuarioIds: readonly string[];
+  readonly clienteId: string | null;
+  readonly asunto: string;
+  readonly prioridad: Prioridad;
+  readonly estado: EstadoDePedido;
+  /** 'AAAA-MM-DD' o null. Solo una marca visual: nunca dispara un envío (REGLA 0-bis). */
+  readonly recordarEl: string | null;
+  readonly motivoDeCancelacion: string | null;
+  readonly derivadoASoporte: boolean;
+  readonly derivadoASoporteEn: Date | null;
+  readonly creadoEn: Date;
+  readonly actualizadoEn: Date;
+}
+
+export interface MensajeAlmacenado {
+  readonly id: string;
+  readonly pedidoId: string;
+  readonly autorUsuarioId: string;
+  readonly canal: string;
+  readonly ocurridoEn: Date;
+  readonly texto: string;
+  readonly notaInterna: boolean;
+  readonly registradoPorUsuarioId: string;
+  readonly corregidoPorId: string | null;
+  readonly creadoEn: Date;
+}
+
+export type DatosDeMensaje = Omit<MensajeAlmacenado, 'id' | 'pedidoId' | 'corregidoPorId' | 'creadoEn'>;
+
+export interface AltaDePedido {
+  readonly solicitanteUsuarioId: string;
+  readonly destinatarioUsuarioIds: readonly string[];
+  readonly clienteId: string | null;
+  readonly asunto: string;
+  readonly prioridad: Prioridad;
+  readonly recordarEl: string | null;
+  readonly primerMensaje: { readonly canal: string; readonly ocurridoEn: Date; readonly texto: string };
+  readonly registradoPorUsuarioId: string;
+}
+
+export type CambioDePedido = Partial<
+  Pick<
+    PedidoAlmacenado,
+    | 'prioridad'
+    | 'estado'
+    | 'recordarEl'
+    | 'motivoDeCancelacion'
+    | 'destinatarioUsuarioIds'
+    | 'derivadoASoporte'
+    | 'asunto'
+    | 'clienteId'
+  >
+>;
+
+/** `{ todo: true }` = dirección (ve todo); `{ soloDe }` = solo los pedidos de ese solicitante, sin notas internas. */
+export type AlcanceDePedidos = { readonly todo: true } | { readonly soloDe: string };
+
+export interface RepositorioDePedidosDelEquipo {
+  /** Pedido y primer mensaje en una sola transacción. */
+  crear(alta: AltaDePedido): Promise<PedidoAlmacenado>;
+  /** Del más nuevo al más viejo. */
+  listar(alcance: AlcanceDePedidos, filtro: { estados?: readonly string[] }): Promise<PedidoAlmacenado[]>;
+  /** Mensajes del más viejo al más nuevo. Con `soloDe`, null si el pedido es ajeno y sin notas internas. */
+  buscar(
+    id: string,
+    alcance: AlcanceDePedidos,
+  ): Promise<{ pedido: PedidoAlmacenado; mensajes: MensajeAlmacenado[] } | null>;
+  agregarMensaje(pedidoId: string, datos: DatosDeMensaje): Promise<MensajeAlmacenado>;
+  /** Crea el mensaje nuevo y marca el viejo como corregido. 409 `ya_corregido` si ya lo estaba. */
+  corregirMensaje(mensajeId: string, datos: DatosDeMensaje): Promise<MensajeAlmacenado>;
+  cambiar(id: string, cambio: CambioDePedido, usuarioId: string): Promise<PedidoAlmacenado>;
+  listarDerivadosASoporte(): Promise<PedidoAlmacenado[]>;
 }

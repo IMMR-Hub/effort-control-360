@@ -40,6 +40,7 @@ import {
   ClientesFalsos,
   clienteMinimo,
   ContactosFalsos,
+  PedidosDelEquipoFalsos,
   SesionesFalsas,
   UsuariosFalsos,
 } from './dobles.js';
@@ -161,6 +162,7 @@ async function montar(): Promise<Contexto> {
     sesiones,
     clientes,
     contactos: new ContactosFalsos(),
+    pedidosDelEquipo: new PedidosDelEquipoFalsos(),
     bitacora,
     documentos,
     procesoMensual,

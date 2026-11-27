@@ -55,6 +55,7 @@ import type {
   RepositorioDeVencimientos,
   RepositorioDeExportacionesSiga,
   RepositorioDeLiquidaciones,
+  RepositorioDePedidosDelEquipo,
 } from './puertos-dominio.js';
 
 export interface Dependencias {
@@ -63,6 +64,7 @@ export interface Dependencias {
   readonly sesiones: RepositorioDeSesiones;
   readonly clientes: RepositorioDeClientes;
   readonly contactos: RepositorioDeContactos;
+  readonly pedidosDelEquipo: RepositorioDePedidosDelEquipo;
   readonly horas: RepositorioDeHoras;
   readonly bitacora: RepositorioDeBitacora;
   readonly documentos: RepositorioDeDocumentos;

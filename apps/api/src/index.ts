@@ -23,6 +23,7 @@ import { UsuariosPrisma } from './repositorios/usuarios.js';
 import { SesionesPrisma } from './repositorios/sesiones.js';
 import { ClientesPrisma } from './repositorios/clientes.js';
 import { ContactosPrisma } from './repositorios/contactos.js';
+import { PedidosDelEquipoPrisma } from './repositorios/pedidosDelEquipo.js';
 import { HorasPrisma } from './repositorios/horas.js';
 import { BitacoraPrisma } from './repositorios/bitacora.js';
 import {
@@ -143,6 +144,7 @@ export function construirDependencias(configuracion: Configuracion): Dependencia
     sesiones: new SesionesPrisma(prisma),
     clientes: new ClientesPrisma(prisma),
     contactos: new ContactosPrisma(prisma),
+    pedidosDelEquipo: new PedidosDelEquipoPrisma(prisma),
     horas: new HorasPrisma(prisma),
     bitacora: new BitacoraPrisma(prisma),
     documentos: new DocumentosPrisma(prisma),
