@@ -119,7 +119,7 @@ export function Encabezado({ activa, onCambiar }: Props) {
 
       <nav
         aria-label="Navegación principal"
-        className="flex min-w-0 flex-1 gap-1 overflow-x-auto lg:flex-none lg:flex-col lg:overflow-y-auto lg:overflow-x-hidden lg:px-2 lg:py-3"
+        className="flex min-w-0 flex-1 gap-1 overflow-x-auto lg:min-h-0 lg:flex-col lg:overflow-y-auto lg:overflow-x-hidden lg:px-2 lg:py-3"
       >
         {enlacesVisibles.map((enlace) => {
           const Icono = enlace.icono;
