@@ -40,6 +40,7 @@ function unUsuario(id: string, nombre: string, apellido: string, rol: string) {
 const LAURA = unUsuario('u-laura', 'Laura', 'Pérez', 'direccion');
 const LILI = unUsuario('u-lili', 'Lili', 'Benítez', 'direccion');
 const ANA = unUsuario('u-ana', 'Ana', 'Gómez', 'responsable');
+const BEA = unUsuario('u-bea', 'Bea', 'Ríos', 'responsable');
 
 function unPedido(datos: Record<string, unknown> = {}) {
   return {
@@ -91,8 +92,23 @@ function unItem(datos: Record<string, unknown> = {}) {
     deQuien: 'Ana Gómez',
     clienteId: null,
     periodo: null,
+    solicitanteUsuarioId: 'u-ana',
     ...datos,
   };
+}
+
+/** Una solicitud de documentación a un cliente, como fila de la bandeja. */
+function unaSolicitud(id: string, clienteId: string, deQuien: string, periodo = '2026-11') {
+  return unItem({
+    tipo: 'CLIENTE',
+    id,
+    estado: 'ABIERTA',
+    titulo: `Documentación ${periodo} de ${deQuien}`,
+    deQuien,
+    clienteId,
+    periodo,
+    solicitanteUsuarioId: null,
+  });
 }
 
 let mock: ReturnType<typeof crearFetchMock>;
@@ -129,7 +145,7 @@ async function montar({
     respuestaJson({ usuarioId, rol, veTodosLosClientes: rol === 'direccion', cantidadDeClientesAsignados: 0 }),
   );
   mock.mockDeRuta('GET /api/v1/csrf', () => respuestaJson({ csrfToken: 'token-de-prueba' }));
-  mock.mockDeRuta('GET /api/v1/usuarios', () => respuestaJson({ usuarios: [LAURA, LILI, ANA] }));
+  mock.mockDeRuta('GET /api/v1/usuarios', () => respuestaJson({ usuarios: [LAURA, LILI, ANA, BEA] }));
   mock.mockDeRuta('GET /api/v1/clientes', () => respuestaJson({ clientes: [] }));
 
   vi.resetModules();
@@ -307,6 +323,55 @@ describe('pestaña Pendientes', () => {
     });
   });
 
+  it('dirección filtra por colaborador: sus pedidos por solicitante y las solicitudes por su cartera', async () => {
+    mock.mockDeRuta('GET /api/v1/seguimiento/pendientes', () =>
+      bandeja([
+        unItem({ id: 'p1', titulo: 'Pedido de Ana' }),
+        unItem({ id: 'p2', titulo: 'Pedido de Bea', deQuien: 'Bea Ríos', solicitanteUsuarioId: 'u-bea' }),
+        unaSolicitud('sol-garso', 'cli-garso', 'GARSO S.A.'),
+        unaSolicitud('sol-otro', 'cli-otro', 'OTRO S.A.'),
+      ]),
+    );
+    mock.mockDeRuta('GET /api/v1/usuarios/u-ana/clientes', () => respuestaJson({ clienteIds: ['cli-garso'] }));
+    await montar();
+    await screen.findByText('Pedido de Ana');
+
+    await usuario.selectOptions(await screen.findByLabelText('Colaborador'), 'u-ana');
+
+    await waitFor(() => expect(screen.getByText('Documentación 2026-11 de GARSO S.A.')).toBeVisible());
+    expect(screen.getByText('Pedido de Ana')).toBeVisible();
+    expect(screen.queryByText('Pedido de Bea')).not.toBeInTheDocument();
+    expect(screen.queryByText('Documentación 2026-11 de OTRO S.A.')).not.toBeInTheDocument();
+    expect(screen.getByText(/con estos filtros se ven 2 · colaborador: Ana Gómez/)).toBeVisible();
+
+    await usuario.selectOptions(screen.getByLabelText('Colaborador'), '');
+    expect(screen.getByText('Pedido de Bea')).toBeVisible();
+    expect(screen.getByText('Documentación 2026-11 de OTRO S.A.')).toBeVisible();
+  });
+
+  it('se filtra por tipo y por prioridad, sin cambiar el orden', async () => {
+    mock.mockDeRuta('GET /api/v1/seguimiento/pendientes', () =>
+      bandeja([
+        unItem({ id: 'p9', prioridad: 'CRITICA', titulo: 'Urgente' }),
+        unaSolicitud('sol-garso', 'cli-garso', 'GARSO S.A.'),
+        unItem({ id: 'p1', prioridad: 'BAJA', titulo: 'Cuando se pueda' }),
+      ]),
+    );
+    await montar();
+    const tabla = await screen.findByRole('table', { name: 'Pendientes de seguimiento' });
+
+    await usuario.selectOptions(screen.getByLabelText('Tipo'), 'EQUIPO');
+    let filas = within(tabla).getAllByRole('row').slice(1);
+    expect(filas.map((f) => within(f).getAllByRole('cell')[3]!.textContent)).toEqual(['Urgente', 'Cuando se pueda']);
+
+    await usuario.selectOptions(screen.getByLabelText('Prioridad'), 'BAJA');
+    filas = within(tabla).getAllByRole('row').slice(1);
+    expect(filas.map((f) => within(f).getAllByRole('cell')[3]!.textContent)).toEqual(['Cuando se pueda']);
+
+    await usuario.selectOptions(screen.getByLabelText('Tipo'), 'CLIENTE');
+    expect(screen.getByText('Ningún pendiente con estos filtros.')).toBeVisible();
+  });
+
   it('el error del servidor se muestra con su mensaje', async () => {
     mock.mockDeRuta('GET /api/v1/seguimiento/pendientes', () => bandeja([unItem()]));
     mock.mockDeRuta('PATCH /api/v1/seguimiento/pedidos-equipo/p1', () =>
@@ -444,6 +509,8 @@ describe('pestaña Equipo', () => {
     await usuario.click(screen.getByRole('tab', { name: 'Pendientes' }));
     await screen.findByRole('table', { name: 'Pendientes de seguimiento' });
     expect(screen.queryByRole('button', { name: 'Tildar' })).not.toBeInTheDocument();
+    // El filtro por colaborador es solo de dirección.
+    expect(screen.queryByLabelText('Colaborador')).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: 'Reagendar' })).not.toBeInTheDocument();
   });
 

@@ -227,6 +227,8 @@ interface ItemDeBandeja extends ItemPendiente {
   readonly deQuien: string;
   readonly clienteId: string | null;
   readonly periodo: string | null;
+  /** Quién lo pidió, para el filtro por colaborador: el solicitante en EQUIPO, null en CLIENTE. */
+  readonly solicitanteUsuarioId: string | null;
 }
 
 /* --- Utilidades ----------------------------------------------------------- */
@@ -526,6 +528,7 @@ export async function registrarRutasDeSeguimiento(
         deQuien: nombreDe(usuarios, p.solicitanteUsuarioId),
         clienteId: p.clienteId,
         periodo: null,
+        solicitanteUsuarioId: p.solicitanteUsuarioId,
       })),
       ...solicitudes.map((sol): ItemDeBandeja => ({
         tipo: 'CLIENTE',
@@ -538,6 +541,7 @@ export async function registrarRutasDeSeguimiento(
         deQuien: nombreDeCliente.get(sol.clienteId) ?? 'Cliente desconocido',
         clienteId: sol.clienteId,
         periodo: sol.periodo,
+        solicitanteUsuarioId: null,
       })),
     ];
 

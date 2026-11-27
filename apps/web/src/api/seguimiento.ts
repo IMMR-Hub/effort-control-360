@@ -67,6 +67,8 @@ export interface ItemDeBandeja {
   readonly deQuien: string;
   readonly clienteId: string | null;
   readonly periodo: string | null;
+  /** El solicitante en un pedido del equipo; null en una solicitud a un cliente. */
+  readonly solicitanteUsuarioId: string | null;
 }
 
 export interface ResumenDePendientes {

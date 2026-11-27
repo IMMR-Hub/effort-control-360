@@ -20,6 +20,14 @@ import {
   type ResumenDePendientes,
 } from '../../api/seguimiento.js';
 import { useSesion } from '../../contexts/SesionContext.js';
+import { TODOS_LOS_CLIENTES } from '../../ui/FiltroDeCliente.js';
+import {
+  FiltroDeColaboradorSelector,
+  coincideConColaborador,
+  sufijoDeColaborador,
+  useFiltroDeColaborador,
+  type FiltroDeColaborador,
+} from '../../ui/FiltroDeColaborador.js';
 import { AccionesDePedido, AccionesDeSolicitud } from './AccionesRapidas.js';
 import {
   ETIQUETA_PRIORIDAD,
@@ -30,7 +38,6 @@ import {
   etiquetaDeEstado,
   mensajeDeError,
 } from './comun.js';
-import { useUsuarios } from './useUsuarios.js';
 
 const OPCIONES_TIPO = [
   { valor: '', etiqueta: 'Todos' },
@@ -39,6 +46,20 @@ const OPCIONES_TIPO = [
 ];
 
 const OPCIONES_FILTRO_PRIORIDAD = [{ valor: '', etiqueta: 'Todas' }, ...OPCIONES_PRIORIDAD];
+
+/**
+ * Filtro por colaborador (§5.3 bis): un pedido del equipo, por quién lo pidió;
+ * una solicitud a un cliente, por la cartera de esa persona, como en «Clientes».
+ */
+function coincideConElColaborador(item: ItemDeBandeja, filtro: FiltroDeColaborador): boolean {
+  if (filtro.cartera === null) return true;
+  return item.tipo === 'EQUIPO'
+    ? item.solicitanteUsuarioId === filtro.colaboradorId
+    : coincideConColaborador(item.clienteId, filtro);
+}
+
+/** Pendientes no tiene filtro de cliente: el del colaborador nunca tiene que corregirlo. */
+const sinCambioDeCliente = () => undefined;
 
 function resumenEnTexto(resumen: ResumenDePendientes): string {
   const abiertos = `${resumen.total} ${resumen.total === 1 ? 'abierto' : 'abiertos'}`;
@@ -54,8 +75,9 @@ export default function Pendientes({
 } = {}) {
   const { sesion } = useSesion();
   const puedeEscribir = ROLES_QUE_ABREN.has(sesion?.rol ?? '');
-  const { usuarios } = useUsuarios(puedeEscribir);
-  const destinatarios = useMemo(() => destinatariosPosibles(usuarios), [usuarios]);
+  // Solo dirección ve el selector (lo decide el propio filtro); su lista del equipo sirve también para «Derivar».
+  const colaborador = useFiltroDeColaborador(TODOS_LOS_CLIENTES, sinCambioDeCliente);
+  const destinatarios = useMemo(() => destinatariosPosibles(colaborador.colaboradores), [colaborador.colaboradores]);
 
   const [datos, setDatos] = useState<{ items: readonly ItemDeBandeja[]; resumen: ResumenDePendientes } | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -100,8 +122,12 @@ export default function Pendientes({
   const ahora = new Date();
   // Filtrar no reordena: lo que queda sigue en el orden del servidor.
   const visibles = datos.items.filter(
-    (item) => (tipo === '' || item.tipo === tipo) && (prioridad === '' || item.prioridad === prioridad),
+    (item) =>
+      (tipo === '' || item.tipo === tipo) &&
+      (prioridad === '' || item.prioridad === prioridad) &&
+      coincideConElColaborador(item, colaborador),
   );
+  const filtrado = visibles.length !== datos.items.length;
   const columnas = puedeEscribir ? 8 : 7;
 
   return (
@@ -117,9 +143,10 @@ export default function Pendientes({
       <Tarjeta>
         <EncabezadoTarjeta
           titulo="Todo lo abierto"
-          descripcion={resumenEnTexto(datos.resumen)}
+          descripcion={`${resumenEnTexto(datos.resumen)}${filtrado ? ` · con estos filtros se ven ${visibles.length}` : ''}${sufijoDeColaborador(colaborador)}`}
           acciones={
             <div className="flex flex-wrap items-end gap-3">
+              <FiltroDeColaboradorSelector id="filtroColaboradorPendientes" filtro={colaborador} />
               <CampoSelect
                 id="filtroTipoPendientes"
                 etiqueta="Tipo"

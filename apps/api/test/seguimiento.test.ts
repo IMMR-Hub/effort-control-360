@@ -566,6 +566,7 @@ describe('bandeja de pendientes y prioridad de solicitudes', () => {
       items: {
         tipo: string; id: string; prioridad: string; titulo: string; deQuien: string; estado: string;
         clienteId: string | null; periodo: string | null; creadoEn: string;
+        solicitanteUsuarioId: string | null;
       }[];
       resumen: { total: number; criticos: number; vencidos: number };
     };
@@ -587,6 +588,16 @@ describe('bandeja de pendientes y prioridad de solicitudes', () => {
       tipo: 'EQUIPO', titulo: 'Timbrados', deQuien: 'Ana Ruiz', periodo: null, estado: 'ABIERTO',
     });
     expect(resumen).toEqual({ total: 3, criticos: 1, vencidos: 0 });
+  });
+
+  it('cada fila dice quién la pidió: el solicitante en un pedido del equipo, null en una solicitud', async () => {
+    const deBeto = await crearPedido({ solicitanteUsuarioId: BETO, asunto: 'De Beto' });
+    const solicitud = sembrarSolicitud();
+
+    const { items } = await bandeja();
+
+    expect(items.find((i) => i.id === deBeto.id)).toHaveProperty('solicitanteUsuarioId', BETO);
+    expect(items.find((i) => i.id === solicitud.id)).toHaveProperty('solicitanteUsuarioId', null);
   });
 
   it('el resumen cuenta vencidos con el reloj inyectado (hoy en Paraguay)', async () => {
