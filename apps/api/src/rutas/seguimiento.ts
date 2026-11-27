@@ -17,6 +17,7 @@
 import type { FastifyInstance, FastifyRequest } from 'fastify';
 import { z } from 'zod';
 
+import { ordenarPendientes, resumirPendientes, type ItemPendiente } from '@effort/core';
 import { idSchema } from '@effort/schema';
 
 import { ACCIONES, registrarEvento } from '../bitacora.js';
@@ -24,13 +25,14 @@ import type { UsuarioListado } from '../puertos.js';
 import type {
   AlcanceDePedidos,
   CambioDePedido,
+  CambioDePrioridadDeSolicitud,
   DatosDeMensaje,
   EstadoDePedido,
   MensajeAlmacenado,
   PedidoAlmacenado,
 } from '../puertos-dominio.js';
 import { ErrorDeAplicacion, type Dependencias } from '../servidor.js';
-import { exigirPermiso, type SujetoAutenticado } from '../seguridad/rbac.js';
+import { exigirPermiso, filtroDeClientes, puede, type SujetoAutenticado } from '../seguridad/rbac.js';
 import { autorizar, paramsId } from './comun.js';
 
 /* --- Esquemas ------------------------------------------------------------- */
@@ -59,6 +61,17 @@ const recordarElSchema = z
     return !Number.isNaN(fecha.getTime()) && fecha.toISOString().slice(0, 10) === valor;
   }, 'Fecha inexistente.')
   .nullable();
+
+/** Al menos una clave: un PATCH vacío no cambia nada y casi seguro es un error del cliente. */
+const prioridadDeSolicitudSchema = z
+  .object({
+    prioridad: prioridadSchema.optional(),
+    recordarEl: recordarElSchema.optional(),
+  })
+  .strict()
+  .refine((c) => c.prioridad !== undefined || c.recordarEl !== undefined, {
+    message: 'No hay nada que cambiar.',
+  });
 
 const destinatariosSchema = z.array(idSchema).min(1).max(20);
 
@@ -205,6 +218,15 @@ function mensajeASalida(mensaje: MensajeAlmacenado, usuarios: MapaDeUsuarios) {
     creadoEn: mensaje.creadoEn.toISOString(),
     autorNombre: nombreDe(usuarios, mensaje.autorUsuarioId),
   };
+}
+
+/** Una fila de la bandeja: `ItemPendiente` más lo que la pantalla muestra. */
+interface ItemDeBandeja extends ItemPendiente {
+  readonly estado: string;
+  readonly titulo: string;
+  readonly deQuien: string;
+  readonly clienteId: string | null;
+  readonly periodo: string | null;
 }
 
 /* --- Utilidades ----------------------------------------------------------- */
@@ -470,6 +492,96 @@ export async function registrarRutasDeSeguimiento(
     });
 
     return { pedido: pedidoASalida(nuevo, usuarios) };
+  });
+
+  /**
+   * Bandeja de «Pendientes»: pedidos del equipo abiertos o en curso, más las
+   * solicitudes a clientes que siguen sin cerrarse (de todos los períodos).
+   * Cada consulta es una sola (usuarios, clientes, solicitudes): sin N+1.
+   * El orden y los contadores salen de `@effort/core`, con el reloj inyectado.
+   */
+  app.get('/api/v1/seguimiento/pendientes', async (peticion) => {
+    const sujeto = autorizar(peticion, 'pedido_equipo', 'ver');
+    const ahora = deps.ahora();
+    const incluyeSolicitudes = puede(sujeto, 'solicitud', 'ver');
+    const cartera = filtroDeClientes(sujeto);
+
+    const [pedidos, solicitudes, usuarios, clientes] = await Promise.all([
+      deps.pedidosDelEquipo.listar(alcanceDe(sujeto), { estados: ['ABIERTO', 'EN_CURSO'] }),
+      incluyeSolicitudes ? deps.solicitudes.listarPendientes(cartera) : Promise.resolve([]),
+      cargarUsuarios(deps),
+      incluyeSolicitudes ? deps.clientes.listar(cartera) : Promise.resolve([]),
+    ]);
+    const nombreDeCliente = new Map(clientes.map((c) => [c.id, c.nombre]));
+
+    const items: ItemDeBandeja[] = [
+      ...pedidos.map((p): ItemDeBandeja => ({
+        tipo: 'EQUIPO',
+        id: p.id,
+        prioridad: p.prioridad,
+        recordarEl: p.recordarEl,
+        creadoEn: p.creadoEn.toISOString(),
+        estado: p.estado,
+        titulo: p.asunto,
+        deQuien: nombreDe(usuarios, p.solicitanteUsuarioId),
+        clienteId: p.clienteId,
+        periodo: null,
+      })),
+      ...solicitudes.map((sol): ItemDeBandeja => ({
+        tipo: 'CLIENTE',
+        id: sol.id,
+        prioridad: sol.prioridad,
+        recordarEl: sol.recordarEl,
+        creadoEn: sol.creadoEn.toISOString(),
+        estado: sol.estado,
+        titulo: `Documentación ${sol.periodo}`,
+        deQuien: nombreDeCliente.get(sol.clienteId) ?? 'Cliente desconocido',
+        clienteId: sol.clienteId,
+        periodo: sol.periodo,
+      })),
+    ];
+
+    return {
+      items: ordenarPendientes(items, ahora),
+      resumen: resumirPendientes(items, ahora),
+    };
+  });
+
+  /** Prioridad y recordatorio visual de una solicitud a un cliente. No toca su estado ni envía nada. */
+  app.patch('/api/v1/seguimiento/solicitudes/:id/prioridad', async (peticion) => {
+    const sujeto = autorizar(peticion, 'solicitud', 'editar');
+    const { id } = paramsId.parse(peticion.params);
+    const cuerpo = prioridadDeSolicitudSchema.parse(peticion.body);
+
+    const previa = await deps.solicitudes.buscarPorId(id, filtroDeClientes(sujeto));
+    if (!previa) throw noEncontrado();
+
+    const cambio: CambioDePrioridadDeSolicitud = {
+      ...(cuerpo.prioridad !== undefined ? { prioridad: cuerpo.prioridad } : {}),
+      ...(cuerpo.recordarEl !== undefined ? { recordarEl: cuerpo.recordarEl } : {}),
+    };
+    const nueva = await deps.solicitudes.cambiarPrioridad(id, cambio, sujeto.usuarioId);
+
+    const campos = Object.keys(cambio) as (keyof CambioDePrioridadDeSolicitud)[];
+    await registrarEvento(deps.bitacora, peticion.log, {
+      usuarioId: sujeto.usuarioId,
+      accion: ACCIONES.SOLICITUD_PRIORIDAD_CAMBIADA,
+      entidad: 'solicitud_documentacion',
+      entidadId: id,
+      clienteId: nueva.clienteId,
+      datosAntes: Object.fromEntries(campos.map((c) => [c, previa[c]])),
+      datosDespues: Object.fromEntries(campos.map((c) => [c, nueva[c]])),
+      ...contexto(peticion),
+    });
+
+    return {
+      solicitud: {
+        ...nueva,
+        cuentaDesde: nueva.cuentaDesde.toISOString().slice(0, 10),
+        ultimoRecordatorioEn: nueva.ultimoRecordatorioEn?.toISOString().slice(0, 10) ?? null,
+        creadoEn: nueva.creadoEn.toISOString(),
+      },
+    };
   });
 
   /** Lo derivado a soporte: solo dirección (por eso pide `editar`). */

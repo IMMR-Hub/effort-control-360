@@ -44,6 +44,7 @@ function aSalida(solicitud: SolicitudAlmacenada) {
     ...solicitud,
     cuentaDesde: solicitud.cuentaDesde.toISOString().slice(0, 10),
     ultimoRecordatorioEn: solicitud.ultimoRecordatorioEn?.toISOString().slice(0, 10) ?? null,
+    creadoEn: solicitud.creadoEn.toISOString(),
   };
 }
 

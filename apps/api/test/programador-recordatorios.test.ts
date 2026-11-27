@@ -80,6 +80,9 @@ function armar(configuracion: Record<string, unknown>) {
     recordatoriosEnviados: 0,
     ultimoRecordatorioEn: null,
     reglaId: 'regla-1',
+    prioridad: 'MEDIA',
+    recordarEl: null,
+    creadoEn: new Date('2026-09-14T00:00:00.000Z'),
   });
 
   const contactos = new ContactosFalsos();

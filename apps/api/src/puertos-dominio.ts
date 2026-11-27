@@ -467,6 +467,18 @@ export interface SolicitudAlmacenada {
   readonly recordatoriosEnviados: number;
   readonly ultimoRecordatorioEn: Date | null;
   readonly reglaId: string | null;
+  /** Para ordenar la bandeja de pendientes junto con los pedidos del equipo. */
+  readonly prioridad: 'BAJA' | 'MEDIA' | 'ALTA' | 'CRITICA';
+  /** Fecha civil 'AAAA-MM-DD' (Paraguay) o null. Marca visual: nunca dispara un envío. */
+  readonly recordarEl: string | null;
+  /** Instante en que se abrió el seguimiento. */
+  readonly creadoEn: Date;
+}
+
+/** Lo que se puede cambiar de una solicitud desde la bandeja de pendientes. */
+export interface CambioDePrioridadDeSolicitud {
+  readonly prioridad?: SolicitudAlmacenada['prioridad'];
+  readonly recordarEl?: string | null;
 }
 
 export interface AltaDeSolicitud {
@@ -489,6 +501,19 @@ export interface RepositorioDeSolicitudes {
    * necesitando que se le insista.
    */
   listarAbiertas(): Promise<SolicitudAlmacenada[]>;
+  /**
+   * Las que siguen pendientes de atender (`ABIERTA`, `RESPONDIDA_SIN_ENTREGA`,
+   * `ESCALADA`, `AGOTADA`), de todos los períodos y de la cartera dada, en UNA
+   * sola consulta. Incluye `AGOTADA`: dejó de recibir recordatorios pero el
+   * cliente sigue sin entregar, y eso es justo lo que la bandeja tiene que mostrar.
+   */
+  listarPendientes(filtro: FiltroDeCartera): Promise<SolicitudAlmacenada[]>;
+  /** Cambia solo prioridad y/o recordatorio visual; nunca el estado. */
+  cambiarPrioridad(
+    id: string,
+    cambio: CambioDePrioridadDeSolicitud,
+    usuarioId: string,
+  ): Promise<SolicitudAlmacenada>;
   /**
    * Abre el seguimiento de un cliente para un período. Idempotente: pedirlo
    * de nuevo para el mismo (cliente, período) no crea una fila duplicada, la

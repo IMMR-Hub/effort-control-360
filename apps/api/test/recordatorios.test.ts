@@ -58,6 +58,9 @@ function solicitud(parcial: Partial<SolicitudAlmacenada> = {}): SolicitudAlmacen
     recordatoriosEnviados: 0,
     ultimoRecordatorioEn: null,
     reglaId: 'regla-1',
+    prioridad: 'MEDIA',
+    recordarEl: null,
+    creadoEn: new Date('2026-09-14T00:00:00.000Z'),
     ...parcial,
   };
 }

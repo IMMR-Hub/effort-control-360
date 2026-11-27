@@ -48,6 +48,7 @@ import type {
   RepositorioDeSolicitudes,
   RepositorioDeVencimientos,
   SolicitudAlmacenada,
+  CambioDePrioridadDeSolicitud,
   AltaDeSolicitud,
   VencimientoAlmacenado,
 } from '../puertos-dominio.js';
@@ -967,7 +968,18 @@ const CAMPOS_SOLICITUD = {
   recordatoriosEnviados: true,
   ultimoRecordatorioEn: true,
   reglaId: true,
+  prioridad: true,
+  recordarEl: true,
+  creadoEn: true,
 } as const;
+
+/** `recordarEl` es DATE en la base: sale como Date a medianoche UTC; la API usa 'AAAA-MM-DD'. */
+function aSolicitud(fila: {
+  recordarEl: Date | null;
+  [clave: string]: unknown;
+}): SolicitudAlmacenada {
+  return { ...fila, recordarEl: fila.recordarEl?.toISOString().slice(0, 10) ?? null } as unknown as SolicitudAlmacenada;
+}
 
 export class SolicitudesPrisma implements RepositorioDeSolicitudes {
   constructor(private readonly prisma: PrismaClient) {}
@@ -982,7 +994,7 @@ export class SolicitudesPrisma implements RepositorioDeSolicitudes {
       orderBy: { cuentaDesde: 'asc' },
     });
 
-    return filas as SolicitudAlmacenada[];
+    return filas.map(aSolicitud);
   }
 
   async listarPorCliente(
@@ -995,7 +1007,7 @@ export class SolicitudesPrisma implements RepositorioDeSolicitudes {
       orderBy: { periodo: 'desc' },
     });
 
-    return filas as SolicitudAlmacenada[];
+    return filas.map(aSolicitud);
   }
 
   async buscarPorId(id: string, filtro: FiltroDeCartera): Promise<SolicitudAlmacenada | null> {
@@ -1004,7 +1016,7 @@ export class SolicitudesPrisma implements RepositorioDeSolicitudes {
       select: CAMPOS_SOLICITUD,
     });
 
-    return fila as SolicitudAlmacenada | null;
+    return fila ? aSolicitud(fila) : null;
   }
 
   async listarAbiertas(): Promise<SolicitudAlmacenada[]> {
@@ -1014,7 +1026,42 @@ export class SolicitudesPrisma implements RepositorioDeSolicitudes {
       orderBy: { cuentaDesde: 'asc' },
     });
 
-    return filas as SolicitudAlmacenada[];
+    return filas.map(aSolicitud);
+  }
+
+  async listarPendientes(filtro: FiltroDeCartera): Promise<SolicitudAlmacenada[]> {
+    const filas = await this.prisma.solicitudDocumentacion.findMany({
+      where: {
+        AND: [
+          { estado: { in: ['ABIERTA', 'RESPONDIDA_SIN_ENTREGA', 'ESCALADA', 'AGOTADA'] } },
+          porCartera(filtro),
+        ],
+      },
+      select: CAMPOS_SOLICITUD,
+      orderBy: { cuentaDesde: 'asc' },
+    });
+
+    return filas.map(aSolicitud);
+  }
+
+  async cambiarPrioridad(
+    id: string,
+    cambio: CambioDePrioridadDeSolicitud,
+    usuarioId: string,
+  ): Promise<SolicitudAlmacenada> {
+    const fila = await this.prisma.solicitudDocumentacion.update({
+      where: { id },
+      data: {
+        ...(cambio.prioridad !== undefined ? { prioridad: cambio.prioridad } : {}),
+        ...(cambio.recordarEl !== undefined
+          ? { recordarEl: cambio.recordarEl === null ? null : new Date(`${cambio.recordarEl}T00:00:00Z`) }
+          : {}),
+        actualizadoPorUsuarioId: usuarioId,
+      },
+      select: CAMPOS_SOLICITUD,
+    });
+
+    return aSolicitud(fila);
   }
 
   /**
@@ -1035,7 +1082,7 @@ export class SolicitudesPrisma implements RepositorioDeSolicitudes {
       select: CAMPOS_SOLICITUD,
     });
 
-    return fila as SolicitudAlmacenada;
+    return aSolicitud(fila);
   }
 
   async cerrar(
@@ -1049,7 +1096,7 @@ export class SolicitudesPrisma implements RepositorioDeSolicitudes {
       select: CAMPOS_SOLICITUD,
     });
 
-    return fila as SolicitudAlmacenada;
+    return aSolicitud(fila);
   }
 
   async registrarRecordatorioEnviado(
@@ -1068,7 +1115,7 @@ export class SolicitudesPrisma implements RepositorioDeSolicitudes {
       select: CAMPOS_SOLICITUD,
     });
 
-    return fila as SolicitudAlmacenada;
+    return aSolicitud(fila);
   }
 }
 

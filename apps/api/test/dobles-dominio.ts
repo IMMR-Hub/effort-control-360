@@ -48,6 +48,7 @@ import type {
   RepositorioDeSolicitudes,
   RepositorioDeVencimientos,
   SolicitudAlmacenada,
+  CambioDePrioridadDeSolicitud,
   AltaDeSolicitud,
   VencimientoAlmacenado,
   AltaDeExportacionSiga,
@@ -530,6 +531,9 @@ export class SolicitudesFalsas implements RepositorioDeSolicitudes {
       recordatoriosEnviados: 0,
       ultimoRecordatorioEn: null,
       reglaId: datos.reglaId,
+      prioridad: 'MEDIA',
+      recordarEl: null,
+      creadoEn: new Date(),
     };
     this.solicitudes.push(sol);
     return sol;
@@ -548,6 +552,27 @@ export class SolicitudesFalsas implements RepositorioDeSolicitudes {
   async listarAbiertas(): Promise<SolicitudAlmacenada[]> {
     const cerrados = new Set(['ENTREGADA', 'CERRADA_MANUALMENTE', 'AGOTADA']);
     return this.solicitudes.filter((sol) => !cerrados.has(sol.estado));
+  }
+
+  async listarPendientes(filtro: FiltroDeCartera): Promise<SolicitudAlmacenada[]> {
+    const pendientes = new Set(['ABIERTA', 'RESPONDIDA_SIN_ENTREGA', 'ESCALADA', 'AGOTADA']);
+    return this.solicitudes.filter(
+      (sol) => pendientes.has(sol.estado) && alcanza(filtro, sol.clienteId),
+    );
+  }
+
+  async cambiarPrioridad(
+    id: string,
+    cambio: CambioDePrioridadDeSolicitud,
+  ): Promise<SolicitudAlmacenada> {
+    const indice = this.solicitudes.findIndex((sol) => sol.id === id);
+    const actualizada: SolicitudAlmacenada = {
+      ...this.solicitudes[indice]!,
+      ...(cambio.prioridad !== undefined ? { prioridad: cambio.prioridad } : {}),
+      ...(cambio.recordarEl !== undefined ? { recordarEl: cambio.recordarEl } : {}),
+    };
+    this.solicitudes[indice] = actualizada;
+    return actualizada;
   }
 
   async registrarRecordatorioEnviado(

@@ -7,10 +7,13 @@
  * texto de un pedido es dato y nunca instrucción.
  */
 
+import { randomUUID } from 'node:crypto';
+
 import type { FastifyInstance } from 'fastify';
 import { authenticator } from 'otplib';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 
+import type { SolicitudAlmacenada } from '../src/puertos-dominio.js';
 import { construirServidor, type Dependencias } from '../src/servidor.js';
 import { registrarRutasDeAutenticacion } from '../src/rutas/autenticacion.js';
 import { registrarRutasDeContactos } from '../src/rutas/contactos.js';
@@ -69,6 +72,7 @@ interface Contexto {
   bitacora: BitacoraFalsa;
   pedidos: PedidosDelEquipoFalsos;
   usuarios: UsuariosFalsos;
+  solicitudes: SolicitudesFalsas;
 }
 
 async function montar(): Promise<Contexto> {
@@ -76,6 +80,7 @@ async function montar(): Promise<Contexto> {
   const clientes = new ClientesFalsos();
   const bitacora = new BitacoraFalsa();
   const pedidos = new PedidosDelEquipoFalsos();
+  const solicitudes = new SolicitudesFalsas();
   const hash = await hashearContrasena(CONTRASENA);
   const base = {
     activo: true, hashContrasena: hash, secretoTotp: SECRETO_TOTP,
@@ -106,7 +111,7 @@ async function montar(): Promise<Contexto> {
     evidencias: new EvidenciasFalsas(),
     drive: new DriveFalsoDePrueba(),
     driveDeOrigen: new DriveFalsoDePrueba(),
-    solicitudes: new SolicitudesFalsas(),
+    solicitudes,
     balances: new BalancesFalsos(),
     exportacionesSiga: new ExportacionesSigaFalsas(),
     liquidaciones: new LiquidacionesFalsas(),
@@ -123,7 +128,7 @@ async function montar(): Promise<Contexto> {
   await registrarRutasDeSeguimiento(app, deps);
   await app.ready();
   await activarCsrfEnInject(app);
-  return { app, bitacora, pedidos, usuarios };
+  return { app, bitacora, pedidos, usuarios, solicitudes };
 }
 
 async function acceder(ctx: Contexto, email: string): Promise<string> {
@@ -528,5 +533,164 @@ describe('pedidos del equipo', () => {
     expect(ctx.pedidos.pedidos[0]!.estado).toBe('ABIERTO');
     expect(ctx.usuarios.usuarios.every((u) => u.activo || u.id === EX_DIRECCION)).toBe(true);
     expect(ctx.bitacora.accionesRegistradas().filter((a) => a === 'pedido_equipo.creado')).toHaveLength(1);
+  });
+});
+
+
+describe('bandeja de pendientes y prioridad de solicitudes', () => {
+  const OTRO_CLIENTE = 'cccccccc-0000-4000-8000-000000000002';
+
+  function sembrarSolicitud(parcial: Partial<SolicitudAlmacenada> = {}): SolicitudAlmacenada {
+    const sol: SolicitudAlmacenada = {
+      id: randomUUID(),
+      clienteId: CLIENTE,
+      periodo: '2026-10',
+      estado: 'ABIERTA',
+      cuentaDesde: new Date('2026-11-01T00:00:00Z'),
+      recordatoriosEnviados: 0,
+      ultimoRecordatorioEn: null,
+      reglaId: null,
+      prioridad: 'MEDIA',
+      recordarEl: null,
+      creadoEn: new Date('2026-11-01T12:00:00Z'),
+      ...parcial,
+    };
+    ctx.solicitudes.solicitudes.push(sol);
+    return sol;
+  }
+
+  async function bandeja(cookie = direccion) {
+    const respuesta = await ctx.app.inject({ method: 'GET', url: `${BASE}/pendientes`, headers: { cookie } });
+    expect(respuesta.statusCode).toBe(200);
+    return JSON.parse(respuesta.body) as {
+      items: {
+        tipo: string; id: string; prioridad: string; titulo: string; deQuien: string; estado: string;
+        clienteId: string | null; periodo: string | null; creadoEn: string;
+      }[];
+      resumen: { total: number; criticos: number; vencidos: number };
+    };
+  }
+
+  it('la bandeja une pedidos abiertos y solicitudes pendientes, ordenados por prioridad', async () => {
+    const pedido = await crearPedido({ prioridad: 'ALTA', asunto: 'Timbrados' });
+    const critica = sembrarSolicitud({ prioridad: 'CRITICA', periodo: '2026-09' });
+    const baja = sembrarSolicitud({ prioridad: 'BAJA', periodo: '2026-10' });
+
+    const { items, resumen } = await bandeja();
+
+    expect(items.map((i) => i.id)).toEqual([critica.id, pedido.id, baja.id]);
+    expect(items[0]).toMatchObject({
+      tipo: 'CLIENTE', titulo: 'Documentación 2026-09', deQuien: 'GARSO S.A.',
+      clienteId: CLIENTE, periodo: '2026-09', estado: 'ABIERTA', creadoEn: '2026-11-01T12:00:00.000Z',
+    });
+    expect(items[1]).toMatchObject({
+      tipo: 'EQUIPO', titulo: 'Timbrados', deQuien: 'Ana Ruiz', periodo: null, estado: 'ABIERTO',
+    });
+    expect(resumen).toEqual({ total: 3, criticos: 1, vencidos: 0 });
+  });
+
+  it('el resumen cuenta vencidos con el reloj inyectado (hoy en Paraguay)', async () => {
+    await crearPedido({ recordarEl: '2026-11-27' });
+    sembrarSolicitud({ recordarEl: '2026-11-28' });
+    const { resumen } = await bandeja();
+    expect(resumen).toEqual({ total: 2, criticos: 0, vencidos: 1 });
+  });
+
+  it('una solicitud ENTREGADA o CERRADA_MANUALMENTE no entra en la bandeja', async () => {
+    sembrarSolicitud({ estado: 'ENTREGADA' });
+    sembrarSolicitud({ estado: 'CERRADA_MANUALMENTE', periodo: '2026-09' });
+    const abierta = sembrarSolicitud({ periodo: '2026-08' });
+
+    const { items } = await bandeja();
+    expect(items.map((i) => i.id)).toEqual([abierta.id]);
+  });
+
+  it('una solicitud AGOTADA sí entra', async () => {
+    const agotada = sembrarSolicitud({ estado: 'AGOTADA' });
+    const escalada = sembrarSolicitud({ estado: 'ESCALADA', periodo: '2026-09' });
+    const { items } = await bandeja();
+    expect(items.map((i) => i.id).sort()).toEqual([agotada.id, escalada.id].sort());
+    expect(items.find((i) => i.id === agotada.id)!.estado).toBe('AGOTADA');
+  });
+
+  it('los pedidos resueltos no entran, y las notas internas no aparecen', async () => {
+    const resuelto = await crearPedido({ asunto: 'Ya resuelto' });
+    await patch(resuelto.id, { accion: 'tildar' });
+    await crearPedido({ asunto: 'Sigue abierto' });
+    const { items } = await bandeja();
+    expect(items.map((i) => i.titulo)).toEqual(['Sigue abierto']);
+    expect(JSON.stringify(items)).not.toContain('notaInterna');
+  });
+
+  it('un responsable ve en la bandeja solo sus pedidos y las solicitudes de su cartera', async () => {
+    ctx.usuarios.usuarios.find((u) => u.id === ANA)!.veTodosLosClientes = false;
+    ctx.usuarios.asignaciones.set(ANA, [CLIENTE]);
+    const anaRestringida = await acceder(ctx, 'ana@effort.com.py');
+
+    const deAna = await crearPedido({ solicitanteUsuarioId: ANA, asunto: 'De Ana' });
+    await crearPedido({ solicitanteUsuarioId: BETO, asunto: 'De Beto' });
+    const suya = sembrarSolicitud({ clienteId: CLIENTE });
+    sembrarSolicitud({ clienteId: OTRO_CLIENTE, periodo: '2026-09' });
+
+    const { items, resumen } = await bandeja(anaRestringida);
+    expect(items.map((i) => i.id).sort()).toEqual([deAna.id, suya.id].sort());
+    expect(resumen.total).toBe(2);
+
+    const todo = await bandeja();
+    expect(todo.items).toHaveLength(4);
+  });
+
+  it('cambiar la prioridad de una solicitud deja el evento con antes y después', async () => {
+    const sol = sembrarSolicitud();
+    const respuesta = await ctx.app.inject({
+      method: 'PATCH', url: `${BASE}/solicitudes/${sol.id}/prioridad`, headers: { cookie: direccion },
+      payload: { prioridad: 'CRITICA', recordarEl: '2026-12-05' },
+    });
+    expect(respuesta.statusCode).toBe(200);
+    expect(JSON.parse(respuesta.body).solicitud).toMatchObject({ id: sol.id, prioridad: 'CRITICA', recordarEl: '2026-12-05' });
+
+    const evento = ctx.bitacora.filas.find((f) => f.accion === 'solicitud.prioridad_cambiada');
+    expect(evento).toMatchObject({
+      usuarioId: LAURA, entidad: 'solicitud_documentacion', entidadId: sol.id, clienteId: CLIENTE,
+      datosAntes: { prioridad: 'MEDIA', recordarEl: null },
+      datosDespues: { prioridad: 'CRITICA', recordarEl: '2026-12-05' },
+    });
+    expect(ctx.solicitudes.solicitudes[0]!.estado).toBe('ABIERTA');
+  });
+
+  it('solo cambia lo que se pide: sin recordarEl en el cuerpo no se toca, con null se quita', async () => {
+    const sol = sembrarSolicitud({ recordarEl: '2026-12-01' });
+    const url = `${BASE}/solicitudes/${sol.id}/prioridad`;
+    await ctx.app.inject({ method: 'PATCH', url, headers: { cookie: direccion }, payload: { prioridad: 'ALTA' } });
+    expect(ctx.solicitudes.solicitudes[0]).toMatchObject({ prioridad: 'ALTA', recordarEl: '2026-12-01' });
+    await ctx.app.inject({ method: 'PATCH', url, headers: { cookie: direccion }, payload: { recordarEl: null } });
+    expect(ctx.solicitudes.solicitudes[0]).toMatchObject({ prioridad: 'ALTA', recordarEl: null });
+  });
+
+  it('un responsable no puede cambiar la prioridad de una solicitud (403, aun con cuerpo inválido)', async () => {
+    const sol = sembrarSolicitud();
+    const url = `${BASE}/solicitudes/${sol.id}/prioridad`;
+    const valido = await ctx.app.inject({ method: 'PATCH', url, headers: { cookie: ana }, payload: { prioridad: 'ALTA' } });
+    const invalido = await ctx.app.inject({ method: 'PATCH', url, headers: { cookie: ana }, payload: { basura: 1 } });
+    expect(valido.statusCode).toBe(403);
+    expect(invalido.statusCode).toBe(403);
+    expect(ctx.solicitudes.solicitudes[0]!.prioridad).toBe('MEDIA');
+    expect(ctx.bitacora.filas.some((f) => f.accion === 'solicitud.prioridad_cambiada')).toBe(false);
+  });
+
+  it('el cuerpo vacío, con campos de más o con fechas inválidas devuelve 400; una solicitud inexistente, 404', async () => {
+    const sol = sembrarSolicitud();
+    const url = `${BASE}/solicitudes/${sol.id}/prioridad`;
+    for (const payload of [{}, { prioridad: 'URGENTE' }, { recordarEl: '2026-02-30' }, { prioridad: 'ALTA', estado: 'ENTREGADA' }]) {
+      const r = await ctx.app.inject({ method: 'PATCH', url, headers: { cookie: direccion }, payload });
+      expect(r.statusCode).toBe(400);
+    }
+    const r404 = await ctx.app.inject({
+      method: 'PATCH', url: `${BASE}/solicitudes/${randomUUID()}/prioridad`, headers: { cookie: direccion },
+      payload: { prioridad: 'ALTA' },
+    });
+    expect(r404.statusCode).toBe(404);
+    expect(r404.body).toContain('Recurso inexistente.');
+    expect(ctx.solicitudes.solicitudes[0]!.prioridad).toBe('MEDIA');
   });
 });
