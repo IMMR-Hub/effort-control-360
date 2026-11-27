@@ -121,6 +121,34 @@ filas). Por eso Panel, notificaciones y Vencimientos muestran solo el piloto. He
     nivel, colaborador y cliente puestos (1 obligación, IVA 2026-11, vence 07/12); Eventos con «Daniel Isaak» trae
     solo sus acciones. (e) Encontrado al recorrer: con la ventana baja (633 px) el menú lateral cortaba «Eventos» y
     «Cerrar sesión» sin poder desplazarse; arreglado (`lg:min-h-0` en la lista) y visto en pantalla.
+  - [x] **Seguimiento: pedidos del equipo y bandeja «Pendientes» — 2026-11-27 (pedido de Lili vía Daniel).**
+    Lo que los colaboradores les piden a Laura y Lili por correo, WhatsApp o llamada queda registrado en Seguimiento
+    → **Equipo**: quién, a quién, por qué vía, prioridad (baja/media/alta/crítica), «Recordar el» y la conversación
+    (mensajes que no se borran ni se editan: se corrigen con uno nuevo; **nota interna** que solo ve dirección).
+    Acciones estilo Recordatorios del iPhone (solo dirección): tildar, reagendar (mañana / 3 días / próxima semana /
+    fecha), cancelar con motivo, reabrir, derivar a otra persona de dirección o **a soporte** (lista que ve Daniel).
+    **Pendientes** junta pedidos del equipo y pedidos de documentación a clientes abiertos, de lo más urgente a lo
+    menos, con filtros por tipo, prioridad y colaborador; las solicitudes a clientes ganaron prioridad y recordatorio.
+    Tarjeta nueva en el Panel «Pendientes de seguimiento» (N críticos · M con recordatorio vencido). Un colaborador ve
+    solo sus pedidos y nunca las notas internas. «Recordar el» es solo una marca en pantalla: no manda nada
+    (REGLA 0-bis). Diseño `docs/superpowers/specs/2026-11-27-seguimiento-pedidos-del-equipo-design.md`, plan
+    `docs/superpowers/plans/2026-11-27-seguimiento-pedidos-del-equipo.md`; hecho por subagentes con revisión por tarea
+    y revisión final (rama `seguimiento-pedidos-del-equipo`, unida a main en `411dc29`).
+    **Producción:** respaldo `respaldos/respaldo-2026-11-27T22-55-46.json` (127.683 filas) → migración
+    `20261127120000_pedidos_del_equipo` con `migrate deploy` (solo agrega; conteos iguales antes y después; RLS,
+    política y 3 disparadores; `effort_app` en mensajes: SELECT, INSERT y UPDATE solo de `corregido_por_id`, sin
+    UPDATE de texto ni DELETE — comprobado con `has_table_privilege`/`has_column_privilege`) → push → despliegue
+    confirmado. `npm run verify` 21/21 (el e2e falló 2 veces por arranque en frío del servidor de prueba y pasó 3/3
+    en la tercera: intermitente, no se esconde). **Verificado en pantalla con la sesión de Daniel:** tarjeta del Panel
+    (5 → 6 con «1 crítico» en singular), Pendientes con el crítico primero, pedido «PRUEBA — Daniel» creado,
+    reagendado a 28/11/2026, tildado (pasó a Cerrados), reabierto y cancelado con motivo «prueba de Claude»
+    (confirmar deshabilitado con el motivo vacío); en la base: CANCELADO, no borrado, y 5 eventos en la bitácora con
+    antes y después. **Pendiente:** (1) agregar Seguimiento → Pendientes/Equipo al manual (`docs/manual/`, las
+    capturas salen del entorno de prueba con `docs/manual/herramientas/`); (2) decisiones de Daniel: que la tarjeta
+    del Panel siga los filtros de cliente/colaborador; corregir asunto/cliente y borrar «Recordar el» desde la
+    pantalla; que el colaborador vea el nombre del cliente en el detalle; la novena tarjeta queda sola en pantallas
+    anchas; (3) menores anotados en la revisión final (doble envío, `role="alert"`, tests de componente de Derivar,
+    Elegir fecha, Cerrar solicitud, Corregir y Marcar en curso).
   - [ ] **Horas: ver el recorte por colaborador con datos reales.** El selector está en «Resumen del equipo» y la
     prueba lo cubre, pero el 2026-11-26 nadie había cargado horas: no hay con qué verlo en pantalla.
     **Ojo (aparte, sin tocar):** los trabajos automáticos (sincronización, evaluación de alertas, presentaciones
@@ -1740,3 +1768,4 @@ tener que redescubrirla en la próxima conversación.)*
 - **2026-09-21** — Menú: de una barra horizontal que se envolvía en 2-3 líneas a una barra lateral fija. Causa exacta del «hay que scrollear para ver algo»: 13 botones en `flex-wrap`. Sin librerías nuevas: se descartó reskinear todo con shadcn/Radix dos días antes de una demo.
 - **2026-09-21** — Migraciones del día (`registro_de_horas`, `prorroga_de_vencimiento`) aplicadas con `migrate deploy`, respaldo previo cada una, y **antes** del push. Aprendizaje: `respaldar-base.mjs` falla cuando el código va adelante del esquema (tarea 150).
 - **2026-11-27** — **Tolerancia del IVA del libro RG 90: ±20 Gs** (Lili, vía Daniel). Reemplaza el «alertar desde 1 guaraní» del 2026-09-14: con el sistema en uso, ~450 de 562 alertas críticas del Panel eran redondeos de 1–2 Gs de bancos y proveedores y tapaban las importantes. Se cambió la constante `TOLERANCIA_DE_REDONDEO_DEL_PROVEEDOR` (20n); no se borró ningún hallazgo (siguen visibles con «Ver todos»), y las alertas que quedan sin comprobantes con riesgo las cierra el motor. Detalle en `docs/DISCREPANCIAS.md` punto 20.
+- **2026-11-27** — **Seguimiento: pedidos del equipo** (pedido de Lili). Mismo módulo con pestañas y bandeja común (elegido por Daniel) en vez de un módulo aparte: un solo lugar para mirar, y separado por dentro para que un mensaje interno nunca llegue a la constancia de gestión del cliente. Los mensajes son evidencia: la base rechaza borrarlos o editarlos; solo se marca `corregido_por_id` una vez (disparador + permiso de columna; hubo que quitar el UPDATE que dejaban los privilegios por defecto de 20260722180000). Solo dirección escribe (regla 12); los colaboradores ven lo suyo, sin notas internas. «Recordar el» no dispara envíos (REGLA 0-bis).
