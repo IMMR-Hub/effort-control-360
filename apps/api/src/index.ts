@@ -12,6 +12,7 @@ import { cargarConfiguracion, type Configuracion } from './configuracion.js';
 import { construirServidor, type Dependencias } from './servidor.js';
 import { registrarRutasDeAutenticacion } from './rutas/autenticacion.js';
 import { registrarRutasDeContactos } from './rutas/contactos.js';
+import { registrarRutasDeSeguimiento } from './rutas/seguimiento.js';
 import { registrarRutasDeHoras } from './rutas/horas.js';
 import { AlmacenEnMemoria } from './seguridad/limites.js';
 import { Prisma } from '@prisma/client';
@@ -193,6 +194,7 @@ export async function arrancar(dependencias: Dependencias): Promise<void> {
 
   await registrarRutasDeAutenticacion(app, dependencias);
   await registrarRutasDeContactos(app, dependencias);
+  await registrarRutasDeSeguimiento(app, dependencias);
   await registrarRutasDeHoras(app, dependencias);
   await registrarRutasDeDocumentos(app, dependencias);
   await registrarRutasDeVencimientos(app, dependencias);

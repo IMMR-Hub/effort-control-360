@@ -401,6 +401,10 @@ export class PedidosDelEquipoFalsos implements RepositorioDePedidosDelEquipo {
   }
 
   async agregarMensaje(pedidoId: string, datos: DatosDeMensaje): Promise<MensajeAlmacenado> {
+    // El repositorio real falla (404) si el pedido no existe: el doble no puede mentir.
+    if (!this.pedidos.some((p) => p.id === pedidoId)) {
+      throw new ErrorDeAplicacion(404, 'Recurso inexistente.', 'no_encontrado');
+    }
     const mensaje: MensajeAlmacenado = {
       id: randomUUID(),
       pedidoId,
@@ -428,9 +432,11 @@ export class PedidosDelEquipoFalsos implements RepositorioDePedidosDelEquipo {
     const indice = this.pedidos.findIndex((p) => p.id === id);
     const actual = this.pedidos[indice];
     if (!actual) throw new ErrorDeAplicacion(404, 'Recurso inexistente.', 'no_encontrado');
+    // Como el repositorio real: una clave con valor `undefined` no cambia nada.
+    const aplicado = Object.fromEntries(Object.entries(cambio).filter(([, valor]) => valor !== undefined));
     const nuevo: PedidoAlmacenado = {
       ...actual,
-      ...cambio,
+      ...aplicado,
       derivadoASoporteEn:
         cambio.derivadoASoporte && !actual.derivadoASoporte ? new Date() : actual.derivadoASoporteEn,
       actualizadoEn: new Date(),

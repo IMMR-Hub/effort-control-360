@@ -13,6 +13,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { construirServidor, type Dependencias } from '../src/servidor.js';
 import { registrarRutasDeAutenticacion } from '../src/rutas/autenticacion.js';
 import { registrarRutasDeContactos } from '../src/rutas/contactos.js';
+import { registrarRutasDeSeguimiento } from '../src/rutas/seguimiento.js';
 import { registrarRutasDeClientes } from '../src/rutas/clientes.js';
 import { hashearContrasena } from '../src/seguridad/credenciales.js';
 import { AlmacenEnMemoria } from '../src/seguridad/limites.js';
@@ -129,6 +130,7 @@ async function montar(opciones: { bitacoraRota?: boolean } = {}): Promise<Contex
   const app = await construirServidor(deps);
   await registrarRutasDeAutenticacion(app, deps);
   await registrarRutasDeContactos(app, deps);
+  await registrarRutasDeSeguimiento(app, deps);
   await registrarRutasDeClientes(app, deps);
   await app.ready();
   const injectSinCsrf = await activarCsrfEnInject(app);

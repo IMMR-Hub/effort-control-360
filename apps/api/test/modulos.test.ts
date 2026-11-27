@@ -21,6 +21,7 @@ import { registrarRutasDeAutenticacion } from '../src/rutas/autenticacion.js';
 import { registrarRutasDeDocumentos } from '../src/rutas/documentos.js';
 import { registrarRutasDeVencimientos } from '../src/rutas/vencimientos.js';
 import { registrarRutasDeSolicitudes } from '../src/rutas/solicitudes.js';
+import { registrarRutasDeSeguimiento } from '../src/rutas/seguimiento.js';
 import { registrarRutasDeBalances } from '../src/rutas/balances.js';
 import { registrarRutasDeAlertas } from '../src/rutas/alertas.js';
 import { registrarRutasDeUsuarios } from '../src/rutas/usuarios.js';
@@ -187,6 +188,7 @@ async function montar(): Promise<Contexto> {
   await registrarRutasDeDocumentos(app, deps);
   await registrarRutasDeVencimientos(app, deps);
   await registrarRutasDeSolicitudes(app, deps);
+  await registrarRutasDeSeguimiento(app, deps);
   await registrarRutasDeBalances(app, deps);
   await registrarRutasDeAlertas(app, deps);
   await registrarRutasDeUsuarios(app, deps);

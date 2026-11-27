@@ -160,6 +160,11 @@ export const ACCIONES = Object.freeze({
   RECORDATORIO_ENVIADO: 'recordatorio.enviado',
   CONSTANCIA_EMITIDA: 'constancia.emitida',
 
+  PEDIDO_EQUIPO_CREADO: 'pedido_equipo.creado',
+  PEDIDO_EQUIPO_MENSAJE: 'pedido_equipo.mensaje_agregado',
+  PEDIDO_EQUIPO_MENSAJE_CORREGIDO: 'pedido_equipo.mensaje_corregido',
+  PEDIDO_EQUIPO_CAMBIADO: 'pedido_equipo.cambiado',
+
   DOCUMENTO_REGISTRADO: 'documento.registrado',
   DOCUMENTO_IMPORTADO_DESDE_ARCHIVO: 'documento.importado_desde_archivo',
   DOCUMENTO_CAMBIO_ESTADO: 'documento.cambio_estado',
