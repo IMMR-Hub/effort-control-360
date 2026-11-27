@@ -20,3 +20,4 @@ export * from './clasificacionDeDocumentos.js';
 export * from './periodoDeDocumentos.js';
 export * from './modelosDelRespaldo.js';
 export * from './faltantes.js';
+export * from './pendientes.js';
