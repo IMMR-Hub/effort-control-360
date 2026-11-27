@@ -17,6 +17,7 @@ import { useEffect, useMemo, useState, type ComponentProps, type CSSProperties }
 import {
   AlertTriangle,
   CalendarClock,
+  ClipboardList,
   Clock,
   FileClock,
   Landmark,
@@ -58,6 +59,8 @@ import {
   type VencimientoPresentado,
 } from '../api/vencimientos.js';
 import { listarSolicitudesPorPeriodo, type SolicitudDocumentacion } from '../api/solicitudes.js';
+import { listarPendientes, type ResumenDePendientes } from '../api/seguimiento.js';
+import type { PestanaDeSeguimiento } from './Seguimiento.js';
 import { listarBalances, type Balance } from '../api/balances.js';
 import { listarLiquidaciones, type Liquidacion } from '../api/liquidaciones.js';
 import type { FiltroDeNivel } from '../ui/etiquetas.js';
@@ -148,8 +151,10 @@ function deCliente(datos: DatosDelPanel, clienteId: string | null): DatosDelPane
  * modificarlo: las otras ocho pantallas que usan `Indicador` siguen
  * recibiendo un número quieto, tal como lo tenían.
  */
-function IndicadorAnimado({ valor, ...resto }: ComponentProps<typeof Indicador> & { valor: number }) {
-  return <Indicador valor={useConteoAnimado(valor)} {...resto} />;
+function IndicadorAnimado({ valor, ...resto }: ComponentProps<typeof Indicador> & { valor: number | null }) {
+  // `null` = no se pudo calcular: «—», nunca un 0 que parezca un dato.
+  const animado = useConteoAnimado(valor ?? 0);
+  return <Indicador valor={valor === null ? '—' : animado} {...resto} />;
 }
 
 /**
@@ -175,6 +180,11 @@ function pedirDatosDelPanel(periodos: readonly string[]) {
       ),
     ),
     listarPresentados(),
+    // Un error de este pedido no tumba el Panel: el indicador muestra «—».
+    Promise.resolve()
+      .then(listarPendientes)
+      .then((r) => r.resumen)
+      .catch((): null => null),
   ]);
 }
 
@@ -193,7 +203,12 @@ export default function Panel({
 }: {
   irA?: (
     pantalla: Pantalla,
-    opciones?: { readonly nivel?: FiltroDeNivel; readonly clienteId?: string; readonly colaboradorId?: string },
+    opciones?: {
+      readonly nivel?: FiltroDeNivel;
+      readonly clienteId?: string;
+      readonly colaboradorId?: string;
+      readonly pestana?: PestanaDeSeguimiento;
+    },
   ) => void;
 }) {
   const hoy = useMemo(() => hoyEnParaguay(new Date()), []);
@@ -219,6 +234,7 @@ export default function Panel({
   const [solicitudes, setSolicitudes] = useState<readonly SolicitudDocumentacion[]>([]);
   const [balances, setBalances] = useState<readonly Balance[]>([]);
   const [liquidaciones, setLiquidaciones] = useState<readonly Liquidacion[]>([]);
+  const [pendientes, setPendientes] = useState<ResumenDePendientes | null>(null);
 
   async function recargar() {
     setCargando(true);
@@ -230,6 +246,7 @@ export default function Panel({
         { alertas: listaDeAlertas },
         porPeriodo,
         { presentados: listaDePresentados },
+        resumenDePendientes,
       ] = await pedirDatosDelPanel(periodos);
       setClientes(listaDeClientes);
       setVencimientos(radar.vencimientos);
@@ -238,6 +255,7 @@ export default function Panel({
       setBalances(porPeriodo.flatMap(([, b]) => b.balances));
       setLiquidaciones(porPeriodo.flatMap(([, , l]) => l.liquidaciones));
       setPresentados(listaDePresentados);
+      setPendientes(resumenDePendientes);
     } catch (motivo) {
       setError(motivo instanceof ErrorDeApi ? motivo.message : 'No se pudo conectar con el servidor.');
     } finally {
@@ -398,14 +416,14 @@ export default function Panel({
   );
 
   if (cargando) {
-    // La misma forma que la pantalla real (8 indicadores + 2 tarjetas), para
+    // La misma forma que la pantalla real (9 indicadores + 2 tarjetas), para
     // que nada salte de tamaño cuando llegan los datos — y para que el primer
     // instante muestre una forma reconocible en vez de un texto centrado.
     return (
       <main className="mx-auto max-w-[86rem] space-y-5 px-5 py-6" aria-busy="true" aria-label="Cargando panel general">
         <div className="esqueleto h-16 max-w-2xl rounded" />
         <section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-          {Array.from({ length: 8 }, (_, i) => <IndicadorEsqueleto key={i} />)}
+          {Array.from({ length: 9 }, (_, i) => <IndicadorEsqueleto key={i} />)}
         </section>
         <div className="grid gap-5 lg:grid-cols-2">
           <TarjetaEsqueleto />
@@ -480,13 +498,27 @@ export default function Panel({
         />
         <IndicadorAnimado
           etiqueta="Documentación pendiente"
-          onIr={irA ? () => irA('seguimiento', filtrosDelPanel) : null}
+          onIr={irA ? () => irA('seguimiento', { ...filtrosDelPanel, pestana: 'clientes' }) : null}
           irEtiqueta="Ver el seguimiento de documentación"
           valor={documentacionPendiente}
           detalle={detallePeriodos}
           tono="pendiente"
           icono={FileClock}
           retardoMs={160}
+        />
+        <IndicadorAnimado
+          etiqueta="Pendientes de seguimiento"
+          // Lo que le toca a quien mira, ya recortado por el servidor según su rol: no depende de los filtros del Panel.
+          onIr={irA ? () => irA('seguimiento', { pestana: 'pendientes' }) : null}
+          irEtiqueta="Ver los pendientes de seguimiento"
+          valor={pendientes ? pendientes.total : null}
+          detalle={
+            pendientes ? `${pendientes.criticos} críticos · ${pendientes.vencidos} con recordatorio vencido` : null
+          }
+          tono={pendientes && pendientes.criticos > 0 ? 'critico' : 'pendiente'}
+          destacado={pendientes !== null && pendientes.criticos > 0}
+          icono={ClipboardList}
+          retardoMs={320}
         />
         <IndicadorAnimado
           etiqueta="Balances sin aprobar"

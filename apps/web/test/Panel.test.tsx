@@ -116,6 +116,12 @@ const LIQUIDACION_PENDIENTE = {
   respuesta: null,
 };
 
+const RESUMEN_DE_PENDIENTES = { total: 5, criticos: 2, vencidos: 1 };
+
+function conPendientes(resumen: { total: number; criticos: number; vencidos: number } = RESUMEN_DE_PENDIENTES) {
+  mock.mockDeRuta('GET /api/v1/seguimiento/pendientes', () => respuestaJson({ items: [], resumen }));
+}
+
 let mock: ReturnType<typeof crearFetchMock>;
 
 beforeEach(() => {
@@ -529,6 +535,7 @@ describe('panel general', () => {
       mock.mockDeRuta('GET /api/v1/solicitudes-documentacion', () => respuestaJson({ solicitudes: [] }));
       mock.mockDeRuta('GET /api/v1/balances', () => respuestaJson({ balances: [] }));
       mock.mockDeRuta('GET /api/v1/liquidaciones', () => respuestaJson({ liquidaciones: [] }));
+      conPendientes();
 
       vi.resetModules();
       const { ProveedorDeSesion } = await import('../src/contexts/SesionContext.js');
@@ -589,6 +596,61 @@ describe('panel general', () => {
 
       fireEvent.click(screen.getByRole('button', { name: 'Ver las alertas críticas' }));
       expect(irA).toHaveBeenLastCalledWith('alertas', { clienteId: 'cli-garso' });
+    });
+
+    it('muestra los pendientes de seguimiento con críticos y vencidos', async () => {
+      conPendientes({ total: 5, criticos: 2, vencidos: 1 });
+      await montar();
+      const tarjeta = (await screen.findByText('Pendientes de seguimiento')).closest('div')!;
+      expect(tarjeta.textContent).toContain('5');
+      expect(tarjeta.textContent).toContain('2 críticos · 1 con recordatorio vencido');
+    });
+
+    it('apretar la tarjeta lleva a Seguimiento, pestaña Pendientes', async () => {
+      const irA = vi.fn();
+      await montarConNavegacion(irA);
+
+      fireEvent.click(await screen.findByRole('button', { name: 'Ver los pendientes de seguimiento' }));
+
+      expect(irA).toHaveBeenCalledWith('seguimiento', { pestana: 'pendientes' });
+    });
+
+    it('sin críticos la tarjeta no se destaca', async () => {
+      conPendientes({ total: 3, criticos: 0, vencidos: 0 });
+      await montar();
+      const sinCriticos = (await screen.findByText('Pendientes de seguimiento')).closest('div')!;
+      expect(sinCriticos.className).not.toContain('border-critico-borde');
+      expect(sinCriticos.textContent).toContain('0 críticos · 0 con recordatorio vencido');
+    });
+
+    it('con críticos, la tarjeta lleva el borde de destacado', async () => {
+      conPendientes({ total: 5, criticos: 2, vencidos: 1 });
+      await montar();
+      const conCriticos = (await screen.findByText('Pendientes de seguimiento')).closest('div')!;
+      expect(conCriticos.className).toContain('border-critico-borde');
+    });
+
+    it('si el pedido de pendientes falla, la tarjeta muestra «—» y el resto del Panel sigue andando', async () => {
+      mock.mockDeRuta('GET /api/v1/seguimiento/pendientes', () =>
+        respuestaJson({ error: 'interno', mensaje: 'Falló.' }, { status: 500 }),
+      );
+      await montar();
+
+      const tarjeta = (await screen.findByText('Pendientes de seguimiento')).closest('div')!;
+      expect(tarjeta.textContent).toContain('—');
+      expect(tarjeta.textContent).not.toContain('críticos');
+      await waitFor(() => {
+        expect(screen.getByText('Vencimientos vencidos').closest('div')!.textContent).toContain('1');
+      });
+    });
+
+    it('«Documentación pendiente» sigue abriendo Seguimiento en la tabla de clientes', async () => {
+      const irA = vi.fn();
+      await montarConNavegacion(irA);
+
+      fireEvent.click(await screen.findByRole('button', { name: 'Ver el seguimiento de documentación' }));
+
+      expect(irA).toHaveBeenCalledWith('seguimiento', { pestana: 'clientes' });
     });
 
     it('sin navegación disponible no finge ser un botón', async () => {
