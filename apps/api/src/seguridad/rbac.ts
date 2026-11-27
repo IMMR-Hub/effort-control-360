@@ -39,7 +39,8 @@ export type Recurso =
   | 'regla_impositiva'
   | 'horas'
   | 'resumen_horas'
-  | 'actualizacion';
+  | 'actualizacion'
+  | 'pedido_equipo';
 
 export type Accion = 'ver' | 'crear' | 'editar' | 'eliminar' | 'aprobar' | 'exportar' | 'cerrar';
 
@@ -69,9 +70,15 @@ export const MATRIZ: MatrizDePermisos = Object.freeze({
     alerta: ['ver', 'crear', 'cerrar', 'exportar'],
     obligacion: ['ver', 'crear', 'editar'],
     regla_notificacion: ['ver', 'crear', 'editar'],
-    solicitud: ['ver', 'crear', 'cerrar', 'exportar'],
+    solicitud: ['ver', 'crear', 'editar', 'cerrar', 'exportar'],
     contacto: ['ver', 'crear', 'exportar'],
     constancia: ['ver', 'exportar'],
+    /*
+     * Pedidos del equipo (regla 12: solo dirección escribe). Los demás roles
+     * ven solo los pedidos que les corresponden; ese filtro vive en el
+     * repositorio, no acá (spec §5.3).
+     */
+    pedido_equipo: ['ver', 'crear', 'editar'],
     /**
      * La bitácora la ve SOLO dirección (Daniel, Lili y Laura).
      *
@@ -138,6 +145,7 @@ export const MATRIZ: MatrizDePermisos = Object.freeze({
     regla_impositiva: ['ver'],
     horas: ['ver', 'crear'],
     actualizacion: ['crear'],
+    pedido_equipo: ['ver'],
   },
 
   coordinador: {
@@ -159,6 +167,7 @@ export const MATRIZ: MatrizDePermisos = Object.freeze({
     regla_impositiva: ['ver'],
     horas: ['ver', 'crear'],
     actualizacion: ['crear'],
+    pedido_equipo: ['ver'],
   },
 
   auxiliar: {
@@ -178,6 +187,7 @@ export const MATRIZ: MatrizDePermisos = Object.freeze({
     regla_impositiva: ['ver'],
     horas: ['ver', 'crear'],
     actualizacion: ['crear'],
+    pedido_equipo: ['ver'],
   },
 
   revisor_balance: {
@@ -197,6 +207,7 @@ export const MATRIZ: MatrizDePermisos = Object.freeze({
     regla_impositiva: ['ver'],
     horas: ['ver', 'crear'],
     actualizacion: ['crear'],
+    pedido_equipo: ['ver'],
   },
 
   solo_lectura: {
@@ -213,6 +224,7 @@ export const MATRIZ: MatrizDePermisos = Object.freeze({
     contacto: ['ver'],
     constancia: ['ver'],
     regla_impositiva: ['ver'],
+    pedido_equipo: ['ver'],
   },
 });
 

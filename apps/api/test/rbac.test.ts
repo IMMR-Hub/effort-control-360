@@ -26,6 +26,7 @@ const RECURSOS: Recurso[] = [
   'cliente', 'usuario', 'documento', 'evidencia', 'proceso_mensual', 'exportacion_siga',
   'liquidacion', 'balance', 'vencimiento', 'alerta', 'obligacion', 'regla_notificacion',
   'solicitud', 'contacto', 'constancia', 'evento', 'configuracion', 'regla_impositiva',
+  'pedido_equipo',
 ];
 
 const ACCIONES: Accion[] = ['ver', 'crear', 'editar', 'eliminar', 'aprobar', 'exportar', 'cerrar'];
@@ -55,9 +56,9 @@ describe('la matriz cubre toda combinación posible', () => {
       }
     }
 
-    // 6 roles x 18 recursos x 7 acciones. Si crece un recurso y nadie decide
+    // 6 roles x 19 recursos x 7 acciones. Si crece un recurso y nadie decide
     // sus permisos, este número cambia y el test obliga a mirarlo.
-    expect(celdas).toHaveLength(6 * 18 * 7);
+    expect(celdas).toHaveLength(6 * 19 * 7);
   });
 
   it('niega por defecto: un recurso que no figura en el rol queda cerrado', () => {
@@ -140,6 +141,32 @@ describe('solo dirección puede hacer cambios', () => {
 
   it('el costo por hora y los usuarios los edita solo dirección', () => {
     const editan = ROLES.filter((rol) => puede(sujeto({ rol }), 'usuario', 'editar'));
+    expect(editan).toEqual(['direccion']);
+  });
+});
+
+describe('pedidos del equipo: solo dirección escribe, los demás solo ven', () => {
+  it('dirección crea y edita pedidos del equipo', () => {
+    expect(puede(sujeto({ rol: 'direccion' }), 'pedido_equipo', 'crear')).toBe(true);
+    expect(puede(sujeto({ rol: 'direccion' }), 'pedido_equipo', 'editar')).toBe(true);
+  });
+
+  it('un responsable solo ve pedidos del equipo', () => {
+    expect(puede(sujeto({ rol: 'responsable' }), 'pedido_equipo', 'ver')).toBe(true);
+    expect(puede(sujeto({ rol: 'responsable' }), 'pedido_equipo', 'crear')).toBe(false);
+    expect(puede(sujeto({ rol: 'responsable' }), 'pedido_equipo', 'editar')).toBe(false);
+  });
+
+  it('todo rol que no es dirección ve pedidos del equipo y no escribe ninguno', () => {
+    for (const rol of ROLES.filter((r) => r !== 'direccion')) {
+      expect(puede(sujeto({ rol }), 'pedido_equipo', 'ver')).toBe(true);
+      expect(puede(sujeto({ rol }), 'pedido_equipo', 'crear')).toBe(false);
+      expect(puede(sujeto({ rol }), 'pedido_equipo', 'editar')).toBe(false);
+    }
+  });
+
+  it('dirección puede editar solicitudes; nadie más puede', () => {
+    const editan = ROLES.filter((rol) => puede(sujeto({ rol }), 'solicitud', 'editar'));
     expect(editan).toEqual(['direccion']);
   });
 });
