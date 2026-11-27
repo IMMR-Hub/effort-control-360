@@ -104,7 +104,7 @@ filas). Por eso Panel, notificaciones y Vencimientos muestran solo el piloto. He
     su cuenta; `kbaez` vuelve al script de contraseña inicial. La novena fila de BEA, «AF Y RM ASOCIACIONES - ALISON»
     (carpeta 121, sin movimiento), no tiene carpeta en OneDrive y no está en el sistema: pendiente desde el 10/11.
     **Abierto (lo responde Daniel):** el nombre completo de BEA (la cuenta todavía dice «Karina Baez»).
-  - [ ] **Filtro «Colaborador» y filtros que viajan desde el Panel — 2026-11-26 (pedido de EFFORT en la reunión).**
+  - [x] **Filtro «Colaborador» y filtros que viajan desde el Panel — 2026-11-26 (pedido de EFFORT en la reunión).**
     (a) Al lado de «Cliente», en Panel, Vencimientos (y sus presentados), Alertas, Documentos, Faltantes, Seguimiento,
     Liquidaciones y Balances: elegir a una persona deja solo sus clientes (su cartera vigente,
     `GET /usuarios/:id/clientes`), y el filtro de cliente ofrece solo esos. **Solo lo ve dirección** (el resto ya ve
@@ -115,7 +115,17 @@ filas). Por eso Panel, notificaciones y Vencimientos muestran solo el piloto. He
     los demás indicadores) abrían la pantalla con todos los clientes; ahora llevan el cliente y el colaborador.
     (d) `npm audit` trajo un aviso nuevo (effect, GHSA-7589-6fvf-x4pw, viene fijado por prisma): excepción escrita en
     `scripts/auditar-dependencias.mjs`. Pruebas nuevas en Vencimientos, Horas, Eventos y Panel.
-    **Falta:** verlo en pantalla en producción con la sesión de Daniel (lección 14: hasta entonces `[ ]`).
+    **Verificado en producción con la sesión de Daniel (2026-11-26, commits `e725b4c` y `41c3047`):** Panel con
+    «Analia Sanguina» → 13 clientes activos, el filtro «Cliente» ofrece solo esos 13 y coinciden uno por uno con su
+    cartera vigente en la base; con OSMAR MANUEL LOPEZ LESME elegido, «Vencimientos próximos» abrió Vencimientos con
+    nivel, colaborador y cliente puestos (1 obligación, IVA 2026-11, vence 07/12); Eventos con «Daniel Isaak» trae
+    solo sus acciones. (e) Encontrado al recorrer: con la ventana baja (633 px) el menú lateral cortaba «Eventos» y
+    «Cerrar sesión» sin poder desplazarse; arreglado (`lg:min-h-0` en la lista) y visto en pantalla.
+  - [ ] **Horas: ver el recorte por colaborador con datos reales.** El selector está en «Resumen del equipo» y la
+    prueba lo cubre, pero el 2026-11-26 nadie había cargado horas: no hay con qué verlo en pantalla.
+    **Ojo (aparte, sin tocar):** los trabajos automáticos (sincronización, evaluación de alertas, presentaciones
+    detectadas) quedan en Eventos a nombre de «Daniel Isaak»; buscar por Daniel mezcla lo que hizo él con lo que
+    hizo el sistema.
   - [ ] **▶ HANDOFF 2026-11-26 (después de la reunión de Daniel con el equipo) — EMPEZAR ACÁ.**
     **Estado verificado hoy:** producción sana (web y API responden, versión `index-DGpv2woh.js`); 88 clientes activos,
     todos con responsable y carpeta; sincronización cada 15 min + completa a medianoche (decisión de Daniel 2026-11-16),
