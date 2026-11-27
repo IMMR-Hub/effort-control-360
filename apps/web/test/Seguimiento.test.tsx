@@ -141,7 +141,11 @@ afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-async function montar(rol: string = 'direccion') {
+/**
+ * Desde 2026-11-27 Seguimiento abre en «Pendientes»; la pantalla de siempre es la
+ * pestaña «Clientes». Estos tests la abren directo, salvo el que prueba la pestaña.
+ */
+async function montar(rol: string = 'direccion', { conPestanaInicial = true } = {}) {
   mock.mockDeRuta('GET /api/v1/yo', () =>
     respuestaJson({ usuarioId: 'u1', rol, veTodosLosClientes: true, cantidadDeClientesAsignados: 0 }),
   );
@@ -161,10 +165,13 @@ async function montar(rol: string = 'direccion') {
 
   render(
     <ProveedorDeSesion>
-      <Seguimiento />
+      {conPestanaInicial ? <Seguimiento pestanaInicial="clientes" /> : <Seguimiento />}
     </ProveedorDeSesion>,
   );
 
+  if (!conPestanaInicial) {
+    await usuario.click(await screen.findByRole('tab', { name: 'Clientes' }));
+  }
   await screen.findByText('GARSO S.A.', { selector: 'td' });
   await waitFor(() => {
     expect(mock.llamadasA('GET /api/v1/yo')).toHaveLength(1);
@@ -174,6 +181,22 @@ async function montar(rol: string = 'direccion') {
 const indicador = (etiqueta: string) => screen.getByText(etiqueta, { selector: 'p' }).closest('div')!.textContent;
 
 describe('seguimiento al cliente', () => {
+  it('la pestaña Clientes sigue mostrando la tabla de hoy', async () => {
+    mock.mockDeRuta('GET /api/v1/seguimiento/pendientes', () =>
+      respuestaJson({ items: [], resumen: { total: 0, criticos: 0, vencidos: 0 } }),
+    );
+    mock.mockDeRuta('GET /api/v1/usuarios', () => respuestaJson({ usuarios: [] }));
+    await montar('direccion', { conPestanaInicial: false });
+
+    expect(screen.getByRole('tab', { name: 'Clientes' })).toHaveAttribute('aria-selected', 'true');
+    expect(screen.getByRole('tab', { name: 'Pendientes' })).toHaveAttribute('aria-selected', 'false');
+    const panel = screen.getByRole('tabpanel', { name: 'Clientes' });
+    expect(panel).toContainElement(screen.getByText('GARSO S.A.', { selector: 'td' }));
+    expect(screen.getByText('OTRO S.A.', { selector: 'td' })).toBeVisible();
+    expect(screen.getByText('Seguimiento al cliente')).toBeVisible();
+    expect(indicador('Sin entregar')).toContain('de 2 clientes del piloto');
+  });
+
   it('muestra una fila por cliente con su estado de entrega', async () => {
     await montar();
 

@@ -1,987 +1,120 @@
 /**
- * Pantalla de seguimiento al cliente (tarea 101: contra la API real, no
- * datos de semilla).
+ * Seguimiento, «el centro de todo» (Daniel, 2026-11-27): tres pestañas.
  *
- * Responde tres preguntas en una sola vista:
- *   1. ¿A quién hay que perseguir hoy y por qué?
- *   2. ¿Qué se hizo ya, por qué vía, y quién atendió?
- *   3. Si el cliente reclama, ¿qué le mostramos?
+ *  - «Pendientes»: todo lo abierto, pedidos del equipo y de clientes juntos.
+ *  - «Clientes»: la pantalla de seguimiento al cliente de siempre, sin cambios
+ *    de comportamiento (`seguimiento/Clientes.tsx`).
+ *  - «Equipo»: los pedidos de los colaboradores y su conversación.
  *
- * Toda cifra sale de `@effort/core` sobre los registros que trae la API. No
- * hay un solo número escrito a mano acá: si la lógica de escalamiento cambia,
- * esta pantalla cambia sola.
+ * Separadas por dentro a propósito: lo interno del equipo nunca llega a la
+ * constancia de gestión que se le muestra a un cliente (diseño §4 y §5.6).
+ * Solo se monta la pestaña a la vista: al volver a una, trae lo de ahora.
  */
 
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
-import {
-  ArrowUpRight,
-  CalendarClock,
-  MessageSquare,
-  Phone,
-  Send,
-  Users,
-} from 'lucide-react';
+import { useRef, useState, type KeyboardEvent } from 'react';
 
-import {
-  armarConstanciaDeGestion,
-  crearCalendario,
-  describirFiltro,
-  fechaCivilAIso,
-  fechaCivilDesdeIso,
-  feriadosParaguay,
-  fechaLimiteDeEntrega,
-  hoyEnParaguay,
-  periodoDesdeTexto,
-  planificarProximoRecordatorio,
-  type CalendarioHabil,
-  type PlanDeEnvio,
-  type ReglaNotificacion,
-  type RegistroContacto as RegistroContactoCore,
-  type SolicitudDocumentacion as SolicitudCore,
-} from '@effort/core';
+import SeguimientoDeClientes from './seguimiento/Clientes.js';
+import Equipo from './seguimiento/Equipo.js';
+import Pendientes from './seguimiento/Pendientes.js';
 
-import {
-  Badge,
-  Boton,
-  CampoSelect,
-  CampoTexto,
-  EncabezadoTarjeta,
-  Indicador,
-  Tabla,
-  Tarjeta,
-  Td,
-  Th,
-} from '../ui/Primitivos.jsx';
-import { ErrorDeApi } from '../api/cliente.js';
-import { listarClientes, type Cliente } from '../api/clientes.js';
-import { listarContactosDelPeriodo, registrarContacto, type Contacto } from '../api/contactos.js';
-import { listarReglasDeNotificacion } from '../api/reglasNotificacion.js';
-import {
-  abrirSolicitud,
-  listarSolicitudesPorPeriodo,
-  type SolicitudDocumentacion,
-} from '../api/solicitudes.js';
-import { useSesion } from '../contexts/SesionContext.js';
-import { FiltroDeFechasSelector, PeriodosDelRango, filtroDelMesActual, usePeriodoDelFiltro } from '../ui/FiltroDeFechas.js';
-import type { FiltroDeFechas } from '@effort/core';
-import {
-  FiltroDeClienteSelector,
-  TODOS_LOS_CLIENTES,
-  coincideConCliente,
-  filtroDeClienteEnPalabras,
-  nombreDelClienteFiltrado,
-  type FiltroDeCliente,
-} from '../ui/FiltroDeCliente.js';
-import {
-  FiltroDeColaboradorSelector,
-  coincideConColaborador,
-  filtroDeColaboradorEnPalabras,
-  sufijoDeColaborador,
-  useFiltroDeColaborador,
-} from '../ui/FiltroDeColaborador.js';
-import { BotonDescargarExcel } from '../ui/BotonDescargarExcel.js';
-import { hoja, type HojaDeReporte, type Reporte } from '../ui/reporteExcel.js';
+export type PestanaDeSeguimiento = 'pendientes' | 'clientes' | 'equipo';
 
-/** Mismos roles que la matriz deja crear una solicitud. */
-const ROLES_QUE_ABREN = new Set(['direccion']);
-
-const ICONO_CANAL: Record<Contacto['canal'], typeof Phone> = {
-  LLAMADA: Phone,
-  MENSAJE: MessageSquare,
-  WHATSAPP: MessageSquare,
-  CORREO: Send,
-  PRESENCIAL: Users,
-};
-
-const ETIQUETA_ESTADO: Record<
-  SolicitudDocumentacion['estado'],
-  { texto: string; tono: 'completo' | 'critico' | 'parcial' | 'pendiente' }
-> = {
-  ENTREGADA: { texto: 'Entregada', tono: 'completo' },
-  ABIERTA: { texto: 'Sin entregar', tono: 'critico' },
-  RESPONDIDA_SIN_ENTREGA: { texto: 'Prometió entregar', tono: 'parcial' },
-  ESCALADA: { texto: 'Escalada', tono: 'critico' },
-  AGOTADA: { texto: 'Recordatorios agotados', tono: 'critico' },
-  CERRADA_MANUALMENTE: { texto: 'Cerrada a mano', tono: 'pendiente' },
-};
-
-function formatearFechaHora(fechaIso: string): string {
-  return new Intl.DateTimeFormat('es-PY', {
-    timeZone: 'America/Asuncion',
-    day: '2-digit',
-    month: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(new Date(fechaIso));
-}
-
-/** `AAAA-MM-DD` del día del instante, en Paraguay (es lo que se le da a Excel como fecha). */
-function diaEnParaguay(fechaIso: string): string {
-  return new Intl.DateTimeFormat('en-CA', { timeZone: 'America/Asuncion' }).format(new Date(fechaIso));
-}
-
-function horaEnParaguay(fechaIso: string): string {
-  return new Intl.DateTimeFormat('es-PY', {
-    timeZone: 'America/Asuncion',
-    hour: '2-digit',
-    minute: '2-digit',
-    hour12: false,
-  }).format(new Date(fechaIso));
-}
-
-/** «Llamada», «Whatsapp»…: como se lee en el selector de vía y en la bitácora. */
-function etiquetaDeCanal(canal: string): string {
-  return canal.charAt(0) + canal.slice(1).toLowerCase();
-}
-
-function formatearPeriodo(periodo: string): string {
-  const partes = periodo.split('-').map(Number);
-  const anio = partes[0] ?? 0;
-  const mes = partes[1] ?? 1;
-  return new Intl.DateTimeFormat('es-PY', { month: 'long', year: 'numeric', timeZone: 'UTC' })
-    .format(new Date(Date.UTC(anio, mes - 1, 1)));
-}
-
-function diasDesde(fechaIso: string, hoy: Date): number {
-  const fecha = new Date(fechaIso);
-  const dia = Date.UTC(fecha.getUTCFullYear(), fecha.getUTCMonth(), fecha.getUTCDate());
-  const diaDeHoy = Date.UTC(hoy.getUTCFullYear(), hoy.getUTCMonth(), hoy.getUTCDate());
-  return Math.round((diaDeHoy - dia) / 86_400_000);
-}
-
-/** Convierte la solicitud que trae la API a la forma que espera `@effort/core`. */
-function aSolicitudCore(solicitud: SolicitudDocumentacion): SolicitudCore {
-  return {
-    id: solicitud.id,
-    clienteId: solicitud.clienteId,
-    periodo: periodoDesdeTexto(solicitud.periodo),
-    estado: solicitud.estado,
-    cuentaDesde: fechaCivilDesdeIso(solicitud.cuentaDesde),
-    recordatoriosEnviados: solicitud.recordatoriosEnviados,
-    ultimoRecordatorioEn: solicitud.ultimoRecordatorioEn
-      ? fechaCivilDesdeIso(solicitud.ultimoRecordatorioEn)
-      : null,
-  };
-}
-
-function aContactoCore(contacto: Contacto): RegistroContactoCore {
-  return {
-    id: contacto.id,
-    clienteId: contacto.clienteId,
-    periodo: periodoDesdeTexto(contacto.periodo),
-    solicitudId: null,
-    canal: contacto.canal,
-    direccion: contacto.direccion,
-    origen: contacto.origenContacto,
-    ocurridoEn: new Date(contacto.ocurridoEn),
-    registradoPorUsuarioId: contacto.registradoPorUsuarioId,
-    huboRespuesta: contacto.huboRespuesta,
-    quienAtendio: contacto.quienAtendio,
-    resumen: contacto.resumen,
-    evidenciaId: contacto.evidenciaId,
-  };
-}
-
-interface FormularioDeContacto {
-  canal: Contacto['canal'];
-  direccion: Contacto['direccion'];
-  fecha: string;
-  huboRespuesta: boolean;
-  quienAtendio: string;
-  resumen: string;
-}
-
-const CONTACTO_VACIO: FormularioDeContacto = {
-  canal: 'LLAMADA',
-  direccion: 'SALIENTE',
-  fecha: '',
-  huboRespuesta: false,
-  quienAtendio: '',
-  resumen: '',
-};
-
-const OPCIONES_CANAL = Object.keys(ICONO_CANAL).map((valor) => ({
-  valor,
-  etiqueta: etiquetaDeCanal(valor),
-}));
-
-const OPCIONES_DIRECCION = [
-  { valor: 'SALIENTE', etiqueta: 'Lo llamamos nosotros' },
-  { valor: 'ENTRANTE', etiqueta: 'Nos contactó el cliente' },
+const PESTANAS: readonly { readonly id: PestanaDeSeguimiento; readonly texto: string }[] = [
+  { id: 'pendientes', texto: 'Pendientes' },
+  { id: 'clientes', texto: 'Clientes' },
+  { id: 'equipo', texto: 'Equipo' },
 ];
 
-interface FilaDeSeguimiento {
-  readonly solicitud: SolicitudDocumentacion;
-  readonly cliente: Cliente | undefined;
-  readonly plan: PlanDeEnvio | null;
-  readonly limite: string;
-  readonly ultimoContacto: Contacto | null;
-  readonly diasSinContacto: number | null;
-  readonly respondioAlgunaVez: boolean;
-}
-
-/** La celda «Último contacto» de la tabla; el Excel usa este mismo texto. */
-function ultimoContactoEnTexto(fila: FilaDeSeguimiento): string {
-  return fila.ultimoContacto
-    ? `${formatearFechaHora(fila.ultimoContacto.ocurridoEn)} · ${fila.ultimoContacto.canal.toLowerCase()}`
-    : 'sin contacto';
-}
-
-/**
- * La celda «Próxima acción» en texto plano, para el Excel. La tabla la dibuja
- * con íconos pero dice lo mismo: si cambia una, hay que cambiar la otra.
- */
-function proximaAccionEnTexto(fila: FilaDeSeguimiento): string {
-  if (fila.solicitud.estado === 'ENTREGADA') return 'Nada pendiente';
-  if (fila.plan) {
-    return `Aviso ${fila.plan.numeroDeRecordatorio} el ${fechaCivilAIso(fila.plan.fecha)}${
-      fila.plan.esEscalamiento ? ' con dirección' : ''
-    }`;
-  }
-  return 'Avisos agotados — decidir';
-}
-
 export default function Seguimiento({
-  clienteInicial = TODOS_LOS_CLIENTES,
+  clienteInicial,
   colaboradorInicial,
-}: { readonly clienteInicial?: string; readonly colaboradorInicial?: string } = {}) {
-  // Hasta el 2026-09-15 el período estaba fijo en el mes en curso y no se podía
-  // elegir. Ahora usa el filtro común; el seguimiento es por período, así que
-  // con un rango se elige cuál de los que toca.
-  const [filtro, setFiltro] = useState<FiltroDeFechas>(filtroDelMesActual);
-  const { periodos, periodo: periodoActivo, elegirPeriodo } = usePeriodoDelFiltro(filtro);
+  pestanaInicial = 'pendientes',
+}: {
+  readonly clienteInicial?: string;
+  readonly colaboradorInicial?: string;
+  readonly pestanaInicial?: PestanaDeSeguimiento;
+} = {}) {
+  const [pestana, setPestana] = useState<PestanaDeSeguimiento>(pestanaInicial);
+  const [pedidoAAbrir, setPedidoAAbrir] = useState<string | undefined>(undefined);
+  const botones = useRef<Partial<Record<PestanaDeSeguimiento, HTMLButtonElement | null>>>({});
 
-  const calendario: CalendarioHabil = useMemo(() => {
-    const anio = Number(periodoActivo.slice(0, 4));
-    return crearCalendario([...feriadosParaguay(anio), ...feriadosParaguay(anio + 1)]);
-  }, [periodoActivo]);
-
-  const [cargando, setCargando] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [clientes, setClientes] = useState<readonly Cliente[]>([]);
-  const [solicitudes, setSolicitudes] = useState<readonly SolicitudDocumentacion[]>([]);
-  const [regla, setRegla] = useState<ReglaNotificacion | null>(null);
-  const [contactosPorCliente, setContactosPorCliente] = useState<
-    Readonly<Record<string, readonly Contacto[]>>
-  >({});
-  const [clienteSeleccionado, setClienteSeleccionado] = useState<string | null>(
-    clienteInicial === TODOS_LOS_CLIENTES ? null : clienteInicial,
-  );
-  const [filtroDeCliente, setFiltroDeCliente] = useState<FiltroDeCliente>(clienteInicial);
-  const colaborador = useFiltroDeColaborador(filtroDeCliente, setFiltroDeCliente, colaboradorInicial);
-
-  const [altaAbierta, setAltaAbierta] = useState(false);
-  const [guardando, setGuardando] = useState(false);
-  const [errorAlta, setErrorAlta] = useState<string | null>(null);
-  const [formulario, setFormulario] = useState<FormularioDeContacto>(CONTACTO_VACIO);
-  const { sesion } = useSesion();
-  const puedeAbrir = ROLES_QUE_ABREN.has(sesion?.rol ?? '');
-  const [recarga, setRecarga] = useState(0);
-  const [abriendo, setAbriendo] = useState(false);
-
-  useEffect(() => {
-    let cancelado = false;
-
-    async function cargar() {
-      setCargando(true);
-      setError(null);
-      try {
-        const [
-          { clientes: listaDeClientes },
-          { solicitudes: listaDeSolicitudes },
-          { reglas },
-          { contactos: todosLosContactos },
-        ] = await Promise.all([
-          listarClientes(),
-          listarSolicitudesPorPeriodo(periodoActivo),
-          listarReglasDeNotificacion(),
-          listarContactosDelPeriodo(periodoActivo),
-        ]);
-
-        if (cancelado) return;
-
-        const reglaDocumentacion = reglas.find(
-          (candidata) => candidata.evento === 'DOCUMENTACION_NO_ENTREGADA' && candidata.activa,
-        );
-
-        // Se agrupan acá, en memoria, en vez de pedirlos cliente por cliente.
-        const contactosPorId: Record<string, Contacto[]> = {};
-        for (const contacto of todosLosContactos) {
-          (contactosPorId[contacto.clienteId] ??= []).push(contacto);
-        }
-
-        setClientes(listaDeClientes);
-        setSolicitudes(listaDeSolicitudes);
-        setRegla(
-          reglaDocumentacion
-            ? {
-                id: reglaDocumentacion.id,
-                nombre: reglaDocumentacion.nombre,
-                activa: reglaDocumentacion.activa,
-                evento: reglaDocumentacion.evento,
-                diasHabilesDePlazo: reglaDocumentacion.diasHabilesDePlazo,
-                horaDeEnvio: reglaDocumentacion.horaDeEnvio,
-                reintentarCadaDiasHabiles: reglaDocumentacion.reintentarCadaDiasHabiles,
-                maximoRecordatorios: reglaDocumentacion.maximoRecordatorios,
-                escalarAPartirDelRecordatorio: reglaDocumentacion.escalarAPartirDelRecordatorio,
-                destinatariosIniciales: reglaDocumentacion.destinatariosIniciales,
-                destinatariosDeEscalamiento: reglaDocumentacion.destinatariosDeEscalamiento,
-                plantillaId: reglaDocumentacion.plantillaId ?? '',
-              }
-            : null,
-        );
-        setContactosPorCliente(contactosPorId);
-        setClienteSeleccionado((actual) => actual ?? listaDeSolicitudes[0]?.clienteId ?? null);
-      } catch (motivo) {
-        if (cancelado) return;
-        setError(
-          motivo instanceof ErrorDeApi
-            ? motivo.message
-            : 'No se pudo conectar con el servidor.',
-        );
-      } finally {
-        if (!cancelado) setCargando(false);
-      }
-    }
-
-    void cargar();
-    return () => {
-      cancelado = true;
-    };
-  }, [periodoActivo, recarga]);
-
-  /*
-   * Abre el seguimiento del período para todos los clientes activos.
-   *
-   * Existe porque la pantalla de inicio estaba vacía y no decía por qué: el
-   * seguimiento de un período no se abre solo, y los del piloto se perdieron
-   * con el borrado del 2026-09-13. Abrir es idempotente en el servidor — un
-   * cliente que ya tenía su período abierto no se duplica.
-   */
-  async function abrirParaTodos() {
-    setAbriendo(true);
-    setError(null);
-    try {
-      const yaAbiertos = new Set(solicitudes.map((s) => s.clienteId));
-      for (const cliente of clientes.filter((c) => c.activo && !yaAbiertos.has(c.id))) {
-        await abrirSolicitud(cliente.id, {
-          periodo: periodoActivo,
-          cuentaDesde: `${periodoActivo}-01`,
-          reglaId: regla?.id ?? null,
-        });
-      }
-      setRecarga((n) => n + 1);
-    } catch (motivo) {
-      setError(motivo instanceof ErrorDeApi ? motivo.message : 'No se pudo abrir el seguimiento.');
-    } finally {
-      setAbriendo(false);
-    }
+  function elegir(nueva: PestanaDeSeguimiento) {
+    setPedidoAAbrir(undefined);
+    setPestana(nueva);
   }
 
-  // Memoizado: si se recalculara en cada render, cambiaría de referencia
-  // todo el tiempo y el `useMemo` de más abajo (que lo usa) recalcularía en
-  // cada render también, sin ningún beneficio — encontrado al configurar
-  // `react-hooks/exhaustive-deps`, que marcaba `hoy` como dependencia
-  // faltante ahí abajo.
-  const hoy = useMemo(() => new Date(), []);
-
-  const filas: readonly FilaDeSeguimiento[] = useMemo(
-    () =>
-      solicitudes.map((solicitud) => {
-        const cliente = clientes.find((c) => c.id === solicitud.clienteId);
-        const contactosDelCliente = contactosPorCliente[solicitud.clienteId] ?? [];
-
-        const plan = regla
-          ? planificarProximoRecordatorio(aSolicitudCore(solicitud), regla, calendario)
-          : null;
-        const limite = regla
-          ? fechaCivilAIso(fechaLimiteDeEntrega(aSolicitudCore(solicitud), regla, calendario))
-          : solicitud.cuentaDesde;
-
-        const ultimo = contactosDelCliente.reduce<Contacto | null>(
-          (masReciente, c) =>
-            !masReciente || c.ocurridoEn > masReciente.ocurridoEn ? c : masReciente,
-          null,
-        );
-
-        return {
-          solicitud,
-          cliente,
-          plan,
-          limite,
-          ultimoContacto: ultimo,
-          diasSinContacto: ultimo ? diasDesde(ultimo.ocurridoEn, hoy) : null,
-          respondioAlgunaVez: contactosDelCliente.some((c) => c.huboRespuesta),
-        };
-      }),
-    [solicitudes, clientes, contactosPorCliente, regla, calendario, hoy],
-  );
-
-  async function guardarContacto(evento: FormEvent<HTMLFormElement>) {
+  // Flechas, Inicio y Fin mueven entre pestañas, como pide el patrón de pestañas accesibles.
+  function alTeclear(evento: KeyboardEvent<HTMLDivElement>) {
+    const actual = PESTANAS.findIndex((p) => p.id === pestana);
+    const destino =
+      evento.key === 'ArrowRight' ? (actual + 1) % PESTANAS.length
+      : evento.key === 'ArrowLeft' ? (actual - 1 + PESTANAS.length) % PESTANAS.length
+      : evento.key === 'Home' ? 0
+      : evento.key === 'End' ? PESTANAS.length - 1
+      : null;
+    if (destino === null) return;
     evento.preventDefault();
-    if (!clienteSeleccionado) return;
-
-    setGuardando(true);
-    setErrorAlta(null);
-    try {
-      await registrarContacto(clienteSeleccionado, {
-        periodo: periodoActivo,
-        canal: formulario.canal,
-        direccion: formulario.direccion,
-        // Sin hora elegida se usa la de ahora: lo que importa registrar es el
-        // día, y pedir hora y minuto para cada llamada sería fricción inútil.
-        ocurridoEn: new Date(`${formulario.fecha}T12:00:00`).toISOString(),
-        huboRespuesta: formulario.huboRespuesta,
-        quienAtendio: formulario.quienAtendio.trim() === '' ? null : formulario.quienAtendio.trim(),
-        resumen: formulario.resumen.trim(),
-      });
-
-      const { contactos } = await listarContactosDelPeriodo(periodoActivo);
-      const agrupados: Record<string, Contacto[]> = {};
-      for (const contacto of contactos) {
-        (agrupados[contacto.clienteId] ??= []).push(contacto);
-      }
-      setContactosPorCliente(agrupados);
-      setAltaAbierta(false);
-      setFormulario(CONTACTO_VACIO);
-    } catch (motivo) {
-      setErrorAlta(
-        motivo instanceof ErrorDeApi ? motivo.message : 'No se pudo conectar con el servidor.',
-      );
-    } finally {
-      setGuardando(false);
-    }
+    const siguiente = PESTANAS[destino]!.id;
+    elegir(siguiente);
+    botones.current[siguiente]?.focus();
   }
 
-  const contactosDelCliente = useMemo(
-    () =>
-      (clienteSeleccionado ? contactosPorCliente[clienteSeleccionado] ?? [] : [])
-        .slice()
-        .sort((a, b) => (a.ocurridoEn > b.ocurridoEn ? -1 : 1)),
-    [clienteSeleccionado, contactosPorCliente],
-  );
-
-  const constancia = useMemo(() => {
-    if (!clienteSeleccionado) return null;
-    return armarConstanciaDeGestion(
-      clienteSeleccionado,
-      periodoDesdeTexto(periodoActivo),
-      contactosDelCliente.map(aContactoCore),
-    );
-  }, [clienteSeleccionado, periodoActivo, contactosDelCliente]);
-
-  const nombreCliente = clientes.find((c) => c.id === clienteSeleccionado)?.nombre ?? '';
-
-  // Tabla e indicadores cuentan lo mismo: lo del cliente elegido (o todos).
-  const filasVisibles = useMemo(
-    () =>
-      filas.filter(
-        (f) =>
-          coincideConCliente(f.solicitud.clienteId, filtroDeCliente) &&
-          coincideConColaborador(f.solicitud.clienteId, colaborador),
-      ),
-    [filas, filtroDeCliente, colaborador.cartera],
-  );
-
-  /**
-   * Con un cliente elegido, la bitácora y la constancia de abajo pasan a ser las
-   * suyas: si no, quedaría a la vista el detalle de otro cliente. Con «Todos» no
-   * se toca lo que ya estaba seleccionado.
-   */
-  function cambiarFiltroDeCliente(nuevo: FiltroDeCliente) {
-    setFiltroDeCliente(nuevo);
-    if (nuevo !== TODOS_LOS_CLIENTES) setClienteSeleccionado(nuevo);
-  }
-
-  /**
-   * Lo mismo que muestra la pantalla con sus filtros: la tabla «Estado de
-   * entrega» y, del cliente que está a la vista, su bitácora de contactos y su
-   * constancia de gestión (lo que se le muestra cuando reclama).
-   */
-  function reporte(): Reporte {
-    const hojas: HojaDeReporte[] = [
-      hoja(
-        'Estado de entrega',
-        [
-          { titulo: 'Cliente', valor: (f: FilaDeSeguimiento) => f.cliente?.nombre ?? f.solicitud.clienteId },
-          { titulo: 'Estado', valor: (f) => ETIQUETA_ESTADO[f.solicitud.estado].texto },
-          { titulo: 'Venció', valor: (f) => f.limite, formato: 'fecha' },
-          { titulo: 'Avisos', valor: (f) => f.solicitud.recordatoriosEnviados, formato: 'entero' },
-          { titulo: 'Último contacto', valor: ultimoContactoEnTexto },
-          { titulo: 'Días sin respuesta', valor: (f) => f.diasSinContacto, formato: 'entero' },
-          { titulo: 'Próxima acción', valor: proximaAccionEnTexto },
-        ],
-        filasVisibles,
-      ),
-    ];
-
-    const filtros = [
-      ...filtroDeColaboradorEnPalabras(colaborador),
-      filtroDeClienteEnPalabras(filtroDeCliente, clientes),
-      `Período: ${periodoActivo}${filtro.tipo === 'mes' ? '' : ` (rango elegido: ${describirFiltro(filtro)})`}`,
-    ];
-
-    if (clienteSeleccionado !== null && constancia !== null) {
-      const cliente = nombreCliente || clienteSeleccionado;
-      filtros.push(`Bitácora y constancia de: ${cliente}`);
-      hojas.push(
-        hoja(
-          'Bitácora de contactos',
-          [
-            { titulo: 'Cliente', valor: () => cliente },
-            { titulo: 'Fecha', valor: (c: Contacto) => diaEnParaguay(c.ocurridoEn), formato: 'fecha' },
-            { titulo: 'Hora', valor: (c) => horaEnParaguay(c.ocurridoEn) },
-            { titulo: 'Vía', valor: (c) => etiquetaDeCanal(c.canal) },
-            { titulo: 'Origen', valor: (c) => (c.origenContacto === 'AUTOMATICO' ? 'Automático' : 'Manual') },
-            { titulo: 'Respuesta', valor: (c) => (c.huboRespuesta ? 'Respondió' : 'Sin respuesta') },
-            { titulo: 'Qué se habló', valor: (c) => c.resumen },
-            { titulo: 'Atendió', valor: (c) => c.quienAtendio ?? 'Nadie atendió' },
-            { titulo: 'Evidencia', valor: (c) => (c.evidenciaId ? 'Con evidencia adjunta' : null) },
-          ],
-          contactosDelCliente,
-        ),
-        hoja(
-          'Constancia de gestión',
-          [
-            { titulo: 'Cliente', valor: () => cliente },
-            { titulo: 'Concepto', valor: (fila: { concepto: string; valor: string | number }) => fila.concepto },
-            { titulo: 'Valor', valor: (fila) => fila.valor },
-          ],
-          [
-            { concepto: 'Síntesis', valor: constancia.sintesis },
-            { concepto: 'Intentos totales', valor: constancia.totalDeContactos },
-            { concepto: 'Respuestas', valor: constancia.vecesQueRespondieron },
-            { concepto: 'Avisos del sistema', valor: constancia.contactosAutomaticos },
-            { concepto: 'Gestiones a mano', valor: constancia.contactosManuales },
-            ...Object.entries(constancia.contactosPorCanal)
-              .filter(([, cantidad]) => cantidad > 0)
-              .map(([canal, cantidad]) => ({ concepto: `Por vía: ${canal.toLowerCase()}`, valor: cantidad })),
-            ...(constancia.personasQueAtendieron.length > 0
-              ? [{ concepto: 'Atendieron', valor: constancia.personasQueAtendieron.join(' · ') }]
-              : []),
-          ],
-        ),
-      );
-    }
-
-    return { titulo: 'Seguimiento', filtros, hojas };
-  }
-
-  const sinEntregar = filasVisibles.filter((f) => f.solicitud.estado !== 'ENTREGADA').length;
-  const escalados = filasVisibles.filter((f) => f.plan?.esEscalamiento).length;
-  const agotados = filasVisibles.filter(
-    (f) => f.solicitud.estado !== 'ENTREGADA' && f.plan === null,
-  ).length;
-  const nuncaRespondieron = filasVisibles.filter(
-    (f) => f.solicitud.estado !== 'ENTREGADA' && !f.respondioAlgunaVez,
-  ).length;
-
-  if (cargando) {
-    return (
-      <div className="flex items-center justify-center py-24">
-        <p className="text-sm text-tinta-tenue">Cargando…</p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center py-24">
-        <p className="text-sm text-critico">{error}</p>
-      </div>
-    );
-  }
+  const clientesProps = {
+    ...(clienteInicial !== undefined ? { clienteInicial } : {}),
+    ...(colaboradorInicial !== undefined ? { colaboradorInicial } : {}),
+  };
 
   return (
     <main className="mx-auto max-w-[86rem] space-y-5 px-5 py-6">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <h1 className="text-lg font-semibold">Seguimiento al cliente</h1>
-          <p className="mt-1 max-w-2xl text-sm text-tinta-suave">
-            Quién no entregó, qué se le reclamó y con qué respaldo. Los recordatorios salen solos
-            según la regla configurada; cada intento queda registrado para poder demostrarlo después.
-          </p>
-          <div className="mt-3 flex flex-wrap items-end gap-3">
-            <FiltroDeColaboradorSelector id="filtroDeColaboradorSeguimiento" filtro={colaborador} />
-            <FiltroDeClienteSelector
-              id="filtroDeClienteSeguimiento"
-              clientes={clientes}
-              valor={filtroDeCliente}
-              onCambiar={cambiarFiltroDeCliente}
-              cartera={colaborador.cartera}
-            />
-            <BotonDescargarExcel reporte={reporte} detalleDelNombre={nombreDelClienteFiltrado(filtroDeCliente, clientes)} />
-          </div>
-        </div>
-        <div className="flex flex-col items-end gap-2">
-          <FiltroDeFechasSelector id="filtroSeguimiento" valor={filtro} onCambiar={setFiltro} />
-          <PeriodosDelRango periodos={periodos} periodo={periodoActivo} onElegir={elegirPeriodo} />
-          <Badge tono="proceso" conIcono={false}>{formatearPeriodo(periodoActivo)}</Badge>
-          {/*
-            Acá había tres botones más —"Reglas de aviso", "Exportar" y "PDF"—
-            que no hacían nada al hacer clic. Se sacaron el 2026-09-11 en vez de
-            dejarlos: un botón que no responde hace dudar de todo lo demás de la
-            pantalla, incluso de lo que sí funciona. Vuelven cuando tengan su
-            función escrita. («Exportar» volvió el 2026-10-02 como «Descargar
-            Excel», junto al filtro de cliente, con la función ya escrita.)
-          */}
-        </div>
+      <div
+        role="tablist"
+        aria-label="Seguimiento"
+        className="flex gap-1 border-b border-borde"
+        onKeyDown={alTeclear}
+      >
+        {PESTANAS.map((p) => {
+          const activa = p.id === pestana;
+          return (
+            <button
+              key={p.id}
+              ref={(nodo) => {
+                botones.current[p.id] = nodo;
+              }}
+              type="button"
+              role="tab"
+              id={`pestana-seguimiento-${p.id}`}
+              aria-selected={activa}
+              aria-controls={`panel-seguimiento-${p.id}`}
+              tabIndex={activa ? 0 : -1}
+              onClick={() => elegir(p.id)}
+              className={`-mb-px border-b-2 px-4 py-2 text-sm font-medium transition-colors focus-visible:outline-none ${
+                activa
+                  ? 'border-marca-600 text-tinta'
+                  : 'border-transparent text-tinta-tenue hover:text-tinta'
+              }`}
+            >
+              {p.texto}
+            </button>
+          );
+        })}
       </div>
 
-        <section
-          className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4"
-          aria-label="Resumen del período"
-        >
-          <Indicador
-            etiqueta="Sin entregar"
-            valor={sinEntregar}
-            detalle={`de ${filasVisibles.length} ${filasVisibles.length === 1 ? 'cliente' : 'clientes'} del piloto`}
-            tono="critico"
+      <div
+        role="tabpanel"
+        id={`panel-seguimiento-${pestana}`}
+        aria-labelledby={`pestana-seguimiento-${pestana}`}
+      >
+        {pestana === 'pendientes' && (
+          <Pendientes
+            alAbrirPedido={(id) => {
+              setPestana('equipo');
+              setPedidoAAbrir(id);
+            }}
           />
-          <Indicador
-            etiqueta="Escalados a dirección"
-            valor={escalados}
-            detalle={regla ? `desde el recordatorio ${regla.escalarAPartirDelRecordatorio}` : '—'}
-            tono="parcial"
-          />
-          <Indicador
-            etiqueta="Nunca respondieron"
-            valor={nuncaRespondieron}
-            detalle="ningún contacto contestado"
-            tono="critico"
-            destacado={nuncaRespondieron > 0}
-          />
-          <Indicador
-            etiqueta="Recordatorios agotados"
-            valor={agotados}
-            detalle="requieren decisión comercial"
-            tono="pendiente"
-          />
-        </section>
-
-        <Tarjeta>
-          <EncabezadoTarjeta
-            titulo="Estado de entrega por cliente"
-            descripcion={`${
-              regla
-                ? `Plazo: ${regla.diasHabilesDePlazo}º día hábil · Aviso ${regla.horaDeEnvio} · Insiste cada ${regla.reintentarCadaDiasHabiles} días hábiles`
-                : 'Sin regla de "Entrega de documentación" configurada todavía.'
-            }${sufijoDeColaborador(colaborador)}${filtroDeCliente === TODOS_LOS_CLIENTES ? '' : ` · cliente: ${nombreDelClienteFiltrado(filtroDeCliente, clientes)}`}`}
-          />
-          <Tabla etiqueta="Estado de entrega de documentación por cliente">
-            <thead>
-              <tr>
-                <Th>Cliente</Th>
-                <Th>Estado</Th>
-                <Th>Venció</Th>
-                <Th numerica>Avisos</Th>
-                <Th>Último contacto</Th>
-                <Th numerica>Días sin respuesta</Th>
-                <Th>Próxima acción</Th>
-              </tr>
-            </thead>
-            <tbody>
-              {filasVisibles.map((fila) => {
-                const estado = ETIQUETA_ESTADO[fila.solicitud.estado];
-                const seleccionada = fila.solicitud.clienteId === clienteSeleccionado;
-
-                return (
-                  <tr
-                    key={fila.solicitud.id}
-                    onClick={() => setClienteSeleccionado(fila.solicitud.clienteId)}
-                    className={`cursor-pointer transition-colors hover:bg-superficie-tenue ${
-                      seleccionada ? 'bg-superficie-tenue' : ''
-                    }`}
-                  >
-                    <Td className="font-medium">{fila.cliente?.nombre ?? fila.solicitud.clienteId}</Td>
-                    <Td><Badge tono={estado.tono}>{estado.texto}</Badge></Td>
-                    <Td className="text-tinta-suave">{fila.limite}</Td>
-                    <Td numerica>{fila.solicitud.recordatoriosEnviados}</Td>
-                    <Td className="text-tinta-suave">{ultimoContactoEnTexto(fila)}</Td>
-                    <Td
-                      numerica
-                      className={
-                        fila.diasSinContacto !== null && fila.diasSinContacto > 3
-                          ? 'font-semibold text-critico'
-                          : ''
-                      }
-                    >
-                      {fila.diasSinContacto ?? '—'}
-                    </Td>
-                    <Td className="text-tinta-suave">
-                      {fila.solicitud.estado === 'ENTREGADA' ? (
-                        <span className="text-completo">Nada pendiente</span>
-                      ) : fila.plan ? (
-                        <span className="inline-flex items-center gap-1.5">
-                          <CalendarClock size={14} aria-hidden="true" />
-                          Aviso {fila.plan.numeroDeRecordatorio} el {fechaCivilAIso(fila.plan.fecha)}
-                          {fila.plan.esEscalamiento && (
-                            <span className="inline-flex items-center gap-0.5 text-parcial">
-                              <ArrowUpRight size={13} aria-hidden="true" />
-                              con dirección
-                            </span>
-                          )}
-                        </span>
-                      ) : (
-                        <span className="text-critico">Avisos agotados — decidir</span>
-                      )}
-                    </Td>
-                  </tr>
-                );
-              })}
-              {filas.length > 0 && filasVisibles.length === 0 && (
-                <tr>
-                  <td colSpan={7} className="px-4 py-8 text-center text-sm text-tinta-tenue">
-                    Este cliente no tiene el seguimiento abierto para este período.
-                  </td>
-                </tr>
-              )}
-              {filas.length === 0 && (
-                <tr>
-                  <td colSpan={7} className="px-4 py-8 text-center text-sm text-tinta-tenue">
-                    <p>Todavía no se abrió el seguimiento de ningún cliente para este período.</p>
-                    <p className="mt-1 text-xs">
-                      El seguimiento de un período no se abre solo: marca desde cuándo corre el
-                      plazo para que cada cliente entregue su documentación.
-                    </p>
-                    {puedeAbrir && clientes.some((c) => c.activo) && (
-                      <div className="mt-3 flex justify-center">
-                        <Boton variante="primario" onClick={() => void abrirParaTodos()} disabled={abriendo}>
-                          {abriendo
-                            ? 'Abriendo…'
-                            : `Abrir el seguimiento de ${clientes.filter((c) => c.activo).length} clientes`}
-                        </Boton>
-                      </div>
-                    )}
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </Tabla>
-        </Tarjeta>
-
-        <div className="grid gap-5 lg:grid-cols-[1.25fr_1fr]">
-          <Tarjeta>
-            <EncabezadoTarjeta
-              titulo={`Bitácora de contactos — ${nombreCliente}`}
-              descripcion="Cada intento, con vía, fecha, quién lo hizo y si contestaron."
-              acciones={
-                clienteSeleccionado && (
-                  <Boton
-                    variante="primario"
-                    icono={Phone}
-                    onClick={() => {
-                      setFormulario({ ...CONTACTO_VACIO, fecha: fechaCivilAIso(hoyEnParaguay(new Date())) });
-                      setErrorAlta(null);
-                      setAltaAbierta(true);
-                    }}
-                  >
-                    Registrar contacto
-                  </Boton>
-                )
-              }
-            />
-            {altaAbierta && (
-              <form onSubmit={guardarContacto} className="space-y-4 border-b border-borde px-5 py-4">
-                {errorAlta && (
-                  <p className="rounded border border-critico-borde bg-critico-fondo px-3 py-2 text-sm text-critico">
-                    {errorAlta}
-                  </p>
-                )}
-                <div className="grid gap-4 sm:grid-cols-2">
-                  <CampoSelect
-                    id="canalContacto"
-                    etiqueta="Vía"
-                    opciones={OPCIONES_CANAL}
-                    value={formulario.canal}
-                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                      setFormulario({ ...formulario, canal: e.target.value as Contacto['canal'] })
-                    }
-                  />
-                  <CampoSelect
-                    id="direccionContacto"
-                    etiqueta="Quién inició"
-                    opciones={OPCIONES_DIRECCION}
-                    value={formulario.direccion}
-                    onChange={(e: React.ChangeEvent<HTMLSelectElement>) =>
-                      setFormulario({ ...formulario, direccion: e.target.value as Contacto['direccion'] })
-                    }
-                  />
-                  <CampoTexto
-                    id="fechaContacto"
-                    etiqueta="Cuándo"
-                    type="date"
-                    required
-                    value={formulario.fecha}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setFormulario({ ...formulario, fecha: e.target.value })
-                    }
-                  />
-                  <CampoTexto
-                    id="quienAtendio"
-                    etiqueta="Quién atendió"
-                    placeholder="Nombre, o vacío si no atendió nadie"
-                    value={formulario.quienAtendio}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      setFormulario({ ...formulario, quienAtendio: e.target.value })
-                    }
-                  />
-                </div>
-
-                <label className="flex items-center gap-2 text-sm text-tinta-suave">
-                  <input
-                    type="checkbox"
-                    checked={formulario.huboRespuesta}
-                    onChange={(e) => setFormulario({ ...formulario, huboRespuesta: e.target.checked })}
-                  />
-                  Hubo respuesta del cliente
-                </label>
-
-                <div className="flex flex-col gap-1.5">
-                  <label htmlFor="resumenContacto" className="text-xs font-medium text-tinta-suave">
-                    Qué se habló
-                  </label>
-                  <textarea
-                    id="resumenContacto"
-                    rows={2}
-                    required
-                    value={formulario.resumen}
-                    onChange={(e) => setFormulario({ ...formulario, resumen: e.target.value })}
-                    className="rounded border border-borde-fuerte bg-superficie px-3 py-1.5 text-sm text-tinta focus-visible:outline-none"
-                  />
-                </div>
-
-                <div className="flex justify-end gap-2">
-                  <Boton
-                    variante="fantasma"
-                    type="button"
-                    onClick={() => setAltaAbierta(false)}
-                    disabled={guardando}
-                  >
-                    Cancelar
-                  </Boton>
-                  <Boton variante="primario" type="submit" disabled={guardando}>
-                    {guardando ? 'Guardando…' : 'Registrar contacto'}
-                  </Boton>
-                </div>
-              </form>
-            )}
-
-            <ol className="divide-y divide-borde">
-              {contactosDelCliente.map((contacto) => {
-                const Icono = ICONO_CANAL[contacto.canal];
-                return (
-                  <li key={contacto.id} className="flex gap-3 px-5 py-3.5">
-                    <span
-                      className={`mt-0.5 flex h-8 w-8 shrink-0 items-center justify-center rounded-full border ${
-                        contacto.huboRespuesta
-                          ? 'border-completo-borde bg-completo-fondo text-completo'
-                          : 'border-borde bg-superficie-hundida text-tinta-tenue'
-                      }`}
-                    >
-                      <Icono size={15} aria-hidden="true" />
-                    </span>
-                    <div className="min-w-0 flex-1">
-                      <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                        <span className="text-sm font-medium capitalize">
-                          {contacto.canal.toLowerCase()}
-                        </span>
-                        <span className="text-xs text-tinta-tenue">
-                          {formatearFechaHora(contacto.ocurridoEn)}
-                        </span>
-                        {contacto.origenContacto === 'AUTOMATICO' ? (
-                          <Badge tono="proceso" conIcono={false}>automático</Badge>
-                        ) : (
-                          <Badge tono="pendiente" conIcono={false}>manual</Badge>
-                        )}
-                        {contacto.huboRespuesta ? (
-                          <Badge tono="completo">respondió</Badge>
-                        ) : (
-                          <Badge tono="critico">sin respuesta</Badge>
-                        )}
-                      </div>
-                      <p className="mt-1 text-sm text-tinta-suave">{contacto.resumen}</p>
-                      <p className="mt-1 text-xs text-tinta-tenue">
-                        {contacto.quienAtendio
-                          ? `Atendió: ${contacto.quienAtendio}`
-                          : 'Nadie atendió'}
-                        {contacto.evidenciaId && ' · con evidencia adjunta'}
-                      </p>
-                    </div>
-                  </li>
-                );
-              })}
-              {contactosDelCliente.length === 0 && (
-                <li className="px-5 py-8 text-center text-sm text-tinta-tenue">
-                  Todavía no hay contactos registrados para este cliente.
-                </li>
-              )}
-            </ol>
-          </Tarjeta>
-
-          <Tarjeta className="self-start">
-            <EncabezadoTarjeta
-              titulo="Constancia de gestión"
-              descripcion="Lo que se le muestra al cliente que reclama."
-            />
-            {constancia ? (
-              <div className="space-y-4 px-5 py-4">
-                <p className="rounded border border-borde-marca bg-superficie-tenue px-3 py-2.5 text-sm text-tinta-suave">
-                  {constancia.sintesis}
-                </p>
-
-                <dl className="grid grid-cols-2 gap-3 text-sm">
-                  <div>
-                    <dt className="text-xs text-tinta-tenue">Intentos totales</dt>
-                    <dd className="cifra text-lg font-semibold">{constancia.totalDeContactos}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-xs text-tinta-tenue">Respuestas</dt>
-                    <dd className="cifra text-lg font-semibold">{constancia.vecesQueRespondieron}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-xs text-tinta-tenue">Avisos del sistema</dt>
-                    <dd className="cifra text-lg font-semibold">{constancia.contactosAutomaticos}</dd>
-                  </div>
-                  <div>
-                    <dt className="text-xs text-tinta-tenue">Gestiones a mano</dt>
-                    <dd className="cifra text-lg font-semibold">{constancia.contactosManuales}</dd>
-                  </div>
-                </dl>
-
-                <div>
-                  <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-tinta-tenue">
-                    Por vía
-                  </p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {Object.entries(constancia.contactosPorCanal)
-                      .filter(([, cantidad]) => cantidad > 0)
-                      .map(([canal, cantidad]) => (
-                        <Badge key={canal} tono="pendiente" conIcono={false}>
-                          {canal.toLowerCase()} · {cantidad}
-                        </Badge>
-                      ))}
-                  </div>
-                </div>
-
-                {constancia.personasQueAtendieron.length > 0 && (
-                  <div>
-                    <p className="mb-1 text-xs font-medium uppercase tracking-wide text-tinta-tenue">
-                      Atendieron
-                    </p>
-                    <p className="text-sm text-tinta-suave">
-                      {constancia.personasQueAtendieron.join(' · ')}
-                    </p>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <p className="px-5 py-8 text-center text-sm text-tinta-tenue">
-                Elegí un cliente de la tabla para ver su constancia.
-              </p>
-            )}
-          </Tarjeta>
-        </div>
+        )}
+        {pestana === 'clientes' && <SeguimientoDeClientes {...clientesProps} />}
+        {pestana === 'equipo' && <Equipo {...(pedidoAAbrir ? { pedidoInicial: pedidoAAbrir } : {})} />}
+      </div>
     </main>
   );
 }
