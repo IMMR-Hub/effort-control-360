@@ -1176,7 +1176,7 @@ se le va a reclamar a cinco clientes reales.
 
 ---
 
-## 20. Tolerancia de redondeo del proveedor en el IVA — CERRADO (2026-09-14)
+## 20. Tolerancia de redondeo del proveedor en el IVA — CERRADO (2026-09-14), CAMBIADO A ±20 Gs (2026-11-27)
 
 **Lo que estaba.** El análisis del libro marcaba como riesgo de multa cualquier
 diferencia entre el IVA declarado y la regla, aunque fuera de un guaraní: 65
@@ -1199,6 +1199,21 @@ se cierra sola cuando todos sus comprobantes con riesgo están aceptados.
 Por qué es mejor que la tolerancia: con una tolerancia el sistema decide qué no
 importa y nadie se entera de lo que calló; con decisiones, avisa de todo y
 decide una persona con nombre y motivo.
+
+**Cambio del 2026-11-27 (Lili, vía Daniel en el chat): tolerancia de ±20 Gs.**
+Con el sistema ya en uso, el Panel mostraba 562 alertas «Crítica» y unas 450
+eran del libro RG 90 por 1 o 2 guaraníes: redondeo de bancos y proveedores (el
+caso que preguntó Laura: ALISON BETTINA RAMIREZ, 4 facturas de Itaú y Ueno con
+1–2 Gs de diferencia). Tapaban las que importan. Lili confirmó: *«tolerancia
++/-20»*.
+
+Lo aplicado: `TOLERANCIA_DE_REDONDEO_DEL_PROVEEDOR = 20n`. Un comprobante es
+riesgo de multa si la diferencia en la dirección del fisco es **mayor que 20**
+(21 ya alerta; 20 no). **No se borró ningún hallazgo**: los de ≤20 Gs siguen en
+la base y se ven con «Ver todos los hallazgos»; solo dejan de contar como riesgo.
+Las alertas de períodos que quedan sin comprobantes con riesgo las cierra el
+motor en su siguiente vuelta («cerrada por el sistema»), no se borran. Para lo
+que pasa la tolerancia sigue valiendo lo de arriba: decide una persona.
 
 ---
 

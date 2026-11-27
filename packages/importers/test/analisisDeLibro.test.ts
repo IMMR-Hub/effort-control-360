@@ -139,9 +139,9 @@ describe('resumen de hallazgos', () => {
   it('separa lo que puede costar una multa de lo que solo cuesta plata', () => {
     const hallazgos = analizarLibro(
       [
-        fila({ gravado10: gs(1548000), iva10: gs(140739), total: gs(1548000) }),
+        fila({ gravado10: gs(1548000), iva10: gs(140760), total: gs(1548000) }),
         fila({ gravado10: gs(110000), iva10: gs(9999), total: gs(110000) }),
-        fila({ tipoRegistro: 'VENTAS', gravado10: gs(110000), iva10: gs(9993), total: gs(110000) }),
+        fila({ tipoRegistro: 'VENTAS', gravado10: gs(110000), iva10: gs(9970), total: gs(110000) }),
       ],
       DIVISORES,
     );
@@ -150,19 +150,24 @@ describe('resumen de hallazgos', () => {
 
     expect(resumen.conRiesgoDeMulta).toBe(2);
     expect(resumen.enContraDelCliente).toBe(1);
-    // 12 del crédito de más + 7 del débito de menos. No se compensan entre sí:
+    // 33 del crédito de más + 30 del débito de menos. No se compensan entre sí:
     // son dos problemas, no uno que anula al otro.
-    expect(resumen.ivaEnRiesgo).toBe(19n);
+    expect(resumen.ivaEnRiesgo).toBe(63n);
   });
 
   /*
-   * Daniel, 2026-09-14: "mejor alertar a partir de 1 guaraní, y que luego
-   * puedan aceptar o revisar". Reemplazó la tolerancia de 5 Gs que se había
-   * aplicado ese mismo día: el sistema avisa de todo y decide una persona.
+   * Lili, 2026-11-27: tolerancia de ±20 Gs. Reemplazó el «alertar desde 1
+   * guaraní» del 2026-09-14, que llenaba el Panel de alertas por redondeo.
    */
-  it('un solo guaraní en la dirección del fisco ya es riesgo', () => {
-    expect(esRiesgoDeMulta({ riesgo: 'CREDITO_DE_MAS', diferencia: 1n })).toBe(true);
-    expect(esRiesgoDeMulta({ riesgo: 'DEBITO_DE_MENOS', diferencia: -1n })).toBe(true);
+  it('hasta 20 guaraníes en la dirección del fisco no es riesgo', () => {
+    expect(esRiesgoDeMulta({ riesgo: 'CREDITO_DE_MAS', diferencia: 1n })).toBe(false);
+    expect(esRiesgoDeMulta({ riesgo: 'CREDITO_DE_MAS', diferencia: 20n })).toBe(false);
+    expect(esRiesgoDeMulta({ riesgo: 'DEBITO_DE_MENOS', diferencia: -20n })).toBe(false);
+  });
+
+  it('desde 21 guaraníes en la dirección del fisco ya es riesgo', () => {
+    expect(esRiesgoDeMulta({ riesgo: 'CREDITO_DE_MAS', diferencia: 21n })).toBe(true);
+    expect(esRiesgoDeMulta({ riesgo: 'DEBITO_DE_MENOS', diferencia: -21n })).toBe(true);
   });
 
   it('una diferencia de cero no es riesgo', () => {

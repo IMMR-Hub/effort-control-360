@@ -253,7 +253,8 @@ export async function registrarRutasDeLiquidacionesIva(
    * Una persona acepta un hallazgo o lo manda a revisar.
    *
    * Daniel, 2026-09-14: *"mejor alertar a partir de 1 guaraní, y que luego
-   * puedan aceptar o revisar"*. El sistema avisa de todo; decide una persona.
+   * puedan aceptar o revisar"*. Desde 2026-11-27 (Lili) avisa de lo que pasa
+   * los ±20 Gs de tolerancia; sobre eso decide una persona.
    *
    * **Aceptar exige motivo**, igual que cerrar una alerta: una aceptación sin
    * explicación no se distingue de un clic para sacarse el aviso de encima, y

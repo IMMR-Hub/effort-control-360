@@ -146,8 +146,9 @@ describeSiHayBase('libro RG 90 contra PostgreSQL real', () => {
     expect(filas).toBe(1);
   });
 
-  it('un guaraní de crédito de más alerta, y deja de alertar cuando alguien lo acepta con motivo', async () => {
-    await libro.guardarHallazgos([hallazgo({ diferencia: 1n, declarado: gs(140728) })]);
+  it('21 guaraníes de crédito de más alertan, y dejan de alertar cuando alguien lo acepta con motivo', async () => {
+    // Pasa la tolerancia de ±20 Gs (Lili, 2026-11-27).
+    await libro.guardarHallazgos([hallazgo({ diferencia: 21n, declarado: gs(140748) })]);
 
     const antes = await libro.riesgoPorPeriodo();
     expect(antes.find((r) => r.clienteId === clienteId)?.comprobantes).toBe(1);

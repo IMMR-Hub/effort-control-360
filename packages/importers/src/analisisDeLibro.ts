@@ -88,25 +88,29 @@ export interface HallazgoDeLibro {
 }
 
 /**
- * Diferencia de IVA que el sistema calla, en guaraníes. Es cero a propósito.
+ * Diferencia de IVA que el sistema calla, en guaraníes: hasta 20 Gs por
+ * comprobante, para arriba o para abajo, no es riesgo de multa.
  *
- * Tuvo dos valores el mismo día, y conviene que quede la historia:
+ * Tuvo tres valores, y conviene que quede la historia (DISCREPANCIAS 20):
  *
  *  1. Lili y Laura, 2026-09-14: *"5 sigue siendo aceptable, diría que 10 ya se
  *     revisará"*. Se aplicó 5, y los comprobantes con riesgo bajaron de 65 a 2.
  *  2. Daniel, horas después: *"mejor alertar a partir de 1 guaraní a partir de
- *     ahora, y que luego puedan aceptar o revisar"*.
+ *     ahora, y que luego puedan aceptar o revisar"*. Quedó en 0.
+ *  3. Lili, 2026-11-27, con el sistema ya en uso: tolerancia de **±20 Gs**. Con
+ *     cero, el Panel se llenó de alertas «Crítica» por 1 o 2 guaraníes de
+ *     redondeo de bancos y proveedores (unas 450 de 562), que tapaban las que
+ *     importan.
  *
- * La segunda es mejor por una razón de fondo: con una tolerancia, **el sistema
- * decide** qué diferencia no importa, y nadie se entera de lo que calló. Con
- * cero, avisa de todo y **decide una persona**, con nombre y motivo, sobre cada
- * comprobante (`estado` del hallazgo: PENDIENTE, EN_REVISION, ACEPTADO). El
- * ruido se resuelve aceptando, no silenciando.
+ * Lo que se aprendió de la 2 sigue valiendo para lo que pasa la tolerancia:
+ * avisa el sistema y **decide una persona**, con nombre y motivo, sobre cada
+ * comprobante (`estado` del hallazgo: PENDIENTE, EN_REVISION, ACEPTADO).
  *
- * Se deja la constante —en vez de borrarla— porque el día que EFFORT quiera
- * volver a tolerar algo, este es el único lugar donde se cambia.
+ * Lo que queda dentro de la tolerancia **no se borra**: el hallazgo sigue
+ * guardado y se ve al pedir todos; solo deja de contar como riesgo. Por eso
+ * cambiar este número es reversible y no toca la base.
  */
-export const TOLERANCIA_DE_REDONDEO_DEL_PROVEEDOR = 0n;
+export const TOLERANCIA_DE_REDONDEO_DEL_PROVEEDOR = 20n;
 
 /**
  * Si un hallazgo puede terminar en multa: la dirección es la del fisco y la

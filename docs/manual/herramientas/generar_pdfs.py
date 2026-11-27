@@ -523,7 +523,7 @@ def manual():
             "(declarado DNIT)», que sale en rojo si no coincide con el cálculo.",
         ],
         ["Dirección: «Recalcular desde los libros» y decidir cada diferencia («Aceptar» con motivo, o «Revisar»)."],
-        "Toda diferencia de IVA levanta un aviso, aunque sea de un guaraní: puede derivar en una multa.")
+        "Toda diferencia de IVA de más de 20 guaraníes levanta un aviso: puede derivar en una multa. Hasta 20 se toma como redondeo del proveedor.")
 
     seccion_pantalla(h, "Alertas", "p11-alertas.png",
         "Todos los avisos abiertos que levantó el sistema, en un solo lugar y ordenados por criticidad.",

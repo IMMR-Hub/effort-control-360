@@ -377,7 +377,7 @@ export default function LiquidacionIva() {
       <Tarjeta>
         <EncabezadoTarjeta
           titulo="Qué revisar antes de presentar"
-          descripcion="Toda diferencia de IVA alerta, aunque sea de un guaraní. Cada una se acepta con motivo o se manda a revisar."
+          descripcion="Alerta toda diferencia de IVA de más de 20 guaraníes (hasta 20 es redondeo del proveedor). Cada una se acepta con motivo o se manda a revisar."
           acciones={
             <Boton variante="secundario" onClick={() => setSoloRiesgo(!soloRiesgo)}>
               {soloRiesgo ? 'Ver todos los hallazgos' : 'Ver solo los de riesgo'}
