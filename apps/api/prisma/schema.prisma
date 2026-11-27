@@ -94,6 +94,11 @@ model Usuario {
   contactosRegistrados RegistroContacto[]
   registrosDeHoras     RegistroDeHoras[]
 
+  pedidosSolicitados       PedidoDelEquipo[] @relation("PedidoSolicitante")
+  pedidosCreados           PedidoDelEquipo[] @relation("PedidoCreadoPor")
+  mensajesDePedidoAutor    MensajeDePedido[] @relation("MensajeAutor")
+  mensajesDePedidoCargados MensajeDePedido[] @relation("MensajeRegistradoPor")
+
   @@index([email])
   @@index([activo, rol])
   @@map("usuario")
@@ -180,21 +185,22 @@ model Cliente {
   actualizadoPorUsuarioId String?  @map("actualizado_por_usuario_id") @db.Uuid
   origen                  Origen   @default(REAL)
 
-  asignaciones      AsignacionCliente[]
-  obligaciones      ObligacionDeCliente[]
-  documentos        Documento[]
-  procesosMensuales ProcesoMensual[]
-  vencimientos      Vencimiento[]
-  contactos         RegistroContacto[]
-  solicitudes       SolicitudDocumentacion[]
-  balances          Balance[]
-  exportacionesSiga ExportacionSiga[]
-  liquidaciones     Liquidacion[]
-  liquidacionesIva  LiquidacionIvaRg90[]
-  hallazgosDeLibro  HallazgoDeLibroRg90[]
-  archivosDeOrigen  ArchivoDeOrigen[]
+  asignaciones          AsignacionCliente[]
+  obligaciones          ObligacionDeCliente[]
+  documentos            Documento[]
+  procesosMensuales     ProcesoMensual[]
+  vencimientos          Vencimiento[]
+  contactos             RegistroContacto[]
+  solicitudes           SolicitudDocumentacion[]
+  balances              Balance[]
+  exportacionesSiga     ExportacionSiga[]
+  liquidaciones         Liquidacion[]
+  liquidacionesIva      LiquidacionIvaRg90[]
+  hallazgosDeLibro      HallazgoDeLibroRg90[]
+  archivosDeOrigen      ArchivoDeOrigen[]
   lecturasDeDeclaracion LecturaDeDeclaracion[]
-  registrosDeHoras RegistroDeHoras[]
+  registrosDeHoras      RegistroDeHoras[]
+  pedidosDelEquipo      PedidoDelEquipo[]
 
   @@index([activo])
   @@map("cliente")
@@ -306,8 +312,8 @@ model Evidencia {
   creadoEn DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
   origen   Origen   @default(REAL)
 
-  documentos       Documento[]
-  archivosDeOrigen ArchivoDeOrigen[]
+  documentos           Documento[]
+  archivosDeOrigen     ArchivoDeOrigen[]
   lecturaDeDeclaracion LecturaDeDeclaracion?
 
   @@index([clienteId, periodo])
@@ -653,6 +659,12 @@ model SolicitudDocumentacion {
   clienteId String          @map("cliente_id") @db.Uuid
   periodo   String          @db.VarChar(7)
   estado    EstadoSolicitud @default(ABIERTA)
+
+  /// Prioridad y recordatorio visual, para que una sola regla de orden sirva
+  /// a las solicitudes a clientes y a los pedidos del equipo. `recordarEl`
+  /// nunca dispara un envío (REGLA 0-bis).
+  prioridad  Prioridad @default(MEDIA)
+  recordarEl DateTime? @map("recordar_el") @db.Date
 
   cuentaDesde           DateTime  @map("cuenta_desde") @db.Date
   recordatoriosEnviados Int       @default(0) @map("recordatorios_enviados")
@@ -1239,4 +1251,84 @@ model RegistroDeHoras {
   @@index([clienteId, fecha])
   @@index([usuarioId, fecha])
   @@map("registro_de_horas")
+}
+
+enum Prioridad {
+  BAJA
+  MEDIA
+  ALTA
+  CRITICA
+}
+
+enum EstadoPedido {
+  ABIERTO
+  EN_CURSO
+  RESUELTO
+  CANCELADO
+}
+
+/// Pedido de un colaborador a dirección (Seguimiento). Nunca se borra: se
+/// resuelve o se cancela con motivo. El texto vive en `MensajeDePedido`.
+model PedidoDelEquipo {
+  id                     String   @id @default(uuid()) @db.Uuid
+  solicitanteUsuarioId   String   @map("solicitante_usuario_id") @db.Uuid
+  /// Ids de usuarios de dirección a quienes va dirigido. Lista, no relación:
+  /// se guarda lo que se eligió al crear el pedido.
+  destinatarioUsuarioIds String[] @map("destinatario_usuario_ids") @db.Uuid
+  clienteId              String?  @map("cliente_id") @db.Uuid
+
+  asunto    String       @db.VarChar(200)
+  prioridad Prioridad    @default(MEDIA)
+  estado    EstadoPedido @default(ABIERTO)
+
+  /// Solo una marca visual, sin hora, en America/Asuncion. Nunca dispara un
+  /// envío (REGLA 0-bis).
+  recordarEl          DateTime? @map("recordar_el") @db.Date
+  motivoDeCancelacion String?   @map("motivo_de_cancelacion") @db.VarChar(500)
+
+  derivadoASoporte   Boolean   @default(false) @map("derivado_a_soporte")
+  derivadoASoporteEn DateTime? @map("derivado_a_soporte_en") @db.Timestamptz(3)
+
+  creadoPorUsuarioId      String   @map("creado_por_usuario_id") @db.Uuid
+  creadoEn                DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  actualizadoEn           DateTime @updatedAt @map("actualizado_en") @db.Timestamptz(3)
+  actualizadoPorUsuarioId String?  @map("actualizado_por_usuario_id") @db.Uuid
+  origen                  Origen   @default(REAL)
+
+  solicitante Usuario           @relation("PedidoSolicitante", fields: [solicitanteUsuarioId], references: [id])
+  creadoPor   Usuario           @relation("PedidoCreadoPor", fields: [creadoPorUsuarioId], references: [id])
+  cliente     Cliente?          @relation(fields: [clienteId], references: [id])
+  mensajes    MensajeDePedido[]
+
+  @@index([estado, prioridad])
+  @@index([solicitanteUsuarioId])
+  @@map("pedido_del_equipo")
+}
+
+/// Mensaje de un pedido: solo se agrega. Se corrige con un mensaje nuevo
+/// (`corregidoPorId`), igual que `RegistroContacto`.
+model MensajeDePedido {
+  id                     String        @id @default(uuid()) @db.Uuid
+  pedidoId               String        @map("pedido_id") @db.Uuid
+  autorUsuarioId         String        @map("autor_usuario_id") @db.Uuid
+  canal                  CanalContacto
+  ocurridoEn             DateTime      @map("ocurrido_en") @db.Timestamptz(3)
+  texto                  String        @db.VarChar(4000)
+  /// Las notas internas solo las ve dirección; se filtran en el repositorio.
+  notaInterna            Boolean       @default(false) @map("nota_interna")
+  registradoPorUsuarioId String        @map("registrado_por_usuario_id") @db.Uuid
+
+  /// Mensaje que corrige a este. Única columna que admite UPDATE, y solo de
+  /// NULL a un valor (disparador en la migración).
+  corregidoPorId String? @unique @map("corregido_por_id") @db.Uuid
+
+  creadoEn DateTime @default(now()) @map("creado_en") @db.Timestamptz(3)
+  origen   Origen   @default(REAL)
+
+  pedido        PedidoDelEquipo @relation(fields: [pedidoId], references: [id])
+  autor         Usuario         @relation("MensajeAutor", fields: [autorUsuarioId], references: [id])
+  registradoPor Usuario         @relation("MensajeRegistradoPor", fields: [registradoPorUsuarioId], references: [id])
+
+  @@index([pedidoId, ocurridoEn])
+  @@map("mensaje_de_pedido")
 }

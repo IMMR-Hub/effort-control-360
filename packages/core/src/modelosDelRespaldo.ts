@@ -53,6 +53,8 @@ export const MODELOS_DEL_RESPALDO = [
   // interno). Es un dato que solo una persona puede volver a cargar, y no se
   // puede reconstruir desde ningún otro lado: las horas se autoreportan.
   'registroDeHoras',
+  'pedidoDelEquipo',
+  'mensajeDePedido',
   'envioNotificacion',
   'eventLog',
 ] as const;
