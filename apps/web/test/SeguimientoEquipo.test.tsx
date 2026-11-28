@@ -48,6 +48,7 @@ function unPedido(datos: Record<string, unknown> = {}) {
     solicitanteUsuarioId: 'u-ana',
     destinatarioUsuarioIds: ['u-laura'],
     clienteId: null,
+    clienteNombre: null,
     asunto: 'No me aparece el cliente nuevo',
     prioridad: 'MEDIA',
     estado: 'ABIERTO',
@@ -140,14 +141,15 @@ function bandeja(items: readonly unknown[]) {
 async function montar({
   rol = 'direccion',
   pestana,
-}: { rol?: string; pestana?: 'pendientes' | 'clientes' | 'equipo' } = {}) {
+  clientes = [],
+}: { rol?: string; pestana?: 'pendientes' | 'clientes' | 'equipo'; clientes?: readonly unknown[] } = {}) {
   const usuarioId = rol === 'direccion' ? 'u-laura' : 'u-ana';
   mock.mockDeRuta('GET /api/v1/yo', () =>
     respuestaJson({ usuarioId, rol, veTodosLosClientes: rol === 'direccion', cantidadDeClientesAsignados: 0 }),
   );
   mock.mockDeRuta('GET /api/v1/csrf', () => respuestaJson({ csrfToken: 'token-de-prueba' }));
   mock.mockDeRuta('GET /api/v1/usuarios', () => respuestaJson({ usuarios: [LAURA, LILI, ANA, BEA] }));
-  mock.mockDeRuta('GET /api/v1/clientes', () => respuestaJson({ clientes: [] }));
+  mock.mockDeRuta('GET /api/v1/clientes', () => respuestaJson({ clientes }));
 
   vi.resetModules();
   const { ProveedorDeSesion } = await import('../src/contexts/SesionContext.js');
@@ -674,5 +676,139 @@ describe('ajustes de la revisión final', () => {
 
     expect(await screen.findByRole('button', { name: 'Agregar mensaje' })).toBeVisible();
     expect(screen.getByRole('button', { name: 'Corregir' })).toBeVisible();
+  });
+});
+
+describe('quitar recordatorio, corregir datos y nombre del cliente (2026-11-27)', () => {
+  it('«Quitar recordatorio» solo aparece con fecha y manda recordarEl:null (pedido y solicitud)', async () => {
+    mock.mockDeRuta('GET /api/v1/seguimiento/pendientes', () =>
+      bandeja([
+        unItem({ recordarEl: '2099-12-31' }),
+        unItem({ id: 'p2', titulo: 'Sin fecha' }),
+        unItem({
+          tipo: 'CLIENTE',
+          id: 'sol-1',
+          estado: 'ABIERTA',
+          titulo: 'Documentación 2026-11',
+          deQuien: 'GARSO S.A.',
+          clienteId: 'cli-garso',
+          periodo: '2026-11',
+          recordarEl: '2099-11-30',
+        }),
+      ]),
+    );
+    mock.mockDeRuta('PATCH /api/v1/seguimiento/pedidos-equipo/p1', () => respuestaJson({ pedido: unPedido() }));
+    mock.mockDeRuta('PATCH /api/v1/seguimiento/solicitudes/sol-1/prioridad', () => respuestaJson({ solicitud: {} }));
+    await montar();
+    await screen.findByText('No me aparece el cliente nuevo');
+
+    const sinFecha = filaDe('Sin fecha');
+    await usuario.click(within(sinFecha).getByRole('button', { name: 'Reagendar' }));
+    expect(within(sinFecha).queryByRole('button', { name: 'Quitar recordatorio' })).not.toBeInTheDocument();
+
+    const fila = filaDe('No me aparece el cliente nuevo');
+    await usuario.click(within(fila).getByRole('button', { name: 'Reagendar' }));
+    await usuario.click(within(fila).getByRole('button', { name: 'Quitar recordatorio' }));
+    await waitFor(() => expect(mock.llamadasA('PATCH /api/v1/seguimiento/pedidos-equipo/p1')).toHaveLength(1));
+    expect(cuerpoDe('PATCH /api/v1/seguimiento/pedidos-equipo/p1')).toEqual({ accion: 'reagendar', recordarEl: null });
+
+    const filaSol = filaDe('Documentación 2026-11');
+    await usuario.click(within(filaSol).getByRole('button', { name: 'Reagendar' }));
+    await usuario.click(within(filaSol).getByRole('button', { name: 'Quitar recordatorio' }));
+    await waitFor(() => expect(mock.llamadasA('PATCH /api/v1/seguimiento/solicitudes/sol-1/prioridad')).toHaveLength(1));
+    expect(cuerpoDe('PATCH /api/v1/seguimiento/solicitudes/sol-1/prioridad')).toEqual({ recordarEl: null });
+  });
+
+  async function abrirDetalle(pedido: Record<string, unknown>, opciones: { rol?: string } = {}) {
+    mock.mockDeRuta('GET /api/v1/seguimiento/pedidos-equipo', () => respuestaJson({ pedidos: [pedido] }));
+    mock.mockDeRuta('GET /api/v1/seguimiento/pedidos-equipo/p1', () =>
+      respuestaJson({ pedido, mensajes: [unMensaje()] }),
+    );
+    await montar({
+      ...opciones,
+      pestana: 'equipo',
+      clientes: [{ id: 'cli-garso', codigo: '012', nombre: 'GARSO S.A.', ruc: '80017726-6', activo: true }],
+    });
+    await usuario.click(await screen.findByRole('button', { name: pedido.asunto as string }));
+  }
+
+  it('el detalle muestra clienteNombre aunque la lista de clientes no lo traiga', async () => {
+    const pedido = unPedido({ clienteId: 'cli-otro', clienteNombre: 'INACTIVA S.A.' });
+    await abrirDetalle(pedido, { rol: 'responsable' });
+    expect(await screen.findByText(/cliente: INACTIVA S\.A\./)).toBeVisible();
+  });
+
+  it('«Corregir datos» manda solo lo que cambió, bloquea mientras envía y recarga del servidor', async () => {
+    await abrirDetalle(unPedido());
+    await usuario.click(await screen.findByRole('button', { name: 'Corregir datos' }));
+    const form = screen.getByRole('form', { name: 'Corregir datos' });
+    const asunto = within(form).getByLabelText('Asunto');
+    await usuario.clear(asunto);
+    await usuario.type(asunto, '  Cliente nuevo no aparece  ');
+
+    // El PATCH queda colgado hasta que el test lo suelte; lo demás sigue por el mock de rutas.
+    let soltar: () => void = () => {};
+    const compuerta = new Promise<void>((resolver) => { soltar = resolver; });
+    const original = mock.fetchMock.getMockImplementation()!;
+    mock.fetchMock.mockImplementation((entrada: RequestInfo | URL, opciones?: RequestInit) =>
+      opciones?.method === 'PATCH'
+        ? compuerta.then(() => respuestaJson({ pedido: unPedido({ asunto: 'Cliente nuevo no aparece' }) }))
+        : original(entrada, opciones),
+    );
+    await usuario.click(within(form).getByRole('button', { name: 'Guardar datos' }));
+    expect(within(form).getByRole('button', { name: 'Guardando…' })).toBeDisabled();
+    expect(within(form).getByLabelText('Asunto')).toBeDisabled();
+
+    const versionesAntes = mock.llamadasA('GET /api/v1/seguimiento/pedidos-equipo/p1').length;
+    mock.mockDeRuta('GET /api/v1/seguimiento/pedidos-equipo/p1', () =>
+      respuestaJson({ pedido: unPedido({ asunto: 'Cliente nuevo no aparece' }), mensajes: [unMensaje()] }),
+    );
+    soltar();
+
+    await waitFor(() =>
+      expect(mock.llamadasA('GET /api/v1/seguimiento/pedidos-equipo/p1').length).toBeGreaterThan(versionesAntes),
+    );
+    const llamadas = mock.fetchMock.mock.calls.filter(([, o]) => (o as RequestInit | undefined)?.method === 'PATCH');
+    expect(JSON.parse(String((llamadas[0]?.[1] as RequestInit).body))).toEqual({
+      accion: 'corregir',
+      asunto: 'Cliente nuevo no aparece',
+    });
+    expect(await screen.findByRole('heading', { name: 'Cliente nuevo no aparece' })).toBeVisible();
+  });
+
+  it('«Corregir datos» cambia el cliente (incluido «Ninguno» → null) y muestra el error del servidor', async () => {
+    await abrirDetalle(unPedido({ clienteId: 'cli-garso', clienteNombre: 'GARSO S.A.' }));
+    await usuario.click(await screen.findByRole('button', { name: 'Corregir datos' }));
+    const form = screen.getByRole('form', { name: 'Corregir datos' });
+    await usuario.selectOptions(within(form).getByLabelText('Cliente relacionado'), 'Ninguno');
+
+    mock.mockDeRuta('PATCH /api/v1/seguimiento/pedidos-equipo/p1', () =>
+      respuestaJson({ error: 'cliente_invalido', mensaje: 'El cliente no existe.' }, { status: 400 }),
+    );
+    await usuario.click(within(form).getByRole('button', { name: 'Guardar datos' }));
+    expect(await screen.findByText('El cliente no existe.')).toBeVisible();
+    expect(cuerpoDe('PATCH /api/v1/seguimiento/pedidos-equipo/p1')).toEqual({ accion: 'corregir', clienteId: null });
+    expect(within(form).getByRole('button', { name: 'Guardar datos' })).toBeEnabled();
+  });
+
+  it('«Corregir datos» no deja guardar sin cambios ni con el asunto vacío', async () => {
+    await abrirDetalle(unPedido());
+    await usuario.click(await screen.findByRole('button', { name: 'Corregir datos' }));
+    const form = screen.getByRole('form', { name: 'Corregir datos' });
+    expect(within(form).getByRole('button', { name: 'Guardar datos' })).toBeDisabled();
+    await usuario.clear(within(form).getByLabelText('Asunto'));
+    expect(within(form).getByRole('button', { name: 'Guardar datos' })).toBeDisabled();
+  });
+
+  it('«Corregir datos» no se ofrece en un pedido cerrado', async () => {
+    await abrirDetalle(unPedido({ estado: 'RESUELTO' }));
+    await screen.findByRole('button', { name: 'Agregar mensaje' });
+    expect(screen.queryByRole('button', { name: 'Corregir datos' })).not.toBeInTheDocument();
+  });
+
+  it('«Corregir datos» no se ofrece a un responsable', async () => {
+    await abrirDetalle(unPedido(), { rol: 'responsable' });
+    await screen.findByText('Cargué el cliente ayer y no aparece en la lista.');
+    expect(screen.queryByRole('button', { name: 'Corregir datos' })).not.toBeInTheDocument();
   });
 });

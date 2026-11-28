@@ -223,11 +223,12 @@ export default function Pendientes({
                           id={item.id}
                           estado={item.estado as EstadoDePedido}
                           derivadoASoporte={item.derivadoASoporte}
+                          recordarEl={item.recordarEl}
                           destinatarios={destinatarios}
                           alCambiar={recargar}
                         />
                       ) : (
-                        <AccionesDeSolicitud id={item.id} prioridad={item.prioridad} alCambiar={recargar} />
+                        <AccionesDeSolicitud id={item.id} prioridad={item.prioridad} recordarEl={item.recordarEl} alCambiar={recargar} />
                       )}
                     </Td>
                   )}

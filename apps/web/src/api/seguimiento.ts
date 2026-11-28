@@ -21,6 +21,8 @@ export interface PedidoDelEquipo {
   readonly solicitanteUsuarioId: string;
   readonly destinatarioUsuarioIds: readonly string[];
   readonly clienteId: string | null;
+  /** Lo resuelve el servidor (incluye clientes inactivos); null si no hay cliente. */
+  readonly clienteNombre: string | null;
   readonly asunto: string;
   readonly prioridad: Prioridad;
   readonly estado: EstadoDePedido;

@@ -224,6 +224,7 @@ export default function Equipo({ pedidoInicial }: { readonly pedidoInicial?: str
                           id={pedido.id}
                           estado={pedido.estado}
                           derivadoASoporte={pedido.derivadoASoporte}
+                          recordarEl={pedido.recordarEl}
                           destinatariosActuales={pedido.destinatarioUsuarioIds}
                           destinatarios={destinatarios}
                           alCambiar={recargar}

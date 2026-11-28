@@ -11,7 +11,7 @@ import { randomUUID } from 'node:crypto';
 
 import type { FastifyInstance } from 'fastify';
 import { authenticator } from 'otplib';
-import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import type { SolicitudAlmacenada } from '../src/puertos-dominio.js';
 import { construirServidor, type Dependencias } from '../src/servidor.js';
@@ -70,6 +70,7 @@ const configuracion: Configuracion = {
 interface Contexto {
   app: FastifyInstance;
   bitacora: BitacoraFalsa;
+  clientes: ClientesFalsos;
   pedidos: PedidosDelEquipoFalsos;
   usuarios: UsuariosFalsos;
   solicitudes: SolicitudesFalsas;
@@ -128,7 +129,7 @@ async function montar(): Promise<Contexto> {
   await registrarRutasDeSeguimiento(app, deps);
   await app.ready();
   await activarCsrfEnInject(app);
-  return { app, bitacora, pedidos, usuarios, solicitudes };
+  return { app, bitacora, clientes, pedidos, usuarios, solicitudes };
 }
 
 async function acceder(ctx: Contexto, email: string): Promise<string> {
@@ -549,6 +550,68 @@ describe('pedidos del equipo', () => {
     expect(ctx.usuarios.usuarios.every((u) => u.activo || u.id === EX_DIRECCION)).toBe(true);
     expect(ctx.bitacora.accionesRegistradas().filter((a) => a === 'pedido_equipo.creado')).toHaveLength(1);
   });
+
+  it('quitar el recordatorio de un pedido (null) deja el evento con antes {recordarEl} y después null', async () => {
+    const pedido = await crearPedido({ recordarEl: '2026-12-01' });
+    const r = await patch(pedido.id, { accion: 'reagendar', recordarEl: null });
+    expect(r.statusCode).toBe(200);
+    expect(ctx.pedidos.pedidos[0]!.recordarEl).toBeNull();
+    const evento = ctx.bitacora.filas.filter((f) => f.accion === 'pedido_equipo.cambiado').at(-1);
+    expect(evento).toMatchObject({
+      datosAntes: { recordarEl: '2026-12-01' },
+      datosDespues: { recordarEl: null },
+    });
+  });
+
+  it('corregir asunto y cliente deja el evento con asunto y clienteId antes y después', async () => {
+    const pedido = await crearPedido({ asunto: 'Asunto viejo' });
+    const r = await patch(pedido.id, { accion: 'corregir', asunto: 'Asunto nuevo', clienteId: CLIENTE });
+    expect(r.statusCode).toBe(200);
+    const evento = ctx.bitacora.filas.filter((f) => f.accion === 'pedido_equipo.cambiado').at(-1);
+    expect(evento).toMatchObject({
+      datosAntes: { asunto: 'Asunto viejo', clienteId: null },
+      datosDespues: { asunto: 'Asunto nuevo', clienteId: CLIENTE },
+    });
+    const quitar = await patch(pedido.id, { accion: 'corregir', clienteId: null });
+    expect(quitar.statusCode).toBe(200);
+    expect(JSON.parse(quitar.body).pedido.clienteNombre).toBeNull();
+  });
+
+  it('corregir se rechaza (409) en un pedido cerrado', async () => {
+    const pedido = await crearPedido();
+    await patch(pedido.id, { accion: 'tildar' });
+    expect((await patch(pedido.id, { accion: 'corregir', asunto: 'Otro' })).statusCode).toBe(409);
+  });
+
+  it('clienteNombre sale en lista y detalle, resuelto en una sola consulta, aun con cliente inactivo; null sin cliente', async () => {
+    const INACTIVO = 'cccccccc-0000-4000-8000-000000000009';
+    ctx.clientes.clientes.push(clienteMinimo({ id: INACTIVO, codigo: '099', nombre: 'VIEJA S.A.', ruc: '80000001-1', activo: false }));
+    const a = await crearPedido({ clienteId: CLIENTE, asunto: 'A' });
+    const b = await crearPedido({ clienteId: INACTIVO, asunto: 'B' });
+    const c = await crearPedido({ clienteId: null, asunto: 'C' });
+
+    const espia = vi.spyOn(ctx.clientes, 'listar');
+    const buscar = vi.spyOn(ctx.clientes, 'buscarPorId');
+    const lista = await ctx.app.inject({ method: 'GET', url: `${BASE}/pedidos-equipo`, headers: { cookie: direccion } });
+    const pedidos = JSON.parse(lista.body).pedidos as { id: string; clienteNombre: string | null }[];
+    expect(pedidos.find((p) => p.id === a.id)!.clienteNombre).toBe('GARSO S.A.');
+    expect(pedidos.find((p) => p.id === b.id)!.clienteNombre).toBe('VIEJA S.A.');
+    expect(pedidos.find((p) => p.id === c.id)!.clienteNombre).toBeNull();
+    expect(espia.mock.calls.length + buscar.mock.calls.length).toBe(1);
+
+    const detalle = await ctx.app.inject({ method: 'GET', url: `${BASE}/pedidos-equipo/${b.id}`, headers: { cookie: direccion } });
+    expect(JSON.parse(detalle.body).pedido.clienteNombre).toBe('VIEJA S.A.');
+  });
+
+  it('un colaborador ve clienteNombre de su pedido aunque el cliente no esté en su cartera', async () => {
+    ctx.usuarios.usuarios.find((u) => u.id === ANA)!.veTodosLosClientes = false;
+    ctx.usuarios.asignaciones.set(ANA, []);
+    const anaRestringida = await acceder(ctx, 'ana@effort.com.py');
+    const pedido = await crearPedido({ clienteId: CLIENTE, solicitanteUsuarioId: ANA });
+    const detalle = await ctx.app.inject({ method: 'GET', url: `${BASE}/pedidos-equipo/${pedido.id}`, headers: { cookie: anaRestringida } });
+    expect(detalle.statusCode).toBe(200);
+    expect(JSON.parse(detalle.body).pedido.clienteNombre).toBe('GARSO S.A.');
+  });
 });
 
 
@@ -704,6 +767,17 @@ describe('bandeja de pendientes y prioridad de solicitudes', () => {
     expect(ctx.solicitudes.solicitudes[0]).toMatchObject({ prioridad: 'ALTA', recordarEl: '2026-12-01' });
     await ctx.app.inject({ method: 'PATCH', url, headers: { cookie: direccion }, payload: { recordarEl: null } });
     expect(ctx.solicitudes.solicitudes[0]).toMatchObject({ prioridad: 'ALTA', recordarEl: null });
+  });
+
+  it('quitar el recordatorio de una solicitud (null) deja el evento con antes {recordarEl} y después null', async () => {
+    const sol = sembrarSolicitud({ recordarEl: '2026-12-01' });
+    const r = await ctx.app.inject({
+      method: 'PATCH', url: `${BASE}/solicitudes/${sol.id}/prioridad`, headers: { cookie: direccion },
+      payload: { recordarEl: null },
+    });
+    expect(r.statusCode).toBe(200);
+    const evento = ctx.bitacora.filas.find((f) => f.accion === 'solicitud.prioridad_cambiada');
+    expect(evento).toMatchObject({ datosAntes: { recordarEl: '2026-12-01' }, datosDespues: { recordarEl: null } });
   });
 
   it('un responsable no puede cambiar la prioridad de una solicitud (403, aun con cuerpo inválido)', async () => {

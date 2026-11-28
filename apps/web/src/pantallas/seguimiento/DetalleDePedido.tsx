@@ -9,7 +9,7 @@
  */
 
 import { useEffect, useMemo, useState, type FormEvent } from 'react';
-import { MessageSquarePlus } from 'lucide-react';
+import { MessageSquarePlus, Pencil } from 'lucide-react';
 
 import { Badge, Boton, CampoSelect, CampoTexto, EncabezadoTarjeta, Tarjeta } from '../../ui/Primitivos.jsx';
 import type { Cliente } from '../../api/clientes.js';
@@ -36,6 +36,102 @@ import {
   mensajeDeError,
   nombreDeUsuario,
 } from './comun.js';
+
+/**
+ * «Corregir datos»: asunto y cliente de un pedido abierto. Manda solo lo que cambió
+ * y el cambio queda en el registro con el valor de antes y el de después.
+ */
+function FormularioDeCorreccion({
+  pedido,
+  clientes,
+  alCancelar,
+  alGuardar,
+}: {
+  readonly pedido: PedidoDelEquipo;
+  readonly clientes: readonly Cliente[];
+  readonly alCancelar: () => void;
+  readonly alGuardar: () => void | Promise<void>;
+}) {
+  const [asunto, setAsunto] = useState(pedido.asunto);
+  const [clienteId, setClienteId] = useState(pedido.clienteId ?? '');
+  const [guardando, setGuardando] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const opciones = useMemo(() => {
+    const activos = clientes.filter((c) => c.activo).map((c) => ({ valor: c.id, etiqueta: c.nombre }));
+    // El cliente actual siempre se ofrece, aunque esté inactivo o no esté en la lista cargada.
+    const actualFalta = pedido.clienteId !== null && !activos.some((o) => o.valor === pedido.clienteId);
+    return [
+      { valor: '', etiqueta: 'Ninguno' },
+      ...(actualFalta ? [{ valor: pedido.clienteId as string, etiqueta: pedido.clienteNombre ?? 'Cliente actual' }] : []),
+      ...activos,
+    ];
+  }, [clientes, pedido.clienteId, pedido.clienteNombre]);
+
+  const asuntoLimpio = asunto.trim();
+  const cambioAsunto = asuntoLimpio !== pedido.asunto;
+  const cambioCliente = clienteId !== (pedido.clienteId ?? '');
+  const valido = asuntoLimpio.length >= 1 && asuntoLimpio.length <= 200;
+
+  async function guardar(evento: FormEvent) {
+    evento.preventDefault();
+    if (!valido || (!cambioAsunto && !cambioCliente) || guardando) return;
+    setGuardando(true);
+    setError(null);
+    try {
+      await cambiarPedido(pedido.id, {
+        accion: 'corregir',
+        ...(cambioAsunto ? { asunto: asuntoLimpio } : {}),
+        ...(cambioCliente ? { clienteId: clienteId === '' ? null : clienteId } : {}),
+      });
+      await alGuardar();
+    } catch (motivo) {
+      setError(mensajeDeError(motivo));
+      setGuardando(false);
+    }
+  }
+
+  return (
+    <form
+      onSubmit={(e) => void guardar(e)}
+      className="space-y-4 border-b border-borde px-5 py-4"
+      aria-label="Corregir datos"
+    >
+      {error && (
+        <p role="alert" className="rounded border border-critico-borde bg-critico-fondo px-3 py-2 text-sm text-critico">
+          {error}
+        </p>
+      )}
+      <div className="grid gap-4 sm:grid-cols-2">
+        <CampoTexto
+          id="correccionAsunto"
+          etiqueta="Asunto"
+          maxLength={200}
+          required
+          disabled={guardando}
+          value={asunto}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAsunto(e.target.value)}
+        />
+        <CampoSelect
+          id="correccionCliente"
+          etiqueta="Cliente relacionado"
+          opciones={opciones}
+          disabled={guardando}
+          value={clienteId}
+          onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setClienteId(e.target.value)}
+        />
+      </div>
+      <div className="flex justify-end gap-2">
+        <Boton variante="fantasma" disabled={guardando} onClick={alCancelar}>
+          Descartar
+        </Boton>
+        <Boton variante="primario" type="submit" disabled={guardando || !valido || (!cambioAsunto && !cambioCliente)}>
+          {guardando ? 'Guardando…' : 'Guardar datos'}
+        </Boton>
+      </div>
+    </form>
+  );
+}
 
 /** `null` = mensaje nuevo; si no, el mensaje que se corrige. */
 type Edicion = { readonly corrige: MensajeDePedido | null } | null;
@@ -195,6 +291,7 @@ export function DetalleDePedido({
   const datos = carga?.pedidoId === pedidoId ? carga.datos : null;
   const error = carga?.pedidoId === pedidoId ? carga.error : null;
   const [edicion, setEdicion] = useState<Edicion>(null);
+  const [corrigiendoDatos, setCorrigiendoDatos] = useState(false);
   const [errorDeCambio, setErrorDeCambio] = useState<string | null>(null);
 
   useEffect(() => {
@@ -245,7 +342,7 @@ export function DetalleDePedido({
   const abierto = pedido.estado === 'ABIERTO' || pedido.estado === 'EN_CURSO';
   const estado = ETIQUETA_ESTADO_PEDIDO[pedido.estado];
   const prioridad = ETIQUETA_PRIORIDAD[pedido.prioridad];
-  const cliente = pedido.clienteId ? clientes.find((c) => c.id === pedido.clienteId)?.nombre : null;
+  const cliente = pedido.clienteNombre;
   const correcciones = new Set(mensajes.map((m) => m.corregidoPorId).filter((id): id is string => id !== null));
 
   async function cambiar(escribir: () => Promise<unknown>) {
@@ -269,9 +366,16 @@ export function DetalleDePedido({
         }`}
         acciones={
           puedeEscribir && (
-            <Boton variante="primario" icono={MessageSquarePlus} onClick={() => setEdicion({ corrige: null })}>
-              Agregar mensaje
-            </Boton>
+            <div className="flex flex-wrap gap-2">
+              {abierto && (
+                <Boton icono={Pencil} aria-expanded={corrigiendoDatos} onClick={() => setCorrigiendoDatos((v) => !v)}>
+                  Corregir datos
+                </Boton>
+              )}
+              <Boton variante="primario" icono={MessageSquarePlus} onClick={() => setEdicion({ corrige: null })}>
+                Agregar mensaje
+              </Boton>
+            </div>
           )
         }
       />
@@ -309,6 +413,19 @@ export function DetalleDePedido({
       )}
       {error && <p role="alert" className="border-b border-borde px-5 py-2 text-sm text-critico">{error}</p>}
       {errorDeCambio && <p className="border-b border-borde px-5 py-2 text-sm text-critico">{errorDeCambio}</p>}
+
+      {puedeEscribir && abierto && corrigiendoDatos && (
+        <FormularioDeCorreccion
+          key={pedido.id}
+          pedido={pedido}
+          clientes={clientes}
+          alCancelar={() => setCorrigiendoDatos(false)}
+          alGuardar={() => {
+            setCorrigiendoDatos(false);
+            alCambiar();
+          }}
+        />
+      )}
 
       {puedeEscribir && edicion && (
         <FormularioDeMensaje

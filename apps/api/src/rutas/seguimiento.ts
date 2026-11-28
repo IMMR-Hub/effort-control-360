@@ -204,12 +204,15 @@ function nombreDe(usuarios: MapaDeUsuarios, id: string): string {
   return usuario.activo ? completo : `${completo} (inactivo)`;
 }
 
-function pedidoASalida(pedido: PedidoAlmacenado, usuarios: MapaDeUsuarios) {
+type MapaDeClientes = ReadonlyMap<string, string>;
+
+function pedidoASalida(pedido: PedidoAlmacenado, usuarios: MapaDeUsuarios, clientes: MapaDeClientes) {
   return {
     ...pedido,
     derivadoASoporteEn: pedido.derivadoASoporteEn?.toISOString() ?? null,
     creadoEn: pedido.creadoEn.toISOString(),
     actualizadoEn: pedido.actualizadoEn.toISOString(),
+    clienteNombre: pedido.clienteId ? (clientes.get(pedido.clienteId) ?? null) : null,
     solicitanteNombre: nombreDe(usuarios, pedido.solicitanteUsuarioId),
     destinatarioNombres: pedido.destinatarioUsuarioIds.map((id) => nombreDe(usuarios, id)),
   };
@@ -243,6 +246,16 @@ interface ItemDeBandeja extends ItemPendiente {
 async function cargarUsuarios(deps: Dependencias): Promise<MapaDeUsuarios> {
   const usuarios = await deps.usuarios.listar();
   return new Map(usuarios.map((u) => [u.id, u]));
+}
+
+/**
+ * Nombres de cliente por id, en una sola consulta por petición. Incluye inactivos y no
+ * depende de la cartera de quien consulta: el pedido ya está autorizado y el nombre es
+ * lo único que se expone.
+ */
+async function cargarNombresDeClientes(deps: Dependencias): Promise<MapaDeClientes> {
+  const clientes = await deps.clientes.listar(null);
+  return new Map(clientes.map((c) => [c.id, c.nombre]));
 }
 
 /** El alcance sale de la sesión: nunca de un parámetro de la petición. */
@@ -321,16 +334,17 @@ export async function registrarRutasDeSeguimiento(
     // `colaborador` solo lo respeta dirección; para el resto se ignora.
     const colaborador = sujeto.rol === 'direccion' ? consulta.colaborador : undefined;
 
-    const [pedidos, usuarios] = await Promise.all([
+    const [pedidos, usuarios, nombresDeClientes] = await Promise.all([
       deps.pedidosDelEquipo.listar(alcanceDe(sujeto), estados ? { estados } : {}),
       cargarUsuarios(deps),
+      cargarNombresDeClientes(deps),
     ]);
 
     return {
       pedidos: pedidos
         .filter((p) => !consulta.prioridad || p.prioridad === consulta.prioridad)
         .filter((p) => !colaborador || p.solicitanteUsuarioId === colaborador)
-        .map((p) => pedidoASalida(p, usuarios)),
+        .map((p) => pedidoASalida(p, usuarios, nombresDeClientes)),
     };
   });
 
@@ -373,7 +387,7 @@ export async function registrarRutasDeSeguimiento(
       ...contexto(peticion),
     });
 
-    return respuesta.code(201).send({ pedido: pedidoASalida(pedido, usuarios) });
+    return respuesta.code(201).send({ pedido: pedidoASalida(pedido, usuarios, await cargarNombresDeClientes(deps)) });
   });
 
   app.get('/api/v1/seguimiento/pedidos-equipo/:id', async (peticion) => {
@@ -384,9 +398,9 @@ export async function registrarRutasDeSeguimiento(
     const encontrado = await deps.pedidosDelEquipo.buscar(id, alcanceDe(sujeto));
     if (!encontrado) throw noEncontrado();
 
-    const usuarios = await cargarUsuarios(deps);
+    const [usuarios, nombresDeClientes] = await Promise.all([cargarUsuarios(deps), cargarNombresDeClientes(deps)]);
     return {
-      pedido: pedidoASalida(encontrado.pedido, usuarios),
+      pedido: pedidoASalida(encontrado.pedido, usuarios, nombresDeClientes),
       mensajes: encontrado.mensajes.map((m) => mensajeASalida(m, usuarios)),
     };
   });
@@ -499,7 +513,7 @@ export async function registrarRutasDeSeguimiento(
       ...contexto(peticion),
     });
 
-    return { pedido: pedidoASalida(nuevo, usuarios) };
+    return { pedido: pedidoASalida(nuevo, usuarios, await cargarNombresDeClientes(deps)) };
   });
 
   /**
@@ -599,10 +613,11 @@ export async function registrarRutasDeSeguimiento(
   /** Lo derivado a soporte: solo dirección (por eso pide `editar`). */
   app.get('/api/v1/seguimiento/soporte', async (peticion) => {
     autorizar(peticion, 'pedido_equipo', 'editar');
-    const [pedidos, usuarios] = await Promise.all([
+    const [pedidos, usuarios, nombresDeClientes] = await Promise.all([
       deps.pedidosDelEquipo.listarDerivadosASoporte(),
       cargarUsuarios(deps),
+      cargarNombresDeClientes(deps),
     ]);
-    return { pedidos: pedidos.map((p) => pedidoASalida(p, usuarios)) };
+    return { pedidos: pedidos.map((p) => pedidoASalida(p, usuarios, nombresDeClientes)) };
   });
 }

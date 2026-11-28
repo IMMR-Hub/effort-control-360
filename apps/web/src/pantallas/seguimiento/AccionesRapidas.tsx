@@ -57,10 +57,13 @@ function MenuDeReagendar({
   idCampo,
   ocupado,
   alElegir,
+  alQuitar,
 }: {
   readonly idCampo: string;
   readonly ocupado: boolean;
   readonly alElegir: (fecha: string) => void;
+  /** Solo se pasa si hay una fecha que quitar: «Quitar» deja el recordatorio en null (el cambio queda en el registro). */
+  readonly alQuitar?: (() => void) | undefined;
 }) {
   const [eligiendo, setEligiendo] = useState(false);
   const [fecha, setFecha] = useState('');
@@ -80,6 +83,11 @@ function MenuDeReagendar({
         <Boton disabled={ocupado} onClick={() => setEligiendo(true)}>
           Elegir fecha
         </Boton>
+        {alQuitar && (
+          <Boton variante="fantasma" disabled={ocupado} onClick={alQuitar}>
+            Quitar recordatorio
+          </Boton>
+        )}
       </div>
       {eligiendo && (
         <div className="flex flex-wrap items-end gap-2">
@@ -118,6 +126,7 @@ export function AccionesDePedido({
   id,
   estado,
   derivadoASoporte = false,
+  recordarEl = null,
   destinatarios,
   destinatariosActuales = [],
   alCambiar,
@@ -125,6 +134,8 @@ export function AccionesDePedido({
   readonly id: string;
   readonly estado: EstadoDePedido;
   readonly derivadoASoporte?: boolean;
+  /** 'AAAA-MM-DD' o null: con fecha, el menú de reagendar ofrece «Quitar recordatorio». */
+  readonly recordarEl?: string | null;
   readonly destinatarios: readonly OpcionDeDestinatario[];
   /** Los «Para» actuales del pedido: «Derivar» los abre ya tildados. Sin dato, ninguno. */
   readonly destinatariosActuales?: readonly string[];
@@ -205,7 +216,8 @@ export function AccionesDePedido({
         <MenuDeReagendar
           idCampo={`${idCampo}-fecha`}
           ocupado={ocupado}
-          alElegir={(recordarEl) => void aplicar({ accion: 'reagendar', recordarEl })}
+          alElegir={(fecha) => void aplicar({ accion: 'reagendar', recordarEl: fecha })}
+          alQuitar={recordarEl ? () => void aplicar({ accion: 'reagendar', recordarEl: null }) : undefined}
         />
       )}
 
@@ -287,10 +299,13 @@ export function AccionesDePedido({
 export function AccionesDeSolicitud({
   id,
   prioridad,
+  recordarEl = null,
   alCambiar,
 }: {
   readonly id: string;
   readonly prioridad: Prioridad;
+  /** 'AAAA-MM-DD' o null: con fecha, el menú de reagendar ofrece «Quitar recordatorio». */
+  readonly recordarEl?: string | null;
   readonly alCambiar: () => void | Promise<void>;
 }) {
   const [panel, setPanel] = useState<Panel>(null);
@@ -322,8 +337,13 @@ export function AccionesDeSolicitud({
         <MenuDeReagendar
           idCampo={`solicitud-${id}-fecha`}
           ocupado={ocupado}
-          alElegir={(recordarEl) =>
-            void ejecutar(() => cambiarPrioridadDeSolicitud(id, { recordarEl })).then((ok) => ok && setPanel(null))
+          alElegir={(fecha) =>
+            void ejecutar(() => cambiarPrioridadDeSolicitud(id, { recordarEl: fecha })).then((ok) => ok && setPanel(null))
+          }
+          alQuitar={
+            recordarEl
+              ? () => void ejecutar(() => cambiarPrioridadDeSolicitud(id, { recordarEl: null })).then((ok) => ok && setPanel(null))
+              : undefined
           }
         />
       )}
