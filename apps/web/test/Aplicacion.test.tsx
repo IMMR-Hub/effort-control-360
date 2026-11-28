@@ -3,7 +3,7 @@
  * Acá se prueba que `pestana` llega a Seguimiento y que cambia de pestaña aunque la pantalla ya estuviera abierta.
  */
 
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { configure, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { crearFetchMock, respuestaJson } from './ayuda-fetch-mock.js';
@@ -37,6 +37,10 @@ vi.mock('../src/pantallas/Seguimiento.js', async () => {
 });
 
 let mock: ReturnType<typeof crearFetchMock>;
+
+// Cada caso importa la aplicación entera de nuevo (`vi.resetModules()`): con la máquina cargada eso pasa del
+// segundo de espera de `findBy`/`waitFor` y de los 5 s por test. Más margen, mismas aserciones.
+configure({ asyncUtilTimeout: 15_000 });
 
 beforeEach(() => {
   mock = crearFetchMock();
@@ -76,7 +80,7 @@ async function montarAplicacion() {
   await screen.findByText('Panel general');
 }
 
-describe('navegación del Panel a Seguimiento', () => {
+describe('navegación del Panel a Seguimiento', { timeout: 40_000 }, () => {
   it('«Documentación pendiente» abre Seguimiento en la pestaña Clientes', async () => {
     await montarAplicacion();
 
