@@ -346,7 +346,8 @@ def manual():
          "usuarios, reglas. Es el único rol que hace cambios."],
         ["<b>Responsable</b> (Analía, Ara, Ari, Sandra, Bea, Pedro)", "Solo los clientes de su cartera.",
          "Solo dos cosas: cargar <b>sus propias horas</b> y apretar <b>«Actualizar ahora»</b> (en Faltantes), que "
-         "trae lo nuevo de OneDrive y recalcula. Todo lo demás es de lectura."],
+         "trae lo nuevo de OneDrive y recalcula. Todo lo demás es de lectura. En Seguimiento → Equipo ve "
+         "<b>solo sus propios pedidos</b> y las respuestas, nunca las notas internas de dirección."],
     ], [4.4, 4.4, 8.6]))
     h.append(Spacer(1, 6))
     h.append(P("La <b>cartera</b> es la lista de clientes que lleva cada persona, según la planilla de clientes de EFFORT. "
@@ -396,6 +397,9 @@ def manual():
             "días o menos) y <b>«Alertas críticas»</b> (críticas o altas: vencen en 7 días o menos, o ya vencieron).",
             "<b>«Documentación pendiente»</b>, <b>«Balances sin aprobar»</b> y <b>«Liquidaciones sin enviar»</b>, del "
             "período.",
+            "<b>«Pendientes de seguimiento»</b>: todo lo que sigue abierto en Seguimiento (pedidos del equipo y "
+            "pedidos de documentación a clientes), con cuántos son críticos y cuántos tienen el recordatorio "
+            "vencido. Si hay alguno crítico, la tarjeta se marca en rojo. Te lleva a Seguimiento → Pendientes.",
             "<b>«Presentadas con atraso»</b>: cuántas presentaciones salieron tarde y cuántos días suman.",
             "<b>«Alertas más urgentes»</b> y <b>«Vencimientos más urgentes»</b>: las 5 más cercanas a hoy.",
         ],
@@ -405,17 +409,89 @@ def manual():
         "Empezá el día por acá: si «Vencimientos vencidos» o «Alertas críticas» no están en cero, ahí está lo urgente.")
 
     seccion_pantalla(h, "Seguimiento", "p02-seguimiento.png",
-        "Controlar qué clientes no entregaron la documentación del mes, qué se les reclamó y con qué respaldo.",
+        "El centro de todo lo que está pendiente: los pedidos que los colaboradores le hacen a dirección (por correo, "
+        "WhatsApp o llamada) y los pedidos de documentación a los clientes. Tiene tres pestañas: "
+        "<b>«Pendientes»</b>, <b>«Clientes»</b> y <b>«Equipo»</b>. La imagen de arriba es «Pendientes», que es la que "
+        "se abre primero.",
         [
-            "Tarjetas: «Sin entregar», «Escalados a dirección», «Nunca respondieron», «Recordatorios agotados».",
-            "Tabla «Estado de entrega por cliente»: estado, «Venció», «Avisos», «Último contacto», «Días sin respuesta» "
-            "(en rojo si pasa de 3) y «Próxima acción».",
-            "Al tocar un cliente: su «Bitácora de contactos» (cada llamada, mensaje o correo) y la «Constancia de "
-            "gestión», que es lo que se le muestra al cliente que reclama.",
+            "<b>«Pendientes»</b>: todo lo abierto en una sola lista, de lo más urgente a lo menos: primero la "
+            "prioridad (Crítica, Alta, Media, Baja), después lo que tiene el recordatorio vencido, después lo más viejo.",
+            "Columnas: «Tipo» (Equipo o Cliente), «Prioridad», «De quién», «Asunto», «Recordar el», «Estado» y "
+            "«Antigüedad». Una fila con el recordatorio de hoy o de antes se resalta y dice <b>«Vencido»</b>.",
+            "Arriba, el resumen: cuántos abiertos, cuántos críticos y cuántos con el recordatorio vencido. Filtros: "
+            "«Colaborador» (solo dirección), «Tipo» y «Prioridad».",
         ],
-        ["Dirección abre el seguimiento del mes y registra los contactos («Registrar contacto»: vía, quién inició, "
-         "cuándo, quién atendió, si respondió y qué se habló)."],
-        "Los recordatorios automáticos a clientes están apagados por ahora: los contactos se registran a mano.")
+        ["Dirección, en cada fila: <b>«Tildar»</b> (hecho), <b>«Reagendar»</b>, <b>«Cancelar»</b>, <b>«Derivar»</b> y "
+         "<b>«Derivar a soporte»</b> en los pedidos del equipo; <b>«Cambiar prioridad»</b>, «Reagendar» y «Cerrar» en "
+         "los pedidos a clientes (ver más abajo)."],
+        "«Recordar el» es solo una marca en esta pantalla: no manda ningún aviso, ni por correo ni por WhatsApp.")
+
+    h.append(P("Seguimiento → Equipo: los pedidos de los colaboradores", "h1"))
+    h.append(P("Lo que Analía, Ara, Ari, Sandra, Bea o Pedro le piden a Laura o a Lili queda anotado acá, con toda la "
+               "conversación. Así nada se pierde en el WhatsApp ni en el correo."))
+    h.append(imagen("d05-seguimiento-equipo.png", 17.2, alto_max=900))
+    h.append(Spacer(1, 6))
+    h.append(P("Qué ves", "h2"))
+    h += puntos([
+        "Arriba, la lista de pedidos: «Abiertos», «Cerrados» (resueltos y cancelados) y, solo dirección, «Soporte».",
+        "Al tocar un pedido se abre su <b>conversación</b>, en orden: el pedido, las respuestas y las notas (imagen "
+        "de abajo). Las <b>notas internas</b> llevan la marca «Nota interna»: las ve solo dirección, nunca el colaborador.",
+        "Un mensaje no se borra ni se edita. Si algo quedó mal, <b>«Corregir»</b> agrega un mensaje nuevo y el "
+        "anterior queda tachado, a la vista. El asunto y el cliente relacionado se corrigen con «Corregir datos».",
+    ])
+    h.append(imagen("d05b-seguimiento-conversacion.png", 17.2, caja=(250, 370, 1356, 805)))
+    h.append(Spacer(1, 6))
+    h.append(P("Cargar un pedido nuevo (dirección)", "h2"))
+    h.append(imagen("d06-seguimiento-nuevo-pedido.png", 17.2, caja=(250, 170, 1356, 820)))
+    h.append(Spacer(1, 4))
+    h += puntos([
+        "<b>«Nuevo pedido»</b>: «De» (quién lo pidió), «Vía» (llamada, mensaje, WhatsApp, correo o presencial), "
+        "«Cuándo llegó», «Cliente relacionado» (opcional), «Prioridad» (Media si no elegís otra), «Recordar el» "
+        "(opcional), «Para» (Laura, Lili o Daniel), «Asunto» y «Texto del pedido».",
+        "<b>«Agregar mensaje»</b>: para anotar cada respuesta, la del colaborador o la de dirección. Tildá "
+        "<b>«Nota interna»</b> si es algo que el colaborador no tiene que ver.",
+    ])
+    h.append(P("Las acciones rápidas, como los Recordatorios del iPhone", "h2"))
+    h.append(imagen("d07-seguimiento-reagendar.png", 17.2, caja=(250, 265, 1356, 700)))
+    h.append(Spacer(1, 4))
+    h.append(tabla([
+        ["Acción", "Qué hace"],
+        ["<b>«Tildar»</b>", "Lo marca como hecho (Resuelto). Pasa a «Cerrados»; desde ahí se puede «Reabrir»."],
+        ["<b>«Reagendar»</b>", "Cambia «Recordar el»: «Mañana», «En 3 días», «Próxima semana» (el lunes que viene) o "
+         "«Elegir fecha». «Quitar recordatorio» lo deja sin fecha."],
+        ["<b>«Cancelar»</b>", "Pide el motivo (sin motivo no deja confirmar). No borra nada: queda en «Cerrados»."],
+        ["<b>«Derivar»</b>", "Lo pasa a otra persona de dirección."],
+        ["<b>«Derivar a soporte»</b>", "Para lo que no es una consulta de trabajo sino un problema del sistema («no me "
+         "aparece el cliente nuevo»). Pide confirmación y lo manda a la lista «Soporte», que mira Daniel."],
+    ], [4.2, 13.2]))
+    h.append(Spacer(1, 4))
+    h.append(recuadro([P("<b>Todo queda registrado.</b> Cada pedido, mensaje, cambio de prioridad, reagenda, "
+                         "corrección, cancelación o derivación queda en la bitácora con quién lo hizo, cuándo, y cómo "
+                         "estaba antes. Nada se borra.")]))
+    h.append(PageBreak())
+
+    h.append(P("Seguimiento → Clientes: la documentación del mes", "h1"))
+    h.append(P("<b>Para qué sirve.</b> Controlar qué clientes no entregaron la documentación del mes, qué se les "
+               "reclamó y con qué respaldo."))
+    h.append(imagen("d08-seguimiento-clientes.png", 17.2, alto_max=1000))
+    h.append(Spacer(1, 6))
+    h.append(P("Qué ves", "h2"))
+    h += puntos([
+        "Tarjetas: «Sin entregar», «Escalados a dirección», «Nunca respondieron», «Recordatorios agotados».",
+        "Tabla «Estado de entrega por cliente»: estado, «Venció», «Avisos», «Último contacto», «Días sin respuesta» "
+        "(en rojo si pasa de 3) y «Próxima acción».",
+        "Al tocar un cliente: su «Bitácora de contactos» (cada llamada, mensaje o correo) y la «Constancia de "
+        "gestión», que es lo que se le muestra al cliente que reclama. Los pedidos del equipo <b>nunca</b> aparecen "
+        "en esa constancia.",
+    ])
+    h.append(P("Qué podés hacer", "h2"))
+    h += puntos(["Dirección abre el seguimiento del mes y registra los contactos («Registrar contacto»: vía, quién "
+                 "inició, cuándo, quién atendió, si respondió y qué se habló).",
+                 "La prioridad y el recordatorio de cada pedido a un cliente se cambian desde «Pendientes»."])
+    h.append(Spacer(1, 4))
+    h.append(recuadro([P("Los recordatorios automáticos a clientes están apagados por ahora: los contactos se "
+                         "registran a mano.")]))
+    h.append(PageBreak())
 
     seccion_pantalla(h, "Clientes", "p03-clientes.png",
         "Ver la cartera y qué datos le faltan a cada cliente.",

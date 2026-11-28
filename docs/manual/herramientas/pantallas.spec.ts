@@ -81,6 +81,60 @@ async function sembrarDemo(page: Page): Promise<void> {
     await post('/api/v1/alertas/evaluar', { periodo: dia(0).slice(0, 7) });
     await post('/api/v1/horas', { clienteId: creados[0]!.id, fecha: dia(0), minutos: 150, tarea: 'Carga de facturas de compras' });
     await post('/api/v1/horas', { clienteId: creados[1]!.id, fecha: dia(0), minutos: 90, tarea: 'Revisión del IVA del mes' });
+
+    // Seguimiento (2026-11-27): colaboradores de ejemplo, pedidos del equipo con su conversación
+    // (una nota interna incluida) y un pedido de documentación a un cliente, para que las
+    // pestañas Pendientes y Equipo no salgan vacías.
+    const get = async (ruta: string) => {
+      const r = await fetch(`${api}${ruta}`, { credentials: 'include' });
+      if (!r.ok) throw new Error(`${ruta} → ${r.status}`);
+      return r.json();
+    };
+    const colaborador = async (nombre: string, apellido: string, email: string) => {
+      const r = await post('/api/v1/usuarios', {
+        nombre, apellido, email, rol: 'responsable', contrasenaInicial: 'clave-de-ejemplo-para-el-manual-2026',
+      });
+      return (r.usuario?.id ?? r.id) as string;
+    };
+    const ana = await colaborador('Ana', 'Ejemplo', 'ana.ejemplo@effort.com.py');
+    const bruno = await colaborador('Bruno', 'Muestra', 'bruno.muestra@effort.com.py');
+    const { usuarios } = await get('/api/v1/usuarios');
+    const direccion = (usuarios as { id: string; nombre: string; rol: string }[])
+      .find((u) => u.rol === 'direccion' && u.nombre === 'Dirección')!.id;
+    const ahora = new Date().toISOString();
+    const pedido = async (cuerpo: Record<string, unknown>) =>
+      ((await post('/api/v1/seguimiento/pedidos-equipo', {
+        destinatarioUsuarioIds: [direccion], ocurridoEn: ahora, ...cuerpo,
+      })).pedido.id) as string;
+
+    await pedido({
+      solicitanteUsuarioId: ana, clienteId: null, canal: 'WHATSAPP', prioridad: 'ALTA', recordarEl: dia(-1),
+      asunto: 'No me aparece el cliente nuevo en el Panel',
+      texto: 'Cargué el cliente ayer y hoy no lo veo en el Panel ni en Vencimientos.',
+    });
+    const iva = await pedido({
+      solicitanteUsuarioId: bruno, clienteId: creados[0]!.id, canal: 'CORREO', prioridad: 'CRITICA', recordarEl: dia(1),
+      asunto: '¿Se presenta el IVA con la factura que llegó tarde?',
+      texto: 'DEMO COMERCIAL mandó hoy una factura de octubre. ¿La incluyo en el IVA que vence esta semana?',
+    });
+    await post(`/api/v1/seguimiento/pedidos-equipo/${iva}/mensajes`, {
+      autorUsuarioId: direccion, canal: 'WHATSAPP', ocurridoEn: ahora, notaInterna: false,
+      texto: 'Sí, incluila. Si el cliente no manda el resto hoy, avisame.',
+    });
+    await post(`/api/v1/seguimiento/pedidos-equipo/${iva}/mensajes`, {
+      autorUsuarioId: direccion, canal: 'PRESENCIAL', ocurridoEn: ahora, notaInterna: true,
+      texto: 'Ojo: este cliente ya presentó tarde en septiembre. Revisar antes de enviar.',
+    });
+    await pedido({
+      solicitanteUsuarioId: ana, clienteId: creados[1]!.id, canal: 'LLAMADA', prioridad: 'MEDIA', recordarEl: null,
+      asunto: 'Pedir a EJEMPLO AGRO los extractos bancarios',
+      texto: 'El cliente dice que los manda la semana que viene.',
+    });
+    const mesPasado = (() => { const f = new Date(); f.setDate(1); f.setMonth(f.getMonth() - 1);
+      return `${f.getFullYear()}-${String(f.getMonth() + 1).padStart(2, '0')}`; })();
+    await post(`/api/v1/clientes/${creados[2]!.id}/solicitudes-documentacion`, {
+      periodo: mesPasado, cuentaDesde: dia(-10), reglaId: null,
+    });
     return creados.length;
   });
   expect(resultado).toBe(5);
@@ -141,4 +195,30 @@ test('capturas de cada pantalla', async ({ page }) => {
   await page.getByLabel('Cliente').first().selectOption({ label: 'DEMO COMERCIAL S.A.' });
   await page.waitForTimeout(1000);
   await page.screenshot({ path: archivo('d04-documentos-un-cliente'), fullPage: false });
+
+  // Seguimiento: pestañas Equipo y Clientes, el formulario de pedido y las acciones rápidas.
+  await page.getByRole('button', { name: 'Seguimiento', exact: true }).click();
+  await page.waitForTimeout(1500);
+  await page.getByRole('button', { name: 'Reagendar' }).first().click();
+  await page.waitForTimeout(600);
+  await page.screenshot({ path: archivo('d07-seguimiento-reagendar'), fullPage: false });
+  await page.getByRole('tab', { name: 'Equipo' }).click();
+  await page.waitForTimeout(1500);
+  await page.getByRole('button', { name: /IVA con la factura/ }).first().click();
+  await page.waitForTimeout(1500);
+  await page.screenshot({ path: archivo('d05-seguimiento-equipo'), fullPage: true });
+  // La pantalla se desplaza por dentro: la conversación (con la nota interna) va en su propia captura.
+  await page.getByText('Ojo: este cliente ya presentó tarde').scrollIntoViewIfNeeded();
+  await page.waitForTimeout(500);
+  await page.screenshot({ path: archivo('d05b-seguimiento-conversacion'), fullPage: false });
+  await page.getByRole('button', { name: 'Nuevo pedido' }).click();
+  await page.waitForTimeout(800);
+  await page.screenshot({ path: archivo('d06-seguimiento-nuevo-pedido'), fullPage: false });
+  await page.reload();
+  await expect(page.getByRole('button', { name: 'Panel general', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Seguimiento', exact: true }).click();
+  await page.waitForTimeout(1000);
+  await page.getByRole('tab', { name: 'Clientes' }).click();
+  await page.waitForTimeout(1500);
+  await page.screenshot({ path: archivo('d08-seguimiento-clientes'), fullPage: true });
 });
